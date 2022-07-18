@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+    font-family: "SFNSRounded";
+    src: url("../public/fonts/SFNSRounded.ttf")
+}
