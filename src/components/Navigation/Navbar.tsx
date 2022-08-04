@@ -2,14 +2,30 @@ import React from "react";
 
 export interface NavbarInterface {
     defaultPage?: string
-    pages?: string[]
+    children?: React.ReactElement[]
 }
 
-const Navbar = ({defaultPage, pages}: NavbarInterface) => {
+export interface IMenuItems {
+    label: string;
+    selected?: boolean;
+    onClick?: (e: any) => void;
+}
+
+
+export const MenuItem = ({label, selected, onClick}: IMenuItems) => {
+    const mode = selected ? "bg-white text-black" : "bg-black text-white" 
     return (
-        <div className={["grid grid-flow-col auto-cols-max justify-between px-3 py-2 gap-8 w-min", "font-basefont text-white text-[12px]", "bg-black rounded-lg"].join(" ")}>
+        <button className={["w-full p-[8px] rounded-lg", mode].join(" ")}>
+            {label}
+        </button>
+    )
+}
+
+const Navbar = ({children, defaultPage}: NavbarInterface) => {
+    return (
+        <div className={["grid grid-flow-col auto-cols-max justify-between gap-8 w-max p-[8px]", "bg-black rounded-[18px]"].join(" ")}>
             {
-                pages?.map((i) => <p className="px-2 py-2">{i}</p>)
+                children
             }
         </div>
     )
