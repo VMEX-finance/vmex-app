@@ -2,6 +2,8 @@ import React, { Fragment } from "react";
 import { Dialog, Switch } from "@headlessui/react";
 import { IoIosClose } from "react-icons/io";
 import { PieChart } from 'react-minimal-pie-chart';
+import TranchToggle from "./components/risk-profile-selection";
+import { useMediatedState } from "react-use";
 
 interface IOwnedAssetDetails {
     name?: string,
@@ -10,12 +12,23 @@ interface IOwnedAssetDetails {
     closeDialog(e: any): void;
 }
 
-const OwnedAssetDetails: React.FC<IOwnedAssetDetails> = ({ name, isOpen, data, closeDialog}) => {
-  const [enabled, setEnabled] = React.useState(false)
+
+
+type OwnedAssetForm = {
   
-  console.log(data)
+}
+
+const inputMediator = (s: string) =>{
+   return s.replace(/^0*(?=[1-9])|(^0*(?=0.))/, '')
+  }
+const OwnedAssetDetails: React.FC<IOwnedAssetDetails> = ({ name, isOpen, data, closeDialog}) => {
+  const [amount, setAmount] = useMediatedState(inputMediator, '');
+  const [t0, setT0] = React.useState(0);
+  const [t1, setT1] = React.useState(0);
+  const [t2, setT2] = React.useState(0);
+
     return (
-        <>
+        data.tranches && <>
           <div className="flex flex-row justify-between">
             <div className="mt-3 text-left sm:mt-5">
               <Dialog.Title as="h3" className="text-xl leading-6 font-medium text-gray-900">
@@ -34,7 +47,7 @@ const OwnedAssetDetails: React.FC<IOwnedAssetDetails> = ({ name, isOpen, data, c
           <h1 className="mt-5 text-gray-400">Amount</h1>
           <div className="w-full flex flex-row justify-between mt-1 rounded-xl border border-gray-300 p-2">
             <div className="flex flex-col justify-between gap-3">
-              <input type="text" className="text-2xl focus:outline-none" placeholder="0.00"/>
+              <input type="text" value={amount} onChange={(e: any) => setAmount(e.target.value)} className="text-2xl focus:outline-none" placeholder="0.00"/>
               <div className="text-gray-400">USD</div>
             </div>
             <div className="flex flex-col justify-between gap-3">
@@ -46,12 +59,12 @@ const OwnedAssetDetails: React.FC<IOwnedAssetDetails> = ({ name, isOpen, data, c
             </div>
           </div>
           <h1 className="mt-6 text-gray-400">Risk Profile Selection</h1>
-          <div className="w-full flex flex-row justify-between mt-1 p-2">
+          <div className="w-full flex flex-row justify-between items-center mt-1 p-2">
               <PieChart 
                 data={[
-                  { title: 'Tranch 0', value: 58, color: '#000000' },
-                  { title: 'Tranch 1', value: 32, color: '#90E7D4' },
-                  { title: 'Tranch 2', value: 10, color: '#F35B53' },
+                  { title: 'Tranch 0', value: Number(t0), color: '#000000' },
+                  { title: 'Tranch 1', value: Number(t1), color: '#90E7D4' },
+                  { title: 'Tranch 2', value: Number(t2), color: '#F35B53' },
                 ]}
                 className="w-[150px] h-[150px]"
                 animate
@@ -69,24 +82,10 @@ const OwnedAssetDetails: React.FC<IOwnedAssetDetails> = ({ name, isOpen, data, c
                   fontSize: '10px'
                 }}
               />
-              <div className="flex flex-col">
-                <div>
-                  <p>Tranch 0</p>
-                  <Switch 
-                    checked
-                    onChange={setEnabled}
-                    className={`${
-                      enabled ? 'bg-blue-600' : 'bg-gray-200'
-                    } relative inline-flex h-6 w-11 items-center rounded-full`}
-                  >
-                    <span className="sr-only">Enable notifications</span>
-                    <span
-                      className={`${
-                        enabled ? 'translate-x-6' : 'translate-x-1'
-                      } inline-block h-4 w-4 transform rounded-full bg-white`}
-                    />
-                  </Switch>
-                </div>
+              <div className="flex flex-col grow">
+                <TranchToggle max={1 - Number(t1) + Number(t2)} name="Stable Asset Tranche" value={t0} onChange={(e: any) => setT0(e.target.value)} disabled={data.tranches[0].disabled}/>
+                <TranchToggle max={1 - Number(t0) + Number(t2)} name="High Cap Tranche" value={t1} onChange={(e: any) => setT1(e.target.value)} disabled={data.tranches[1].disabled}/>
+                <TranchToggle max={1 - Number(t1) + Number(t0)} name="Low Cap Tranche" value={t2} onChange={(e: any) => setT2(e.target.value)} disabled={data.tranches[2].disabled}/>
               </div>
           </div>
           <div className="mt-5 sm:mt-6">
@@ -95,7 +94,7 @@ const OwnedAssetDetails: React.FC<IOwnedAssetDetails> = ({ name, isOpen, data, c
               className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-black text-base font-medium text-white focus:outline-none focus:ring-none sm:text-sm hover:text-black hover:bg-white hover:border-[2px] hover:border-black box-border hover:box-border"
               onClick={() => closeDialog('loan-asset-dialog')}
               >
-              go back to dashboard
+              submit transaction
             </button>
           </div>
         </>
