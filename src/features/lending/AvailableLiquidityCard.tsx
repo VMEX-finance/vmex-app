@@ -1,5 +1,4 @@
 import React from "react";
-import { Tab } from "@headlessui/react";
 import AvailableLiquidityTable from "../../components/tables/AvailableLiquidityTable";
 import { _mockAssetData } from "../../models/available-liquidity-model";
 

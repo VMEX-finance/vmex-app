@@ -1,9 +1,9 @@
 import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-import DropdownButton, { DropdownItem, IDropdown } from "@components/buttons/Dropdown";
+import DropdownButton, { IDropdown } from "@components/buttons/Dropdown";
 
 export default {
-    title: "Components/Buttons/Dropdown",
+    title: "Components/Buttons",
     component: DropdownButton
 } as ComponentMeta<typeof DropdownButton>
 
@@ -11,9 +11,12 @@ const Template: ComponentStory<typeof DropdownButton> = (args) => <DropdownButto
 
 export const Primary = Template.bind({})
 Primary.args = {
-    label: "All Tranches",
-    menuItems: [
-        <DropdownItem label="Example 1" />,
-        <DropdownItem label="Example 2" />
+    items: [
+        {
+            text: "Example 1"
+        },
+        {
+            text: "Example 2"
+        }
     ]
 }

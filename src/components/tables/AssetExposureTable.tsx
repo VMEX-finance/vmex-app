@@ -36,7 +36,7 @@ const AssetExposureTable: React.FC<IAssetExposureTable> = ({ children, data }) =
                             <tr key={i.asset}>
                                 <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                                     <div className="flex items-center gap-2">
-                                        <img src={i.logo} className="h-8 w-8"/>
+                                        <img src={i.logo} alt={i.asset} className="h-8 w-8"/>
                                         <div className="text-lg">{i.asset}</div>
                                     </div>
                                 </td>
