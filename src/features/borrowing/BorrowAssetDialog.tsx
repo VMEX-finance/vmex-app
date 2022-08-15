@@ -5,6 +5,8 @@ import { FaGasPump } from "react-icons/fa";
 import { useMediatedState } from "react-use";
 import Button from "../../components/buttons/Button";
 import CoinInput from "../../components/inputs/coin-input";
+import ActiveStatus from "../../components/statuses/active";
+import DropdownButton from "../../components/buttons/Dropdown";
 
 interface IOwnedAssetDetails {
     name?: string,
@@ -44,6 +46,19 @@ const BorrowAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, isOpen, data, c
           <h3 className="mt-6 text-gray-400">Available Collateral</h3>
 
           <h3 className="mt-6 text-gray-400">Transaction Overview</h3>
+          <div className={`mt-2 flex justify-between rounded-lg border border-neutral-900 p-4 lg:py-6`}>
+            <div className="flex flex-col gap-2">
+              <span>Supply APR%</span>
+              <span>Collateralization</span>
+              <span>Insurance</span>
+            </div>
+
+            <div className="min-w-[100px] flex flex-col gap-2">
+              <span>0.44%</span>
+              {amount && <ActiveStatus active={true} size="sm" />}
+              {amount && <ActiveStatus active={false} size="sm" />}
+            </div>
+          </div>
 
           <div className="mt-5 sm:mt-6 flex justify-between items-end">
             <div className="flex flex-col">
@@ -52,7 +67,9 @@ const BorrowAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, isOpen, data, c
                   <span>Gas Limit</span>
                 </div>
                 <div>
-                  Dropdown
+                  <DropdownButton 
+                    items={[{ text: "Normal" }, { text: "Low" }, { text: "High" }]}
+                  />
                 </div>
             </div>
             <div>

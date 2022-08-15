@@ -7,7 +7,7 @@ export interface ICoinInput {
     logo: string;
     name: string;
   }
-  balance?: string | number;
+  balance?: string;
 }
 
 const CoinInput = ({ amount, setAmount, coin, balance }: ICoinInput) => {
@@ -23,8 +23,13 @@ const CoinInput = ({ amount, setAmount, coin, balance }: ICoinInput) => {
           {coin.name}
         </div>
         <div className="text-xs text-right text-blue-700">
-          <p>MAX</p>
-          <p>{balance || 0.3213}</p>
+          <span
+            className="hover:text-brand-purple cursor-pointer transition duration-200"
+            onClick={() => balance ? setAmount(balance) : {}}
+          >
+            MAX
+          </span>
+          <p>Balance: {balance || 0.3213}</p>
         </div>
       </div>
     </div>

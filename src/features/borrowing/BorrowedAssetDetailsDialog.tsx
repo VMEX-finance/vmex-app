@@ -1,10 +1,7 @@
 import React from "react";
 import { Dialog } from "@headlessui/react";
 import { IoIosClose } from "react-icons/io";
-import { PieChart } from 'react-minimal-pie-chart';
-import TranchToggle from "../../components/toggles/RiskProfile";
 import { useMediatedState } from "react-use";
-import CoinInput from "../../components/inputs/coin-input";
 import Button from "../../components/buttons/Button";
 
 interface IOwnedAssetDetails {
@@ -19,9 +16,6 @@ const inputMediator = (s: string) =>{
   }
 const BorrowedAssetDetailsDialog: React.FC<IOwnedAssetDetails> = ({ name, isOpen, data, closeDialog}) => {
   const [amount, setAmount] = useMediatedState(inputMediator, '');
-  const [t0, setT0] = React.useState(0);
-  const [t1, setT1] = React.useState(0);
-  const [t2, setT2] = React.useState(0);
 
     return (
         data.tranches && <>
