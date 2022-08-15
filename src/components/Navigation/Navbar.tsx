@@ -13,9 +13,12 @@ export interface IMenuItems {
 
 
 export const MenuItem = ({label, selected, onClick}: IMenuItems) => {
-    const mode = selected ? "bg-white text-black" : "bg-black text-white" 
+    const mode = selected ? "!bg-white !text-black" : "bg-black text-white" 
     return (
-        <button className={["w-full p-[8px] rounded-lg", mode].join(" ")}>
+        <button 
+            className={["w-full p-[8px] rounded-lg hover:bg-neutral-600 transition duration-200", mode].join(" ")}
+            onClick={onClick}
+        >
             {label}
         </button>
     )

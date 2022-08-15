@@ -1,27 +1,51 @@
 import React from "react";
 import { WalletButton } from "../../components/Buttons/Button";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Navbar, { MenuItem } from "../../components/Navigation/Navbar";
 
 const DashboardNavbar: React.FC = () => {
-    let navigate = useNavigate();
+    const navigate = useNavigate();
+    const location = useLocation();
+
     function navigateTo(e: any) {
         e.preventDefault();
-        let value = e.target.value;
+        console.log(e)
+        let value = e.target.innerText.toLowerCase();
         navigate(`../${value}`, { replace: false });
     };
+
+    console.log(location)
 
     return (
         <nav className="flex flex-row sticky h-fit justify-between items-center top-0 font-basefont px-10 py-5">
             <span className="flex flex-row items-center gap-[70px]">
                 <span id="nav-logo">
-                    <img src="/VMEX-logo.svg" />
+                    <img 
+                        src="/VMEX-logo.svg" 
+                        alt="VMEX Finance Logo"
+                    />
                 </span>
                 <Navbar>
-                    <MenuItem label="Lending" selected/>
-                    <MenuItem label="Borrowing"/>
-                    <MenuItem label="Staking" />
-                    <MenuItem label="Markets" />
+                    <MenuItem 
+                        label="Lending" 
+                        selected={location.pathname === '/lending'}
+                        onClick={navigateTo}
+                    />
+                    <MenuItem 
+                        label="Borrowing" 
+                        selected={location.pathname === '/borrowing'}
+                        onClick={navigateTo} 
+                    />
+                    <MenuItem 
+                        label="Staking" 
+                        selected={location.pathname === '/staking'}
+                        onClick={navigateTo} 
+                    />
+                    <MenuItem 
+                        label="Markets" 
+                        selected={location.pathname === '/markets'}
+                        onClick={navigateTo} 
+                    />
                     <MenuItem label="Governance" />
                     <MenuItem label="Develop" />
                 </Navbar>

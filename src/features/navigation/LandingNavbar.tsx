@@ -6,7 +6,7 @@ const LandingNavbar: React.FC = () => {
     let navigate = useNavigate();
     function launchApp(e: any) {
         e.preventDefault();
-        navigate("../app", { replace: true});
+        navigate("../lending", { replace: true});
     }
 
 
