@@ -1,5 +1,5 @@
 import React from "react";
-import AssetExposureTable from "../../components/Tables/AssetExposureTable";
+import AssetExposureTable from "../../components/tables/AssetExposureTable";
 import { _mockTrancheAssetExposure, _mockTrancheAssetExposure2, _mockTrancheAssetExposure3 } from "../../models/asset-exposure-model";
 import { Tab } from "@headlessui/react";
 

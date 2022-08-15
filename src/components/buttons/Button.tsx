@@ -1,5 +1,5 @@
 import React from "react";
-import { useWalletState } from "../../hooks/connectMetamask";
+import { useWalletState } from "../../hooks/wallet/connectMetamask";
 
 export interface IButtonProps {
     label: string;

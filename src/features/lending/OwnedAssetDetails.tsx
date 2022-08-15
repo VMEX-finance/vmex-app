@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import { Dialog, Switch } from "@headlessui/react";
 import { IoIosClose } from "react-icons/io";
 import { PieChart } from 'react-minimal-pie-chart';
-import TranchToggle from "./components/risk-profile-selection";
+import TranchToggle from "../../components/toggles/RiskProfile";
 import { useMediatedState } from "react-use";
 
 interface IOwnedAssetDetails {
@@ -11,8 +11,6 @@ interface IOwnedAssetDetails {
     data?: any,
     closeDialog(e: any): void;
 }
-
-
 
 type OwnedAssetForm = {
   

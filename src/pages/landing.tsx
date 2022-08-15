@@ -1,6 +1,6 @@
 import React from "react";
 import Template from "../templates";
-import LandingHero from "../features/heroes/landing.hero"
+import LandingHero from "../features/heros/landing.hero"
 
 const Landing: React.FC = () => {
     return (

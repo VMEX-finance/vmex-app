@@ -1,6 +1,6 @@
 import React from "react";
 import LandingNavbar from "../features/navigation/LandingNavbar"
-import Footer from '../components/Navigation/Footer';
+import Footer from '../components/navigation/Footer';
 
 interface ITemplate {
     children: React.ReactElement[] | React.ReactElement

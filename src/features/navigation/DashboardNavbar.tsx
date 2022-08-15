@@ -1,7 +1,7 @@
 import React from "react";
-import { WalletButton } from "../../components/Buttons/Button";
+import { WalletButton } from "../../components/buttons/Button";
 import { useNavigate, useLocation } from "react-router-dom";
-import Navbar, { MenuItem } from "../../components/Navigation/Navbar";
+import Navbar, { MenuItem } from "../../components/navigation/Navbar";
 
 const DashboardNavbar: React.FC = () => {
     const navigate = useNavigate();

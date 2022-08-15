@@ -1,6 +1,6 @@
 import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-import Button, { IButtonProps } from "../components/Buttons/Button"
+import Button, { IButtonProps } from "../components/buttons/Button"
 
 export default {
     title: "Components/Buttons/Button",

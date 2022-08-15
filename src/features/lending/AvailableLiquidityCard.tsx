@@ -1,6 +1,6 @@
 import React from "react";
 import { Tab } from "@headlessui/react";
-import AvailableLiquidityTable from "../../components/Tables/AvailableLiquidityTable";
+import AvailableLiquidityTable from "../../components/tables/AvailableLiquidityTable";
 import { _mockAssetData } from "../../models/available-liquidity-model";
 
 const AvailableLiquidityCard: React.FC = () => {

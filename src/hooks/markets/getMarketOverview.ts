@@ -1,5 +1,5 @@
 import React from "react";
-import { ITVLData } from "../../../components/Data/TvlDataComponent";
+import { ITVLData } from "../../components/data/TvlDataComponent";
 
 function getTVLData(): ITVLData {
     return {
