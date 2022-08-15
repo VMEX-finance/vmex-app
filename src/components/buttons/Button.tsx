@@ -19,9 +19,9 @@ const Button = ({label, onClick, primary, border = true, className}: IButtonProp
 }
 
 function truncateAddress(s: string) { return s.slice(0,3) + "..." + s.slice(-4)}
-export const WalletButton = ({ label, onClick, primary }: IButtonProps) => {
+export const WalletButton = ({ primary }: IButtonProps) => {
     const {address, connectMetamask } = useWalletState()
-    const mode = primary && !address ? "" : "!bg-white !text-black"
+    const mode = primary && !address ? "" : "!bg-white !text-black hover:!bg-neutral-200"
     return (
         <Button 
             primary

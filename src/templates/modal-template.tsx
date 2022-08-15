@@ -23,8 +23,6 @@ const ModalTemplate: React.FC = () => {
 
 
 const ModalWrapper: React.FC<IModalWrapper> = ({ name, isOpen, data, closeDialog, children}) => {
-    
-
     return (
         <Transition.Root show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={() => closeDialog("loan-asset-dialog")}>
