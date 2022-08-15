@@ -3,10 +3,10 @@ import React from "react";
 const LendingPerformanceCard: React.FC = () => {
     return (
         <div className="base-font bg-black text-white p-8 rounded-lg">
-            <header className="text-lg">Performance</header>
-            <main>
+            <h3 className="text-lg">Performance</h3>
+            <div>
 
-            </main>
+            </div>
         </div>
     )
 }

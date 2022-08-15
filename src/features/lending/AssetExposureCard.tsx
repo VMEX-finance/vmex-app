@@ -6,8 +6,8 @@ import { Tab } from "@headlessui/react";
 const AssetExposureCard: React.FC = () => {
     return (
         <div className="font-basefont bg-white p-8 rounded-lg">
-            <header className="text-lg mb-8">Your Asset Exposures</header>
-            <main>
+            <h3 className="text-lg mb-8">Your Asset Exposures</h3>
+            <div>
                 <Tab.Group>
                     <Tab.List className="mb-3 text-sm text-right">
                         <Tab className="mx-2">
@@ -50,7 +50,7 @@ const AssetExposureCard: React.FC = () => {
                         </Tab.Panel>
                     </Tab.Panels>
                 </Tab.Group>
-            </main>
+            </div>
         </div>
     )
 }

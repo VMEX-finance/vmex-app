@@ -8,10 +8,10 @@ const Borrowing: React.FC = () => {
     return (
         <AppTemplate title="borrowing">
             <GridView>
-                <div className="col-span-1">
+                <div className="lg:col-span-1">
                   <BorrowedAssetsCard />
                 </div>
-                <div className="col-span-4">
+                <div className="lg:col-span-4">
                   <ViewBorrowAssetsCard />
                 </div>
             </GridView>

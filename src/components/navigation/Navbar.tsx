@@ -9,14 +9,16 @@ export interface IMenuItems {
     label: string;
     selected?: boolean;
     onClick?: (e: any) => void;
+    mobile?: boolean;
 }
 
 
-export const MenuItem = ({label, selected, onClick}: IMenuItems) => {
-    const mode = selected ? "!bg-white !text-black" : "bg-black text-white" 
+export const MenuItem = ({label, selected, onClick, mobile}: IMenuItems) => {
+    const mode = selected && !mobile ? "!bg-white !text-black" : mobile ? "hover:!bg-neutral-200" : "bg-black text-white ";
+
     return (
         <button 
-            className={["w-full p-[8px] rounded-lg hover:bg-neutral-600 transition duration-200", mode].join(" ")}
+            className={["w-full p-[8px] rounded-lg transition duration-200 hover:bg-neutral-700", mode].join(" ")}
             onClick={onClick}
         >
             {label}

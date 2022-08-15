@@ -24,21 +24,29 @@ const TVLDataComponent: React.FC<ITVLData> = ({
         notation: "compact"
     })
     return (
-        <div className="flex flex-row font-basefont p-8 gap-8">
-            <span className="flex flex-col">
-                <h1 className="text-2xl">Total Value Locked (TVL)</h1> 
+        <div className="flex flex-col md:flex-row font-basefont p-8 gap-8">
+            <div className="flex flex-col">
+                <h2 className="text-2xl">Total Value Locked (TVL)</h2> 
                 <p className="text-3xl">{tvl ? formatter.format(tvl as number) : ""}</p>
-            </span>
-            <span className="flex flex-col">
-                <p className="text-sm">Reserves:</p>
-                <p className="text-xl">{reserve ? formatter.format(reserve as number) : ""}</p>
-                <p className="odd:text-sm">Lenders:</p>
-                <p className="text-xl">{lenders}</p>
-                <p className="text-sm">Borrowers:</p>
-                <p className="text-xl">{borrowers}</p>
-                <p className="text-sm">Markets:</p>
-                <p className="text-xl">{markets}</p>
-            </span>
+            </div>
+            <div className="flex md:flex-col justify-between">
+                <div className="flex flex-col">
+                    <p className="text-sm">Reserves:</p>
+                    <p className="text-xl">{reserve ? formatter.format(reserve as number) : ""}</p>
+                </div>
+                <div className="flex flex-col">
+                    <p className="odd:text-sm">Lenders:</p>
+                    <p className="text-xl">{lenders}</p>
+                </div>
+                <div className="flex flex-col">
+                    <p className="text-sm">Borrowers:</p>
+                    <p className="text-xl">{borrowers}</p>
+                </div>
+                <div className="flex flex-col">
+                    <p className="text-sm">Markets:</p>
+                    <p className="text-xl">{markets}</p>
+                </div>
+            </div>
         </div>
     )
 }

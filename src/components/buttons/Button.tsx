@@ -19,15 +19,17 @@ const Button = ({label, onClick, primary, border = true, className}: IButtonProp
 }
 
 function truncateAddress(s: string) { return s.slice(0,3) + "..." + s.slice(-4)}
-export const WalletButton = ({ primary }: IButtonProps) => {
+export const WalletButton = ({ primary, className, label }: IButtonProps) => {
+    const _label = label;
+
     const {address, connectMetamask } = useWalletState()
     const mode = primary && !address ? "" : "!bg-white !text-black hover:!bg-neutral-200"
     return (
         <Button 
             primary
             onClick={connectMetamask} 
-            className={["box-border", "font-basefont", "px-4 py-1", "!border-[2px] !border-black !border-solid", mode].join(" ")}
-            label={address ? truncateAddress(address) : "Connect Metamask"}
+            className={["box-border", "whitespace-nowrap", "font-basefont", "px-4 py-1", "!border-[2px] !border-black !border-solid", mode, className].join(" ")}
+            label={address ? truncateAddress(address) : (_label || "Connect Metamask")}
         />
     )
 }
