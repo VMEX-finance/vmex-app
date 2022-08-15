@@ -3,10 +3,6 @@ import { Switch } from "@headlessui/react";
 import { PieChart } from "react-minimal-pie-chart";
 import { useMap } from "react-use";
 
-
-
-
-
 interface ITrancheToggle {
   name: string;
   active?: boolean;

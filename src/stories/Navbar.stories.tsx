@@ -1,6 +1,6 @@
 import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-import Navbar, { MenuItem } from "@components/Navigation/Navbar";
+import Navbar, { MenuItem } from "@components/navigation/Navbar";
 
 export default {
     title: "Components/Navbars",

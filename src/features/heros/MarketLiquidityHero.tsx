@@ -1,6 +1,6 @@
 import React from "react";
-import TVLDataComponent from "../../components/Data/TvlDataComponent";
-import useMarketOverview from "./hooks/getMarketOverview";
+import TVLDataComponent from "../../components/data/TvlDataComponent";
+import useMarketOverview from "../../hooks/markets/getMarketOverview";
 
 const MarketLiquidityHero: React.FC = () => {
     const { TVLDataProps } = useMarketOverview()

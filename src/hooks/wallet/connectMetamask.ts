@@ -1,6 +1,6 @@
 import React from "react";
-import { loginWithMetamask, IWalletState } from "../store/wallet";
-import { useAppSelector, useAppDispatch } from "./redux";
+import { loginWithMetamask, IWalletState } from "../../store/wallet";
+import { useAppSelector, useAppDispatch } from "../redux";
 
 export function useWalletState(): any {
     const {

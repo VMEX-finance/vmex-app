@@ -1,12 +1,12 @@
 import React from "react";
-import Button from "../../components/Buttons/Button";
+import Button from "../../components/buttons/Button";
 import { useNavigate } from "react-router-dom";
 
 const LandingNavbar: React.FC = () => {
     let navigate = useNavigate();
     function launchApp(e: any) {
         e.preventDefault();
-        navigate("../app", { replace: true});
+        navigate("../lending", { replace: true});
     }
 
 

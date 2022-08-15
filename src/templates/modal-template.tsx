@@ -1,7 +1,9 @@
 import React, { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import OwnedAssetDetails from "../features/lending/OwnedAssetDetails";
-import useDialogController from "../hooks/useDialogController";
+import useDialogController from "../hooks/dialogs/useDialogController";
+import BorrowedAssetDetailsDialog from "../features/borrowing/BorrowedAssetDetailsDialog";
+import BorrowAssetDialog from "../features/borrowing/BorrowAssetDialog";
 
 interface IModalWrapper extends React.PropsWithChildren {
     name?: string,
@@ -10,24 +12,10 @@ interface IModalWrapper extends React.PropsWithChildren {
     closeDialog(e: any): void;
 }
 
-const ModalTemplate: React.FC = () => {
-    const { getDialogProps } = useDialogController()
-    return (
-        <React.Fragment>
-            <ModalWrapper {...getDialogProps("loan-asset-dialog")}>
-                <OwnedAssetDetails {...getDialogProps('loan-asset-dialog')}/>
-            </ModalWrapper>
-        </React.Fragment>
-    )
-}
-
-
 const ModalWrapper: React.FC<IModalWrapper> = ({ name, isOpen, data, closeDialog, children}) => {
-    
-
     return (
         <Transition.Root show={isOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={() => closeDialog("loan-asset-dialog")}>
+        <Dialog as="div" className="relative z-10" onClose={() => closeDialog(name)}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -62,7 +50,30 @@ const ModalWrapper: React.FC<IModalWrapper> = ({ name, isOpen, data, closeDialog
     )
 }
 
+const ModalTemplate: React.FC = () => {
+  const { getDialogProps } = useDialogController();
 
+  return (
+    <>
+      <React.Fragment>
+          <ModalWrapper {...getDialogProps("loan-asset-dialog")}>
+              <OwnedAssetDetails {...getDialogProps('loan-asset-dialog')}/>
+          </ModalWrapper>
+      </React.Fragment>
+
+      <React.Fragment>
+          <ModalWrapper {...getDialogProps("borrowed-asset-details-dialog")}>
+              <BorrowedAssetDetailsDialog {...getDialogProps('borrowed-asset-details-dialog')}/>
+          </ModalWrapper>
+      </React.Fragment>
+
+      <React.Fragment>
+          <ModalWrapper {...getDialogProps("borrow-asset-dialog")}>
+              <BorrowAssetDialog {...getDialogProps('borrow-asset-dialog')}/>
+          </ModalWrapper>
+      </React.Fragment>
+    </>
+  )
+}
  
-
 export default ModalTemplate;

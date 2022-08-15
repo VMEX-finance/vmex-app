@@ -21,6 +21,22 @@ const DialogControllerState: IDialogState = {
                     isOpen: false,
                     data: {}
                 }
+        ],
+        [
+            "borrowed-asset-details-dialog", 
+                {
+                    name: "Borrowed Asset Details", 
+                    isOpen: false,
+                    data: {}
+                }
+        ],
+        [
+            "borrow-asset-dialog", 
+                {
+                    name: "Borrow", 
+                    isOpen: false,
+                    data: {}
+                }
         ]
     ])
 }
