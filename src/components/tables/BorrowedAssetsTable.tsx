@@ -46,13 +46,13 @@ const BorrowedAssetsTable: React.FC<IAvailableLiquidityTable> = ({ children, dat
                                 <td className="text-center">{i.amount}</td>
                                 <td>{i.apy_perc}</td>
                                 <td>
-                                    <Button label="Repay" onClick={() => openDialog("loan-asset-dialog", {...i})}/>
+                                    <Button label="Repay" onClick={() => openDialog("borrowed-asset-details-dialog", {...i})}/>
                                 </td>
                                 <td>
                                     <Button 
                                         border={false}
                                         label={<BsThreeDotsVertical size="20px" />} 
-                                        onClick={() => openDialog("loan-asset-dialog", {...i})}
+                                        onClick={() => openDialog("borrowed-asset-details-dialog", {...i})}
                                     />
                                 </td>
                             </tr>

@@ -1,6 +1,5 @@
 import React from "react";
 import type { AvailableAsset } from "../../models/available-liquidity-model";
-import { BsThreeDotsVertical } from "react-icons/bs";
 import Button from "../buttons/Button"
 import useDialogController from "../../hooks/dialogs/useDialogController";
 
@@ -56,7 +55,7 @@ const BorrowedAssetsTable: React.FC<IAvailableLiquidityTable> = ({ children, dat
                                     <Button 
                                         primary
                                         label={"Borrow"} 
-                                        onClick={() => openDialog("loan-asset-dialog", {...i})}
+                                        onClick={() => openDialog("borrow-asset-dialog", {...i})}
                                     />
                                 </td>
                             </tr>

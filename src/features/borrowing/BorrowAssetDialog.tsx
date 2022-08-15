@@ -36,7 +36,7 @@ const BorrowAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, isOpen, data, c
                 </p>
               </div>
             </div>
-            <div className="self-baseline h-fit w-fit cursor-pointer text-neutral-900 hover:text-neutral-600 transition duration-200" onClick={() => closeDialog('loan-asset-dialog')}>
+            <div className="self-baseline h-fit w-fit cursor-pointer text-neutral-900 hover:text-neutral-600 transition duration-200" onClick={() => closeDialog('borrow-asset-dialog')}>
               <IoIosClose className="w-7 h-7" />
             </div>
           </div>
