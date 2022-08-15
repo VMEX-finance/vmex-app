@@ -1,14 +1,13 @@
 import React from "react";
 import type { AvailableAsset } from "../../models/available-liquidity-model";
-import { BsCheck } from "react-icons/bs";
-import { IoIosClose } from "react-icons/io";
+import { BsThreeDotsVertical } from "react-icons/bs";
 import Button from "../buttons/Button"
 import useDialogController from "../../hooks/dialogs/useDialogController";
 
 interface IAvailableLiquidityTable extends React.PropsWithChildren {
     data: AvailableAsset[]
 }
-const AvailableLiquidityTable: React.FC<IAvailableLiquidityTable> = ({ children, data }) => {
+const BorrowedAssetsTable: React.FC<IAvailableLiquidityTable> = ({ children, data }) => {
     const { openDialog } = useDialogController();
 
     return (
@@ -19,13 +18,13 @@ const AvailableLiquidityTable: React.FC<IAvailableLiquidityTable> = ({ children,
                         Asset
                     </th>
                     <th scope="col" className="py-3.5 text-center text-sm font-semibold text-gray-900">
-                        Balance
+                        Available
                     </th>
                     <th scope="col" className="py-3.5 text-center text-sm font-semibold text-gray-900">
-                        Can be Collatoral
+                        APY% (Variable)
                     </th>
                     <th scope="col" className="py-3.5 text-center text-sm font-semibold text-gray-900">
-                        APY%
+                        APY% (Stable)
                     </th>
                     <th scope="col" className="py-3.5 text-center text-sm font-semibold text-gray-900">
                         
@@ -44,15 +43,21 @@ const AvailableLiquidityTable: React.FC<IAvailableLiquidityTable> = ({ children,
                                         <div className="text-lg">{i.asset}</div>
                                     </div>
                                 </td>
-                                <td className="text-center">{i.amount} {i.unit}</td>
-                                <td className="">
-                                    <div className="w-10 h-10 mx-auto">
-                                        {i.canBeCollat ? <BsCheck className="w-full h-full text-emerald-600" /> : <IoIosClose className="w-full h-full text-red-600"/>}
-                                    </div>
+                                <td className="text-right">
+                                    {i.amount}
                                 </td>
-                                <td>{i.apy_perc}</td>
                                 <td>
-                                    <Button label="Loan Asset" onClick={() => openDialog("loan-asset-dialog", {...i})}/>
+                                    {"-"}
+                                </td>
+                                <td>
+                                    {"-"}
+                                </td>
+                                <td>
+                                    <Button 
+                                        primary
+                                        label={"Borrow"} 
+                                        onClick={() => openDialog("loan-asset-dialog", {...i})}
+                                    />
                                 </td>
                             </tr>
                         )
@@ -63,4 +68,4 @@ const AvailableLiquidityTable: React.FC<IAvailableLiquidityTable> = ({ children,
     )
 }
 
-export default AvailableLiquidityTable;
+export default BorrowedAssetsTable;

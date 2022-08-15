@@ -38,8 +38,8 @@ const OwnedAssetDetails: React.FC<IOwnedAssetDetails> = ({ name, isOpen, data, c
                 </p>
               </div>
             </div>
-            <div className="self-baseline h-fit w-fit" onClick={() => closeDialog('loan-asset-dialog')}>
-              <IoIosClose className="w-7 h-7"/>
+            <div className="self-baseline h-fit w-fit cursor-pointer text-neutral-900 hover:text-neutral-600 transition duration-200" onClick={() => closeDialog('loan-asset-dialog')}>
+              <IoIosClose className="w-7 h-7" />
             </div>
           </div>
           <h1 className="mt-5 text-gray-400">Amount</h1>
@@ -89,10 +89,10 @@ const OwnedAssetDetails: React.FC<IOwnedAssetDetails> = ({ name, isOpen, data, c
           <div className="mt-5 sm:mt-6">
             <button
               type="button"
-              className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-black text-base font-medium text-white focus:outline-none focus:ring-none sm:text-sm hover:text-black hover:bg-white hover:border-[2px] hover:border-black box-border hover:box-border"
+              className="inline-flex justify-center w-full rounded-md border-[2px] shadow-sm px-4 py-2 bg-black text-base font-medium text-white focus:outline-none focus:ring-none sm:text-sm hover:text-black hover:bg-white hover:border-[2px] hover:border-black box-border hover:box-border transition duration-200"
               onClick={() => closeDialog('loan-asset-dialog')}
               >
-              submit transaction
+              Submit Transaction
             </button>
           </div>
         </>

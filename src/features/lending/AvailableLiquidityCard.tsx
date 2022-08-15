@@ -6,10 +6,10 @@ import { _mockAssetData } from "../../models/available-liquidity-model";
 const AvailableLiquidityCard: React.FC = () => {
     return (
         <div className="font-basefont bg-white p-8 rounded-lg">
-            <header className="text-lg mb-8">Available Liquidity</header>
-            <main>
+            <h3 className="text-lg mb-8">Available Liquidity</h3>
+            <div>
                 <AvailableLiquidityTable data={_mockAssetData.data}/>
-            </main>
+            </div>
         </div>
     )
 }
