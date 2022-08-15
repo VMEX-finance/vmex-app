@@ -1,9 +1,11 @@
-import React, { Fragment } from "react";
-import { Dialog, Switch } from "@headlessui/react";
+import React from "react";
+import { Dialog } from "@headlessui/react";
 import { IoIosClose } from "react-icons/io";
 import { PieChart } from 'react-minimal-pie-chart';
 import TranchToggle from "../../components/toggles/RiskProfile";
 import { useMediatedState } from "react-use";
+import CoinInput from "../../components/inputs/coin-input";
+import Button from "../../components/buttons/Button";
 
 interface IOwnedAssetDetails {
     name?: string,
@@ -42,21 +44,17 @@ const OwnedAssetDetails: React.FC<IOwnedAssetDetails> = ({ name, isOpen, data, c
               <IoIosClose className="w-7 h-7" />
             </div>
           </div>
-          <h1 className="mt-5 text-gray-400">Amount</h1>
-          <div className="w-full flex flex-row justify-between mt-1 rounded-xl border border-gray-300 p-2">
-            <div className="flex flex-col justify-between gap-3">
-              <input type="text" value={amount} onChange={(e: any) => setAmount(e.target.value)} className="text-2xl focus:outline-none" placeholder="0.00"/>
-              <div className="text-gray-400">USD</div>
-            </div>
-            <div className="flex flex-col justify-between gap-3">
-              <div className="flex gap-1"><img src={data.logo} />{data.asset}</div>
-              <div className="text-xs text-right text-blue-700">
-                <p>MAX</p>
-                <p>0.3213</p>
-              </div>
-            </div>
-          </div>
-          <h1 className="mt-6 text-gray-400">Risk Profile Selection</h1>
+          <h3 className="mt-5 text-gray-400">Amount</h3>
+          <CoinInput 
+            amount={amount}
+            setAmount={setAmount}
+            coin={{
+              logo: data.logo,
+              name: data.asset
+            }}
+            balance={"0.23"}
+          />
+          <h3 className="mt-6 text-gray-400">Risk Profile Selection</h3>
           <div className="w-full flex flex-row justify-between items-center mt-1 p-2">
               <PieChart 
                 data={[
@@ -87,13 +85,10 @@ const OwnedAssetDetails: React.FC<IOwnedAssetDetails> = ({ name, isOpen, data, c
               </div>
           </div>
           <div className="mt-5 sm:mt-6">
-            <button
-              type="button"
-              className="inline-flex justify-center w-full rounded-md border-[2px] shadow-sm px-4 py-2 bg-black text-base font-medium text-white focus:outline-none focus:ring-none sm:text-sm hover:text-black hover:bg-white hover:border-[2px] hover:border-black box-border hover:box-border transition duration-200"
-              onClick={() => closeDialog('loan-asset-dialog')}
-              >
-              Submit Transaction
-            </button>
+            <Button
+                onClick={() => closeDialog('loan-asset-dialog')}
+                label="Submit Transaction"
+              />
           </div>
         </>
     )
