@@ -32,9 +32,11 @@ const StakingOverview = (props: IStakingOverviewProps) => {
     <Card>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 divide-x divide-neutral-900 items-center justify-center">
         {stats.map((el, i) => (
-          <div key={`staking-overview-${i}`} className="flex flex-col justify-center items-center">
+          <div key={`staking-overview-${i}`} className="flex justify-center items-center">
+            <div className='flex flex-col'>
             <span className="text-neutral-500">{el.label}</span>
             <span className="text-3xl">${el.amount}</span>
+            </div>
           </div>
         ))}
       </div>
