@@ -1,7 +1,8 @@
-import { StakingOverview } from "../features/staking/overview";
+import { StakingOverview } from "../features/staking/StakeOverview";
 import React from "react";
 import AppTemplate from "../templates/app-template";
 import GridView from "../templates/grid-template";
+import { StakingAsset } from "../features/staking/StakeAsset";
 
 const Staking: React.FC = () => {
     return (
@@ -13,12 +14,39 @@ const Staking: React.FC = () => {
                 with staking funds <a className="text-brand-purple underline" href="#">here</a>.
             </>}
         >
-            <GridView>
                 <StakingOverview 
                     safetyFunds={"255.55MM"}
                     dailyEmissions={"200.50 VMEX"}
                     stakers={254}
                     etc={"123"}
+                />
+            <GridView>
+                <StakingAsset 
+                    asset={`USDC`}
+                    bonus={{
+                        days: 275,
+                        percent: 9.75
+                    }}
+                    apr={`9.75`}
+                    slashing={`30`}
+                    wallet={{
+                        staked: 0.04,
+                        claim: 1.59
+                    }}
+                />
+
+                <StakingAsset 
+                    asset={`USDC`}
+                    bonus={{
+                        days: 275,
+                        percent: 9.75
+                    }}
+                    apr={`9.75`}
+                    slashing={`30`}
+                    wallet={{
+                        staked: 0.04,
+                        claim: 1.59
+                    }}
                 />
             </GridView>
         </AppTemplate>

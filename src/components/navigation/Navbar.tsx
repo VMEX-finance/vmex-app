@@ -28,7 +28,7 @@ export const MenuItem = ({label, selected, onClick, mobile}: IMenuItems) => {
 
 const Navbar = ({children, defaultPage}: NavbarInterface) => {
     return (
-        <div className={["grid grid-flow-col auto-cols-max justify-between gap-8 w-max p-[8px]", "bg-black rounded-[18px]"].join(" ")}>
+        <div className={["grid grid-flow-col auto-cols-max justify-between gap-8 w-max p-[8px] shadow-lg", "bg-black rounded-[18px]"].join(" ")}>
             {
                 children
             }

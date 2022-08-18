@@ -9,7 +9,7 @@ type ICardProps = {
 
 const Card = ({ children, color, black, padding }: ICardProps) => (
   <div className={`
-    w-full rounded-lg 
+    w-full rounded-lg shadow-lg
     ${color ? color : black ? 'bg-neutral-900 text-neutral-100' : 'bg-white'}
     ${padding ? padding : 'p-8'}
   `}>
