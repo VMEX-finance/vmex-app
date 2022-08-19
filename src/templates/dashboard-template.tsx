@@ -3,14 +3,22 @@ import React from "react";
 interface IDashboardTemplate {
     title?: string;
     hero?: React.ReactElement;
-    children?: React.ReactElement | React.ReactElement[]
+    children?: React.ReactElement | React.ReactElement[];
+    description?: string | React.ReactNode;
 }
-const DashboardTemplate: React.FC<IDashboardTemplate> = ({ title, hero, children }) => {
+const DashboardTemplate: React.FC<IDashboardTemplate> = ({ title, hero, children, description }) => {
     return (
         <div className="py-10">
             <header>
-                <div className="max-w-[100rem] mx-auto px-4 sm:px-6 lg:px-8">
-                    <h1 className="text-3xl font-basefont capitalize leading-tight text-gray-900">{title}</h1>
+                <div className="max-w-[100rem] mx-auto">
+                    <div className="max-w-[500px] sm:px-6 lg:px-8">
+                        <h1 className="text-3xl font-basefont capitalize leading-tight text-gray-900">{title}</h1>
+                        {description && (
+                            <p className="mt-3">
+                                {description}
+                            </p>
+                        )}
+                    </div>
                 </div>
             </header>
             <main>

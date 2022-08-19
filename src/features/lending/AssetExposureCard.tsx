@@ -2,10 +2,11 @@ import React from "react";
 import AssetExposureTable from "../../components/tables/AssetExposureTable";
 import { _mockTrancheAssetExposure, _mockTrancheAssetExposure2, _mockTrancheAssetExposure3 } from "../../models/asset-exposure-model";
 import { Tab } from "@headlessui/react";
+import { Card } from "../../components/cards/default";
 
 const AssetExposureCard: React.FC = () => {
     return (
-        <div className="font-basefont bg-white p-8 rounded-lg">
+        <Card>
             <h3 className="text-lg mb-8">Your Asset Exposures</h3>
             <div>
                 <Tab.Group>
@@ -51,7 +52,7 @@ const AssetExposureCard: React.FC = () => {
                     </Tab.Panels>
                 </Tab.Group>
             </div>
-        </div>
+        </Card>
     )
 }
 
