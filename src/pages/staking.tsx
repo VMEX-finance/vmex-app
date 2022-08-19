@@ -3,6 +3,7 @@ import React from "react";
 import AppTemplate from "../templates/app-template";
 import GridView from "../templates/grid-template";
 import { StakingAsset } from "../features/staking/StakeAsset";
+import { _mockAvailableAsset } from "../models/available-liquidity-model";
 
 const Staking: React.FC = () => {
     return (
@@ -33,6 +34,7 @@ const Staking: React.FC = () => {
                         staked: 0.04,
                         claim: 1.59
                     }}
+                    data={_mockAvailableAsset}
                 />
 
                 <StakingAsset 
@@ -47,6 +49,7 @@ const Staking: React.FC = () => {
                         staked: 0.04,
                         claim: 1.59
                     }}
+                    data={_mockAvailableAsset}
                 />
             </GridView>
         </AppTemplate>

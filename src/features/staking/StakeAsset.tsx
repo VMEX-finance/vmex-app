@@ -3,6 +3,7 @@ import { Card } from '../../components/cards/default';
 import React from 'react';
 import { NumberAndDollar } from '../../components/displays/NumberAndDollar';
 import { Number } from '../../components/displays/Number';
+import useDialogController from '../../hooks/dialogs/useDialogController';
 
 type IStakingAsset = {
   asset: string;
@@ -16,9 +17,12 @@ type IStakingAsset = {
     staked?: string | number;
     claim?: string | number;
   }
+  data?: any;
 }
 
 const StakingAsset = (props: IStakingAsset) => {
+  const { openDialog } = useDialogController();
+
   return (
     <Card black>
       <div className="flex flex-col">
@@ -44,7 +48,10 @@ const StakingAsset = (props: IStakingAsset) => {
                   value={`${props.slashing}`}
                 />
                 <div className="h-fit">
-                  <Button label="Stake VMEX" />
+                  <Button 
+                    label="Stake VMEX" 
+                    onClick={() => openDialog("stake-asset-dialog", {...props.data})}
+                  />
                 </div>
               </div>
             </div>
