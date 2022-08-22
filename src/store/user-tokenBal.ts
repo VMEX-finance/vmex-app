@@ -1,12 +1,12 @@
 import React from "react";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getUserTokenBalances } from "vmex-sdk/dist/src.ts/analytics";
+import { getUserTokenBalances } from "vmex/dist/src.ts/analytics";
 
 export interface IUserDataSlice {
     isLoading: boolean;
     error?: boolean;
     error_msg?: string;
-
+    data?: any
 }
 
 
@@ -17,11 +17,9 @@ export const initialTokenList: IUserDataSlice = {
 
 export const refreshUserTokenList = createAsyncThunk(
     "refresh_tokenList",
-    async (data, thunkAPI) =>{
-        if (!(data as any).provider) return;
-        const { response } = await getUserTokenBalances((data as any).provider)
-        console.log(response)
-        return response
+    async (data: any, thunkAPI) =>{
+        console.log(data)
+        return data
     }
 )
 
@@ -34,7 +32,8 @@ export const UserTokenSlice = createSlice({
     extraReducers: (builder) => {
 
         builder.addCase(refreshUserTokenList.fulfilled, (state, action) => {
-            console.log(action.payload)
+            state.data = action.payload
+            state.isLoading = false
         })
 
         builder.addCase(refreshUserTokenList.rejected, (state, action) => {
@@ -45,5 +44,3 @@ export const UserTokenSlice = createSlice({
 
 
 export default UserTokenSlice.reducer;
-
-export {};

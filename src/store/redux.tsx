@@ -3,6 +3,7 @@ import { Provider } from "react-redux";
 import { combineReducers, configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import WalletSlice, {type IWalletState } from "./wallet";
 import DialogControllerSlice, { type IDialogState, DialogType } from "./modals";
+import UserTokenSlice from "./user-tokenBal";
 import { enableMapSet } from "immer";
 import { fetchUserTokensMW } from "../middleware/fetch-usertokens";
 window.Buffer = window.Buffer || require("buffer").Buffer;
@@ -12,7 +13,8 @@ enableMapSet()
 export const Store = configureStore({
     reducer: {
         wallet: WalletSlice,
-        dialogs: DialogControllerSlice
+        dialogs: DialogControllerSlice,
+        user_tokens: UserTokenSlice,
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(fetchUserTokensMW)
 })

@@ -1,9 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { Web3Provider } from "@ethersproject/providers";
+import { Web3Provider, JsonRpcProvider } from "@ethersproject/providers";
+import { MaxUint256 } from "@ethersproject/constants";
 import { Signer } from "@ethersproject/abstract-signer";
+import { setupMockEnv } from "vmex/dist/src.ts/mock-env";
 
 export interface IWalletState {
-    provider?: Web3Provider;
+    provider?: Web3Provider | JsonRpcProvider;
     address?: string;
     signer?: Signer;
     isLoading: boolean;
@@ -23,6 +25,16 @@ export const loginWithMetamask = createAsyncThunk(
         await provider.send("eth_requestAccounts", []);
         const signer = provider.getSigner();
         const address = await signer.getAddress();
+        await setupMockEnv(address)
+        
+        // const provider = process.env.REACT_APP_TEST ? new JsonRpcProvider(process.env.REACT_APP_RPC) : new Web3Provider((window as any).ethereum);
+        // const signer = provider.getSigner();
+        // if (process.env.REACT_APP_TEST) {
+        //     await provider.send("hardhat_setBalance", [
+        //         await signer.getAddress(),
+        //         MaxUint256
+        //     ])
+        // }
         return {
             signer,
             address,
