@@ -4,6 +4,7 @@ import OwnedAssetDetails from "../features/lending/OwnedAssetDetails";
 import useDialogController from "../hooks/dialogs/useDialogController";
 import BorrowedAssetDetailsDialog from "../features/borrowing/BorrowedAssetDetailsDialog";
 import BorrowAssetDialog from "../features/borrowing/BorrowAssetDialog";
+import StakeAssetDialog from "../features/dialogs/StakeAsset";
 
 interface IModalWrapper extends React.PropsWithChildren {
     name?: string,
@@ -70,6 +71,12 @@ const ModalTemplate: React.FC = () => {
       <React.Fragment>
           <ModalWrapper {...getDialogProps("borrow-asset-dialog")}>
               <BorrowAssetDialog {...getDialogProps('borrow-asset-dialog')}/>
+          </ModalWrapper>
+      </React.Fragment>
+
+      <React.Fragment>
+          <ModalWrapper {...getDialogProps("stake-asset-dialog")}>
+              <StakeAssetDialog {...getDialogProps('stake-asset-dialog')}/>
           </ModalWrapper>
       </React.Fragment>
     </>

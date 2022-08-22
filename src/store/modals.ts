@@ -37,6 +37,14 @@ const DialogControllerState: IDialogState = {
                     isOpen: false,
                     data: {}
                 }
+        ],
+        [
+            "stake-asset-dialog", 
+                {
+                    name: "Stake", 
+                    isOpen: false,
+                    data: {}
+                }
         ]
     ])
 }

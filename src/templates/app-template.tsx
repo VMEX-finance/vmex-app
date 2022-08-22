@@ -6,14 +6,18 @@ import ModalTemplate from "./modal-template";
 interface IAppTemplate {
     children?: React.ReactElement | React.ReactElement[];
     title?: string;
+    description?: string | React.ReactNode;
 }
 
-const AppTemplate: React.FC<IAppTemplate> = ({ children, title }) => {
+const AppTemplate: React.FC<IAppTemplate> = ({ children, title, description }) => {
     return (
         <div className="h-screen bg-[#EEEEEE]">
             <DashboardNavbar />
             <ModalTemplate />
-            <DashboardTemplate title={title}>
+            <DashboardTemplate 
+                title={title}
+                description={description}
+            >
                 {children}
             </DashboardTemplate>
         </div>

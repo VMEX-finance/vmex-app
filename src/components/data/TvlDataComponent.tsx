@@ -24,7 +24,7 @@ const TVLDataComponent: React.FC<ITVLData> = ({
         notation: "compact"
     })
     return (
-        <div className="flex flex-col md:flex-row font-basefont p-8 gap-8">
+        <div className="flex flex-col md:flex-row font-basefont gap-8">
             <div className="flex flex-col">
                 <h2 className="text-2xl">Total Value Locked (TVL)</h2> 
                 <p className="text-3xl">{tvl ? formatter.format(tvl as number) : ""}</p>
