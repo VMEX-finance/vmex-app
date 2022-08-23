@@ -7,6 +7,7 @@ import Button from "../../components/buttons/Button";
 import CoinInput from "../../components/inputs/coin-input";
 import ActiveStatus from "../../components/statuses/active";
 import DropdownButton from "../../components/buttons/Dropdown";
+import TransactionStatus from "../../components/statuses/transaction";
 
 interface IOwnedAssetDetails {
     name?: string,
@@ -19,6 +20,9 @@ const inputMediator = (s: string) =>{
    return s.replace(/^0*(?=[1-9])|(^0*(?=0.))/, '')
   }
 const BorrowAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, isOpen, data, closeDialog}) => {
+  const [isSuccess, setIsSuccess] = React.useState(false);
+  const [isError, setIsError] = React.useState(false);
+
   const [amount, setAmount] = useMediatedState(inputMediator, '');
 
     return (
@@ -33,52 +37,76 @@ const BorrowAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, isOpen, data, c
               <IoIosClose className="w-7 h-7" />
             </div>
           </div>
-          <h3 className="mt-5 text-gray-400">Amount</h3>
-          <CoinInput 
-            amount={amount}
-            setAmount={setAmount}
-            coin={{
-              logo: data.logo,
-              name: data.asset
-            }}
-            balance={"0.23"}
-          />
-          <h3 className="mt-6 text-gray-400">Available Collateral</h3>
+          {!isSuccess && !isError ? (
+            // Default State
+            <>
+              <h3 className="mt-5 text-gray-400">Amount</h3>
+              <CoinInput 
+                amount={amount}
+                setAmount={setAmount}
+                coin={{
+                  logo: data.logo,
+                  name: data.asset
+                }}
+                balance={"0.23"}
+              />
+              <h3 className="mt-6 text-gray-400">Available Collateral</h3>
 
-          <h3 className="mt-6 text-gray-400">Transaction Overview</h3>
-          <div className={`mt-2 flex justify-between rounded-lg border border-neutral-900 p-4 lg:py-6`}>
-            <div className="flex flex-col gap-2">
-              <span>Supply APR%</span>
-              <span>Collateralization</span>
-              <span>Insurance</span>
-            </div>
-
-            <div className="min-w-[100px] flex flex-col gap-2">
-              <span>0.44%</span>
-              {amount && <ActiveStatus active={true} size="sm" />}
-              {amount && <ActiveStatus active={false} size="sm" />}
-            </div>
-          </div>
-
-          <div className="mt-5 sm:mt-6 flex justify-between items-end">
-            <div className="flex flex-col">
-                <div className="flex items-center gap-2">
-                  <FaGasPump />
-                  <span>Gas Limit</span>
+              <h3 className="mt-6 text-gray-400">Transaction Overview</h3>
+              <div className={`mt-2 flex justify-between rounded-lg border border-neutral-900 p-4 lg:py-6`}>
+                <div className="flex flex-col gap-2">
+                  <span>Supply APR%</span>
+                  <span>Collateralization</span>
+                  <span>Insurance</span>
                 </div>
-                <div>
-                  <DropdownButton 
-                    items={[{ text: "Normal" }, { text: "Low" }, { text: "High" }]}
-                  />
+
+                <div className="min-w-[100px] flex flex-col gap-2">
+                  <span>0.44%</span>
+                  {amount && <ActiveStatus active={true} size="sm" />}
+                  {amount && <ActiveStatus active={false} size="sm" />}
                 </div>
-            </div>
+              </div>
+
+              <div className="mt-5 sm:mt-6 flex justify-between items-end">
+                <div className="flex flex-col">
+                    <div className="flex items-center gap-2">
+                      <FaGasPump />
+                      <span>Gas Limit</span>
+                    </div>
+                    <div>
+                      <DropdownButton 
+                        items={[{ text: "Normal" }, { text: "Low" }, { text: "High" }]}
+                      />
+                    </div>
+                </div>
+              </div>
+              </>
+            ) : isSuccess ? (
+              // Success State
+              <div className="mt-10 mb-8">
+                <TransactionStatus success={true} full />
+              </div>
+            ) : (
+              // Error State
+              <div className="mt-10 mb-8">
+                <TransactionStatus success={false} full />
+              </div>
+            )}
+
             <div>
               <Button
-                onClick={() => closeDialog('borrow-asset-dialog')}
+                disabled={isSuccess || isError}
+                onClick={() => {
+                  setIsSuccess(true);
+
+                  setTimeout(() => {
+                    setIsSuccess(false);
+                    closeDialog('borrow-asset-dialog');
+                  }, 2000);
+                }}
                 label="Submit Transaction"
               />
             </div>
-          </div>
         </>
     )
 }

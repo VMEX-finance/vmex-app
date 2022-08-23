@@ -4,6 +4,8 @@ export type DialogType = {
     name?: string;
     isOpen?: boolean;
     data?: any;
+    isError?: boolean;
+    isSuccess?: boolean;
 }
 
 export interface IDialogState {
@@ -19,7 +21,9 @@ const DialogControllerState: IDialogState = {
                 {
                     name: "Supply", 
                     isOpen: false,
-                    data: {}
+                    data: {},
+                    isSuccess: false,
+                    isError: false
                 }
         ],
         [
@@ -27,7 +31,9 @@ const DialogControllerState: IDialogState = {
                 {
                     name: "Borrowed Asset Details", 
                     isOpen: false,
-                    data: {}
+                    data: {},
+                    isSuccess: false,
+                    isError: false
                 }
         ],
         [
@@ -35,7 +41,9 @@ const DialogControllerState: IDialogState = {
                 {
                     name: "Borrow", 
                     isOpen: false,
-                    data: {}
+                    data: {},
+                    isSuccess: false,
+                    isError: false
                 }
         ],
         [
@@ -43,10 +51,12 @@ const DialogControllerState: IDialogState = {
                 {
                     name: "Stake", 
                     isOpen: false,
-                    data: {}
+                    data: {},
+                    isSuccess: false,
+                    isError: false
                 }
         ]
-    ])
+    ]),
 }
 
 export const DialogControllerSlice = createSlice({
@@ -62,13 +72,12 @@ export const DialogControllerSlice = createSlice({
         },
 
         clearAndClose: (state, action: PayloadAction<any>) => {
-            console.log(action.payload.id)
             state.dialogs?.set(action.payload.id, {
                 ...state.dialogs?.get(action.payload.id),
                 data: {},
                 isOpen: false
             })
-        },
+        }
     }
 });
 

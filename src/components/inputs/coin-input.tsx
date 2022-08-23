@@ -18,8 +18,8 @@ const CoinInput = ({ amount, setAmount, coin, balance }: ICoinInput) => {
         <div className="text-gray-400">USD</div>
       </div>
       <div className="flex flex-col justify-between gap-3">
-        <div className="flex gap-1">
-          <img src={coin.logo} alt={coin.name} />
+        <div className="flex items-center gap-1">
+          <img src={coin.logo} alt={coin.name} height="30" width="30" />
           {coin.name}
         </div>
         <div className="text-xs text-right text-blue-700">
