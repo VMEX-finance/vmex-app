@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { Web3Provider, JsonRpcProvider } from "@ethersproject/providers";
 import { MaxUint256 } from "@ethersproject/constants";
 import { Signer } from "@ethersproject/abstract-signer";
-import { setupMockEnv } from "vmex/dist/src.ts/mock-env";
+import { setupMockEnv } from "vmex-sdk/dist/src.ts/mock-env";
 
 export interface IWalletState {
     provider?: Web3Provider | JsonRpcProvider;
