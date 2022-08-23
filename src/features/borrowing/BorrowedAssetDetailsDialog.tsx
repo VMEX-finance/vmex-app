@@ -3,6 +3,7 @@ import { Dialog } from "@headlessui/react";
 import { IoIosClose } from "react-icons/io";
 import { useMediatedState } from "react-use";
 import Button from "../../components/buttons/Button";
+import TransactionStatus from "../../components/statuses/transaction";
 
 interface IOwnedAssetDetails {
     name?: string,
@@ -15,6 +16,9 @@ const inputMediator = (s: string) =>{
    return s.replace(/^0*(?=[1-9])|(^0*(?=0.))/, '')
   }
 const BorrowedAssetDetailsDialog: React.FC<IOwnedAssetDetails> = ({ name, isOpen, data, closeDialog}) => {
+  const [isSuccess, setIsSuccess] = React.useState(false);
+  const [isError, setIsError] = React.useState(false);
+
   const [amount, setAmount] = useMediatedState(inputMediator, '');
 
     return (
@@ -29,18 +33,40 @@ const BorrowedAssetDetailsDialog: React.FC<IOwnedAssetDetails> = ({ name, isOpen
               <IoIosClose className="w-7 h-7" />
             </div>
           </div>
-          <h3 className="mt-5 text-gray-400">Overview</h3>
+          {!isSuccess && !isError ? (
+            // Default State
+            <>
+              <h3 className="mt-5 text-gray-400">Overview</h3>
 
-          <h3 className="mt-6 text-gray-400">Loan Details</h3>
-          <div className="w-full flex flex-row justify-between items-center mt-1 p-2">
+              <h3 className="mt-6 text-gray-400">Loan Details</h3>
+              <div className="w-full flex flex-row justify-between items-center mt-1 p-2">
 
-          </div>
+              </div>
 
-          <h3 className="mt-6 text-gray-400">Price Analytics</h3>
+              <h3 className="mt-6 text-gray-400">Price Analytics</h3>
+            </>
+          ) : isSuccess ? (
+            // Success State
+            <div className="mt-10 mb-8">
+              <TransactionStatus success={true} full />
+            </div>
+          ) : (
+            // Error State
+            <div className="mt-10 mb-8">
+              <TransactionStatus success={false} full />
+            </div>
+          )}
 
           <div className="mt-5 sm:mt-6">
             <Button
-                onClick={() => closeDialog('loan-asset-dialog')}
+                onClick={() => {
+                  setIsSuccess(true);
+
+                  setTimeout(() => {
+                    setIsSuccess(false);
+                    closeDialog('borrowed-asset-details-dialog');
+                  }, 2000);
+                }}
                 label="Submit Transaction"
               />
           </div>

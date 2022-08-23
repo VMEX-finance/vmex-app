@@ -23,7 +23,8 @@ const useDialogController = () => {
             let data = dialogs.get(id)
             return {
                 ...data,
-                closeDialog: closeDialog
+                closeDialog: closeDialog,
+                showSuccess: dispatch
             }
         } else {
             return {

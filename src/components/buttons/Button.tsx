@@ -7,12 +7,17 @@ export interface IButtonProps {
     onClick?: (e: any) => void;
     border?: boolean | string;
     className?: string;
+    disabled?: boolean;
 }
 
-const Button = ({label, onClick, primary, border = true, className}: IButtonProps) => {
+const Button = ({label, onClick, primary, border = true, className, disabled}: IButtonProps) => {
     const mode = primary ? "bg-black !rounded-lg text-white hover:bg-neutral-800" : border ? `bg-white text-neutral-900 border-[2px] border-black border-solid rounded-lg hover:bg-neutral-200` : "bg-white text-neutral-900 rounded-lg hover:bg-neutral-200"
     return (
-        <button onClick={onClick} className={["box-border", "font-basefont", "px-4 py-1", "transition duration-200", className, mode].join(" ")}>
+        <button 
+            disabled={disabled} 
+            onClick={onClick} 
+            className={["box-border", "font-basefont", "px-4 py-1", "transition duration-200", className, mode, `${disabled ? 'hover:!bg-inherit !cursor-not-allowed' : ''}`].join(" ")}
+        >
             {label}
         </button>
     )

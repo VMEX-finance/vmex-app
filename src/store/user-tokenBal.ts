@@ -1,6 +1,6 @@
 import React from "react";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getUserTokenBalances } from "vmex/dist/src.ts/analytics";
+import { getUserTokenBalances } from "vmex-sdk/dist/src.ts/analytics";
 
 export interface IUserDataSlice {
     isLoading: boolean;
