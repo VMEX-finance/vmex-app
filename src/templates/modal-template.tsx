@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import OwnedAssetDetails from "../features/lending/OwnedAssetDetails";
+import SupplyAssetDialog from "../features/dialogs/SupplyAsset";
 import useDialogController from "../hooks/dialogs/useDialogController";
 import BorrowedAssetDetailsDialog from "../features/borrowing/BorrowedAssetDetailsDialog";
 import BorrowAssetDialog from "../features/borrowing/BorrowAssetDialog";
@@ -15,7 +15,7 @@ interface IModalWrapper extends React.PropsWithChildren {
 
 const ModalWrapper: React.FC<IModalWrapper> = ({ name, isOpen, data, closeDialog, children}) => {
     return (
-        <Transition.Root show={isOpen} as={Fragment}>
+      <Transition.Root show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={() => closeDialog(name)}>
           <Transition.Child
             as={Fragment}
@@ -58,7 +58,7 @@ const ModalTemplate: React.FC = () => {
     <>
       <React.Fragment>
           <ModalWrapper {...getDialogProps("loan-asset-dialog")}>
-              <OwnedAssetDetails {...getDialogProps('loan-asset-dialog')}/>
+              <SupplyAssetDialog {...getDialogProps('loan-asset-dialog')}/>
           </ModalWrapper>
       </React.Fragment>
 

@@ -7,6 +7,7 @@ import Button from "../../components/buttons/Button";
 import CoinInput from "../../components/inputs/coin-input";
 import ActiveStatus from "../../components/statuses/active";
 import DropdownButton from "../../components/buttons/Dropdown";
+import TransactionStatus from "../../components/statuses/transaction";
 
 interface IOwnedAssetDetails {
     name?: string,
@@ -19,6 +20,9 @@ const inputMediator = (s: string) =>{
    return s.replace(/^0*(?=[1-9])|(^0*(?=0.))/, '')
   }
 const StakeAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, isOpen, data, closeDialog}) => {
+  const [isSuccess, setIsSuccess] = React.useState(false);
+  const [isError, setIsError] = React.useState(false);
+
   const [amount, setAmount] = useMediatedState(inputMediator, '');
 
     return (
@@ -33,6 +37,9 @@ const StakeAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, isOpen, data, cl
               <IoIosClose className="w-7 h-7" />
             </div>
           </div>
+          {!isSuccess && !isError ? (
+            // Default State
+            <>
           <h3 className="mt-5 text-gray-400">Amount</h3>
           <CoinInput 
             amount={amount}
@@ -59,6 +66,19 @@ const StakeAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, isOpen, data, cl
             </div>
           </div>
 
+          </>
+          ) : isSuccess ? (
+            // Success State
+            <div className="mt-10 mb-8">
+              <TransactionStatus success={true} full />
+            </div>
+          ) : (
+            // Error State
+            <div className="mt-10 mb-8">
+              <TransactionStatus success={false} full />
+            </div>
+          )}
+
           <div className="mt-5 sm:mt-6 flex justify-between items-end">
             <div className="flex flex-col">
                 <div className="flex items-center gap-2">
@@ -73,7 +93,15 @@ const StakeAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, isOpen, data, cl
             </div>
             <div>
               <Button
-                onClick={() => closeDialog('stake-asset-dialog')}
+                disabled={isSuccess || isError}
+                onClick={() => {
+                  setIsSuccess(true);
+
+                  setTimeout(() => {
+                    setIsSuccess(false);
+                    closeDialog('stake-asset-dialog');
+                  }, 2000);
+                }}
                 label="Submit Transaction"
               />
             </div>

@@ -4,6 +4,7 @@ import { MaxUint256 } from "@ethersproject/constants";
 import { Signer } from "@ethersproject/abstract-signer";
 // import { setupMockEnv } from "vmex/dist/src.ts/mock-env";
 
+
 export interface IWalletState {
     provider?: Web3Provider | JsonRpcProvider;
     address?: string;
