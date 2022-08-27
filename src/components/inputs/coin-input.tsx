@@ -15,7 +15,7 @@ const CoinInput = ({ amount, setAmount, coin, balance }: ICoinInput) => {
   return (
     <div className="w-full flex flex-row justify-between mt-1 rounded-xl border border-gray-300 p-2">
       <div className="flex flex-col justify-between gap-3">
-        <input type="text" value={amount} onChange={(e: any) => setAmount(e.target.value)} className="text-2xl focus:outline-none" placeholder="0.00"/>
+        <input type="text" value={amount} onChange={(e: any) => setAmount(e.target.value)} className="text-2xl focus:outline-none max-w-[200px]" placeholder="0.00"/>
         <div className="text-gray-400">USD</div>
       </div>
       <div className="flex flex-col justify-between gap-3">

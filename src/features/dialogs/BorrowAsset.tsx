@@ -99,6 +99,7 @@ const BorrowAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, isOpen, data, c
                     <div>
                       <DropdownButton 
                         items={[{ text: "Normal" }, { text: "Low" }, { text: "High" }]}
+                        direction="right"
                       />
                     </div>
                 </div>

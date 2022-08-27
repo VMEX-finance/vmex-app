@@ -60,7 +60,7 @@ const StakingAsset = (props: IStakingAsset) => {
           <div className="flex flex-col gap-1 xl:gap-2 pt-6 md:pt-0 md:pl-6">
             <span className="text-3xl">Claim VMEX</span>
 
-            <div className="flex justify-between items-end">
+            <div className="flex justify-between !items-end">
               <NumberAndDollar 
                 label="Available"
                 value={props.wallet?.staked}
@@ -75,7 +75,7 @@ const StakingAsset = (props: IStakingAsset) => {
             </div>
 
             <span className="text-3xl">Unstake VMEX</span>
-            <div className="flex justify-between items-end">
+            <div className="flex justify-between !items-end">
               <NumberAndDollar 
                 label="Available"
                 value={props.wallet?.staked}
