@@ -51,7 +51,11 @@ const BorrowedAssetDetailsDialog: React.FC<IOwnedAssetDetails> = ({ name, isOpen
                 </div>
                 <MdCompareArrows className="justify-self-center" size="32px" />
                 <div className="flex flex-col">
-                  <AssetDisplay name={"USDC"} logo={`/tokens/token-${"USDC"}.svg`} />
+                  <AssetDisplay 
+                    name={"USDC"} 
+                    logo={`/tokens/token-${"USDC"}.svg`} 
+                    className="mb-1"
+                  />
                   <span>{"156,241.1"} {"USDC"} Collatoralized</span>
                   <span className="text-sm text-neutral-500">${"156,240.02"} USD</span>
                 </div>
@@ -80,7 +84,7 @@ const BorrowedAssetDetailsDialog: React.FC<IOwnedAssetDetails> = ({ name, isOpen
 
               <h3 className="mt-6 text-gray-400">Price Analytics</h3>
               <div className="grid gap-2">
-                <div>
+                <div className="min-h-[100px]">
 
                 </div>
               </div>
