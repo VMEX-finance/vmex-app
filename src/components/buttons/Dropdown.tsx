@@ -12,9 +12,10 @@ export interface IDropdown {
     items: Array<IDropdownItem>;
     primary?: boolean;
     border?: boolean;
+    direction?: 'left' | 'right';
 }
 
-const DropdownButton = ({items, primary}: IDropdown) => {
+const DropdownButton = ({items, primary, direction = 'left'}: IDropdown) => {
     const [selected, setSelected] = React.useState(items[0].text);
 
     const determineColor = () => {
@@ -45,7 +46,7 @@ const DropdownButton = ({items, primary}: IDropdown) => {
                 leaveFrom="transform opacity-100 scale-100"
                 leaveTo="transform opacity-0 scale-95"
             >
-            <Menu.Items className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-[999999]">
+            <Menu.Items className={`origin-top-right absolute ${direction === 'left' ? 'right-0' : ''} mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-[999999]`}>
                 <div className="p-2">
                     {items.map((item, i) => (
                         <Menu.Item key={`${item}-${i}`}>
