@@ -18,7 +18,7 @@ export const MenuItem = ({label, selected, onClick, mobile}: IMenuItems) => {
 
     return (
         <button 
-            className={["w-full p-[8px] rounded-lg transition duration-200 hover:bg-neutral-700", mode].join(" ")}
+            className={["w-full px-4 py-2 rounded-lg transition duration-200 hover:bg-neutral-700", mode].join(" ")}
             onClick={onClick}
         >
             {label}
@@ -28,7 +28,7 @@ export const MenuItem = ({label, selected, onClick, mobile}: IMenuItems) => {
 
 const Navbar = ({children, defaultPage}: NavbarInterface) => {
     return (
-        <div className={["grid grid-flow-col auto-cols-max justify-between gap-8 w-max p-[8px] shadow-lg", "bg-black rounded-[18px]"].join(" ")}>
+        <div className={["grid grid-flow-col auto-cols-max justify-between gap-4 w-max p-[8px] shadow-lg", "bg-black rounded-2xl"].join(" ")}>
             {
                 children
             }
