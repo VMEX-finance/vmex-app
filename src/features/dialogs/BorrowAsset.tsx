@@ -8,6 +8,7 @@ import CoinInput from "../../components/inputs/coin-input";
 import ActiveStatus from "../../components/statuses/active";
 import DropdownButton from "../../components/buttons/Dropdown";
 import TransactionStatus from "../../components/statuses/transaction";
+import { AvailableAssetDisplay } from "../../components/displays/AvailableAsset";
 
 interface IOwnedAssetDetails {
     name?: string,
@@ -22,6 +23,10 @@ const inputMediator = (s: string) =>{
 const BorrowAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, isOpen, data, closeDialog}) => {
   const [isSuccess, setIsSuccess] = React.useState(false);
   const [isError, setIsError] = React.useState(false);
+
+  // Temp States for demo
+  const [isUSDCSelected, setIsUSDCSelected] = React.useState(false);
+  const [isWBTCSelected, setIsWBTCSelected] = React.useState(false);
 
   const [amount, setAmount] = useMediatedState(inputMediator, '');
 
@@ -51,6 +56,24 @@ const BorrowAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, isOpen, data, c
                 balance={"0.23"}
               />
               <h3 className="mt-6 text-gray-400">Available Collateral</h3>
+              <div className="grid gap-4 mt-2">
+                <AvailableAssetDisplay 
+                  asset="USDC" 
+                  amount={1} 
+                  balance={1} 
+                  selectable 
+                  selected={isUSDCSelected} 
+                  setSelected={() => setIsUSDCSelected(!isUSDCSelected)} 
+                />
+                <AvailableAssetDisplay 
+                  asset="WBTC" 
+                  amount={1} 
+                  balance={1} 
+                  selectable 
+                  selected={isWBTCSelected} 
+                  setSelected={() => setIsWBTCSelected(!isWBTCSelected)} 
+                />
+              </div>
 
               <h3 className="mt-6 text-gray-400">Transaction Overview</h3>
               <div className={`mt-2 flex justify-between rounded-lg border border-neutral-900 p-4 lg:py-6`}>

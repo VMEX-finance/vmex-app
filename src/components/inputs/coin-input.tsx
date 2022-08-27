@@ -1,3 +1,4 @@
+import { AssetDisplay } from '../displays/Asset';
 import React from 'react';
 
 export interface ICoinInput {
@@ -18,10 +19,10 @@ const CoinInput = ({ amount, setAmount, coin, balance }: ICoinInput) => {
         <div className="text-gray-400">USD</div>
       </div>
       <div className="flex flex-col justify-between gap-3">
-        <div className="flex items-center gap-1">
-          <img src={coin.logo} alt={coin.name} height="30" width="30" />
-          {coin.name}
-        </div>
+        <AssetDisplay 
+          logo={coin.logo}
+          name={coin.name}
+        />
         <div className="text-xs text-right text-blue-700">
           <span
             className="hover:text-brand-purple cursor-pointer transition duration-200"
