@@ -21,7 +21,7 @@ const DashboardNavbar: React.FC = () => {
     const navItems = ["Lending", "Borrowing", "Staking", "Markets", "Governance", "Develop"];
 
     return (
-        <nav className="flex flex-row sticky h-fit justify-between items-center top-0 font-basefont px-4 py-2 md:px-10 md:py-5">
+        <nav className="flex flex-row sticky h-fit justify-between items-center top-0 font-basefont px-4 py-2 md:px-10 md:py-5 bg-[#EEEEEE] z-50">
             <div className={`w-full
                 ${width < 1024 ? 
                     'flex flex-row items-center justify-between' : 

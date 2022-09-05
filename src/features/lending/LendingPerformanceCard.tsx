@@ -2,6 +2,7 @@ import { ReLineChart } from "../../components/charts/line-chart";
 import React from "react";
 import { Card } from "../../components/cards/default";
 import DropdownButton from "../../components/buttons/Dropdown";
+import { PillDisplay } from "../../components/displays/Pill";
 
 const LendingPerformanceCard: React.FC = () => {
     return (
@@ -10,7 +11,7 @@ const LendingPerformanceCard: React.FC = () => {
                 <h3 className="text-lg">Performance</h3>
                 <DropdownButton primary items={[{text: "All Tranches"}]} />
             </div>
-            <div className="grid gap-3 w-full h-full px-3">
+            <div className="grid gap-3 w-full px-3">
                 <div className="grid w-full h-[240px]">
                     <h4>Profit / Loss (P&L)</h4>
                     <ReLineChart />
@@ -20,9 +21,12 @@ const LendingPerformanceCard: React.FC = () => {
                     <ReLineChart />
                 </div>
                 <div className="grid w-full h-full">
-                    <h4>Assets On Loan</h4>
-                    <div>
-
+                    <h4 className="mb-2">Assets On Loan</h4>
+                    <div className="flex flex-wrap gap-3">
+                        <PillDisplay asset="BTC" value={0.11} />
+                        <PillDisplay asset="BTC" value={0.11} />
+                        <PillDisplay asset="BTC" value={0.11} />
+                        <PillDisplay asset="BTC" value={0.11} />
                     </div>
                 </div>
             </div>
