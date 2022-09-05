@@ -11,7 +11,7 @@ interface IAppTemplate {
 
 const AppTemplate: React.FC<IAppTemplate> = ({ children, title, description }) => {
     return (
-        <div className="h-screen bg-[#EEEEEE]">
+        <div className="h-screen">
             <DashboardNavbar />
             <ModalTemplate />
             <DashboardTemplate 
