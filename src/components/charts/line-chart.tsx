@@ -1,44 +1,23 @@
+import { lineData } from '../../utils/mock-data';
 import React from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, Tooltip, ResponsiveContainer } from 'recharts';
+import { CustomTooltip } from './custom-tooltip';
 
-const data = [
-  {
-    name: 'Page A',
-    amt: 200,
-  },
-  {
-    name: 'Page B',
-    amt: 600,
-  },
-  {
-    name: 'Page C',
-    amt: 1000,
-  },
-  {
-    name: 'Page D',
-    amt: 1200,
-  },
-  {
-    name: 'Page E',
-    amt: 981,
-  },
-  {
-    name: 'Page F',
-    amt: 2500,
-  },
-  {
-    name: 'Page G',
-    amt: 2100,
-  },
-];
+type ILineChartProps = {
+  data?: Array<any>;
+  dataKey?: string;
+  loading?: boolean;
+  error?: boolean;
+  color?: string;
+}
 
-const ReLineChart = () => {
+const ReLineChart = (props: ILineChartProps) => {
   return (
     <ResponsiveContainer width="100%" height="100%">
       <LineChart
         width={500}
         height={300}
-        data={data}
+        data={props.data || lineData}
         margin={{
           top: 10,
           bottom: 10,
@@ -46,8 +25,14 @@ const ReLineChart = () => {
           right: 10
         }}
       >
-        <Tooltip />
-        <Line type="monotone" dataKey="amt" stroke="#8884d8" activeDot={{ r: 8 }} />
+        <Tooltip content={<CustomTooltip />} />
+        <Line 
+          dot={{ r: 0 }}
+          type="monotone" 
+          dataKey={props.dataKey || 'value'} 
+          stroke={props.color || "#8884d8"} 
+          activeDot={{ r: 3 }} 
+        />
       </LineChart>
     </ResponsiveContainer>
   );
