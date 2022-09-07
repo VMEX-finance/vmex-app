@@ -25,9 +25,9 @@ export const _mockAsset: AssetExposureType = {
     tranche_id: 0
 }
 export const _mockAsset2: AssetExposureType = {
-    asset: "BTC",
-    unit: "BTC",
-    logo: "tokens/token-BTC.svg",
+    asset: "DAI",
+    unit: "DAI",
+    logo: "tokens/token-DAI.svg",
     amount: "23.423",
     collateral_perc: .054,
     apy_perc: .012,
@@ -35,9 +35,9 @@ export const _mockAsset2: AssetExposureType = {
     tranche_id: 0
 }
 export const _mockAsset3: AssetExposureType = {
-    asset: "XRP",
-    unit: "XRP",
-    logo: "tokens/token-XRP.svg",
+    asset: "WBTC",
+    unit: "WBTC",
+    logo: "tokens/token-WBTC.svg",
     amount: "23.423",
     collateral_perc: .054,
     apy_perc: .012,

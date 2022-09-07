@@ -3,6 +3,7 @@ import React from "react";
 import { Card } from "../../components/cards/default";
 import DropdownButton from "../../components/buttons/Dropdown";
 import { PillDisplay } from "../../components/displays/Pill";
+import { lineData, lineData2 } from "../../utils/mock-data";
 
 const LendingPerformanceCard: React.FC = () => {
     return (
@@ -14,19 +15,19 @@ const LendingPerformanceCard: React.FC = () => {
             <div className="grid gap-3 w-full px-3">
                 <div className="grid w-full h-[240px]">
                     <h4>Profit / Loss (P&L)</h4>
-                    <ReLineChart />
+                    <ReLineChart data={lineData} />
                 </div>
                 <div className="grid w-full h-[240px]">
                     <h4>Insurance Utilization</h4>
-                    <ReLineChart />
+                    <ReLineChart data={lineData2} />
                 </div>
                 <div className="grid w-full h-full">
                     <h4 className="mb-2">Assets On Loan</h4>
                     <div className="flex flex-wrap gap-3">
-                        <PillDisplay asset="BTC" value={0.11} />
-                        <PillDisplay asset="BTC" value={0.11} />
-                        <PillDisplay asset="BTC" value={0.11} />
-                        <PillDisplay asset="BTC" value={0.11} />
+                        <PillDisplay asset="DAI" value={0.11} />
+                        <PillDisplay asset="USDC" value={0.03} />
+                        <PillDisplay asset="WBTC" value={0.92} />
+                        <PillDisplay asset="CRV" value={1.48} />
                     </div>
                 </div>
             </div>
