@@ -18,7 +18,7 @@ const DashboardNavbar: React.FC = () => {
         navigate(`../${value}`, { replace: false });
     };
 
-    const navItems = ["Lending", "Borrowing", "Staking", "Markets", "Governance", "Develop"];
+    const navItems = ["Supply", "Borrow", "Stake", "Markets", "Governance", "Develop"];
 
     return (
         <nav className="flex flex-row sticky h-fit justify-between items-center top-0 font-basefont px-4 py-2 md:px-10 md:py-5 bg-[#EEEEEE] z-50">

@@ -7,6 +7,7 @@ import { useMediatedState } from "react-use";
 import CoinInput from "../../components/inputs/coin-input";
 import Button from "../../components/buttons/Button";
 import TransactionStatus from "../../components/statuses/transaction";
+import Checkbox from "../../components/buttons/Checkbox";
 
 interface IOwnedAssetDetails {
     name?: string,
@@ -25,6 +26,8 @@ const inputMediator = (s: string) =>{
 const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, isOpen, data, closeDialog }) => {
   const [isSuccess, setIsSuccess] = React.useState(false);
   const [isError, setIsError] = React.useState(false);
+  const [asCollateral, setAsCollateral] = React.useState(false);
+  const [isInsured, setIsInsured] = React.useState(false);
 
   const [amount, setAmount] = useMediatedState(inputMediator, '');
   const [t0, setT0] = React.useState(0);
@@ -61,6 +64,20 @@ const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, isOpen, data, c
                 }}
                 balance={"0.23"}
               />
+
+              <div className="mt-1">
+                <Checkbox 
+                  setChecked={setIsInsured}
+                  checked={isInsured}
+                  label="Insure Asset"
+                />
+                <Checkbox 
+                  setChecked={setAsCollateral}
+                  checked={asCollateral}
+                  label="Collateralize Asset"
+                />
+              </div>
+
               <h3 className="mt-6 text-gray-400">Risk Profile Selection</h3>
               <div className="w-full flex flex-row justify-between items-center mt-1 p-2">
                   <PieChart 

@@ -15,9 +15,9 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route index element={<Landing />} />
-        <Route path="/lending" element={<Lending />} />
-        <Route path="/borrowing" element={<Borrowing />} />
-        <Route path="/staking" element={<Staking />} />
+        <Route path="/supply" element={<Lending />} />
+        <Route path="/borrow" element={<Borrowing />} />
+        <Route path="/stake" element={<Staking />} />
         <Route path="/markets" element={<Markets />} />
       </Routes>
     </BrowserRouter>
