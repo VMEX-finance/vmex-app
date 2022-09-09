@@ -18,8 +18,8 @@ export const _mockAvailableAsset: AvailableAsset = {
     asset: "USDC",
     logo: "tokens/token-USDC.svg",
     unit: "USDC",
-    amount: 2394,
-    apy_perc: .0053,
+    amount: 9921,
+    apy_perc: .0078,
     canBeCollat: true,
     tranches: [
         {
@@ -41,9 +41,9 @@ export const _mockAvailableAsset: AvailableAsset = {
 }
 
 export const _mockAvailableAsset2: AvailableAsset = {
-    asset: "XRP",
-    logo: "tokens/token-XRP.svg",
-    unit: "XRP",
+    asset: "WBTC",
+    logo: "tokens/token-WBTC.svg",
+    unit: "WBTC",
     amount: 2394,
     apy_perc: .0053,
     canBeCollat: false,
@@ -67,11 +67,11 @@ export const _mockAvailableAsset2: AvailableAsset = {
 }
 
 export const _mockAvailableAsset3: AvailableAsset = {
-    asset: "BTC",
-    logo: "tokens/token-BTC.svg",
-    unit: "BTC",
-    amount: 2394,
-    apy_perc: .0053,
+    asset: "DAI",
+    logo: "tokens/token-DAI.svg",
+    unit: "DAI",
+    amount: 9128,
+    apy_perc: .0103,
     canBeCollat: true,
     tranches: [
         {

@@ -6,6 +6,11 @@
     font-family: "SFNSRounded";
     src: url("../public/fonts/SFNSRounded.ttf")
 }
+
+body {
+    background-color: #EEEEEE;
+}
+
 input[type="checkbox"] {
     background-color: #EFEFEF;
     overflow: hidden;

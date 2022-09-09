@@ -14,7 +14,7 @@ Coin.args = {
   amount: "0.45",
   balance: "1.45",
   coin: {
-    logo: "/tokens/token-BTC.svg",
-    name: "BTC"
+    logo: "/tokens/token-WBTC.svg",
+    name: "WBTC"
   }
 }

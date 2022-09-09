@@ -44,7 +44,7 @@ const AvailableLiquidityTable: React.FC<IAvailableLiquidityTable> = ({ children,
                                         <div className="text-lg">{i.asset}</div>
                                     </div>
                                 </td>
-                                <td className="text-center">{i.amount} {i.unit}</td>
+                                <td className="text-center">{i.amount}</td>
                                 <td className="">
                                     <div className="w-10 h-10 mx-auto">
                                         {i.canBeCollat ? <BsCheck className="w-full h-full text-emerald-600" /> : <IoIosClose className="w-full h-full text-red-600"/>}
