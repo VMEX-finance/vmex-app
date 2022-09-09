@@ -16,7 +16,7 @@ interface IModalWrapper extends React.PropsWithChildren {
 const ModalWrapper: React.FC<IModalWrapper> = ({ name, isOpen, data, closeDialog, children}) => {
     return (
       <Transition.Root show={isOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={() => closeDialog(name)}>
+        <Dialog as="div" className="relative z-50" onClose={() => closeDialog(name)}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"

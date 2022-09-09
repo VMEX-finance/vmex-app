@@ -14,7 +14,7 @@ let checked = false;
 Primary.args = {
     checked: checked,
     disabled: false,
-    onClick: (e) => {
+    setChecked: () => {
         checked = !checked
     }
 

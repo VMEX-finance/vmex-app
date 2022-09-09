@@ -28,9 +28,9 @@ input[type='checkbox']:before {
     content: 'x';
     visibility: hidden;
     line-height: 0;
-    font-weight: 200;
-    font-size: 10px;
-    color: #3cb55e00;
+    font-weight: 600;
+    font-size: 18px;
+    color: #3cb55e;
 }
 
 input[type='checkbox']:checked {
@@ -66,16 +66,16 @@ input[type='checkbox']:disabled:checked:after {
     content: 'x';
     visibility: hidden;
     line-height: 0;
-    font-weight: 200;
-    font-size: 10px;
-    color: #3cb55e00;
+    font-weight: 600;
+    font-size: 12px;
+    color: #3cb55e;
 }
 
 input[type='checkbox']:checked:after {
     position: absolute;
     content: 'x';
     line-height: 0;
-    font-weight: 200;
-    font-size: 10px;
+    font-weight: 600;
+    font-size: 18px;
     color: #3CB55E;
 }
