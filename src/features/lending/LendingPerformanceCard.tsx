@@ -15,11 +15,11 @@ const LendingPerformanceCard: React.FC = () => {
             <div className="grid gap-3 w-full px-3">
                 <div className="grid w-full h-[240px]">
                     <h4>Profit / Loss (P&L)</h4>
-                    <ReLineChart data={lineData} />
+                    <ReLineChart data={lineData} timeseries />
                 </div>
                 <div className="grid w-full h-[240px]">
                     <h4>Insurance Utilization</h4>
-                    <ReLineChart data={lineData2} />
+                    <ReLineChart data={lineData2} timeseries />
                 </div>
                 <div className="grid w-full h-full">
                     <h4 className="mb-2">Assets On Loan</h4>

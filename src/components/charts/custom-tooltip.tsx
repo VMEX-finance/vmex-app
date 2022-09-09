@@ -1,7 +1,6 @@
 import React from 'react';
 
 const CustomTooltip = ({ active, payload, label }: any) => {
-  console.log(active, payload, label)
   if (active && payload && payload.length) {
     return (
       <div className="bg-black px-2 py-1 flex flex-col">

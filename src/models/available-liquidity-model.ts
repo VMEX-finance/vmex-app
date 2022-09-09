@@ -18,8 +18,8 @@ export const _mockAvailableAsset: AvailableAsset = {
     asset: "USDC",
     logo: "tokens/token-USDC.svg",
     unit: "USDC",
-    amount: 2394,
-    apy_perc: .0053,
+    amount: 9921,
+    apy_perc: .0078,
     canBeCollat: true,
     tranches: [
         {
@@ -70,8 +70,8 @@ export const _mockAvailableAsset3: AvailableAsset = {
     asset: "DAI",
     logo: "tokens/token-DAI.svg",
     unit: "DAI",
-    amount: 2394,
-    apy_perc: .0053,
+    amount: 9128,
+    apy_perc: .0103,
     canBeCollat: true,
     tranches: [
         {
