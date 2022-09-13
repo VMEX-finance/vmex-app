@@ -1,4 +1,5 @@
 import React from "react";
+import useGeneralTokenData from "hooks/user-data/token-data";
 import { 
   BrowserRouter,
   Routes,
@@ -11,6 +12,7 @@ import Staking from "./pages/staking";
 import Markets from "./pages/markets";
 
 function App() {
+  useGeneralTokenData();
   return (
     <BrowserRouter>
       <Routes>

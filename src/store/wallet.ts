@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { Web3Provider, JsonRpcProvider } from "@ethersproject/providers";
-import { MaxUint256 } from "@ethersproject/constants";
 import { Signer } from "@ethersproject/abstract-signer";
+import { formatEther } from "@ethersproject/units";
 // import { setupMockEnv } from "vmex/dist/src.ts/mock-env";
 
 
@@ -21,21 +21,32 @@ const WalletState: IWalletState = {
 export const loginWithMetamask = createAsyncThunk(
     "connect_metamask",
     async (data, thunkAPI) => {
+
+        if (process.env.REACT_APP_TEST) {
+
+            console.log("authenticating with localhost provider")
+            const provider = new JsonRpcProvider(process.env.REACT_APP_RPC)
+            const signer = provider.getSigner();
+            const address = await signer.getAddress();
+            // TODO: figure out why this code hangs!
+            // await provider.send("hardhat_setBalance", [
+            //     await signer.getAddress(),
+            //     formatEther("100.0")
+            // ])
+
+
+            return {
+                signer,
+                address,
+                provider
+            }
+        }
         if (!(window as any).ethereum) throw Error("Please install Metamask browser extension");
         const provider = new Web3Provider((window as any).ethereum);
         await provider.send("eth_requestAccounts", []);
         const signer = provider.getSigner();
         const address = await signer.getAddress();
-        // await setupMockEnv(address)
-        
-        // const provider = process.env.REACT_APP_TEST ? new JsonRpcProvider(process.env.REACT_APP_RPC) : new Web3Provider((window as any).ethereum);
-        // const signer = provider.getSigner();
-        // if (process.env.REACT_APP_TEST) {
-        //     await provider.send("hardhat_setBalance", [
-        //         await signer.getAddress(),
-        //         MaxUint256
-        //     ])
-        // }
+    
         return {
             signer,
             address,
