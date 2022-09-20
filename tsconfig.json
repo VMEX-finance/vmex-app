@@ -9,6 +9,9 @@
         "@pages": ["pages/index.ts"],
         "@store/*": ["store/*"],
         "@hooks/*": ["hooks/*"],
+        "@utils/*": ["utils/*"],
+        "@models/*": ["models/*"],
+        "@ui/*": ["ui/*"],
         "@app/*": ["./*"]
       },
       "baseUrl": "src",

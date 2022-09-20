@@ -5,13 +5,13 @@ import { getTokenReserveData } from "vmex/dist/src.ts/analytics";
 import { JsonRpcProvider } from "@ethersproject/providers";
 import { ITokenData } from "@store/token-data";
 
-export default async function useGeneralTokenData() {
+export async function useGeneralTokenData() {
     const { 
         isLoading,
         error,
         error_msg,
         data,
-    }: ITokenData = useAppSelector<any>((state) => state.token_data);
+    }: ITokenData = useAppSelector<any>((state) => (state as any).token_data);
     const dispatch = useAppDispatch();
 
     React.useEffect(() => {

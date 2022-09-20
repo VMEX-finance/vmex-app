@@ -1,4 +1,3 @@
-function getUserWalletAssets() {
+export function getUserWalletAssets() {
     
 }
-export {}

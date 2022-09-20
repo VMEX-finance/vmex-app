@@ -1,9 +1,7 @@
-import { StakingOverview } from "../features/staking/StakeOverview";
 import React from "react";
-import AppTemplate from "../templates/app-template";
-import GridView from "../templates/grid-template";
-import { StakingAsset } from "../features/staking/StakeAsset";
+import { AppTemplate, GridView } from "../ui/templates";
 import { _mockAvailableAsset } from "../models/available-liquidity-model";
+import { StakingAsset, StakingOverview } from "../ui/features/staking";
 
 const Staking: React.FC = () => {
     return (
