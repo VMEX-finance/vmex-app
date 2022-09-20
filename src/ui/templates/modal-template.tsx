@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { useDialogController } from "@hooks/dialogs";
-import { BorrowAssetDialog, BorrowedAssetDetailsDialog, StakeAssetDialog, SupplyAssetDialog } from "@ui/features/dialogs";
+import { useDialogController } from "../../hooks/dialogs";
+import { BorrowAssetDialog, BorrowedAssetDetailsDialog, StakeAssetDialog, SupplyAssetDialog } from "../../ui/features/dialogs";
 
 interface IModalWrapper extends React.PropsWithChildren {
     name?: string,

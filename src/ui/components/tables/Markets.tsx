@@ -1,6 +1,6 @@
 import React from "react";
-import type { MarketsAsset } from "@models/markets";
-import { useDialogController } from "@hooks/dialogs";
+import type { MarketsAsset } from "../../../models/markets";
+import { useDialogController } from "../../../hooks/dialogs";
 import { Button } from "../buttons";
 
 interface IAvailableLiquidityTable extends React.PropsWithChildren {

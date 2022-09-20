@@ -1,9 +1,9 @@
-import { ReLineChart } from "@ui/components/charts";
+import { ReLineChart } from "../../components/charts";
 import React from "react";
-import { Card } from "@ui/components/cards";
-import { PillDisplay } from "@ui/components/displays";
-import { lineData, lineData2 } from "@utils/mock-data";
-import { DropdownButton } from "@ui/components/buttons";
+import { Card } from "../../components/cards";
+import { PillDisplay } from "../../components/displays";
+import { lineData, lineData2 } from "../../../utils/mock-data";
+import { DropdownButton } from "../../components/buttons";
 
 export const LendingPerformanceCard: React.FC = () => {
     return (

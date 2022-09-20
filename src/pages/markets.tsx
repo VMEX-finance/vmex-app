@@ -1,7 +1,7 @@
-import { Card } from "@ui/components/cards";
+import { Card } from "../ui/components/cards";
 import React from "react";
-import { AppTemplate } from "@ui/templates";
-import { MarketsTable } from "@ui/components/tables";
+import { AppTemplate } from "../ui/templates";
+import { MarketsTable } from "../ui/components/tables";
 import { _mockMarketsData } from "../models/markets";
 import { TokenData } from "../hooks/user-data";
 import { ITokenData } from "../store/token-data";

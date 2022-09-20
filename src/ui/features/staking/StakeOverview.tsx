@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card } from '@ui/components/cards/default';
+import { Card } from '../../components/cards/default';
 
 type IStakingOverviewProps = {
   safetyFunds: string | number;

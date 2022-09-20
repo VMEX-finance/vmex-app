@@ -3,10 +3,10 @@ import { Dialog } from "@headlessui/react";
 import { IoIosClose } from "react-icons/io";
 import { MdCompareArrows, MdOutlineArrowForward } from "react-icons/md";
 import { useMediatedState } from "react-use";
-import { Button } from "@ui/components/buttons";
-import { TransactionStatus } from "@ui/components/statuses";
-import { AssetDisplay } from "@ui/components/displays";
-import { inputMediator } from "@utils/helpers";
+import { Button } from "../../components/buttons";
+import { TransactionStatus } from "../../components/statuses";
+import { AssetDisplay } from "../../components/displays";
+import { inputMediator } from "../../../utils/helpers";
 
 interface IOwnedAssetDetails {
     name?: string,

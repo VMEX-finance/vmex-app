@@ -3,10 +3,10 @@ import { Dialog } from "@headlessui/react";
 import { IoIosClose } from "react-icons/io";
 import { FaGasPump } from "react-icons/fa";
 import { useMediatedState } from "react-use";
-import { CoinInput } from "@ui/components/inputs";
-import { ActiveStatus, TransactionStatus } from "@ui/components/statuses";
-import { Button, DropdownButton } from "@ui/components/buttons";
-import { inputMediator } from "@utils/helpers";
+import { CoinInput } from "../../components/inputs";
+import { ActiveStatus, TransactionStatus } from "../../components/statuses";
+import { Button, DropdownButton } from "../../components/buttons";
+import { inputMediator } from "../../../utils/helpers";
 
 interface IOwnedAssetDetails {
     name?: string,

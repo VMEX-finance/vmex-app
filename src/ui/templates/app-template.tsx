@@ -1,5 +1,5 @@
 import React from "react";
-import { DashboardNavbar } from "@ui/base";
+import { DashboardNavbar } from "../../ui/base";
 import { DashboardTemplate } from "./dashboard-template";
 import { ModalTemplate } from "./modal-template";
 

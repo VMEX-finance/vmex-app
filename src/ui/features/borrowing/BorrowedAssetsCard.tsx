@@ -1,7 +1,7 @@
 import React from "react";
-import { BorrowedAssetsTable } from "@ui/components/tables";
-import { _mockAssetData } from "@models/available-liquidity-model";
-import { Card } from "@ui/components/cards";
+import { BorrowedAssetsTable } from "../../components/tables";
+import { _mockAssetData } from "../../../models/available-liquidity-model";
+import { Card } from "../../components/cards";
 
 export const BorrowedAssetsCard: React.FC = () => {
     return (

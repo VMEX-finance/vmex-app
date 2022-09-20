@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import { Menu, Transition } from '@headlessui/react';
-import { MenuItem } from "@ui/base";
+import { MenuItem } from "../../base";
 import { RiArrowDropDownLine } from "react-icons/ri";
 
 interface IDropdownItem {

@@ -10,7 +10,7 @@ import Borrowing from "./pages/borrowing";
 import Staking from "./pages/staking";
 import Markets from "./pages/markets";
 import Construction from "./pages/construction";
-import { useGeneralTokenData } from "@hooks/user-data";
+import { useGeneralTokenData } from "./hooks/user-data";
 
 function App() {
   useGeneralTokenData();

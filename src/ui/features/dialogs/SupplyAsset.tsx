@@ -3,11 +3,11 @@ import { Dialog } from "@headlessui/react";
 import { IoIosClose } from "react-icons/io";
 import { PieChart } from 'react-minimal-pie-chart';
 import { useMediatedState } from "react-use";
-import { inputMediator } from "@utils/helpers";
-import { CoinInput } from "@ui/components/inputs";
-import { Button, Checkbox } from "@ui/components/buttons";
-import { TranchToggle } from "@ui/components/toggles";
-import { TransactionStatus } from "@ui/components/statuses";
+import { inputMediator } from "../../../utils/helpers";
+import { CoinInput } from "../../components/inputs";
+import { Button, Checkbox } from "../..//components/buttons";
+import { TranchToggle } from "../../components/toggles";
+import { TransactionStatus } from "../../components/statuses";
 
 interface IOwnedAssetDetails {
     name?: string,

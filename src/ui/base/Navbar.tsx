@@ -1,9 +1,9 @@
 import { Menu, Transition } from "@headlessui/react";
-import { useWindowSize } from "@hooks/ui";
+import { useWindowSize } from "../../hooks/ui";
 import React, { Fragment } from "react";
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
 import { useLocation, useNavigate } from "react-router-dom";
-import { WalletButton } from "@ui/components/buttons";
+import { WalletButton } from "../components/buttons";
 
 export interface NavbarInterface {
     defaultPage?: string

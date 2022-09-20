@@ -1,6 +1,6 @@
 import React from "react";
-import type { AvailableAsset } from "@models/available-liquidity-model";
-import { useDialogController } from "@hooks/dialogs";
+import type { AvailableAsset } from "../../../models/available-liquidity-model";
+import { useDialogController } from "../../../hooks/dialogs";
 import { Button } from "../buttons";
 
 interface IAvailableLiquidityTable extends React.PropsWithChildren {

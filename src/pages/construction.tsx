@@ -1,5 +1,5 @@
 import React from "react";
-import { AppTemplate } from "@ui/templates";
+import { AppTemplate } from "../ui/templates";
 
 const Construction: React.FC = () => {
     return (
