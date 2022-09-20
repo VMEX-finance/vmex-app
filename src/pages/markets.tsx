@@ -1,9 +1,9 @@
-import { Card } from "../components/cards/default";
+import { Card } from "@ui/components/cards";
 import React from "react";
-import AppTemplate from "../templates/app-template";
-import MarketsTable from "../components/tables/Markets";
+import { AppTemplate } from "@ui/templates";
+import { MarketsTable } from "@ui/components/tables";
 import { _mockMarketsData } from "../models/markets";
-import TokenData from "../hooks/user-data";
+import { TokenData } from "../hooks/user-data";
 import { ITokenData } from "../store/token-data";
 
 const Markets: React.FC = () => {

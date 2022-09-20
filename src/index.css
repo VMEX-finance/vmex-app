@@ -2,15 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Fonts */
 @font-face {
     font-family: "SFNSRounded";
     src: url("../public/fonts/SFNSRounded.ttf")
 }
 
+/* General */
 body {
     background-color: #EEEEEE;
 }
 
+/* Checkbox */
 input[type="checkbox"] {
     background-color: #EFEFEF;
     overflow: hidden;
@@ -24,6 +27,7 @@ input[type="checkbox"] {
     border: .124em solid black;
     box-shadow: none;
 }
+
 input[type='checkbox']:before {
     content: 'x';
     visibility: hidden;
@@ -34,32 +38,13 @@ input[type='checkbox']:before {
 }
 
 input[type='checkbox']:checked {
-    /* background-color: #EFEFEF;
-    overflow: hidden;
-    appearance:none;
-    display:inline-flex;
-    align-items:center;
-    justify-content: center;
-    width: 15px !important;
-    height: 15px !important;
-    border-radius:20%; */
     background-color: white;
     border: .124em solid #3CB55E;
-    /* box-shadow: none; */
 }
+
 input[type='checkbox']:disabled {
-    /* background-color: #EFEFEF;
-    overflow: hidden;
-    appearance:none;
-    display:inline-flex;
-    align-items:center;
-    justify-content: center;
-    width: 15px !important;
-    height: 15px !important;
-    border-radius:20%; */
     background-color: rgb(171, 171, 171);
     border: .124em solid rgb(157, 157, 157);
-    /* box-shadow: none; */
 }
 
 input[type='checkbox']:disabled:checked:after {

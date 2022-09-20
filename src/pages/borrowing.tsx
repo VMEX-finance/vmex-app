@@ -1,8 +1,6 @@
 import React from "react";
-import AppTemplate from "../templates/app-template";
-import GridView from "../templates/grid-template";
-import BorrowedAssetsCard from "../features/borrowing/BorrowedAssetsCard";
-import ViewBorrowAssetsCard from "../features/borrowing/ViewAssetsCard";
+import { AppTemplate, GridView } from "../ui/templates";
+import { BorrowedAssetsCard, ViewBorrowAssetsCard } from "@ui/features/borrowing";
 
 const Borrowing: React.FC = () => {
     return (

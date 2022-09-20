@@ -1,6 +1,6 @@
 import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-import CoinInput, { ICoinInput } from "../components/inputs/coin-input";
+import { ICoinInput, CoinInput } from "@ui/components/inputs";
 
 export default {
   title: "Components/Inputs",

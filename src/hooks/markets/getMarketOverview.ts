@@ -1,7 +1,7 @@
 import React from "react";
-import { ITVLData } from "../../components/data/TvlDataComponent";
+import { ITVLData } from "@ui/components/data";
 
-function getTVLData(): ITVLData {
+export function getTVLData(): ITVLData {
     return {
         tvl: 4642124,
         reserve: 248750,
@@ -11,7 +11,7 @@ function getTVLData(): ITVLData {
     }
 }
 
-function useMarketOverview() {
+export function useMarketOverview() {
     const TVLDataProps = ({...otherProps} = {}) => {
         return {
             ...getTVLData(),
@@ -23,4 +23,3 @@ function useMarketOverview() {
         TVLDataProps
     }
 }
-export default useMarketOverview;

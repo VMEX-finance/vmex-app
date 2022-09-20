@@ -1,8 +1,8 @@
 import React from "react";
 import { useAppSelector, useAppDispatch } from "../redux";
-import { clearAndClose, setDataAndOpen, IDialogState } from "../../store/modals";
+import { clearAndClose, setDataAndOpen, IDialogState } from "@store/modals";
 
-const useDialogController = () => {
+export const useDialogController = () => {
     const {
         dialogs,
         isLoading,
@@ -39,5 +39,3 @@ const useDialogController = () => {
         getDialogProps,
     }
 }
-
-export default useDialogController;

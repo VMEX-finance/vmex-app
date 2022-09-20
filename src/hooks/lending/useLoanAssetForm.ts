@@ -1,12 +1,11 @@
 import React from "react";
 import { useMethods } from "react-use";
 
-
 type Tranch = [string, unknown][];
 
 type Speed = "fast" | "medium" | "slow";
 
-interface ILoanForm {
+export interface ILoanForm {
     amount: number | null;
     tranch0: number | null;
     tranch1: number | null;
@@ -23,7 +22,7 @@ const initialState: ILoanForm = {
 }
 
 
-function createMethods(state: ILoanForm) {
+export function createMethods(state: ILoanForm) {
     return {
         update(data: any) {
             return { ...state, ...data}
@@ -31,7 +30,7 @@ function createMethods(state: ILoanForm) {
     }
 }
 
-function useLoanAssetForm(availableTranches: any) {
+export function useLoanAssetForm(availableTranches: any) {
     const [ state, methods ] = useMethods(createMethods, initialState)
 
     function updateTranch(id: string, data: number){
@@ -47,9 +46,6 @@ function useLoanAssetForm(availableTranches: any) {
     }
 }
 
-function useTranceState() {
+export function useTranceState() {
     const [ enabled, setEnabled ] = React.useState();
 }
-
-export default useLoanAssetForm;
-
