@@ -1,18 +1,14 @@
 import { useMarketOverview } from "../hooks/markets";
 import React from "react";
 import { AppTemplate, GridView } from "../ui/templates";
-import { Card } from "../ui/components/cards";
-import TVLDataComponent from "../ui/components/data/TvlData";
-import { LendingPerformanceCard, AssetExposureCard, AvailableLiquidityCard } from "../ui/features/lending";
+import { LendingPerformanceCard, AssetExposureCard, AvailableLiquidityCard, TVLDataCard } from "../ui/features/overview";
 
-const Lending: React.FC = () => {
+const Overview: React.FC = () => {
     const { TVLDataProps } = useMarketOverview();
 
     return (
         <AppTemplate title="lending">
-            <Card>
-                <TVLDataComponent {...TVLDataProps()}/>
-            </Card>
+            <TVLDataCard {...TVLDataProps()}/>
             <GridView>
                 <LendingPerformanceCard />
                 <AvailableLiquidityCard />
@@ -21,4 +17,4 @@ const Lending: React.FC = () => {
         </AppTemplate>
     )
 }
-export default Lending;
+export default Overview;

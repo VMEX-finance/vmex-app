@@ -5,8 +5,8 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import Lending from "./pages/lending"
-import Borrowing from "./pages/borrowing";
+import Overview from "./pages/overview"
+import Tranches from "./pages/tranches";
 import Staking from "./pages/staking";
 import Markets from "./pages/markets";
 import Construction from "./pages/construction";
@@ -17,11 +17,11 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route index element={<Navigate to="/supply" />} />
-        <Route path="/supply" element={<Lending />} />
-        <Route path="/borrow" element={<Borrowing />} />
+        <Route index element={<Navigate to="/overview" />} />
+        <Route path="/overview" element={<Overview />} />
+        <Route path="/tranches" element={<Tranches />} />
         <Route path="/markets" element={<Markets />} />
-        <Route path="/stake" element={<Staking />} />
+        <Route path="/staking" element={<Staking />} />
         <Route path="/governance" element={<Construction />} />
         <Route path="/develop" element={<Construction />} />
       </Routes>

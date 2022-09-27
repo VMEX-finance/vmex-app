@@ -1,10 +1,10 @@
 import React from "react";
 import { AppTemplate, GridView } from "../ui/templates";
-import { BorrowedAssetsCard, ViewBorrowAssetsCard } from "../ui/features/borrowing";
+import { BorrowedAssetsCard, ViewBorrowAssetsCard } from "../ui/features/borrow";
 
-const Borrowing: React.FC = () => {
+const Tranches: React.FC = () => {
     return (
-        <AppTemplate title="borrowing">
+        <AppTemplate title="Tranches">
             <GridView>
                 <div className="lg:col-span-1">
                   <BorrowedAssetsCard />
@@ -16,4 +16,4 @@ const Borrowing: React.FC = () => {
         </AppTemplate>
     )
 }
-export default Borrowing;
+export default Tranches;

@@ -8,10 +8,19 @@ module.exports = {
       },
       colors: {
         brand: {
-          purple: '#7667db',
-          green: '#59db51',
-          blue: '#6098e8',
-          pink: '#da887d',
+          purple: {
+            DEFAULT: '#7667db'
+          },
+          blue: {
+            DEFAULT: '#6098e8'
+          },
+          pink: {
+            DEFAULT: '#da887d'
+          },
+          green: {
+            DEFAULT: '#3CB55E',
+            neon: '#59db51'
+          }
         },
       },
     },
