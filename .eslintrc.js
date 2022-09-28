@@ -10,7 +10,6 @@ module.exports = {
     'plugin:react-hooks/recommended',
     'plugin:prettier/recommended',
     'plugin:jsx-a11y/strict',
-    'prettier',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -29,6 +28,7 @@ module.exports = {
     radix: 'error',
     'space-before-blocks': 'error',
     'import/prefer-default-export': 'off',
+    'prettier/prettier': ['error', { singleQuote: true }],
   },
   overrides: [
     {
