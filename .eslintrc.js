@@ -26,7 +26,7 @@ module.exports = {
     'brace-style': 'error',
     'prefer-template': 'error',
     radix: 'error',
-    'space-before-blocks': 'error',
+    'space-before-blocks': 'warn',
     'import/prefer-default-export': 'off',
   },
   overrides: [
