@@ -32,7 +32,7 @@ export const DropdownButton = ({items, primary, direction = 'left'}: IDropdown) 
     return (
         <Menu as="div" className="relative inline-block">
             <div>
-                <Menu.Button className={`${determineColor()} inline-flex items-center w-full rounded-md py-2 pl-1 pr-3 ${mode} text-sm font-medium focus:outline-none focus:ring-none`}>
+                <Menu.Button className={`${determineColor()} inline-flex items-center w-full rounded-md py-1 pl-1 pr-3 ${mode} text-sm font-medium focus:outline-none focus:ring-none`}>
                     <RiArrowDropDownLine size="24px" /> {selected}
                 </Menu.Button>
             </div>

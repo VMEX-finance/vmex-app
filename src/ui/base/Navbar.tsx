@@ -31,15 +31,6 @@ export const MenuItem = ({label, selected, onClick, mobile}: IMenuItems) => {
     )
 }
 
-export const Navbar = ({children, defaultPage}: NavbarInterface) => {
-    return (
-        <div className={["grid grid-flow-col auto-cols-max justify-between gap-4 w-max p-[8px] shadow-lg", "bg-black rounded-2xl"].join(" ")}>
-            {
-                children
-            }
-        </div>
-    )
-}
 
 export const DashboardNavbar: React.FC = () => {
     const navigate = useNavigate();
@@ -53,7 +44,7 @@ export const DashboardNavbar: React.FC = () => {
         navigate(`../${value}`, { replace: false });
     };
 
-    const navItems = ["Supply", "Borrow", "Stake", "Markets", "Governance", "Develop"];
+    const navItems = ["Overview", "Tranches", "Markets", "Staking", "Governance", "Develop"];
 
     return (
         <nav className="flex flex-row sticky h-fit justify-between items-center top-0 font-basefont px-4 py-2 md:px-10 md:py-5 bg-[#EEEEEE] z-50">
@@ -72,7 +63,7 @@ export const DashboardNavbar: React.FC = () => {
 
                 {width > 1024 ? (
                     <div className="justify-self-center">
-                        <Navbar>
+                        <div className={"grid grid-flow-col auto-cols-max justify-between gap-4 w-max p-[8px] shadow-lg bg-black rounded-2xl"}>
                             {navItems.map((item) => (
                                 <MenuItem 
                                     key={item}
@@ -81,7 +72,7 @@ export const DashboardNavbar: React.FC = () => {
                                     onClick={navigateTo}
                                 />
                             ))}
-                        </Navbar>
+                        </div>
                     </div>
                 ) : (
                     <Menu as="div" className="relative inline-block">
