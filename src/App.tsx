@@ -5,11 +5,14 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+
 import Overview from "./pages/overview"
 import Tranches from "./pages/tranches";
 import Staking from "./pages/staking";
 import Markets from "./pages/markets";
 import Construction from "./pages/construction";
+import TrancheDetails from "./pages/tranche-details";
+
 import { useGeneralTokenData } from "./hooks/user-data";
 
 function App() {
@@ -24,6 +27,9 @@ function App() {
         <Route path="/staking" element={<Staking />} />
         <Route path="/governance" element={<Construction />} />
         <Route path="/develop" element={<Construction />} />
+
+        {/* Dynamic Tranche Routes */}
+        <Route path="/tranches/:id" element={<TrancheDetails/>} />
       </Routes>
     </BrowserRouter>
   );
