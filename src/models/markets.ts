@@ -1,42 +1,55 @@
 export type MarketsAsset = {
   asset: string;
   logo: string;
-  supplyTotal: number | string;
+  tranche: string;
   supplyApy: number | string;
-  borrowTotal: number | string;
   borrowApy: number | string;
-  poolSize: number | string;
+  yourAmount: number | string;
+  available: number | string;
+  supplyTotal: number | string;
+  borrowTotal: number | string;
+  rating: string;
 }
 
 export const _mockAvailableAsset: MarketsAsset = {
   asset: "USDC",
   logo: "tokens/token-USDC.svg",
-  supplyTotal: 22.18,
+  tranche: "VMEX High Quality",
   supplyApy: 0.77,
-  borrowTotal: 8.44,
   borrowApy: 2.11,
-  poolSize: 12.7,
+  yourAmount: 211,
+  available: 0,
+  supplyTotal: 22.18,
+  borrowTotal: 8.44,
+  rating: "A+"
+  
 
 }
 
 export const _mockAvailableAsset2: MarketsAsset = {
   asset: "WBTC",
   logo: "tokens/token-WBTC.svg",
-  supplyTotal: 8.73,
+  tranche: "VMEX Mid Quality",
   supplyApy: 1.21,
-  borrowTotal: 4.19,
   borrowApy: 1.81,
-  poolSize: 9.1,
+  yourAmount: 5,
+  available: 0,
+  supplyTotal: 8.73,
+  borrowTotal: 4.19,
+  rating: "C"
 }
 
 export const _mockAvailableAsset3: MarketsAsset = {
   asset: "DAI",
   logo: "tokens/token-DAI.svg",
-  supplyTotal: 17.22,
+  tranche: "VMEX Low Quality",
   supplyApy: 0.98,
-  borrowTotal: 11.24,
   borrowApy: 2.04,
-  poolSize: 10.9,
+  yourAmount: 67,
+  available: 0,
+  supplyTotal: 17.22,
+  borrowTotal: 11.24,
+  rating: "D"
 }
 
 export const _mockMarketsData: Array<MarketsAsset> = [_mockAvailableAsset, _mockAvailableAsset2, _mockAvailableAsset3];

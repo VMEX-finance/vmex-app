@@ -17,19 +17,28 @@ export const MarketsTable: React.FC<IAvailableLiquidityTable> = ({ children, dat
                         Asset
                     </th>
                     <th scope="col" className="py-3.5">
-                        Total Supplied
+                        Tranche
                     </th>
                     <th scope="col" className="py-3.5">
-                        Supply APY
+                        Supply APY%
                     </th>
                     <th scope="col" className="py-3.5">
-                        Total Borrowed
+                        Borrow APY%
                     </th>
                     <th scope="col" className="py-3.5">
-                        Borrow APY
+                        Your Amount
                     </th>
                     <th scope="col" className="py-3.5">
-                        Insurance Pool Size
+                        Available
+                    </th>
+                    <th scope="col" className="py-3.5">
+                        Supplied
+                    </th>
+                    <th scope="col" className="py-3.5">
+                        Borrowed
+                    </th>
+                    <th scope="col" className="py-3.5">
+                        Rating
                     </th>
                     <th scope="col" className="py-3.5">
                         
@@ -48,13 +57,16 @@ export const MarketsTable: React.FC<IAvailableLiquidityTable> = ({ children, dat
                                         <div className="text-lg">{i.asset}</div>
                                     </div>
                                 </td>
-                                <td>{i.supplyTotal}M</td>
+                                <td>{i.tranche}</td>
                                 <td>{i.supplyApy}%</td>
-                                <td>{i.borrowTotal}M</td>
                                 <td>{i.borrowApy}%</td>
-                                <td>{i.poolSize}M</td>
+                                <td>{i.yourAmount} {i.asset}</td>
+                                <td>{i.available}</td>
+                                <td>${i.supplyTotal}M</td>
+                                <td>${i.borrowTotal}M</td>
+                                <td>{i.rating}</td>
                                 <td>
-                                    <Button label="Details" primary />
+                                    <Button label="View Details" />
                                 </td>
                             </tr>
                         )
