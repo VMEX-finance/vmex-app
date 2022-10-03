@@ -1,22 +1,22 @@
-import React from "react";
-import type { MarketsAsset } from "../../../models/markets";
-import { useDialogController } from "../../../hooks/dialogs";
-import { Button } from "../buttons";
-import { useNavigate } from "react-router-dom";
+import React from 'react';
+import type { MarketsAsset } from '../../../models/markets';
+import { useDialogController } from '../../../hooks/dialogs';
+import { Button } from '../buttons';
+import { useNavigate } from 'react-router-dom';
 
 interface IAvailableLiquidityTable extends React.PropsWithChildren {
-    data: MarketsAsset[]
+    data: MarketsAsset[];
 }
 export const MarketsTable: React.FC<IAvailableLiquidityTable> = ({ children, data }) => {
     const navigate = useNavigate();
     const { openDialog } = useDialogController();
 
     const route = (tranche: string) => navigate(`/tranches/${tranche.replace(/\s+/g, '-')}`, {});
-    
+
     return (
         <table className="min-w-full divide-y divide-gray-300 font-basefont">
             <thead className="">
-                <tr className="text-gray-900 text-sm font-semibold text-left">
+                <tr className="text-gray-400 text-sm font-semibold text-left">
                     <th scope="col" className="py-3.5 pl-4 sm:pl-6">
                         Asset
                     </th>
@@ -44,32 +44,31 @@ export const MarketsTable: React.FC<IAvailableLiquidityTable> = ({ children, dat
                     <th scope="col" className="py-3.5">
                         Rating
                     </th>
-                    <th scope="col" className="py-3.5">
-                        
-                    </th>
+                    <th scope="col" className="py-3.5"></th>
                 </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 bg-white">
-                {
-                    data &&
+                {data &&
                     data.map((el, i) => {
-                        console.log(el)
+                        console.log(el);
                         return (
-                            <tr 
-                                key={`${el.asset}-${i}`} 
+                            <tr
+                                key={`${el.asset}-${i}`}
                                 className="text-left transition duration-200 hover:bg-neutral-200 hover:cursor-pointer"
                                 onClick={() => route(el.tranche)}
                             >
                                 <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                                     <div className="flex items-center gap-2">
-                                        <img src={el.logo} alt={el.asset} className="h-8 w-8"/>
+                                        <img src={el.logo} alt={el.asset} className="h-8 w-8" />
                                         <div className="text-lg">{el.asset}</div>
                                     </div>
                                 </td>
                                 <td>{el.tranche}</td>
                                 <td>{el.supplyApy}%</td>
                                 <td>{el.borrowApy}%</td>
-                                <td>{el.yourAmount} {el.asset}</td>
+                                <td>
+                                    {el.yourAmount} {el.asset}
+                                </td>
                                 <td>{el.available}</td>
                                 <td>${el.supplyTotal}M</td>
                                 <td>${el.borrowTotal}M</td>
@@ -78,10 +77,9 @@ export const MarketsTable: React.FC<IAvailableLiquidityTable> = ({ children, dat
                                     <Button label="View Details" />
                                 </td>
                             </tr>
-                        )
-                    })
-                }
+                        );
+                    })}
             </tbody>
         </table>
-    )
-}
+    );
+};

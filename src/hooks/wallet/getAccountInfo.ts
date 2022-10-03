@@ -1,3 +1,1 @@
-export function getUserWalletAssets() {
-    
-}
+export function getUserWalletAssets() {}

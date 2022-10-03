@@ -4,63 +4,63 @@
 
 /* Fonts */
 @font-face {
-    font-family: "SFNSRounded";
-    src: url("../public/fonts/SFNSRounded.ttf")
+  font-family: 'SFNSRounded';
+  src: url('../public/fonts/SFNSRounded.ttf');
 }
 
 /* General */
 body {
-    background-color: #EEEEEE;
+  background-color: #eeeeee;
 }
 
 /* Checkbox */
-input[type="checkbox"] {
-    background-color: #EFEFEF;
-    overflow: hidden;
-    appearance:none;
-    display:inline-flex;
-    align-items:center;
-    justify-content: center;
-    width: 15px !important;
-    height: 15px !important;
-    border-radius:20%;
-    border: .124em solid black;
-    box-shadow: none;
+input[type='checkbox'] {
+  background-color: #efefef;
+  overflow: hidden;
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 15px !important;
+  height: 15px !important;
+  border-radius: 20%;
+  border: 0.124em solid black;
+  box-shadow: none;
 }
 
 input[type='checkbox']:before {
-    content: 'x';
-    visibility: hidden;
-    line-height: 0;
-    font-weight: 600;
-    font-size: 18px;
-    color: #3cb55e;
+  content: 'x';
+  visibility: hidden;
+  line-height: 0;
+  font-weight: 600;
+  font-size: 18px;
+  color: #3cb55e;
 }
 
 input[type='checkbox']:checked {
-    background-color: white;
-    border: .124em solid #3CB55E;
+  background-color: white;
+  border: 0.124em solid #3cb55e;
 }
 
 input[type='checkbox']:disabled {
-    background-color: rgb(171, 171, 171);
-    border: .124em solid rgb(157, 157, 157);
+  background-color: rgb(171, 171, 171);
+  border: 0.124em solid rgb(157, 157, 157);
 }
 
 input[type='checkbox']:disabled:checked:after {
-    content: 'x';
-    visibility: hidden;
-    line-height: 0;
-    font-weight: 600;
-    font-size: 12px;
-    color: #3cb55e;
+  content: 'x';
+  visibility: hidden;
+  line-height: 0;
+  font-weight: 600;
+  font-size: 12px;
+  color: #3cb55e;
 }
 
 input[type='checkbox']:checked:after {
-    position: absolute;
-    content: 'x';
-    line-height: 0;
-    font-weight: 600;
-    font-size: 18px;
-    color: #3CB55E;
+  position: absolute;
+  content: 'x';
+  line-height: 0;
+  font-weight: 600;
+  font-size: 18px;
+  color: #3cb55e;
 }

@@ -16,26 +16,26 @@ export const TranchesTable: React.FC<IAvailableLiquidityTable> = ({ /* children,
     return (
         <table className="min-w-full divide-y divide-gray-300 font-basefont">
             <thead className="">
-                <tr className="text-gray-900 text-sm font-semibold text-left">
-                    <th scope="col" className="py-3.5 pl-4 sm:pl-6">
+                <tr className="text-gray-400 text-sm font-semibold text-left">
+                    <th scope="col" className="py-3.5 sm:pl-6">
                         Tranche
                     </th>
-                    <th scope="col" className="py-3.5">
+                    <th scope="col" className="py-3.5 pr-36">
                         Assets
                     </th>
-                    <th scope="col" className="py-3.5">
+                    <th scope="col" className="py-3.5 pr-36">
                         Aggregate Rating
                     </th>
-                    <th scope="col" className="py-3.5">
+                    <th scope="col" className="py-3.5 pr-36">
                         Your Amount
                     </th>
-                    <th scope="col" className="py-3.5">
+                    <th scope="col" className="py-3.5 pr-36">
                         Supplied
                     </th>
-                    <th scope="col" className="py-3.5">
+                    <th scope="col" className="py-3.5 pr-36">
                         Borrowed
                     </th>
-                    <th scope="col" className="py-3.5"></th>
+                    <th scope="col" className="py-3.5 pr-36"></th>
                 </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 bg-white">
@@ -49,13 +49,14 @@ export const TranchesTable: React.FC<IAvailableLiquidityTable> = ({ /* children,
                                 onClick={() => route(el.tranche)}
                             >
                                 <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
-                                    <div className="flex items-center gap-2">
-                                        <img src={el.assets} alt={el.tranche} className="h-8 w-8" />
-                                        <div className="text-lg">{el.tranche}</div>
-                                    </div>
+                                    <td>{el.tranche}</td>
+                                </td>
+
+                                <td>
+                                    <img src={el.assets} alt={el.tranche} className="h-8 w-8" />
                                 </td>
                                 <td>{el.aggregateRating}</td>
-                                <td>{el.yourAmount}%</td>
+                                <td>{el.yourAmount}</td>
                                 <td>${el.supplyTotal}M</td>
                                 <td>${el.borrowTotal}M</td>
                                 <td>

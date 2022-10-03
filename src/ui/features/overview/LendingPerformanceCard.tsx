@@ -1,16 +1,16 @@
-import { ReLineChart } from "../../components/charts";
-import React from "react";
-import { Card } from "../../components/cards";
-import { PillDisplay } from "../../components/displays";
-import { lineData, lineData2 } from "../../../utils/mock-data";
-import { DropdownButton } from "../../components/buttons";
+import { ReLineChart } from '../../components/charts';
+import React from 'react';
+import { Card } from '../../components/cards';
+import { PillDisplay } from '../../components/displays';
+import { lineData, lineData2 } from '../../../utils/mock-data';
+import { DropdownButton } from '../../components/buttons';
 
 export const LendingPerformanceCard: React.FC = () => {
     return (
         <Card black className="md:max-w-[450px]">
             <div className="flex justify-between items-center mb-3">
                 <h3 className="text-lg">Performance</h3>
-                <DropdownButton primary items={[{text: "All Tranches"}]} />
+                <DropdownButton primary items={[{ text: 'All Tranches' }]} />
             </div>
             <div className="grid gap-3 w-full px-3">
                 <div className="grid w-full h-[240px]">
@@ -32,5 +32,5 @@ export const LendingPerformanceCard: React.FC = () => {
                 </div>
             </div>
         </Card>
-    )
-}
+    );
+};

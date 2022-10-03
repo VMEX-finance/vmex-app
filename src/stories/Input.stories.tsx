@@ -1,20 +1,20 @@
-import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { ICoinInput, CoinInput } from "@ui/components/inputs";
+import React from 'react';
+import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { ICoinInput, CoinInput } from '@ui/components/inputs';
 
 export default {
-  title: "Components/Inputs",
-  component: CoinInput
-}
+    title: 'Components/Inputs',
+    component: CoinInput,
+};
 
-const Template: ComponentStory<typeof CoinInput> = (args) => <CoinInput {...args} />
+const Template: ComponentStory<typeof CoinInput> = (args) => <CoinInput {...args} />;
 
 export const Coin = Template.bind({});
 Coin.args = {
-  amount: "0.45",
-  balance: "1.45",
-  coin: {
-    logo: "/tokens/token-WBTC.svg",
-    name: "WBTC"
-  }
-}
+    amount: '0.45',
+    balance: '1.45',
+    coin: {
+        logo: '/tokens/token-WBTC.svg',
+        name: 'WBTC',
+    },
+};

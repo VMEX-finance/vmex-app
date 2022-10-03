@@ -1,4 +1,4 @@
-import { BigNumber } from "@ethersproject/bignumber";
+import { BigNumber } from '@ethersproject/bignumber';
 
 type AssetBaseData = {
     symbol: string;
@@ -6,17 +6,16 @@ type AssetBaseData = {
     price: BigNumber | number;
     name?: string;
     decimals?: number;
-}
+};
 
 type AssetTrancheData = {
     debtTokenBalance: BigNumber | number;
     aToken_balance: BigNumber | number;
     insured_balance: BigNumber | number;
-}
+};
 
 type K = string;
 // type AssetData = Pick<AssetBaseData, K extends keyof AssetBaseData>
-
 
 interface AssetUserData {
     asset: AssetBaseData;
@@ -27,4 +26,4 @@ interface AssetUserData {
     debt_balance: BigNumber | number;
 }
 
-export {}
+export {};
