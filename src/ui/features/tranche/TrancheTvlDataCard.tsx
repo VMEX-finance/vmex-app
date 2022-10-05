@@ -4,14 +4,13 @@ import { ReLineChart } from '../../components/charts';
 import { lineData2 } from '../../../utils/mock-data';
 
 export interface ITrancheTVLData {
-    assets?: string | string[]
+    assets?: string | string[];
     tvl?: number;
     supplied?: number;
     sYtd?: number;
     borrowed?: number;
     bYtd?: number;
     grade?: string;
-
 }
 
 const TrancheTVLDataCard: React.FC<ITrancheTVLData> = ({
@@ -21,15 +20,15 @@ const TrancheTVLDataCard: React.FC<ITrancheTVLData> = ({
     sYtd,
     bYtd,
     borrowed,
-    grade
+    grade,
 }) => {
-    var formatter = new Intl.NumberFormat('en-US', {
+    let formatter = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
         notation: 'compact',
     });
     return (
-        <Card >
+        <Card>
             <div className="flex flex-col md:flex-row justify-between font-basefont gap-8">
                 <div className="flex flex-col justify-between">
                     <div className="flex flex-col">
@@ -38,32 +37,31 @@ const TrancheTVLDataCard: React.FC<ITrancheTVLData> = ({
                     </div>
                 </div>
                 <div className="flex md:flex-row justify-between gap-36">
-                    <div className="flex flex-col">
-                        <p className="text-sm">TVL</p>
-                        <p className="text-xl">
-                        {tvl ? formatter.format(tvl as number) : ''}
+                    <div className="flex flex-col justify-center justify-items-center">
+                        <p className="text-sm justify-self-center">TVL</p>
+                        <p className="text-xl justify-self-center">
+                            {tvl ? formatter.format(tvl as number) : ''}
                         </p>
                     </div>
                     <div className="flex flex-col">
                         <p className="odd:text-sm">Supplied</p>
-                        <p className="text-xl text-brand-green">{supplied}</p>
+                        <p className="text-xl">{formatter.format(supplied as number)}</p>
                     </div>
                     <div className="flex flex-col">
                         <p className="text-sm">Borrowed</p>
-                        <p className="text-xl text-brand-purple">{borrowed}</p>
+                        <p className="text-xl ">{formatter.format(borrowed as number)}</p>
                     </div>
                 </div>
                 <div>
-                <div className="flex flex-col justify-between">
-                    <div className="flex flex-col">
-                        <h2 className="text-2xl">Grade</h2>
-                        <p className="text-3xl">{grade}</p>
+                    <div className="flex flex-col justify-between">
+                        <div className="flex flex-col">
+                            <h2 className="text-2xl">Grade</h2>
+                            <p className="text-3xl">{grade}</p>
+                        </div>
                     </div>
-                </div>
                 </div>
             </div>
         </Card>
     );
 };
 export { TrancheTVLDataCard };
-

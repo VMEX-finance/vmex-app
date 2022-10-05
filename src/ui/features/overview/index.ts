@@ -2,4 +2,4 @@ export * from './AssetExposureCard';
 export * from './AvailableLiquidityCard';
 export * from './LendingPerformanceCard';
 export * from './TvlDataCard';
-export * from './TrancheTvlDataCard';
+export * from '../tranche/TrancheTvlDataCard';

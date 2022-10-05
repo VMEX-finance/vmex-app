@@ -29,6 +29,7 @@ module.exports = {
         'space-before-blocks': 'error',
         'import/prefer-default-export': 'off',
         'prettier/prettier': ['error', { singleQuote: true }],
+        'no-unused-vars': 'warn',
     },
     overrides: [
         {
