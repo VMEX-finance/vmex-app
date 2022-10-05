@@ -7,14 +7,15 @@ interface IAppTemplate {
     children?: React.ReactElement | React.ReactElement[];
     title?: string;
     description?: string | React.ReactNode;
+    back?: any;
 }
 
-const AppTemplate: React.FC<IAppTemplate> = ({ children, title, description }) => {
+const AppTemplate: React.FC<IAppTemplate> = ({ children, title, description, back }) => {
     return (
         <div className="h-screen">
             <DashboardNavbar />
             <ModalTemplate />
-            <DashboardTemplate title={title} description={description}>
+            <DashboardTemplate title={title} description={description} back={back}>
                 {children}
             </DashboardTemplate>
         </div>

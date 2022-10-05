@@ -16,7 +16,7 @@ export function getTrancheTVLData(): ITrancheTVLData {
         tvl: 4642124,
         supplied: 248750,
         borrowed: 267,
-        grade: 'A+'
+        grade: 'A+',
     };
 }
 

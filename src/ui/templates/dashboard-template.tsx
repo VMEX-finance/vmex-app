@@ -5,22 +5,31 @@ interface IDashboardTemplate {
     hero?: React.ReactElement;
     children?: React.ReactElement | React.ReactElement[];
     description?: string | React.ReactNode;
+    back?: any;
 }
+
 const DashboardTemplate: React.FC<IDashboardTemplate> = ({
     title,
     hero,
     children,
     description,
+    back,
 }) => {
     return (
         <div className="py-10">
             <header>
-                <div className="max-w-[100rem] mx-auto">
+                <div className="max-w-[100rem] mx-auto flex flex-col">
                     <div className="max-w-[500px] sm:px-6 lg:px-8">
+                        {back && (
+                            <div className="flex flex-row gap-1">
+                                <img src="elements/Vector.svg" alt="vector" />
+                                <p>Back to all</p>
+                            </div>
+                        )}
                         <h1 className="text-3xl font-basefont capitalize leading-tight text-gray-900">
                             {title}
                         </h1>
-                        {description && <p className="mt-3">{description}</p>}
+                        {description && <p className="mt-1">{description}</p>}
                     </div>
                 </div>
             </header>

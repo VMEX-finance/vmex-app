@@ -33,7 +33,7 @@ const TrancheTVLDataCard: React.FC<ITrancheTVLData> = ({
                 <div className="flex flex-col justify-between">
                     <div className="flex flex-col">
                         <h2 className="text-2xl">Assets</h2>
-                        <p className="text-3xl">{tvl ? formatter.format(tvl as number) : ''}</p>
+                        <img src="tokens/token-USDC.svg" alt="" className="h-8 w-8" />
                     </div>
                 </div>
                 <div className="flex md:flex-row justify-between gap-36">
@@ -43,13 +43,17 @@ const TrancheTVLDataCard: React.FC<ITrancheTVLData> = ({
                             {tvl ? formatter.format(tvl as number) : ''}
                         </p>
                     </div>
-                    <div className="flex flex-col">
-                        <p className="odd:text-sm">Supplied</p>
-                        <p className="text-xl">{formatter.format(supplied as number)}</p>
+                    <div className="flex flex-col justify-center justify-items-center">
+                        <p className="odd:text-sm justify-self-center">Supplied</p>
+                        <p className="text-xl justify-self-center">
+                            {formatter.format(supplied as number)}
+                        </p>
                     </div>
-                    <div className="flex flex-col">
-                        <p className="text-sm">Borrowed</p>
-                        <p className="text-xl ">{formatter.format(borrowed as number)}</p>
+                    <div className="flex flex-col justify-center justify-items-center">
+                        <p className="text-sm justify-self-center">Borrowed</p>
+                        <p className="text-xl justify-self-center">
+                            {formatter.format(borrowed as number)}
+                        </p>
                     </div>
                 </div>
                 <div>

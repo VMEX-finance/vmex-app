@@ -30,5 +30,3 @@ const Tranches: React.FC = () => {
     );
 };
 export default Tranches;
-
-
