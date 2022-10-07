@@ -14,7 +14,7 @@ const Overview: React.FC = () => {
     return (
         <AppTemplate title="lending">
             <TVLDataCard {...TVLDataProps()} />
-            <GridView>
+            <GridView type="fixed">
                 <LendingPerformanceCard />
                 <AvailableLiquidityCard />
                 <AssetExposureCard />

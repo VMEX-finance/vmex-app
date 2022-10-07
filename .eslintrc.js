@@ -21,15 +21,18 @@ module.exports = {
     },
     plugins: ['react', 'jsx-a11y', '@typescript-eslint'],
     rules: {
-        'react-hooks/exhaustive-deps': 'error',
+        'react-hooks/exhaustive-deps': 'warn',
         'no-var': 'error',
         'brace-style': 'error',
         'prefer-template': 'error',
         radix: 'error',
         'space-before-blocks': 'error',
         'import/prefer-default-export': 'off',
-        'prettier/prettier': ['error', { singleQuote: true }],
+        'prettier/prettier': 'off',
         'no-unused-vars': 'warn',
+        'jsx-a11y/no-static-element-interactions': 'warn',
+        'jsx-a11y/click-events-have-key-events': 'warn',
+        'jsx-a11y/anchor-is-valid': 'warn',
     },
     overrides: [
         {

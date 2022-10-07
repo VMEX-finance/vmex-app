@@ -1,5 +1,5 @@
 export function truncateAddress(s: string) {
-    return s.slice(0, 3) + '...' + s.slice(-4);
+    return `${s.slice(0, 3)}...${s.slice(-4)}`;
 }
 
 export const inputMediator = (s: string) => {
