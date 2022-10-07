@@ -32,14 +32,23 @@ export const StakingAsset = (props: IStakingAsset) => {
 
                         <div className="flex flex-col gap-1 xl:gap-2">
                             <Number
+                                color="text-brand-purple"
                                 label="Current Staking Bonus"
                                 value={`${props.bonus.days} days - ${props.bonus.percent}%`}
                             />
 
-                            <Number label="Staking APR" value={`${props.apr}%`} />
+                            <Number
+                                color="text-brand-purple"
+                                label="Staking APR"
+                                value={`${props.apr}%`}
+                            />
 
                             <div className="flex flex-col md:flex-row md:items-end md:justify-between">
-                                <Number label="Max Slashing" value={`${props.slashing}`} />
+                                <Number
+                                    color="text-brand-purple"
+                                    label="Max Slashing"
+                                    value={`${props.slashing}`}
+                                />
                                 <div className="h-fit">
                                     <Button
                                         label="Stake VMEX"

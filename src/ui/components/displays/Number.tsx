@@ -2,17 +2,24 @@ import React from 'react';
 
 type INumberProps = {
     label?: string;
-    value: number | string | React.ReactNode;
-    type?: 'basic' | 'exotic';
+    value?: number | string | React.ReactNode;
     color?: 'text-brand-purple' | 'text-brand-green' | 'text-black';
+    size?: 'lg' | 'xl' | 'md';
 };
 
-export const Number = ({ value, label, type = 'exotic', color = 'text-black' }: INumberProps) => {
-    if (type === 'exotic') {
+export const Number = ({ value, label, size, color = 'text-black' }: INumberProps) => {
+    if (size === 'xl') {
         return (
             <div className="flex flex-col">
-                <span>{label}</span>
-                <span className="text-brand-purple text-2xl">{value}</span>
+                <p>{label}</p>
+                <p className={`text-3xl ${color}`}>{value}</p>
+            </div>
+        );
+    } else if (size === 'lg') {
+        return (
+            <div className="flex flex-col">
+                <p className="text-sm">{label}</p>
+                <p className={`text-2xl ${color}`}>{value}</p>
             </div>
         );
     } else {
