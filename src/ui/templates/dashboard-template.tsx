@@ -18,7 +18,7 @@ const DashboardTemplate: React.FC<IDashboardTemplate> = ({
     return (
         <div className="py-10">
             <header>
-                <div className="max-w-[100rem] mx-auto flex flex-col">
+                <div className="max-w-[120rem] mx-auto flex flex-col">
                     <div className="max-w-[500px] sm:px-6 lg:px-8">
                         {back && (
                             <div className="flex flex-row gap-1">
@@ -34,7 +34,7 @@ const DashboardTemplate: React.FC<IDashboardTemplate> = ({
                 </div>
             </header>
             <main>
-                <div className="max-w-[100rem] mx-auto sm:px-6 lg:px-8">
+                <div className="max-w-[120rem] mx-auto sm:px-6 lg:px-8">
                     <div className="px-4 py-8 sm:px-0 flex flex-col gap-8">
                         {children ? (
                             children

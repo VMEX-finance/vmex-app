@@ -4,8 +4,8 @@ import { AppTemplate, GridView } from '../ui/templates';
 import {
     LendingPerformanceCard,
     AssetExposureCard,
-    AvailableLiquidityCard,
     TVLDataCard,
+    YourPositions,
 } from '../ui/features/overview';
 
 const Overview: React.FC = () => {
@@ -16,8 +16,8 @@ const Overview: React.FC = () => {
             <TVLDataCard {...TVLDataProps()} />
             <GridView type="fixed">
                 <LendingPerformanceCard />
-                <AvailableLiquidityCard />
-                <AssetExposureCard />
+                <YourPositions type="supplies" />
+                <YourPositions type="borrows" />
             </GridView>
         </AppTemplate>
     );

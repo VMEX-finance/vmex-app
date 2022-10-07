@@ -50,13 +50,14 @@ const TVLDataCard: React.FC<ITVLData> = ({
                     </div>
                 </div>
 
-                <div className="py-2 md:py-4 lg:py-0 lg:px-6 flex justify-between w-full">
+                <div className="py-2 md:py-4 lg:py-0 lg:px-6 flex flex-col lg:flex-row gap-6 2xl:gap-32 w-full">
                     <div className="flex flex-col gap-2">
                         <Number size="xl" label="Total Supplied" value={`$${'157.08'}M`} />
                         <div className="flex flex-col gap-1">
                             <span>Top Supplied Assets</span>
                             {/* Dummy Data */}
-                            <div className="grid grid-cols-2 gap-1">
+                            {/* TODO: at 1600px, only top 3 should show */}
+                            <div className="grid grid-cols-1 xl:grid-cols-2 gap-1">
                                 {[1, 2, 3, 4, 5, 6].map((el, i) => (
                                     <PillDisplay
                                         key={`top-asset-${i}`}
@@ -68,12 +69,13 @@ const TVLDataCard: React.FC<ITVLData> = ({
                             </div>
                         </div>
                     </div>
-                    <div className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-2">
                         <Number size="xl" label="Total Borrowed" value={`$${'129.31'}M`} />
-                        <div className="flex flex-col">
+                        <div className="flex flex-col gap-1">
                             <span>Top Borrowed Assets</span>
                             {/* Dummy Data */}
-                            <div className="grid grid-cols-2 gap-1">
+                            {/* TODO: at 1600px, only top 3 should show */}
+                            <div className="grid grid-cols-1 xl:grid-cols-2 gap-1">
                                 {[1, 2, 3, 4, 5, 6].map((el, i) => (
                                     <PillDisplay
                                         key={`top-asset-${i}`}
