@@ -1,9 +1,9 @@
-import React from "react";
-import { useMethods } from "react-use";
+import React from 'react';
+import { useMethods } from 'react-use';
 
 type Tranch = [string, unknown][];
 
-type Speed = "fast" | "medium" | "slow";
+type Speed = 'fast' | 'medium' | 'slow';
 
 export interface ILoanForm {
     amount: number | null;
@@ -18,34 +18,29 @@ const initialState: ILoanForm = {
     tranch0: null,
     tranch1: null,
     tranch2: null,
-    speed: 'medium'
-}
-
+    speed: 'medium',
+};
 
 export function createMethods(state: ILoanForm) {
     return {
         update(data: any) {
-            return { ...state, ...data}
-        }
-    }
+            return { ...state, ...data };
+        },
+    };
 }
 
 export function useLoanAssetForm(availableTranches: any) {
-    const [ state, methods ] = useMethods(createMethods, initialState)
+    const [state, methods] = useMethods(createMethods, initialState);
 
-    function updateTranch(id: string, data: number){
+    function updateTranch(id: string, data: number) {}
 
-    }
-    
-    React.useEffect(() => {
-    }, [])
-
+    React.useEffect(() => {}, []);
 
     return {
-        ...state
-    }
+        ...state,
+    };
 }
 
 export function useTranceState() {
-    const [ enabled, setEnabled ] = React.useState();
+    const [enabled, setEnabled] = React.useState();
 }

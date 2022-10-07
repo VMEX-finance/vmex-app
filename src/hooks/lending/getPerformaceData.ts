@@ -1,10 +1,10 @@
-import React from "react";
+import React from 'react';
 
 export const getPerformanceData = () => {
-    return 
-}
-export const usePerformaceProps = ({...otherProps} = {}) => {
+    return;
+};
+export const usePerformaceProps = ({ ...otherProps } = {}) => {
     return {
-        ...otherProps
-    }
-}
+        ...otherProps,
+    };
+};

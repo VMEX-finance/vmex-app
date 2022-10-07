@@ -7,7 +7,7 @@ export type AssetExposureType = {
     apy_perc: number;
     insurance_perc: number;
     tranche_id: number;
-}
+};
 
 export interface ITrancheBasedAssetExposure {
     tranche_id: number;
@@ -15,45 +15,45 @@ export interface ITrancheBasedAssetExposure {
 }
 
 export const _mockAsset: AssetExposureType = {
-    asset: "USDC",
-    unit: "USDC",
-    logo: "tokens/token-USDC.svg",
-    amount: "23.423",
-    collateral_perc: .054,
-    apy_perc: .012,
+    asset: 'USDC',
+    unit: 'USDC',
+    logo: 'tokens/token-USDC.svg',
+    amount: '23.423',
+    collateral_perc: 0.054,
+    apy_perc: 0.012,
     insurance_perc: 0.043,
-    tranche_id: 0
-}
+    tranche_id: 0,
+};
 export const _mockAsset2: AssetExposureType = {
-    asset: "DAI",
-    unit: "DAI",
-    logo: "tokens/token-DAI.svg",
-    amount: "23.423",
-    collateral_perc: .054,
-    apy_perc: .012,
+    asset: 'DAI',
+    unit: 'DAI',
+    logo: 'tokens/token-DAI.svg',
+    amount: '23.423',
+    collateral_perc: 0.054,
+    apy_perc: 0.012,
     insurance_perc: 0.043,
-    tranche_id: 0
-}
+    tranche_id: 0,
+};
 export const _mockAsset3: AssetExposureType = {
-    asset: "WBTC",
-    unit: "WBTC",
-    logo: "tokens/token-WBTC.svg",
-    amount: "23.423",
-    collateral_perc: .054,
-    apy_perc: .012,
+    asset: 'WBTC',
+    unit: 'WBTC',
+    logo: 'tokens/token-WBTC.svg',
+    amount: '23.423',
+    collateral_perc: 0.054,
+    apy_perc: 0.012,
     insurance_perc: 0.043,
-    tranche_id: 0
-}
+    tranche_id: 0,
+};
 
 export const _mockTrancheAssetExposure: ITrancheBasedAssetExposure = {
     tranche_id: 0,
-    assets: [_mockAsset]
-}
+    assets: [_mockAsset],
+};
 export const _mockTrancheAssetExposure2: ITrancheBasedAssetExposure = {
     tranche_id: 0,
-    assets: [_mockAsset2]
-}
+    assets: [_mockAsset2],
+};
 export const _mockTrancheAssetExposure3: ITrancheBasedAssetExposure = {
     tranche_id: 0,
-    assets: [_mockAsset3]
-}
+    assets: [_mockAsset3],
+};
