@@ -55,7 +55,23 @@ export const TrancheTable: React.FC<IAvailableLiquidityTable> = ({ children, dat
                                     {el.balance} {el.asset}
                                 </td>
                                 <td>{el.apy}%</td>
-                                <td>${primary ? el.collateral : el.liquidity}M</td>
+                                {primary ? (
+                                    el.collateral ? (
+                                        <img
+                                            src="elements/Clicker2.svg"
+                                            alt=""
+                                            className="h-8 w-8"
+                                        />
+                                    ) : (
+                                        <img
+                                            src="elements/Clicker.svg"
+                                            alt=""
+                                            className="h-8 w-8"
+                                        />
+                                    )
+                                ) : (
+                                    <td>${el.liquidity}M</td>
+                                )}
                             </tr>
                         );
                     })}

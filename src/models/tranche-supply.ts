@@ -20,7 +20,7 @@ export const _mockAvailableAsset2: TrancheSupply = {
     logo: 'tokens/token-WBTC.svg',
     balance: 123.13,
     apy: 2.32,
-    collateral: true,
+    collateral: false,
 };
 
 export const _mockAvailableAsset3: TrancheSupply = {
@@ -28,7 +28,7 @@ export const _mockAvailableAsset3: TrancheSupply = {
     logo: 'tokens/token-DAI.svg',
     balance: 123.13,
     apy: 2.32,
-    collateral: true,
+    collateral: false,
 };
 
 export const _mockMarketsData: Array<TrancheSupply> = [

@@ -11,7 +11,7 @@ interface IAvailableLiquidityTable extends React.PropsWithChildren {
 
 export const YourSuppliesTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
     const { width } = useWindowSize();
-    const headers = ['Asset', 'Amount', 'Collatoral', 'APY%', ''];
+    const headers = ['Asset', 'Amount', 'Collateral', 'APY%', ''];
 
     return (
         <table className="min-w-full divide-y divide-gray-300 font-basefont">

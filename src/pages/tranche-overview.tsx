@@ -10,7 +10,7 @@ const TrancheOverview: React.FC = () => {
     const { TVLDataProps } = useTrancheOverview();
 
     return (
-        <AppTemplate title="pools" description="Tranche Name" back="yes">
+        <AppTemplate title="pools" description="Tranche Name" back="yes" overview="yes">
             <TrancheTVLDataCard {...TVLDataProps()} />
             <GridView>
                 <Card>

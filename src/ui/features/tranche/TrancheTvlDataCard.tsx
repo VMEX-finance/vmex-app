@@ -33,7 +33,7 @@ const TrancheTVLDataCard: React.FC<ITrancheTVLData> = ({
                 <div className="flex flex-col justify-between">
                     <div className="flex flex-col">
                         <h2 className="text-2xl">Assets</h2>
-                        <img src="tokens/token-USDC.svg" alt="" className="h-8 w-8" />
+                        <img src="tokens/token-AAVE.svg" alt="" className="h-8 w-8" />
                     </div>
                 </div>
                 <div className="flex md:flex-row justify-between gap-36">

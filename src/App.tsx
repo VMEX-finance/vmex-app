@@ -24,7 +24,7 @@ function App() {
                 <Route path="/develop" element={<Construction />} />
 
                 {/* Dynamic Tranche Routes */}
-                <Route path="/tranches/:id" element={<TrancheDetails />} />
+                <Route path="/tranche/details" element={<TrancheDetails />} />
                 <Route path="/tranche" element={<TrancheOverview />} />
             </Routes>
         </BrowserRouter>
