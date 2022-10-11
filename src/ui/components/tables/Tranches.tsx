@@ -59,7 +59,7 @@ export const TranchesTable: React.FC<IAvailableLiquidityTable> = ({ /* children,
                                 <td>{el.yourAmount}</td>
                                 <td>${el.supplyTotal}M</td>
                                 <td>${el.borrowTotal}M</td>
-                                <td>
+                                <td className="text-right pr-3.5">
                                     <Button label="View Details" />
                                 </td>
                             </tr>
