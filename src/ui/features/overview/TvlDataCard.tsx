@@ -30,7 +30,7 @@ const TVLDataCard: React.FC<ITVLData> = ({
         <Card>
             <div className="flex flex-col lg:flex-row gap-2 md:gap-4 lg:gap-6 divide-y-2 lg:divide-y-0 lg:divide-x-2 divide-black">
                 <div className="flex flex-col md:flex-row font-basefont gap-8">
-                    <div className="flex flex-col justify-between">
+                    <div className="flex flex-col justify-between min-w-[300px]">
                         <div className="flex flex-col">
                             <h2 className="text-2xl">Total Value Locked (TVL)</h2>
                             <p className="text-3xl">{tvl ? formatter.format(tvl as number) : ''}</p>
@@ -50,14 +50,14 @@ const TVLDataCard: React.FC<ITVLData> = ({
                     </div>
                 </div>
 
-                <div className="py-2 md:py-4 lg:py-0 lg:px-6 flex flex-col lg:flex-row gap-6 2xl:gap-32 w-full">
+                <div className="py-2 md:py-4 lg:py-0 lg:px-6 flex flex-col lg:flex-row gap-6 xl:gap-12 2xl:gap-24 w-full">
                     <div className="flex flex-col gap-2">
                         <Number size="xl" label="Total Supplied" value={`$${'157.08'}M`} />
                         <div className="flex flex-col gap-1">
                             <span>Top Supplied Assets</span>
                             {/* Dummy Data */}
                             {/* TODO: at 1600px, only top 3 should show */}
-                            <div className="grid grid-cols-1 xl:grid-cols-2 gap-1">
+                            <div className="flex flex-wrap gap-1">
                                 {[1, 2, 3, 4, 5, 6].map((el, i) => (
                                     <PillDisplay
                                         key={`top-asset-${i}`}
@@ -75,7 +75,7 @@ const TVLDataCard: React.FC<ITVLData> = ({
                             <span>Top Borrowed Assets</span>
                             {/* Dummy Data */}
                             {/* TODO: at 1600px, only top 3 should show */}
-                            <div className="grid grid-cols-1 xl:grid-cols-2 gap-1">
+                            <div className="flex flex-wrap gap-1">
                                 {[1, 2, 3, 4, 5, 6].map((el, i) => (
                                     <PillDisplay
                                         key={`top-asset-${i}`}

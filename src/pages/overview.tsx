@@ -12,7 +12,7 @@ const Overview: React.FC = () => {
     const { TVLDataProps } = useMarketOverview();
 
     return (
-        <AppTemplate title="lending">
+        <AppTemplate title="overview">
             <TVLDataCard {...TVLDataProps()} />
             <GridView type="fixed">
                 <LendingPerformanceCard />

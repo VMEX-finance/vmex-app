@@ -9,7 +9,7 @@ type IPillDisplay = {
 export const PillDisplay = (props: IPillDisplay) => {
     if (props.type === 'asset') {
         return (
-            <div className="bg-neutral-900 text-white rounded-3xl flex items-center gap-5 w-fit px-3 py-1">
+            <div className="bg-neutral-900 text-white rounded-3xl flex items-center gap-4 w-fit px-3 py-1">
                 <div className="flex gap-1">
                     <img
                         src={`/tokens/token-${props.asset.toUpperCase()}.svg`}
