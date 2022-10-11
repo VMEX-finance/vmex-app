@@ -30,7 +30,11 @@ export const YourBorrowsTable: React.FC<IAvailableLiquidityTable> = ({ data }) =
                 {data &&
                     data.map((i) => {
                         return (
-                            <tr key={i.asset} className="">
+                            <tr
+                                key={i.asset}
+                                className="text-left transition duration-200 hover:bg-neutral-200 hover:cursor-pointer"
+                                onClick={() => console.log('reroute')}
+                            >
                                 <td className="whitespace-nowrap p-4 text-sm sm:pl-6">
                                     <div className="flex items-center gap-2">
                                         <img src={i.logo} alt={i.asset} className="h-8 w-8" />
@@ -40,7 +44,7 @@ export const YourBorrowsTable: React.FC<IAvailableLiquidityTable> = ({ data }) =
                                 <td className="">{i.amount}</td>
                                 <td>{i.apy_perc}</td>
                                 <td className="">{'VMEX High'}</td>
-                                <td className="text-right hidden md:table-cell">
+                                <td className="text-right hidden md:table-cell pr-3.5">
                                     <Button
                                         label={
                                             (width > 1535 && width < 2000) || width < 500

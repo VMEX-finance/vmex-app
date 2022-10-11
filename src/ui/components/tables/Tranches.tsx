@@ -1,16 +1,14 @@
 import React from 'react';
 import type { Tranche } from '../../../models/tranches';
-// import { useDialogController } from "../../../hooks/dialogs";
 import { Button } from '../buttons';
 import { useNavigate } from 'react-router-dom';
+import { determineRatingColor } from '../../../utils/helpers';
 
 interface IAvailableLiquidityTable extends React.PropsWithChildren {
     data: Tranche[];
 }
-export const TranchesTable: React.FC<IAvailableLiquidityTable> = ({ /* children, */ data }) => {
+export const TranchesTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
     const navigate = useNavigate();
-    // const { openDialog } = useDialogController();
-
     const route = (tranche: string) => navigate(`/tranches/${tranche.replace(/\s+/g, '-')}`, {});
 
     const headers = [
@@ -41,7 +39,6 @@ export const TranchesTable: React.FC<IAvailableLiquidityTable> = ({ /* children,
             <tbody className="divide-y divide-gray-200 bg-white">
                 {data &&
                     data.map((el, i) => {
-                        console.log(el);
                         return (
                             <tr
                                 key={`${el.tranche}-${i}`}
@@ -55,11 +52,13 @@ export const TranchesTable: React.FC<IAvailableLiquidityTable> = ({ /* children,
                                 <td>
                                     <img src={el.assets} alt={el.tranche} className="h-8 w-8" />
                                 </td>
-                                <td>{el.aggregateRating}</td>
+                                <td style={{ color: determineRatingColor(el.aggregateRating) }}>
+                                    {el.aggregateRating}
+                                </td>
                                 <td>{el.yourAmount}</td>
                                 <td>${el.supplyTotal}M</td>
                                 <td>${el.borrowTotal}M</td>
-                                <td>
+                                <td className="text-right pr-3.5">
                                     <Button label="View Details" />
                                 </td>
                             </tr>
