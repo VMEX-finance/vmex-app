@@ -1,14 +1,17 @@
 import React from 'react';
 import type { MarketsAsset } from '../../../models/markets';
 import { useDialogController } from '../../../hooks/dialogs';
+import { useWindowSize } from '../../../hooks/ui';
 import { Button } from '../buttons';
 import { useNavigate } from 'react-router-dom';
+import { determineRatingColor } from '../../../utils/helpers';
 
 interface IAvailableLiquidityTable extends React.PropsWithChildren {
     data: MarketsAsset[];
 }
 export const MarketsTable: React.FC<IAvailableLiquidityTable> = ({ children, data }) => {
     const navigate = useNavigate();
+    const { width } = useWindowSize();
     const { openDialog } = useDialogController();
 
     const route = (tranche: string) => navigate(`/tranches/${tranche.replace(/\s+/g, '-')}`, {});
@@ -50,7 +53,6 @@ export const MarketsTable: React.FC<IAvailableLiquidityTable> = ({ children, dat
             <tbody className="divide-y divide-gray-200 bg-white">
                 {data &&
                     data.map((el, i) => {
-                        console.log(el);
                         return (
                             <tr
                                 key={`${el.asset}-${i}`}
@@ -60,7 +62,7 @@ export const MarketsTable: React.FC<IAvailableLiquidityTable> = ({ children, dat
                                 <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                                     <div className="flex items-center gap-2">
                                         <img src={el.logo} alt={el.asset} className="h-8 w-8" />
-                                        <div className="text-lg">{el.asset}</div>
+                                        <div className="text-lg hidden lg:block">{el.asset}</div>
                                     </div>
                                 </td>
                                 <td>{el.tranche}</td>
@@ -72,9 +74,11 @@ export const MarketsTable: React.FC<IAvailableLiquidityTable> = ({ children, dat
                                 <td>{el.available}</td>
                                 <td>${el.supplyTotal}M</td>
                                 <td>${el.borrowTotal}M</td>
-                                <td>{el.rating}</td>
+                                <td style={{ color: determineRatingColor(el.rating) }}>
+                                    {el.rating}
+                                </td>
                                 <td>
-                                    <Button label="View Details" />
+                                    <Button label={width > 1200 ? 'View Details' : 'Details'} />
                                 </td>
                             </tr>
                         );

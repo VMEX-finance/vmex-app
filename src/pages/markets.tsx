@@ -15,9 +15,9 @@ const Markets: React.FC = () => {
             <Card>
                 <p className="text-xl -mt-4 pb-5">All Available Assets</p>
                 <div className="divide-x-8 divide-transparent">
-                    <DropdownButton items={[{ text: 'Filter Asset' }]} primary />
-                    <DropdownButton items={[{ text: 'Filter APY' }]} primary />
-                    <DropdownButton items={[{ text: 'Filter TVL' }]} primary />
+                    <DropdownButton items={[{ text: 'Filter Asset' }]} primary direction="right" />
+                    <DropdownButton items={[{ text: 'Filter APY' }]} primary direction="right" />
+                    <DropdownButton items={[{ text: 'Filter TVL' }]} primary direction="right" />
                 </div>
                 <MarketsTable data={_mockMarketsData} />
             </Card>
