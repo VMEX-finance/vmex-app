@@ -16,7 +16,7 @@ const Tranches: React.FC = () => {
     }: ITokenData = TokenData(); */
 
     return (
-        <AppTemplate title="pools">
+        <AppTemplate title="tranches">
             <Card>
                 <p className="text-xl -mt-4 pb-5">All Available Tranches</p>
                 <div className="divide-x-8 divide-transparent">

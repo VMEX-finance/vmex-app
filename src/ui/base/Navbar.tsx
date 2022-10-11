@@ -59,9 +59,9 @@ export const DashboardNavbar: React.FC = () => {
                 ${width < 1024 ? 'flex flex-row items-center justify-between' : 'grid grid-cols-3'}
             `}
             >
-                <div id="nav-logo" className="max-w-[100px]">
-                    <img src="/VMEX-logo.svg" alt="VMEX Finance Logo" />
-                </div>
+                <a id="nav-logo" href="/">
+                    <img src="/VMEX-logo.svg" alt="VMEX Finance Logo" width="100" />
+                </a>
 
                 {width > 1024 ? (
                     <div className="justify-self-center">

@@ -13,29 +13,29 @@ export const TranchesTable: React.FC<IAvailableLiquidityTable> = ({ /* children,
 
     const route = (tranche: string) => navigate(`/tranches/${tranche.replace(/\s+/g, '-')}`, {});
 
+    const headers = [
+        'Tranche',
+        'Assets',
+        'Aggregate Rating',
+        'Your Amount',
+        'Supplied',
+        'Borrowed',
+        '',
+    ];
+
     return (
         <table className="min-w-full divide-y divide-gray-300 font-basefont">
             <thead className="">
                 <tr className="text-gray-400 text-sm font-semibold text-left">
-                    <th scope="col" className="py-3.5 sm:pl-6">
-                        Tranche
-                    </th>
-                    <th scope="col" className="py-3.5 pr-36">
-                        Assets
-                    </th>
-                    <th scope="col" className="py-3.5 pr-36">
-                        Aggregate Rating
-                    </th>
-                    <th scope="col" className="py-3.5 pr-36">
-                        Your Amount
-                    </th>
-                    <th scope="col" className="py-3.5 pr-36">
-                        Supplied
-                    </th>
-                    <th scope="col" className="py-3.5 pr-36">
-                        Borrowed
-                    </th>
-                    <th scope="col" className="py-3.5 pr-36"></th>
+                    {headers.map((el: string, i: number) => (
+                        <th
+                            key={`tranches-header-${i}`}
+                            scope="col"
+                            className="py-3.5 first-of-type:sm:pl-6"
+                        >
+                            {el}
+                        </th>
+                    ))}
                 </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 bg-white">
