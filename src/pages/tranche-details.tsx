@@ -6,6 +6,7 @@ import { Card } from '../ui/components/cards';
 import { TrancheInfo } from '../ui/components/tables/TrancheInfo';
 import { _mockMarketsData } from '../models/tranche-supply';
 import { _mockBorrowData } from '../models/tranche-borrow';
+import { TrancheStatisticsCard } from '../ui/features/overview';
 const TrancheDetails: React.FC = () => {
     const { TVLDataProps } = useTrancheOverview();
 
@@ -17,7 +18,7 @@ const TrancheDetails: React.FC = () => {
                     <TrancheInfo data={_mockMarketsData} />
                 </Card>
                 <Card>
-                    <div></div>
+                    <TrancheStatisticsCard />
                 </Card>
             </GridView>
         </AppTemplate>
