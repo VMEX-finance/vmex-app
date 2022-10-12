@@ -55,7 +55,7 @@ const DashboardTemplate: React.FC<IDashboardTemplate> = ({
                             <Button
                                 label="Details"
                                 className="mx-1 rounded-sm w-32"
-                                onClick={() => navigate('/tranche/details')}
+                                onClick={() => navigate('/details')}
                             />
                         </div>
                     ) : (
