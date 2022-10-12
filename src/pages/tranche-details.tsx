@@ -17,9 +17,7 @@ const TrancheDetails: React.FC = () => {
                 <Card>
                     <TrancheInfo data={_mockMarketsData} />
                 </Card>
-                <Card>
-                    <TrancheStatisticsCard />
-                </Card>
+                <TrancheStatisticsCard />
             </GridView>
         </AppTemplate>
     );

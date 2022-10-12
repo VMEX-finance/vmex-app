@@ -4,4 +4,4 @@ export * from './LendingPerformanceCard';
 export * from './TvlDataCard';
 export * from '../tranche/TrancheTvlDataCard'; // TODO: export this from the correct file
 export * from './YourPositions';
-export * from './TrancheStatisticsCard';
+export * from '../tranche/TrancheStatisticsCard';

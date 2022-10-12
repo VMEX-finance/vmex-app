@@ -17,13 +17,13 @@ export const TrancheInfo: React.FC<IAvailableLiquidityTable> = ({ children, data
 
     const mode = primary ? 'Collateral' : 'Liquidity';
     return (
-        <div className="flex flex-row justify-between">
-            <div className="flex flex-col justify-between">
-                <div>
-                    <h2 className="text-xl">Info</h2>
-                    <p>Assets</p>
-                    <img src="tokens/token-UNI.svg" alt="" className="h-8 w-8" />
-                </div>
+        <div className="flex flex-col">
+            <div>
+                <h2 className="text-xl mb-8">Info</h2>
+                <p>Assets</p>
+                <img src="tokens/token-UNI.svg" alt="" className="h-8 w-8 mb-8" />
+            </div>
+            <div className="grid grid-cols-2 justify-between gap-7">
                 <div>
                     <p>Total Supplied</p>
                     <p className="text-2xl">12.47M</p>
@@ -44,8 +44,6 @@ export const TrancheInfo: React.FC<IAvailableLiquidityTable> = ({ children, data
                     <p>Oracle</p>
                     <p className="text-2xl">Chainlink</p>
                 </div>
-            </div>
-            <div className="flex flex-col mt-7">
                 <div>
                     <p>Total Borrowed</p>
                     <p className="text-2xl">12.47M</p>
