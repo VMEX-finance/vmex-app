@@ -1,21 +1,22 @@
 import React from 'react';
 import type { MarketsAsset } from '../../../models/markets';
-import { useDialogController } from '../../../hooks/dialogs';
 import { useWindowSize } from '../../../hooks/ui';
 import { Button } from '../buttons';
 import { useNavigate } from 'react-router-dom';
 import { determineRatingColor } from '../../../utils/helpers';
+import { useSelectedTrancheContext } from '../../../store/contexts';
 
-interface IAvailableLiquidityTable extends React.PropsWithChildren {
+interface IAvailableLiquidityTable {
     data: MarketsAsset[];
 }
-export const MarketsTable: React.FC<IAvailableLiquidityTable> = ({ children, data }) => {
+export const MarketsTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
     const navigate = useNavigate();
     const { width } = useWindowSize();
-    const { openDialog } = useDialogController();
+    const { updateTranche } = useSelectedTrancheContext();
 
     const route = (e: Event, tranche: string, view = 'overview') => {
         e.stopPropagation();
+        updateTranche('name', tranche);
         navigate(`/tranches/${tranche.replace(/\s+/g, '-')}`, { state: { view } });
     };
 

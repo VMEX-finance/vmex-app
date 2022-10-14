@@ -6,3 +6,5 @@ export * from './ViewBorrowedAssetsTable';
 export * from './Tranches';
 export * from './YourSupplies';
 export * from './YourBorrows';
+export * from './TrancheInfo';
+export * from './TrancheOverviewTable';

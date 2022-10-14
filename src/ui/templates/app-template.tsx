@@ -8,14 +8,20 @@ interface IAppTemplate {
     title?: string;
     description?: string | React.ReactNode;
     view?: string;
+    setView?: any;
 }
 
-const AppTemplate: React.FC<IAppTemplate> = ({ children, title, description, view }) => {
+const AppTemplate: React.FC<IAppTemplate> = ({ children, title, description, view, setView }) => {
     return (
         <div className="h-screen">
             <DashboardNavbar />
             <ModalTemplate />
-            <DashboardTemplate title={title} description={description} view={view}>
+            <DashboardTemplate
+                title={title}
+                description={description}
+                view={view}
+                setView={setView}
+            >
                 {children}
             </DashboardTemplate>
         </div>

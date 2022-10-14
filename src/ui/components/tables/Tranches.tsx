@@ -3,14 +3,18 @@ import type { Tranche } from '../../../models/tranches';
 import { Button } from '../buttons';
 import { useNavigate } from 'react-router-dom';
 import { determineRatingColor } from '../../../utils/helpers';
+import { useSelectedTrancheContext } from '../../../store/contexts';
 
 interface IAvailableLiquidityTable extends React.PropsWithChildren {
     data: Tranche[];
 }
 export const TranchesTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
     const navigate = useNavigate();
+    const { updateTranche } = useSelectedTrancheContext();
+
     const route = (e: Event, tranche: string, view = 'overview') => {
         e.stopPropagation();
+        updateTranche('name', tranche);
         navigate(`/tranches/${tranche.replace(/\s+/g, '-')}`, { state: { view } });
     };
 
