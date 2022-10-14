@@ -14,7 +14,10 @@ export const MarketsTable: React.FC<IAvailableLiquidityTable> = ({ children, dat
     const { width } = useWindowSize();
     const { openDialog } = useDialogController();
 
-    const route = (tranche: string) => navigate(`/tranches/${tranche.replace(/\s+/g, '-')}`, {});
+    const route = (e: Event, tranche: string, view = 'overview') => {
+        e.stopPropagation();
+        navigate(`/tranches/${tranche.replace(/\s+/g, '-')}`, { state: { view } });
+    };
 
     return (
         <table className="min-w-full divide-y divide-gray-300 font-basefont">
@@ -57,7 +60,7 @@ export const MarketsTable: React.FC<IAvailableLiquidityTable> = ({ children, dat
                             <tr
                                 key={`${el.asset}-${i}`}
                                 className="text-left transition duration-200 hover:bg-neutral-200 hover:cursor-pointer"
-                                onClick={() => route(el.tranche)}
+                                onClick={(e: any) => route(e, el.tranche)}
                             >
                                 <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                                     <div className="flex items-center gap-2">
@@ -78,7 +81,10 @@ export const MarketsTable: React.FC<IAvailableLiquidityTable> = ({ children, dat
                                     {el.rating}
                                 </td>
                                 <td>
-                                    <Button label={width > 1200 ? 'View Details' : 'Details'} />
+                                    <Button
+                                        label={width > 1200 ? 'View Details' : 'Details'}
+                                        onClick={(e) => route(e, el.tranche, 'details')}
+                                    />
                                 </td>
                             </tr>
                         );

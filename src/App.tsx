@@ -7,7 +7,6 @@ import Staking from './pages/staking';
 import Markets from './pages/markets';
 import Construction from './pages/construction';
 import TrancheDetails from './pages/tranche-details';
-import TrancheOverview from './pages/tranche-overview';
 import { useGeneralTokenData } from './hooks/user-data';
 
 function App() {
@@ -24,8 +23,8 @@ function App() {
                 <Route path="/develop" element={<Construction />} />
 
                 {/* Dynamic Tranche Routes */}
-                <Route path="/details" element={<TrancheDetails />} />
-                <Route path="/tranche" element={<TrancheOverview />} />
+                <Route path="/tranches/:name" element={<TrancheDetails />} />
+                {/* <Route path="/tranches/:name" element={<TrancheOverview />} /> */}
             </Routes>
         </BrowserRouter>
     );

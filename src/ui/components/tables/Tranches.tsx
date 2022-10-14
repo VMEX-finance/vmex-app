@@ -9,7 +9,10 @@ interface IAvailableLiquidityTable extends React.PropsWithChildren {
 }
 export const TranchesTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
     const navigate = useNavigate();
-    const route = (tranche: string) => navigate(`/tranches/${tranche.replace(/\s+/g, '-')}`, {});
+    const route = (e: Event, tranche: string, view = 'overview') => {
+        e.stopPropagation();
+        navigate(`/tranches/${tranche.replace(/\s+/g, '-')}`, { state: { view } });
+    };
 
     const headers = [
         'Tranche',
@@ -43,7 +46,7 @@ export const TranchesTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
                             <tr
                                 key={`${el.tranche}-${i}`}
                                 className="text-left transition duration-200 hover:bg-neutral-200 hover:cursor-pointer"
-                                onClick={() => route(el.tranche)}
+                                onClick={(e: any) => route(e, el.tranche)}
                             >
                                 <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                                     <td>{el.tranche}</td>
@@ -59,7 +62,10 @@ export const TranchesTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
                                 <td>${el.supplyTotal}M</td>
                                 <td>${el.borrowTotal}M</td>
                                 <td className="text-right pr-3.5">
-                                    <Button label="View Details" />
+                                    <Button
+                                        label="View Details"
+                                        onClick={(e) => route(e, el.tranche, 'details')}
+                                    />
                                 </td>
                             </tr>
                         );
