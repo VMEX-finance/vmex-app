@@ -8,25 +8,28 @@ import Markets from './pages/markets';
 import Construction from './pages/construction';
 import TrancheDetails from './pages/tranche-details';
 import { useGeneralTokenData } from './hooks/user-data';
+import { SelectedTrancheStore } from './store/contexts';
 
 function App() {
     useGeneralTokenData();
-    return (
-        <BrowserRouter>
-            <Routes>
-                <Route index element={<Navigate to="/overview" />} />
-                <Route path="/overview" element={<Overview />} />
-                <Route path="/tranches" element={<Tranches />} />
-                <Route path="/markets" element={<Markets />} />
-                <Route path="/staking" element={<Staking />} />
-                <Route path="/governance" element={<Construction />} />
-                <Route path="/develop" element={<Construction />} />
 
-                {/* Dynamic Tranche Routes */}
-                <Route path="/tranches/:name" element={<TrancheDetails />} />
-                {/* <Route path="/tranches/:name" element={<TrancheOverview />} /> */}
-            </Routes>
-        </BrowserRouter>
+    return (
+        <SelectedTrancheStore>
+            <BrowserRouter>
+                <Routes>
+                    <Route index element={<Navigate to="/overview" />} />
+                    <Route path="/overview" element={<Overview />} />
+                    <Route path="/tranches" element={<Tranches />} />
+                    <Route path="/markets" element={<Markets />} />
+                    <Route path="/staking" element={<Staking />} />
+                    <Route path="/governance" element={<Construction />} />
+                    <Route path="/develop" element={<Construction />} />
+
+                    {/* Dynamic Tranche Routes */}
+                    <Route path="/tranches/:name" element={<TrancheDetails />} />
+                </Routes>
+            </BrowserRouter>
+        </SelectedTrancheStore>
     );
 }
 

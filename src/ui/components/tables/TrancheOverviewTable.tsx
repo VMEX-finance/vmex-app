@@ -1,20 +1,12 @@
 import React from 'react';
 import type { TrancheSupply } from '../../../models/tranche-supply';
 import type { TrancheBorrow } from '../../../models/tranche-borrow';
-import { useDialogController } from '../../../hooks/dialogs';
-import { Button } from '../buttons';
-import { useNavigate } from 'react-router-dom';
-
-interface IAvailableLiquidityTable extends React.PropsWithChildren {
+// TODO: why is there a primary prop? Not descriptive
+interface IAvailableLiquidityTable {
     data: TrancheSupply[] | TrancheBorrow[];
     primary?: any;
 }
-export const TrancheTable: React.FC<IAvailableLiquidityTable> = ({ children, data, primary }) => {
-    const navigate = useNavigate();
-    const { openDialog } = useDialogController();
-
-    const route = (tranche: string) => navigate(`/tranches/${tranche.replace(/\s+/g, '-')}`, {});
-
+export const TrancheTable: React.FC<IAvailableLiquidityTable> = ({ data, primary }) => {
     const mode = primary ? 'Collateral' : 'Liquidity';
     return (
         <table className="min-w-full divide-y divide-gray-300 font-basefont">
@@ -38,7 +30,6 @@ export const TrancheTable: React.FC<IAvailableLiquidityTable> = ({ children, dat
             <tbody className="divide-y divide-gray-200 bg-white">
                 {data &&
                     data.map((el, i) => {
-                        console.log(el);
                         return (
                             <tr key={`${el.asset}-${i}`} className="text-left" onClick={() => {}}>
                                 <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">

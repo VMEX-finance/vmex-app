@@ -1,12 +1,6 @@
 import React from 'react';
-import type { TrancheSupply } from '../../../models/tranche-supply';
-import type { TrancheBorrow } from '../../../models/tranche-borrow';
 
-interface IAvailableLiquidityTable extends React.PropsWithChildren {
-    data: TrancheSupply[] | TrancheBorrow[];
-}
-
-export const TrancheInfo: React.FC<IAvailableLiquidityTable> = ({ data }) => {
+export const TrancheInfo = ({ tranche }: any) => {
     return (
         <div className="flex flex-col">
             <div>

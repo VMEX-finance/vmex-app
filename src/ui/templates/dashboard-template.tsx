@@ -8,7 +8,7 @@ interface IDashboardTemplate {
     children?: React.ReactElement | React.ReactElement[];
     description?: string | React.ReactNode;
     view?: string;
-    tranche?: any;
+    setView?: any;
 }
 
 const DashboardTemplate: React.FC<IDashboardTemplate> = ({
@@ -17,7 +17,7 @@ const DashboardTemplate: React.FC<IDashboardTemplate> = ({
     children,
     description,
     view,
-    tranche,
+    setView,
 }) => {
     const navigate = useNavigate();
     const routeChange = () => navigate('/tranches');
@@ -45,13 +45,13 @@ const DashboardTemplate: React.FC<IDashboardTemplate> = ({
                         <Button
                             label="Overview"
                             // TODO: change to push tranche to state
-                            onClick={() => navigate('/tranches')}
+                            onClick={() => setView('tranche-overview')}
                             primary={view.includes('overview')}
                         />
                         <Button
                             label="Details"
                             // TODO: change to push tranche to state
-                            onClick={() => navigate('/tranches')}
+                            onClick={() => setView('tranche-details')}
                             primary={view.includes('details')}
                         />
                     </div>
