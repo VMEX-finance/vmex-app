@@ -40,14 +40,14 @@ export const TrancheTable: React.FC<IAvailableLiquidityTable> = ({ children, dat
                     data.map((el, i) => {
                         console.log(el);
                         return (
-                            <tr
-                                key={`${el.asset}-${i}`}
-                                className="text-left transition duration-200 hover:bg-neutral-200 hover:cursor-pointer"
-                                onClick={() => {}}
-                            >
+                            <tr key={`${el.asset}-${i}`} className="text-left" onClick={() => {}}>
                                 <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                                     <div className="flex items-center gap-2">
-                                        <img src={el.logo} alt={el.asset} className="h-8 w-8" />
+                                        <img
+                                            src={`/${el.logo}`}
+                                            alt={el.asset}
+                                            className="h-8 w-8"
+                                        />
                                         <div className="text-lg">{el.asset}</div>
                                     </div>
                                 </td>
@@ -55,16 +55,17 @@ export const TrancheTable: React.FC<IAvailableLiquidityTable> = ({ children, dat
                                     {el.balance} {el.asset}
                                 </td>
                                 <td>{el.apy}%</td>
+                                {/* TODO: create a toggle component that holds all this information */}
                                 {primary ? (
                                     el.collateral ? (
                                         <img
-                                            src="elements/Clicker2.svg"
+                                            src="/elements/Clicker2.svg"
                                             alt=""
                                             className="h-8 w-8"
                                         />
                                     ) : (
                                         <img
-                                            src="elements/Clicker.svg"
+                                            src="/elements/Clicker.svg"
                                             alt=""
                                             className="h-8 w-8"
                                         />

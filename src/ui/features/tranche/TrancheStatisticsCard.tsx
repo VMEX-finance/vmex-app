@@ -1,13 +1,12 @@
 import { ReLineChart } from '../../components/charts';
 import React from 'react';
 import { Card } from '../../components/cards';
-import { PillDisplay } from '../../components/displays';
 import { lineData, lineData2 } from '../../../utils/mock-data';
 import { DropdownButton } from '../../components/buttons';
 
 export const TrancheStatisticsCard: React.FC = () => {
     return (
-        <Card black className="max-w-4xl">
+        <Card black>
             <div className="flex justify-between items-center mb-3">
                 <h3 className="text-lg">Statistics</h3>
                 <DropdownButton primary items={[{ text: 'ETH' }]} />
@@ -19,6 +18,7 @@ export const TrancheStatisticsCard: React.FC = () => {
                 </div>
             </div>
             <div className="grid grid-cols-4 justify-items-center gap-y-10">
+                {/* TODO: change all these to the NumberDisplay component and make it come from a "data" prop or whatever you want to name it */}
                 <div className="grid grid-cols-1 justify-items-center">
                     <p>LTV</p>
                     <p className="text-xl">0%</p>

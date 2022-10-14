@@ -20,7 +20,7 @@ export const Button = ({
     alt,
 }: IButtonProps) => {
     const mode = primary
-        ? 'bg-black rounded-lg text-white hover:bg-neutral-800'
+        ? 'bg-black rounded-lg text-white hover:bg-neutral-800 border border-[1px] border-black'
         : border
         ? `bg-white text-neutral-900 border-[1px] border-black border-solid rounded-lg hover:bg-neutral-200`
         : 'bg-white text-neutral-900 rounded-lg hover:bg-neutral-200';
