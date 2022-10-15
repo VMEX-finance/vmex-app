@@ -3,18 +3,9 @@ import React from 'react';
 import { AppTemplate } from '../ui/templates';
 import { TranchesTable } from '../ui/components/tables';
 import { _mockTranchesData } from '../models/tranches';
-//import { TokenData } from "../hooks/user-data";
-//import { ITokenData } from "../store/token-data";
 import { DropdownButton } from '../ui/components/buttons';
 
 const Tranches: React.FC = () => {
-    /*  const {
-        isLoading,
-        error,
-        error_msg,
-        data
-    }: ITokenData = TokenData(); */
-
     return (
         <AppTemplate title="tranches">
             <Card>

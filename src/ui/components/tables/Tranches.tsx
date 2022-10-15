@@ -4,11 +4,23 @@ import { Button } from '../buttons';
 import { useNavigate } from 'react-router-dom';
 import { determineRatingColor } from '../../../utils/helpers';
 import { useSelectedTrancheContext } from '../../../store/contexts';
+import { BsArrowDownCircle, BsArrowUpCircle } from 'react-icons/bs';
 
-interface IAvailableLiquidityTable extends React.PropsWithChildren {
+interface IDataTable {
     data: Tranche[];
 }
-export const TranchesTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
+
+const headers = [
+    'Tranche',
+    'Assets',
+    'Aggregate Rating',
+    'Your Activity',
+    'Supplied',
+    'Borrowed',
+    '',
+];
+
+export const TranchesTable: React.FC<IDataTable> = ({ data }) => {
     const navigate = useNavigate();
     const { updateTranche } = useSelectedTrancheContext();
 
@@ -18,15 +30,25 @@ export const TranchesTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
         navigate(`/tranches/${tranche.replace(/\s+/g, '-')}`, { state: { view } });
     };
 
-    const headers = [
-        'Tranche',
-        'Assets',
-        'Aggregate Rating',
-        'Your Amount',
-        'Supplied',
-        'Borrowed',
-        '',
-    ];
+    const renderActivity = (status: string) => {
+        // TODO: add tooltips to describe what these mean and/or add better icons
+        const size = '18px';
+        switch (status.toLowerCase()) {
+            case 'deposited':
+                return <BsArrowDownCircle size={size} />;
+            case 'supplied':
+                return <BsArrowUpCircle size={size} />;
+            case 'both':
+                return (
+                    <div className="flex gap-2">
+                        <BsArrowDownCircle size={size} />
+                        <BsArrowUpCircle size={size} />
+                    </div>
+                );
+            default:
+                return <></>;
+        }
+    };
 
     return (
         <table className="min-w-full divide-y divide-gray-300 font-basefont">
@@ -62,7 +84,7 @@ export const TranchesTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
                                 <td style={{ color: determineRatingColor(el.aggregateRating) }}>
                                     {el.aggregateRating}
                                 </td>
-                                <td>{el.yourAmount}</td>
+                                <td>{renderActivity(el.yourActivity)}</td>
                                 <td>${el.supplyTotal}M</td>
                                 <td>${el.borrowTotal}M</td>
                                 <td className="text-right pr-3.5">

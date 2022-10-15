@@ -31,7 +31,7 @@ const TrancheDetails: React.FC = () => {
         >
             {/* TODO: Should not use TVL Data Props from the entire protocol? */}
             <TrancheTVLDataCard {...TVLDataProps()} />
-            <GridView>
+            <GridView className="lg:grid-cols-[1fr_2fr]">
                 {view.includes('details') ? (
                     <>
                         <Card>
