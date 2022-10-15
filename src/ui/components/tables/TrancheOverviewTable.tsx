@@ -48,6 +48,7 @@ export const TrancheTable: React.FC<IAvailableLiquidityTable> = ({ data, primary
                                 <td>{el.apy}%</td>
                                 {/* TODO: create a toggle component that holds all this information */}
                                 {primary ? (
+                                    // TODO: make this its own function for easier code read
                                     el.collateral ? (
                                         <img
                                             src="/elements/Clicker2.svg"

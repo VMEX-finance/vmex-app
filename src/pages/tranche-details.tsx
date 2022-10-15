@@ -31,26 +31,26 @@ const TrancheDetails: React.FC = () => {
         >
             {/* TODO: Should not use TVL Data Props from the entire protocol? */}
             <TrancheTVLDataCard {...TVLDataProps()} />
-            <GridView>
-                {view.includes('details') ? (
-                    <>
-                        <Card>
-                            <TrancheInfo tranche={tranche} />
-                        </Card>
-                        <TrancheStatisticsCard tranche={tranche} />
-                    </>
-                ) : (
-                    <>
-                        <Card>
-                            {/* TODO: Replace tables "data" prop with tranche table data prop    */}
-                            <TrancheTable data={_mockMarketsData} primary />
-                        </Card>
-                        <Card>
-                            <TrancheTable data={_mockBorrowData} />
-                        </Card>
-                    </>
-                )}
-            </GridView>
+            {view.includes('details') ? (
+                <GridView className="lg:grid-cols-[1fr_2fr]">
+                    <Card>
+                        <TrancheInfo tranche={tranche} />
+                    </Card>
+                    <TrancheStatisticsCard tranche={tranche} />
+                </GridView>
+            ) : (
+                <GridView>
+                    <Card>
+                        <h3>Deposit</h3>
+                        {/* TODO: Replace tables "data" prop with tranche table data prop */}
+                        <TrancheTable data={_mockMarketsData} primary />
+                    </Card>
+                    <Card>
+                        <h3>Supply</h3>
+                        <TrancheTable data={_mockBorrowData} />
+                    </Card>
+                </GridView>
+            )}
         </AppTemplate>
     );
 };

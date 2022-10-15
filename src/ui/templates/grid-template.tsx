@@ -2,6 +2,7 @@ import React from 'react';
 
 interface IGridView {
     children: React.ReactElement | React.ReactElement[];
+    className?: string;
     type?: 'flow' | 'fixed';
     cols?:
         | 'grid-cols-1'
@@ -13,11 +14,24 @@ interface IGridView {
         | 'xl:grid-cols-4';
 }
 
-const GridView: React.FC<IGridView> = ({ children, type = 'flow', cols = '2xl:grid-cols-3' }) => {
+const GridView: React.FC<IGridView> = ({
+    children,
+    type = 'flow',
+    cols = '2xl:grid-cols-3',
+    className = '',
+}) => {
     if (type === 'fixed') {
-        return <div className={`w-full grid gap-4 md:gap-6 lg:gap-8 ${cols}`}>{children}</div>;
+        return (
+            <div className={`w-full grid gap-4 md:gap-6 lg:gap-8 ${cols} ${className}`}>
+                {children}
+            </div>
+        );
     } else {
-        return <div className="w-full grid grid-col lg:grid-flow-col-dense gap-8">{children}</div>;
+        return (
+            <div className={`w-full grid grid-col lg:grid-flow-col-dense gap-8 ${className}`}>
+                {children}
+            </div>
+        );
     }
 };
 
