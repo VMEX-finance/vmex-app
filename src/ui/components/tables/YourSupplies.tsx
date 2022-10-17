@@ -11,7 +11,7 @@ interface IAvailableLiquidityTable extends React.PropsWithChildren {
 
 export const YourSuppliesTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
     const { width } = useWindowSize();
-    const headers = ['Asset', 'Amount', 'Collateral', 'APY%', ''];
+    const headers = ['Asset', 'Amount', 'Collateral', 'APY%'];
 
     return (
         <table className="min-w-full divide-y divide-gray-300 font-basefont">
@@ -54,7 +54,7 @@ export const YourSuppliesTable: React.FC<IAvailableLiquidityTable> = ({ data }) 
                                     </div>
                                 </td>
                                 <td>{i.apy_perc}</td>
-                                <td className="text-right pr-3.5 hidden md:table-cell">
+                                {/* <td className="text-right pr-3.5 hidden md:table-cell">
                                     <Button
                                         label={
                                             (width > 1535 && width < 2000) || width < 500
@@ -64,7 +64,7 @@ export const YourSuppliesTable: React.FC<IAvailableLiquidityTable> = ({ data }) 
                                         // TODO: Send from here to appropriate traunch details view
                                         onClick={() => console.log('directing')}
                                     />
-                                </td>
+                                </td> */}
                             </tr>
                         );
                     })}

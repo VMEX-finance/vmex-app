@@ -1,13 +1,17 @@
 import React from 'react';
-import type { TrancheSupply } from '../../../models/tranche-supply';
-import type { TrancheBorrow } from '../../../models/tranche-borrow';
-// TODO: why is there a primary prop? Not descriptive
-interface IAvailableLiquidityTable {
-    data: TrancheSupply[] | TrancheBorrow[];
-    primary?: any;
+import { useDialogController } from '../../../hooks/dialogs';
+import { AvailableAsset } from '../../../models/available-liquidity-model';
+import { Switch } from '@headlessui/react';
+import { BasicToggle } from '../toggles';
+
+interface ITableProps {
+    data: AvailableAsset[];
+    type?: 'supply' | 'borrow';
 }
-export const TrancheTable: React.FC<IAvailableLiquidityTable> = ({ data, primary }) => {
-    const mode = primary ? 'Collateral' : 'Liquidity';
+export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
+    const { openDialog } = useDialogController();
+    const mode = type === 'supply' ? 'Collateral' : 'Liquidity';
+
     return (
         <table className="min-w-full divide-y divide-gray-300 font-basefont">
             <thead className="">
@@ -31,7 +35,18 @@ export const TrancheTable: React.FC<IAvailableLiquidityTable> = ({ data, primary
                 {data &&
                     data.map((el, i) => {
                         return (
-                            <tr key={`${el.asset}-${i}`} className="text-left" onClick={() => {}}>
+                            <tr
+                                key={`${el.asset}-${i}`}
+                                className="text-left transition duration-200 hover:bg-neutral-200 hover:cursor-pointer"
+                                onClick={() =>
+                                    openDialog(
+                                        type === 'supply'
+                                            ? 'loan-asset-dialog'
+                                            : 'borrow-asset-dialog',
+                                        { ...el },
+                                    )
+                                }
+                            >
                                 <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                                     <div className="flex items-center gap-2">
                                         <img
@@ -43,28 +58,16 @@ export const TrancheTable: React.FC<IAvailableLiquidityTable> = ({ data, primary
                                     </div>
                                 </td>
                                 <td>
-                                    {el.balance} {el.asset}
+                                    {el.amount} {el.asset}
                                 </td>
-                                <td>{el.apy}%</td>
-                                {/* TODO: create a toggle component that holds all this information */}
-                                {primary ? (
-                                    // TODO: make this its own function for easier code read
-                                    el.collateral ? (
-                                        <img
-                                            src="/elements/Clicker2.svg"
-                                            alt=""
-                                            className="h-8 w-8"
-                                        />
+                                <td>{el.apy_perc}%</td>
+                                <td>
+                                    {type === 'supply' ? (
+                                        <BasicToggle checked={el.canBeCollat} />
                                     ) : (
-                                        <img
-                                            src="/elements/Clicker.svg"
-                                            alt=""
-                                            className="h-8 w-8"
-                                        />
-                                    )
-                                ) : (
-                                    <td>${el.liquidity}M</td>
-                                )}
+                                        `$${el.liquidity}M`
+                                    )}
+                                </td>
                             </tr>
                         );
                     })}

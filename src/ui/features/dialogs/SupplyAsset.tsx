@@ -22,6 +22,8 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
     data,
     closeDialog,
 }) => {
+    console.log(data);
+
     const [isSuccess, setIsSuccess] = React.useState(false);
     const [isError, setIsError] = React.useState(false);
     const [asCollateral, setAsCollateral] = React.useState(false);
@@ -64,7 +66,7 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
                             amount={amount}
                             setAmount={setAmount}
                             coin={{
-                                logo: data.logo,
+                                logo: `/${data.logo}`,
                                 name: data.asset,
                             }}
                             balance={'0.23'}

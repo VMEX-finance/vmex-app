@@ -58,7 +58,7 @@ export const BorrowAssetDialog: React.FC<IOwnedAssetDetails> = ({
                             amount={amount}
                             setAmount={setAmount}
                             coin={{
-                                logo: data.logo,
+                                logo: `/${data.logo}`,
                                 name: data.asset,
                             }}
                             balance={'0.23'}

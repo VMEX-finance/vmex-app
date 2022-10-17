@@ -14,6 +14,12 @@ export interface IDialogState {
     error?: null | string;
 }
 
+export type IDialogNames =
+    | 'loan-asset-dialog'
+    | 'borrowed-asset-details-dialog'
+    | 'borrow-asset-dialog'
+    | 'stake-asset-dialog';
+
 const DialogControllerState: IDialogState = {
     dialogs: new Map<string, DialogType>([
         [
