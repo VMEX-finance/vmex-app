@@ -24,6 +24,7 @@ export type AvailableAsset = {
     amount: number;
     apy_perc: number;
     canBeCollat: boolean;
+    liquidity?: number;
     tranches: Tranch[];
 };
 
@@ -40,6 +41,7 @@ export const _mockAvailableAsset: AvailableAsset = {
     amount: 9921,
     apy_perc: 0.0078,
     canBeCollat: true,
+    liquidity: 18.3,
     tranches: [
         {
             name: 'Stable Asset Tranche',
@@ -66,6 +68,7 @@ export const _mockAvailableAsset2: AvailableAsset = {
     amount: 2394,
     apy_perc: 0.0053,
     canBeCollat: false,
+    liquidity: 4.2,
     tranches: [
         {
             name: 'Stable Asset Tranche',
@@ -92,6 +95,7 @@ export const _mockAvailableAsset3: AvailableAsset = {
     amount: 9128,
     apy_perc: 0.0103,
     canBeCollat: true,
+    liquidity: 12.8,
     tranches: [
         {
             name: 'Stable Asset Tranche',

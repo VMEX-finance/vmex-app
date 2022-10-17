@@ -3,7 +3,7 @@ import React from 'react';
 export interface ICheckboxProps {
     checked: boolean;
     disabled?: boolean;
-    setChecked: any;
+    setChecked?: any;
     label: string;
 }
 
