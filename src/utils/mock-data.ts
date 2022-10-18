@@ -132,7 +132,8 @@ export const mockTopTranches = [
 ];
 
 export const _mockAvailableTranche: ITrancheProps = {
-    tranche: 'VMEX High Quality',
+    id: 1,
+    name: 'VMEX High Quality',
     assets: ['USDC', 'WBTC', 'AAVE', 'DAI', 'WETH', 'LINK', 'USDT'],
     aggregateRating: 'A+',
     yourActivity: 'none',
@@ -141,8 +142,9 @@ export const _mockAvailableTranche: ITrancheProps = {
 };
 
 export const _mockAvailableTranche2: ITrancheProps = {
+    id: 2,
     assets: ['WBTC', 'ENJ', 'AAVE', 'UNI', 'WETH', 'DAI'],
-    tranche: 'VMEX Mid Quality',
+    name: 'VMEX Mid Quality',
     yourActivity: 'both',
     supplyTotal: 8.73,
     borrowTotal: 4.19,
@@ -150,8 +152,9 @@ export const _mockAvailableTranche2: ITrancheProps = {
 };
 
 export const _mockAvailableTranche3: ITrancheProps = {
+    id: 3,
     assets: ['MANA', 'SNX', 'MKR', 'BAT', 'LINK', 'XRP', 'KNC', 'REN'],
-    tranche: 'VMEX Low Quality',
+    name: 'VMEX Low Quality',
     yourActivity: 'deposited',
     supplyTotal: 17.22,
     borrowTotal: 11.24,

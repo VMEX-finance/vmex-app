@@ -14,10 +14,10 @@ export const MarketsTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
     const { width } = useWindowSize();
     const { updateTranche } = useSelectedTrancheContext();
 
-    const route = (e: Event, tranche: string, view = 'overview') => {
+    const route = (e: Event, market: MarketsAsset, view = 'overview') => {
         e.stopPropagation();
-        updateTranche('name', tranche);
-        navigate(`/tranches/${tranche.replace(/\s+/g, '-')}`, { state: { view } });
+        updateTranche('id', market.trancheId);
+        navigate(`/tranches/${market.tranche.replace(/\s+/g, '-')}`, { state: { view } });
     };
 
     return (
@@ -61,7 +61,7 @@ export const MarketsTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
                             <tr
                                 key={`${el.asset}-${i}`}
                                 className="text-left transition duration-200 hover:bg-neutral-200 hover:cursor-pointer"
-                                onClick={(e: any) => route(e, el.tranche)}
+                                onClick={(e: any) => route(e, el)}
                             >
                                 <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                                     <div className="flex items-center gap-2">
@@ -84,7 +84,7 @@ export const MarketsTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
                                 <td>
                                     <Button
                                         label={width > 1200 ? 'View Details' : 'Details'}
-                                        onClick={(e) => route(e, el.tranche, 'details')}
+                                        onClick={(e) => route(e, el, 'details')}
                                     />
                                 </td>
                             </tr>
