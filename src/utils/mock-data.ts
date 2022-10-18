@@ -1,3 +1,5 @@
+import { ITrancheProps } from '../models/tranches';
+
 export const lineData = [
     {
         date: '07/20/2022',
@@ -127,4 +129,37 @@ export const mockTopTranches = [
         borrowed: 11.4,
         supplied: 12.8,
     },
+];
+
+export const _mockAvailableTranche: ITrancheProps = {
+    tranche: 'VMEX High Quality',
+    assets: ['USDC', 'WBTC', 'AAVE', 'DAI', 'WETH', 'LINK', 'USDT'],
+    aggregateRating: 'A+',
+    yourActivity: 'none',
+    supplyTotal: 22.18,
+    borrowTotal: 8.44,
+};
+
+export const _mockAvailableTranche2: ITrancheProps = {
+    assets: ['WBTC', 'ENJ', 'AAVE', 'UNI', 'WETH', 'DAI'],
+    tranche: 'VMEX Mid Quality',
+    yourActivity: 'both',
+    supplyTotal: 8.73,
+    borrowTotal: 4.19,
+    aggregateRating: 'C',
+};
+
+export const _mockAvailableTranche3: ITrancheProps = {
+    assets: ['MANA', 'SNX', 'MKR', 'BAT', 'LINK', 'XRP', 'KNC', 'REN'],
+    tranche: 'VMEX Low Quality',
+    yourActivity: 'deposited',
+    supplyTotal: 17.22,
+    borrowTotal: 11.24,
+    aggregateRating: 'D',
+};
+
+export const _mockTranchesData: Array<ITrancheProps> = [
+    _mockAvailableTranche,
+    _mockAvailableTranche2,
+    _mockAvailableTranche3,
 ];

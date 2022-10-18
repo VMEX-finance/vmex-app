@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Tranche } from '../../../models/tranches';
+import type { ITrancheProps } from '../../../models/tranches';
 import { Button } from '../buttons';
 import { useNavigate } from 'react-router-dom';
 import { determineRatingColor } from '../../../utils/helpers';
@@ -7,7 +7,7 @@ import { useSelectedTrancheContext } from '../../../store/contexts';
 import { BsArrowDownCircle, BsArrowUpCircle } from 'react-icons/bs';
 
 interface IDataTable {
-    data: Tranche[];
+    data: ITrancheProps[];
 }
 
 const headers = [
@@ -79,7 +79,18 @@ export const TranchesTable: React.FC<IDataTable> = ({ data }) => {
                                 </td>
 
                                 <td>
-                                    <img src={el.assets} alt={el.tranche} className="h-8 w-8" />
+                                    {/* TODO: make assets overlap each other ever so slightly */}
+                                    <div className="flex items-center">
+                                        {el.assets.slice(0, 4).map((el, i) => (
+                                            <img
+                                                key={`tranches-asset-${i}`}
+                                                src={`tokens/token-${el}.svg`}
+                                                alt={el}
+                                                className="h-8 w-8"
+                                            />
+                                        ))}
+                                        <span className="ml-2">+{el.assets.slice(4).length}</span>
+                                    </div>
                                 </td>
                                 <td style={{ color: determineRatingColor(el.aggregateRating) }}>
                                     {el.aggregateRating}
