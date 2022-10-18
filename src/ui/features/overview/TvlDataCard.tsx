@@ -1,8 +1,9 @@
 import { Card } from '../../components/cards';
 import React from 'react';
-import { ReLineChart } from '../../components/charts';
-import { lineData2 } from '../../../utils/mock-data';
+import { IDataProps, ReLineChart } from '../../components/charts';
+import { lineData2, mockTopAssets, mockTopTranches } from '../../../utils/mock-data';
 import { Number, PillDisplay } from '../../components/displays';
+import { TopTranchesTable } from '../../components/tables';
 
 export interface ITVLData {
     tvl?: number;
@@ -10,7 +11,7 @@ export interface ITVLData {
     lenders?: number;
     borrowers?: number;
     markets?: number;
-    graphData?: number[];
+    graphData?: IDataProps[];
 }
 
 const TVLDataCard: React.FC<ITVLData> = ({
@@ -36,7 +37,7 @@ const TVLDataCard: React.FC<ITVLData> = ({
                             <p className="text-3xl">{tvl ? formatter.format(tvl as number) : ''}</p>
                         </div>
                         <div className="h-[100px] w-full">
-                            <ReLineChart data={lineData2} color="#3CB55E" />
+                            <ReLineChart data={graphData || lineData2} color="#3CB55E" />
                         </div>
                     </div>
                     <div className="flex md:flex-col justify-between gap-1">
@@ -50,7 +51,7 @@ const TVLDataCard: React.FC<ITVLData> = ({
                     </div>
                 </div>
 
-                <div className="py-2 md:py-4 xl:py-0 xl:px-6 flex flex-col lg:flex-row gap-6 xl:gap-12 2xl:gap-24 w-full">
+                <div className="py-2 md:py-4 xl:py-0 xl:px-6 grid grid-cols-1 lg:grid-cols-3 gap-4 w-full">
                     <div className="flex flex-col gap-2">
                         <Number size="xl" label="Total Supplied" value={`$${'157.08'}M`} />
                         <div className="flex flex-col gap-1">
@@ -58,17 +59,18 @@ const TVLDataCard: React.FC<ITVLData> = ({
                             {/* Dummy Data */}
                             {/* TODO: at 1600px, only top 3 should show */}
                             <div className="flex flex-wrap gap-1">
-                                {[1, 2, 3, 4, 5, 6].map((el, i) => (
+                                {mockTopAssets.map((el, i) => (
                                     <PillDisplay
                                         key={`top-asset-${i}`}
                                         type="asset"
-                                        asset={`BTC`}
-                                        value={`$30.2M`}
+                                        asset={`${el.asset}`}
+                                        value={`$${el.val}M`}
                                     />
                                 ))}
                             </div>
                         </div>
                     </div>
+
                     <div className="flex flex-col gap-2">
                         <Number size="xl" label="Total Borrowed" value={`$${'129.31'}M`} />
                         <div className="flex flex-col gap-1">
@@ -76,20 +78,23 @@ const TVLDataCard: React.FC<ITVLData> = ({
                             {/* Dummy Data */}
                             {/* TODO: at 1600px, only top 3 should show */}
                             <div className="flex flex-wrap gap-1">
-                                {[1, 2, 3, 4, 5, 6].map((el, i) => (
+                                {mockTopAssets.map((el, i) => (
                                     <PillDisplay
                                         key={`top-asset-${i}`}
                                         type="asset"
-                                        asset={`BTC`}
-                                        value={`$30.2M`}
+                                        asset={`${el.asset}`}
+                                        value={`$${el.val}M`}
                                     />
                                 ))}
                             </div>
                         </div>
                     </div>
+
                     <div className="flex flex-col gap-4">
-                        <span>Tranches Summary</span>
-                        <div className="flex flex-col"></div>
+                        <span>Top Tranches</span>
+                        <div className="flex flex-col">
+                            <TopTranchesTable data={mockTopTranches} />
+                        </div>
                     </div>
                 </div>
             </div>

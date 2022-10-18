@@ -8,3 +8,4 @@ export * from './YourSupplies';
 export * from './YourBorrows';
 export * from './TrancheInfo';
 export * from './TrancheOverviewTable';
+export * from './TopTranches';
