@@ -1,12 +1,13 @@
 import React from 'react';
+import { MultipleAssetsDisplay } from '../displays';
 
 export const TrancheInfo = ({ tranche }: any) => {
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col gap-8">
             <div>
-                <h2 className="text-xl mb-8">Info</h2>
+                <h2 className="text-2xl mb-6">Info</h2>
                 <p>Assets</p>
-                <img src="/tokens/token-UNI.svg" alt="" className="h-8 w-8 mb-8" />
+                <MultipleAssetsDisplay assets={tranche.assets} show="all" />
             </div>
             <div className="grid grid-cols-2 justify-between gap-7">
                 <div>

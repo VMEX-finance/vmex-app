@@ -1,10 +1,9 @@
 import { Card } from '../../components/cards';
 import React from 'react';
-import { ReLineChart } from '../../components/charts';
-import { lineData2 } from '../../../utils/mock-data';
+import { MultipleAssetsDisplay, Number } from '../../components/displays';
 
 export interface ITrancheTVLData {
-    assets?: string | string[];
+    assets?: string[];
     tvl?: number;
     supplied?: number;
     sYtd?: number;
@@ -22,40 +21,20 @@ const TrancheTVLDataCard: React.FC<ITrancheTVLData> = ({
     borrowed,
     grade,
 }) => {
-    let formatter = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        notation: 'compact',
-    });
     return (
         <Card>
             {/* TODO: use number display component to maintain consistency */}
             <div className="flex flex-col md:flex-row justify-between font-basefont gap-8">
                 <div className="flex flex-col justify-between">
-                    <div className="flex flex-col">
+                    <div className="flex flex-col gap-1">
                         <h2 className="text-2xl">Assets</h2>
-                        <img src="/tokens/token-AAVE.svg" alt="" className="h-8 w-8" />
+                        <MultipleAssetsDisplay assets={assets} />
                     </div>
                 </div>
-                <div className="flex md:flex-row justify-between gap-36">
-                    <div className="flex flex-col justify-center justify-items-center">
-                        <p className="text-sm justify-self-center">TVL</p>
-                        <p className="text-xl justify-self-center">
-                            {tvl ? formatter.format(tvl as number) : ''}
-                        </p>
-                    </div>
-                    <div className="flex flex-col justify-center justify-items-center">
-                        <p className="odd:text-sm justify-self-center">Supplied</p>
-                        <p className="text-xl justify-self-center">
-                            {formatter.format(supplied as number)}
-                        </p>
-                    </div>
-                    <div className="flex flex-col justify-center justify-items-center">
-                        <p className="text-sm justify-self-center">Borrowed</p>
-                        <p className="text-xl justify-self-center">
-                            {formatter.format(borrowed as number)}
-                        </p>
-                    </div>
+                <div className="flex justify-between items-center gap-36">
+                    <Number center size="xl" label="TVL" value={`$${tvl}M`} />
+                    <Number center size="xl" label="Supplied" value={`$${supplied}M`} />
+                    <Number center size="xl" label="Borrowed" value={`$${borrowed}M`} />
                 </div>
                 <div>
                     <div className="flex flex-col justify-between">

@@ -13,9 +13,10 @@ export interface IDropdown {
     primary?: boolean;
     border?: boolean;
     direction?: 'left' | 'right';
+    size?: 'lg' | 'md';
 }
 
-export const DropdownButton = ({ items, primary, direction = 'left' }: IDropdown) => {
+export const DropdownButton = ({ items, primary, direction = 'left', size = 'md' }: IDropdown) => {
     const [selected, setSelected] = React.useState(items[0].text);
 
     const determineColor = () => {
@@ -33,13 +34,17 @@ export const DropdownButton = ({ items, primary, direction = 'left' }: IDropdown
 
     const mode = primary ? '!text-neutral-100 bg-neutral-800 shadow-lg' : '';
 
+    const textSize = size === 'lg' ? 'text-lg' : 'text-sm';
+    const iconSize = size === 'lg' ? '30px' : '24px';
+    const paddingSize = size === 'lg' ? 'pl-2 py-1 pr-4' : 'pr-2';
+
     return (
         <Menu as="div" className="relative inline-block">
             <div>
                 <Menu.Button
-                    className={`${determineColor()} inline-flex items-center w-full rounded-md pr-2 ${mode} text-xs font-medium focus:outline-none focus:ring-none`}
+                    className={`${determineColor()} inline-flex items-center w-full rounded-md ${mode} ${textSize} ${paddingSize} font-medium focus:outline-none focus:ring-none`}
                 >
-                    <RiArrowDropDownLine size="24px" /> {selected}
+                    <RiArrowDropDownLine size={iconSize} /> {selected}
                 </Menu.Button>
             </div>
 
@@ -55,7 +60,7 @@ export const DropdownButton = ({ items, primary, direction = 'left' }: IDropdown
                 <Menu.Items
                     className={`origin-top-right absolute ${
                         direction === 'left' ? 'right-0' : ''
-                    } mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-[999999]`}
+                    } mt-2 w-56 rounded-md shadow-lg ${mode} ring-1 ring-black ring-opacity-5 focus:outline-none z-[999999]`}
                 >
                     <div className="p-2">
                         {items.map((item, i) => (

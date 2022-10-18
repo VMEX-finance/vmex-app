@@ -1,34 +1,37 @@
 import React from 'react';
-import type { Tranche } from '../../../models/tranches';
+import type { ITrancheProps } from '../../../models/tranches';
 import { Button } from '../buttons';
 import { useNavigate } from 'react-router-dom';
 import { determineRatingColor } from '../../../utils/helpers';
 import { useSelectedTrancheContext } from '../../../store/contexts';
 import { BsArrowDownCircle, BsArrowUpCircle } from 'react-icons/bs';
+import { MultipleAssetsDisplay } from '../displays';
+import { useWindowSize } from '../../../hooks/ui';
 
 interface IDataTable {
-    data: Tranche[];
+    data: ITrancheProps[];
 }
-
-const headers = [
-    'Tranche',
-    'Assets',
-    'Aggregate Rating',
-    'Your Activity',
-    'Supplied',
-    'Borrowed',
-    '',
-];
 
 export const TranchesTable: React.FC<IDataTable> = ({ data }) => {
     const navigate = useNavigate();
     const { updateTranche } = useSelectedTrancheContext();
+    const { width } = useWindowSize();
 
-    const route = (e: Event, tranche: string, view = 'overview') => {
+    const route = (e: Event, tranche: ITrancheProps, view = 'overview') => {
         e.stopPropagation();
-        updateTranche('name', tranche);
-        navigate(`/tranches/${tranche.replace(/\s+/g, '-')}`, { state: { view } });
+        updateTranche('id', tranche.id);
+        navigate(`/tranches/${tranche.name.replace(/\s+/g, '-')}`, { state: { view } });
     };
+
+    const headers = [
+        'Tranche',
+        'Assets',
+        width > 1000 ? 'Aggregate Rating' : 'Rating',
+        width > 1000 ? 'Your Activity' : 'Activity',
+        'Supplied',
+        'Borrowed',
+        '',
+    ];
 
     const renderActivity = (status: string) => {
         // TODO: add tooltips to describe what these mean and/or add better icons
@@ -70,16 +73,16 @@ export const TranchesTable: React.FC<IDataTable> = ({ data }) => {
                     data.map((el, i) => {
                         return (
                             <tr
-                                key={`${el.tranche}-${i}`}
+                                key={`${el.name}-${i}`}
                                 className="text-left transition duration-200 hover:bg-neutral-200 hover:cursor-pointer"
-                                onClick={(e: any) => route(e, el.tranche)}
+                                onClick={(e: any) => route(e, el)}
                             >
                                 <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
-                                    <td>{el.tranche}</td>
+                                    <span>{el.name}</span>
                                 </td>
 
                                 <td>
-                                    <img src={el.assets} alt={el.tranche} className="h-8 w-8" />
+                                    <MultipleAssetsDisplay assets={el.assets} />
                                 </td>
                                 <td style={{ color: determineRatingColor(el.aggregateRating) }}>
                                     {el.aggregateRating}
@@ -89,8 +92,8 @@ export const TranchesTable: React.FC<IDataTable> = ({ data }) => {
                                 <td>${el.borrowTotal}M</td>
                                 <td className="text-right pr-3.5">
                                     <Button
-                                        label="View Details"
-                                        onClick={(e) => route(e, el.tranche, 'details')}
+                                        label={width > 1000 ? 'View Details' : 'Details'}
+                                        onClick={(e) => route(e, el, 'details')}
                                     />
                                 </td>
                             </tr>

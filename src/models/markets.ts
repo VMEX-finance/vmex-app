@@ -2,6 +2,7 @@ export type MarketsAsset = {
     asset: string;
     logo: string;
     tranche: string;
+    trancheId: number;
     supplyApy: number | string;
     borrowApy: number | string;
     yourAmount: number | string;
@@ -15,6 +16,7 @@ export const _mockAvailableAsset: MarketsAsset = {
     asset: 'USDC',
     logo: 'tokens/token-USDC.svg',
     tranche: 'VMEX High Quality',
+    trancheId: 1,
     supplyApy: 0.77,
     borrowApy: 2.11,
     yourAmount: 211,
@@ -28,6 +30,7 @@ export const _mockAvailableAsset2: MarketsAsset = {
     asset: 'WBTC',
     logo: 'tokens/token-WBTC.svg',
     tranche: 'VMEX Mid Quality',
+    trancheId: 2,
     supplyApy: 1.21,
     borrowApy: 1.81,
     yourAmount: 5,
@@ -41,6 +44,7 @@ export const _mockAvailableAsset3: MarketsAsset = {
     asset: 'DAI',
     logo: 'tokens/token-DAI.svg',
     tranche: 'VMEX Low Quality',
+    trancheId: 3,
     supplyApy: 0.98,
     borrowApy: 2.04,
     yourAmount: 67,

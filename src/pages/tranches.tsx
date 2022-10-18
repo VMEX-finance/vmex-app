@@ -2,8 +2,8 @@ import { Card } from '../ui/components/cards';
 import React from 'react';
 import { AppTemplate } from '../ui/templates';
 import { TranchesTable } from '../ui/components/tables';
-import { _mockTranchesData } from '../models/tranches';
 import { DropdownButton } from '../ui/components/buttons';
+import { _mockTranchesData } from '../utils/mock-data';
 
 const Tranches: React.FC = () => {
     return (
