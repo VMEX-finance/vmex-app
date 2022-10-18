@@ -8,9 +8,13 @@ export const TrancheStatisticsCard = ({ tranche }: any) => {
     return (
         <Card black>
             <div className="flex justify-between items-center mb-3">
-                <h3 className="text-lg">Statistics</h3>
+                <h3 className="text-2xl">Statistics</h3>
                 {/* TODO: Pull all available coins in tranche */}
-                <DropdownButton primary items={[{ text: 'ETH' }]} />
+                <DropdownButton
+                    primary
+                    size="lg"
+                    items={tranche.assets.map((el: string) => ({ text: el }))}
+                />
             </div>
             <div className="flex flex-col h-[90%] justify-between">
                 <div className="grid grid-cols-1 gap-3 w-full px-3">

@@ -6,30 +6,32 @@ import { determineRatingColor } from '../../../utils/helpers';
 import { useSelectedTrancheContext } from '../../../store/contexts';
 import { BsArrowDownCircle, BsArrowUpCircle } from 'react-icons/bs';
 import { MultipleAssetsDisplay } from '../displays';
+import { useWindowSize } from '../../../hooks/ui';
 
 interface IDataTable {
     data: ITrancheProps[];
 }
 
-const headers = [
-    'Tranche',
-    'Assets',
-    'Aggregate Rating',
-    'Your Activity',
-    'Supplied',
-    'Borrowed',
-    '',
-];
-
 export const TranchesTable: React.FC<IDataTable> = ({ data }) => {
     const navigate = useNavigate();
     const { updateTranche } = useSelectedTrancheContext();
+    const { width } = useWindowSize();
 
     const route = (e: Event, tranche: ITrancheProps, view = 'overview') => {
         e.stopPropagation();
         updateTranche('id', tranche.id);
         navigate(`/tranches/${tranche.name.replace(/\s+/g, '-')}`, { state: { view } });
     };
+
+    const headers = [
+        'Tranche',
+        'Assets',
+        width > 1000 ? 'Aggregate Rating' : 'Rating',
+        width > 1000 ? 'Your Activity' : 'Activity',
+        'Supplied',
+        'Borrowed',
+        '',
+    ];
 
     const renderActivity = (status: string) => {
         // TODO: add tooltips to describe what these mean and/or add better icons
@@ -50,8 +52,6 @@ export const TranchesTable: React.FC<IDataTable> = ({ data }) => {
                 return <></>;
         }
     };
-
-    console.log('data', data);
 
     return (
         <table className="min-w-full divide-y divide-gray-300 font-basefont">
@@ -92,7 +92,7 @@ export const TranchesTable: React.FC<IDataTable> = ({ data }) => {
                                 <td>${el.borrowTotal}M</td>
                                 <td className="text-right pr-3.5">
                                     <Button
-                                        label="View Details"
+                                        label={width > 1000 ? 'View Details' : 'Details'}
                                         onClick={(e) => route(e, el, 'details')}
                                     />
                                 </td>

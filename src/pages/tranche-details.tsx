@@ -54,12 +54,12 @@ const TrancheDetails: React.FC = () => {
             ) : (
                 <GridView>
                     <Card>
-                        <h3>Supply</h3>
+                        <h3 className="text-2xl">Supply</h3>
                         {/* TODO: Replace tables "data" prop with tranche table data prop */}
                         <TrancheTable data={_mockAssetData.data} type="supply" />
                     </Card>
                     <Card>
-                        <h3>Borrow</h3>
+                        <h3 className="text-2xl">Borrow</h3>
                         <TrancheTable data={_mockAssetData.data} type="borrow" />
                     </Card>
                 </GridView>
