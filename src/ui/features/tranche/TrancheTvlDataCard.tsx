@@ -26,7 +26,7 @@ const TrancheTVLDataCard: React.FC<ITrancheTVLData> = ({
             {/* TODO: use number display component to maintain consistency */}
             <div className="flex flex-col md:flex-row justify-between font-basefont gap-8">
                 <div className="flex flex-col justify-between">
-                    <div className="flex flex-col">
+                    <div className="flex flex-col gap-1">
                         <h2 className="text-2xl">Assets</h2>
                         <MultipleAssetsDisplay assets={assets} />
                     </div>
