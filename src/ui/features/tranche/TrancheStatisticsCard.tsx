@@ -3,6 +3,7 @@ import React from 'react';
 import { Card } from '../../components/cards';
 import { lineData, lineData2 } from '../../../utils/mock-data';
 import { DropdownButton } from '../../components/buttons';
+import ReactTooltip from 'react-tooltip';
 
 export const TrancheStatisticsCard = ({ tranche }: any) => {
     return (
@@ -56,8 +57,23 @@ export const TrancheStatisticsCard = ({ tranche }: any) => {
                         <p className="text-xl">${tranche.statisticsBorrowed}M</p>
                     </div>
                     <div className="grid grid-cols-1 justify-items-center">
-                        <p>Reserve Factor</p>
-                        <p className="text-xl">{tranche.reserveFactor}</p>
+                        <p>VMEX Strategy APY</p>
+                        <div className="flex flex-row gap-2">
+                            <p className="text-xl ml-6">{tranche.strategy}%</p>
+                            <button
+                                data-tip
+                                data-for="strategiesTip"
+                                className="!text-neutral-100 bg-neutral-800 shadow-lg border-inherit w-4 rounded-md"
+                            >
+                                i
+                            </button>
+
+                            <ReactTooltip id="strategiesTip" place="top" effect="solid">
+                                When deposited, USDC is deployed into a VMEX strategy. Your USDC
+                                will be staked on Convex and earned rewards will be automatically
+                                compounded back into your underlying position.
+                            </ReactTooltip>
+                        </div>
                     </div>
                 </div>
             </div>

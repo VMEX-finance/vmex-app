@@ -25,4 +25,5 @@ export type ITrancheProps = {
     statisticsBorrowed: number | string;
     utilization: number | string;
     reserveFactor: number | string;
+    strategy: number | string;
 };
