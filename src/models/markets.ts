@@ -10,6 +10,7 @@ export type MarketsAsset = {
     supplyTotal: number | string;
     borrowTotal: number | string;
     rating: string;
+    strategies: boolean;
 };
 
 export const _mockAvailableAsset: MarketsAsset = {
@@ -24,6 +25,7 @@ export const _mockAvailableAsset: MarketsAsset = {
     supplyTotal: 22.18,
     borrowTotal: 8.44,
     rating: 'A+',
+    strategies: true,
 };
 
 export const _mockAvailableAsset2: MarketsAsset = {
@@ -38,6 +40,7 @@ export const _mockAvailableAsset2: MarketsAsset = {
     supplyTotal: 8.73,
     borrowTotal: 4.19,
     rating: 'C',
+    strategies: false,
 };
 
 export const _mockAvailableAsset3: MarketsAsset = {
@@ -52,6 +55,7 @@ export const _mockAvailableAsset3: MarketsAsset = {
     supplyTotal: 17.22,
     borrowTotal: 11.24,
     rating: 'D',
+    strategies: true,
 };
 
 export const _mockMarketsData: Array<MarketsAsset> = [

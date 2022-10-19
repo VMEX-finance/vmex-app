@@ -5,6 +5,8 @@ import { Button } from '../buttons';
 import { useNavigate } from 'react-router-dom';
 import { determineRatingColor } from '../../../utils/helpers';
 import { useSelectedTrancheContext } from '../../../store/contexts';
+import { BsCheck } from 'react-icons/bs';
+import { IoIosClose } from 'react-icons/io';
 
 interface IAvailableLiquidityTable {
     data: MarketsAsset[];
@@ -51,6 +53,9 @@ export const MarketsTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
                     <th scope="col" className="py-3.5">
                         Rating
                     </th>
+                    <th scope="col" className="py-3.5">
+                        Strategies
+                    </th>
                     <th scope="col" className="py-3.5"></th>
                 </tr>
             </thead>
@@ -81,7 +86,16 @@ export const MarketsTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
                                 <td style={{ color: determineRatingColor(el.rating) }}>
                                     {el.rating}
                                 </td>
-                                <td>
+                                <td className="">
+                                    <div className="w-8 h-8">
+                                        {el.strategies ? (
+                                            <BsCheck className="w-full h-full text-[#00DD3E]" />
+                                        ) : (
+                                            <IoIosClose className="w-full h-full text-[#FF1F00]" />
+                                        )}
+                                    </div>
+                                </td>
+                                <td className="text-right pr-3.5">
                                     <Button
                                         label={width > 1200 ? 'View Details' : 'Details'}
                                         onClick={(e) => route(e, el, 'details')}

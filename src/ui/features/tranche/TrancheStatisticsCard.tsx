@@ -29,35 +29,35 @@ export const TrancheStatisticsCard = ({ tranche }: any) => {
                     {/* TODO: change all these to the NumberDisplay component and make it come from a "data" prop or whatever you want to name it */}
                     <div className="grid grid-cols-1 justify-items-center">
                         <p>LTV</p>
-                        <p className="text-xl">0%</p>
+                        <p className="text-xl">{tranche.ltv}%</p>
                     </div>
                     <div className="grid grid-cols-1 justify-items-center">
                         <p>Liquidation Threshold</p>
-                        <p className="text-xl">0%</p>
+                        <p className="text-xl">{tranche.liquidThreshold}%</p>
                     </div>
                     <div className="grid grid-cols-1 justify-items-center">
                         <p>Liquidation Penalty</p>
-                        <p className="text-xl">0%</p>
+                        <p className="text-xl">{tranche.liquidPenalty}%</p>
                     </div>
                     <div className="grid grid-cols-1 justify-items-center">
                         <p>Collateral Only</p>
-                        <p className="text-xl">Yes</p>
+                        <p className="text-xl">{tranche.collateral}</p>
                     </div>
                     <div className="grid grid-cols-1 justify-items-center">
                         <p>Total Supplied</p>
-                        <p className="text-xl">$1.25M</p>
+                        <p className="text-xl">${tranche.statisticsSupplied}M</p>
                     </div>
                     <div className="grid grid-cols-1 justify-items-center">
                         <p>Utilization</p>
-                        <p className="text-xl">78%</p>
+                        <p className="text-xl">{tranche.utilization}%</p>
                     </div>
                     <div className="grid grid-cols-1 justify-items-center">
                         <p>Total Borrowed</p>
-                        <p className="text-xl">$1.023M</p>
+                        <p className="text-xl">${tranche.statisticsBorrowed}M</p>
                     </div>
                     <div className="grid grid-cols-1 justify-items-center">
                         <p>Reserve Factor</p>
-                        <p className="text-xl">0.21</p>
+                        <p className="text-xl">{tranche.reserveFactor}</p>
                     </div>
                 </div>
             </div>
