@@ -51,7 +51,7 @@ export const StakingAsset = (props: IStakingAsset) => {
                                 />
                                 <div className="h-fit">
                                     <Button
-                                        label="Stake VMEX"
+                                        label={`Stake ${props.asset}`}
                                         onClick={() =>
                                             openDialog('stake-asset-dialog', { ...props.data })
                                         }

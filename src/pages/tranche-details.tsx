@@ -39,7 +39,7 @@ const TrancheDetails: React.FC = () => {
             {/* TODO: Configure this to include all necessary props */}
             <TrancheTVLDataCard
                 assets={tranche.assets}
-                tvl={30.6}
+                tvl={tranche.tvl}
                 grade={tranche.aggregateRating}
                 supplied={tranche.supplyTotal}
                 borrowed={tranche.borrowTotal}
