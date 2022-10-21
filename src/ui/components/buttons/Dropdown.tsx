@@ -36,7 +36,7 @@ export const DropdownButton = ({ items, primary, direction = 'left', size = 'md'
 
     const textSize = size === 'lg' ? 'text-lg' : 'text-sm';
     const iconSize = size === 'lg' ? '30px' : '24px';
-    const paddingSize = size === 'lg' ? 'pl-2 py-1 pr-4' : 'pr-2';
+    const paddingSize = size === 'lg' ? 'py-1 pl-4 pr-2' : 'pl-2';
 
     return (
         <Menu as="div" className="relative inline-block">

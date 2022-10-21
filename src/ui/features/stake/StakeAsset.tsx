@@ -1,6 +1,6 @@
 import { Card } from '../../components/cards';
 import React from 'react';
-import { Number, NumberAndDollar } from '../../components/displays';
+import { NumberDisplay, NumberAndDollar } from '../../components/displays';
 import { useDialogController } from '../../../hooks/dialogs';
 import { Button } from '../../components/buttons';
 
@@ -31,20 +31,20 @@ export const StakingAsset = (props: IStakingAsset) => {
                         <span className="mb-6 text-3xl">{props.asset}</span>
 
                         <div className="flex flex-col gap-1 xl:gap-2">
-                            <Number
+                            <NumberDisplay
                                 color="text-brand-purple"
                                 label="Current Staking Bonus"
                                 value={`${props.bonus.days} days - ${props.bonus.percent}%`}
                             />
 
-                            <Number
+                            <NumberDisplay
                                 color="text-brand-purple"
                                 label="Staking APR"
                                 value={`${props.apr}%`}
                             />
 
                             <div className="flex flex-col md:flex-row md:items-end md:justify-between">
-                                <Number
+                                <NumberDisplay
                                     color="text-brand-purple"
                                     label="Max Slashing"
                                     value={`${props.slashing}`}
