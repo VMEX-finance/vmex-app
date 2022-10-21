@@ -17,6 +17,7 @@ export interface IDropdown {
 }
 
 export const DropdownButton = ({ items, primary, direction = 'left', size = 'md' }: IDropdown) => {
+    // TODO: reconfigure this component to accept a selected state and a setSelected state to allow it to change higher components
     const [selected, setSelected] = React.useState(items[0].text);
 
     const determineColor = () => {
