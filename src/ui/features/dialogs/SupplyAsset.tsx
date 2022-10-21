@@ -21,8 +21,6 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
     data,
     closeDialog,
 }) => {
-    console.log(data);
-
     const [isSuccess, setIsSuccess] = React.useState(false);
     const [isError, setIsError] = React.useState(false);
     const [asCollateral, setAsCollateral] = React.useState(false);

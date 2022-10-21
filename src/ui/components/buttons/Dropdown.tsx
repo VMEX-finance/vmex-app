@@ -44,7 +44,7 @@ export const DropdownButton = ({ items, primary, direction = 'left', size = 'md'
                 <Menu.Button
                     className={`${determineColor()} inline-flex items-center w-full rounded-md ${mode} ${textSize} ${paddingSize} font-medium focus:outline-none focus:ring-none`}
                 >
-                    <RiArrowDropDownLine size={iconSize} /> {selected}
+                    {selected} <RiArrowDropDownLine size={iconSize} />
                 </Menu.Button>
             </div>
 
@@ -60,7 +60,7 @@ export const DropdownButton = ({ items, primary, direction = 'left', size = 'md'
                 <Menu.Items
                     className={`origin-top-right absolute ${
                         direction === 'left' ? 'right-0' : ''
-                    } mt-2 w-56 rounded-md shadow-lg ${mode} ring-1 ring-black ring-opacity-5 focus:outline-none z-[999999]`}
+                    } bg-neutral-100 mt-2 w-56 rounded-md shadow-lg ${mode} ring-1 ring-black ring-opacity-5 focus:outline-none z-[999999]`}
                 >
                     <div className="p-2">
                         {items.map((item, i) => (
