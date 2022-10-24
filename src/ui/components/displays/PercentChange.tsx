@@ -28,7 +28,7 @@ export const PercentChangeDisplay = ({
     return (
         <div className={`flex items-center gap-2 ${fontSize} ${determineColor()}`}>
             {determineIcon()}
-            <p>{Math.abs(Number(value)).toFixed(2)}</p>
+            <p>{Math.abs(Number(value)).toFixed(2)}%</p>
             <p>{`(${range})`}</p>
         </div>
     );

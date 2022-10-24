@@ -4,14 +4,26 @@ import { BsCheck } from 'react-icons/bs';
 import { IoIosClose } from 'react-icons/io';
 import { Button } from '../buttons';
 import { useWindowSize } from '../../../hooks/ui';
+import { useNavigate } from 'react-router-dom';
+import { useSelectedTrancheContext } from '../../../store/contexts';
+import type { MarketsAsset } from '../../../models/markets';
 
 interface IAvailableLiquidityTable extends React.PropsWithChildren {
-    data: AvailableAsset[];
+    data: MarketsAsset[];
 }
 
 export const YourSuppliesTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
     const { width } = useWindowSize();
     const headers = ['Asset', 'Amount', 'Collateral', 'APY%', 'Tranche'];
+    const navigate = useNavigate();
+    const { updateTranche } = useSelectedTrancheContext();
+
+    const route = (e: Event, market: MarketsAsset, view = 'overview') => {
+        e.stopPropagation();
+        updateTranche('id', market.trancheId);
+        updateTranche('strategyEnabled', market.strategies);
+        navigate(`/tranches/${market.tranche.replace(/\s+/g, '-')}`, { state: { view } });
+    };
 
     return (
         <table className="min-w-full divide-y divide-gray-300 font-basefont">
@@ -54,18 +66,20 @@ export const YourSuppliesTable: React.FC<IAvailableLiquidityTable> = ({ data }) 
                                     </div>
                                 </td>
                                 <td>{i.apy_perc}</td>
-                                <td>VMEX Mid</td>
-                                {/* <td className="text-right pr-3.5 hidden md:table-cell">
-                                    <Button
-                                        label={
-                                            (width > 1535 && width < 2000) || width < 500
-                                                ? 'View'
-                                                : 'View Details'
-                                        }
-                                        // TODO: Send from here to appropriate traunch details view
-                                        onClick={() => console.log('directing')}
-                                    />
-                                </td> */}
+                                <td>{i.trancheShort}</td>
+                                {
+                                    <td className="text-right pr-3.5 hidden md:table-cell">
+                                        <Button
+                                            label={
+                                                (width > 1535 && width < 2000) || width < 500
+                                                    ? 'View'
+                                                    : 'View Details'
+                                            }
+                                            // TODO: Send from here to appropriate traunch details view
+                                            onClick={(e) => route(e, i, 'details')}
+                                        />
+                                    </td>
+                                }
                             </tr>
                         );
                     })}

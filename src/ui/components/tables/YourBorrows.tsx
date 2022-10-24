@@ -2,15 +2,26 @@ import React from 'react';
 import type { AvailableAsset } from '../../../models/available-liquidity-model';
 import { Button } from '../buttons';
 import { useWindowSize } from '../../../hooks/ui';
+import { MarketsAsset } from '../../../models/markets';
+import { useNavigate } from 'react-router-dom';
+import { useSelectedTrancheContext } from '../../../store/contexts';
 
 interface IAvailableLiquidityTable extends React.PropsWithChildren {
-    data: AvailableAsset[];
+    data: MarketsAsset[];
 }
 
 export const YourBorrowsTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
     const { width } = useWindowSize();
     const headers = ['Asset', 'Amount', 'APY%', 'Tranche'];
+    const navigate = useNavigate();
+    const { updateTranche } = useSelectedTrancheContext();
 
+    const route = (e: Event, market: MarketsAsset, view = 'overview') => {
+        e.stopPropagation();
+        updateTranche('id', market.trancheId);
+        updateTranche('strategyEnabled', market.strategies);
+        navigate(`/tranches/${market.tranche.replace(/\s+/g, '-')}`, { state: { view } });
+    };
     return (
         <table className="min-w-full divide-y divide-gray-300 font-basefont">
             <thead className="">
@@ -43,18 +54,20 @@ export const YourBorrowsTable: React.FC<IAvailableLiquidityTable> = ({ data }) =
                                 </td>
                                 <td className="">{i.amount}</td>
                                 <td>{i.apy_perc}</td>
-                                <td className="">{'VMEX High'}</td>
-                                {/* <td className="text-right hidden md:table-cell pr-3.5">
-                                    <Button
-                                        label={
-                                            (width > 1535 && width < 2000) || width < 500
-                                                ? 'View'
-                                                : 'View Details'
-                                        }
-                                        // TODO: Send from here to appropriate traunch details view
-                                        onClick={() => console.log('directing')}
-                                    />
-                                </td> */}
+                                <td className="">{i.trancheShort}</td>
+                                {
+                                    <td className="text-right hidden md:table-cell pr-3.5">
+                                        <Button
+                                            label={
+                                                (width > 1535 && width < 2000) || width < 500
+                                                    ? 'View'
+                                                    : 'View Details'
+                                            }
+                                            // TODO: Send from here to appropriate traunch details view
+                                            onClick={(e) => route(e, i, 'details')}
+                                        />
+                                    </td>
+                                }
                             </tr>
                         );
                     })}

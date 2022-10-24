@@ -5,6 +5,9 @@ export type TrancheSupply = {
     apy: string | number;
     collateral: boolean;
     liquidity?: any;
+    tranche: string;
+    trancheId: number | string;
+    strategies: boolean;
 };
 
 export const _mockAvailableAsset: TrancheSupply = {
@@ -13,6 +16,9 @@ export const _mockAvailableAsset: TrancheSupply = {
     balance: 123.13,
     apy: 2.32,
     collateral: true,
+    tranche: 'VMEX Mid Quality',
+    trancheId: 2,
+    strategies: true,
 };
 
 export const _mockAvailableAsset2: TrancheSupply = {
@@ -21,6 +27,9 @@ export const _mockAvailableAsset2: TrancheSupply = {
     balance: 123.13,
     apy: 2.32,
     collateral: false,
+    tranche: 'VMEX Mid Quality',
+    trancheId: 2,
+    strategies: true,
 };
 
 export const _mockAvailableAsset3: TrancheSupply = {
@@ -29,6 +38,9 @@ export const _mockAvailableAsset3: TrancheSupply = {
     balance: 123.13,
     apy: 2.32,
     collateral: false,
+    tranche: 'VMEX Mid Quality',
+    trancheId: 2,
+    strategies: true,
 };
 
 export const _mockMarketsData: Array<TrancheSupply> = [

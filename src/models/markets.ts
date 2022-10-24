@@ -13,12 +13,18 @@ export type MarketsAsset = {
     borrowTotal: number | string;
     rating: string;
     strategies: boolean;
+    amount?: number | string;
+    apy_perc?: number | string;
+    canBeCollat?: boolean;
+    liquidity?: number | string;
+    trancheShort?: string;
 };
 
 export const _mockAvailableAsset: MarketsAsset = {
     asset: 'USDC',
     logo: 'tokens/token-USDC.svg',
     tranche: 'VMEX High Quality',
+    trancheShort: 'VMEX High',
     trancheId: 1,
     supplyApy: 0.87,
     borrowApy: 2.19,
@@ -28,12 +34,17 @@ export const _mockAvailableAsset: MarketsAsset = {
     borrowTotal: 9.04,
     rating: 'A+',
     strategies: true,
+    amount: 9921,
+    apy_perc: 0.0078,
+    canBeCollat: true,
+    liquidity: 18.3,
 };
 
 export const _mockAvailableAsset2: MarketsAsset = {
     asset: 'WBTC',
     logo: 'tokens/token-WBTC.svg',
     tranche: 'VMEX Mid Quality',
+    trancheShort: 'VMEX Mid',
     trancheId: 2,
     supplyApy: 1.07,
     borrowApy: 1.52,
@@ -43,12 +54,17 @@ export const _mockAvailableAsset2: MarketsAsset = {
     borrowTotal: 5.34,
     rating: 'C+',
     strategies: true,
+    amount: 2394,
+    apy_perc: 0.0053,
+    canBeCollat: false,
+    liquidity: 4.2,
 };
 
 export const _mockAvailableAsset3: MarketsAsset = {
     asset: 'DAI',
     logo: 'tokens/token-DAI.svg',
     tranche: 'VMEX Low Quality',
+    trancheShort: 'VMEX Mid',
     trancheId: 3,
     supplyApy: 1.11,
     borrowApy: 2.54,
@@ -58,6 +74,10 @@ export const _mockAvailableAsset3: MarketsAsset = {
     borrowTotal: 9.14,
     rating: 'D+',
     strategies: false,
+    amount: 9128,
+    apy_perc: 0.0103,
+    canBeCollat: true,
+    liquidity: 12.8,
 };
 
 export const _mockAvailableAsset4: MarketsAsset = {
@@ -176,4 +196,10 @@ export const _mockMarketsData: Array<MarketsAsset> = [
     _mockAvailableAsset8,
     _mockAvailableAsset9,
     _mockAvailableAsset10,
+];
+
+export const _mockSupplyBorrow: Array<MarketsAsset> = [
+    _mockAvailableAsset,
+    _mockAvailableAsset2,
+    _mockAvailableAsset3,
 ];

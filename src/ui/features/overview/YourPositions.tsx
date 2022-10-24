@@ -2,6 +2,7 @@ import React from 'react';
 import { Card } from '../../components/cards';
 import { YourBorrowsTable, YourSuppliesTable } from '../../components/tables';
 import { _mockAssetData } from '../../../models/available-liquidity-model';
+import { _mockSupplyBorrow } from '../../../models/markets';
 
 interface IYourPositionsProps {
     type: 'borrows' | 'supplies';
@@ -20,9 +21,9 @@ export const YourPositions: React.FC<IYourPositionsProps> = ({ type }) => {
     const determineTable = () => {
         switch (type) {
             case 'supplies':
-                return <YourSuppliesTable data={_mockAssetData.data} />;
+                return <YourSuppliesTable data={_mockSupplyBorrow} />;
             case 'borrows':
-                return <YourBorrowsTable data={_mockAssetData.data} />;
+                return <YourBorrowsTable data={_mockSupplyBorrow} />;
         }
     };
 
