@@ -1,13 +1,12 @@
 import React from 'react';
 import { Dialog } from '@headlessui/react';
 import { IoIosClose } from 'react-icons/io';
-import { PieChart } from 'react-minimal-pie-chart';
 import { useMediatedState } from 'react-use';
 import { inputMediator } from '../../../utils/helpers';
 import { CoinInput } from '../../components/inputs';
-import { Button, Checkbox } from '../..//components/buttons';
-import { TranchToggle } from '../../components/toggles';
-import { TransactionStatus } from '../../components/statuses';
+import { Button } from '../..//components/buttons';
+import { BasicToggle } from '../../components/toggles';
+import { ActiveStatus, TransactionStatus } from '../../components/statuses';
 
 interface IOwnedAssetDetails {
     name?: string;
@@ -22,17 +21,11 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
     data,
     closeDialog,
 }) => {
-    console.log(data);
-
     const [isSuccess, setIsSuccess] = React.useState(false);
     const [isError, setIsError] = React.useState(false);
     const [asCollateral, setAsCollateral] = React.useState(false);
-    const [isInsured, setIsInsured] = React.useState(false);
 
     const [amount, setAmount] = useMediatedState(inputMediator, '');
-    const [t0, setT0] = React.useState(0);
-    const [t1, setT1] = React.useState(0);
-    const [t2, setT2] = React.useState(0);
 
     return (
         data.tranches && (
@@ -72,65 +65,26 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
                             balance={'0.23'}
                         />
 
+                        <h3 className="mt-6 text-gray-400">Collaterize</h3>
                         <div className="mt-1">
-                            <Checkbox
-                                setChecked={setIsInsured}
-                                checked={isInsured}
-                                label="Insure Asset"
-                            />
-                            <Checkbox
-                                setChecked={setAsCollateral}
+                            <BasicToggle
                                 checked={asCollateral}
-                                label="Collateralize Asset"
+                                onChange={() => setAsCollateral(!asCollateral)}
                             />
                         </div>
 
-                        <h3 className="mt-6 text-gray-400">Risk Profile Selection</h3>
-                        <div className="w-full flex flex-row justify-between items-center mt-1 p-2">
-                            <PieChart
-                                data={[
-                                    { title: 'Tranch 0', value: Number(t0), color: '#000000' },
-                                    { title: 'Tranch 1', value: Number(t1), color: '#90E7D4' },
-                                    { title: 'Tranch 2', value: Number(t2), color: '#F35B53' },
-                                ]}
-                                className="w-[150px] h-[150px]"
-                                animate
-                                lineWidth={50}
-                                center={[60, 60]}
-                                viewBoxSize={[120, 120]}
-                                label={({ dataEntry, dataIndex }) => {
-                                    return dataEntry.percentage > 0 ? `T${dataIndex}` : ``;
-                                }}
-                                labelPosition={100 - 50 / 2}
-                                labelStyle={{
-                                    fill: '#fff',
-                                    opacity: 1,
-                                    pointerEvents: 'none',
-                                    fontSize: '10px',
-                                }}
-                            />
-                            <div className="flex flex-col grow">
-                                <TranchToggle
-                                    max={1 - Number(t1) + Number(t2)}
-                                    name="Stable Asset Tranche"
-                                    value={t0}
-                                    onChange={(e: any) => setT0(e.target.value)}
-                                    disabled={data.tranches[0].disabled}
-                                />
-                                <TranchToggle
-                                    max={1 - Number(t0) + Number(t2)}
-                                    name="High Cap Tranche"
-                                    value={t1}
-                                    onChange={(e: any) => setT1(e.target.value)}
-                                    disabled={data.tranches[1].disabled}
-                                />
-                                <TranchToggle
-                                    max={1 - Number(t1) + Number(t0)}
-                                    name="Low Cap Tranche"
-                                    value={t2}
-                                    onChange={(e: any) => setT2(e.target.value)}
-                                    disabled={data.tranches[2].disabled}
-                                />
+                        <h3 className="mt-6 text-gray-400">Transaction Overview</h3>
+                        <div
+                            className={`mt-2 flex justify-between rounded-lg border border-neutral-900 p-4 lg:py-6`}
+                        >
+                            <div className="flex flex-col gap-2">
+                                <span>Supply APR%</span>
+                                <span>Collateralization</span>
+                            </div>
+
+                            <div className="min-w-[100px] flex flex-col gap-2">
+                                <span>0.44%</span>
+                                <ActiveStatus active={asCollateral} size="sm" />
                             </div>
                         </div>
                     </>

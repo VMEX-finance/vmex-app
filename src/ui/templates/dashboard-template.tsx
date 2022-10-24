@@ -20,7 +20,7 @@ const DashboardTemplate: React.FC<IDashboardTemplate> = ({
     setView,
 }) => {
     const navigate = useNavigate();
-    const routeChange = () => navigate('/tranches');
+    const routeChange = () => navigate(-1);
 
     return (
         <div className="py-10 max-w-[120rem] mx-auto px-6 lg:px-8">

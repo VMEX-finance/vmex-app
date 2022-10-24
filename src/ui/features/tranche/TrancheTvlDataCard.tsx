@@ -1,6 +1,6 @@
 import { Card } from '../../components/cards';
 import React from 'react';
-import { MultipleAssetsDisplay, Number } from '../../components/displays';
+import { MultipleAssetsDisplay, NumberDisplay } from '../../components/displays';
 
 export interface ITrancheTVLData {
     assets?: string[];
@@ -32,9 +32,21 @@ const TrancheTVLDataCard: React.FC<ITrancheTVLData> = ({
                     </div>
                 </div>
                 <div className="flex justify-between items-center gap-36">
-                    <Number center size="xl" label="TVL" value={`$${tvl}M`} />
-                    <Number center size="xl" label="Supplied" value={`$${supplied}M`} />
-                    <Number center size="xl" label="Borrowed" value={`$${borrowed}M`} />
+                    <NumberDisplay center size="xl" label="TVL" value={`$${tvl}M`} change={3.86} />
+                    <NumberDisplay
+                        center
+                        size="xl"
+                        label="Supplied"
+                        value={`$${supplied}M`}
+                        change={3.86}
+                    />
+                    <NumberDisplay
+                        center
+                        size="xl"
+                        label="Borrowed"
+                        value={`$${borrowed}M`}
+                        change={-1.29}
+                    />
                 </div>
                 <div>
                     <div className="flex flex-col justify-between">

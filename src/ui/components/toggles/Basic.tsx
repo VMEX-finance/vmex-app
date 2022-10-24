@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { Switch } from '@headlessui/react';
 
 interface IToggleProps {
-    checked: boolean;
+    checked?: boolean;
     onChange?: any;
+    colors?: string[];
 }
 
-export const BasicToggle = ({ checked, onChange }: IToggleProps) => {
+export const BasicToggle = ({ checked, onChange, colors }: IToggleProps) => {
     const [enabled, setEnabled] = useState(false);
 
     return (
@@ -14,7 +15,13 @@ export const BasicToggle = ({ checked, onChange }: IToggleProps) => {
             checked={checked || enabled}
             onChange={onChange || setEnabled}
             className={`${
-                checked || enabled ? 'bg-green-500' : 'bg-red-500'
+                colors
+                    ? checked || enabled
+                        ? colors[0]
+                        : colors[1]
+                    : checked || enabled
+                    ? 'bg-green-400'
+                    : 'bg-neutral-700'
             } relative inline-flex h-6 w-11 items-center rounded-full`}
         >
             <span className="sr-only">Enable notifications</span>

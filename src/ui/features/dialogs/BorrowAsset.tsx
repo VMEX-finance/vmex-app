@@ -4,10 +4,10 @@ import { IoIosClose } from 'react-icons/io';
 import { FaGasPump } from 'react-icons/fa';
 import { useMediatedState } from 'react-use';
 import { TransactionStatus, ActiveStatus } from '../../components/statuses';
-import { AvailableAssetDisplay } from '../../components/displays/AvailableAsset';
 import { CoinInput } from '../../components/inputs';
 import { Button, DropdownButton } from '../../components/buttons';
 import { inputMediator } from '../../../utils/helpers';
+import { HealthFactor } from '../../components/displays';
 
 interface IOwnedAssetDetails {
     name?: string;
@@ -63,24 +63,10 @@ export const BorrowAssetDialog: React.FC<IOwnedAssetDetails> = ({
                             }}
                             balance={'0.23'}
                         />
-                        <h3 className="mt-6 text-gray-400">Available Collateral</h3>
-                        <div className="grid gap-4 mt-2">
-                            <AvailableAssetDisplay
-                                asset="USDC"
-                                amount={1}
-                                balance={1}
-                                selectable
-                                selected={isUSDCSelected}
-                                setSelected={() => setIsUSDCSelected(!isUSDCSelected)}
-                            />
-                            <AvailableAssetDisplay
-                                asset="WBTC"
-                                amount={1}
-                                balance={1}
-                                selectable
-                                selected={isWBTCSelected}
-                                setSelected={() => setIsWBTCSelected(!isWBTCSelected)}
-                            />
+
+                        <h3 className="mt-6 text-gray-400">Transaction Overview</h3>
+                        <div>
+                            <HealthFactor liquidation={1.0} value={1.24} />
                         </div>
 
                         <h3 className="mt-6 text-gray-400">Transaction Overview</h3>
@@ -88,15 +74,13 @@ export const BorrowAssetDialog: React.FC<IOwnedAssetDetails> = ({
                             className={`mt-2 flex justify-between rounded-lg border border-neutral-900 p-4 lg:py-6`}
                         >
                             <div className="flex flex-col gap-2">
-                                <span>Supply APR%</span>
+                                <span>Borrow APR%</span>
                                 <span>Collateralization</span>
-                                <span>Insurance</span>
                             </div>
 
                             <div className="min-w-[100px] flex flex-col gap-2">
                                 <span>0.44%</span>
-                                {amount && <ActiveStatus active={true} size="sm" />}
-                                {amount && <ActiveStatus active={false} size="sm" />}
+                                <ActiveStatus active={false} size="sm" />
                             </div>
                         </div>
 
@@ -131,7 +115,7 @@ export const BorrowAssetDialog: React.FC<IOwnedAssetDetails> = ({
                     </div>
                 )}
 
-                <div>
+                <div className="mt-6">
                     <Button
                         disabled={isSuccess || isError}
                         onClick={() => {
