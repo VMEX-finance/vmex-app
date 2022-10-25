@@ -2,7 +2,7 @@ import { Card } from '../../components/cards';
 import React from 'react';
 import { IDataProps, ReLineChart } from '../../components/charts';
 import { lineData2, mockTopAssets, mockTopTranches } from '../../../utils/mock-data';
-import { Number, PillDisplay } from '../../components/displays';
+import { NumberDisplay, PillDisplay } from '../../components/displays';
 import { TopTranchesTable } from '../../components/tables';
 
 export interface ITVLData {
@@ -41,19 +41,27 @@ const TVLDataCard: React.FC<ITVLData> = ({
                         </div>
                     </div>
                     <div className="flex md:flex-col justify-between gap-1">
-                        <Number
+                        <NumberDisplay
                             label={'Reserves:'}
                             value={reserve ? formatter.format(reserve as number) : ''}
                         />
-                        <Number color="text-brand-purple" label={'Lenders:'} value={lenders} />
-                        <Number color="text-brand-green" label={'Borrowers:'} value={borrowers} />
-                        <Number label={'Markets:'} value={markets} />
+                        <NumberDisplay
+                            color="text-brand-purple"
+                            label={'Lenders:'}
+                            value={lenders}
+                        />
+                        <NumberDisplay
+                            color="text-brand-green"
+                            label={'Borrowers:'}
+                            value={borrowers}
+                        />
+                        <NumberDisplay label={'Markets:'} value={markets} />
                     </div>
                 </div>
 
                 <div className="py-2 md:py-4 xl:py-0 xl:px-6 grid grid-cols-1 lg:grid-cols-3 gap-4 w-full">
                     <div className="flex flex-col gap-2">
-                        <Number size="xl" label="Total Supplied" value={`$${'157.08'}M`} />
+                        <NumberDisplay size="xl" label="Total Supplied" value={`$${'157.08'}M`} />
                         <div className="flex flex-col gap-1">
                             <span>Top Supplied Assets</span>
                             {/* Dummy Data */}
@@ -72,7 +80,7 @@ const TVLDataCard: React.FC<ITVLData> = ({
                     </div>
 
                     <div className="flex flex-col gap-2">
-                        <Number size="xl" label="Total Borrowed" value={`$${'129.31'}M`} />
+                        <NumberDisplay size="xl" label="Total Borrowed" value={`$${'129.31'}M`} />
                         <div className="flex flex-col gap-1">
                             <span>Top Borrowed Assets</span>
                             {/* Dummy Data */}

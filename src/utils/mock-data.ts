@@ -196,7 +196,7 @@ export const _mockAvailableTranche3: ITrancheProps = {
     id: 3,
     assets: ['MANA', 'SNX', 'MKR', 'BAT', 'LINK', 'XRP', 'KNC', 'REN'],
     name: 'VMEX Low Quality',
-    yourActivity: 'deposited',
+    yourActivity: 'borrowed',
     tvl: 41.2,
     supplyTotal: 19.22,
     borrowTotal: 10.24,

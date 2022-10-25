@@ -17,6 +17,7 @@ export interface IDropdown {
 }
 
 export const DropdownButton = ({ items, primary, direction = 'left', size = 'md' }: IDropdown) => {
+    // TODO: reconfigure this component to accept a selected state and a setSelected state to allow it to change higher components
     const [selected, setSelected] = React.useState(items[0].text);
 
     const determineColor = () => {
@@ -36,7 +37,7 @@ export const DropdownButton = ({ items, primary, direction = 'left', size = 'md'
 
     const textSize = size === 'lg' ? 'text-lg' : 'text-sm';
     const iconSize = size === 'lg' ? '30px' : '24px';
-    const paddingSize = size === 'lg' ? 'pl-2 py-1 pr-4' : 'pr-2';
+    const paddingSize = size === 'lg' ? 'py-1 pl-4 pr-2' : 'pl-2';
 
     return (
         <Menu as="div" className="relative inline-block">
@@ -44,7 +45,7 @@ export const DropdownButton = ({ items, primary, direction = 'left', size = 'md'
                 <Menu.Button
                     className={`${determineColor()} inline-flex items-center w-full rounded-md ${mode} ${textSize} ${paddingSize} font-medium focus:outline-none focus:ring-none`}
                 >
-                    <RiArrowDropDownLine size={iconSize} /> {selected}
+                    {selected} <RiArrowDropDownLine size={iconSize} />
                 </Menu.Button>
             </div>
 
@@ -60,7 +61,7 @@ export const DropdownButton = ({ items, primary, direction = 'left', size = 'md'
                 <Menu.Items
                     className={`origin-top-right absolute ${
                         direction === 'left' ? 'right-0' : ''
-                    } mt-2 w-56 rounded-md shadow-lg ${mode} ring-1 ring-black ring-opacity-5 focus:outline-none z-[999999]`}
+                    } bg-neutral-100 mt-2 w-56 rounded-md shadow-lg ${mode} ring-1 ring-black ring-opacity-5 focus:outline-none z-[999999]`}
                 >
                     <div className="p-2">
                         {items.map((item, i) => (

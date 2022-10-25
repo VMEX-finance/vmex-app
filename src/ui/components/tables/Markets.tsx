@@ -19,6 +19,7 @@ export const MarketsTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
     const route = (e: Event, market: MarketsAsset, view = 'overview') => {
         e.stopPropagation();
         updateTranche('id', market.trancheId);
+        updateTranche('strategyEnabled', market.strategies);
         navigate(`/tranches/${market.tranche.replace(/\s+/g, '-')}`, { state: { view } });
     };
 

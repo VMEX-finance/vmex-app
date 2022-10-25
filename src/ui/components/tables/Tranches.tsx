@@ -7,6 +7,7 @@ import { useSelectedTrancheContext } from '../../../store/contexts';
 import { BsArrowDownCircle, BsArrowUpCircle } from 'react-icons/bs';
 import { MultipleAssetsDisplay } from '../displays';
 import { useWindowSize } from '../../../hooks/ui';
+import { IconTooltip } from '../tooltips/Icon';
 
 interface IDataTable {
     data: ITrancheProps[];
@@ -37,15 +38,15 @@ export const TranchesTable: React.FC<IDataTable> = ({ data }) => {
         // TODO: add tooltips to describe what these mean and/or add better icons
         const size = '18px';
         switch (status.toLowerCase()) {
-            case 'deposited':
-                return <BsArrowDownCircle size={size} />;
             case 'supplied':
-                return <BsArrowUpCircle size={size} />;
+                return <IconTooltip text="Supplying" icon={<BsArrowDownCircle size={size} />} />;
+            case 'borrowed':
+                return <IconTooltip text="Borrowing" icon={<BsArrowUpCircle size={size} />} />;
             case 'both':
                 return (
                     <div className="flex gap-2">
-                        <BsArrowDownCircle size={size} />
-                        <BsArrowUpCircle size={size} />
+                        <IconTooltip text="Supplying" icon={<BsArrowDownCircle size={size} />} />
+                        <IconTooltip text="Borrowing" icon={<BsArrowUpCircle size={size} />} />
                     </div>
                 );
             default:

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { AppTemplate, GridView } from '../ui/templates';
-import { TrancheTVLDataCard } from '../ui/features/tranche/TrancheTvlDataCard'; // Must be exported out of 'index.ts'
+import { TrancheTVLDataCard, TrancheInfoCard } from '../ui/features/tranche';
 import { Card } from '../ui/components/cards';
 import { TrancheStatisticsCard } from '../ui/features/overview';
-import { TrancheTable, TrancheInfo } from '../ui/components/tables';
+import { TrancheTable } from '../ui/components/tables';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '../store/contexts';
 import { _mockAssetData } from '../models/available-liquidity-model';
@@ -46,9 +46,7 @@ const TrancheDetails: React.FC = () => {
             />
             {view.includes('details') ? (
                 <GridView className="lg:grid-cols-[1fr_2fr]">
-                    <Card>
-                        <TrancheInfo tranche={tranche} />
-                    </Card>
+                    <TrancheInfoCard tranche={tranche} />
                     <TrancheStatisticsCard tranche={tranche} />
                 </GridView>
             ) : (
