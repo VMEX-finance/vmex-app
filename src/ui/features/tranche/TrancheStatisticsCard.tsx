@@ -7,7 +7,6 @@ import ReactTooltip from 'react-tooltip';
 import { BsInfoCircle } from 'react-icons/bs';
 // TODO: Implement interface
 export const TrancheStatisticsCard = ({ tranche }: any) => {
-    console.log(tranche);
     return (
         <>
             <Card black>
