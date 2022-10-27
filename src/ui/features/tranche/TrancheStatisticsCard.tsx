@@ -4,11 +4,11 @@ import { Card } from '../../components/cards';
 import { lineData, lineData2 } from '../../../utils/mock-data';
 import { DropdownButton } from '../../components/buttons';
 import ReactTooltip from 'react-tooltip';
-import { BsInfoCircle } from 'react-icons/bs';
 import { useSelectedTrancheContext } from '../../../store/contexts';
 // TODO: Implement interface
 export const TrancheStatisticsCard = ({ tranche }: any) => {
     const { asset, setAsset } = useSelectedTrancheContext();
+    console.log(tranche);
     return (
         <>
             <Card black>
@@ -45,31 +45,33 @@ export const TrancheStatisticsCard = ({ tranche }: any) => {
                         {/* TODO: change all these to the NumberDisplay component and make it come from a "data" prop or whatever you want to name it */}
                         <div className="grid grid-cols-1 justify-items-center">
                             <p>LTV</p>
-                            <p className="text-xl">{tranche.ltv}%</p>
+                            <p className="text-xl">{(Math.random() * 50).toFixed(1)}%</p>
                         </div>
                         <div className="grid grid-cols-1 justify-items-center">
                             <p>Liquidation Threshold</p>
-                            <p className="text-xl">{tranche.liquidThreshold}%</p>
+                            <p className="text-xl">{(Math.random() * 10).toFixed(1)}%</p>
                         </div>
                         <div className="grid grid-cols-1 justify-items-center">
                             <p>Liquidation Penalty</p>
-                            <p className="text-xl">{tranche.liquidPenalty}%</p>
+                            <p className="text-xl">{(Math.random() * 5).toFixed(1)}%</p>
                         </div>
                         <div className="grid grid-cols-1 justify-items-center">
                             <p>Collateral Only</p>
-                            <p className="text-xl">{tranche.collateral}</p>
+                            <p className="text-xl">
+                                {Math.floor(Math.random() * 10) > 5 ? 'Yes' : 'No'}
+                            </p>
                         </div>
                         <div className="grid grid-cols-1 justify-items-center">
                             <p>Total Supplied</p>
-                            <p className="text-xl">${tranche.statisticsSupplied}M</p>
+                            <p className="text-xl">${(Math.random() * 5).toFixed(2)}M</p>
                         </div>
                         <div className="grid grid-cols-1 justify-items-center">
                             <p>Utilization</p>
-                            <p className="text-xl">{tranche.utilization}%</p>
+                            <p className="text-xl">{(Math.random() * 99).toFixed(2)}%</p>
                         </div>
                         <div className="grid grid-cols-1 justify-items-center">
                             <p>Total Borrowed</p>
-                            <p className="text-xl">${tranche.statisticsBorrowed}M</p>
+                            <p className="text-xl">${(Math.random() * 1).toFixed(2)}M</p>
                         </div>
                         <div className="grid grid-cols-1 justify-items-center">
                             <p>Admin Fee</p>
