@@ -30,7 +30,7 @@ export const MultipleAssetsDisplay = ({ assets, show = 4 }: IMultipleAssetsProps
                 />
             ))}
             {show !== 'all' && (
-                <span className="ml-2">
+                <span className="ml-1 md:ml-2">
                     +{assets ? assets.slice(width > 1000 ? show : 2).length : 0}
                 </span>
             )}

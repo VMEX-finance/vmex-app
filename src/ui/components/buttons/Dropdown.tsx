@@ -61,7 +61,7 @@ export const DropdownButton = ({ items, primary, direction = 'left', size = 'md'
                 <Menu.Items
                     className={`origin-top-right absolute ${
                         direction === 'left' ? 'right-0' : ''
-                    } bg-neutral-100 mt-2 w-56 rounded-md shadow-lg ${mode} ring-1 ring-black ring-opacity-5 focus:outline-none z-[999999]`}
+                    } bg-white mt-2 whitespace-nowrap min-w-[180px] rounded-md shadow-lg ${mode} ring-1 ring-black ring-opacity-5 focus:outline-none z-[999999]`}
                 >
                     <div className="p-2">
                         {items.map((item, i) => (
