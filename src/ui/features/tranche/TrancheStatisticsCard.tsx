@@ -5,8 +5,10 @@ import { lineData, lineData2 } from '../../../utils/mock-data';
 import { DropdownButton } from '../../components/buttons';
 import ReactTooltip from 'react-tooltip';
 import { BsInfoCircle } from 'react-icons/bs';
+import { useSelectedTrancheContext } from '../../../store/contexts';
 // TODO: Implement interface
 export const TrancheStatisticsCard = ({ tranche }: any) => {
+    const { asset, setAsset } = useSelectedTrancheContext();
     return (
         <>
             <Card black>
@@ -25,7 +27,9 @@ export const TrancheStatisticsCard = ({ tranche }: any) => {
                     <DropdownButton
                         primary
                         size="lg"
-                        items={tranche.assets.map((el: string) => ({ text: el }))}
+                        items={tranche.assets.map((el: any) => ({ text: el }))}
+                        selected={asset}
+                        setSelected={setAsset}
                     />
                 </div>
                 <div className="flex flex-col h-[90%] justify-between">

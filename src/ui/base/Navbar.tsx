@@ -28,7 +28,7 @@ export const MenuItem = ({ label, selected, onClick, mobile }: IMenuItems) => {
     return (
         <button
             className={[
-                'w-full px-4 py-2 rounded-lg transition duration-200 hover:bg-neutral-700',
+                'w-full px-4 py-2 rounded-lg transition duration-200 hover:bg-neutral-700 whitespace-nowrap',
                 mode,
             ].join(' ')}
             onClick={onClick}

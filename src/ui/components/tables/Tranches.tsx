@@ -78,7 +78,7 @@ export const TranchesTable: React.FC<IDataTable> = ({ data }) => {
                                 className="text-left transition duration-200 hover:bg-neutral-200 hover:cursor-pointer"
                                 onClick={(e: any) => route(e, el)}
                             >
-                                <td className="whitespace-nowrap py-4 pl-2 md:pl-4 pr-3 text-sm">
+                                <td className="whitespace-nowrap py-4 pl-2 md:pl-4 pr-3">
                                     <span>{el.name}</span>
                                 </td>
 

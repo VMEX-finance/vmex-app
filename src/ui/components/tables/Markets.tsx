@@ -14,12 +14,13 @@ interface IAvailableLiquidityTable {
 export const MarketsTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
     const navigate = useNavigate();
     const { width } = useWindowSize();
-    const { updateTranche } = useSelectedTrancheContext();
+    const { updateTranche, setAsset } = useSelectedTrancheContext();
 
     const route = (e: Event, market: MarketsAsset, view = 'overview') => {
         e.stopPropagation();
-        updateTranche('id', market.trancheId);
+        setAsset(market.asset);
         updateTranche('strategyEnabled', market.strategies);
+        updateTranche('id', market.trancheId);
         navigate(`/tranches/${market.tranche.replace(/\s+/g, '-')}`, { state: { view } });
     };
 
