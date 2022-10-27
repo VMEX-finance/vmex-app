@@ -1,4 +1,5 @@
 import { useMarketOverview } from '../hooks/markets';
+import { useWalletState } from '../hooks/wallet';
 import React from 'react';
 import { AppTemplate, GridView } from '../ui/templates';
 import {
@@ -10,15 +11,19 @@ import {
 
 const Overview: React.FC = () => {
     const { TVLDataProps } = useMarketOverview();
+    const { address } = useWalletState();
+    console.log(address);
 
     return (
         <AppTemplate title="overview">
             <TVLDataCard {...TVLDataProps()} />
-            <GridView type="fixed">
-                <LendingPerformanceCard />
-                <YourPositions type="supplies" />
-                <YourPositions type="borrows" />
-            </GridView>
+            {address && (
+                <GridView type="fixed">
+                    <LendingPerformanceCard />
+                    <YourPositions type="supplies" />
+                    <YourPositions type="borrows" />
+                </GridView>
+            )}
         </AppTemplate>
     );
 };

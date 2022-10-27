@@ -1,4 +1,3 @@
-import { FaYenSign } from 'react-icons/fa';
 import { ITrancheProps } from '../models/tranches';
 
 export const lineData = [
