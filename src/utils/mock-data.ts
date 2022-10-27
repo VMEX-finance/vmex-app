@@ -129,6 +129,21 @@ export const mockTopTranches = [
         borrowed: 11.4,
         supplied: 12.8,
     },
+    {
+        name: 'VMEX High',
+        borrowed: 30.2,
+        supplied: 32.1,
+    },
+    {
+        name: 'VMEX Mid',
+        borrowed: 24.9,
+        supplied: 28.3,
+    },
+    {
+        name: 'VMEX Low',
+        borrowed: 11.4,
+        supplied: 12.8,
+    },
 ];
 
 export const _mockAvailableTranche: ITrancheProps = {

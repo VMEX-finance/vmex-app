@@ -37,7 +37,7 @@ export const Button = ({
                     disabled
                         ? `${
                               primary
-                                  ? 'hover:!bg-neutral-800 hover:!text-neutral-200'
+                                  ? '!bg-neutral-700 !text-neutral-300'
                                   : 'hover:!bg-inherit hover:!text-inherit'
                           } !cursor-not-allowed`
                         : ''
