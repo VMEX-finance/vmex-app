@@ -8,15 +8,18 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '../store/contexts';
 import { _mockAssetData } from '../models/available-liquidity-model';
 import { _mockTranchesData } from '../utils/mock-data';
+import { useWalletState } from '../hooks/wallet';
 
 const TrancheDetails: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
+    const { address } = useWalletState();
     const { tranche, setTranche } = useSelectedTrancheContext();
     const [view, setView] = useState('tranche-overview');
 
     useEffect(() => {
-        if (location.state?.view === 'overview') setView('tranche-overview');
+        if (!address) setView('tranche-details');
+        else if (location.state?.view === 'overview') setView('tranche-overview');
         else if (location.state?.view === 'details') setView('tranche-details');
         else setView('tranche-overview');
     }, [location]);

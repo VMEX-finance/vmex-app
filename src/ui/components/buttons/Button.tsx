@@ -1,7 +1,7 @@
 import React from 'react';
 
 export interface IButtonProps {
-    label: string | React.ReactNode;
+    label?: string | React.ReactNode;
     primary?: boolean;
     onClick?: (e: any) => void;
     border?: boolean | string;
