@@ -9,7 +9,7 @@ const Tranches: React.FC = () => {
     return (
         <AppTemplate title="tranches">
             <Card>
-                <p className="text-xl -mt-4 pb-5">All Available Tranches</p>
+                <p className="text-xl pb-5">All Available Tranches</p>
                 <div className="divide-x-8 divide-transparent">
                     <DropdownButton items={[{ text: 'Filter Asset' }]} primary direction="right" />
                     <DropdownButton items={[{ text: 'Filter APY' }]} primary direction="right" />

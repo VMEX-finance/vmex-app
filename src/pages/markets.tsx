@@ -13,7 +13,7 @@ const Markets: React.FC = () => {
     return (
         <AppTemplate title="markets">
             <Card>
-                <p className="text-xl -mt-4 pb-5">All Available Assets</p>
+                <p className="text-xl pb-5">All Available Assets</p>
                 <div className="divide-x-8 divide-transparent">
                     <DropdownButton items={[{ text: 'Filter Asset' }]} primary direction="right" />
                     <DropdownButton items={[{ text: 'Filter APY' }]} primary direction="right" />

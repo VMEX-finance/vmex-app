@@ -62,7 +62,7 @@ export const TranchesTable: React.FC<IDataTable> = ({ data }) => {
                         <th
                             key={`tranches-header-${i}`}
                             scope="col"
-                            className="py-3.5 first-of-type:sm:pl-6"
+                            className="py-3.5 min-w-[80px] first-of-type:sm:pl-6"
                         >
                             {el}
                         </th>
@@ -82,7 +82,7 @@ export const TranchesTable: React.FC<IDataTable> = ({ data }) => {
                                     <span>{el.name}</span>
                                 </td>
 
-                                <td>
+                                <td className="min-w-[120px]">
                                     <MultipleAssetsDisplay assets={el.assets} />
                                 </td>
                                 <td style={{ color: determineRatingColor(el.aggregateRating) }}>
