@@ -19,7 +19,7 @@ export const MultipleAssetsDisplay = ({ assets, show = 4 }: IMultipleAssetsProps
     };
 
     return (
-        <div className={`flex items-center ${show === 'all' ? 'gap-2' : ''}`}>
+        <div className={`flex items-center ${show === 'all' ? 'gap-2' : 'xl:gap-2'}`}>
             {/* TODO: make assets overlap each other ever so slightly */}
             {mapAssets().map((el, i) => (
                 <img
@@ -30,7 +30,7 @@ export const MultipleAssetsDisplay = ({ assets, show = 4 }: IMultipleAssetsProps
                 />
             ))}
             {show !== 'all' && (
-                <span className="ml-2">
+                <span className="ml-1 md:ml-2">
                     +{assets ? assets.slice(width > 1000 ? show : 2).length : 0}
                 </span>
             )}

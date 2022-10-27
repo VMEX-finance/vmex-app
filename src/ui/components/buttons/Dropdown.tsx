@@ -14,12 +14,18 @@ export interface IDropdown {
     border?: boolean;
     direction?: 'left' | 'right';
     size?: 'lg' | 'md';
+    selected?: string;
+    setSelected?: any;
 }
 
-export const DropdownButton = ({ items, primary, direction = 'left', size = 'md' }: IDropdown) => {
-    // TODO: reconfigure this component to accept a selected state and a setSelected state to allow it to change higher components
-    const [selected, setSelected] = React.useState(items[0].text);
-
+export const DropdownButton = ({
+    items,
+    primary,
+    direction = 'left',
+    size = 'md',
+    selected = items[0].text,
+    setSelected = () => {},
+}: IDropdown) => {
     const determineColor = () => {
         switch (selected) {
             case 'Normal':
@@ -61,9 +67,9 @@ export const DropdownButton = ({ items, primary, direction = 'left', size = 'md'
                 <Menu.Items
                     className={`origin-top-right absolute ${
                         direction === 'left' ? 'right-0' : ''
-                    } bg-neutral-100 mt-2 w-56 rounded-md shadow-lg ${mode} ring-1 ring-black ring-opacity-5 focus:outline-none z-[999999]`}
+                    } bg-white mt-2 min-w-[180px] rounded-md shadow-lg ${mode} ring-1 ring-black ring-opacity-5 focus:outline-none z-[999999]`}
                 >
-                    <div className="p-2">
+                    <div className="p-2 flex-col">
                         {items.map((item, i) => (
                             <Menu.Item key={`${item}-${i}`}>
                                 {({ active }) => (

@@ -14,50 +14,42 @@ interface IAvailableLiquidityTable {
 export const MarketsTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
     const navigate = useNavigate();
     const { width } = useWindowSize();
-    const { updateTranche } = useSelectedTrancheContext();
+    const { updateTranche, setAsset } = useSelectedTrancheContext();
 
     const route = (e: Event, market: MarketsAsset, view = 'overview') => {
         e.stopPropagation();
-        updateTranche('id', market.trancheId);
+        setAsset(market.asset);
         updateTranche('strategyEnabled', market.strategies);
+        updateTranche('id', market.trancheId);
         navigate(`/tranches/${market.tranche.replace(/\s+/g, '-')}`, { state: { view } });
     };
 
+    const headers = [
+        'Asset',
+        'Tranche',
+        'Supply APY%',
+        'Borrow APY%',
+        'Your Amount',
+        'Available',
+        'Supplied',
+        'Borrowed',
+        'Rating',
+        'Strategies',
+    ];
+
     return (
-        <table className="min-w-full divide-y divide-gray-300 font-basefont">
+        <table className="min-w-full divide-y divide-gray-300 font-basefont mt-2">
             <thead className="">
                 <tr className="text-gray-400 text-sm font-semibold text-left">
-                    <th scope="col" className="py-3.5 pl-4 sm:pl-6">
-                        Asset
-                    </th>
-                    <th scope="col" className="py-3.5">
-                        Tranche
-                    </th>
-                    <th scope="col" className="py-3.5">
-                        Supply APY%
-                    </th>
-                    <th scope="col" className="py-3.5">
-                        Borrow APY%
-                    </th>
-                    <th scope="col" className="py-3.5">
-                        Your Amount
-                    </th>
-                    <th scope="col" className="py-3.5">
-                        Available
-                    </th>
-                    <th scope="col" className="py-3.5">
-                        Supplied
-                    </th>
-                    <th scope="col" className="py-3.5">
-                        Borrowed
-                    </th>
-                    <th scope="col" className="py-3.5">
-                        Rating
-                    </th>
-                    <th scope="col" className="py-3.5">
-                        Strategies
-                    </th>
-                    <th scope="col" className="py-3.5"></th>
+                    {headers.map((el, i: number) => (
+                        <th
+                            key={`header-${i}`}
+                            scope="col"
+                            className="py-3.5 min-w-[90px] first-of-type:min-w-[60px] first-of-type:pl-2 first-of-type:md:pl-6"
+                        >
+                            {el}
+                        </th>
+                    ))}
                 </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 bg-white">
@@ -69,13 +61,13 @@ export const MarketsTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
                                 className="text-left transition duration-200 hover:bg-neutral-200 hover:cursor-pointer"
                                 onClick={(e: any) => route(e, el)}
                             >
-                                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
+                                <td className="whitespace-nowrap py-4 pl-2 md:pl-4 pr-2 text-sm">
                                     <div className="flex items-center gap-2">
                                         <img src={el.logo} alt={el.asset} className="h-8 w-8" />
                                         <div className="text-lg hidden lg:block">{el.asset}</div>
                                     </div>
                                 </td>
-                                <td>{el.tranche}</td>
+                                <td className="min-w-[150px]">{el.tranche}</td>
                                 <td>{el.supplyApy}%</td>
                                 <td>{el.borrowApy}%</td>
                                 <td>

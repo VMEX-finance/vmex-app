@@ -5,6 +5,9 @@ export type ISelectedTrancheStoreProps = {
     tranche?: any;
     setTranche?: any;
     updateTranche?: any;
+    asset?: string;
+    setAsset?: any;
+    clearTranche?: any;
     // TODO: Establish what else is required for selected tranche
 };
 
@@ -14,6 +17,7 @@ const SelectedTrancheContext = createContext<ISelectedTrancheStoreProps>({});
 // Wrapper
 export function SelectedTrancheStore(props: { children: ReactNode }) {
     const [tranche, setTranche] = useState({});
+    const [asset, setAsset] = useState('');
 
     const updateTranche = (key: string, val: any) => {
         setTranche({
@@ -22,12 +26,20 @@ export function SelectedTrancheStore(props: { children: ReactNode }) {
         });
     };
 
+    const clearTranche = () => {
+        setTranche({});
+        setAsset('');
+    };
+
     return (
         <SelectedTrancheContext.Provider
             value={{
                 tranche,
                 setTranche,
                 updateTranche,
+                asset,
+                setAsset,
+                clearTranche,
             }}
         >
             {props.children}

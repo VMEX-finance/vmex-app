@@ -16,18 +16,16 @@ const TrancheDetails: React.FC = () => {
     const [view, setView] = useState('tranche-overview');
 
     useEffect(() => {
-        if (location.state.view === 'overview') setView('tranche-overview');
-        else if (location.state.view === 'details') setView('tranche-details');
+        if (location.state?.view === 'overview') setView('tranche-overview');
+        else if (location.state?.view === 'details') setView('tranche-details');
         else setView('tranche-overview');
     }, [location]);
 
     useEffect(() => {
-        // TODO: make this return to last page, not always tranches
         if (!tranche.id) navigate('/tranches');
-
         const found = _mockTranchesData.find((el) => el.id === tranche.id);
         setTranche(found);
-    }, [tranche]);
+    }, [tranche, location]);
 
     return (
         <AppTemplate
