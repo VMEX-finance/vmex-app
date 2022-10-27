@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from '../components/buttons';
 import { useNavigate } from 'react-router-dom';
+import { useWalletState } from '../../hooks/wallet';
 
 interface IDashboardTemplate {
     title?: string;
@@ -21,6 +22,7 @@ const DashboardTemplate: React.FC<IDashboardTemplate> = ({
 }) => {
     const navigate = useNavigate();
     const routeChange = () => navigate(-1);
+    const { address } = useWalletState();
 
     return (
         <div className="py-10 max-w-[120rem] mx-auto px-6 lg:px-8">
@@ -60,6 +62,7 @@ const DashboardTemplate: React.FC<IDashboardTemplate> = ({
                                 // TODO: change to push tranche to state
                                 onClick={() => setView('tranche-overview')}
                                 primary={view.includes('overview')}
+                                disabled={!address}
                             />
                             <Button
                                 label="Details"

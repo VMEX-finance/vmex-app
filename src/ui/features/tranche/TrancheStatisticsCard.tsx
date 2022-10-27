@@ -28,7 +28,7 @@ export const TrancheStatisticsCard = ({ tranche }: any) => {
                         primary
                         size="lg"
                         items={tranche.assets.map((el: any) => ({ text: el }))}
-                        selected={asset}
+                        selected={asset || tranche.assets[0]}
                         setSelected={setAsset}
                     />
                 </div>

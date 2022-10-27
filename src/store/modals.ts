@@ -18,7 +18,8 @@ export type IDialogNames =
     | 'loan-asset-dialog'
     | 'borrowed-asset-details-dialog'
     | 'borrow-asset-dialog'
-    | 'stake-asset-dialog';
+    | 'stake-asset-dialog'
+    | 'supplied-asset-details-dialog';
 
 const DialogControllerState: IDialogState = {
     dialogs: new Map<string, DialogType>([
@@ -36,6 +37,16 @@ const DialogControllerState: IDialogState = {
             'borrowed-asset-details-dialog',
             {
                 name: 'Borrowed Asset Details',
+                isOpen: false,
+                data: {},
+                isSuccess: false,
+                isError: false,
+            },
+        ],
+        [
+            'supplied-asset-details-dialog',
+            {
+                name: 'Supplied Asset Details',
                 isOpen: false,
                 data: {},
                 isSuccess: false,

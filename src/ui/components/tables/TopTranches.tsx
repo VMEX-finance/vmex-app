@@ -31,7 +31,7 @@ export const TopTranchesTable: React.FC<ITableProps> = ({ data }) => {
             </thead>
             <tbody className="divide-y divide-gray-200 bg-white">
                 {data &&
-                    data.map((i) => {
+                    data.slice(0, 5).map((i) => {
                         return (
                             <tr key={i.name} className="text-left">
                                 <td className="">{i.name}</td>

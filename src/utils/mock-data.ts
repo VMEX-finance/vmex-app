@@ -1,4 +1,3 @@
-import { FaYenSign } from 'react-icons/fa';
 import { ITrancheProps } from '../models/tranches';
 
 export const lineData = [
@@ -115,6 +114,21 @@ export const mockTopAssets = [
 ];
 
 export const mockTopTranches = [
+    {
+        name: 'VMEX High',
+        borrowed: 30.2,
+        supplied: 32.1,
+    },
+    {
+        name: 'VMEX Mid',
+        borrowed: 24.9,
+        supplied: 28.3,
+    },
+    {
+        name: 'VMEX Low',
+        borrowed: 11.4,
+        supplied: 12.8,
+    },
     {
         name: 'VMEX High',
         borrowed: 30.2,

@@ -3,7 +3,7 @@ import { useWalletState } from '../../../hooks/wallet';
 import { Button, IButtonProps } from './Button';
 import { truncateAddress } from '../../../utils/helpers';
 
-export const WalletButton = ({ primary, className, label }: IButtonProps) => {
+export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: IButtonProps) => {
     const _label = label;
 
     const { address, connectMetamask } = useWalletState();

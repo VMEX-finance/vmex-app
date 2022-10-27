@@ -1,7 +1,6 @@
 import React from 'react';
 import { useDialogController } from '../../../hooks/dialogs';
 import { AvailableAsset } from '../../../models/available-liquidity-model';
-import { Switch } from '@headlessui/react';
 import { BasicToggle } from '../toggles';
 
 interface ITableProps {

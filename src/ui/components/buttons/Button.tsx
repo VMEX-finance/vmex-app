@@ -1,7 +1,7 @@
 import React from 'react';
 
 export interface IButtonProps {
-    label: string | React.ReactNode;
+    label?: string | React.ReactNode;
     primary?: boolean;
     onClick?: (e: any) => void;
     border?: boolean | string;
@@ -33,7 +33,15 @@ export const Button = ({
                 'transition duration-200',
                 className,
                 mode,
-                `${disabled ? 'hover:!bg-inherit !cursor-not-allowed' : ''}`,
+                `${
+                    disabled
+                        ? `${
+                              primary
+                                  ? '!bg-neutral-700 !text-neutral-300'
+                                  : 'hover:!bg-inherit hover:!text-inherit'
+                          } !cursor-not-allowed`
+                        : ''
+                }`,
             ].join(' ')}
         >
             {label}
