@@ -62,7 +62,7 @@ export const TranchesTable: React.FC<IDataTable> = ({ data }) => {
                         <th
                             key={`tranches-header-${i}`}
                             scope="col"
-                            className="py-3.5 min-w-[80px] first-of-type:sm:pl-6"
+                            className="py-3.5 min-w-[80px] first-of-type:pl-1 first-of-type:md:pl-6"
                         >
                             {el}
                         </th>
@@ -78,7 +78,7 @@ export const TranchesTable: React.FC<IDataTable> = ({ data }) => {
                                 className="text-left transition duration-200 hover:bg-neutral-200 hover:cursor-pointer"
                                 onClick={(e: any) => route(e, el)}
                             >
-                                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
+                                <td className="whitespace-nowrap py-4 pl-1 md:pl-4 pr-3 text-sm sm:pl-6">
                                     <span>{el.name}</span>
                                 </td>
 

@@ -24,14 +24,17 @@ const TrancheTVLDataCard: React.FC<ITrancheTVLData> = ({
     return (
         <Card>
             {/* TODO: use number display component to maintain consistency */}
-            <div className="flex flex-col md:flex-row justify-between font-basefont gap-8">
-                <div className="flex flex-col justify-between">
+            <div
+                className="flex flex-col flow md:flex-row justify-between font-basefont gap-8"
+                style={{ flexFlow: 'wrap' }}
+            >
+                <div className="flex flex-col justify-between order-1">
                     <div className="flex flex-col gap-1">
                         <h2 className="text-2xl">Assets</h2>
                         <MultipleAssetsDisplay assets={assets} />
                     </div>
                 </div>
-                <div className="flex justify-between items-center gap-36">
+                <div className="flex flex-wrap justify-around md:justify-between items-center gap-2 md:gap-12 lg:gap-36 order-3 md:order-2">
                     <NumberDisplay center size="xl" label="TVL" value={`$${tvl}M`} change={3.86} />
                     <NumberDisplay
                         center
@@ -48,7 +51,7 @@ const TrancheTVLDataCard: React.FC<ITrancheTVLData> = ({
                         change={-1.29}
                     />
                 </div>
-                <div>
+                <div className="order-2 md:order-3">
                     <div className="flex flex-col justify-between">
                         <div className="flex flex-col">
                             <h2 className="text-2xl">Grade</h2>

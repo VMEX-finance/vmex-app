@@ -53,14 +53,19 @@ export const DashboardNavbar: React.FC = () => {
     const navItems = ['Overview', 'Tranches', 'Markets', 'Staking', 'Governance', 'Develop'];
 
     return (
-        <nav className="flex flex-row sticky h-fit justify-between items-center top-0 font-basefont px-4 py-2 lg:px-10 lg:py-5 bg-[#EEEEEE] z-50">
+        <nav className="flex flex-row sticky h-fit justify-between items-center top-0 font-basefont px-4 py-2 lg:px-10 lg:py-5 bg-neutral-900 lg:bg-[#EEEEEE] z-50">
             <div
                 className={`w-full
                 ${width < 1024 ? 'flex flex-row items-center justify-between' : 'grid grid-cols-3'}
             `}
             >
                 <a id="nav-logo" href="/">
-                    <img src="/VMEX-logo.svg" alt="VMEX Finance Logo" width="100" />
+                    <img
+                        src="/VMEX-logo.svg"
+                        alt="VMEX Finance Logo"
+                        width="100"
+                        className="invert lg:invert-0"
+                    />
                 </a>
 
                 {width > 1024 ? (
@@ -83,8 +88,8 @@ export const DashboardNavbar: React.FC = () => {
                 ) : (
                     <Menu as="div" className="relative inline-block">
                         <div>
-                            <Menu.Button className="inline-flex justify-center w-full rounded-md border shadow-sm px-3 py-2 bg-neutral-800 text-sm font-medium text-neutral-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple">
-                                <HiOutlineMenuAlt3 size="28px" />
+                            <Menu.Button className="inline-flex justify-center w-full rounded-md border shadow-sm px-2 md:px-3 py-1 bg-neutral-100 text-sm font-medium text-neutral-900 focus:outline-none focus:ring-2 focus:ring-offset-2">
+                                <HiOutlineMenuAlt3 size="36px" />
                             </Menu.Button>
                         </div>
 
