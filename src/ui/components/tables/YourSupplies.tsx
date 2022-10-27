@@ -3,14 +3,14 @@ import type { AvailableAsset } from '../../../models/available-liquidity-model';
 import { BsCheck } from 'react-icons/bs';
 import { IoIosClose } from 'react-icons/io';
 import { Button } from '../buttons';
-import { useWindowSize } from '../../../hooks/ui';
+import { useDialogController } from '../../../hooks/dialogs';
 
 interface IAvailableLiquidityTable extends React.PropsWithChildren {
     data: AvailableAsset[];
 }
 
 export const YourSuppliesTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
-    const { width } = useWindowSize();
+    const { openDialog } = useDialogController();
     const headers = ['Asset', 'Amount', 'Collateral', 'APY%', 'Tranche'];
 
     return (
@@ -35,7 +35,9 @@ export const YourSuppliesTable: React.FC<IAvailableLiquidityTable> = ({ data }) 
                             <tr
                                 key={i.asset}
                                 className="text-left transition duration-200 hover:bg-neutral-200 hover:cursor-pointer"
-                                onClick={() => console.log('reroute')}
+                                onClick={() =>
+                                    openDialog('supplied-asset-details-dialog', { ...i })
+                                }
                             >
                                 <td className="whitespace-nowrap p-4 text-sm sm:pl-6">
                                     <div className="flex items-center gap-2">

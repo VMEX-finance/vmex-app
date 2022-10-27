@@ -33,7 +33,15 @@ export const Button = ({
                 'transition duration-200',
                 className,
                 mode,
-                `${disabled ? 'hover:!bg-inherit !cursor-not-allowed' : ''}`,
+                `${
+                    disabled
+                        ? `${
+                              primary
+                                  ? 'hover:!bg-neutral-800 hover:!text-neutral-200'
+                                  : 'hover:!bg-inherit hover:!text-inherit'
+                          } !cursor-not-allowed`
+                        : ''
+                }`,
             ].join(' ')}
         >
             {label}

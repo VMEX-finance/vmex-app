@@ -1,7 +1,7 @@
 import React from 'react';
 import { Dialog } from '@headlessui/react';
 import { IoIosClose } from 'react-icons/io';
-import { MdCompareArrows, MdOutlineArrowForward } from 'react-icons/md';
+import { MdOutlineArrowForward } from 'react-icons/md';
 import { useMediatedState } from 'react-use';
 import { Button } from '../../components/buttons';
 import { TransactionStatus } from '../../components/statuses';
@@ -17,7 +17,7 @@ interface IOwnedAssetDetails {
     closeDialog(e: any): void;
 }
 
-export const BorrowedAssetDetailsDialog: React.FC<IOwnedAssetDetails> = ({
+export const SuppliedAssetDetailsDialog: React.FC<IOwnedAssetDetails> = ({
     name,
     isOpen,
     data,
@@ -50,7 +50,7 @@ export const BorrowedAssetDetailsDialog: React.FC<IOwnedAssetDetails> = ({
                     </div>
                     <div
                         className="self-baseline h-fit w-fit cursor-pointer text-neutral-900 hover:text-neutral-600 transition duration-200"
-                        onClick={() => closeDialog('borrowed-asset-details-dialog')}
+                        onClick={() => closeDialog('supplied-asset-details-dialog')}
                     >
                         <IoIosClose className="w-7 h-7" />
                     </div>
@@ -59,43 +59,25 @@ export const BorrowedAssetDetailsDialog: React.FC<IOwnedAssetDetails> = ({
                     // Default State
                     <>
                         <h3 className="mt-5 text-gray-400">Overview</h3>
-                        <div className="grid grid-cols-3 items-center">
-                            <div className="flex flex-col">
-                                <AssetDisplay
-                                    name={data.asset}
-                                    logo={`/tokens/token-${data.asset.toUpperCase()}.svg`}
-                                    className="mb-1"
-                                />
-                                <span>
-                                    {130.2} {data.asset.toUpperCase()} Borrowed
-                                </span>
-                                <span className="text-sm text-neutral-500">
-                                    ${'156,240.02'} USD
-                                </span>
-                            </div>
-                            <MdCompareArrows className="justify-self-center" size="32px" />
-                            <div className="flex flex-col">
-                                <AssetDisplay
-                                    name={'USDC'}
-                                    logo={`/tokens/token-${'USDC'}.svg`}
-                                    className="mb-1"
-                                />
-                                <span>
-                                    {'156,241.1'} {'USDC'} Collatoralized
-                                </span>
-                                <span className="text-sm text-neutral-500">
-                                    ${'156,240.02'} USD
-                                </span>
-                            </div>
+                        <div className="flex flex-col">
+                            <AssetDisplay
+                                name={data.asset}
+                                logo={`/tokens/token-${data.asset.toUpperCase()}.svg`}
+                                className="mb-1"
+                            />
+                            <span>
+                                {130.2} {data.asset.toUpperCase()} Supplied
+                            </span>
+                            <span className="text-sm text-neutral-500">${'156,240.02'} USD</span>
                         </div>
 
-                        <h3 className="mt-6 text-gray-400">Loan Details</h3>
+                        <h3 className="mt-6 text-gray-400">Staking Details</h3>
                         <div
                             className={`mt-2 flex justify-between rounded-lg border border-neutral-900 p-4 lg:py-6`}
                         >
                             <div className="flex flex-col gap-2">
                                 <span>Interest Rate</span>
-                                <span>Date Borrowed</span>
+                                <span>Date Supplied</span>
                                 <span>Interest Accrued</span>
                                 <span>TX Hash</span>
                             </div>
@@ -126,7 +108,7 @@ export const BorrowedAssetDetailsDialog: React.FC<IOwnedAssetDetails> = ({
                         <TransactionStatus success={false} full />
                     </div>
                 )}
-
+                {/* TODO: implement appropriate data type so we can pass tranche id to "routeToTranche" */}
                 <div className="mt-5 sm:mt-6 flex justify-between">
                     <Button
                         onClick={() => {
@@ -134,12 +116,12 @@ export const BorrowedAssetDetailsDialog: React.FC<IOwnedAssetDetails> = ({
 
                             setTimeout(() => {
                                 setIsSuccess(false);
-                                closeDialog('borrowed-asset-details-dialog');
+                                closeDialog('supplied-asset-details-dialog');
                             }, 2000);
                         }}
                         label={
                             <span className="flex items-center gap-2">
-                                Repay Loan <MdOutlineArrowForward />
+                                Withdraw <MdOutlineArrowForward />
                             </span>
                         }
                     />
