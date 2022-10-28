@@ -22,7 +22,7 @@ export const MenuItem = ({ label, selected, onClick, mobile }: IMenuItems) => {
         selected && !mobile
             ? '!bg-white !text-black'
             : mobile
-            ? 'hover:bg-neutral-200 text-neutral-900'
+            ? 'hover:!bg-neutral-200 !text-neutral-900'
             : 'bg-black text-white ';
 
     return (
