@@ -149,7 +149,7 @@ export const mockTopTranches = [
 export const _mockAvailableTranche: ITrancheProps = {
     id: 1,
     name: 'VMEX High Quality',
-    assets: ['USDC', 'WBTC', 'AAVE', 'DAI', 'WETH', 'LINK', 'USDT'],
+    assets: ['USDC', 'WBTC', 'triCrypto2', 'AAVE', 'DAI', 'WETH', 'LINK', 'USDT'],
     aggregateRating: 'A+',
     yourActivity: 'none',
     tvl: 18.62,

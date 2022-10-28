@@ -15,6 +15,21 @@ export type MarketsAsset = {
     strategies: boolean;
 };
 
+export const _mockAvailableAsset0: MarketsAsset = {
+    asset: 'triCrypto2',
+    logo: 'tokens/token-CRV.svg',
+    tranche: 'VMEX High Quality',
+    trancheId: 1,
+    supplyApy: 0.87,
+    borrowApy: 1.19,
+    yourAmount: 0,
+    available: 0,
+    supplyTotal: 35.18,
+    borrowTotal: 30.92,
+    rating: 'A+',
+    strategies: true,
+};
+
 export const _mockAvailableAsset: MarketsAsset = {
     asset: 'USDC',
     logo: 'tokens/token-USDC.svg',
@@ -27,7 +42,7 @@ export const _mockAvailableAsset: MarketsAsset = {
     supplyTotal: 25.14,
     borrowTotal: 9.04,
     rating: 'A+',
-    strategies: true,
+    strategies: false,
 };
 
 export const _mockAvailableAsset2: MarketsAsset = {
@@ -42,7 +57,7 @@ export const _mockAvailableAsset2: MarketsAsset = {
     supplyTotal: 7.38,
     borrowTotal: 5.34,
     rating: 'C+',
-    strategies: true,
+    strategies: false,
 };
 
 export const _mockAvailableAsset3: MarketsAsset = {
@@ -72,7 +87,7 @@ export const _mockAvailableAsset4: MarketsAsset = {
     supplyTotal: 22.18,
     borrowTotal: 8.44,
     rating: 'A-',
-    strategies: true,
+    strategies: false,
 };
 
 export const _mockAvailableAsset5: MarketsAsset = {
@@ -117,7 +132,7 @@ export const _mockAvailableAsset7: MarketsAsset = {
     supplyTotal: 29.01,
     borrowTotal: 5.98,
     rating: 'B+',
-    strategies: true,
+    strategies: false,
 };
 
 export const _mockAvailableAsset8: MarketsAsset = {
@@ -132,7 +147,7 @@ export const _mockAvailableAsset8: MarketsAsset = {
     supplyTotal: 10.73,
     borrowTotal: 6.14,
     rating: 'B-',
-    strategies: true,
+    strategies: false,
 };
 
 export const _mockAvailableAsset9: MarketsAsset = {
@@ -147,7 +162,7 @@ export const _mockAvailableAsset9: MarketsAsset = {
     supplyTotal: 14.01,
     borrowTotal: 13.42,
     rating: 'C-',
-    strategies: true,
+    strategies: false,
 };
 
 export const _mockAvailableAsset10: MarketsAsset = {
@@ -166,6 +181,7 @@ export const _mockAvailableAsset10: MarketsAsset = {
 };
 
 export const _mockMarketsData: Array<MarketsAsset> = [
+    _mockAvailableAsset0,
     _mockAvailableAsset,
     _mockAvailableAsset2,
     _mockAvailableAsset3,
