@@ -9,3 +9,4 @@ export * from './YourBorrows';
 export * from '../../features/tranche/TrancheInfo';
 export * from './TrancheOverviewTable';
 export * from './TopTranches';
+export * from './tranches2';
