@@ -6,12 +6,10 @@ import { TrancheStatisticsCard } from '../ui/features/overview';
 import { TrancheTable } from '../ui/components/tables';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '../store/contexts';
-import { _mockAssetData } from '../models/available-liquidity-model';
 import { _mockTranchesData } from '../utils/mock-data';
 import { useWalletState } from '../hooks/wallet';
 
 const TrancheDetails: React.FC = () => {
-    console.log(_mockAssetData);
     const navigate = useNavigate();
     const location = useLocation();
     const { address } = useWalletState();

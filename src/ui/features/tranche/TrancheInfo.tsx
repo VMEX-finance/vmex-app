@@ -33,24 +33,12 @@ export const TrancheInfoCard = ({ tranche }: any) => {
                         <p className="text-2xl">{tranche.upgradeable}</p>
                     </div>
                     <div>
-                        <p>Admin</p>
-                        <p className="text-2xl">{tranche.admin}</p>
-                    </div>
-                    <div>
-                        <p>Platform Fee</p>
-                        <p className="text-2xl">{tranche.platformFee}%</p>
-                    </div>
-                    <div>
-                        <p>Average Admin Fee</p>
-                        <p className="text-2xl">{tranche.adminFee}%</p>
-                    </div>
-                    <div>
-                        <p>Oracle</p>
-                        <p className="text-2xl">{tranche.oracle}</p>
-                    </div>
-                    <div>
                         <p>Whitelist</p>
                         <p className="text-2xl">{tranche.whitelist}</p>
+                    </div>
+                    <div>
+                        <p>Admin</p>
+                        <p className="text-2xl">{tranche.admin}</p>
                     </div>
                 </div>
             </div>
