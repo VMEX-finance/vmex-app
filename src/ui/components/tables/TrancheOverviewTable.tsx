@@ -11,6 +11,8 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
     const { openDialog } = useDialogController();
     const mode = type === 'supply' ? 'Collateral' : 'Liquidity';
 
+    console.log(data);
+
     return (
         <table className="min-w-full divide-y divide-gray-300 font-basefont">
             <thead className="">
@@ -49,7 +51,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                 <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                                     <div className="flex items-center gap-2">
                                         <img
-                                            src={`/${el.logo}`}
+                                            src={`/tokens/token-${el.asset.toUpperCase()}.svg`}
                                             alt={el.asset}
                                             className="h-8 w-8"
                                         />

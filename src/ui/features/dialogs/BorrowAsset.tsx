@@ -32,7 +32,7 @@ export const BorrowAssetDialog: React.FC<IOwnedAssetDetails> = ({
     const [amount, setAmount] = useMediatedState(inputMediator, '');
 
     return (
-        data.tranches && (
+        data && (
             <>
                 <div className="flex flex-row justify-between">
                     <div className="mt-3 text-left sm:mt-5">
@@ -58,7 +58,7 @@ export const BorrowAssetDialog: React.FC<IOwnedAssetDetails> = ({
                             amount={amount}
                             setAmount={setAmount}
                             coin={{
-                                logo: `/${data.logo}`,
+                                logo: `/tokens/token-${data.asset}.svg`,
                                 name: data.asset,
                             }}
                             balance={'0.23'}

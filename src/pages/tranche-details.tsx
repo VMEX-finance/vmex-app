@@ -11,6 +11,7 @@ import { _mockTranchesData } from '../utils/mock-data';
 import { useWalletState } from '../hooks/wallet';
 
 const TrancheDetails: React.FC = () => {
+    console.log(_mockAssetData);
     const navigate = useNavigate();
     const location = useLocation();
     const { address } = useWalletState();
@@ -55,11 +56,33 @@ const TrancheDetails: React.FC = () => {
                     <Card>
                         <h3 className="text-2xl">Supply</h3>
                         {/* TODO: Replace tables "data" prop with tranche table data prop */}
-                        <TrancheTable data={_mockAssetData.data} type="supply" />
+                        <TrancheTable
+                            data={
+                                tranche.assets
+                                    ? tranche.assets.map((el: string) => ({
+                                          asset: el,
+                                          canBeCollat: false,
+                                          apy_perc: (Math.random() * 10).toFixed(2),
+                                      }))
+                                    : []
+                            }
+                            type="supply"
+                        />
                     </Card>
                     <Card>
                         <h3 className="text-2xl">Borrow</h3>
-                        <TrancheTable data={_mockAssetData.data} type="borrow" />
+                        <TrancheTable
+                            data={
+                                tranche.assets
+                                    ? tranche.assets.map((el: string) => ({
+                                          asset: el,
+                                          liquidity: (Math.random() * 30).toFixed(1),
+                                          apy_perc: (Math.random() * 10).toFixed(2),
+                                      }))
+                                    : []
+                            }
+                            type="borrow"
+                        />
                     </Card>
                 </GridView>
             )}

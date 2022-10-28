@@ -67,7 +67,7 @@ export const DropdownButton = ({
                 <Menu.Items
                     className={`origin-top-right absolute ${
                         direction === 'left' ? 'right-0' : ''
-                    } bg-white mt-2 min-w-[180px] rounded-md shadow-lg ${mode} ring-1 ring-black ring-opacity-5 focus:outline-none z-[999999]`}
+                    } bg-white mt-2 min-w-[180px] rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-[999999]`}
                 >
                     <div className="p-2 flex-col">
                         {items.map((item, i) => (
