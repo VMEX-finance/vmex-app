@@ -9,7 +9,6 @@ import { NumberDisplay } from '../../components/displays';
 // TODO: Implement interface
 export const TrancheStatisticsCard = ({ tranche }: any) => {
     const { asset, setAsset } = useSelectedTrancheContext();
-    console.log(mockMultiLineData[mockMultiLineData.length - 1]?.value);
     return (
         <>
             <Card black>
@@ -35,23 +34,25 @@ export const TrancheStatisticsCard = ({ tranche }: any) => {
                         setSelected={setAsset}
                     />
                 </div>
-                <div className="flex gap-6 mb-3 mt-1">
-                    <NumberDisplay
-                        label="Supply APY"
-                        value={`${mockMultiLineData[mockMultiLineData.length - 1].value}%`}
-                        color="text-brand-green"
-                    />
-                    <NumberDisplay
-                        label="Borrow APY"
-                        value={`${mockMultiLineData[mockMultiLineData.length - 1].value2}%`}
-                        color="text-white"
-                    />
-                    <NumberDisplay
-                        label="Utilization"
-                        value={`${mockMultiLineData[mockMultiLineData.length - 1].value3}%`}
-                        color="text-brand-purple"
-                    />
-                </div>
+                {mockMultiLineData && mockMultiLineData.length > 0 && (
+                    <div className="flex gap-6 mb-3 mt-1">
+                        <NumberDisplay
+                            label="Supply APY"
+                            value={`${mockMultiLineData[mockMultiLineData.length - 1].value}%`}
+                            color="text-brand-green"
+                        />
+                        <NumberDisplay
+                            label="Borrow APY"
+                            value={`${mockMultiLineData[mockMultiLineData.length - 1].value2}%`}
+                            color="text-white"
+                        />
+                        <NumberDisplay
+                            label="Utilization"
+                            value={`${mockMultiLineData[mockMultiLineData.length - 1].value3}%`}
+                            color="text-brand-purple"
+                        />
+                    </div>
+                )}
                 <div className="flex flex-col justify-between gap-6 xl:gap-12">
                     <div className="grid grid-cols-1 gap-3 w-full px-3">
                         <div className="grid w-full h-[240px]">
