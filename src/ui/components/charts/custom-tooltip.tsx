@@ -8,7 +8,6 @@ type ICustomTooltipProps = {
 };
 
 export const CustomTooltip = ({ active, payload, label, type }: ICustomTooltipProps) => {
-    console.log(payload);
     if (active && payload && payload.length) {
         if (type === 'asset-stats') {
             return (
