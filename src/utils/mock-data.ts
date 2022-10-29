@@ -86,6 +86,69 @@ export const lineData2 = [
     },
 ];
 
+export const mockMultiLineData = [
+    {
+        date: '08/20/2022',
+        value: parseFloat((Math.random() * 2).toFixed(2)),
+        value2: parseFloat((Math.random() * 2).toFixed(2)),
+        value3: parseFloat((Math.random() * 2).toFixed(2)),
+    },
+    {
+        date: '09/01/2022',
+        value: parseFloat((Math.random() * 2).toFixed(2)),
+        value2: parseFloat((Math.random() * 2).toFixed(2)),
+        value3: parseFloat((Math.random() * 2).toFixed(2)),
+    },
+    {
+        date: '09/10/2022',
+        value: parseFloat((Math.random() * 2).toFixed(2)),
+        value2: parseFloat((Math.random() * 2).toFixed(2)),
+        value3: parseFloat((Math.random() * 2).toFixed(2)),
+    },
+    {
+        date: '09/20/2022',
+        value: parseFloat((Math.random() * 2).toFixed(2)),
+        value2: parseFloat((Math.random() * 2).toFixed(2)),
+        value3: parseFloat((Math.random() * 2).toFixed(2)),
+    },
+    {
+        date: '10/01/2022',
+        value: parseFloat((Math.random() * 2).toFixed(2)),
+        value2: parseFloat((Math.random() * 2).toFixed(2)),
+        value3: parseFloat((Math.random() * 2).toFixed(2)),
+    },
+    {
+        date: '10/10/2022',
+        value: parseFloat((Math.random() * 2).toFixed(2)),
+        value2: parseFloat((Math.random() * 2).toFixed(2)),
+        value3: parseFloat((Math.random() * 2).toFixed(2)),
+    },
+    {
+        date: '10/20/2022',
+        value: parseFloat((Math.random() * 2).toFixed(2)),
+        value2: parseFloat((Math.random() * 2).toFixed(2)),
+        value3: parseFloat((Math.random() * 2).toFixed(2)),
+    },
+    {
+        date: '11/01/2022',
+        value: parseFloat((Math.random() * 2).toFixed(2)),
+        value2: parseFloat((Math.random() * 2).toFixed(2)),
+        value3: parseFloat((Math.random() * 2).toFixed(2)),
+    },
+    {
+        date: '11/10/2022',
+        value: parseFloat((Math.random() * 2).toFixed(2)),
+        value2: parseFloat((Math.random() * 2).toFixed(2)),
+        value3: parseFloat((Math.random() * 2).toFixed(2)),
+    },
+    {
+        date: '11/20/2022',
+        value: parseFloat((Math.random() * 2).toFixed(2)),
+        value2: parseFloat((Math.random() * 2).toFixed(2)),
+        value3: parseFloat((Math.random() * 2).toFixed(2)),
+    },
+];
+
 export const mockTopAssets = [
     {
         asset: 'BTC',

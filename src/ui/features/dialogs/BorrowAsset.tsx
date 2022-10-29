@@ -62,6 +62,7 @@ export const BorrowAssetDialog: React.FC<IOwnedAssetDetails> = ({
                                 name: data.asset,
                             }}
                             balance={'0.23'}
+                            type="collateral"
                         />
 
                         <h3 className="mt-6 text-gray-400">Transaction Overview</h3>

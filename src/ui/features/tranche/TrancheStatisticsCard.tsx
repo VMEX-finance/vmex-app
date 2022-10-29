@@ -1,14 +1,13 @@
 import { ReLineChart } from '../../components/charts';
 import React from 'react';
 import { Card } from '../../components/cards';
-import { lineData, lineData2 } from '../../../utils/mock-data';
+import { mockMultiLineData } from '../../../utils/mock-data';
 import { DropdownButton } from '../../components/buttons';
 import ReactTooltip from 'react-tooltip';
 import { useSelectedTrancheContext } from '../../../store/contexts';
 // TODO: Implement interface
 export const TrancheStatisticsCard = ({ tranche }: any) => {
     const { asset, setAsset } = useSelectedTrancheContext();
-    console.log(tranche, asset);
     return (
         <>
             <Card black>
@@ -37,10 +36,12 @@ export const TrancheStatisticsCard = ({ tranche }: any) => {
                 <div className="flex flex-col h-[90%] justify-between gap-12">
                     <div className="grid grid-cols-1 gap-3 w-full px-3">
                         <div className="grid w-full h-[240px]">
-                            {/* TODO: Make a new chart component that supports 3 lines  - refer to recharts docs*/}
-                            <ReLineChart data={lineData} color="#3CB55E" timeseries />
-                            <ReLineChart data={lineData2} color="#fff" />
-                            <ReLineChart data={lineData} color="#7667db" />
+                            <ReLineChart
+                                data={mockMultiLineData}
+                                color="#3CB55E"
+                                type="asset-stats"
+                                timeseries
+                            />
                         </div>
                     </div>
                     <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 justify-items-center gap-y-10">

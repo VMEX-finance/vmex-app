@@ -1,19 +1,27 @@
-import React, { MouseEvent } from 'react';
+import React from 'react';
 import { LineChart, Line, Tooltip, ResponsiveContainer } from 'recharts';
 import { CustomTooltip } from './custom-tooltip';
 
 export type IDataProps = {
     date: string;
     value: number;
+    value2?: number;
+    value3?: number;
 };
 
 type ILineChartProps = {
     data: Array<IDataProps>;
     dataKey?: string;
+    dataKey2?: string;
+    dataKey3?: string;
     loading?: boolean;
     error?: boolean;
     color?: string;
+    color2?: string;
+    color3?: string;
     timeseries?: boolean;
+    labels?: boolean;
+    type?: 'asset-stats' | 'default';
 };
 
 export const ReLineChart = (props: ILineChartProps) => {
@@ -91,7 +99,7 @@ export const ReLineChart = (props: ILineChartProps) => {
                         right: 10,
                     }}
                 >
-                    <Tooltip content={<CustomTooltip />} />
+                    <Tooltip content={<CustomTooltip type={props.type} />} />
                     <Line
                         dot={{ r: 0 }}
                         type="monotone"
@@ -99,6 +107,24 @@ export const ReLineChart = (props: ILineChartProps) => {
                         stroke={props.color || '#8884d8'}
                         activeDot={{ r: 3 }}
                     />
+                    {props.data.length > 0 && props.data[0].value2 && (
+                        <Line
+                            dot={{ r: 0 }}
+                            type="monotone"
+                            dataKey={props.dataKey2 || 'value2'}
+                            stroke={props.color2 || '#fff'}
+                            activeDot={{ r: 3 }}
+                        />
+                    )}
+                    {props.data.length > 0 && props.data[0].value3 && (
+                        <Line
+                            dot={{ r: 0 }}
+                            type="monotone"
+                            dataKey={props.dataKey3 || 'value3'}
+                            stroke={props.color3 || '#7667db'}
+                            activeDot={{ r: 3 }}
+                        />
+                    )}
                 </LineChart>
             </ResponsiveContainer>
         </>

@@ -9,9 +9,10 @@ export interface ICoinInput {
         name: string;
     };
     balance?: string;
+    type?: 'collateral' | 'default';
 }
 
-export const CoinInput = ({ amount, setAmount, coin, balance }: ICoinInput) => {
+export const CoinInput = ({ amount, setAmount, coin, balance, type }: ICoinInput) => {
     return (
         <div className="w-full flex flex-row justify-between mt-1 rounded-xl border border-gray-300 p-2">
             <div className="flex flex-col justify-between gap-3">
@@ -24,7 +25,7 @@ export const CoinInput = ({ amount, setAmount, coin, balance }: ICoinInput) => {
                 />
                 <div className="text-gray-400">USD</div>
             </div>
-            <div className="flex flex-col justify-between gap-3">
+            <div className="flex flex-col justify-between items-end gap-3">
                 <AssetDisplay logo={coin.logo} name={coin.name} />
                 <div className="text-xs text-right text-blue-700">
                     <span
@@ -33,7 +34,10 @@ export const CoinInput = ({ amount, setAmount, coin, balance }: ICoinInput) => {
                     >
                         MAX
                     </span>
-                    <p>Balance: {balance || 0.3213}</p>
+                    <p>
+                        {`${type === 'collateral' ? 'Amount Collateralized' : 'Balance'}:`}{' '}
+                        {balance || 0.3213}
+                    </p>
                 </div>
             </div>
         </div>
