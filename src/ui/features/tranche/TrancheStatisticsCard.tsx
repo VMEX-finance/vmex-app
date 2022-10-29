@@ -1,18 +1,18 @@
 import { ReLineChart } from '../../components/charts';
 import React from 'react';
 import { Card } from '../../components/cards';
-import { lineData, lineData2 } from '../../../utils/mock-data';
+import { mockMultiLineData } from '../../../utils/mock-data';
 import { DropdownButton } from '../../components/buttons';
 import ReactTooltip from 'react-tooltip';
 import { useSelectedTrancheContext } from '../../../store/contexts';
+import { NumberDisplay } from '../../components/displays';
 // TODO: Implement interface
 export const TrancheStatisticsCard = ({ tranche }: any) => {
     const { asset, setAsset } = useSelectedTrancheContext();
-    console.log(tranche, asset);
     return (
         <>
             <Card black>
-                <div className="flex justify-between items-center mb-3">
+                <div className="flex justify-between items-center">
                     <div className="flex items-center gap-4">
                         <h3 className="text-2xl">Asset Statistics</h3>
                         {/* TODO: Make this dynamic based on if strategy */}
@@ -34,13 +34,34 @@ export const TrancheStatisticsCard = ({ tranche }: any) => {
                         setSelected={setAsset}
                     />
                 </div>
-                <div className="flex flex-col h-[90%] justify-between gap-12">
+                {mockMultiLineData && mockMultiLineData.length > 0 && (
+                    <div className="flex gap-6 mb-3 mt-1">
+                        <NumberDisplay
+                            label="Supply APY"
+                            value={`${mockMultiLineData[mockMultiLineData.length - 1].value}%`}
+                            color="text-brand-green"
+                        />
+                        <NumberDisplay
+                            label="Borrow APY"
+                            value={`${mockMultiLineData[mockMultiLineData.length - 1].value2}%`}
+                            color="text-white"
+                        />
+                        <NumberDisplay
+                            label="Utilization"
+                            value={`${mockMultiLineData[mockMultiLineData.length - 1].value3}%`}
+                            color="text-brand-purple"
+                        />
+                    </div>
+                )}
+                <div className="flex flex-col justify-between gap-6 xl:gap-12">
                     <div className="grid grid-cols-1 gap-3 w-full px-3">
                         <div className="grid w-full h-[240px]">
-                            {/* TODO: Make a new chart component that supports 3 lines  - refer to recharts docs*/}
-                            <ReLineChart data={lineData} color="#3CB55E" timeseries />
-                            <ReLineChart data={lineData2} color="#fff" />
-                            <ReLineChart data={lineData} color="#7667db" />
+                            <ReLineChart
+                                data={mockMultiLineData}
+                                color="#3CB55E"
+                                type="asset-stats"
+                                timeseries
+                            />
                         </div>
                     </div>
                     <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 justify-items-center gap-y-10">
