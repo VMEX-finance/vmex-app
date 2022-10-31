@@ -24,14 +24,14 @@ export const MultipleAssetsDisplay = ({ assets, show = 4 }: IMultipleAssetsProps
     };
 
     return (
-        <div className={`flex flex-wrap items-center ${show === 'all' ? 'gap-2' : 'xl:gap-2'}`}>
+        <div className={`flex flex-wrap items-center ${show === 'all' ? 'gap-3' : 'xl:gap-2'}`}>
             {/* TODO: make assets overlap each other ever so slightly */}
             {mapAssets().map((el, i) => (
                 <img
                     key={`tranches-asset-${i}`}
                     src={`/tokens/token-${fallbackImg(el)}.svg`}
                     alt={el}
-                    className="h-8 w-8"
+                    className={`${show === 'all' ? 'h-10 w-10' : 'h-8 w-8'}`}
                 />
             ))}
             {show !== 'all' && (

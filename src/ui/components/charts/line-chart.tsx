@@ -1,12 +1,12 @@
 import React from 'react';
-import { LineChart, Line, Tooltip, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
 import { CustomTooltip } from './custom-tooltip';
 
 export type IDataProps = {
-    date: string;
-    value: number;
-    value2?: number;
-    value3?: number;
+    date?: string; // x axis
+    value: number; // y axis
+    value2?: number; // y axis
+    value3?: number; // y axis
 };
 
 type ILineChartProps = {
