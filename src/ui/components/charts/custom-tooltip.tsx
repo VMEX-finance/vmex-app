@@ -15,7 +15,6 @@ export const CustomTooltip = ({ active, payload, label, type }: ICustomTooltipPr
                     <span className="font-semibold">{payload[0].payload?.date}</span>
                     <span>Supply APY: {payload[0].value}%</span>
                     <span>Borrow APY: {payload[1].value}%</span>
-                    <span>Utilization: {payload[2].value}%</span>
                 </div>
             );
         } else {

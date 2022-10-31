@@ -44,21 +44,22 @@ export const TrancheStatisticsCard = ({ tranche }: any) => {
                         <NumberDisplay
                             label="Borrow APY"
                             value={`${mockMultiLineData[mockMultiLineData.length - 1].value2}%`}
-                            color="text-white"
+                            color="text-brand-purple"
                         />
                         <NumberDisplay
-                            label="Utilization"
-                            value={`${mockMultiLineData[mockMultiLineData.length - 1].value3}%`}
-                            color="text-brand-purple"
+                            label="Optimal Utilization"
+                            value={`80%`}
+                            color="text-white"
                         />
                     </div>
                 )}
-                <div className="flex flex-col justify-between gap-6 xl:gap-12">
-                    <div className="grid grid-cols-1 gap-3 w-full px-3">
-                        <div className="grid w-full h-[240px]">
+                <div className="flex flex-col justify-between gap-6 xl:gap-10">
+                    <div className="grid grid-cols-1 w-full gap-6">
+                        <div className="w-full h-[240px]">
                             <ReLineChart
                                 data={mockMultiLineData}
                                 color="#3CB55E"
+                                color2="#7667db"
                                 type="asset-stats"
                                 timeseries
                             />

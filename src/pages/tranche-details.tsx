@@ -45,10 +45,12 @@ const TrancheDetails: React.FC = () => {
                 borrowed={tranche.borrowTotal}
             />
             {view.includes('details') ? (
-                <GridView className="lg:grid-cols-[1fr_2fr]">
-                    <TrancheInfoCard tranche={tranche} />
-                    <TrancheStatisticsCard tranche={tranche} />
-                </GridView>
+                <>
+                    <GridView className="lg:grid-cols-[1fr_2fr]">
+                        <TrancheInfoCard tranche={tranche} />
+                        <TrancheStatisticsCard tranche={tranche} />
+                    </GridView>
+                </>
             ) : (
                 <GridView>
                     <Card>
