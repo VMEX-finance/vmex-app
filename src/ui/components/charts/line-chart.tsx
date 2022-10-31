@@ -1,9 +1,17 @@
 import React from 'react';
-import { LineChart, Line, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
+import {
+    LineChart,
+    Line,
+    Tooltip,
+    ResponsiveContainer,
+    ReferenceLine,
+    XAxis,
+    YAxis,
+} from 'recharts';
 import { CustomTooltip } from './custom-tooltip';
 
 export type IDataProps = {
-    date?: string; // x axis
+    xaxis?: string | number; // x axis
     value: number; // y axis
     value2?: number; // y axis
     value3?: number; // y axis
@@ -20,8 +28,10 @@ type ILineChartProps = {
     color2?: string;
     color3?: string;
     timeseries?: boolean;
+    xaxis?: boolean;
+    yaxis?: boolean;
     labels?: boolean;
-    type?: 'asset-stats' | 'default';
+    type?: 'asset-stats' | 'utilization' | 'default';
 };
 
 export const ReLineChart = (props: ILineChartProps) => {
@@ -58,8 +68,8 @@ export const ReLineChart = (props: ILineChartProps) => {
 
         const rangeData = props.data.filter((el: any) => {
             return (
-                new Date(el.date).getTime() >= fromDate.getTime() &&
-                new Date(el.date).getTime() <= new Date().getTime()
+                new Date(el.xaxis).getTime() >= fromDate.getTime() &&
+                new Date(el.xaxis).getTime() <= new Date().getTime()
             );
         });
 
@@ -96,7 +106,7 @@ export const ReLineChart = (props: ILineChartProps) => {
                         top: 10,
                         bottom: 10,
                         left: 10,
-                        right: 10,
+                        right: props.yaxis ? 50 : 10,
                     }}
                 >
                     <Tooltip content={<CustomTooltip type={props.type} />} />
@@ -125,6 +135,8 @@ export const ReLineChart = (props: ILineChartProps) => {
                             activeDot={{ r: 3 }}
                         />
                     )}
+                    {props.xaxis && <XAxis dataKey="xaxis" tickLine={false} />}
+                    {props.yaxis && <YAxis tickLine={false} domain={[2, 'auto']} />}
                 </LineChart>
             </ResponsiveContainer>
         </>

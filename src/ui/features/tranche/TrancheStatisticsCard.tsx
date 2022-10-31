@@ -1,7 +1,7 @@
 import { ReLineChart } from '../../components/charts';
 import React from 'react';
 import { Card } from '../../components/cards';
-import { mockMultiLineData } from '../../../utils/mock-data';
+import { mockMultiLineData, mockUtilLineData } from '../../../utils/mock-data';
 import { DropdownButton } from '../../components/buttons';
 import ReactTooltip from 'react-tooltip';
 import { useSelectedTrancheContext } from '../../../store/contexts';
@@ -53,8 +53,8 @@ export const TrancheStatisticsCard = ({ tranche }: any) => {
                         />
                     </div>
                 )}
-                <div className="flex flex-col justify-between gap-6 xl:gap-10">
-                    <div className="grid grid-cols-1 w-full gap-6">
+                <div className="flex flex-col justify-between gap-6">
+                    <div className="grid grid-cols-1 w-full gap-6 xl:gap-10">
                         <div className="w-full h-[240px]">
                             <ReLineChart
                                 data={mockMultiLineData}
@@ -62,7 +62,21 @@ export const TrancheStatisticsCard = ({ tranche }: any) => {
                                 color2="#7667db"
                                 type="asset-stats"
                                 timeseries
+                                xaxis
+                                yaxis
                             />
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <span className="text-lg">Utilization Curve</span>
+                            <div className="w-full h-[120px]">
+                                <ReLineChart
+                                    data={mockUtilLineData}
+                                    color="#fff"
+                                    type="utilization"
+                                    yaxis
+                                    xaxis
+                                />
+                            </div>
                         </div>
                     </div>
                     <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 justify-items-center gap-y-10">
