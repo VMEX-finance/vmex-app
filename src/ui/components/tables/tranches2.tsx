@@ -9,7 +9,10 @@ import { MultipleAssetsDisplay } from '../displays';
 import { useWindowSize } from '../../../hooks/ui';
 import { IconTooltip } from '../tooltips/Icon';
 import { TableTemplate } from '../../templates';
-
+import createCache from '@emotion/cache';
+import { CacheProvider } from '@emotion/react';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { options } from '../../../utils/table-config';
 interface IDataTable {
     data: ITrancheProps[];
 }
@@ -60,8 +63,9 @@ export const TranchesTableDos: React.FC<IDataTable> = ({ data }) => {
             name: 'name',
             label: 'Tranche',
             options: {
-                filter: true,
+                filter: false,
                 sort: true,
+                sortThirdClickReset: true,
             },
         },
         {
@@ -69,7 +73,8 @@ export const TranchesTableDos: React.FC<IDataTable> = ({ data }) => {
             label: 'Assets',
             options: {
                 filter: true,
-                sort: true,
+                sort: false,
+                sortThirdClickReset: true,
             },
         },
         {
@@ -78,6 +83,7 @@ export const TranchesTableDos: React.FC<IDataTable> = ({ data }) => {
             options: {
                 filter: true,
                 sort: true,
+                sortThirdClickReset: true,
             },
         },
         {
@@ -86,6 +92,7 @@ export const TranchesTableDos: React.FC<IDataTable> = ({ data }) => {
             options: {
                 filter: true,
                 sort: true,
+                sortThirdClickReset: true,
             },
         },
         {
@@ -94,6 +101,7 @@ export const TranchesTableDos: React.FC<IDataTable> = ({ data }) => {
             options: {
                 filter: true,
                 sort: true,
+                sortThirdClickReset: true,
             },
         },
         {
@@ -106,12 +114,34 @@ export const TranchesTableDos: React.FC<IDataTable> = ({ data }) => {
         },
     ];
 
+    const muiCache = createCache({
+        key: 'mui-datatables',
+        prepend: true,
+    });
+
+    // const { transactions, loading } = useTransactionContext();
+
+    function zeroTheme() {
+        return createTheme({
+            palette: {
+                primary: {
+                    main: '#368e4c',
+                },
+            },
+            components: {},
+        });
+    }
+
     return (
-        <TableTemplate
-            title={['All Available Tranches']}
-            columns={columns}
-            data={data}
-            options={{}}
-        />
+        <CacheProvider value={muiCache}>
+            <ThemeProvider theme={zeroTheme()}>
+                <TableTemplate
+                    title={['All Available Tranches']}
+                    columns={columns}
+                    data={data}
+                    options={options}
+                />
+            </ThemeProvider>
+        </CacheProvider>
     );
 };

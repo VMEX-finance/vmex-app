@@ -104,10 +104,10 @@ export const ModalTemplate: React.FC = () => {
     );
 }; */
 
-export const TableTemplate: React.FC<ITableTemplate> = ({ columns, data, title }) => {
+export const TableTemplate: React.FC<ITableTemplate> = ({ columns, data, title, options }) => {
     return (
         <>
-            <MUIDataTable columns={columns} data={data} title={title} />
+            <MUIDataTable columns={columns} data={data} title={title} options={options} />
         </>
     );
 };
