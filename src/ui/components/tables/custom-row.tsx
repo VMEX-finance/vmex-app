@@ -11,7 +11,9 @@ import { determineRatingColor } from '../../../utils/helpers';
 import { BsArrowDownCircle, BsArrowUpCircle } from 'react-icons/bs';
 import { IconTooltip } from '../tooltips/Icon';
 
-const CustomRow = (data: any[], rowIndex: number) => {
+const CustomRow = (props: any) => {
+    const { name, assets, aggregateRating, yourActivity, supplyTotal, borrowTotal } = props;
+
     const determineTypeColor = (str: string) => {
         if (str === 'Mint') return 'bg-green-300 !text-[16px]';
         if (str === 'Burn') return 'bg-red-300 !text-[16px]';
@@ -49,31 +51,25 @@ const CustomRow = (data: any[], rowIndex: number) => {
     };
 
     return (
-        <>
-            <tr className="text-left transition duration-200 hover:bg-neutral-200 hover:cursor-pointer">
-                {data &&
-                    data.map((rowData, i) => (
-                        <td
-                            key={i}
-                            className={`${i == 0 && 'whitespace-nowrap py-4 pl-2 md:pl-4 pr-3'} ${
-                                i == 1 && 'min-w-[120px]'
-                            } ${i == 2 && `text-[${determineRatingColor(rowData)}]`} ${
-                                i == 6 && 'text-right pr-3.5'
-                            }`}
-                        >
-                            {(i == 0 || i == 2 || i == 4 || i == 5) && <span>{rowData}</span>}
-                            {i == 1 && <MultipleAssetsDisplay assets={rowData} />}
-                            {i == 3 && renderActivity(rowData)}
-                            {i == 6 && (
-                                <Button
-                                    label={width > 1000 ? 'View Details' : 'Details'}
-                                    onClick={(e) => route(e, rowData, 'details')}
-                                />
-                            )}
-                        </td>
-                    ))}
-            </tr>
-        </>
+        <tr
+            key={name}
+            className="text-left transition duration-200 hover:bg-neutral-200 hover:cursor-pointer"
+        >
+            <td className="whitespace-nowrap py-4 pl-2 md:pl-4 pr-3">
+                <span>{name}</span>
+            </td>
+
+            <td className="min-w-[120px]">
+                <MultipleAssetsDisplay assets={assets} />
+            </td>
+            <td style={{ color: determineRatingColor(aggregateRating) }}>{aggregateRating}</td>
+            <td>{renderActivity(yourActivity)}</td>
+            <td>${supplyTotal}M</td>
+            <td>${borrowTotal}M</td>
+            <td className="text-right pr-3.5">
+                <Button label={width > 1000 ? 'View Details' : 'Details'} />
+            </td>
+        </tr>
     );
 };
 
