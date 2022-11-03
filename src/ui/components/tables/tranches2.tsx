@@ -134,14 +134,12 @@ export const TranchesTableDos: React.FC<IDataTable> = ({ data }) => {
 
     return (
         <CacheProvider value={muiCache}>
-            <ThemeProvider theme={zeroTheme()}>
-                <TableTemplate
-                    title={['All Available Tranches']}
-                    columns={columns}
-                    data={data}
-                    options={options}
-                />
-            </ThemeProvider>
+            <TableTemplate
+                title={['All Available Tranches']}
+                columns={columns}
+                data={data}
+                options={options}
+            />
         </CacheProvider>
     );
 };
