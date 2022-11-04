@@ -11,8 +11,8 @@ import { determineRatingColor } from '../../../utils/helpers';
 import { BsArrowDownCircle, BsArrowUpCircle } from 'react-icons/bs';
 import { IconTooltip } from '../tooltips/Icon';
 
-const CustomRow = (props: any) => {
-    const { name, assets, aggregateRating, yourActivity, supplyTotal, borrowTotal } = props;
+const TranchesCustomRow = (props: any) => {
+    const { name, assets, aggregateRating, yourActivity, supplyTotal, borrowTotal, id } = props;
 
     const determineTypeColor = (str: string) => {
         if (str === 'Mint') return 'bg-green-300 !text-[16px]';
@@ -24,8 +24,9 @@ const CustomRow = (props: any) => {
 
     const route = (e: Event, tranche: any, view = 'overview') => {
         e.stopPropagation();
+        console.log(tranche);
         updateTranche('id', tranche.id);
-        navigate(`/tranches/${tranche[1].replace(/\s+/g, '-')}`, { state: { view } });
+        navigate(`/tranches/${tranche.name.replace(/\s+/g, '-')}`, { state: { view } });
     };
 
     const { width } = useWindowSize();
@@ -67,10 +68,13 @@ const CustomRow = (props: any) => {
             <td>${supplyTotal}M</td>
             <td>${borrowTotal}M</td>
             <td className="text-right pr-3.5">
-                <Button label={width > 1000 ? 'View Details' : 'Details'} />
+                <Button
+                    label={width > 1000 ? 'View Details' : 'Details'}
+                    onClick={(e) => route(e, { id, name }, 'details')}
+                />
             </td>
         </tr>
     );
 };
 
-export { CustomRow };
+export { TranchesCustomRow };

@@ -1,7 +1,7 @@
 import { Card } from '../ui/components/cards';
 import React from 'react';
 import { AppTemplate } from '../ui/templates';
-import { MarketsTable } from '../ui/components/tables';
+import { MarketsTable } from '../ui/components/tables/Markets2';
 import { _mockMarketsData } from '../models/markets';
 import { TokenData } from '../hooks/user-data';
 import { ITokenData } from '../store/token-data';
@@ -12,15 +12,7 @@ const Markets: React.FC = () => {
 
     return (
         <AppTemplate title="markets">
-            <Card>
-                <p className="text-xl pb-5">All Available Assets</p>
-                <div className="divide-x-8 divide-transparent">
-                    <DropdownButton items={[{ text: 'Filter Asset' }]} primary direction="right" />
-                    <DropdownButton items={[{ text: 'Filter APY' }]} primary direction="right" />
-                    <DropdownButton items={[{ text: 'Filter TVL' }]} primary direction="right" />
-                </div>
-                <MarketsTable data={_mockMarketsData} />
-            </Card>
+            <MarketsTable data={_mockMarketsData} />
         </AppTemplate>
     );
 };
