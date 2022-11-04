@@ -1,7 +1,7 @@
 import React from 'react';
-import { useDialogController } from '../../../hooks/dialogs';
-import { AvailableAsset } from '../../../models/available-liquidity-model';
-import { BasicToggle } from '../toggles';
+import { useDialogController } from '../../../../hooks/dialogs';
+import { AvailableAsset } from '../../../../models/available-liquidity-model';
+import { BasicToggle } from '../../toggles';
 
 interface ITableProps {
     data: AvailableAsset[];
