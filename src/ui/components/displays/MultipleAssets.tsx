@@ -4,15 +4,16 @@ import React from 'react';
 interface IMultipleAssetsProps {
     assets?: string[];
     show?: number | 'all';
+    size?: string;
 }
 
-export const MultipleAssetsDisplay = ({ assets, show = 4 }: IMultipleAssetsProps) => {
+export const MultipleAssetsDisplay = ({ assets, show = 4, size }: IMultipleAssetsProps) => {
     const { width } = useWindowSize();
 
     const mapAssets = () => {
         if (assets) {
             if (show === 'all') return assets;
-            else return assets.slice(0, width > 1000 ? show : 2);
+            else return assets.slice(0, show ? show : 4);
         } else {
             return [];
         }
@@ -31,12 +32,12 @@ export const MultipleAssetsDisplay = ({ assets, show = 4 }: IMultipleAssetsProps
                     key={`tranches-asset-${i}`}
                     src={`/tokens/token-${fallbackImg(el)}.svg`}
                     alt={el}
-                    className={`${show === 'all' ? 'h-10 w-10' : 'h-8 w-8'}`}
+                    className={`${size ? size : 'h-8 w-8'}`}
                 />
             ))}
             {show !== 'all' && (
                 <span className="ml-1 md:ml-2">
-                    +{assets ? assets.slice(width > 1000 ? show : 2).length : 0}
+                    +{assets ? assets.slice(show ? show : 4).length : 0}
                 </span>
             )}
         </div>

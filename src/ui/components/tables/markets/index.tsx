@@ -1,21 +1,10 @@
 import React from 'react';
-import type { ITrancheProps } from '../../../models/tranches';
-import { Button } from '../buttons';
-import { useNavigate } from 'react-router-dom';
-import { determineRatingColor } from '../../../utils/helpers';
-import { useSelectedTrancheContext } from '../../../store/contexts';
-import { BsArrowDownCircle, BsArrowUpCircle } from 'react-icons/bs';
-import { MultipleAssetsDisplay } from '../displays';
-import { useWindowSize } from '../../../hooks/ui';
-import { IconTooltip } from '../tooltips/Icon';
-import { TableTemplate } from '../../templates';
-import createCache from '@emotion/cache';
+import { TableTemplate } from '../../../templates';
 import { CacheProvider } from '@emotion/react';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { options } from './markets-table-config';
-import type { MarketsAsset } from '../../../models/markets';
-import { BsCheck } from 'react-icons/bs';
-import { IoIosClose } from 'react-icons/io';
+import { ThemeProvider } from '@mui/material/styles';
+import { muiCache, options, vmexTheme } from '../utils';
+import type { MarketsAsset } from '../../../../models/markets';
+import { MarketsCustomRow } from './custom-row';
 
 interface IAvailableLiquidityTable {
     data: MarketsAsset[];
@@ -27,7 +16,7 @@ export const MarketsTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
             name: 'asset',
             label: 'Asset',
             options: {
-                filter: false,
+                filter: true,
                 sort: true,
                 sortThirdClickReset: true,
             },
@@ -43,7 +32,7 @@ export const MarketsTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
         },
         {
             name: 'supplyApy',
-            label: 'Supply APY%',
+            label: 'Supply APY',
             options: {
                 filter: false,
                 sort: true,
@@ -52,7 +41,7 @@ export const MarketsTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
         },
         {
             name: 'borrowApy',
-            label: 'Borrow APY%',
+            label: 'Borrow APY',
             options: {
                 filter: false,
                 sort: true,
@@ -131,25 +120,14 @@ export const MarketsTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
                 display: false,
             },
         },
-    ];
-
-    const muiCache = createCache({
-        key: 'mui-datatables',
-        prepend: true,
-    });
-
-    function vmexTheme() {
-        return createTheme({
-            palette: {
-                primary: {
-                    main: '#7667db',
-                },
+        {
+            name: '',
+            label: '',
+            options: {
+                filter: false,
             },
-            components: {},
-        });
-    }
-
-    // const { transactions, loading } = useTransactionContext();
+        },
+    ];
 
     return (
         <CacheProvider value={muiCache}>
@@ -158,7 +136,42 @@ export const MarketsTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
                     title={['All Available Assets']}
                     columns={columns}
                     data={data}
-                    options={options}
+                    options={{
+                        ...options,
+                        customRowRender: (data: any) => {
+                            const [
+                                asset,
+                                tranche,
+                                supplyApy,
+                                borrowApy,
+                                yourAmount,
+                                available,
+                                supplyTotal,
+                                borrowTotal,
+                                rating,
+                                strategies,
+                                logo,
+                                trancheId,
+                            ] = data;
+
+                            return (
+                                <MarketsCustomRow
+                                    asset={asset}
+                                    tranche={tranche}
+                                    trancheId={trancheId}
+                                    supplyApy={supplyApy}
+                                    borrowApy={borrowApy}
+                                    yourAmount={yourAmount}
+                                    available={available}
+                                    borrowTotal={borrowTotal}
+                                    supplyTotal={supplyTotal}
+                                    rating={rating}
+                                    strategies={strategies}
+                                    logo={logo}
+                                />
+                            );
+                        },
+                    }}
                 />
             </ThemeProvider>
         </CacheProvider>

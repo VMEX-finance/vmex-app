@@ -1,27 +1,16 @@
 import React from 'react';
-import type { ITrancheProps } from '../../../models/tranches';
-import { Button } from '../buttons';
-import { useNavigate } from 'react-router-dom';
-import { determineRatingColor } from '../../../utils/helpers';
-import { useSelectedTrancheContext } from '../../../store/contexts';
-import { BsArrowDownCircle, BsArrowUpCircle } from 'react-icons/bs';
-import { MultipleAssetsDisplay } from '../displays';
-import { useWindowSize } from '../../../hooks/ui';
-import { IconTooltip } from '../tooltips/Icon';
-import { TableTemplate } from '../../templates';
-import createCache from '@emotion/cache';
+import type { ITrancheProps } from '../../../../models/tranches';
+import { TableTemplate } from '../../../templates';
 import { CacheProvider } from '@emotion/react';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { options } from './tranches-table-config';
+import { ThemeProvider } from '@mui/material/styles';
+import { muiCache, options, vmexTheme } from '../utils';
+import { TranchesCustomRow } from './custom-row';
+
 interface IDataTable {
     data: ITrancheProps[];
 }
 
-export const TranchesTableDos: React.FC<IDataTable> = ({ data }) => {
-    const navigate = useNavigate();
-    const { updateTranche } = useSelectedTrancheContext();
-    const { width } = useWindowSize();
-
+export const TranchesTable: React.FC<IDataTable> = ({ data }) => {
     const columns = [
         {
             name: 'name',
@@ -63,7 +52,7 @@ export const TranchesTableDos: React.FC<IDataTable> = ({ data }) => {
             name: 'supplyTotal',
             label: 'Supplied',
             options: {
-                filter: true,
+                filter: false,
                 sort: true,
                 sortThirdClickReset: true,
             },
@@ -72,7 +61,7 @@ export const TranchesTableDos: React.FC<IDataTable> = ({ data }) => {
             name: 'borrowTotal',
             label: 'Borrowed',
             options: {
-                filter: true,
+                filter: false,
                 sort: true,
                 sortThirdClickReset: true,
             },
@@ -86,24 +75,15 @@ export const TranchesTableDos: React.FC<IDataTable> = ({ data }) => {
                 display: false,
             },
         },
+        {
+            name: '',
+            label: '',
+            options: {
+                filter: false,
+            },
+        },
     ];
 
-    const muiCache = createCache({
-        key: 'mui-datatables',
-        prepend: true,
-    });
-
-    // const { transactions, loading } = useTransactionContext();
-    function vmexTheme() {
-        return createTheme({
-            palette: {
-                primary: {
-                    main: '#7667db',
-                },
-            },
-            components: {},
-        });
-    }
     return (
         <CacheProvider value={muiCache}>
             <ThemeProvider theme={vmexTheme()}>
@@ -111,7 +91,31 @@ export const TranchesTableDos: React.FC<IDataTable> = ({ data }) => {
                     title={['All Available Tranches']}
                     columns={columns}
                     data={data}
-                    options={options}
+                    options={{
+                        ...options,
+                        customRowRender: (data: any) => {
+                            const [
+                                name,
+                                assets,
+                                aggregateRating,
+                                yourActivity,
+                                supplyTotal,
+                                borrowTotal,
+                                id,
+                            ] = data;
+                            return (
+                                <TranchesCustomRow
+                                    name={name}
+                                    assets={assets}
+                                    aggregateRating={aggregateRating}
+                                    yourActivity={yourActivity}
+                                    supplyTotal={supplyTotal}
+                                    borrowTotal={borrowTotal}
+                                    id={id}
+                                />
+                            );
+                        },
+                    }}
                 />
             </ThemeProvider>
         </CacheProvider>
