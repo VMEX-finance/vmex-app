@@ -1,7 +1,7 @@
 import { MUIDataTableColumn, MUIDataTableOptions } from 'mui-datatables';
 import React from 'react';
 
-import { CustomRow } from '../ui/components/tables/custom-row';
+import { TranchesCustomRow } from './tranches-custom-row';
 
 export const options: MUIDataTableOptions = {
     download: false,
@@ -11,16 +11,17 @@ export const options: MUIDataTableOptions = {
     selectableRowsHideCheckboxes: true,
     searchPlaceholder: 'Search...',
     customRowRender: (data) => {
-        const [name, assets, aggregateRating, yourActivity, supplyTotal, borrowTotal] = data;
+        const [name, assets, aggregateRating, yourActivity, supplyTotal, borrowTotal, id] = data;
 
         return (
-            <CustomRow
+            <TranchesCustomRow
                 name={name}
                 assets={assets}
                 aggregateRating={aggregateRating}
                 yourActivity={yourActivity}
                 supplyTotal={supplyTotal}
                 borrowTotal={borrowTotal}
+                id={id}
             />
         );
     },

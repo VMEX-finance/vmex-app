@@ -12,20 +12,20 @@ import { TableTemplate } from '../../templates';
 import createCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { options } from './tranches-table-config';
-interface IDataTable {
-    data: ITrancheProps[];
+import { options } from './markets-table-config';
+import type { MarketsAsset } from '../../../models/markets';
+import { BsCheck } from 'react-icons/bs';
+import { IoIosClose } from 'react-icons/io';
+
+interface IAvailableLiquidityTable {
+    data: MarketsAsset[];
 }
 
-export const TranchesTableDos: React.FC<IDataTable> = ({ data }) => {
-    const navigate = useNavigate();
-    const { updateTranche } = useSelectedTrancheContext();
-    const { width } = useWindowSize();
-
+export const MarketsTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
     const columns = [
         {
-            name: 'name',
-            label: 'Tranche',
+            name: 'asset',
+            label: 'Asset',
             options: {
                 filter: false,
                 sort: true,
@@ -33,8 +33,8 @@ export const TranchesTableDos: React.FC<IDataTable> = ({ data }) => {
             },
         },
         {
-            name: 'assets',
-            label: 'Assets',
+            name: 'tranche',
+            label: 'Tranche',
             options: {
                 filter: true,
                 sort: false,
@@ -42,8 +42,8 @@ export const TranchesTableDos: React.FC<IDataTable> = ({ data }) => {
             },
         },
         {
-            name: 'aggregateRating',
-            label: 'Aggregate Rating',
+            name: 'supplyApy',
+            label: 'Supply APY%',
             options: {
                 filter: true,
                 sort: true,
@@ -51,8 +51,26 @@ export const TranchesTableDos: React.FC<IDataTable> = ({ data }) => {
             },
         },
         {
-            name: 'yourActivity',
-            label: 'Your Activity',
+            name: 'borrowApy',
+            label: 'Borrow APY%',
+            options: {
+                filter: true,
+                sort: true,
+                sortThirdClickReset: true,
+            },
+        },
+        {
+            name: 'yourAmount',
+            label: 'Your Amount',
+            options: {
+                filter: true,
+                sort: true,
+                sortThirdClickReset: true,
+            },
+        },
+        {
+            name: 'available',
+            label: 'Available',
             options: {
                 filter: true,
                 sort: true,
@@ -61,25 +79,48 @@ export const TranchesTableDos: React.FC<IDataTable> = ({ data }) => {
         },
         {
             name: 'supplyTotal',
-            label: 'Supplied',
+            label: 'Supply Total',
             options: {
-                filter: true,
-                sort: true,
-                sortThirdClickReset: true,
+                filter: false,
+                sort: false,
             },
         },
         {
             name: 'borrowTotal',
-            label: 'Borrowed',
+            label: 'Borrow Total',
             options: {
-                filter: true,
-                sort: true,
-                sortThirdClickReset: true,
+                filter: false,
+                sort: false,
             },
         },
         {
-            name: 'id',
-            label: 'ID',
+            name: 'rating',
+            label: 'Rating',
+            options: {
+                filter: false,
+                sort: false,
+            },
+        },
+        {
+            name: 'strategies',
+            label: 'Strategies',
+            options: {
+                filter: false,
+                sort: false,
+            },
+        },
+        {
+            name: 'logo',
+            label: 'Logo',
+            options: {
+                filter: false,
+                sort: false,
+                display: false,
+            },
+        },
+        {
+            name: 'trancheId',
+            label: 'Tranche ID',
             options: {
                 filter: false,
                 sort: false,
@@ -98,7 +139,7 @@ export const TranchesTableDos: React.FC<IDataTable> = ({ data }) => {
     return (
         <CacheProvider value={muiCache}>
             <TableTemplate
-                title={['All Available Tranches']}
+                title={['All Available Assets']}
                 columns={columns}
                 data={data}
                 options={options}
