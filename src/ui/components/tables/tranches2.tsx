@@ -94,15 +94,26 @@ export const TranchesTableDos: React.FC<IDataTable> = ({ data }) => {
     });
 
     // const { transactions, loading } = useTransactionContext();
-
+    function vmexTheme() {
+        return createTheme({
+            palette: {
+                primary: {
+                    main: '#7667db',
+                },
+            },
+            components: {},
+        });
+    }
     return (
         <CacheProvider value={muiCache}>
-            <TableTemplate
-                title={['All Available Tranches']}
-                columns={columns}
-                data={data}
-                options={options}
-            />
+            <ThemeProvider theme={vmexTheme()}>
+                <TableTemplate
+                    title={['All Available Tranches']}
+                    columns={columns}
+                    data={data}
+                    options={options}
+                />
+            </ThemeProvider>
         </CacheProvider>
     );
 };

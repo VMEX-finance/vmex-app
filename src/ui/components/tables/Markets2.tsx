@@ -138,16 +138,29 @@ export const MarketsTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
         prepend: true,
     });
 
+    function vmexTheme() {
+        return createTheme({
+            palette: {
+                primary: {
+                    main: '#7667db',
+                },
+            },
+            components: {},
+        });
+    }
+
     // const { transactions, loading } = useTransactionContext();
 
     return (
         <CacheProvider value={muiCache}>
-            <TableTemplate
-                title={['All Available Assets']}
-                columns={columns}
-                data={data}
-                options={options}
-            />
+            <ThemeProvider theme={vmexTheme()}>
+                <TableTemplate
+                    title={['All Available Assets']}
+                    columns={columns}
+                    data={data}
+                    options={options}
+                />
+            </ThemeProvider>
         </CacheProvider>
     );
 };
