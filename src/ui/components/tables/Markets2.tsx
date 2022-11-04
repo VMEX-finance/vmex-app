@@ -37,7 +37,7 @@ export const MarketsTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
             label: 'Tranche',
             options: {
                 filter: true,
-                sort: false,
+                sort: true,
                 sortThirdClickReset: true,
             },
         },
@@ -45,7 +45,7 @@ export const MarketsTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
             name: 'supplyApy',
             label: 'Supply APY%',
             options: {
-                filter: true,
+                filter: false,
                 sort: true,
                 sortThirdClickReset: true,
             },
@@ -54,7 +54,7 @@ export const MarketsTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
             name: 'borrowApy',
             label: 'Borrow APY%',
             options: {
-                filter: true,
+                filter: false,
                 sort: true,
                 sortThirdClickReset: true,
             },
@@ -63,7 +63,7 @@ export const MarketsTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
             name: 'yourAmount',
             label: 'Your Amount',
             options: {
-                filter: true,
+                filter: false,
                 sort: true,
                 sortThirdClickReset: true,
             },
@@ -72,7 +72,7 @@ export const MarketsTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
             name: 'available',
             label: 'Available',
             options: {
-                filter: true,
+                filter: false,
                 sort: true,
                 sortThirdClickReset: true,
             },
@@ -82,7 +82,8 @@ export const MarketsTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
             label: 'Supply Total',
             options: {
                 filter: false,
-                sort: false,
+                sort: true,
+                sortThirdClickReset: true,
             },
         },
         {
@@ -90,23 +91,26 @@ export const MarketsTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
             label: 'Borrow Total',
             options: {
                 filter: false,
-                sort: false,
+                sort: true,
+                sortThirdClickReset: true,
             },
         },
         {
             name: 'rating',
             label: 'Rating',
             options: {
-                filter: false,
-                sort: false,
+                filter: true,
+                sort: true,
+                sortThirdClickReset: true,
             },
         },
         {
             name: 'strategies',
             label: 'Strategies',
             options: {
-                filter: false,
-                sort: false,
+                filter: true,
+                sort: true,
+                sortThirdClickReset: true,
             },
         },
         {
