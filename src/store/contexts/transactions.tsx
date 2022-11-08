@@ -1,8 +1,14 @@
 import React, { createContext, ReactNode, useContext, useState } from 'react';
 
 // Types
+type ITransactionProps = {
+    text: string;
+    status: 'pending' | 'complete' | 'error';
+    onClick?: any;
+};
+
 export type ITransactionsStoreProps = {
-    transactions: Array<any>;
+    transactions: Array<ITransactionProps>;
     setTransactions?: any;
     newTransaction?: any;
     updateTransaction?: any;
@@ -15,16 +21,7 @@ const TransactionsContext = createContext<ITransactionsStoreProps>({
 
 // Wrapper
 export function TransactionsStore(props: { children: ReactNode }) {
-    const [transactions, setTransactions] = useState([
-        {
-            text: '0x5...33s',
-            status: 'pending',
-        },
-        {
-            text: '0x2...12m',
-            status: 'complete',
-        },
-    ]);
+    const [transactions, setTransactions] = useState<Array<ITransactionProps>>([]);
 
     const newTransaction = (hash: string) => {
         const shallow = [...transactions];

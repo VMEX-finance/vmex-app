@@ -7,6 +7,7 @@ import { CoinInput } from '../../components/inputs';
 import { ActiveStatus, TransactionStatus } from '../../components/statuses';
 import { Button, DropdownButton } from '../../components/buttons';
 import { inputMediator } from '../../../utils/helpers';
+import { useTransactionsContext } from '../../../store/contexts';
 
 interface IOwnedAssetDetails {
     name?: string;
@@ -21,6 +22,7 @@ export const StakeAssetDialog: React.FC<IOwnedAssetDetails> = ({
     data,
     closeDialog,
 }) => {
+    const { newTransaction } = useTransactionsContext();
     const [isSuccess, setIsSuccess] = React.useState(false);
     const [isError, setIsError] = React.useState(false);
 
@@ -76,15 +78,9 @@ export const StakeAssetDialog: React.FC<IOwnedAssetDetails> = ({
                             </div>
                         </div>
                     </>
-                ) : isSuccess ? (
-                    // Success State
-                    <div className="mt-10 mb-8">
-                        <TransactionStatus success={true} full />
-                    </div>
                 ) : (
-                    // Error State
                     <div className="mt-10 mb-8">
-                        <TransactionStatus success={false} full />
+                        <TransactionStatus success={isSuccess} full />
                     </div>
                 )}
 
@@ -105,6 +101,11 @@ export const StakeAssetDialog: React.FC<IOwnedAssetDetails> = ({
                             disabled={isSuccess || isError}
                             onClick={() => {
                                 setIsSuccess(true);
+                                newTransaction(
+                                    `0x${Math.floor(Math.random() * 9)}...${Math.floor(
+                                        Math.random() * 9,
+                                    )}${Math.floor(Math.random() * 9)}s`,
+                                );
 
                                 setTimeout(() => {
                                     setIsSuccess(false);
