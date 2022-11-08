@@ -67,7 +67,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                 <td>{el.apy_perc}%</td>
                                 <td>
                                     {type === 'supply' ? (
-                                        <BasicToggle checked={el.canBeCollat} />
+                                        <BasicToggle checked={el.canBeCollat} disabled />
                                     ) : (
                                         `$${el.liquidity}M`
                                     )}

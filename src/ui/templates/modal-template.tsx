@@ -25,7 +25,7 @@ export const ModalWrapper: React.FC<IModalWrapper> = ({
 }) => {
     return (
         <Transition.Root show={isOpen} as={Fragment}>
-            <Dialog as="div" className="relative z-50" onClose={() => closeDialog(name)}>
+            <Dialog as="div" className="relative z-[1001]" onClose={() => closeDialog(name)}>
                 <Transition.Child
                     as={Fragment}
                     enter="ease-out duration-300"

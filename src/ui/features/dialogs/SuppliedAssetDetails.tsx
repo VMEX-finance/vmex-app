@@ -8,7 +8,7 @@ import { TransactionStatus } from '../../components/statuses';
 import { AssetDisplay } from '../../components/displays';
 import { inputMediator } from '../../../utils/helpers';
 import { useNavigate } from 'react-router-dom';
-import { useSelectedTrancheContext } from '../../../store/contexts';
+import { useSelectedTrancheContext, useTransactionsContext } from '../../../store/contexts';
 
 interface IOwnedAssetDetails {
     name?: string;
@@ -25,6 +25,7 @@ export const SuppliedAssetDetailsDialog: React.FC<IOwnedAssetDetails> = ({
 }) => {
     const navigate = useNavigate();
     const { updateTranche, setAsset } = useSelectedTrancheContext();
+    const { newTransaction } = useTransactionsContext();
     const [isSuccess, setIsSuccess] = React.useState(false);
     const [isError, setIsError] = React.useState(false);
 
@@ -97,15 +98,9 @@ export const SuppliedAssetDetailsDialog: React.FC<IOwnedAssetDetails> = ({
                             <div className="min-h-[100px]"></div>
                         </div>
                     </>
-                ) : isSuccess ? (
-                    // Success State
-                    <div className="mt-10 mb-8">
-                        <TransactionStatus success={true} full />
-                    </div>
                 ) : (
-                    // Error State
                     <div className="mt-10 mb-8">
-                        <TransactionStatus success={false} full />
+                        <TransactionStatus success={isSuccess} full />
                     </div>
                 )}
                 {/* TODO: implement appropriate data type so we can pass tranche id to "routeToTranche" */}
@@ -113,6 +108,11 @@ export const SuppliedAssetDetailsDialog: React.FC<IOwnedAssetDetails> = ({
                     <Button
                         onClick={() => {
                             setIsSuccess(true);
+                            newTransaction(
+                                `0x${Math.floor(Math.random() * 9)}...${Math.floor(
+                                    Math.random() * 9,
+                                )}${Math.floor(Math.random() * 9)}z`,
+                            );
 
                             setTimeout(() => {
                                 setIsSuccess(false);

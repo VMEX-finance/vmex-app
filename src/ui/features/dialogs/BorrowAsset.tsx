@@ -8,6 +8,7 @@ import { CoinInput } from '../../components/inputs';
 import { Button, DropdownButton } from '../../components/buttons';
 import { inputMediator } from '../../../utils/helpers';
 import { HealthFactor } from '../../components/displays';
+import { useTransactionsContext } from '../../../store/contexts';
 
 interface IOwnedAssetDetails {
     name?: string;
@@ -22,6 +23,7 @@ export const BorrowAssetDialog: React.FC<IOwnedAssetDetails> = ({
     data,
     closeDialog,
 }) => {
+    const { newTransaction } = useTransactionsContext();
     const [isSuccess, setIsSuccess] = React.useState(false);
     const [isError, setIsError] = React.useState(false);
 
@@ -104,15 +106,9 @@ export const BorrowAssetDialog: React.FC<IOwnedAssetDetails> = ({
                             </div>
                         </div>
                     </>
-                ) : isSuccess ? (
-                    // Success State
-                    <div className="mt-10 mb-8">
-                        <TransactionStatus success={true} full />
-                    </div>
                 ) : (
-                    // Error State
                     <div className="mt-10 mb-8">
-                        <TransactionStatus success={false} full />
+                        <TransactionStatus success={isSuccess} full />
                     </div>
                 )}
 
@@ -121,6 +117,11 @@ export const BorrowAssetDialog: React.FC<IOwnedAssetDetails> = ({
                         disabled={isSuccess || isError}
                         onClick={() => {
                             setIsSuccess(true);
+                            newTransaction(
+                                `0x${Math.floor(Math.random() * 9)}...${Math.floor(
+                                    Math.random() * 9,
+                                )}${Math.floor(Math.random() * 9)}n`,
+                            );
 
                             setTimeout(() => {
                                 setIsSuccess(false);

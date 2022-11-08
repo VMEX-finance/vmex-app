@@ -8,28 +8,30 @@ import Markets from './pages/markets';
 import Construction from './pages/construction';
 import TrancheDetails from './pages/tranche-details';
 import { useGeneralTokenData } from './hooks/user-data';
-import { SelectedTrancheStore } from './store/contexts';
+import { SelectedTrancheStore, TransactionsStore } from './store/contexts';
 
 function App() {
     useGeneralTokenData();
 
     return (
-        <SelectedTrancheStore>
-            <BrowserRouter>
-                <Routes>
-                    <Route index element={<Navigate to="/overview" />} />
-                    <Route path="/overview" element={<Overview />} />
-                    <Route path="/tranches" element={<Tranches />} />
-                    <Route path="/markets" element={<Markets />} />
-                    <Route path="/staking" element={<Staking />} />
-                    <Route path="/governance" element={<Construction />} />
-                    <Route path="/develop" element={<Construction />} />
+        <TransactionsStore>
+            <SelectedTrancheStore>
+                <BrowserRouter>
+                    <Routes>
+                        <Route index element={<Navigate to="/overview" />} />
+                        <Route path="/overview" element={<Overview />} />
+                        <Route path="/tranches" element={<Tranches />} />
+                        <Route path="/markets" element={<Markets />} />
+                        <Route path="/staking" element={<Staking />} />
+                        <Route path="/governance" element={<Construction />} />
+                        <Route path="/develop" element={<Construction />} />
 
-                    {/* Dynamic Tranche Routes */}
-                    <Route path="/tranches/:name" element={<TrancheDetails />} />
-                </Routes>
-            </BrowserRouter>
-        </SelectedTrancheStore>
+                        {/* Dynamic Tranche Routes */}
+                        <Route path="/tranches/:name" element={<TrancheDetails />} />
+                    </Routes>
+                </BrowserRouter>
+            </SelectedTrancheStore>
+        </TransactionsStore>
     );
 }
 

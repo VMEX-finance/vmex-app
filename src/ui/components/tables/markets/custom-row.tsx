@@ -128,7 +128,7 @@ const MarketsCustomRow = (props: any) => {
                 </td>
                 <td className="text-right pr-3.5">
                     <Button
-                        label={width > 1200 ? 'View Details' : 'Details'}
+                        label={width > 1536 ? 'View Details' : 'Details'}
                         onClick={(e) => route(e, props, 'details')}
                     />
                 </td>

@@ -7,6 +7,7 @@ import { CoinInput } from '../../components/inputs';
 import { Button } from '../..//components/buttons';
 import { BasicToggle } from '../../components/toggles';
 import { ActiveStatus, TransactionStatus } from '../../components/statuses';
+import { useTransactionsContext } from '../../../store/contexts';
 
 interface IOwnedAssetDetails {
     name?: string;
@@ -21,6 +22,8 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
     data,
     closeDialog,
 }) => {
+    const { newTransaction } = useTransactionsContext();
+
     const [isSuccess, setIsSuccess] = React.useState(false);
     const [isError, setIsError] = React.useState(false);
     const [asCollateral, setAsCollateral] = React.useState(false);
@@ -88,15 +91,9 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
                             </div>
                         </div>
                     </>
-                ) : isSuccess ? (
-                    // Success State
-                    <div className="mt-10 mb-8">
-                        <TransactionStatus success={true} full />
-                    </div>
                 ) : (
-                    // Error State
                     <div className="mt-10 mb-8">
-                        <TransactionStatus success={false} full />
+                        <TransactionStatus success={isSuccess} full />
                     </div>
                 )}
                 <div className="mt-5 sm:mt-6">
@@ -104,6 +101,11 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
                         disabled={isSuccess || isError}
                         onClick={() => {
                             setIsSuccess(true);
+                            newTransaction(
+                                `0x${Math.floor(Math.random() * 9)}...${Math.floor(
+                                    Math.random() * 9,
+                                )}${Math.floor(Math.random() * 9)}p`,
+                            );
 
                             setTimeout(() => {
                                 setIsSuccess(false);
