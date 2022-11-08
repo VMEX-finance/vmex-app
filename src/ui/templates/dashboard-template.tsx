@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useWalletState } from '../../hooks/wallet';
 import { useWindowSize } from '../../hooks/ui';
 import { BiPlus } from 'react-icons/bi';
+import { useDialogController } from '../../hooks/dialogs';
 
 interface IDashboardTemplate {
     title?: string;
@@ -20,6 +21,7 @@ const DashboardTemplate: React.FC<IDashboardTemplate> = ({
     view,
     setView,
 }) => {
+    const { openDialog } = useDialogController();
     const location = useLocation();
     const navigate = useNavigate();
     const routeChange = () => navigate(-1);
@@ -76,9 +78,14 @@ const DashboardTemplate: React.FC<IDashboardTemplate> = ({
                 )}
                 {location.pathname === `/tranches` && address && (
                     <div className="flex gap-3 md:justify-end mt-2">
-                        <Button label={'My Tranches'} primary />
+                        <Button
+                            label={'My Tranches'}
+                            onClick={() => openDialog('my-tranches-dialog')}
+                            primary
+                        />
                         <Button
                             label={width > 768 ? 'Create Tranche' : <BiPlus size="24px" />}
+                            onClick={() => openDialog('create-tranche-dialog')}
                             primary
                         />
                     </div>
