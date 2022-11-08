@@ -11,7 +11,7 @@ export function vmexTheme() {
     return createTheme({
         palette: {
             primary: {
-                main: '#7667db',
+                main: '#000',
             },
         },
         components: {
@@ -33,5 +33,5 @@ export const options: MUIDataTableOptions = {
     selectableRowsHeader: false,
     selectableRowsHideCheckboxes: true,
     searchPlaceholder: 'Search...',
-    searchOpen: true,
+    searchAlwaysOpen: true,
 };
