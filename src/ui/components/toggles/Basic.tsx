@@ -5,13 +5,15 @@ interface IToggleProps {
     checked?: boolean;
     onChange?: any;
     colors?: string[];
+    disabled?: boolean;
 }
 
-export const BasicToggle = ({ checked, onChange, colors }: IToggleProps) => {
+export const BasicToggle = ({ checked, onChange, colors, disabled }: IToggleProps) => {
     const [enabled, setEnabled] = useState(false);
 
     return (
         <Switch
+            disabled={disabled}
             checked={checked || enabled}
             onChange={onChange || setEnabled}
             className={`${
