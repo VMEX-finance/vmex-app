@@ -6,7 +6,7 @@ import { AssetDisplay } from '../../components/displays';
 import { useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext, useTransactionsContext } from '../../../store/contexts';
 import { TIMER_CLOSE_DELAY } from '../../../utils/constants';
-import { ModalHeader } from '../../../ui/components/modals';
+import { ModalHeader } from '../../components/modals';
 import { IDialogProps } from '.';
 
 export const SuppliedAssetDetailsDialog: React.FC<IDialogProps> = ({

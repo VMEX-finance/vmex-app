@@ -1,13 +1,11 @@
 import React, { useEffect } from 'react';
-import { Dialog } from '@headlessui/react';
-import { IoIosClose } from 'react-icons/io';
 import { TransactionStatus } from '../../components/statuses';
 import { Button, DropdownButton } from '../../components/buttons';
 import { TIMER_CLOSE_DELAY } from '../../../utils/constants';
 import { useMyTranchesContext, useTransactionsContext } from '../../../store/contexts';
-import { DefaultInput, ListInput } from '../../../ui/components/inputs';
+import { DefaultInput, ListInput } from '../../components/inputs';
 import { IDialogProps } from '.';
-import { ModalHeader } from '../../../ui/components/modals';
+import { ModalHeader } from '../../components/modals';
 
 export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDialog }) => {
     const { newTransaction } = useTransactionsContext();
@@ -151,6 +149,7 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
                         setList={setTokens}
                         placeholder="USDC"
                         coin
+                        noDelete
                     />
                     {/* TODO: implement pausing tokens */}
                 </>
@@ -164,12 +163,12 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
 
             <div className="mt-5 sm:mt-6 flex justify-end items-end">
                 <div className="flex gap-3">
-                    <Button
+                    {/* <Button
                         disabled={isSuccess}
                         onClick={handleDelete}
                         label="Delete"
                         className="!bg-red-600 !text-white !border-red-600 hover:!bg-red-500 hover:!border-red-500 disabled:!text-white"
-                    />
+                    /> */}
                     <Button disabled={isSuccess} onClick={handleSave} label="Save" primary />
                 </div>
             </div>

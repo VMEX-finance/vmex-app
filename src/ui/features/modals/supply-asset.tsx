@@ -1,21 +1,32 @@
 import React from 'react';
-import { Dialog } from '@headlessui/react';
-import { IoIosClose } from 'react-icons/io';
-import { FaGasPump } from 'react-icons/fa';
 import { useMediatedState } from 'react-use';
-import { CoinInput } from '../../components/inputs';
-import { ActiveStatus, TransactionStatus } from '../../components/statuses';
-import { Button, DropdownButton } from '../../components/buttons';
 import { inputMediator } from '../../../utils/helpers';
+import { CoinInput } from '../../components/inputs';
+import { Button } from '../../components/buttons';
+import { BasicToggle } from '../../components/toggles';
+import { ActiveStatus, TransactionStatus } from '../../components/statuses';
 import { useTransactionsContext } from '../../../store/contexts';
 import { TIMER_CLOSE_DELAY } from '../../../utils/constants';
-import { IDialogProps } from '.';
-import { ModalHeader } from '../../../ui/components/modals';
+import { ModalHeader } from '../../components/modals';
 
-export const StakeAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, closeDialog }) => {
+interface IOwnedAssetDetails {
+    name?: string;
+    isOpen?: boolean;
+    data?: any;
+    closeDialog(e: any): void;
+}
+
+export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
+    name,
+    isOpen,
+    data,
+    closeDialog,
+}) => {
     const { newTransaction } = useTransactionsContext();
+
     const [isSuccess, setIsSuccess] = React.useState(false);
-    const [error, setError] = React.useState('');
+    const [isError, setIsError] = React.useState(false);
+    const [asCollateral, setAsCollateral] = React.useState(false);
     const [amount, setAmount] = useMediatedState(inputMediator, '');
 
     const handleSubmit = () => {
@@ -23,12 +34,12 @@ export const StakeAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
         newTransaction(
             `0x${Math.floor(Math.random() * 9)}...${Math.floor(Math.random() * 9)}${Math.floor(
                 Math.random() * 9,
-            )}s`,
+            )}p`,
         );
 
         setTimeout(() => {
             setIsSuccess(false);
-            closeDialog('stake-asset-dialog');
+            closeDialog('loan-asset-dialog');
         }, TIMER_CLOSE_DELAY);
     };
 
@@ -36,8 +47,8 @@ export const StakeAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
         data &&
         data.asset && (
             <>
-                <ModalHeader dialog="stake-asset-dialog" title={name} asset={data.asset} />
-                {!isSuccess ? (
+                <ModalHeader dialog="loan-asset-dialog" title={name} asset={data.asset} />
+                {!isSuccess && !isError ? (
                     // Default State
                     <>
                         <h3 className="mt-5 text-gray-400">Amount</h3>
@@ -45,11 +56,19 @@ export const StakeAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
                             amount={amount}
                             setAmount={setAmount}
                             coin={{
-                                logo: data.logo,
+                                logo: `/tokens/token-${data.asset}.svg`,
                                 name: data.asset,
                             }}
                             balance={'0.23'}
                         />
+
+                        <h3 className="mt-6 text-gray-400">Collaterize</h3>
+                        <div className="mt-1">
+                            <BasicToggle
+                                checked={asCollateral}
+                                onChange={() => setAsCollateral(!asCollateral)}
+                            />
+                        </div>
 
                         <h3 className="mt-6 text-gray-400">Transaction Overview</h3>
                         <div
@@ -58,13 +77,11 @@ export const StakeAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
                             <div className="flex flex-col gap-2">
                                 <span>Supply APR%</span>
                                 <span>Collateralization</span>
-                                <span>Insurance</span>
                             </div>
 
                             <div className="min-w-[100px] flex flex-col gap-2">
                                 <span>0.44%</span>
-                                {amount && <ActiveStatus active={true} size="sm" />}
-                                {amount && <ActiveStatus active={false} size="sm" />}
+                                <ActiveStatus active={asCollateral} size="sm" />
                             </div>
                         </div>
                     </>
@@ -73,26 +90,12 @@ export const StakeAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
                         <TransactionStatus success={isSuccess} full />
                     </div>
                 )}
-
-                <div className="mt-5 sm:mt-6 flex justify-between items-end">
-                    <div className="flex flex-col">
-                        <div className="flex items-center gap-2">
-                            <FaGasPump />
-                            <span>Gas Limit</span>
-                        </div>
-                        <div>
-                            <DropdownButton
-                                items={[{ text: 'Normal' }, { text: 'Low' }, { text: 'High' }]}
-                            />
-                        </div>
-                    </div>
-                    <div>
-                        <Button
-                            disabled={isSuccess}
-                            onClick={handleSubmit}
-                            label="Submit Transaction"
-                        />
-                    </div>
+                <div className="mt-5 sm:mt-6">
+                    <Button
+                        disabled={isSuccess || isError}
+                        onClick={handleSubmit}
+                        label={'Submit Transaction'}
+                    />
                 </div>
             </>
         )

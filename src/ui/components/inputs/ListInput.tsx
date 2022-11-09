@@ -14,9 +14,18 @@ export interface IListInput {
     placeholder?: string;
     title?: string;
     toggle?: boolean;
+    noDelete?: boolean;
 }
 
-export const ListInput = ({ coin, list, setList, placeholder, title, toggle }: IListInput) => {
+export const ListInput = ({
+    coin,
+    list,
+    setList,
+    placeholder,
+    title,
+    toggle,
+    noDelete,
+}: IListInput) => {
     const [value, setValue] = React.useState('');
     const [isOpen, setIsOpen] = React.useState(false);
     const [error, setError] = React.useState('');
@@ -107,10 +116,14 @@ export const ListInput = ({ coin, list, setList, placeholder, title, toggle }: I
                         </div>
                         <div className="flex gap-2 flex-wrap min-h-[26.3px]">
                             {list?.map((el, i: number) => (
-                                <div
+                                <button
                                     key={i}
-                                    onClick={(e) => removeFromList(el)}
-                                    className="border border-black pl-4 pr-2 rounded-md flex items-center gap-2 cursor-pointer"
+                                    onClick={(e) => (noDelete ? {} : removeFromList(el))}
+                                    className={`border border-black ${
+                                        noDelete
+                                            ? 'pl-3 pr-4 cursor-default'
+                                            : 'pl-3 pr-2 cursor-pointer'
+                                    } rounded-md flex items-center gap-2`}
                                 >
                                     {coin ? (
                                         <AssetDisplay
@@ -121,8 +134,8 @@ export const ListInput = ({ coin, list, setList, placeholder, title, toggle }: I
                                     ) : (
                                         <span>{truncateAddress(el)}</span>
                                     )}
-                                    <IoIosClose className="w-6 h-6" />
-                                </div>
+                                    {!noDelete && <IoIosClose className="w-6 h-6" />}
+                                </button>
                             ))}
                         </div>
                     </div>

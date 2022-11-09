@@ -5,7 +5,7 @@ import { TransactionStatus } from '../../components/statuses';
 import { Button } from '../../components/buttons';
 import { TIMER_CLOSE_DELAY } from '../../../utils/constants';
 import { useMyTranchesContext, useTransactionsContext } from '../../../store/contexts';
-import { DefaultInput, ListInput } from '../../../ui/components/inputs';
+import { DefaultInput, ListInput } from '../../components/inputs';
 import { IDialogProps } from '.';
 
 export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeDialog }) => {
