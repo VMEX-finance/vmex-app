@@ -74,6 +74,10 @@ export const ListInput = ({ coin, list, setList, placeholder, title, toggle }: I
         return () => clearInterval(interval);
     }, [value]);
 
+    useEffect(() => {
+        if (list && list?.length > 0) setIsOpen(true);
+    }, [list]);
+
     // TODO: implement dropdown for available coins
     return (
         <>

@@ -6,7 +6,7 @@ import { MultipleAssetsDisplay } from '../../displays';
 import { useWindowSize } from '../../../../hooks/ui';
 import { determineRatingColor } from '../../../../utils/helpers';
 import { BsArrowDownCircle, BsArrowUpCircle } from 'react-icons/bs';
-import { IconTooltip } from '../../tooltips/Icon';
+import { Tooltip } from '../../tooltips';
 
 const TranchesCustomRow = (props: any) => {
     const { name, assets, aggregateRating, yourActivity, supplyTotal, borrowTotal, id } = props;
@@ -25,14 +25,14 @@ const TranchesCustomRow = (props: any) => {
         const size = '20px';
         switch (status.toLowerCase()) {
             case 'supplied':
-                return <IconTooltip text="Supplying" icon={<BsArrowDownCircle size={size} />} />;
+                return <Tooltip text="Supplying" content={<BsArrowDownCircle size={size} />} />;
             case 'borrowed':
-                return <IconTooltip text="Borrowing" icon={<BsArrowUpCircle size={size} />} />;
+                return <Tooltip text="Borrowing" content={<BsArrowUpCircle size={size} />} />;
             case 'both':
                 return (
                     <div className="flex gap-2">
-                        <IconTooltip text="Supplying" icon={<BsArrowDownCircle size={size} />} />
-                        <IconTooltip text="Borrowing" icon={<BsArrowUpCircle size={size} />} />
+                        <Tooltip text="Supplying" content={<BsArrowDownCircle size={size} />} />
+                        <Tooltip text="Borrowing" content={<BsArrowUpCircle size={size} />} />
                     </div>
                 );
             default:

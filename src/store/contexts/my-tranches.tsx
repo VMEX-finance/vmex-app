@@ -1,12 +1,14 @@
-import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import React, { createContext, ReactNode, useContext, useState } from 'react';
 
 // Types
 type IMyTrancheProps = {
     id: number;
     name: string;
+    adminFee: string;
     whitelisted: string[];
     blacklisted: string[];
     tokens: string[];
+    pausedTokens?: string[];
 };
 
 export type ITranchesStoreProps = {
@@ -29,7 +31,7 @@ export function MyTranchesStore(props: { children: ReactNode }) {
     const [error, setError] = useState('');
 
     // TODO: push this new tranche to mock tranches
-    const newTranche = ({ name, whitelisted, blacklisted, tokens }: IMyTrancheProps) => {
+    const newTranche = ({ name, whitelisted, blacklisted, tokens, adminFee }: IMyTrancheProps) => {
         const shallow = myTranches.length !== 0 ? [...myTranches] : [];
         if (myTranches.length !== 0 && myTranches.find((obj) => obj.name === name)) {
             setError('Name is taken.');
@@ -37,11 +39,19 @@ export function MyTranchesStore(props: { children: ReactNode }) {
         } else {
             if (error) setError('');
         }
-        shallow.push({ id: shallow.length, name, whitelisted, blacklisted, tokens });
+        shallow.push({ id: shallow.length, name, whitelisted, blacklisted, tokens, adminFee });
         setMyTranches(shallow);
     };
 
-    const updateTranche = ({ id, name, whitelisted, blacklisted, tokens }: IMyTrancheProps) => {
+    const updateTranche = ({
+        id,
+        name,
+        whitelisted,
+        blacklisted,
+        tokens,
+        pausedTokens,
+        adminFee,
+    }: IMyTrancheProps) => {
         const shallow = [...myTranches];
         const index = shallow.findIndex((el) => el.id === id);
         if (index || index === 0) {
@@ -49,6 +59,8 @@ export function MyTranchesStore(props: { children: ReactNode }) {
             shallow[index].whitelisted = whitelisted;
             shallow[index].blacklisted = blacklisted;
             shallow[index].tokens = tokens;
+            shallow[index].pausedTokens = pausedTokens;
+            shallow[index].adminFee = adminFee;
             setMyTranches(shallow);
         }
     };
