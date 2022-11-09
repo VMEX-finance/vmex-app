@@ -7,6 +7,8 @@ import {
     SuppliedAssetDetailsDialog,
     StakeAssetDialog,
     SupplyAssetDialog,
+    CreateTrancheDialog,
+    MyTranchesDialog,
 } from '../../ui/features/dialogs';
 
 interface IModalWrapper extends React.PropsWithChildren {
@@ -96,6 +98,18 @@ export const ModalTemplate: React.FC = () => {
                     <SuppliedAssetDetailsDialog
                         {...getDialogProps('supplied-asset-details-dialog')}
                     />
+                </ModalWrapper>
+            </React.Fragment>
+
+            <React.Fragment>
+                <ModalWrapper {...getDialogProps('create-tranche-dialog')}>
+                    <CreateTrancheDialog {...getDialogProps('create-tranche-dialog')} />
+                </ModalWrapper>
+            </React.Fragment>
+
+            <React.Fragment>
+                <ModalWrapper {...getDialogProps('my-tranches-dialog')}>
+                    <MyTranchesDialog {...getDialogProps('my-tranches-dialog')} />
                 </ModalWrapper>
             </React.Fragment>
         </>

@@ -8,7 +8,7 @@ export const useDialogController = () => {
     );
     const dispatch = useAppDispatch();
 
-    function openDialog(e: IDialogNames, data: any) {
+    function openDialog(e: IDialogNames, data?: any) {
         dispatch(setDataAndOpen({ data: data, id: e }));
     }
 

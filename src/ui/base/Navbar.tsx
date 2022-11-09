@@ -93,6 +93,7 @@ export const DashboardNavbar: React.FC = () => {
                     <div className="flex items-center gap-4">
                         {address && transactions && transactions.length > 0 && (
                             <DropdownButton
+                                reverse
                                 items={transactions}
                                 label={
                                     width > 1350 ? (
@@ -149,8 +150,10 @@ export const DashboardNavbar: React.FC = () => {
                     <div className="flex items-center justify-end gap-3">
                         {address && transactions && transactions.length > 0 && (
                             <DropdownButton
+                                reverse
                                 items={transactions}
                                 label={width > 1350 ? 'Transactions' : <BiTransferAlt />}
+                                baseLink={`https://etherscan.com`}
                             />
                         )}
                         <WalletButton label={width > 1200 ? 'Connect Wallet' : 'Connect'} primary />

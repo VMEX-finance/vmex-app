@@ -29,7 +29,7 @@ export const Button = ({
             className={[
                 'box-border',
                 'font-basefont',
-                'px-4 py-1',
+                `${typeof label === 'string' ? 'px-4' : 'px-2'} py-1`,
                 'transition duration-200',
                 className,
                 mode,

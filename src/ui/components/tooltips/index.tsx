@@ -4,14 +4,14 @@ import { BsInfoCircle } from 'react-icons/bs';
 
 interface ITooltipProps {
     text: string;
-    icon?: ReactNode;
+    content?: ReactNode | string;
     size?: string;
 }
 
-export const IconTooltip = ({ text, icon, size }: ITooltipProps) => {
+export const Tooltip = ({ text, content, size }: ITooltipProps) => {
     return (
         <>
-            <p data-tip={text}>{icon || <BsInfoCircle size={size || '18px'} />}</p>
+            <p data-tip={text}>{content || <BsInfoCircle size={size || '18px'} />}</p>
             <ReactTooltip />
         </>
     );

@@ -1,11 +1,14 @@
 import React from 'react';
 import { Button } from '../components/buttons';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useWalletState } from '../../hooks/wallet';
+import { useWindowSize } from '../../hooks/ui';
+import { BiPlus } from 'react-icons/bi';
+import { useDialogController } from '../../hooks/dialogs';
+import { useMyTranchesContext } from '../../store/contexts';
 
 interface IDashboardTemplate {
     title?: string;
-    hero?: React.ReactElement;
     children?: React.ReactElement | React.ReactElement[];
     description?: string | React.ReactNode;
     view?: string;
@@ -14,16 +17,20 @@ interface IDashboardTemplate {
 
 const DashboardTemplate: React.FC<IDashboardTemplate> = ({
     title,
-    hero,
     children,
     description,
     view,
     setView,
 }) => {
+    const { myTranches } = useMyTranchesContext();
+    const { openDialog } = useDialogController();
+    const location = useLocation();
     const navigate = useNavigate();
     const routeChange = () => navigate(-1);
     const { address } = useWalletState();
+    const { width } = useWindowSize();
 
+    // TODO: cleanup / optimize
     return (
         <div className="py-10 max-w-[120rem] mx-auto px-6 lg:px-8">
             <header
@@ -59,19 +66,33 @@ const DashboardTemplate: React.FC<IDashboardTemplate> = ({
                         <div className="flex gap-3 md:justify-end mt-2">
                             <Button
                                 label="Overview"
-                                // TODO: change to push tranche to state
                                 onClick={() => setView('tranche-overview')}
                                 primary={view.includes('overview')}
                                 disabled={!address}
                             />
                             <Button
                                 label="Details"
-                                // TODO: change to push tranche to state
                                 onClick={() => setView('tranche-details')}
                                 primary={view.includes('details')}
                             />
                         </div>
                     </>
+                )}
+                {location.pathname === `/tranches` && address && (
+                    <div className="flex gap-3 md:justify-end mt-2">
+                        {myTranches?.length > 0 && (
+                            <Button
+                                label={'My Tranches'}
+                                onClick={() => openDialog('my-tranches-dialog')}
+                                primary
+                            />
+                        )}
+                        <Button
+                            label={width > 768 ? 'Create Tranche' : <BiPlus size="24px" />}
+                            onClick={() => openDialog('create-tranche-dialog')}
+                            primary
+                        />
+                    </div>
                 )}
             </header>
             <main>
