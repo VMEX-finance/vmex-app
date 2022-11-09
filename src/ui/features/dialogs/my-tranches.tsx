@@ -3,6 +3,7 @@ import { Dialog } from '@headlessui/react';
 import { IoIosClose } from 'react-icons/io';
 import { TransactionStatus } from '../../components/statuses';
 import { Button } from '../../components/buttons';
+import { TIMER_CLOSE_DELAY } from '../../../utils/constants';
 
 interface IDialogProps {
     name?: string;
@@ -54,7 +55,7 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
                             setTimeout(() => {
                                 setIsSuccess(false);
                                 closeDialog('my-tranches-dialog');
-                            }, 2000);
+                            }, TIMER_CLOSE_DELAY);
                         }}
                         label="Save"
                     />

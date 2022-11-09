@@ -9,6 +9,7 @@ import { AssetDisplay } from '../../components/displays';
 import { inputMediator } from '../../../utils/helpers';
 import { useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext, useTransactionsContext } from '../../../store/contexts';
+import { TIMER_CLOSE_DELAY } from '../../../utils/constants';
 
 interface IOwnedAssetDetails {
     name?: string;
@@ -117,7 +118,7 @@ export const SuppliedAssetDetailsDialog: React.FC<IOwnedAssetDetails> = ({
                             setTimeout(() => {
                                 setIsSuccess(false);
                                 closeDialog('supplied-asset-details-dialog');
-                            }, 2000);
+                            }, TIMER_CLOSE_DELAY);
                         }}
                         label={
                             <span className="flex items-center gap-2">

@@ -1,4 +1,4 @@
-import React, { Fragment, ReactNode } from 'react';
+import React, { Fragment, ReactNode, useEffect, useState } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import { MenuItem } from '../../base';
 import { RiArrowDropDownLine } from 'react-icons/ri';
@@ -19,6 +19,8 @@ export interface IDropdownProps {
     selected?: string;
     setSelected?: any;
     label?: string | ReactNode;
+    reverse?: boolean;
+    baseLink?: string;
 }
 
 export const DropdownButton = ({
@@ -29,7 +31,11 @@ export const DropdownButton = ({
     selected = items && items.length > 0 ? items[0].text : 'Dropdown',
     setSelected = () => {},
     label,
+    reverse,
+    baseLink,
 }: IDropdownProps) => {
+    const [list, setList] = useState([]);
+
     const determineColor = () => {
         switch (selected) {
             case 'Normal':
@@ -53,6 +59,17 @@ export const DropdownButton = ({
               typeof label === 'string' ? '!px-4 !py-[3px]' : '!p-2'
           } !text-lg`
         : '';
+
+    const route = (e: any, item: any) => {
+        e.preventDefault();
+        window.open(`${baseLink}/${item.text}`);
+    };
+
+    useEffect(() => {
+        const notReversed = [...list].length;
+        if (reverse && notReversed === list.length) setList(items.reverse() as any);
+        else setList(items as any);
+    }, [items, reverse, list]);
 
     return (
         <Menu as="div" className="relative inline-block">
@@ -89,29 +106,39 @@ export const DropdownButton = ({
                         } bg-white mt-2 min-w-[180px] rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-[999999]`}
                     >
                         <div className="p-2 flex-col">
-                            {items.map((item, i) => (
-                                <Menu.Item key={`${item}-${i}`}>
-                                    {({ active }) => (
-                                        <div className="flex items-center gap-2">
-                                            <MenuItem
-                                                label={item.text}
-                                                onClick={
-                                                    item.onClick
-                                                        ? item.onClick
-                                                        : (e: any) =>
-                                                              setSelected(e.target.innerText)
-                                                }
-                                                mobile
-                                            />
-                                            {item?.status && item.status === 'pending' ? (
-                                                <CgSpinner size="24px" className="animate-spin" />
-                                            ) : (
-                                                <IoMdCheckmarkCircle size="24px" />
+                            {list &&
+                                list.map(
+                                    (item: { text: string; onClick: any; status?: string }, i) => (
+                                        <Menu.Item key={`${item}-${i}`}>
+                                            {({ active }) => (
+                                                <div className="flex items-center gap-2">
+                                                    <MenuItem
+                                                        label={item.text}
+                                                        onClick={
+                                                            baseLink
+                                                                ? (e) => route(e, item)
+                                                                : item.onClick
+                                                                ? item.onClick
+                                                                : (e: any) =>
+                                                                      setSelected(
+                                                                          e.target.innerText,
+                                                                      )
+                                                        }
+                                                        mobile
+                                                    />
+                                                    {item?.status && item.status === 'pending' ? (
+                                                        <CgSpinner
+                                                            size="24px"
+                                                            className="animate-spin"
+                                                        />
+                                                    ) : (
+                                                        <IoMdCheckmarkCircle size="24px" />
+                                                    )}
+                                                </div>
                                             )}
-                                        </div>
-                                    )}
-                                </Menu.Item>
-                            ))}
+                                        </Menu.Item>
+                                    ),
+                                )}
                         </div>
                     </Menu.Items>
                 </Transition>

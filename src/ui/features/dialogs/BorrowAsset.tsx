@@ -9,6 +9,7 @@ import { Button, DropdownButton } from '../../components/buttons';
 import { inputMediator } from '../../../utils/helpers';
 import { HealthFactor } from '../../components/displays';
 import { useTransactionsContext } from '../../../store/contexts';
+import { TIMER_CLOSE_DELAY } from '../../../utils/constants';
 
 interface IOwnedAssetDetails {
     name?: string;
@@ -126,7 +127,7 @@ export const BorrowAssetDialog: React.FC<IOwnedAssetDetails> = ({
                             setTimeout(() => {
                                 setIsSuccess(false);
                                 closeDialog('borrow-asset-dialog');
-                            }, 2000);
+                            }, TIMER_CLOSE_DELAY);
                         }}
                         label="Submit Transaction"
                     />

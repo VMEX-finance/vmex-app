@@ -1,4 +1,4 @@
-import React, { createContext, ReactNode, useContext, useState } from 'react';
+import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
 // Types
 type ITransactionProps = {
@@ -22,6 +22,17 @@ const TransactionsContext = createContext<ITransactionsStoreProps>({
 // Wrapper
 export function TransactionsStore(props: { children: ReactNode }) {
     const [transactions, setTransactions] = useState<Array<ITransactionProps>>([]);
+
+    // For mocking data
+    useEffect(() => {
+        const interval = setInterval(() => {
+            const shallow = [...transactions];
+            const completed = shallow.map((obj) => ({ ...obj, status: 'complete' }));
+            setTransactions(completed as any);
+        }, 10000);
+
+        return () => clearInterval(interval);
+    }, [transactions]);
 
     const newTransaction = (hash: string) => {
         const shallow = [...transactions];
