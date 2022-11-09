@@ -42,7 +42,8 @@ export const BorrowedAssetDetailsDialog: React.FC<IDialogProps> = ({
     };
 
     return (
-        data && (
+        data &&
+        data.asset && (
             <>
                 <ModalHeader title={name} dialog="borrowed-asset-details-dialog" />
                 {!isSuccess ? (
@@ -51,9 +52,9 @@ export const BorrowedAssetDetailsDialog: React.FC<IDialogProps> = ({
                         <h3 className="mt-5 text-gray-400">Overview</h3>
                         <div className="grid grid-cols-3 items-center">
                             <div className="flex flex-col">
-                                <AssetDisplay name={'USDC'} className="mb-1" />
+                                <AssetDisplay name={data.asset} className="mb-1" />
                                 <span>
-                                    {130.2} {'USDC'} Borrowed
+                                    {130.2} {data.asset} Borrowed
                                 </span>
                                 <span className="text-sm text-neutral-500">
                                     ${'156,240.02'} USD

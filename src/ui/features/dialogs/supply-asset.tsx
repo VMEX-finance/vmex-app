@@ -46,7 +46,8 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
     };
 
     return (
-        data && (
+        data &&
+        data.asset && (
             <>
                 <ModalHeader dialog="loan-asset-dialog" title={name} asset={data.asset} />
                 {!isSuccess && !isError ? (

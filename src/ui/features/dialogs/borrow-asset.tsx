@@ -32,7 +32,8 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, 
     };
 
     return (
-        data && (
+        data &&
+        data.asset && (
             <>
                 <ModalHeader dialog="borrow-asset-dialog" title={name} asset={data.asset} />
                 {!isSuccess ? (

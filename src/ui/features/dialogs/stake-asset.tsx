@@ -33,7 +33,8 @@ export const StakeAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
     };
 
     return (
-        data && (
+        data &&
+        data.asset && (
             <>
                 <ModalHeader dialog="stake-asset-dialog" title={name} asset={data.asset} />
                 {!isSuccess ? (

@@ -42,7 +42,8 @@ export const SuppliedAssetDetailsDialog: React.FC<IDialogProps> = ({
     };
 
     return (
-        data && (
+        data &&
+        data.asset && (
             <>
                 <ModalHeader title={name} dialog="supplied-asset-details-dialog" />
                 {!isSuccess ? (
