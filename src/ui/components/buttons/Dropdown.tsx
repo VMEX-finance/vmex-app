@@ -21,6 +21,7 @@ export interface IDropdownProps {
     label?: string | ReactNode;
     reverse?: boolean;
     baseLink?: string;
+    full?: boolean;
 }
 
 export const DropdownButton = ({
@@ -33,6 +34,7 @@ export const DropdownButton = ({
     label,
     reverse,
     baseLink,
+    full,
 }: IDropdownProps) => {
     const [list, setList] = useState([]);
 
@@ -72,23 +74,23 @@ export const DropdownButton = ({
     }, [items, reverse, list]);
 
     return (
-        <Menu as="div" className="relative inline-block">
-            <div>
-                <Menu.Button
-                    className={`
-                        inline-flex items-center w-full rounded-lg font-medium focus:outline-none focus:ring-none
-                        ${determineColor()} ${displayOnly} ${mode} ${textSize} ${paddingSize}
-                    `}
-                >
-                    {label ? (
-                        label
-                    ) : (
-                        <span className="inline-flex items-center w-full">
-                            {selected} <RiArrowDropDownLine size={iconSize} />
-                        </span>
-                    )}
-                </Menu.Button>
-            </div>
+        <Menu as="div" className={`relative inline-block ${full ? 'w-full' : ''}`}>
+            <Menu.Button
+                className={`
+                    inline-flex items-center w-full rounded-lg font-medium focus:outline-none focus:ring-none
+                    ${determineColor()} ${displayOnly} ${mode} ${textSize} ${paddingSize} ${
+                    full ? 'w-full' : ''
+                }
+                `}
+            >
+                {label ? (
+                    label
+                ) : (
+                    <span className="inline-flex items-center justify-between w-full">
+                        {selected} <RiArrowDropDownLine size={iconSize} />
+                    </span>
+                )}
+            </Menu.Button>
 
             {items && items.length > 0 && (
                 <Transition
@@ -103,7 +105,9 @@ export const DropdownButton = ({
                     <Menu.Items
                         className={`origin-top-right absolute ${
                             direction === 'left' ? 'right-0' : ''
-                        } bg-white mt-2 min-w-[180px] rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-[999999]`}
+                        } bg-white mt-2 ${
+                            full ? 'w-full' : 'min-w-[180px]'
+                        } rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-[999999]`}
                     >
                         <div className="p-2 flex-col">
                             {list &&
@@ -132,7 +136,9 @@ export const DropdownButton = ({
                                                             className="animate-spin"
                                                         />
                                                     ) : (
-                                                        <IoMdCheckmarkCircle size="24px" />
+                                                        item?.status && (
+                                                            <IoMdCheckmarkCircle size="24px" />
+                                                        )
                                                     )}
                                                 </div>
                                             )}

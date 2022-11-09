@@ -1,0 +1,67 @@
+import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+
+// Types
+type IMyTrancheProps = {
+    id: number;
+    name: string;
+    whitelisted: string[];
+    blacklisted: string[];
+    tokens: string[];
+};
+
+export type ITranchesStoreProps = {
+    myTranches: Array<IMyTrancheProps>;
+    setMyTranches?: any;
+    newTranche?: any;
+    updateTranche?: any;
+    deleteTranche?: any;
+    error?: string;
+};
+
+// Context
+const TranchesContext = createContext<ITranchesStoreProps>({
+    myTranches: [],
+});
+
+// Wrapper
+export function MyTranchesStore(props: { children: ReactNode }) {
+    const [myTranches, setMyTranches] = useState<Array<IMyTrancheProps>>([]);
+    const [error, setError] = useState('');
+
+    // TODO: push this new tranche to mock tranches
+    const newTranche = ({ name, whitelisted, blacklisted, tokens }: IMyTrancheProps) => {
+        const shallow = myTranches.length !== 0 ? [...myTranches] : [];
+        if (myTranches.length !== 0 && myTranches.find((obj) => obj.name === name)) {
+            setError('Name is taken.');
+            return;
+        } else {
+            if (error) setError('');
+        }
+        shallow.push({ id: shallow.length, name, whitelisted, blacklisted, tokens });
+        setMyTranches(shallow);
+    };
+
+    const updateTranche = () => {};
+
+    const deleteTranche = () => {};
+
+    return (
+        <TranchesContext.Provider
+            value={{
+                myTranches,
+                setMyTranches,
+                newTranche,
+                updateTranche,
+                deleteTranche,
+                error,
+            }}
+        >
+            {props.children}
+        </TranchesContext.Provider>
+    );
+}
+
+// Independent
+export function useMyTranchesContext() {
+    return useContext(TranchesContext);
+}

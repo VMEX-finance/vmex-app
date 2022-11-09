@@ -2,8 +2,10 @@ import React from 'react';
 import { Dialog } from '@headlessui/react';
 import { IoIosClose } from 'react-icons/io';
 import { TransactionStatus } from '../../components/statuses';
-import { Button } from '../../components/buttons';
+import { Button, DropdownButton } from '../../components/buttons';
 import { TIMER_CLOSE_DELAY } from '../../../utils/constants';
+import { useMyTranchesContext, useTransactionsContext } from '../../../store/contexts';
+import { DefaultInput, ListInput } from '../../../ui/components/inputs';
 
 interface IDialogProps {
     name?: string;
@@ -12,8 +14,25 @@ interface IDialogProps {
 }
 
 export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDialog }) => {
+    const { newTransaction } = useTransactionsContext();
+    const { updateTranche, myTranches } = useMyTranchesContext();
     const [isSuccess, setIsSuccess] = React.useState(false);
     const [isError, setIsError] = React.useState(false);
+
+    const [selectedTranche, setSelectedTranche] = React.useState(
+        myTranches.length > 0
+            ? myTranches[0]
+            : { name: '', whitelisted: [], blacklisted: [], tokens: [] },
+    );
+    const findSelectedTranche = (name: string) => {
+        const found = myTranches.find((el) => el.name === name);
+        setSelectedTranche(found as any);
+    };
+
+    const [_name, setName] = React.useState(selectedTranche.name);
+    const [_whitelisted, setWhitelisted] = React.useState(selectedTranche.whitelisted);
+    const [_blackListed, setBlackListed] = React.useState(selectedTranche.blacklisted);
+    const [_tokens, setTokens] = React.useState(selectedTranche.tokens);
 
     return (
         <>
@@ -33,10 +52,44 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
             {!isSuccess && !isError ? (
                 // Default State
                 <>
-                    <h3 className="mt-6 text-gray-400">Name</h3>
-                    <div
-                        className={`mt-2 flex justify-between rounded-lg border border-neutral-900 p-4 lg:py-6`}
-                    ></div>
+                    {/* TODO: implement dropdown to choose from myTranches context */}
+                    <div className="w-full mt-6">
+                        <DropdownButton
+                            items={myTranches.map((obj) => ({ ...obj, text: obj.name }))}
+                            selected={selectedTranche.name}
+                            setSelected={(e: string) => findSelectedTranche(e)}
+                            direction="right"
+                            size="lg"
+                            primary
+                            full
+                        />
+                    </div>
+                    <h3 className="mt-2 mb-1 text-gray-400">Name</h3>
+                    <DefaultInput
+                        value={selectedTranche.name}
+                        onType={setName}
+                        size="2xl"
+                        placeholder="VMEX High Quality..."
+                    />
+                    <ListInput
+                        title="Whitelisted"
+                        list={selectedTranche.whitelisted}
+                        setList={setWhitelisted}
+                        placeholder="0x..."
+                    />
+                    <ListInput
+                        title="Blacklisted"
+                        list={selectedTranche.blacklisted}
+                        setList={setBlackListed}
+                        placeholder="0x..."
+                    />
+                    <ListInput
+                        title="Tokens"
+                        list={selectedTranche.tokens}
+                        setList={setTokens}
+                        placeholder="USDC"
+                        coin
+                    />
                 </>
             ) : (
                 <div className="mt-10 mb-8">
@@ -50,7 +103,17 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
                         disabled={isSuccess || isError}
                         onClick={() => {
                             setIsSuccess(true);
-                            // TODO: implement add tranche to UI
+                            updateTranche({
+                                name: _name,
+                                whitelisted: _whitelisted,
+                                blacklisted: _blackListed,
+                                tokens: _tokens,
+                            });
+                            newTransaction(
+                                `0x${Math.floor(Math.random() * 9)}...${Math.floor(
+                                    Math.random() * 9,
+                                )}${Math.floor(Math.random() * 9)}s`,
+                            );
 
                             setTimeout(() => {
                                 setIsSuccess(false);
@@ -58,6 +121,7 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
                             }, TIMER_CLOSE_DELAY);
                         }}
                         label="Save"
+                        primary
                     />
                 </div>
             </div>

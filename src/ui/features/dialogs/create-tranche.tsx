@@ -4,6 +4,8 @@ import { IoIosClose } from 'react-icons/io';
 import { TransactionStatus } from '../../components/statuses';
 import { Button } from '../../components/buttons';
 import { TIMER_CLOSE_DELAY } from '../../../utils/constants';
+import { useMyTranchesContext, useTransactionsContext } from '../../../store/contexts';
+import { DefaultInput, ListInput } from '../../../ui/components/inputs';
 
 interface IDialogProps {
     name?: string;
@@ -12,8 +14,15 @@ interface IDialogProps {
 }
 
 export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeDialog }) => {
+    const { newTransaction } = useTransactionsContext();
+    const { newTranche } = useMyTranchesContext();
     const [isSuccess, setIsSuccess] = React.useState(false);
     const [isError, setIsError] = React.useState(false);
+
+    const [_name, setName] = React.useState('');
+    const [_whitelisted, setWhitelisted] = React.useState([]);
+    const [_blackListed, setBlackListed] = React.useState([]);
+    const [_tokens, setTokens] = React.useState([]);
 
     return (
         <>
@@ -33,10 +42,34 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
             {!isSuccess && !isError ? (
                 // Default State
                 <>
-                    <h3 className="mt-6 text-gray-400">Name</h3>
-                    <div
-                        className={`mt-2 flex justify-between rounded-lg border border-neutral-900 p-4 lg:py-6`}
-                    ></div>
+                    <h3 className="mt-6 mb-1 text-gray-400">Name</h3>
+                    <DefaultInput
+                        value={_name}
+                        onType={setName}
+                        size="2xl"
+                        placeholder="VMEX High Quality..."
+                    />
+                    <ListInput
+                        title="Whitelisted"
+                        list={_whitelisted}
+                        setList={setWhitelisted}
+                        placeholder="0x..."
+                        toggle
+                    />
+                    <ListInput
+                        title="Blacklisted"
+                        list={_blackListed}
+                        setList={setBlackListed}
+                        placeholder="0x..."
+                        toggle
+                    />
+                    <ListInput
+                        title="Tokens"
+                        list={_tokens}
+                        setList={setTokens}
+                        placeholder="USDC"
+                        coin
+                    />
                 </>
             ) : (
                 <div className="mt-10 mb-8">
@@ -50,7 +83,17 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
                         disabled={isSuccess || isError}
                         onClick={() => {
                             setIsSuccess(true);
-                            // TODO: implement add tranche to UI
+                            newTranche({
+                                name: _name,
+                                whitelisted: _whitelisted,
+                                blacklisted: _blackListed,
+                                tokens: _tokens,
+                            });
+                            newTransaction(
+                                `0x${Math.floor(Math.random() * 9)}...${Math.floor(
+                                    Math.random() * 9,
+                                )}${Math.floor(Math.random() * 9)}s`,
+                            );
 
                             setTimeout(() => {
                                 setIsSuccess(false);
@@ -58,6 +101,7 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
                             }, TIMER_CLOSE_DELAY);
                         }}
                         label="Save"
+                        primary
                     />
                 </div>
             </div>
