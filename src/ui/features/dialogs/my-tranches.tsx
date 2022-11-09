@@ -6,12 +6,8 @@ import { Button, DropdownButton } from '../../components/buttons';
 import { TIMER_CLOSE_DELAY } from '../../../utils/constants';
 import { useMyTranchesContext, useTransactionsContext } from '../../../store/contexts';
 import { DefaultInput, ListInput } from '../../../ui/components/inputs';
-
-interface IDialogProps {
-    name?: string;
-    data?: any;
-    closeDialog(e: any): void;
-}
+import { IDialogProps } from '.';
+import { ModalHeader } from '../../../ui/components/modals';
 
 export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDialog }) => {
     const { newTransaction } = useTransactionsContext();
@@ -32,10 +28,6 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
                   pausedTokens: [],
               },
     );
-    const findSelectedTranche = (name: string) => {
-        const found = myTranches.find((el) => el.name === name);
-        setSelectedTranche(found as any);
-    };
 
     const [_name, setName] = React.useState(selectedTranche.name);
     const [_whitelisted, setWhitelisted] = React.useState(selectedTranche.whitelisted);
@@ -43,6 +35,11 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
     const [_tokens, setTokens] = React.useState(selectedTranche.tokens);
     const [_adminFee, setAdminFee] = React.useState(selectedTranche.adminFee);
     const [_pausedTokens, setPausedTokens] = React.useState(selectedTranche.pausedTokens);
+
+    const findSelectedTranche = (name: string) => {
+        const found = myTranches.find((el) => el.name === name);
+        setSelectedTranche(found as any);
+    };
 
     const handleSave = () => {
         if (!_name) {
@@ -100,19 +97,7 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
 
     return (
         <>
-            <div className="flex flex-row justify-between">
-                <div className="mt-3 text-left sm:mt-5">
-                    <Dialog.Title as="h3" className="text-xl leading-6 font-medium text-gray-900">
-                        {name}
-                    </Dialog.Title>
-                </div>
-                <div
-                    className="self-baseline h-fit w-fit cursor-pointer text-neutral-900 hover:text-neutral-600 transition duration-200"
-                    onClick={() => closeDialog('my-tranches-dialog')}
-                >
-                    <IoIosClose className="w-7 h-7" />
-                </div>
-            </div>
+            <ModalHeader dialog="my-tranches-dialog" title={name} />
             {!isSuccess ? (
                 // Default State
                 <>

@@ -1,6 +1,4 @@
 import React from 'react';
-import { Dialog } from '@headlessui/react';
-import { IoIosClose } from 'react-icons/io';
 import { FaGasPump } from 'react-icons/fa';
 import { useMediatedState } from 'react-use';
 import { TransactionStatus, ActiveStatus } from '../../components/statuses';
@@ -10,50 +8,34 @@ import { inputMediator } from '../../../utils/helpers';
 import { HealthFactor } from '../../components/displays';
 import { useTransactionsContext } from '../../../store/contexts';
 import { TIMER_CLOSE_DELAY } from '../../../utils/constants';
+import { ModalHeader } from '../../components/modals';
+import { IDialogProps } from '.';
 
-interface IOwnedAssetDetails {
-    name?: string;
-    isOpen?: boolean;
-    data?: any;
-    closeDialog(e: any): void;
-}
-
-export const BorrowAssetDialog: React.FC<IOwnedAssetDetails> = ({
-    name,
-    isOpen,
-    data,
-    closeDialog,
-}) => {
+export const BorrowAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, closeDialog }) => {
     const { newTransaction } = useTransactionsContext();
     const [isSuccess, setIsSuccess] = React.useState(false);
-    const [isError, setIsError] = React.useState(false);
-
-    // Temp States for demo
-    const [isUSDCSelected, setIsUSDCSelected] = React.useState(false);
-    const [isWBTCSelected, setIsWBTCSelected] = React.useState(false);
-
+    const [error, setError] = React.useState('');
     const [amount, setAmount] = useMediatedState(inputMediator, '');
+
+    const handleClick = () => {
+        setIsSuccess(true);
+        newTransaction(
+            `0x${Math.floor(Math.random() * 9)}...${Math.floor(Math.random() * 9)}${Math.floor(
+                Math.random() * 9,
+            )}n`,
+        );
+
+        setTimeout(() => {
+            setIsSuccess(false);
+            closeDialog('borrow-asset-dialog');
+        }, TIMER_CLOSE_DELAY);
+    };
 
     return (
         data && (
             <>
-                <div className="flex flex-row justify-between">
-                    <div className="mt-3 text-left sm:mt-5">
-                        <Dialog.Title
-                            as="h3"
-                            className="text-xl leading-6 font-medium text-gray-900"
-                        >
-                            {name} {data.asset}
-                        </Dialog.Title>
-                    </div>
-                    <div
-                        className="self-baseline h-fit w-fit cursor-pointer text-neutral-900 hover:text-neutral-600 transition duration-200"
-                        onClick={() => closeDialog('borrow-asset-dialog')}
-                    >
-                        <IoIosClose className="w-7 h-7" />
-                    </div>
-                </div>
-                {!isSuccess && !isError ? (
+                <ModalHeader dialog="borrow-asset-dialog" title={name} asset={data.asset} />
+                {!isSuccess ? (
                     // Default State
                     <>
                         <h3 className="mt-5 text-gray-400">Amount</h3>
@@ -69,9 +51,7 @@ export const BorrowAssetDialog: React.FC<IOwnedAssetDetails> = ({
                         />
 
                         <h3 className="mt-6 text-gray-400">Transaction Overview</h3>
-                        <div>
-                            <HealthFactor liquidation={1.0} value={1.24} />
-                        </div>
+                        <HealthFactor liquidation={1.0} value={1.24} />
 
                         <h3 className="mt-6 text-gray-400">Transaction Overview</h3>
                         <div
@@ -114,23 +94,7 @@ export const BorrowAssetDialog: React.FC<IOwnedAssetDetails> = ({
                 )}
 
                 <div className="mt-6">
-                    <Button
-                        disabled={isSuccess || isError}
-                        onClick={() => {
-                            setIsSuccess(true);
-                            newTransaction(
-                                `0x${Math.floor(Math.random() * 9)}...${Math.floor(
-                                    Math.random() * 9,
-                                )}${Math.floor(Math.random() * 9)}n`,
-                            );
-
-                            setTimeout(() => {
-                                setIsSuccess(false);
-                                closeDialog('borrow-asset-dialog');
-                            }, TIMER_CLOSE_DELAY);
-                        }}
-                        label="Submit Transaction"
-                    />
+                    <Button disabled={isSuccess} onClick={handleClick} label="Submit Transaction" />
                 </div>
             </>
         )

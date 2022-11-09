@@ -6,12 +6,7 @@ import { Button } from '../../components/buttons';
 import { TIMER_CLOSE_DELAY } from '../../../utils/constants';
 import { useMyTranchesContext, useTransactionsContext } from '../../../store/contexts';
 import { DefaultInput, ListInput } from '../../../ui/components/inputs';
-
-interface IDialogProps {
-    name?: string;
-    data?: any;
-    closeDialog(e: any): void;
-}
+import { IDialogProps } from '.';
 
 export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeDialog }) => {
     const { newTransaction } = useTransactionsContext();
@@ -71,12 +66,12 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
                         {name}
                     </Dialog.Title>
                 </div>
-                <div
+                <button
                     className="self-baseline h-fit w-fit cursor-pointer text-neutral-900 hover:text-neutral-600 transition duration-200"
                     onClick={() => closeDialog('create-tranche-dialog')}
                 >
                     <IoIosClose className="w-7 h-7" />
-                </div>
+                </button>
             </div>
             {!isSuccess ? (
                 // Default State
