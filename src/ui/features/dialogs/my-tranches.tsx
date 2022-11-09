@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Dialog } from '@headlessui/react';
 import { IoIosClose } from 'react-icons/io';
 import { TransactionStatus } from '../../components/statuses';
@@ -15,14 +15,14 @@ interface IDialogProps {
 
 export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDialog }) => {
     const { newTransaction } = useTransactionsContext();
-    const { updateTranche, myTranches } = useMyTranchesContext();
+    const { updateTranche, myTranches, deleteTranche } = useMyTranchesContext();
     const [isSuccess, setIsSuccess] = React.useState(false);
     const [isError, setIsError] = React.useState(false);
 
     const [selectedTranche, setSelectedTranche] = React.useState(
         myTranches.length > 0
             ? myTranches[0]
-            : { name: '', whitelisted: [], blacklisted: [], tokens: [] },
+            : { id: 0, name: '', whitelisted: [], blacklisted: [], tokens: [] },
     );
     const findSelectedTranche = (name: string) => {
         const found = myTranches.find((el) => el.name === name);
@@ -33,6 +33,13 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
     const [_whitelisted, setWhitelisted] = React.useState(selectedTranche.whitelisted);
     const [_blackListed, setBlackListed] = React.useState(selectedTranche.blacklisted);
     const [_tokens, setTokens] = React.useState(selectedTranche.tokens);
+
+    useEffect(() => {
+        setName(selectedTranche.name);
+        setWhitelisted(selectedTranche.whitelisted);
+        setBlackListed(selectedTranche.blacklisted);
+        setTokens(selectedTranche.tokens);
+    }, [selectedTranche]);
 
     return (
         <>
@@ -66,26 +73,26 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
                     </div>
                     <h3 className="mt-2 mb-1 text-gray-400">Name</h3>
                     <DefaultInput
-                        value={selectedTranche.name}
+                        value={_name}
                         onType={setName}
                         size="2xl"
                         placeholder="VMEX High Quality..."
                     />
                     <ListInput
                         title="Whitelisted"
-                        list={selectedTranche.whitelisted}
+                        list={_whitelisted}
                         setList={setWhitelisted}
                         placeholder="0x..."
                     />
                     <ListInput
                         title="Blacklisted"
-                        list={selectedTranche.blacklisted}
+                        list={_blackListed}
                         setList={setBlackListed}
                         placeholder="0x..."
                     />
                     <ListInput
                         title="Tokens"
-                        list={selectedTranche.tokens}
+                        list={_tokens}
                         setList={setTokens}
                         placeholder="USDC"
                         coin
@@ -98,12 +105,32 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
             )}
 
             <div className="mt-5 sm:mt-6 flex justify-end items-end">
-                <div>
+                <div className="flex gap-3">
+                    <Button
+                        disabled={isSuccess || isError}
+                        onClick={() => {
+                            deleteTranche(selectedTranche.id);
+                            setIsSuccess(true);
+                            newTransaction(
+                                `0x${Math.floor(Math.random() * 9)}...${Math.floor(
+                                    Math.random() * 9,
+                                )}${Math.floor(Math.random() * 9)}s`,
+                            );
+
+                            setTimeout(() => {
+                                setIsSuccess(false);
+                                closeDialog('my-tranches-dialog');
+                            }, TIMER_CLOSE_DELAY);
+                        }}
+                        label="Delete"
+                        className="!bg-red-600 !text-white !border-red-600 hover:!bg-red-500 hover:!border-red-500 disabled:!text-white"
+                    />
                     <Button
                         disabled={isSuccess || isError}
                         onClick={() => {
                             setIsSuccess(true);
                             updateTranche({
+                                id: selectedTranche.id,
                                 name: _name,
                                 whitelisted: _whitelisted,
                                 blacklisted: _blackListed,

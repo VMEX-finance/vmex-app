@@ -41,9 +41,30 @@ export function MyTranchesStore(props: { children: ReactNode }) {
         setMyTranches(shallow);
     };
 
-    const updateTranche = () => {};
+    const updateTranche = ({ id, name, whitelisted, blacklisted, tokens }: IMyTrancheProps) => {
+        const shallow = [...myTranches];
+        const index = shallow.findIndex((el) => el.id === id);
+        if (index || index === 0) {
+            shallow[index].name = name;
+            shallow[index].whitelisted = whitelisted;
+            shallow[index].blacklisted = blacklisted;
+            shallow[index].tokens = tokens;
+            setMyTranches(shallow);
+        }
+    };
 
-    const deleteTranche = () => {};
+    const deleteTranche = (id: number) => {
+        if (id || id === 0) {
+            if (myTranches.length === 1) {
+                setMyTranches([]);
+                return;
+            }
+            const shallow = [...myTranches];
+            const index = shallow.findIndex((el) => el.id === id);
+            shallow.splice(index, index);
+            setMyTranches(shallow);
+        }
+    };
 
     return (
         <TranchesContext.Provider

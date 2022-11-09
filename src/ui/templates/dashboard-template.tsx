@@ -5,6 +5,7 @@ import { useWalletState } from '../../hooks/wallet';
 import { useWindowSize } from '../../hooks/ui';
 import { BiPlus } from 'react-icons/bi';
 import { useDialogController } from '../../hooks/dialogs';
+import { useMyTranchesContext } from '../../store/contexts';
 
 interface IDashboardTemplate {
     title?: string;
@@ -21,6 +22,7 @@ const DashboardTemplate: React.FC<IDashboardTemplate> = ({
     view,
     setView,
 }) => {
+    const { myTranches } = useMyTranchesContext();
     const { openDialog } = useDialogController();
     const location = useLocation();
     const navigate = useNavigate();
@@ -78,11 +80,13 @@ const DashboardTemplate: React.FC<IDashboardTemplate> = ({
                 )}
                 {location.pathname === `/tranches` && address && (
                     <div className="flex gap-3 md:justify-end mt-2">
-                        <Button
-                            label={'My Tranches'}
-                            onClick={() => openDialog('my-tranches-dialog')}
-                            primary
-                        />
+                        {myTranches?.length > 0 && (
+                            <Button
+                                label={'My Tranches'}
+                                onClick={() => openDialog('my-tranches-dialog')}
+                                primary
+                            />
+                        )}
                         <Button
                             label={width > 768 ? 'Create Tranche' : <BiPlus size="24px" />}
                             onClick={() => openDialog('create-tranche-dialog')}
