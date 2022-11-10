@@ -1,17 +1,11 @@
 import React, { useEffect } from 'react';
-import { Dialog } from '@headlessui/react';
-import { IoIosClose } from 'react-icons/io';
 import { TransactionStatus } from '../../components/statuses';
 import { Button, DropdownButton } from '../../components/buttons';
 import { TIMER_CLOSE_DELAY } from '../../../utils/constants';
 import { useMyTranchesContext, useTransactionsContext } from '../../../store/contexts';
-import { DefaultInput, ListInput } from '../../../ui/components/inputs';
-
-interface IDialogProps {
-    name?: string;
-    data?: any;
-    closeDialog(e: any): void;
-}
+import { DefaultInput, ListInput } from '../../components/inputs';
+import { IDialogProps } from '.';
+import { ModalHeader } from '../../components/modals';
 
 export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDialog }) => {
     const { newTransaction } = useTransactionsContext();
@@ -32,10 +26,6 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
                   pausedTokens: [],
               },
     );
-    const findSelectedTranche = (name: string) => {
-        const found = myTranches.find((el) => el.name === name);
-        setSelectedTranche(found as any);
-    };
 
     const [_name, setName] = React.useState(selectedTranche.name);
     const [_whitelisted, setWhitelisted] = React.useState(selectedTranche.whitelisted);
@@ -43,6 +33,11 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
     const [_tokens, setTokens] = React.useState(selectedTranche.tokens);
     const [_adminFee, setAdminFee] = React.useState(selectedTranche.adminFee);
     const [_pausedTokens, setPausedTokens] = React.useState(selectedTranche.pausedTokens);
+
+    const findSelectedTranche = (name: string) => {
+        const found = myTranches.find((el) => el.name === name);
+        setSelectedTranche(found as any);
+    };
 
     const handleSave = () => {
         if (!_name) {
@@ -62,6 +57,7 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
             blacklisted: _blackListed,
             tokens: _tokens,
             adminFee: _adminFee,
+            pausedTokens: _pausedTokens,
         });
         newTransaction(
             `0x${Math.floor(Math.random() * 9)}...${Math.floor(Math.random() * 9)}${Math.floor(
@@ -96,23 +92,12 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
         setBlackListed(selectedTranche.blacklisted);
         setTokens(selectedTranche.tokens);
         setAdminFee(selectedTranche.adminFee);
+        setPausedTokens(selectedTranche.pausedTokens);
     }, [selectedTranche]);
 
     return (
         <>
-            <div className="flex flex-row justify-between">
-                <div className="mt-3 text-left sm:mt-5">
-                    <Dialog.Title as="h3" className="text-xl leading-6 font-medium text-gray-900">
-                        {name}
-                    </Dialog.Title>
-                </div>
-                <div
-                    className="self-baseline h-fit w-fit cursor-pointer text-neutral-900 hover:text-neutral-600 transition duration-200"
-                    onClick={() => closeDialog('my-tranches-dialog')}
-                >
-                    <IoIosClose className="w-7 h-7" />
-                </div>
-            </div>
+            <ModalHeader dialog="my-tranches-dialog" title={name} />
             {!isSuccess ? (
                 // Default State
                 <>
@@ -166,8 +151,23 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
                         setList={setTokens}
                         placeholder="USDC"
                         coin
+                        noDelete
                     />
                     {/* TODO: implement pausing tokens */}
+                    <div className="w-full mt-6">
+                        <DropdownButton
+                            title="Paused Tokens"
+                            items={_tokens}
+                            selected={_pausedTokens}
+                            setSelected={setPausedTokens}
+                            direction="right"
+                            size="lg"
+                            full
+                            multiselect
+                            border
+                            uppercase
+                        />
+                    </div>
                 </>
             ) : (
                 <div className="mt-10 mb-8">
@@ -179,12 +179,12 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
 
             <div className="mt-5 sm:mt-6 flex justify-end items-end">
                 <div className="flex gap-3">
-                    <Button
+                    {/* <Button
                         disabled={isSuccess}
                         onClick={handleDelete}
                         label="Delete"
                         className="!bg-red-600 !text-white !border-red-600 hover:!bg-red-500 hover:!border-red-500 disabled:!text-white"
-                    />
+                    /> */}
                     <Button disabled={isSuccess} onClick={handleSave} label="Save" primary />
                 </div>
             </div>

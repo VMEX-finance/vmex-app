@@ -26,7 +26,7 @@ export const AssetDisplay = (props: IAssetDisplayProps) => {
                 height={iconSize()}
                 width={iconSize()}
             />
-            {props.name}
+            {props.name.toUpperCase()}
         </div>
     );
 };

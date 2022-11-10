@@ -40,13 +40,13 @@ const DashboardTemplate: React.FC<IDashboardTemplate> = ({
             >
                 <div className="max-w-[500px]">
                     {view ? (
-                        <div
+                        <button
                             className="flex gap-2 items-baseline hover:cursor-pointer"
                             onClick={routeChange}
                         >
                             <img src="/elements/Vector.svg" alt="vector" />
                             <p>Back to all</p>
-                        </div>
+                        </button>
                     ) : (
                         <>
                             <h1 className="text-3xl font-basefont capitalize leading-tight text-gray-900">

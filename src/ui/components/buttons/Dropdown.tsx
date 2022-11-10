@@ -16,12 +16,15 @@ export interface IDropdownProps {
     border?: boolean;
     direction?: 'left' | 'right';
     size?: 'lg' | 'md';
-    selected?: string;
+    selected?: string | string[];
     setSelected?: any;
     label?: string | ReactNode;
     reverse?: boolean;
     baseLink?: string;
     full?: boolean;
+    multiselect?: boolean;
+    title?: string;
+    uppercase?: boolean;
 }
 
 export const DropdownButton = ({
@@ -29,12 +32,16 @@ export const DropdownButton = ({
     primary,
     direction = 'left',
     size = 'md',
-    selected = items && items.length > 0 ? items[0].text : 'Dropdown',
+    selected = items && items.length > 0 ? items[0]?.text : 'Select one...',
     setSelected = () => {},
     label,
     reverse,
     baseLink,
     full,
+    multiselect,
+    border,
+    title,
+    uppercase,
 }: IDropdownProps) => {
     const [list, setList] = useState([]);
 
@@ -56,6 +63,7 @@ export const DropdownButton = ({
     const textSize = size === 'lg' ? 'text-lg' : 'text-sm';
     const iconSize = size === 'lg' ? '30px' : '24px';
     const paddingSize = size === 'lg' ? 'py-1 pl-4 pr-2' : 'pl-2';
+    const withBorder = border ? 'border border-2 border-black' : '';
     const displayOnly = label
         ? `lg:border lg:border-1 lg:border-black bg-white ${
               typeof label === 'string' ? '!px-4 !py-[3px]' : '!p-2'
@@ -67,6 +75,21 @@ export const DropdownButton = ({
         window.open(`${baseLink}/${item.text}`);
     };
 
+    const ifInList = (item: string) =>
+        selected?.length > 0 && (selected.includes(item.toUpperCase()) || selected.includes(item));
+
+    const handleMultiSelect = (e: any) => {
+        e.preventDefault();
+        const item = e.target.innerText;
+        let shallow = selected?.length > 0 ? [...(selected as string[])] : [];
+        if (ifInList(item)) {
+            shallow = shallow.filter((el) => el.toUpperCase() !== item.toUpperCase());
+        } else {
+            shallow.push(item);
+        }
+        setSelected(shallow);
+    };
+
     useEffect(() => {
         const notReversed = [...list].length;
         if (reverse && notReversed === list.length) setList(items.reverse() as any);
@@ -74,81 +97,109 @@ export const DropdownButton = ({
     }, [items, reverse, list]);
 
     return (
-        <Menu as="div" className={`relative inline-block ${full ? 'w-full' : ''}`}>
-            <Menu.Button
-                className={`
-                    inline-flex items-center w-full rounded-lg font-medium focus:outline-none focus:ring-none
-                    ${determineColor()} ${displayOnly} ${mode} ${textSize} ${paddingSize} ${
-                    full ? 'w-full' : ''
-                }
-                `}
-            >
-                {label ? (
-                    label
-                ) : (
-                    <span className="inline-flex items-center justify-between w-full">
-                        {selected} <RiArrowDropDownLine size={iconSize} />
-                    </span>
-                )}
-            </Menu.Button>
-
-            {items && items.length > 0 && (
-                <Transition
-                    as={Fragment}
-                    enter="transition ease-out duration-100"
-                    enterFrom="transform opacity-0 scale-95"
-                    enterTo="transform opacity-100 scale-100"
-                    leave="transition ease-in duration-75"
-                    leaveFrom="transform opacity-100 scale-100"
-                    leaveTo="transform opacity-0 scale-95"
-                >
-                    <Menu.Items
-                        className={`origin-top-right absolute ${
-                            direction === 'left' ? 'right-0' : ''
-                        } bg-white mt-2 ${
-                            full ? 'w-full' : 'min-w-[180px]'
-                        } rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-[999999]`}
-                    >
-                        <div className="p-2 flex-col">
-                            {list &&
-                                list.map(
-                                    (item: { text: string; onClick: any; status?: string }, i) => (
-                                        <Menu.Item key={`${item}-${i}`}>
-                                            {({ active }) => (
-                                                <div className="flex items-center gap-2">
-                                                    <MenuItem
-                                                        label={item.text}
-                                                        onClick={
-                                                            baseLink
-                                                                ? (e) => route(e, item)
-                                                                : item.onClick
-                                                                ? item.onClick
-                                                                : (e: any) =>
-                                                                      setSelected(
-                                                                          e.target.innerText,
-                                                                      )
-                                                        }
-                                                        mobile
-                                                    />
-                                                    {item?.status && item.status === 'pending' ? (
-                                                        <CgSpinner
-                                                            size="24px"
-                                                            className="animate-spin"
-                                                        />
-                                                    ) : (
-                                                        item?.status && (
-                                                            <IoMdCheckmarkCircle size="24px" />
-                                                        )
-                                                    )}
-                                                </div>
-                                            )}
-                                        </Menu.Item>
-                                    ),
-                                )}
-                        </div>
-                    </Menu.Items>
-                </Transition>
+        <>
+            {title && (
+                <div className="flex items-baseline justify-between">
+                    <h3 className="mt-6 mb-2 text-gray-400">{title}</h3>
+                    {multiselect && (
+                        <span className="text-sm">
+                            {selected?.length > 0 ? selected.length : 0} Selected
+                        </span>
+                    )}
+                </div>
             )}
-        </Menu>
+
+            <Menu as="div" className={`relative inline-block ${full ? 'w-full' : ''}`}>
+                <Menu.Button
+                    className={`
+                        inline-flex items-center w-full rounded-lg font-medium focus:outline-none focus:ring-none
+                        ${determineColor()} ${displayOnly} ${mode} ${textSize} ${paddingSize} ${withBorder} ${
+                        full ? 'w-full' : ''
+                    }
+                    `}
+                >
+                    {label ? (
+                        label
+                    ) : (
+                        <span className="inline-flex items-center justify-between w-full">
+                            {!multiselect ? selected : 'Select One...'}{' '}
+                            <RiArrowDropDownLine size={iconSize} />
+                        </span>
+                    )}
+                </Menu.Button>
+
+                {items && items.length > 0 && (
+                    <Transition
+                        as={Fragment}
+                        enter="transition ease-out duration-100"
+                        enterFrom="transform opacity-0 scale-95"
+                        enterTo="transform opacity-100 scale-100"
+                        leave="transition ease-in duration-75"
+                        leaveFrom="transform opacity-100 scale-100"
+                        leaveTo="transform opacity-0 scale-95"
+                    >
+                        <Menu.Items
+                            className={`origin-top-right absolute ${
+                                direction === 'left' ? 'right-0' : ''
+                            } bg-white mt-2 ${
+                                full ? 'w-full' : 'min-w-[180px]'
+                            } rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-[999999]`}
+                        >
+                            <div className={`p-2 flex flex-col ${multiselect ? 'gap-1' : ''}`}>
+                                {list &&
+                                    list.map((item: any, i) => (
+                                        <Menu.Item key={`${item}-${i}`}>
+                                            {({ active }) =>
+                                                !multiselect ? (
+                                                    <div className="flex items-center gap-2">
+                                                        <MenuItem
+                                                            label={
+                                                                uppercase
+                                                                    ? item.text.toUpperCase()
+                                                                    : item.text
+                                                            }
+                                                            onClick={
+                                                                baseLink
+                                                                    ? (e) => route(e, item)
+                                                                    : item.onClick
+                                                                    ? item.onClick
+                                                                    : (e: any) =>
+                                                                          setSelected(
+                                                                              e.target.innerText,
+                                                                          )
+                                                            }
+                                                            mobile
+                                                        />
+                                                        {item?.status &&
+                                                        item.status === 'pending' ? (
+                                                            <CgSpinner
+                                                                size="24px"
+                                                                className="animate-spin"
+                                                            />
+                                                        ) : (
+                                                            item?.status && (
+                                                                <IoMdCheckmarkCircle size="24px" />
+                                                            )
+                                                        )}
+                                                    </div>
+                                                ) : (
+                                                    <MenuItem
+                                                        label={
+                                                            uppercase ? item.toUpperCase() : item
+                                                        }
+                                                        onClick={handleMultiSelect}
+                                                        mobile
+                                                        highlighted={ifInList(item)}
+                                                    />
+                                                )
+                                            }
+                                        </Menu.Item>
+                                    ))}
+                            </div>
+                        </Menu.Items>
+                    </Transition>
+                )}
+            </Menu>
+        </>
     );
 };

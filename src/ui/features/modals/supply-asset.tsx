@@ -1,14 +1,13 @@
 import React from 'react';
-import { Dialog } from '@headlessui/react';
-import { IoIosClose } from 'react-icons/io';
 import { useMediatedState } from 'react-use';
 import { inputMediator } from '../../../utils/helpers';
 import { CoinInput } from '../../components/inputs';
-import { Button } from '../..//components/buttons';
+import { Button } from '../../components/buttons';
 import { BasicToggle } from '../../components/toggles';
 import { ActiveStatus, TransactionStatus } from '../../components/statuses';
 import { useTransactionsContext } from '../../../store/contexts';
 import { TIMER_CLOSE_DELAY } from '../../../utils/constants';
+import { ModalHeader } from '../../components/modals';
 
 interface IOwnedAssetDetails {
     name?: string;
@@ -28,33 +27,27 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
     const [isSuccess, setIsSuccess] = React.useState(false);
     const [isError, setIsError] = React.useState(false);
     const [asCollateral, setAsCollateral] = React.useState(false);
-
     const [amount, setAmount] = useMediatedState(inputMediator, '');
 
+    const handleSubmit = () => {
+        setIsSuccess(true);
+        newTransaction(
+            `0x${Math.floor(Math.random() * 9)}...${Math.floor(Math.random() * 9)}${Math.floor(
+                Math.random() * 9,
+            )}p`,
+        );
+
+        setTimeout(() => {
+            setIsSuccess(false);
+            closeDialog('loan-asset-dialog');
+        }, TIMER_CLOSE_DELAY);
+    };
+
     return (
-        data && (
+        data &&
+        data.asset && (
             <>
-                <div className="flex flex-row justify-between">
-                    <div className="mt-3 text-left sm:mt-5">
-                        <Dialog.Title
-                            as="h3"
-                            className="text-xl leading-6 font-medium text-gray-900"
-                        >
-                            {name} {data.asset}
-                        </Dialog.Title>
-                        <div className="mt-2">
-                            <p className="text-sm text-gray-500">
-                                Please be aware when lending an asset...
-                            </p>
-                        </div>
-                    </div>
-                    <div
-                        className="self-baseline h-fit w-fit cursor-pointer text-neutral-900 hover:text-neutral-600 transition duration-200"
-                        onClick={() => closeDialog('loan-asset-dialog')}
-                    >
-                        <IoIosClose className="w-7 h-7" />
-                    </div>
-                </div>
+                <ModalHeader dialog="loan-asset-dialog" title={name} asset={data.asset} />
                 {!isSuccess && !isError ? (
                     // Default State
                     <>
@@ -100,19 +93,7 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
                 <div className="mt-5 sm:mt-6">
                     <Button
                         disabled={isSuccess || isError}
-                        onClick={() => {
-                            setIsSuccess(true);
-                            newTransaction(
-                                `0x${Math.floor(Math.random() * 9)}...${Math.floor(
-                                    Math.random() * 9,
-                                )}${Math.floor(Math.random() * 9)}p`,
-                            );
-
-                            setTimeout(() => {
-                                setIsSuccess(false);
-                                closeDialog('loan-asset-dialog');
-                            }, TIMER_CLOSE_DELAY);
-                        }}
+                        onClick={handleSubmit}
                         label={'Submit Transaction'}
                     />
                 </div>

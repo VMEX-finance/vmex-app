@@ -1,6 +1,4 @@
 import React from 'react';
-import { Dialog } from '@headlessui/react';
-import { IoIosClose } from 'react-icons/io';
 import { FaGasPump } from 'react-icons/fa';
 import { useMediatedState } from 'react-use';
 import { CoinInput } from '../../components/inputs';
@@ -9,46 +7,35 @@ import { Button, DropdownButton } from '../../components/buttons';
 import { inputMediator } from '../../../utils/helpers';
 import { useTransactionsContext } from '../../../store/contexts';
 import { TIMER_CLOSE_DELAY } from '../../../utils/constants';
+import { IDialogProps } from '.';
+import { ModalHeader } from '../../components/modals';
 
-interface IOwnedAssetDetails {
-    name?: string;
-    isOpen?: boolean;
-    data?: any;
-    closeDialog(e: any): void;
-}
-
-export const StakeAssetDialog: React.FC<IOwnedAssetDetails> = ({
-    name,
-    isOpen,
-    data,
-    closeDialog,
-}) => {
+export const StakeAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, closeDialog }) => {
     const { newTransaction } = useTransactionsContext();
     const [isSuccess, setIsSuccess] = React.useState(false);
-    const [isError, setIsError] = React.useState(false);
-
+    const [error, setError] = React.useState('');
     const [amount, setAmount] = useMediatedState(inputMediator, '');
 
+    const handleSubmit = () => {
+        setIsSuccess(true);
+        newTransaction(
+            `0x${Math.floor(Math.random() * 9)}...${Math.floor(Math.random() * 9)}${Math.floor(
+                Math.random() * 9,
+            )}s`,
+        );
+
+        setTimeout(() => {
+            setIsSuccess(false);
+            closeDialog('stake-asset-dialog');
+        }, TIMER_CLOSE_DELAY);
+    };
+
     return (
-        data.tranches && (
+        data &&
+        data.asset && (
             <>
-                <div className="flex flex-row justify-between">
-                    <div className="mt-3 text-left sm:mt-5">
-                        <Dialog.Title
-                            as="h3"
-                            className="text-xl leading-6 font-medium text-gray-900"
-                        >
-                            {name} {data.asset}
-                        </Dialog.Title>
-                    </div>
-                    <div
-                        className="self-baseline h-fit w-fit cursor-pointer text-neutral-900 hover:text-neutral-600 transition duration-200"
-                        onClick={() => closeDialog('stake-asset-dialog')}
-                    >
-                        <IoIosClose className="w-7 h-7" />
-                    </div>
-                </div>
-                {!isSuccess && !isError ? (
+                <ModalHeader dialog="stake-asset-dialog" title={name} asset={data.asset} />
+                {!isSuccess ? (
                     // Default State
                     <>
                         <h3 className="mt-5 text-gray-400">Amount</h3>
@@ -99,20 +86,8 @@ export const StakeAssetDialog: React.FC<IOwnedAssetDetails> = ({
                     </div>
                     <div>
                         <Button
-                            disabled={isSuccess || isError}
-                            onClick={() => {
-                                setIsSuccess(true);
-                                newTransaction(
-                                    `0x${Math.floor(Math.random() * 9)}...${Math.floor(
-                                        Math.random() * 9,
-                                    )}${Math.floor(Math.random() * 9)}s`,
-                                );
-
-                                setTimeout(() => {
-                                    setIsSuccess(false);
-                                    closeDialog('stake-asset-dialog');
-                                }, TIMER_CLOSE_DELAY);
-                            }}
+                            disabled={isSuccess}
+                            onClick={handleSubmit}
                             label="Submit Transaction"
                         />
                     </div>
