@@ -5,7 +5,6 @@ import { BasicToggle } from '../toggles';
 import { truncateAddress } from '../../../utils/helpers';
 import { utils } from 'ethers';
 import { AVAILABLE_ASSETS } from '../../../utils/constants';
-import { reverse } from 'dns';
 
 export interface IListInput {
     coin?: boolean;

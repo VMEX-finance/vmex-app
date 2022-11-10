@@ -57,6 +57,7 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
             blacklisted: _blackListed,
             tokens: _tokens,
             adminFee: _adminFee,
+            pausedTokens: _pausedTokens,
         });
         newTransaction(
             `0x${Math.floor(Math.random() * 9)}...${Math.floor(Math.random() * 9)}${Math.floor(
@@ -91,6 +92,7 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
         setBlackListed(selectedTranche.blacklisted);
         setTokens(selectedTranche.tokens);
         setAdminFee(selectedTranche.adminFee);
+        setPausedTokens(selectedTranche.pausedTokens);
     }, [selectedTranche]);
 
     return (
@@ -152,6 +154,20 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
                         noDelete
                     />
                     {/* TODO: implement pausing tokens */}
+                    <div className="w-full mt-6">
+                        <DropdownButton
+                            title="Paused Tokens"
+                            items={_tokens}
+                            selected={_pausedTokens}
+                            setSelected={setPausedTokens}
+                            direction="right"
+                            size="lg"
+                            full
+                            multiselect
+                            border
+                            uppercase
+                        />
+                    </div>
                 </>
             ) : (
                 <div className="mt-10 mb-8">
