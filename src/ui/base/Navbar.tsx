@@ -166,14 +166,15 @@ export const DashboardNavbar: React.FC = () => {
                             <DropdownButton
                                 reverse
                                 items={transactions}
+                                baseLink={`https://etherscan.com`}
+                                className="max-h-[36px]"
                                 label={
-                                    <span className="max-h-[36px] flex items-center gap-2">
+                                    <span className="flex items-center gap-2">
                                         {width > 1350 ? `Transactions` : <BiTransferAlt />}
                                         {transactions.filter((el) => el.status === 'pending')
                                             .length > 0 && <CgSpinner className="animate-spin" />}
                                     </span>
                                 }
-                                baseLink={`https://etherscan.com`}
                             />
                         )}
                         <WalletButton label={width > 1200 ? 'Connect Wallet' : 'Connect'} primary />
