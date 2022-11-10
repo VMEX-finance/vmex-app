@@ -6,7 +6,7 @@ import { AssetDisplay } from '../../components/displays';
 import { useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext, useTransactionsContext } from '../../../store/contexts';
 import { TIMER_CLOSE_DELAY } from '../../../utils/constants';
-import { ModalHeader } from '../../components/modals';
+import { ModalHeader, ModalTableDisplay } from '../../components/modals';
 import { IDialogProps } from '.';
 
 export const SuppliedAssetDetailsDialog: React.FC<IDialogProps> = ({
@@ -62,26 +62,28 @@ export const SuppliedAssetDetailsDialog: React.FC<IDialogProps> = ({
                             <span className="text-sm text-neutral-500">${'156,240.02'} USD</span>
                         </div>
 
-                        <h3 className="mt-6 text-gray-400">Staking Details</h3>
-                        <div
-                            className={`mt-2 flex justify-between rounded-lg border border-neutral-900 p-4 lg:py-6`}
-                        >
-                            <div className="flex flex-col gap-2">
-                                <span>Interest Rate</span>
-                                <span>Date Supplied</span>
-                                <span>Interest Accrued</span>
-                                <span>TX Hash</span>
-                            </div>
-
-                            <div className="min-w-[100px] flex flex-col gap-2">
-                                <span>{0.44}%</span>
-                                <span>12-23-2022 | 13:05</span>
-                                <span>${13.56}</span>
-                                <span className="underline text-brand-purple cursor-pointer">
-                                    <a href="/borrowing">{'0x932...2134'}</a>
-                                </span>
-                            </div>
-                        </div>
+                        <ModalTableDisplay
+                            title="Staking Details"
+                            content={[
+                                {
+                                    label: 'Interest Rate',
+                                    value: `${0.44}%`,
+                                },
+                                {
+                                    label: 'Date Supplied',
+                                    value: '12-23-2022 | 13:05',
+                                },
+                                {
+                                    label: 'Interest Accrued',
+                                    value: `$${13.56}`,
+                                },
+                                {
+                                    label: 'TX Hash',
+                                    value: '0x932...2134',
+                                    baseLink: `https://etherscan.com/tx/`,
+                                },
+                            ]}
+                        />
 
                         <h3 className="mt-6 text-gray-400">Price Analytics</h3>
                         <div className="grid gap-2">

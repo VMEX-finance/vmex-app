@@ -1,5 +1,5 @@
 import React from 'react';
-import { PercentChangeDisplay } from './PercentChange';
+import { PercentChangeDisplay } from './percent-change';
 
 type INumberProps = {
     label?: string;

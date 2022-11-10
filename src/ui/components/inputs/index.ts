@@ -1,3 +1,3 @@
-export * from './CoinInput';
-export * from './Default';
-export * from './ListInput';
+export * from './coin';
+export * from './default';
+export * from './list';
