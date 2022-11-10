@@ -7,6 +7,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { DropdownButton, WalletButton } from '../components/buttons';
 import { useTransactionsContext } from '../../store/contexts';
 import { useWalletState } from '../../hooks/wallet';
+import { CgSpinner } from 'react-icons/cg';
 
 export interface NavbarInterface {
     defaultPage?: string;
@@ -95,16 +96,25 @@ export const DashboardNavbar: React.FC = () => {
                     </div>
                 ) : (
                     <div className="flex items-center gap-4">
-                        {address && transactions && transactions.length > 0 && (
+                        {address && transactions && (
                             <DropdownButton
                                 reverse
                                 items={transactions}
+                                baseLink={`https://etherscan.com`}
                                 label={
-                                    width > 1350 ? (
-                                        'Transactions'
-                                    ) : (
-                                        <BiTransferAlt size={`${width < 1023 ? '28px' : '20px'}`} />
-                                    )
+                                    <span className="flex items-center gap-2">
+                                        {width > 1350 ? (
+                                            'Transactions'
+                                        ) : (
+                                            <BiTransferAlt
+                                                size={`${width < 1023 ? '28px' : '20px'}`}
+                                            />
+                                        )}
+                                        {
+                                            transactions.filter((el) => el.status === 'pending')
+                                                .length
+                                        }
+                                    </span>
                                 }
                             />
                         )}
@@ -152,12 +162,19 @@ export const DashboardNavbar: React.FC = () => {
 
                 {width > 1024 && (
                     <div className="flex items-center justify-end gap-3">
-                        {address && transactions && transactions.length > 0 && (
+                        {address && transactions && (
                             <DropdownButton
                                 reverse
                                 items={transactions}
-                                label={width > 1350 ? 'Transactions' : <BiTransferAlt />}
                                 baseLink={`https://etherscan.com`}
+                                className="max-h-[36px]"
+                                label={
+                                    <span className="flex items-center gap-2">
+                                        {width > 1350 ? `Transactions` : <BiTransferAlt />}
+                                        {transactions.filter((el) => el.status === 'pending')
+                                            .length > 0 && <CgSpinner className="animate-spin" />}
+                                    </span>
+                                }
                             />
                         )}
                         <WalletButton label={width > 1200 ? 'Connect Wallet' : 'Connect'} primary />

@@ -3,7 +3,7 @@ import React from 'react';
 import { IDataProps, ReLineChart } from '../../components/charts';
 import { lineData2, mockTopAssets, mockTopTranches } from '../../../utils/mock-data';
 import { NumberDisplay, PillDisplay } from '../../components/displays';
-import { TopTranchesTable } from '../../components/tables';
+import { TopTranchesTable } from '../../tables';
 
 export interface ITVLData {
     tvl?: number;

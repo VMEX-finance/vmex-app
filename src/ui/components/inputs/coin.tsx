@@ -1,4 +1,4 @@
-import { AssetDisplay } from '../displays/Asset';
+import { AssetDisplay } from '../displays/asset';
 import React from 'react';
 
 export interface ICoinInput {

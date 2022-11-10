@@ -1,3 +1,3 @@
-export * from './TrancheInfo';
-export * from './TrancheStatisticsCard';
-export * from './TrancheTvlDataCard';
+export * from './info';
+export * from './stats';
+export * from './overview';

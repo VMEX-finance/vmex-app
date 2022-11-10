@@ -1,4 +1,4 @@
 export * from './Button';
-export * from './Checkbox';
-export * from './Dropdown';
-export * from './Wallet';
+export * from './checkbox';
+export * from './dropdown';
+export * from './wallet';

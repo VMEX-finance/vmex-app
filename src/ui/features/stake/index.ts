@@ -1,2 +1,2 @@
-export * from './StakeAsset';
-export * from './StakeOverview';
+export * from './stake';
+export * from './overview';

@@ -80,13 +80,12 @@ const DashboardTemplate: React.FC<IDashboardTemplate> = ({
                 )}
                 {location.pathname === `/tranches` && address && (
                     <div className="flex gap-3 md:justify-end mt-2">
-                        {myTranches?.length > 0 && (
-                            <Button
-                                label={'My Tranches'}
-                                onClick={() => openDialog('my-tranches-dialog')}
-                                primary
-                            />
-                        )}
+                        <Button
+                            label={'My Tranches'}
+                            onClick={() => openDialog('my-tranches-dialog')}
+                            primary
+                            disabled={myTranches?.length === 0}
+                        />
                         <Button
                             label={width > 768 ? 'Create Tranche' : <BiPlus size="24px" />}
                             onClick={() => openDialog('create-tranche-dialog')}

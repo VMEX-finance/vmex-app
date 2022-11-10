@@ -25,6 +25,7 @@ export interface IDropdownProps {
     multiselect?: boolean;
     title?: string;
     uppercase?: boolean;
+    className?: string;
 }
 
 export const DropdownButton = ({
@@ -42,6 +43,7 @@ export const DropdownButton = ({
     border,
     title,
     uppercase,
+    className,
 }: IDropdownProps) => {
     const [list, setList] = useState([]);
 
@@ -113,7 +115,9 @@ export const DropdownButton = ({
                 <Menu.Button
                     className={`
                         inline-flex items-center w-full rounded-lg font-medium focus:outline-none focus:ring-none
-                        ${determineColor()} ${displayOnly} ${mode} ${textSize} ${paddingSize} ${withBorder} ${
+                        ${
+                            className ? className : ''
+                        } ${determineColor()} ${displayOnly} ${mode} ${textSize} ${paddingSize} ${withBorder} ${
                         full ? 'w-full' : ''
                     }
                     `}

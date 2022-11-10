@@ -1,5 +1,5 @@
 import React from 'react';
-import { AssetDisplay } from './Asset';
+import { AssetDisplay } from './asset';
 
 type IAvailableAssetDisplayProps = {
     asset: string;

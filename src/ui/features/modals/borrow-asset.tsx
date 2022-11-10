@@ -8,7 +8,7 @@ import { inputMediator } from '../../../utils/helpers';
 import { HealthFactor } from '../../components/displays';
 import { useTransactionsContext } from '../../../store/contexts';
 import { TIMER_CLOSE_DELAY } from '../../../utils/constants';
-import { ModalHeader } from '../../components/modals';
+import { ModalHeader, ModalTableDisplay } from '../../components/modals';
 import { IDialogProps } from '.';
 
 export const BorrowAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, closeDialog }) => {
@@ -54,20 +54,19 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, 
                         <h3 className="mt-6 text-gray-400">Transaction Overview</h3>
                         <HealthFactor liquidation={1.0} value={1.24} />
 
-                        <h3 className="mt-6 text-gray-400">Transaction Overview</h3>
-                        <div
-                            className={`mt-2 flex justify-between rounded-lg border border-neutral-900 p-4 lg:py-6`}
-                        >
-                            <div className="flex flex-col gap-2">
-                                <span>Borrow APR%</span>
-                                <span>Collateralization</span>
-                            </div>
-
-                            <div className="min-w-[100px] flex flex-col gap-2">
-                                <span>0.44%</span>
-                                <ActiveStatus active={false} size="sm" />
-                            </div>
-                        </div>
+                        <ModalTableDisplay
+                            title="Transaction Overview"
+                            content={[
+                                {
+                                    label: 'Borrow APR (%)',
+                                    value: `${0.44}%`,
+                                },
+                                {
+                                    label: 'Collateralization',
+                                    value: <ActiveStatus active={false} size="sm" />,
+                                },
+                            ]}
+                        />
 
                         <div className="mt-5 sm:mt-6 flex justify-between items-end">
                             <div className="flex flex-col">

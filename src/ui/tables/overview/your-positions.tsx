@@ -1,13 +1,13 @@
 import React from 'react';
 import { Card } from '../../components/cards';
-import { YourBorrowsTable, YourSuppliesTable } from '../../components/tables';
+import { YourBorrowsTable, YourSuppliesTable } from '..';
 import { _mockAssetData } from '../../../models/available-liquidity-model';
 
 interface IYourPositionsProps {
     type: 'borrows' | 'supplies';
 }
 
-export const YourPositions: React.FC<IYourPositionsProps> = ({ type }) => {
+export const YourPositionsTable: React.FC<IYourPositionsProps> = ({ type }) => {
     const determineTitle = () => {
         switch (type) {
             case 'supplies':

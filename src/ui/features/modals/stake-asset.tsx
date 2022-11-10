@@ -8,7 +8,7 @@ import { inputMediator } from '../../../utils/helpers';
 import { useTransactionsContext } from '../../../store/contexts';
 import { TIMER_CLOSE_DELAY } from '../../../utils/constants';
 import { IDialogProps } from '.';
-import { ModalHeader } from '../../components/modals';
+import { ModalHeader, ModalTableDisplay } from '../../components/modals';
 
 export const StakeAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, closeDialog }) => {
     const { newTransaction } = useTransactionsContext();
@@ -49,22 +49,23 @@ export const StakeAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
                             balance={'0.23'}
                         />
 
-                        <h3 className="mt-6 text-gray-400">Transaction Overview</h3>
-                        <div
-                            className={`mt-2 flex justify-between rounded-lg border border-neutral-900 p-4 lg:py-6`}
-                        >
-                            <div className="flex flex-col gap-2">
-                                <span>Supply APR%</span>
-                                <span>Collateralization</span>
-                                <span>Insurance</span>
-                            </div>
-
-                            <div className="min-w-[100px] flex flex-col gap-2">
-                                <span>0.44%</span>
-                                {amount && <ActiveStatus active={true} size="sm" />}
-                                {amount && <ActiveStatus active={false} size="sm" />}
-                            </div>
-                        </div>
+                        <ModalTableDisplay
+                            title="Transaction Overview"
+                            content={[
+                                {
+                                    label: 'Supply APR (%)',
+                                    value: `${0.44}%`,
+                                },
+                                {
+                                    label: 'Collateralization',
+                                    value: <ActiveStatus active={true} size="sm" />,
+                                },
+                                {
+                                    label: 'Insurance',
+                                    value: <ActiveStatus active={false} size="sm" />,
+                                },
+                            ]}
+                        />
                     </>
                 ) : (
                     <div className="mt-10 mb-8">
