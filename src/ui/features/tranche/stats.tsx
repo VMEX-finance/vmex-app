@@ -80,50 +80,66 @@ export const TrancheStatisticsCard = ({ tranche }: any) => {
                         </div>
                     </div>
                     <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 justify-items-center gap-y-10">
-                        {/* TODO: change all these to the NumberDisplay component and make it come from a "data" prop or whatever you want to name it */}
-                        <div className="grid grid-cols-1 justify-items-center">
-                            <p>LTV</p>
-                            <p className="text-xl">{(Math.random() * 50).toFixed(1)}%</p>
-                        </div>
-                        <div className="grid grid-cols-1 justify-items-center">
-                            <p>Liq. Threshold</p>
-                            <p className="text-xl">{(Math.random() * 10).toFixed(1)}%</p>
-                        </div>
-                        <div className="grid grid-cols-1 justify-items-center">
-                            <p>Liq. Penalty</p>
-                            <p className="text-xl">{(Math.random() * 5).toFixed(1)}%</p>
-                        </div>
-                        <div className="grid grid-cols-1 justify-items-center">
-                            <p>Collateral</p>
-                            <p className="text-xl">
-                                {Math.floor(Math.random() * 10) > 5 ? 'Yes' : 'No'}
-                            </p>
-                        </div>
-                        <div className="grid grid-cols-1 justify-items-center">
-                            <p>Oracle</p>
-                            <p className="text-xl">{tranche.oracle || 'Chainlink'}</p>
-                        </div>
-                        <div className="grid grid-cols-1 justify-items-center">
-                            <p>Total Supplied</p>
-                            <p className="text-xl">${(Math.random() * 5).toFixed(2)}M</p>
-                        </div>
-                        <div className="grid grid-cols-1 justify-items-center">
-                            <p>Utilization</p>
-                            <p className="text-xl">{(Math.random() * 99).toFixed(2)}%</p>
-                        </div>
-                        <div className="grid grid-cols-1 justify-items-center">
-                            <p>Total Borrowed</p>
-                            <p className="text-xl">${(Math.random() * 1).toFixed(2)}M</p>
-                        </div>
-                        <div className="grid grid-cols-1 justify-items-center">
-                            <p>Admin Fee</p>
-                            <p className="text-xl">{tranche.adminFee || 1}%</p>
-                        </div>
-
-                        <div className="grid grid-cols-1 justify-items-center">
-                            <p>Platform Fee</p>
-                            <p className="text-xl">{(Math.random() * 5).toFixed(1)}%</p>
-                        </div>
+                        <NumberDisplay
+                            label="LTV"
+                            value={`${(Math.random() * 50).toFixed(1)}%`}
+                            color="text-white"
+                            center
+                        />
+                        <NumberDisplay
+                            label="Liq. Threshold"
+                            value={`${(Math.random() * 10).toFixed(1)}%`}
+                            color="text-white"
+                            center
+                        />
+                        <NumberDisplay
+                            label="Liq. Penalty"
+                            value={`${(Math.random() * 5).toFixed(1)}%`}
+                            color="text-white"
+                            center
+                        />
+                        <NumberDisplay
+                            label="Collateral"
+                            value={`${Math.floor(Math.random() * 10) > 5 ? 'Yes' : 'No'}`}
+                            color="text-white"
+                            center
+                        />
+                        <NumberDisplay
+                            label="Oracle"
+                            value={`${tranche.oracle || 'Chainlink'}`}
+                            color="text-white"
+                            center
+                        />
+                        <NumberDisplay
+                            label="Total Supplied"
+                            value={`$${(Math.random() * 2).toFixed(2)}M`}
+                            color="text-white"
+                            center
+                        />
+                        <NumberDisplay
+                            label="Utilization"
+                            value={`${(Math.random() * 99).toFixed(2)}%`}
+                            color="text-white"
+                            center
+                        />
+                        <NumberDisplay
+                            label="Total Borrowed"
+                            value={`$${(Math.random() * 1).toFixed(2)}M`}
+                            color="text-white"
+                            center
+                        />
+                        <NumberDisplay
+                            label="Admin Fee"
+                            value={`${tranche.adminFee || 1}%`}
+                            color="text-white"
+                            center
+                        />
+                        <NumberDisplay
+                            label="Platform Fee"
+                            value={`${(Math.random() * 5).toFixed(1)}%`}
+                            color="text-white"
+                            center
+                        />
                     </div>
                 </div>
             </Card>

@@ -23,7 +23,6 @@ const TrancheTVLDataCard: React.FC<ITrancheTVLData> = ({
 }) => {
     return (
         <Card>
-            {/* TODO: use number display component to maintain consistency */}
             <div
                 className="flex flex-col flow md:flex-row justify-between font-basefont gap-4 md:gap-8"
                 style={{ flexFlow: 'wrap' }}

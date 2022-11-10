@@ -101,7 +101,6 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
             {!isSuccess ? (
                 // Default State
                 <>
-                    {/* TODO: implement dropdown to choose from myTranches context */}
                     <div className="w-full mt-6">
                         <DropdownButton
                             items={myTranches.map((obj) => ({ ...obj, text: obj.name }))}
@@ -153,7 +152,6 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
                         coin
                         noDelete
                     />
-                    {/* TODO: implement pausing tokens */}
                     <div className="w-full mt-6">
                         <DropdownButton
                             title="Paused Tokens"
