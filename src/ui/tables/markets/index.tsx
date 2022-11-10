@@ -1,9 +1,9 @@
 import React from 'react';
-import { TableTemplate } from '../../../templates';
+import { TableTemplate } from '../../templates';
 import { CacheProvider } from '@emotion/react';
 import { ThemeProvider } from '@mui/material/styles';
 import { muiCache, options, vmexTheme } from '../utils';
-import type { MarketsAsset } from '../../../../models/markets';
+import type { MarketsAsset } from '../../../models/markets';
 import { MarketsCustomRow } from './custom-row';
 
 interface IAvailableLiquidityTable {

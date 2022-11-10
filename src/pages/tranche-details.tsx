@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { AppTemplate, GridView } from '../ui/templates';
 import { TrancheTVLDataCard, TrancheInfoCard, TrancheStatisticsCard } from '../ui/features/tranche';
 import { Card } from '../ui/components/cards';
-import { TrancheTable } from '../ui/components/tables';
+import { TrancheTable } from '../ui/tables';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '../store/contexts';
 import { _mockTranchesData } from '../utils/mock-data';

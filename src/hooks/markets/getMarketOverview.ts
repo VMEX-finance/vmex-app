@@ -1,6 +1,5 @@
 import React from 'react';
-import { ITVLData } from '@ui/features/overview';
-import { ITrancheTVLData } from '@ui/features/tranche';
+import { ITVLData, ITrancheTVLData } from '@ui/features';
 
 export function getTVLData(): ITVLData {
     return {

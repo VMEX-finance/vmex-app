@@ -1,6 +1,6 @@
 import React from 'react';
-import type { ITrancheProps } from '../../../../models/tranches';
-import { TableTemplate } from '../../../templates';
+import type { ITrancheProps } from '../../../models/tranches';
+import { TableTemplate } from '../../templates';
 import { CacheProvider } from '@emotion/react';
 import { ThemeProvider } from '@mui/material/styles';
 import { muiCache, options, vmexTheme } from '../utils';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { AppTemplate } from '../ui/templates';
-import { MarketsTable } from '../ui/components/tables/markets';
+import { MarketsTable } from '../ui/tables';
 import { _mockMarketsData } from '../models/markets';
 import { TokenData } from '../hooks/user-data';
 import { ITokenData } from '../store/token-data';

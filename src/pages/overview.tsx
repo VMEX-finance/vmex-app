@@ -2,7 +2,8 @@ import { useMarketOverview } from '../hooks/markets';
 import { useWalletState } from '../hooks/wallet';
 import React from 'react';
 import { AppTemplate, GridView } from '../ui/templates';
-import { LendingPerformanceCard, TVLDataCard, YourPositions } from '../ui/features/overview';
+import { LendingPerformanceCard, TVLDataCard } from '../ui/features/overview';
+import { YourPositionsTable } from '../ui/tables';
 import { WalletButton } from '../ui/components/buttons';
 
 const Overview: React.FC = () => {
@@ -16,8 +17,8 @@ const Overview: React.FC = () => {
             {address ? (
                 <GridView type="fixed">
                     <LendingPerformanceCard />
-                    <YourPositions type="supplies" />
-                    <YourPositions type="borrows" />
+                    <YourPositionsTable type="supplies" />
+                    <YourPositionsTable type="borrows" />
                 </GridView>
             ) : (
                 <div className="pt-10 lg:pt-20 text-center flex-col">

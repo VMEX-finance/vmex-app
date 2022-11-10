@@ -1,12 +1,12 @@
-import { Button } from '../../buttons';
+import { Button } from '../../components/buttons';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSelectedTrancheContext } from '../../../../store/contexts';
-import { useWindowSize } from '../../../../hooks/ui';
-import { determineRatingColor } from '../../../../utils/helpers';
+import { useSelectedTrancheContext } from '../../../store/contexts';
+import { useWindowSize } from '../../../hooks/ui';
+import { determineRatingColor } from '../../../utils/helpers';
 import { BsCheck } from 'react-icons/bs';
 import { IoIosClose } from 'react-icons/io';
-import { MarketsAsset } from '../../../../models/markets';
+import { MarketsAsset } from '../../../models/markets';
 
 const MarketsCustomRow = (props: any) => {
     const {
@@ -129,7 +129,7 @@ const MarketsCustomRow = (props: any) => {
                 <td className="text-right pr-3.5">
                     <Button
                         label={width > 1536 ? 'View Details' : 'Details'}
-                        onClick={(e) => route(e, props, 'details')}
+                        onClick={(e: any) => route(e, props, 'details')}
                     />
                 </td>
             </tr>

@@ -1,12 +1,12 @@
-import { Button } from '../../buttons';
+import { Button } from '../../components/buttons';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSelectedTrancheContext } from '../../../../store/contexts';
-import { MultipleAssetsDisplay } from '../../displays';
-import { useWindowSize } from '../../../../hooks/ui';
-import { determineRatingColor } from '../../../../utils/helpers';
+import { useSelectedTrancheContext } from '../../../store/contexts';
+import { MultipleAssetsDisplay } from '../../components/displays';
+import { useWindowSize } from '../../../hooks/ui';
+import { determineRatingColor } from '../../../utils/helpers';
 import { BsArrowDownCircle, BsArrowUpCircle } from 'react-icons/bs';
-import { Tooltip } from '../../tooltips';
+import { Tooltip } from '../../components/tooltips';
 
 const TranchesCustomRow = (props: any) => {
     const { name, assets, aggregateRating, yourActivity, supplyTotal, borrowTotal, id } = props;
@@ -99,7 +99,7 @@ const TranchesCustomRow = (props: any) => {
                 <td className="text-right pr-3.5">
                     <Button
                         label={width > 1000 ? 'View Details' : 'Details'}
-                        onClick={(e) => route(e, { id, name }, 'details')}
+                        onClick={(e: any) => route(e, { id, name }, 'details')}
                     />
                 </td>
             </tr>

@@ -1,14 +1,16 @@
 import React from 'react';
-import type { AvailableAsset } from '../../../../models/available-liquidity-model';
-import { useDialogController } from '../../../../hooks/dialogs';
+import type { AvailableAsset } from '../../../models/available-liquidity-model';
+import { BsCheck } from 'react-icons/bs';
+import { IoIosClose } from 'react-icons/io';
+import { useDialogController } from '../../../hooks/dialogs';
 
 interface IAvailableLiquidityTable extends React.PropsWithChildren {
     data: AvailableAsset[];
 }
 
-export const YourBorrowsTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
+export const YourSuppliesTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
     const { openDialog } = useDialogController();
-    const headers = ['Asset', 'Amount', 'APY%', 'Tranche'];
+    const headers = ['Asset', 'Amount', 'Collateral', 'APY%', 'Tranche'];
 
     return (
         <table className="min-w-full divide-y divide-gray-300 font-basefont">
@@ -33,7 +35,7 @@ export const YourBorrowsTable: React.FC<IAvailableLiquidityTable> = ({ data }) =
                                 key={i.asset}
                                 className="text-left transition duration-200 hover:bg-neutral-200 hover:cursor-pointer"
                                 onClick={() =>
-                                    openDialog('borrowed-asset-details-dialog', { ...i })
+                                    openDialog('supplied-asset-details-dialog', { ...i })
                                 }
                             >
                                 <td className="whitespace-nowrap p-4 text-sm sm:pl-6">
@@ -43,9 +45,18 @@ export const YourBorrowsTable: React.FC<IAvailableLiquidityTable> = ({ data }) =
                                     </div>
                                 </td>
                                 <td className="">{i.amount}</td>
+                                <td className="">
+                                    <div className="w-10 h-10">
+                                        {i.canBeCollat ? (
+                                            <BsCheck className="w-full h-full text-emerald-600" />
+                                        ) : (
+                                            <IoIosClose className="w-full h-full text-red-600" />
+                                        )}
+                                    </div>
+                                </td>
                                 <td>{i.apy_perc}</td>
-                                <td className="">{'VMEX High'}</td>
-                                {/* <td className="text-right hidden md:table-cell pr-3.5">
+                                <td>VMEX Mid</td>
+                                {/* <td className="text-right pr-3.5 hidden md:table-cell">
                                     <Button
                                         label={
                                             (width > 1535 && width < 2000) || width < 500
