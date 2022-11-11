@@ -7,7 +7,7 @@ import { BiPlus } from 'react-icons/bi';
 import { useDialogController } from '../../hooks/dialogs';
 import { useMyTranchesContext } from '../../store/contexts';
 
-interface IDashboardTemplate {
+interface IDashboardTemplateProps {
     title?: string;
     children?: React.ReactElement | React.ReactElement[];
     description?: string | React.ReactNode;
@@ -15,7 +15,7 @@ interface IDashboardTemplate {
     setView?: any;
 }
 
-const DashboardTemplate: React.FC<IDashboardTemplate> = ({
+const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
     title,
     children,
     description,

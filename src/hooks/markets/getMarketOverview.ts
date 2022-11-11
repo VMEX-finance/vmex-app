@@ -1,7 +1,7 @@
 import React from 'react';
-import { ITVLData, ITrancheTVLData } from '@ui/features';
+import { IProtocolProps, ITrancheOverviewProps } from '@ui/features';
 
-export function getTVLData(): ITVLData {
+export function getTVLData(): IProtocolProps {
     return {
         tvl: 4642124,
         reserve: 248750,
@@ -11,7 +11,7 @@ export function getTVLData(): ITVLData {
     };
 }
 
-export function getTrancheTVLData(): ITrancheTVLData {
+export function getTrancheTVLData(): ITrancheOverviewProps {
     return {
         tvl: 4642124,
         supplied: 248750,

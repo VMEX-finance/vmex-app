@@ -1,17 +1,17 @@
 import React, { Fragment, ReactNode, useEffect, useState } from 'react';
 import { Menu, Transition } from '@headlessui/react';
-import { MenuItem } from '../../base';
 import { RiArrowDropDownLine } from 'react-icons/ri';
 import { CgSpinner } from 'react-icons/cg';
 import { IoMdCheckmarkCircle } from 'react-icons/io';
+import { MenuItemButton } from './menu-item';
 
-interface IDropdownItem {
+interface IDropdownItemProps {
     text: string;
     onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
 export interface IDropdownProps {
-    items: Array<IDropdownItem | any>;
+    items: Array<IDropdownItemProps | any>;
     primary?: boolean;
     border?: boolean;
     direction?: 'left' | 'right';
@@ -156,7 +156,7 @@ export const DropdownButton = ({
                                             {({ active }) =>
                                                 !multiselect ? (
                                                     <div className="flex items-center gap-2">
-                                                        <MenuItem
+                                                        <MenuItemButton
                                                             label={
                                                                 uppercase
                                                                     ? item.text.toUpperCase()
@@ -164,7 +164,7 @@ export const DropdownButton = ({
                                                             }
                                                             onClick={
                                                                 baseLink
-                                                                    ? (e) => route(e, item)
+                                                                    ? (e: any) => route(e, item)
                                                                     : item.onClick
                                                                     ? item.onClick
                                                                     : (e: any) =>
@@ -187,7 +187,7 @@ export const DropdownButton = ({
                                                         )}
                                                     </div>
                                                 ) : (
-                                                    <MenuItem
+                                                    <MenuItemButton
                                                         label={
                                                             uppercase ? item.toUpperCase() : item
                                                         }

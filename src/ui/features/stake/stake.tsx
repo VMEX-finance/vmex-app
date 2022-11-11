@@ -4,7 +4,7 @@ import { NumberDisplay, NumberAndDollar } from '../../components/displays';
 import { useDialogController } from '../../../hooks/dialogs';
 import { Button } from '../../components/buttons';
 
-type IStakingAsset = {
+export type IStakingAsset = {
     asset: string;
     bonus: {
         days: string | number;

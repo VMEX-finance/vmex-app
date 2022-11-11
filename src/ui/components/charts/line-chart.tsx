@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-    LineChart,
-    Line,
-    Tooltip,
-    ResponsiveContainer,
-    ReferenceLine,
-    XAxis,
-    YAxis,
-} from 'recharts';
+import { LineChart, Line, Tooltip, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 import { CustomTooltip } from './custom-tooltip';
 
 export type IDataProps = {

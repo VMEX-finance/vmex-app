@@ -2,7 +2,7 @@ import { Card } from '../../components/cards';
 import React from 'react';
 import { MultipleAssetsDisplay, NumberDisplay } from '../../components/displays';
 
-export interface ITrancheTVLData {
+export interface ITrancheOverviewProps {
     assets?: string[];
     tvl?: number;
     supplied?: number;
@@ -12,7 +12,7 @@ export interface ITrancheTVLData {
     grade?: string;
 }
 
-const TrancheTVLDataCard: React.FC<ITrancheTVLData> = ({
+const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
     assets,
     tvl,
     supplied,

@@ -5,7 +5,7 @@ import { lineData2, mockTopAssets, mockTopTranches } from '../../../utils/mock-d
 import { NumberDisplay, PillDisplay } from '../../components/displays';
 import { TopTranchesTable } from '../../tables';
 
-export interface ITVLData {
+export interface IProtocolProps {
     tvl?: number;
     reserve?: number;
     lenders?: number;
@@ -14,7 +14,7 @@ export interface ITVLData {
     graphData?: IDataProps[];
 }
 
-const TVLDataCard: React.FC<ITVLData> = ({
+const TVLDataCard: React.FC<IProtocolProps> = ({
     tvl,
     reserve,
     lenders,

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card } from '../../components/cards/default';
 
-type IStakingOverviewProps = {
+export type IStakingOverviewProps = {
     safetyFunds: string | number;
     dailyEmissions: string | number;
     stakers: string | number;

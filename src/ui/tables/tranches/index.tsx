@@ -1,10 +1,10 @@
 import React from 'react';
 import type { ITrancheProps } from '../../../models/tranches';
-import { TableTemplate } from '../../templates';
 import { CacheProvider } from '@emotion/react';
 import { ThemeProvider } from '@mui/material/styles';
 import { muiCache, options, vmexTheme } from '../utils';
 import { TranchesCustomRow } from './custom-row';
+import MUIDataTable from 'mui-datatables';
 
 interface IDataTable {
     data: ITrancheProps[];
@@ -87,7 +87,7 @@ export const TranchesTable: React.FC<IDataTable> = ({ data }) => {
     return (
         <CacheProvider value={muiCache}>
             <ThemeProvider theme={vmexTheme()}>
-                <TableTemplate
+                <MUIDataTable
                     title={['All Available Tranches']}
                     columns={columns}
                     data={data}
