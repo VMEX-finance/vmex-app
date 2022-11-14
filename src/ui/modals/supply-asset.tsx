@@ -13,6 +13,7 @@ interface IOwnedAssetDetails {
     name?: string;
     isOpen?: boolean;
     data?: any;
+    tab?: string;
     closeDialog(e: any): void;
 }
 
@@ -20,8 +21,10 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
     name,
     isOpen,
     data,
+    tab,
     closeDialog,
 }) => {
+
     const { newTransaction } = useTransactionsContext();
 
     const [isSuccess, setIsSuccess] = React.useState(false);
@@ -47,47 +50,107 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
         data &&
         data.asset && (
             <>
-                <ModalHeader dialog="loan-asset-dialog" title={name} asset={data.asset} />
-                {!isSuccess && !isError ? (
-                    // Default State
+                {view?.includes('supply') ? (
                     <>
-                        <h3 className="mt-5 text-gray-400">Amount</h3>
-                        <CoinInput
-                            amount={amount}
-                            setAmount={setAmount}
-                            coin={{
-                                logo: `/tokens/token-${data.asset}.svg`,
-                                name: data.asset,
-                            }}
-                            balance={'0.23'}
+                        <ModalHeader
+                            dialog="loan-asset-dialog"
+                            title={name}
+                            asset={data.asset}
+                            tab={tab}
+                            primary
                         />
+                        {!isSuccess && !isError ? (
+                            // Default State
+                            <>
+                                <h3 className="mt-5 text-gray-400">Amount</h3>
+                                <CoinInput
+                                    amount={amount}
+                                    setAmount={setAmount}
+                                    coin={{
+                                        logo: `/tokens/token-${data.asset}.svg`,
+                                        name: data.asset,
+                                    }}
+                                    balance={'0.23'}
+                                />
 
-                        <h3 className="mt-6 text-gray-400">Collaterize</h3>
-                        <div className="mt-1">
-                            <BasicToggle
-                                checked={asCollateral}
-                                onChange={() => setAsCollateral(!asCollateral)}
-                            />
-                        </div>
+                                <h3 className="mt-6 text-gray-400">Collaterize</h3>
+                                <div className="mt-1">
+                                    <BasicToggle
+                                        checked={asCollateral}
+                                        onChange={() => setAsCollateral(!asCollateral)}
+                                    />
+                                </div>
 
-                        <ModalTableDisplay
-                            title="Transaction Overview"
-                            content={[
-                                {
-                                    label: 'Supply APR (%)',
-                                    value: `${0.44}%`,
-                                },
-                                {
-                                    label: 'Collateralization',
-                                    value: <ActiveStatus active={asCollateral} size="sm" />,
-                                },
-                            ]}
-                        />
+                                <ModalTableDisplay
+                                    title="Transaction Overview"
+                                    content={[
+                                        {
+                                            label: 'Supply APR (%)',
+                                            value: `${0.44}%`,
+                                        },
+                                        {
+                                            label: 'Collateralization',
+                                            value: <ActiveStatus active={asCollateral} size="sm" />,
+                                        },
+                                    ]}
+                                />
+                            </>
+                        ) : (
+                            <div className="mt-10 mb-8">
+                                <TransactionStatus success={isSuccess} full />
+                            </div>
+                        )}
                     </>
                 ) : (
-                    <div className="mt-10 mb-8">
-                        <TransactionStatus success={isSuccess} full />
-                    </div>
+                    <>
+                        <ModalHeader
+                            dialog="loan-asset-dialog"
+                            title={name}
+                            asset={data.asset}
+                            tab={tab}
+                        />
+                        {!isSuccess && !isError ? (
+                            // Default State
+                            <>
+                                <h3 className="mt-5 text-gray-400">Amount</h3>
+                                <CoinInput
+                                    amount={amount}
+                                    setAmount={setAmount}
+                                    coin={{
+                                        logo: `/tokens/token-${data.asset}.svg`,
+                                        name: data.asset,
+                                    }}
+                                    balance={'0.23'}
+                                />
+
+                                <h3 className="mt-6 text-gray-400">Collaterize</h3>
+                                <div className="mt-1">
+                                    <BasicToggle
+                                        checked={asCollateral}
+                                        onChange={() => setAsCollateral(!asCollateral)}
+                                    />
+                                </div>
+
+                                <ModalTableDisplay
+                                    title="Transaction Overview"
+                                    content={[
+                                        {
+                                            label: 'Supply APR (%)',
+                                            value: `${0.44}%`,
+                                        },
+                                        {
+                                            label: 'Remaining Amount',
+                                            value: `${0.0}`,
+                                        },
+                                    ]}
+                                />
+                            </>
+                        ) : (
+                            <div className="mt-10 mb-8">
+                                <TransactionStatus success={isSuccess} full />
+                            </div>
+                        )}
+                    </>
                 )}
                 <div className="mt-5 sm:mt-6">
                     <Button
