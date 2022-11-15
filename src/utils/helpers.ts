@@ -145,3 +145,20 @@ export const capFirst = (string: string | undefined) => {
     if (!string) return '';
     return string.charAt(0).toUpperCase() + string.slice(1);
 };
+
+export const usdFormatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    notation: 'compact',
+});
+
+export const numberFormatter = new Intl.NumberFormat('en-US', {
+    notation: 'compact',
+});
+
+export const percentFormatter = new Intl.NumberFormat('en-US', {
+    style: 'percent',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+    notation: 'compact',
+});

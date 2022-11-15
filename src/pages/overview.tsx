@@ -2,23 +2,23 @@ import { useMarketOverview } from '../hooks/markets';
 import { useWalletState } from '../hooks/wallet';
 import React from 'react';
 import { AppTemplate, GridView } from '../ui/templates';
-import { LendingPerformanceCard, TVLDataCard } from '../ui/features/overview';
+import { UserPerformanceCard, ProtocolTVLDataCard } from '../ui/features/overview';
 import { YourPositionsTable } from '../ui/tables';
 import { WalletButton } from '../ui/components/buttons';
+import { MOCK_YOUR_BORROWS, MOCK_YOUR_SUPPLIES } from '../utils/mock-data';
 
 const Overview: React.FC = () => {
     const { TVLDataProps } = useMarketOverview();
     const { address } = useWalletState();
-    console.log(address);
 
     return (
         <AppTemplate title="overview">
-            <TVLDataCard {...TVLDataProps()} />
+            <ProtocolTVLDataCard {...TVLDataProps()} />
             {address ? (
                 <GridView type="fixed">
-                    <LendingPerformanceCard />
-                    <YourPositionsTable type="supplies" />
-                    <YourPositionsTable type="borrows" />
+                    <UserPerformanceCard />
+                    <YourPositionsTable type="supplies" data={MOCK_YOUR_SUPPLIES} />
+                    <YourPositionsTable type="borrows" data={MOCK_YOUR_BORROWS} />
                 </GridView>
             ) : (
                 <div className="pt-10 lg:pt-20 text-center flex-col">

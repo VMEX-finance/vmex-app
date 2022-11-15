@@ -5,7 +5,7 @@ import { Card } from '../ui/components/cards';
 import { TrancheTable } from '../ui/tables';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '../store/contexts';
-import { _mockTranchesData } from '../utils/mock-data';
+import { MOCK_TRANCHES_DATA } from '../utils/mock-data';
 import { useWalletState } from '../hooks/wallet';
 
 const TrancheDetails: React.FC = () => {
@@ -24,7 +24,7 @@ const TrancheDetails: React.FC = () => {
 
     useEffect(() => {
         if (!tranche.id) navigate('/tranches');
-        const found = _mockTranchesData.find((el) => el.id === tranche.id);
+        const found = MOCK_TRANCHES_DATA.find((el) => el.id === tranche.id);
         setTranche(found);
     }, [tranche, location]);
 

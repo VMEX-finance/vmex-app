@@ -1,3 +1,4 @@
+import { usdFormatter } from '../../../utils/helpers';
 import React from 'react';
 
 // TODO: add this to shared models
@@ -34,9 +35,9 @@ export const TopTranchesTable: React.FC<ITableProps> = ({ data }) => {
                     data.slice(0, 5).map((i) => {
                         return (
                             <tr key={i.name} className="text-left">
-                                <td className="">{i.name}</td>
-                                <td>{`$${i.supplied}M`}</td>
-                                <td className="">{`$${i.borrowed}M`}</td>
+                                <td>{i.name}</td>
+                                <td>{usdFormatter.format(i.supplied)}</td>
+                                <td>{usdFormatter.format(i.borrowed)}</td>
                             </tr>
                         );
                     })}
