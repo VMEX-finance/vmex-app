@@ -6,12 +6,12 @@ import { useWindowSize } from '../../../hooks/ui';
 import { determineRatingColor } from '../../../utils/helpers';
 import { BsCheck } from 'react-icons/bs';
 import { IoIosClose } from 'react-icons/io';
-import { MarketsAsset } from '../../../models/markets';
+import type { IMarketsAsset } from '../../../models/markets';
+import { AssetDisplay } from '../../components/displays';
 
 const MarketsCustomRow = (props: any) => {
     const {
         asset,
-        logo,
         tranche,
         trancheId,
         supplyApy,
@@ -27,7 +27,7 @@ const MarketsCustomRow = (props: any) => {
     const { width } = useWindowSize();
     const { updateTranche, setAsset } = useSelectedTrancheContext();
 
-    const route = (e: Event, market: MarketsAsset, view = 'overview') => {
+    const route = (e: Event, market: IMarketsAsset, view = 'overview') => {
         e.stopPropagation();
         setAsset(market.asset);
         updateTranche('id', market.trancheId);
@@ -45,8 +45,7 @@ const MarketsCustomRow = (props: any) => {
                 <td className="flex justify-between">
                     <span className="font-bold">Asset</span>
                     <div className="flex items-center gap-2">
-                        <img src={logo} alt={asset} className="h-6 w-6" />
-                        <div>{asset}</div>
+                        <AssetDisplay name={asset} />
                     </div>
                 </td>
                 <td className="flex justify-between">
@@ -100,10 +99,7 @@ const MarketsCustomRow = (props: any) => {
                 onClick={(e: any) => route(e, props)}
             >
                 <td className="whitespace-nowrap py-4 pl-2 md:pl-4 pr-2 text-sm">
-                    <div className="flex items-center gap-2">
-                        <img src={logo} alt={asset} className="h-8 w-8" />
-                        <div className="text-lg hidden lg:block">{asset}</div>
-                    </div>
+                    <AssetDisplay name={asset} />
                 </td>
                 <td className="min-w-[150px]">{tranche}</td>
                 <td>{supplyApy}%</td>

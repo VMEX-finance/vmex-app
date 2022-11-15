@@ -25,11 +25,11 @@ export const UserPerformanceCard: React.FC = () => {
             </div>
             <div className="grid">
                 <h4 className="mb-2">Assets On Loan</h4>
+                {/* Dummy Data */}
                 <div className="flex flex-wrap gap-3">
-                    <PillDisplay asset="DAI" value={0.11} />
-                    <PillDisplay asset="USDC" value={0.03} />
-                    <PillDisplay asset="WBTC" value={0.92} />
-                    <PillDisplay asset="CRV" value={1.48} />
+                    <PillDisplay asset="DAI" value={9000} formatter="basic" />
+                    <PillDisplay asset="USDC" value={8000} formatter="basic" />
+                    <PillDisplay asset="WBTC" value={0.86} formatter="basic" />
                 </div>
             </div>
         </Card>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { AppTemplate, GridView } from '../ui/templates';
-import { _mockAvailableAsset } from '../models/available-liquidity-model';
 import { StakingAsset, StakingOverview } from '../ui/features/stake';
+import { MOCK_STAKE_ASSET_DATA } from '../utils/mock-data';
 
 const Staking: React.FC = () => {
     return (
@@ -40,7 +40,7 @@ const Staking: React.FC = () => {
                         staked: 0.04,
                         claim: 1.59,
                     }}
-                    data={_mockAvailableAsset}
+                    data={MOCK_STAKE_ASSET_DATA}
                 />
 
                 <StakingAsset
@@ -55,7 +55,7 @@ const Staking: React.FC = () => {
                         staked: 0.04,
                         claim: 1.59,
                     }}
-                    data={_mockAvailableAsset}
+                    data={MOCK_STAKE_ASSET_DATA}
                 />
             </GridView>
         </AppTemplate>
