@@ -133,7 +133,7 @@ export const Navbar: React.FC = () => {
                                 className="max-h-[36px]"
                                 label={
                                     <span className="flex items-center gap-2">
-                                        {width > 1350 ? `Transactions` : <BiTransferAlt />}
+                                        {width < 1350 ? <BiTransferAlt /> : `Transactions`}
                                         {transactions.filter((el) => el.status === 'pending')
                                             .length > 0 && <CgSpinner className="animate-spin" />}
                                     </span>

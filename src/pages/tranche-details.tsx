@@ -64,6 +64,7 @@ const TrancheDetails: React.FC = () => {
                                           asset: el,
                                           canBeCollat: false,
                                           apy_perc: (Math.random() * 10).toFixed(2),
+                                          amount: 0,
                                       }))
                                     : []
                             }
@@ -79,6 +80,7 @@ const TrancheDetails: React.FC = () => {
                                           asset: el,
                                           liquidity: (Math.random() * 30).toFixed(1),
                                           apy_perc: (Math.random() * 10).toFixed(2),
+                                          amount: 0,
                                       }))
                                     : []
                             }
