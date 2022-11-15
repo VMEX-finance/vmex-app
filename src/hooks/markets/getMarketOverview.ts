@@ -1,5 +1,5 @@
 import { IProtocolProps, ITrancheOverviewProps } from '../../ui/features';
-import { MOCK_TOP_ASSETS, MOCK_TOP_TRANCHES } from '../../utils/mock-data';
+import { MOCK_LINE_DATA_2, MOCK_TOP_ASSETS, MOCK_TOP_TRANCHES } from '../../utils/mock-data';
 
 export function getTVLData(): IProtocolProps {
     return {
@@ -13,6 +13,7 @@ export function getTVLData(): IProtocolProps {
         topBorrowedAssets: MOCK_TOP_ASSETS,
         topSuppliedAssets: MOCK_TOP_ASSETS,
         topTranches: MOCK_TOP_TRANCHES,
+        graphData: MOCK_LINE_DATA_2,
     };
 }
 
