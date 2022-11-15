@@ -1,5 +1,6 @@
 import { useWindowSize } from '../../../hooks/ui';
 import React from 'react';
+import { Tooltip } from '../tooltips';
 
 interface IMultipleAssetsProps {
     assets?: string[];
@@ -35,10 +36,15 @@ export const MultipleAssetsDisplay = ({ assets, show = 4, size }: IMultipleAsset
                     className={`${size ? size : 'h-8 w-8'}`}
                 />
             ))}
-            {show !== 'all' && (
-                <span className="ml-1 md:ml-2">
-                    +{assets ? assets.slice(show ? show : 4).length : 0}
-                </span>
+            {show !== 'all' && assets && assets.length > (show ? show : 4) && (
+                <Tooltip
+                    text={assets.slice(show ? show : 4).join(', ')}
+                    content={
+                        <span className="ml-1 md:ml-2">
+                            +{assets.slice(show ? show : 4).length}
+                        </span>
+                    }
+                />
             )}
         </div>
     );
