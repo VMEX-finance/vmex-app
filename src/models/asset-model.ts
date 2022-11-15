@@ -25,5 +25,3 @@ interface AssetUserData {
     collateral_balance: BigNumber | number;
     debt_balance: BigNumber | number;
 }
-
-export {};

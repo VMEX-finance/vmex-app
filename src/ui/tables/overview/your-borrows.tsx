@@ -1,12 +1,20 @@
 import React from 'react';
-import type { AvailableAsset } from '../../../models/available-liquidity-model';
 import { useDialogController } from '../../../hooks/dialogs';
+import { AssetDisplay } from '../../components/displays';
+import { numberFormatter, percentFormatter } from '../../../utils/helpers';
 
-interface IAvailableLiquidityTable extends React.PropsWithChildren {
-    data: AvailableAsset[];
-}
+export type IYourBorrowsTableItemProps = {
+    asset: string;
+    amount: number;
+    apy: number;
+    tranche: string;
+};
 
-export const YourBorrowsTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
+export type IYourBorrowsTableProps = {
+    data: IYourBorrowsTableItemProps[];
+};
+
+export const YourBorrowsTable: React.FC<IYourBorrowsTableProps> = ({ data }) => {
     const { openDialog } = useDialogController();
     const headers = ['Asset', 'Amount', 'APY%', 'Tranche'];
 
@@ -37,13 +45,12 @@ export const YourBorrowsTable: React.FC<IAvailableLiquidityTable> = ({ data }) =
                                 }
                             >
                                 <td className="whitespace-nowrap p-4 text-sm sm:pl-6">
-                                    <div className="flex items-center gap-2">
-                                        <img src={i.logo} alt={i.asset} className="h-8 w-8" />
-                                        <div className="text-lg hidden md:block">{i.asset}</div>
-                                    </div>
+                                    <AssetDisplay name={i.asset} />
                                 </td>
-                                <td className="">{i.amount}</td>
-                                <td>{i.apy_perc}</td>
+                                <td className="">{`${numberFormatter.format(i.amount)} ${
+                                    i.asset
+                                }`}</td>
+                                <td>{percentFormatter.format(i.apy)}</td>
                                 <td className="">{'VMEX High'}</td>
                                 {/* <td className="text-right hidden md:table-cell pr-3.5">
                                     <Button

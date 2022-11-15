@@ -1,7 +1,7 @@
 import { ReLineChart } from '../../components/charts';
 import React from 'react';
 import { Card } from '../../components/cards';
-import { mockMultiLineData, mockUtilLineData } from '../../../utils/mock-data';
+import { MOCK_MULTI_LINE_DATA, MOCK_UTILITIZATION_LINE_DATA } from '../../../utils/mock-data';
 import { DropdownButton } from '../../components/buttons';
 import ReactTooltip from 'react-tooltip';
 import { useSelectedTrancheContext } from '../../../store/contexts';
@@ -35,16 +35,20 @@ export const TrancheStatisticsCard = ({ tranche }: any) => {
                         setSelected={setAsset}
                     />
                 </div>
-                {mockMultiLineData && mockMultiLineData.length > 0 && (
+                {MOCK_MULTI_LINE_DATA && MOCK_MULTI_LINE_DATA.length > 0 && (
                     <div className="flex gap-6 mb-3 mt-1">
                         <NumberDisplay
                             label="Supply APY"
-                            value={`${mockMultiLineData[mockMultiLineData.length - 1].value}%`}
+                            value={`${
+                                MOCK_MULTI_LINE_DATA[MOCK_MULTI_LINE_DATA.length - 1].value
+                            }%`}
                             color="text-brand-green"
                         />
                         <NumberDisplay
                             label="Borrow APY"
-                            value={`${mockMultiLineData[mockMultiLineData.length - 1].value2}%`}
+                            value={`${
+                                MOCK_MULTI_LINE_DATA[MOCK_MULTI_LINE_DATA.length - 1].value2
+                            }%`}
                             color="text-brand-purple"
                         />
                         <NumberDisplay
@@ -58,7 +62,7 @@ export const TrancheStatisticsCard = ({ tranche }: any) => {
                     <div className="grid grid-cols-1 w-full gap-6 xl:gap-10">
                         <div className="w-full h-[240px]">
                             <ReLineChart
-                                data={mockMultiLineData}
+                                data={MOCK_MULTI_LINE_DATA}
                                 color="#3CB55E"
                                 color2="#7667db"
                                 type="asset-stats"
@@ -71,7 +75,7 @@ export const TrancheStatisticsCard = ({ tranche }: any) => {
                             <span className="text-lg">Utilization Curve</span>
                             <div className="w-full h-[120px]">
                                 <ReLineChart
-                                    data={mockUtilLineData}
+                                    data={MOCK_UTILITIZATION_LINE_DATA}
                                     color="#fff"
                                     type="utilization"
                                     yaxis

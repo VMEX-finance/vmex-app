@@ -1,5 +1,5 @@
-import React from 'react';
-import { IProtocolProps, ITrancheOverviewProps } from '@ui/features';
+import { IProtocolProps, ITrancheOverviewProps } from '../../ui/features';
+import { MOCK_TOP_ASSETS, MOCK_TOP_TRANCHES } from '../../utils/mock-data';
 
 export function getTVLData(): IProtocolProps {
     return {
@@ -8,6 +8,11 @@ export function getTVLData(): IProtocolProps {
         lenders: 267,
         borrowers: 473,
         markets: 58,
+        totalSupplied: 129145000,
+        totalBorrowed: 110231029,
+        topBorrowedAssets: MOCK_TOP_ASSETS,
+        topSuppliedAssets: MOCK_TOP_ASSETS,
+        topTranches: MOCK_TOP_TRANCHES,
     };
 }
 

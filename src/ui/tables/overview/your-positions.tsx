@@ -1,13 +1,18 @@
 import React from 'react';
 import { Card } from '../../components/cards';
-import { YourBorrowsTable, YourSuppliesTable } from '..';
-import { _mockAssetData } from '../../../models/available-liquidity-model';
+import {
+    YourBorrowsTable,
+    YourSuppliesTable,
+    IYourBorrowsTableItemProps,
+    IYourSuppliesTableItemProps,
+} from '..';
 
 interface IYourPositionsProps {
     type: 'borrows' | 'supplies';
+    data: IYourBorrowsTableItemProps[] | IYourSuppliesTableItemProps[]; // TODO: implement type
 }
 
-export const YourPositionsTable: React.FC<IYourPositionsProps> = ({ type }) => {
+export const YourPositionsTable: React.FC<IYourPositionsProps> = ({ type, data }) => {
     const determineTitle = () => {
         switch (type) {
             case 'supplies':
@@ -20,9 +25,9 @@ export const YourPositionsTable: React.FC<IYourPositionsProps> = ({ type }) => {
     const determineTable = () => {
         switch (type) {
             case 'supplies':
-                return <YourSuppliesTable data={_mockAssetData.data} />;
+                return <YourSuppliesTable data={data as IYourSuppliesTableItemProps[]} />;
             case 'borrows':
-                return <YourBorrowsTable data={_mockAssetData.data} />;
+                return <YourBorrowsTable data={data as IYourBorrowsTableItemProps[]} />;
         }
     };
 

@@ -2,15 +2,15 @@ import React from 'react';
 import { CacheProvider } from '@emotion/react';
 import { ThemeProvider } from '@mui/material/styles';
 import { muiCache, options, vmexTheme } from '../utils';
-import type { MarketsAsset } from '../../../models/markets';
+import type { IMarketsAsset } from '../../../models/markets';
 import { MarketsCustomRow } from './custom-row';
 import MUIDataTable from 'mui-datatables';
 
-interface IAvailableLiquidityTable {
-    data: MarketsAsset[];
+interface ITableProps {
+    data: IMarketsAsset[];
 }
 
-export const MarketsTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
+export const MarketsTable: React.FC<ITableProps> = ({ data }) => {
     const columns = [
         {
             name: 'asset',

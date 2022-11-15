@@ -1,14 +1,23 @@
+import { AssetDisplay } from '../../components/displays';
 import React from 'react';
-import type { AvailableAsset } from '../../../models/available-liquidity-model';
 import { BsCheck } from 'react-icons/bs';
 import { IoIosClose } from 'react-icons/io';
 import { useDialogController } from '../../../hooks/dialogs';
+import { numberFormatter, percentFormatter } from '../../../utils/helpers';
 
-interface IAvailableLiquidityTable extends React.PropsWithChildren {
-    data: AvailableAsset[];
-}
+export type IYourSuppliesTableItemProps = {
+    asset: string;
+    amount: number;
+    collateral: boolean;
+    apy: number;
+    tranche: string;
+};
 
-export const YourSuppliesTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
+export type IYourSuppliesTableProps = {
+    data: IYourSuppliesTableItemProps[];
+};
+
+export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({ data }) => {
     const { openDialog } = useDialogController();
     const headers = ['Asset', 'Amount', 'Collateral', 'APY%', 'Tranche'];
 
@@ -39,23 +48,22 @@ export const YourSuppliesTable: React.FC<IAvailableLiquidityTable> = ({ data }) 
                                 }
                             >
                                 <td className="whitespace-nowrap p-4 text-sm sm:pl-6">
-                                    <div className="flex items-center gap-2">
-                                        <img src={i.logo} alt={i.asset} className="h-8 w-8" />
-                                        <div className="text-lg hidden md:block">{i.asset}</div>
-                                    </div>
+                                    <AssetDisplay name={i.asset} />
                                 </td>
-                                <td className="">{i.amount}</td>
+                                <td className="">{`${numberFormatter.format(i.amount)} ${
+                                    i.asset
+                                }`}</td>
                                 <td className="">
                                     <div className="w-10 h-10">
-                                        {i.canBeCollat ? (
+                                        {i.collateral ? (
                                             <BsCheck className="w-full h-full text-emerald-600" />
                                         ) : (
                                             <IoIosClose className="w-full h-full text-red-600" />
                                         )}
                                     </div>
                                 </td>
-                                <td>{i.apy_perc}</td>
-                                <td>VMEX Mid</td>
+                                <td>{percentFormatter.format(i.apy)}</td>
+                                <td>{i.tranche}</td>
                                 {/* <td className="text-right pr-3.5 hidden md:table-cell">
                                     <Button
                                         label={
