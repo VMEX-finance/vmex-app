@@ -1,4 +1,3 @@
-import { useWindowSize } from '../../../hooks/ui';
 import React from 'react';
 import { Tooltip } from '../tooltips';
 
@@ -9,8 +8,6 @@ interface IMultipleAssetsProps {
 }
 
 export const MultipleAssetsDisplay = ({ assets, show = 4, size }: IMultipleAssetsProps) => {
-    const { width } = useWindowSize();
-
     const mapAssets = () => {
         if (assets) {
             if (show === 'all') return assets;
