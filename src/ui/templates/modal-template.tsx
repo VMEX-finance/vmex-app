@@ -11,14 +11,14 @@ import {
     MyTranchesDialog,
 } from '../features/modals';
 
-interface IModalWrapper extends React.PropsWithChildren {
+interface IModalWrapperProps extends React.PropsWithChildren {
     name?: string;
     isOpen?: boolean;
     data?: any;
     closeDialog(e: any): void;
 }
 
-export const ModalWrapper: React.FC<IModalWrapper> = ({
+export const ModalWrapper: React.FC<IModalWrapperProps> = ({
     name,
     isOpen,
     data,

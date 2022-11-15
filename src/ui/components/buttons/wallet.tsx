@@ -1,6 +1,6 @@
 import React from 'react';
 import { useWalletState } from '../../../hooks/wallet';
-import { Button, IButtonProps } from './Button';
+import { Button, IButtonProps } from './default';
 import { truncateAddress } from '../../../utils/helpers';
 
 export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: IButtonProps) => {

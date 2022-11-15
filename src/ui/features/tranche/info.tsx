@@ -1,7 +1,9 @@
 import React from 'react';
 import { Card } from '../../components/cards';
 import { MultipleAssetsDisplay, NumberDisplay } from '../../components/displays';
+
 // TODO: implment interface
+
 export const TrancheInfoCard = ({ tranche }: any) => {
     return (
         <Card>

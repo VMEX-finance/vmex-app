@@ -1,10 +1,10 @@
 import React from 'react';
-import { TableTemplate } from '../../templates';
 import { CacheProvider } from '@emotion/react';
 import { ThemeProvider } from '@mui/material/styles';
 import { muiCache, options, vmexTheme } from '../utils';
 import type { MarketsAsset } from '../../../models/markets';
 import { MarketsCustomRow } from './custom-row';
+import MUIDataTable from 'mui-datatables';
 
 interface IAvailableLiquidityTable {
     data: MarketsAsset[];
@@ -132,7 +132,7 @@ export const MarketsTable: React.FC<IAvailableLiquidityTable> = ({ data }) => {
     return (
         <CacheProvider value={muiCache}>
             <ThemeProvider theme={vmexTheme()}>
-                <TableTemplate
+                <MUIDataTable
                     title={['All Available Assets']}
                     columns={columns}
                     data={data}

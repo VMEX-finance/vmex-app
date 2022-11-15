@@ -1,9 +1,9 @@
 import React from 'react';
-import { DashboardNavbar } from '../../ui/base';
+import { Navbar } from '../../ui/base';
 import { DashboardTemplate } from './dashboard-template';
 import { ModalTemplate } from './modal-template';
 
-interface IAppTemplate {
+interface IAppTemplateProps {
     children?: React.ReactElement | React.ReactElement[];
     title?: string;
     description?: string | React.ReactNode;
@@ -11,10 +11,16 @@ interface IAppTemplate {
     setView?: any;
 }
 
-const AppTemplate: React.FC<IAppTemplate> = ({ children, title, description, view, setView }) => {
+const AppTemplate: React.FC<IAppTemplateProps> = ({
+    children,
+    title,
+    description,
+    view,
+    setView,
+}) => {
     return (
         <div className="h-screen">
-            <DashboardNavbar />
+            <Navbar />
             <ModalTemplate />
             <DashboardTemplate
                 title={title}

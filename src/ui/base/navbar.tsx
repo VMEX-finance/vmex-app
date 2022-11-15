@@ -4,49 +4,12 @@ import React, { Fragment } from 'react';
 import { HiOutlineMenuAlt3 } from 'react-icons/hi';
 import { BiTransferAlt } from 'react-icons/bi';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { DropdownButton, WalletButton } from '../components/buttons';
+import { DropdownButton, MenuItemButton, WalletButton } from '../components/buttons';
 import { useTransactionsContext } from '../../store/contexts';
 import { useWalletState } from '../../hooks/wallet';
 import { CgSpinner } from 'react-icons/cg';
 
-export interface NavbarInterface {
-    defaultPage?: string;
-    children?: React.ReactElement[];
-}
-
-export interface IMenuItems {
-    label: string;
-    selected?: boolean;
-    onClick?: (e: any) => void;
-    mobile?: boolean;
-    highlighted?: boolean;
-}
-
-export const MenuItem = ({ label, selected, onClick, mobile, highlighted }: IMenuItems) => {
-    const mode =
-        selected && !mobile
-            ? '!bg-white !text-black'
-            : mobile
-            ? 'hover:!bg-neutral-200 !text-neutral-900'
-            : 'bg-black text-white ';
-
-    const highlight = highlighted ? '!bg-neutral-900 !text-white hover:!bg-neutral-800' : '';
-
-    return (
-        <button
-            className={[
-                'w-full px-3 xl:px-4 py-2 rounded-lg transition duration-200 hover:bg-neutral-700 whitespace-nowrap',
-                mode,
-                highlight,
-            ].join(' ')}
-            onClick={onClick}
-        >
-            {label}
-        </button>
-    );
-};
-
-export const DashboardNavbar: React.FC = () => {
+export const Navbar: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const { width } = useWindowSize();
@@ -85,7 +48,7 @@ export const DashboardNavbar: React.FC = () => {
                             }
                         >
                             {navItems.map((item) => (
-                                <MenuItem
+                                <MenuItemButton
                                     key={item}
                                     label={item}
                                     selected={location.pathname === `/${item.toLowerCase()}`}
@@ -139,7 +102,7 @@ export const DashboardNavbar: React.FC = () => {
                                         {navItems.map((item, i) => (
                                             <Menu.Item key={`${item}-${i}`}>
                                                 {({ active }) => (
-                                                    <MenuItem
+                                                    <MenuItemButton
                                                         key={item}
                                                         label={item}
                                                         onClick={navigateTo}
@@ -170,7 +133,7 @@ export const DashboardNavbar: React.FC = () => {
                                 className="max-h-[36px]"
                                 label={
                                     <span className="flex items-center gap-2">
-                                        {width > 1350 ? `Transactions` : <BiTransferAlt />}
+                                        {width < 1350 ? <BiTransferAlt /> : `Transactions`}
                                         {transactions.filter((el) => el.status === 'pending')
                                             .length > 0 && <CgSpinner className="animate-spin" />}
                                     </span>

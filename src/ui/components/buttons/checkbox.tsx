@@ -10,7 +10,7 @@ export interface ICheckboxProps {
 export const Checkbox = ({ checked, disabled, setChecked, label }: ICheckboxProps) => {
     const mode = disabled ? 'text-gray-100' : checked ? '' : 'accent-gray-300';
     return (
-        <div className="flex items-center gap-2" onClick={() => setChecked(!checked)}>
+        <button className="flex items-center gap-2" onClick={() => setChecked(!checked)}>
             <label htmlFor="button">{label}</label>
             <input
                 type="checkbox"
@@ -18,6 +18,6 @@ export const Checkbox = ({ checked, disabled, setChecked, label }: ICheckboxProp
                 checked={checked}
                 disabled={disabled}
             />
-        </div>
+        </button>
     );
 };

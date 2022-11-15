@@ -1,6 +1,6 @@
 import React from 'react';
 
-interface IGridView {
+interface IGridViewProps {
     children: React.ReactElement | React.ReactElement[];
     className?: string;
     type?: 'flow' | 'fixed';
@@ -14,7 +14,7 @@ interface IGridView {
         | 'xl:grid-cols-4';
 }
 
-const GridView: React.FC<IGridView> = ({
+const GridView: React.FC<IGridViewProps> = ({
     children,
     type = 'flow',
     cols = '2xl:grid-cols-3',

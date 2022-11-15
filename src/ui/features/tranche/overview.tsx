@@ -2,22 +2,24 @@ import { Card } from '../../components/cards';
 import React from 'react';
 import { MultipleAssetsDisplay, NumberDisplay } from '../../components/displays';
 
-export interface ITrancheTVLData {
+export interface ITrancheOverviewProps {
     assets?: string[];
     tvl?: number;
+    tvlChange?: number;
     supplied?: number;
-    sYtd?: number;
+    supplyChange?: number;
     borrowed?: number;
-    bYtd?: number;
+    borrowChange?: number;
     grade?: string;
 }
 
-const TrancheTVLDataCard: React.FC<ITrancheTVLData> = ({
+const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
     assets,
     tvl,
+    tvlChange,
     supplied,
-    sYtd,
-    bYtd,
+    supplyChange,
+    borrowChange,
     borrowed,
     grade,
 }) => {
@@ -34,20 +36,26 @@ const TrancheTVLDataCard: React.FC<ITrancheTVLData> = ({
                     </div>
                 </div>
                 <div className="flex flex-wrap justify-around md:justify-between items-center gap-6 md:gap-12 lg:gap-24 order-3 md:order-2">
-                    <NumberDisplay center size="xl" label="TVL" value={`$${tvl}M`} change={3.86} />
+                    <NumberDisplay
+                        center
+                        size="xl"
+                        label="TVL"
+                        value={`$${tvl}M`}
+                        change={tvlChange}
+                    />
                     <NumberDisplay
                         center
                         size="xl"
                         label="Supplied"
                         value={`$${supplied}M`}
-                        change={3.86}
+                        change={supplyChange}
                     />
                     <NumberDisplay
                         center
                         size="xl"
                         label="Borrowed"
                         value={`$${borrowed}M`}
-                        change={-1.29}
+                        change={borrowChange}
                     />
                 </div>
                 <div className="order-2 md:order-3">

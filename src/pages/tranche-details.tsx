@@ -35,13 +35,15 @@ const TrancheDetails: React.FC = () => {
             view={view}
             setView={setView}
         >
-            {/* TODO: Configure this to include all necessary props */}
             <TrancheTVLDataCard
                 assets={tranche.assets}
-                tvl={tranche.tvl}
                 grade={tranche.aggregateRating}
+                tvl={tranche.tvl}
+                tvlChange={tranche.tvlChange}
                 supplied={tranche.supplyTotal}
+                supplyChange={tranche.supplyChange}
                 borrowed={tranche.borrowTotal}
+                borrowChange={tranche.borrowChange}
             />
             {view.includes('details') ? (
                 <>
@@ -62,6 +64,7 @@ const TrancheDetails: React.FC = () => {
                                           asset: el,
                                           canBeCollat: false,
                                           apy_perc: (Math.random() * 10).toFixed(2),
+                                          amount: 0,
                                       }))
                                     : []
                             }
@@ -77,6 +80,7 @@ const TrancheDetails: React.FC = () => {
                                           asset: el,
                                           liquidity: (Math.random() * 30).toFixed(1),
                                           apy_perc: (Math.random() * 10).toFixed(2),
+                                          amount: 0,
                                       }))
                                     : []
                             }

@@ -5,6 +5,8 @@ import { PillDisplay } from '../../components/displays';
 import { lineData, lineData2 } from '../../../utils/mock-data';
 import { DropdownButton } from '../../components/buttons';
 
+// TODO: implement type
+
 export const LendingPerformanceCard: React.FC = () => {
     return (
         <Card black>
