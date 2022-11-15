@@ -35,13 +35,15 @@ const TrancheDetails: React.FC = () => {
             view={view}
             setView={setView}
         >
-            {/* TODO: Configure this to include all necessary props */}
             <TrancheTVLDataCard
                 assets={tranche.assets}
-                tvl={tranche.tvl}
                 grade={tranche.aggregateRating}
+                tvl={tranche.tvl}
+                tvlChange={tranche.tvlChange}
                 supplied={tranche.supplyTotal}
+                supplyChange={tranche.supplyChange}
                 borrowed={tranche.borrowTotal}
+                borrowChange={tranche.borrowChange}
             />
             {view.includes('details') ? (
                 <>

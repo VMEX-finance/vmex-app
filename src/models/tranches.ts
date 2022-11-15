@@ -20,8 +20,11 @@ export type ITrancheProps = {
     aggregateRating: string;
     yourActivity: 'borrowed' | 'supplied' | 'both' | 'none'; // Can also be represented in another way if necessary (i.e. 1 = 'deposited', 2 = 'supplied', etc.)
     tvl: number | string;
+    tvlChange?: number;
     supplyTotal: number | string;
+    supplyChange?: number;
     borrowTotal: number | string;
+    borrowChange?: number;
     longSupply: number | string;
     longBorrow: number | string;
     liquidity: number | string;
