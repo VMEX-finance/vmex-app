@@ -95,7 +95,6 @@ export const SuppliedAssetDetailsDialog: React.FC<IDialogProps> = ({
                         <TransactionStatus success={isSuccess} full />
                     </div>
                 )}
-                {/* TODO: implement appropriate data type so we can pass tranche id to "routeToTranche" */}
                 <div className="mt-5 sm:mt-6 flex justify-between">
                     <Button
                         onClick={handleSubmit}

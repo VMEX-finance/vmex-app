@@ -5,7 +5,12 @@ import { AppTemplate, GridView } from '../ui/templates';
 import { UserPerformanceCard, ProtocolTVLDataCard } from '../ui/features/overview';
 import { YourPositionsTable } from '../ui/tables';
 import { WalletButton } from '../ui/components/buttons';
-import { MOCK_YOUR_BORROWS, MOCK_YOUR_SUPPLIES } from '../utils/mock-data';
+import {
+    MOCK_LINE_DATA,
+    MOCK_LINE_DATA_2,
+    MOCK_YOUR_BORROWS,
+    MOCK_YOUR_SUPPLIES,
+} from '../utils/mock-data';
 
 const Overview: React.FC = () => {
     const { TVLDataProps } = useMarketOverview();
@@ -16,7 +21,12 @@ const Overview: React.FC = () => {
             <ProtocolTVLDataCard {...TVLDataProps()} />
             {address ? (
                 <GridView type="fixed">
-                    <UserPerformanceCard />
+                    <UserPerformanceCard
+                        tranches={[{ text: 'All Tranches' }]}
+                        profitLossChart={MOCK_LINE_DATA}
+                        insuranceChart={MOCK_LINE_DATA_2}
+                        loanedAssets={MOCK_YOUR_SUPPLIES}
+                    />
                     <YourPositionsTable type="supplies" data={MOCK_YOUR_SUPPLIES} />
                     <YourPositionsTable type="borrows" data={MOCK_YOUR_BORROWS} />
                 </GridView>

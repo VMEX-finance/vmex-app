@@ -8,7 +8,6 @@ export type ISelectedTrancheStoreProps = {
     asset?: string;
     setAsset?: any;
     clearTranche?: any;
-    // TODO: Establish what else is required for selected tranche
 };
 
 // Context

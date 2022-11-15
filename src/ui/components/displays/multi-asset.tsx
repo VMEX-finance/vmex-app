@@ -1,4 +1,3 @@
-import { useWindowSize } from '../../../hooks/ui';
 import React from 'react';
 import { Tooltip } from '../tooltips';
 
@@ -9,8 +8,6 @@ interface IMultipleAssetsProps {
 }
 
 export const MultipleAssetsDisplay = ({ assets, show = 4, size }: IMultipleAssetsProps) => {
-    const { width } = useWindowSize();
-
     const mapAssets = () => {
         if (assets) {
             if (show === 'all') return assets;
@@ -27,7 +24,6 @@ export const MultipleAssetsDisplay = ({ assets, show = 4, size }: IMultipleAsset
 
     return (
         <div className={`flex flex-wrap items-center ${show === 'all' ? 'gap-3' : 'xl:gap-2'}`}>
-            {/* TODO: make assets overlap each other ever so slightly */}
             {mapAssets().map((el, i) => (
                 <img
                     key={`tranches-asset-${i}`}

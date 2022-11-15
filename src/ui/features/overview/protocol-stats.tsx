@@ -1,6 +1,6 @@
 import { Card } from '../../components/cards';
 import React from 'react';
-import { IDataProps, ReLineChart } from '../../components/charts';
+import { ILineChartDataPointProps, ReLineChart } from '../../components/charts';
 import { NumberDisplay, PillDisplay } from '../../components/displays';
 import { TopTranchesTable } from '../../tables';
 import { usdFormatter } from '../../../utils/helpers';
@@ -11,7 +11,7 @@ export interface IProtocolProps {
     lenders?: number;
     borrowers?: number;
     markets?: number;
-    graphData?: IDataProps[];
+    graphData?: ILineChartDataPointProps[];
     totalSupplied?: number;
     totalBorrowed?: number;
     topBorrowedAssets?: any[]; // TODO: implement appropriate type

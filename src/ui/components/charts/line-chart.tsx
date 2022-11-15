@@ -2,7 +2,7 @@ import React from 'react';
 import { LineChart, Line, Tooltip, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 import { CustomTooltip } from './custom-tooltip';
 
-export type IDataProps = {
+export type ILineChartDataPointProps = {
     xaxis?: string | number; // x axis
     value: number; // y axis
     value2?: number; // y axis
@@ -10,7 +10,7 @@ export type IDataProps = {
 };
 
 type ILineChartProps = {
-    data: Array<IDataProps>;
+    data: Array<ILineChartDataPointProps>;
     dataKey?: string;
     dataKey2?: string;
     dataKey3?: string;
