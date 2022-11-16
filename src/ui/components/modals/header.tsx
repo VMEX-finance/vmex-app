@@ -14,8 +14,8 @@ export const ModalHeader = ({ title, dialog, asset }: IModalHeaderProps) => {
     const { closeDialog } = useDialogController();
 
     return (
-        <div className="flex flex-row justify-between">
-            <div className="mt-3 text-left sm:mt-5">
+        <div className="flex flex-row justify-between items-center mt-3 sm:mt-5">
+            <div className="text-left">
                 <Dialog.Title as="h3" className="text-xl leading-6 font-medium text-gray-900">
                     {title} {asset ? asset : ''}
                 </Dialog.Title>
