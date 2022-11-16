@@ -1,6 +1,7 @@
-import { useQuery, UseQueryResult } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { IProtocolProps } from '../../ui/features';
 import { MOCK_LINE_DATA_2, MOCK_TOP_ASSETS, MOCK_TOP_TRANCHES } from '../../utils/mock-data';
+import { IProtocolDataProps } from './types';
 
 export function getProtocolOverviewData(): IProtocolProps {
     return {
@@ -17,10 +18,6 @@ export function getProtocolOverviewData(): IProtocolProps {
         graphData: MOCK_LINE_DATA_2,
     };
 }
-
-type IProtocolDataProps = {
-    queryProtocolOverview: UseQueryResult<IProtocolProps, unknown>;
-};
 
 export function useProtocolData(): IProtocolDataProps {
     const queryProtocolOverview = useQuery({

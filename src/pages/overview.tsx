@@ -26,12 +26,12 @@ const Overview: React.FC = () => {
                     />
                     <YourPositionsTable
                         type="supplies"
-                        data={queryUserActivity.data?.supplies || []}
+                        data={queryUserActivity.data?.supplies}
                         isLoading={queryUserActivity.isLoading}
                     />
                     <YourPositionsTable
                         type="borrows"
-                        data={queryUserActivity.data?.borrows || []}
+                        data={queryUserActivity.data?.borrows}
                         isLoading={queryUserActivity.isLoading}
                     />
                 </GridView>

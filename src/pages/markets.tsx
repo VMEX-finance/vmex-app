@@ -1,12 +1,14 @@
 import React from 'react';
 import { AppTemplate } from '../ui/templates';
 import { MarketsTable } from '../ui/tables';
-import { MOCK_MARKETS_DATA } from '../utils/mock-data';
+import { useMarketsData } from '../hooks/protocol';
 
 const Markets: React.FC = () => {
+    const { queryAllMarkets } = useMarketsData();
+
     return (
         <AppTemplate title="markets">
-            <MarketsTable data={MOCK_MARKETS_DATA} />
+            <MarketsTable data={queryAllMarkets.data} />
         </AppTemplate>
     );
 };

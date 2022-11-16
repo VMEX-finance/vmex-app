@@ -9,7 +9,7 @@ import {
 
 interface IYourPositionsProps {
     type: 'borrows' | 'supplies';
-    data: IYourBorrowsTableItemProps[] | IYourSuppliesTableItemProps[];
+    data?: IYourBorrowsTableItemProps[] | IYourSuppliesTableItemProps[];
     isLoading?: boolean;
 }
 
@@ -26,9 +26,9 @@ export const YourPositionsTable: React.FC<IYourPositionsProps> = ({ type, data, 
     const determineTable = () => {
         switch (type) {
             case 'supplies':
-                return <YourSuppliesTable data={data as IYourSuppliesTableItemProps[]} />;
+                return <YourSuppliesTable data={(data as IYourSuppliesTableItemProps[]) || []} />;
             case 'borrows':
-                return <YourBorrowsTable data={data as IYourBorrowsTableItemProps[]} />;
+                return <YourBorrowsTable data={(data as IYourBorrowsTableItemProps[]) || []} />;
         }
     };
 

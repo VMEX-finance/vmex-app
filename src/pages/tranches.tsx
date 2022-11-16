@@ -1,12 +1,13 @@
 import React from 'react';
 import { AppTemplate } from '../ui/templates';
-import { MOCK_TRANCHES_DATA } from '../utils/mock-data';
 import { TranchesTable } from '../ui/tables';
+import { useTranchesData } from '../hooks/protocol';
 
 const Tranches: React.FC = () => {
+    const { queryAllTranches } = useTranchesData();
     return (
         <AppTemplate title="tranches">
-            <TranchesTable data={MOCK_TRANCHES_DATA} />
+            <TranchesTable data={queryAllTranches.data} />
         </AppTemplate>
     );
 };

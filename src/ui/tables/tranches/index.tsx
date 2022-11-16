@@ -7,7 +7,7 @@ import { TranchesCustomRow } from './custom-row';
 import MUIDataTable from 'mui-datatables';
 
 interface IDataTable {
-    data: ITrancheProps[];
+    data?: ITrancheProps[];
 }
 
 export const TranchesTable: React.FC<IDataTable> = ({ data }) => {
@@ -90,7 +90,7 @@ export const TranchesTable: React.FC<IDataTable> = ({ data }) => {
                 <MUIDataTable
                     title={['All Available Tranches']}
                     columns={columns}
-                    data={data}
+                    data={data || []}
                     options={{
                         ...options,
                         customRowRender: (data: any) => {

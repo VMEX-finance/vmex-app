@@ -7,7 +7,7 @@ import { MarketsCustomRow } from './custom-row';
 import MUIDataTable from 'mui-datatables';
 
 interface ITableProps {
-    data: IMarketsAsset[];
+    data?: IMarketsAsset[];
 }
 
 export const MarketsTable: React.FC<ITableProps> = ({ data }) => {
@@ -135,7 +135,7 @@ export const MarketsTable: React.FC<ITableProps> = ({ data }) => {
                 <MUIDataTable
                     title={['All Available Assets']}
                     columns={columns}
-                    data={data}
+                    data={data || []}
                     options={{
                         ...options,
                         customRowRender: (data: any) => {
