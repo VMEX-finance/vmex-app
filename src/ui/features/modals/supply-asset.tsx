@@ -34,11 +34,7 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
     tab,
     closeDialog,
 }) => {
-    const { view, setView } = useSupplyContext();
-
-    useEffect(() => {
-        setView('supply');
-    });
+    const [view, setView] = React.useState('Supply');
 
     const { newTransaction } = useTransactionsContext();
 
@@ -65,13 +61,14 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
         data &&
         data.asset && (
             <>
-                {view?.includes('supply') ? (
+                {view?.includes('Supply') ? (
                     <>
                         <ModalHeader
                             dialog="loan-asset-dialog"
                             title={name}
                             asset={data.asset}
                             tab={tab}
+                            onClick={setView}
                             primary
                         />
                         {!isSuccess && !isError ? (
@@ -123,6 +120,7 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
                             title={name}
                             asset={data.asset}
                             tab={tab}
+                            onClick={setView}
                         />
                         {!isSuccess && !isError ? (
                             // Default State
@@ -138,14 +136,6 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
                                     balance={'0.23'}
                                 />
 
-                                <h3 className="mt-6 text-gray-400">Collaterize</h3>
-                                <div className="mt-1">
-                                    <BasicToggle
-                                        checked={asCollateral}
-                                        onChange={() => setAsCollateral(!asCollateral)}
-                                    />
-                                </div>
-
                                 <ModalTableDisplay
                                     title="Transaction Overview"
                                     content={[
@@ -154,7 +144,7 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
                                             value: `${0.44}%`,
                                         },
                                         {
-                                            label: 'Remaining Amount',
+                                            label: 'Remaining Supply',
                                             value: `${0.0}`,
                                         },
                                     ]}
