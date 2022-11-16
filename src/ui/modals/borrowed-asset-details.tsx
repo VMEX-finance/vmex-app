@@ -1,13 +1,13 @@
 import React from 'react';
 import { MdCompareArrows, MdOutlineArrowForward } from 'react-icons/md';
-import { Button } from '../../components/buttons';
-import { TransactionStatus } from '../../components/statuses';
-import { AssetDisplay } from '../../components/displays';
+import { Button } from '../components/buttons';
+import { TransactionStatus } from '../components/statuses';
+import { AssetDisplay } from '../components/displays';
 import { useNavigate } from 'react-router-dom';
-import { useSelectedTrancheContext, useTransactionsContext } from '../../../store/contexts';
-import { TIMER_CLOSE_DELAY } from '../../../utils/constants';
+import { useSelectedTrancheContext, useTransactionsContext } from '../../store/contexts';
+import { TIMER_CLOSE_DELAY } from '../../utils/constants';
 import { IDialogProps } from '.';
-import { ModalHeader, ModalTableDisplay } from '../../components/modals';
+import { ModalHeader, ModalTableDisplay } from '../modals/subcomponents';
 
 export const BorrowedAssetDetailsDialog: React.FC<IDialogProps> = ({
     name,

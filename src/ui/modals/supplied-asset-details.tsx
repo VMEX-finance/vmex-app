@@ -1,12 +1,12 @@
 import React from 'react';
 import { MdOutlineArrowForward } from 'react-icons/md';
-import { Button } from '../../components/buttons';
-import { TransactionStatus } from '../../components/statuses';
-import { AssetDisplay } from '../../components/displays';
+import { Button } from '../components/buttons';
+import { TransactionStatus } from '../components/statuses';
+import { AssetDisplay } from '../components/displays';
 import { useNavigate } from 'react-router-dom';
-import { useSelectedTrancheContext, useTransactionsContext } from '../../../store/contexts';
-import { TIMER_CLOSE_DELAY } from '../../../utils/constants';
-import { ModalHeader, ModalTableDisplay } from '../../components/modals';
+import { useSelectedTrancheContext, useTransactionsContext } from '../../store/contexts';
+import { TIMER_CLOSE_DELAY } from '../../utils/constants';
+import { ModalHeader, ModalTableDisplay } from '../modals/subcomponents';
 import { IDialogProps } from '.';
 
 export const SuppliedAssetDetailsDialog: React.FC<IDialogProps> = ({
