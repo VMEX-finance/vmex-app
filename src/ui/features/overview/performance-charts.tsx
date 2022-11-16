@@ -1,5 +1,5 @@
 import { ILineChartDataPointProps, ReLineChart } from '../../components/charts';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card } from '../../components/cards';
 import { PillDisplay } from '../../components/displays';
 import { DropdownButton } from '../../components/buttons';
@@ -14,6 +14,7 @@ export type IUserPerformanceCardProps = {
     profitLossChart?: ILineChartDataPointProps[];
     insuranceChart?: ILineChartDataPointProps[];
     loanedAssets?: ILoanedAssetProps[];
+    isLoading?: boolean;
 };
 
 // TODO: implement type and change name
@@ -22,12 +23,22 @@ export const UserPerformanceCard: React.FC<IUserPerformanceCardProps> = ({
     profitLossChart,
     insuranceChart,
     loanedAssets,
+    isLoading,
 }) => {
+    const [tranchesDropdown, setTranchesDropdown] = useState([]);
+
+    useEffect(() => {
+        if (tranches) {
+            const starter = [{ text: 'All Tranches' }];
+            setTranchesDropdown([...starter, ...tranches] as any);
+        }
+    }, [tranches]);
+
     return (
-        <Card black>
+        <Card black loading={isLoading}>
             <div className="flex justify-between items-center mb-3">
                 <h3 className="text-lg">Performance</h3>
-                <DropdownButton primary items={tranches || [{ text: 'All Tranches' }]} />
+                <DropdownButton primary items={tranchesDropdown} />
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-1 gap-3 w-full px-3">
                 <div className="grid w-full h-[240px]">

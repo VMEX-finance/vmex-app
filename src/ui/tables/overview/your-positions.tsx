@@ -9,10 +9,11 @@ import {
 
 interface IYourPositionsProps {
     type: 'borrows' | 'supplies';
-    data: IYourBorrowsTableItemProps[] | IYourSuppliesTableItemProps[]; // TODO: implement type
+    data: IYourBorrowsTableItemProps[] | IYourSuppliesTableItemProps[];
+    isLoading?: boolean;
 }
 
-export const YourPositionsTable: React.FC<IYourPositionsProps> = ({ type, data }) => {
+export const YourPositionsTable: React.FC<IYourPositionsProps> = ({ type, data, isLoading }) => {
     const determineTitle = () => {
         switch (type) {
             case 'supplies':
@@ -32,7 +33,7 @@ export const YourPositionsTable: React.FC<IYourPositionsProps> = ({ type, data }
     };
 
     return (
-        <Card>
+        <Card loading={isLoading}>
             <h3 className="text-lg mb-8">Your {determineTitle()}</h3>
             <div>{determineTable()}</div>
         </Card>
