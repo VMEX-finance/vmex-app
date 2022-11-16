@@ -81,8 +81,8 @@ export const ModalHeader = ({ title, dialog, asset, tab, primary, onClick }: IMo
                 </>
             ) : (
                 <>
-                    <div className="flex flex-row justify-between items-center mt-3 sm:mt-5">
-                        <div className="text-left">
+                    <div className="flex flex-row justify-between">
+                        <div className="mt-3 text-left sm:mt-5">
                             <Dialog.Title
                                 as="h3"
                                 className="text-xl leading-6 font-medium text-gray-900"

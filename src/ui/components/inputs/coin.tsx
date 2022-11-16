@@ -9,7 +9,7 @@ export interface ICoinInput {
         name: string;
     };
     balance?: string;
-    type?: 'collateral' | 'default';
+    type?: 'collateral' | 'owed' | 'default';
 }
 
 export const CoinInput = ({ amount, setAmount, coin, balance, type }: ICoinInput) => {
@@ -35,7 +35,13 @@ export const CoinInput = ({ amount, setAmount, coin, balance, type }: ICoinInput
                         MAX
                     </span>
                     <p>
-                        {`${type === 'collateral' ? 'Amount Collateralized' : 'Balance'}:`}{' '}
+                        {`${
+                            type === 'collateral'
+                                ? 'Amount Collateralized'
+                                : type === 'owed'
+                                ? 'Amount Owed'
+                                : 'Balance'
+                        }:`}{' '}
                         {balance || 0.3213}
                     </p>
                 </div>

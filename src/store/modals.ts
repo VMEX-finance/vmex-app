@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export type DialogType = {
     name?: string;
+    tab?: string;
     isOpen?: boolean;
     data?: any;
     isError?: boolean;
@@ -29,6 +30,7 @@ const DialogControllerState: IDialogState = {
             'loan-asset-dialog',
             {
                 name: 'Supply',
+                tab: 'Withdraw',
                 isOpen: false,
                 data: {},
                 isSuccess: false,
@@ -59,6 +61,7 @@ const DialogControllerState: IDialogState = {
             'borrow-asset-dialog',
             {
                 name: 'Borrow',
+                tab: 'Repay',
                 isOpen: false,
                 data: {},
                 isSuccess: false,
