@@ -1,16 +1,14 @@
 import React from 'react';
 import { AppTemplate } from '../ui/templates';
 import { MarketsTable } from '../ui/tables';
-import { TokenData } from '../hooks/user-data';
-import { ITokenData } from '../store/token-data';
-import { MOCK_MARKETS_DATA } from '../utils/mock-data';
+import { useMarketsData } from '../hooks/protocol';
 
 const Markets: React.FC = () => {
-    const { isLoading, error, error_msg, data }: ITokenData = TokenData();
+    const { queryAllMarkets } = useMarketsData();
 
     return (
         <AppTemplate title="markets">
-            <MarketsTable data={MOCK_MARKETS_DATA} />
+            <MarketsTable data={queryAllMarkets.data} />
         </AppTemplate>
     );
 };

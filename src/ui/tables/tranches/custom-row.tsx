@@ -23,20 +23,22 @@ const TranchesCustomRow = (props: any) => {
 
     const renderActivity = (status: string) => {
         const size = '20px';
-        switch (status.toLowerCase()) {
-            case 'supplied':
-                return <Tooltip text="Supplying" content={<BsArrowDownCircle size={size} />} />;
-            case 'borrowed':
-                return <Tooltip text="Borrowing" content={<BsArrowUpCircle size={size} />} />;
-            case 'both':
-                return (
-                    <div className="flex gap-2">
-                        <Tooltip text="Supplying" content={<BsArrowDownCircle size={size} />} />
-                        <Tooltip text="Borrowing" content={<BsArrowUpCircle size={size} />} />
-                    </div>
-                );
-            default:
-                return width < 900 ? <>None</> : <></>;
+        if (status) {
+            switch (status.toLowerCase()) {
+                case 'supplied':
+                    return <Tooltip text="Supplying" content={<BsArrowDownCircle size={size} />} />;
+                case 'borrowed':
+                    return <Tooltip text="Borrowing" content={<BsArrowUpCircle size={size} />} />;
+                case 'both':
+                    return (
+                        <div className="flex gap-2">
+                            <Tooltip text="Supplying" content={<BsArrowDownCircle size={size} />} />
+                            <Tooltip text="Borrowing" content={<BsArrowUpCircle size={size} />} />
+                        </div>
+                    );
+                default:
+                    return width < 900 ? <>None</> : <></>;
+            }
         }
     };
     // Mobile
