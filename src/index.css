@@ -21,8 +21,8 @@ input[type='checkbox'] {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 15px !important;
-  height: 15px !important;
+  width: 18px !important;
+  height: 18px !important;
   border-radius: 20%;
   border: 0.124em solid black;
   box-shadow: none;
@@ -40,6 +40,7 @@ input[type='checkbox']:before {
 input[type='checkbox']:checked {
   background-color: white;
   border: 0.124em solid #3cb55e;
+  padding: 8px;
 }
 
 input[type='checkbox']:disabled {
@@ -57,10 +58,12 @@ input[type='checkbox']:disabled:checked:after {
 }
 
 input[type='checkbox']:checked:after {
-  position: absolute;
   content: 'x';
   line-height: 0;
   font-weight: 600;
-  font-size: 18px;
   color: #3cb55e;
+  font-size: 20px;
+  margin-bottom: 2px;
+  position: relative;
+  margin-right: 9px;
 }

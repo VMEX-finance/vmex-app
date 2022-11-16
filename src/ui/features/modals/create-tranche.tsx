@@ -8,6 +8,8 @@ import { IDialogProps } from '.';
 import { Stepper, StepperChild } from '../../components/tabs';
 import { useStepper } from '../../../hooks/ui/useStepper';
 import { ModalHeader } from '../../components/modals';
+import { CreateTrancheAssetsTable } from '../../tables';
+import { InnerCard } from '../../components/cards';
 
 export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeDialog }) => {
     const { newTransaction } = useTransactionsContext();
@@ -25,6 +27,8 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
     const [_blackListed, setBlackListed] = React.useState([]);
     const [_tokens, setTokens] = React.useState([]);
     const [_adminFee, setAdminFee] = React.useState('0.2');
+    const [_collateralTokens, setCollateralTokens] = React.useState([]);
+    const [_borrowLendTokens, setBorrowLendTokens] = React.useState([]);
 
     const handleSubmit = () => {
         if (
@@ -51,6 +55,8 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
             blacklisted: _blackListed,
             tokens: _tokens,
             adminFee: _adminFee,
+            lendAndBorrowTokens: _borrowLendTokens,
+            collateralTokens: _collateralTokens,
         });
         newTransaction(
             `0x${Math.floor(Math.random() * 9)}...${Math.floor(Math.random() * 9)}${Math.floor(
@@ -68,7 +74,7 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
         <>
             <ModalHeader title={name} dialog="create-tranche-dialog" />
             <div className="mt-2">
-                <Stepper steps={steps} previous={prevStep} />
+                <Stepper steps={steps} previous={prevStep} next={nextStep} />
             </div>
             {!isSuccess ? (
                 // Default State
@@ -118,7 +124,17 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
                         />
                     </StepperChild>
                     <StepperChild active={activeStep === 1}>
-                        <div>yo</div>
+                        <div className="mt-6">
+                            <InnerCard className="max-h-60 overflow-y-auto">
+                                <CreateTrancheAssetsTable
+                                    assets={_tokens}
+                                    collateralAssets={_collateralTokens}
+                                    lendAssets={_borrowLendTokens}
+                                    lendClick={setBorrowLendTokens}
+                                    collateralClick={setCollateralTokens}
+                                />
+                            </InnerCard>
+                        </div>
                     </StepperChild>
                 </>
             ) : (

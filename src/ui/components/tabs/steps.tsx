@@ -8,9 +8,11 @@ export type IStepperItemProps = {
 export type IStepperProps = {
     steps: IStepperItemProps[];
     previous?: MouseEventHandler<HTMLButtonElement>;
+    next?: MouseEventHandler<HTMLButtonElement>;
+    noSkip?: boolean;
 };
 
-export const Stepper = ({ steps, previous }: IStepperProps) => {
+export const Stepper = ({ steps, previous, next, noSkip }: IStepperProps) => {
     return (
         <nav aria-label="Progress">
             <ol className="space-y-4 md:flex md:space-y-0 md:space-x-8">
@@ -37,11 +39,14 @@ export const Stepper = ({ steps, previous }: IStepperProps) => {
                                 <span className="text-sm font-medium">{step.name}</span>
                             </button>
                         ) : (
-                            <button className="w-full group flex flex-col border-l-4 border-gray-200 py-2 pl-4 md:border-l-0 md:border-t-4 md:pl-0 md:pb-0 transition duration-150 cursor-default">
-                                <span className="text-sm font-medium text-gray-500">{`Step ${
+                            <button
+                                className="w-full group flex flex-col border-l-4 border-gray-200 py-2 pl-4 md:border-l-0 md:border-t-4 md:pl-0 md:pb-0 transition duration-150 hover:border-gray-300"
+                                onClick={noSkip ? () => {} : next}
+                            >
+                                <span className="text-sm font-medium text-gray-500 hover:text-gray-700">{`Step ${
                                     i + 1
                                 }`}</span>
-                                <span className="text-sm font-medium text-gray-900">
+                                <span className="text-sm font-medium text-gray-900 hover:text-black">
                                     {step.name}
                                 </span>
                             </button>
