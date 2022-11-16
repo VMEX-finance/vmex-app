@@ -25,7 +25,7 @@ yarn start
 ```
 
 ### Directory
-
+```
 src
 ├── hooks                   # Hooks for api, ui, stores, and more
 │   ├── dialogs             # Managing dialog state
@@ -52,3 +52,4 @@ src
 ├── App.tsx
 ├── index.css
 └── index.js
+```
