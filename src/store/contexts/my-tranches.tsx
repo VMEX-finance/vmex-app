@@ -9,6 +9,9 @@ type IMyTrancheProps = {
     blacklisted: string[];
     tokens: string[];
     pausedTokens?: string[];
+    lendAndBorrowTokens?: string[];
+    collateralTokens?: string[];
+    isPaused?: boolean;
 };
 
 export type ITranchesStoreProps = {
@@ -18,6 +21,7 @@ export type ITranchesStoreProps = {
     updateTranche?: any;
     deleteTranche?: any;
     error?: string;
+    pauseTranche?: any;
 };
 
 // Context
@@ -31,7 +35,15 @@ export function MyTranchesStore(props: { children: ReactNode }) {
     const [error, setError] = useState('');
 
     // TODO: push this new tranche to mock tranches
-    const newTranche = ({ name, whitelisted, blacklisted, tokens, adminFee }: IMyTrancheProps) => {
+    const newTranche = ({
+        name,
+        whitelisted,
+        blacklisted,
+        tokens,
+        adminFee,
+        lendAndBorrowTokens,
+        collateralTokens,
+    }: IMyTrancheProps) => {
         const shallow = myTranches.length !== 0 ? [...myTranches] : [];
         if (myTranches.length !== 0 && myTranches.find((obj) => obj.name === name)) {
             setError('Name is taken.');
@@ -39,7 +51,16 @@ export function MyTranchesStore(props: { children: ReactNode }) {
         } else {
             if (error) setError('');
         }
-        shallow.push({ id: shallow.length, name, whitelisted, blacklisted, tokens, adminFee });
+        shallow.push({
+            id: shallow.length,
+            name,
+            whitelisted,
+            blacklisted,
+            tokens,
+            adminFee,
+            lendAndBorrowTokens,
+            collateralTokens,
+        });
         setMyTranches(shallow);
     };
 
@@ -51,6 +72,8 @@ export function MyTranchesStore(props: { children: ReactNode }) {
         tokens,
         pausedTokens,
         adminFee,
+        lendAndBorrowTokens,
+        collateralTokens,
     }: IMyTrancheProps) => {
         const shallow = [...myTranches];
         const index = shallow.findIndex((el) => el.id === id);
@@ -61,6 +84,17 @@ export function MyTranchesStore(props: { children: ReactNode }) {
             shallow[index].tokens = tokens;
             shallow[index].pausedTokens = pausedTokens;
             shallow[index].adminFee = adminFee;
+            shallow[index].lendAndBorrowTokens = lendAndBorrowTokens;
+            shallow[index].collateralTokens = collateralTokens;
+            setMyTranches(shallow);
+        }
+    };
+
+    const pauseTranche = (id: number) => {
+        if (id || id === 0) {
+            const shallow = [...myTranches];
+            const index = shallow.findIndex((el) => el.id === id);
+            shallow[index].isPaused = !shallow[index].isPaused;
             setMyTranches(shallow);
         }
     };
@@ -87,6 +121,7 @@ export function MyTranchesStore(props: { children: ReactNode }) {
                 updateTranche,
                 deleteTranche,
                 error,
+                pauseTranche,
             }}
         >
             {props.children}

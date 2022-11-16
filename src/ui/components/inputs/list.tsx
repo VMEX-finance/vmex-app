@@ -14,6 +14,7 @@ export interface IListInput {
     title?: string;
     toggle?: boolean;
     noDelete?: boolean;
+    required?: boolean;
 }
 
 export const ListInput = ({
@@ -24,6 +25,7 @@ export const ListInput = ({
     title,
     toggle,
     noDelete,
+    required,
 }: IListInput) => {
     const [value, setValue] = React.useState('');
     const [isOpen, setIsOpen] = React.useState(false);
@@ -90,7 +92,10 @@ export const ListInput = ({
     return (
         <>
             <div className="flex justify-between items-end">
-                <h3 className="mt-6 mb-1 text-gray-400">{title}</h3>
+                <h3 className="mt-6 mb-1 text-gray-400">
+                    {title}
+                    {required && <span className="text-red-500 ml-1">*</span>}
+                </h3>
                 {toggle && <BasicToggle checked={isOpen} onChange={turnOff} />}
             </div>
             {determineOpen() && (

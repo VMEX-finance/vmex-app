@@ -10,6 +10,7 @@ type IInputProps = {
     onEnter?: any;
     title?: string;
     tooltip?: string;
+    required?: boolean;
 };
 
 export const DefaultInput = ({
@@ -21,6 +22,7 @@ export const DefaultInput = ({
     onEnter,
     title,
     tooltip,
+    required,
 }: IInputProps) => {
     const saveTyping = (e: any): void => {
         e.preventDefault();
@@ -51,10 +53,18 @@ export const DefaultInput = ({
                     {tooltip ? (
                         <Tooltip
                             text={tooltip}
-                            content={<h3 className="mt-6 mb-1 text-gray-400">{title}</h3>}
+                            content={
+                                <h3 className="mt-6 mb-1 text-gray-400">
+                                    {title}
+                                    {required && <span className="text-red-500 ml-1">*</span>}
+                                </h3>
+                            }
                         />
                     ) : (
-                        <h3 className="mt-6 mb-1 text-gray-400">{title}</h3>
+                        <h3 className="mt-6 mb-1 text-gray-400">
+                            {title}
+                            {required && <span className="text-red-500 ml-1">*</span>}
+                        </h3>
                     )}
                 </>
             )}

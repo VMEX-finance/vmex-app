@@ -5,19 +5,25 @@ export interface ICheckboxProps {
     disabled?: boolean;
     setChecked?: any;
     label: string;
+    onClick?: any;
 }
 
-export const Checkbox = ({ checked, disabled, setChecked, label }: ICheckboxProps) => {
+export const Checkbox = ({ checked, disabled, setChecked, label, onClick }: ICheckboxProps) => {
     const mode = disabled ? 'text-gray-100' : checked ? '' : 'accent-gray-300';
     return (
-        <button className="flex items-center gap-2" onClick={() => setChecked(!checked)}>
-            <label htmlFor="button">{label}</label>
+        <button
+            className="flex items-center gap-2 cursor-pointer"
+            onClick={() => (onClick ? onClick : setChecked(!checked))}
+        >
             <input
                 type="checkbox"
-                className={['', mode].join(' ')}
+                className={['cursor-pointer', mode].join(' ')}
                 checked={checked}
                 disabled={disabled}
             />
+            <label htmlFor="button" className="cursor-pointer">
+                {label}
+            </label>
         </button>
     );
 };
