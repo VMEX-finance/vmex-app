@@ -1,14 +1,14 @@
 import React from 'react';
 import { FaGasPump } from 'react-icons/fa';
 import { useMediatedState } from 'react-use';
-import { CoinInput } from '../../components/inputs';
-import { ActiveStatus, TransactionStatus } from '../../components/statuses';
-import { Button, DropdownButton } from '../../components/buttons';
-import { inputMediator } from '../../../utils/helpers';
-import { useTransactionsContext } from '../../../store/contexts';
-import { TIMER_CLOSE_DELAY } from '../../../utils/constants';
+import { CoinInput } from '../components/inputs';
+import { ActiveStatus, TransactionStatus } from '../components/statuses';
+import { Button, DropdownButton } from '../components/buttons';
+import { inputMediator } from '../../utils/helpers';
+import { useTransactionsContext } from '../../store/contexts';
+import { TIMER_CLOSE_DELAY } from '../../utils/constants';
 import { IDialogProps } from '.';
-import { ModalHeader, ModalTableDisplay } from '../../components/modals';
+import { ModalHeader, ModalTableDisplay } from '../modals/subcomponents';
 
 export const StakeAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, closeDialog }) => {
     const { newTransaction } = useTransactionsContext();

@@ -1,14 +1,14 @@
 import React from 'react';
 import { FaGasPump } from 'react-icons/fa';
 import { useMediatedState } from 'react-use';
-import { TransactionStatus, ActiveStatus } from '../../components/statuses';
-import { CoinInput } from '../../components/inputs';
-import { Button, DropdownButton } from '../../components/buttons';
-import { inputMediator } from '../../../utils/helpers';
-import { HealthFactor } from '../../components/displays';
-import { useTransactionsContext } from '../../../store/contexts';
-import { TIMER_CLOSE_DELAY } from '../../../utils/constants';
-import { ModalHeader, ModalTableDisplay } from '../../components/modals';
+import { TransactionStatus, ActiveStatus } from '../components/statuses';
+import { CoinInput } from '../components/inputs';
+import { Button, DropdownButton } from '../components/buttons';
+import { inputMediator } from '../../utils/helpers';
+import { HealthFactor } from '../components/displays';
+import { useTransactionsContext } from '../../store/contexts';
+import { TIMER_CLOSE_DELAY } from '../../utils/constants';
+import { ModalHeader, ModalTableDisplay } from '../modals/subcomponents';
 import { IDialogProps } from '.';
 
 export const BorrowAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, closeDialog }) => {

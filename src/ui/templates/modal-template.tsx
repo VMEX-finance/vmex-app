@@ -9,7 +9,7 @@ import {
     SupplyAssetDialog,
     CreateTrancheDialog,
     MyTranchesDialog,
-} from '../features/modals';
+} from '../modals';
 
 interface IModalWrapperProps extends React.PropsWithChildren {
     name?: string;

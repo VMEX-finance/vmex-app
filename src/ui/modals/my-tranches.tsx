@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
-import { TransactionStatus } from '../../components/statuses';
-import { Button, DropdownButton } from '../../components/buttons';
-import { TIMER_CLOSE_DELAY } from '../../../utils/constants';
-import { useMyTranchesContext, useTransactionsContext } from '../../../store/contexts';
-import { DefaultInput, ListInput } from '../../components/inputs';
+import { TransactionStatus } from '../components/statuses';
+import { Button, DropdownButton } from '../components/buttons';
+import { TIMER_CLOSE_DELAY } from '../../utils/constants';
+import { useMyTranchesContext, useTransactionsContext } from '../../store/contexts';
+import { DefaultInput, ListInput } from '../components/inputs';
 import { IDialogProps } from '.';
-import { ModalHeader } from '../../components/modals';
+import { ModalHeader } from '../modals/subcomponents';
 
 export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDialog }) => {
     const { newTransaction } = useTransactionsContext();

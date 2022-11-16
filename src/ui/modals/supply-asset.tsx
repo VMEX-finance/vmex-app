@@ -1,13 +1,13 @@
 import React from 'react';
 import { useMediatedState } from 'react-use';
-import { inputMediator } from '../../../utils/helpers';
-import { CoinInput } from '../../components/inputs';
-import { Button } from '../../components/buttons';
-import { BasicToggle } from '../../components/toggles';
-import { ActiveStatus, TransactionStatus } from '../../components/statuses';
-import { useTransactionsContext } from '../../../store/contexts';
-import { TIMER_CLOSE_DELAY } from '../../../utils/constants';
-import { ModalHeader, ModalTableDisplay } from '../../components/modals';
+import { inputMediator } from '../../utils/helpers';
+import { CoinInput } from '../components/inputs';
+import { Button } from '../components/buttons';
+import { BasicToggle } from '../components/toggles';
+import { ActiveStatus, TransactionStatus } from '../components/statuses';
+import { useTransactionsContext } from '../../store/contexts';
+import { TIMER_CLOSE_DELAY } from '../../utils/constants';
+import { ModalHeader, ModalTableDisplay } from '../modals/subcomponents';
 
 interface IOwnedAssetDetails {
     name?: string;
