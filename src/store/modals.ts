@@ -30,7 +30,7 @@ const DialogControllerState: IDialogState = {
             'loan-asset-dialog',
             {
                 name: 'Supply',
-                tab: 'Borrow',
+                tab: 'Withdraw',
                 isOpen: false,
                 data: {},
                 isSuccess: false,
@@ -61,6 +61,7 @@ const DialogControllerState: IDialogState = {
             'borrow-asset-dialog',
             {
                 name: 'Borrow',
+                tab: 'Repay',
                 isOpen: false,
                 data: {},
                 isSuccess: false,
