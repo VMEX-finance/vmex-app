@@ -27,42 +27,41 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
     const [_adminFee, setAdminFee] = React.useState('0.2');
 
     const handleSubmit = () => {
-        nextStep();
-        // if (
-        //     myTranches &&
-        //     myTranches.length > 0 &&
-        //     myTranches.map((obj) => obj.name).includes(_name)
-        // ) {
-        //     setError('Tranche name already in use.');
-        //     return;
-        // }
-        // if (!_name) {
-        //     setError('Please enter a tranche name.');
-        //     return;
-        // }
-        // if (_tokens?.length === 0) {
-        //     setError('Please enter tokens to be included in your tranche.');
-        //     return;
-        // }
-        // setError('');
-        // setIsSuccess(true);
-        // newTranche({
-        //     name: _name,
-        //     whitelisted: _whitelisted,
-        //     blacklisted: _blackListed,
-        //     tokens: _tokens,
-        //     adminFee: _adminFee,
-        // });
-        // newTransaction(
-        //     `0x${Math.floor(Math.random() * 9)}...${Math.floor(Math.random() * 9)}${Math.floor(
-        //         Math.random() * 9,
-        //     )}s`,
-        // );
+        if (
+            myTranches &&
+            myTranches.length > 0 &&
+            myTranches.map((obj) => obj.name).includes(_name)
+        ) {
+            setError('Tranche name already in use.');
+            return;
+        }
+        if (!_name) {
+            setError('Please enter a tranche name.');
+            return;
+        }
+        if (_tokens?.length === 0) {
+            setError('Please enter tokens to be included in your tranche.');
+            return;
+        }
+        setError('');
+        setIsSuccess(true);
+        newTranche({
+            name: _name,
+            whitelisted: _whitelisted,
+            blacklisted: _blackListed,
+            tokens: _tokens,
+            adminFee: _adminFee,
+        });
+        newTransaction(
+            `0x${Math.floor(Math.random() * 9)}...${Math.floor(Math.random() * 9)}${Math.floor(
+                Math.random() * 9,
+            )}s`,
+        );
 
-        // setTimeout(() => {
-        //     setIsSuccess(false);
-        //     closeDialog('create-tranche-dialog');
-        // }, TIMER_CLOSE_DELAY);
+        setTimeout(() => {
+            setIsSuccess(false);
+            closeDialog('create-tranche-dialog');
+        }, TIMER_CLOSE_DELAY);
     };
 
     return (
@@ -82,6 +81,7 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
                                 size="2xl"
                                 placeholder="VMEX High Quality..."
                                 title="Name"
+                                required
                             />
                             <DefaultInput
                                 type="percent"
@@ -91,6 +91,7 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
                                 placeholder="0.00"
                                 title="Admin Fee (%)"
                                 tooltip="Admin fees will be distributed to the wallet address used to create the tranche. Admin fees set are additive to the base 5% fee taken by VMEX"
+                                required
                             />
                         </div>
                         <ListInput
@@ -113,6 +114,7 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
                             setList={setTokens}
                             placeholder="USDC"
                             coin
+                            required
                         />
                     </StepperChild>
                     <StepperChild active={activeStep === 1}>
@@ -128,10 +130,20 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
             {error && !isSuccess && <p className="text-red-500">{error || 'Invalid input'}</p>}
 
             <div className="mt-5 sm:mt-6 flex justify-end items-end">
-                <div>
-                    <Button disabled={isSuccess} onClick={prevStep} label="Back" primary />
+                <div className="flex gap-3">
+                    <Button
+                        disabled={isSuccess || activeStep === 0}
+                        onClick={prevStep}
+                        label="Back"
+                        primary
+                    />
 
-                    <Button disabled={isSuccess} onClick={handleSubmit} label="Save" primary />
+                    <Button
+                        disabled={isSuccess}
+                        onClick={activeStep === steps.length - 1 ? handleSubmit : nextStep}
+                        label={activeStep === steps.length - 1 ? 'Save' : 'Next'}
+                        primary
+                    />
                 </div>
             </div>
         </>
