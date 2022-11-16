@@ -21,16 +21,12 @@ export const AssetDisplay = (props: IAssetDisplayProps) => {
     return (
         <div className={`flex items-center gap-1 ${props.className ? props.className : ''}`}>
             <img
-                src={
-                    props.logo
-                        ? props.logo
-                        : `/tokens/token-${props.name ? props.name.toUpperCase() : 'WETH'}.svg`
-                }
+                src={props.logo ? props.logo : `/tokens/token-${props.name?.toUpperCase()}.svg`}
                 alt={props.name}
                 height={iconSize()}
                 width={iconSize()}
             />
-            {props.name ? props.name.toUpperCase() : 'WETH'}
+            {props.name?.toUpperCase()}
         </div>
     );
 };
