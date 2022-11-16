@@ -1,32 +1,27 @@
-import { useMarketOverview } from '../hooks/markets';
 import { useWalletState } from '../hooks/wallet';
 import React from 'react';
 import { AppTemplate, GridView } from '../ui/templates';
-import { UserPerformanceCard, ProtocolTVLDataCard } from '../ui/features/overview';
+import { UserPerformanceCard, ProtocolStatsCard } from '../ui/features/overview';
 import { YourPositionsTable } from '../ui/tables';
 import { WalletButton } from '../ui/components/buttons';
-import {
-    MOCK_LINE_DATA,
-    MOCK_LINE_DATA_2,
-    MOCK_YOUR_BORROWS,
-    MOCK_YOUR_SUPPLIES,
-} from '../utils/mock-data';
+import { MOCK_YOUR_BORROWS, MOCK_YOUR_SUPPLIES } from '../utils/mock-data';
+import { useProtocolData } from '../hooks/protocol';
+import { useUserData } from '../hooks/user';
 
 const Overview: React.FC = () => {
-    const { TVLDataProps } = useMarketOverview();
     const { address } = useWalletState();
+    const { queryProtocolOverview } = useProtocolData();
+    const { queryUserPerformance } = useUserData();
 
     return (
         <AppTemplate title="overview">
-            <ProtocolTVLDataCard {...TVLDataProps()} />
+            <ProtocolStatsCard
+                {...queryProtocolOverview.data}
+                isLoading={queryProtocolOverview.isLoading}
+            />
             {address ? (
                 <GridView type="fixed">
-                    <UserPerformanceCard
-                        tranches={[{ text: 'All Tranches' }]}
-                        profitLossChart={MOCK_LINE_DATA}
-                        insuranceChart={MOCK_LINE_DATA_2}
-                        loanedAssets={MOCK_YOUR_SUPPLIES}
-                    />
+                    <UserPerformanceCard {...queryUserPerformance.data} />
                     <YourPositionsTable type="supplies" data={MOCK_YOUR_SUPPLIES} />
                     <YourPositionsTable type="borrows" data={MOCK_YOUR_BORROWS} />
                 </GridView>

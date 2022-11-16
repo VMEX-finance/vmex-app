@@ -9,8 +9,8 @@ type ILoanedAssetProps = {
     amount: number;
 };
 
-type IUserPerformanceCardProps = {
-    tranches: any[];
+export type IUserPerformanceCardProps = {
+    tranches?: any[];
     profitLossChart?: ILineChartDataPointProps[];
     insuranceChart?: ILineChartDataPointProps[];
     loanedAssets?: ILoanedAssetProps[];
@@ -27,7 +27,7 @@ export const UserPerformanceCard: React.FC<IUserPerformanceCardProps> = ({
         <Card black>
             <div className="flex justify-between items-center mb-3">
                 <h3 className="text-lg">Performance</h3>
-                <DropdownButton primary items={tranches} />
+                <DropdownButton primary items={tranches || [{ text: 'All Tranches' }]} />
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-1 gap-3 w-full px-3">
                 <div className="grid w-full h-[240px]">
