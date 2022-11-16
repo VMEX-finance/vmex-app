@@ -11,6 +11,7 @@ type IMyTrancheProps = {
     pausedTokens?: string[];
     lendAndBorrowTokens?: string[];
     collateralTokens?: string[];
+    isPaused?: boolean;
 };
 
 export type ITranchesStoreProps = {
@@ -20,6 +21,7 @@ export type ITranchesStoreProps = {
     updateTranche?: any;
     deleteTranche?: any;
     error?: string;
+    pauseTranche?: any;
 };
 
 // Context
@@ -88,6 +90,15 @@ export function MyTranchesStore(props: { children: ReactNode }) {
         }
     };
 
+    const pauseTranche = (id: number) => {
+        if (id || id === 0) {
+            const shallow = [...myTranches];
+            const index = shallow.findIndex((el) => el.id === id);
+            shallow[index].isPaused = !shallow[index].isPaused;
+            setMyTranches(shallow);
+        }
+    };
+
     const deleteTranche = (id: number) => {
         if (id || id === 0) {
             if (myTranches.length === 1) {
@@ -110,6 +121,7 @@ export function MyTranchesStore(props: { children: ReactNode }) {
                 updateTranche,
                 deleteTranche,
                 error,
+                pauseTranche,
             }}
         >
             {props.children}

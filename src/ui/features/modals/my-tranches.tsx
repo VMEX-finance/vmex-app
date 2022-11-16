@@ -9,7 +9,7 @@ import { ModalHeader } from '../../components/modals';
 
 export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDialog }) => {
     const { newTransaction } = useTransactionsContext();
-    const { updateTranche, myTranches, deleteTranche } = useMyTranchesContext();
+    const { updateTranche, myTranches, deleteTranche, pauseTranche } = useMyTranchesContext();
     const [isSuccess, setIsSuccess] = React.useState(false);
     const [error, setError] = React.useState('');
 
@@ -83,6 +83,21 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
         setTimeout(() => {
             setIsSuccess(false);
             closeDialog('my-tranches-dialog');
+        }, TIMER_CLOSE_DELAY);
+    };
+
+    const handlePause = () => {
+        pauseTranche(selectedTranche.id);
+        setIsSuccess(true);
+
+        newTransaction(
+            `0x${Math.floor(Math.random() * 9)}...${Math.floor(Math.random() * 9)}${Math.floor(
+                Math.random() * 9,
+            )}s`,
+        );
+
+        setTimeout(() => {
+            setIsSuccess(false);
         }, TIMER_CLOSE_DELAY);
     };
 
@@ -177,12 +192,12 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
 
             <div className="mt-5 sm:mt-6 flex justify-end items-end">
                 <div className="flex gap-3">
-                    {/* <Button
+                    <Button
                         disabled={isSuccess}
-                        onClick={handleDelete}
-                        label="Delete"
-                        className="!bg-red-600 !text-white !border-red-600 hover:!bg-red-500 hover:!border-red-500 disabled:!text-white"
-                    /> */}
+                        onClick={handlePause}
+                        label={selectedTranche.isPaused ? 'Unpause Tranche' : 'Pause Tranche'}
+                        type="delete"
+                    />
                     <Button disabled={isSuccess} onClick={handleSave} label="Save" primary />
                 </div>
             </div>
