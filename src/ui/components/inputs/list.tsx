@@ -5,6 +5,7 @@ import { BasicToggle } from '../toggles';
 import { truncateAddress } from '../../../utils/helpers';
 import { utils } from 'ethers';
 import { AVAILABLE_ASSETS } from '../../../utils/constants';
+import { AutoCompleteInput } from '.';
 
 export interface IListInput {
     coin?: boolean;
@@ -15,7 +16,34 @@ export interface IListInput {
     toggle?: boolean;
     noDelete?: boolean;
     required?: boolean;
+    autocomplete?: string[];
 }
+
+export const ListInputItem = ({
+    noDelete,
+    coin,
+    value,
+    remove,
+}: {
+    noDelete?: boolean;
+    coin?: boolean;
+    value: string;
+    remove: (e: any) => void;
+}) => (
+    <button
+        onClick={(e) => (noDelete ? {} : remove(value))}
+        className={`border border-black ${
+            noDelete ? 'pl-3 pr-4 cursor-default' : 'pl-3 pr-2 cursor-pointer'
+        } rounded-md flex items-center gap-2`}
+    >
+        {coin ? (
+            <AssetDisplay name={value} size="sm" className="max-h-[26.28px]" />
+        ) : (
+            <span>{truncateAddress(value)}</span>
+        )}
+        {!noDelete && <IoIosClose className="w-6 h-6" />}
+    </button>
+);
 
 export const ListInput = ({
     coin,
@@ -26,28 +54,32 @@ export const ListInput = ({
     toggle,
     noDelete,
     required,
+    autocomplete,
 }: IListInput) => {
     const [value, setValue] = React.useState('');
     const [isOpen, setIsOpen] = React.useState(false);
     const [error, setError] = React.useState('');
 
-    const handleType = (e: any) => {
+    const handleType = (e: any, val = '') => {
+        const toBeSet = val ? val : value;
         if (e.key === 'Enter') {
-            if (coin && !AVAILABLE_ASSETS.includes(value.toUpperCase())) {
+            if (coin && !AVAILABLE_ASSETS.includes(toBeSet.toUpperCase())) {
                 setError('Please enter a valid token.');
+                setValue('');
                 return;
             }
-            if (!coin && !utils.isAddress(value)) {
+            if (!coin && !utils.isAddress(toBeSet)) {
                 setError('Please enter a valid address.');
                 return;
             }
-            if (list?.includes(value)) {
+            if (list?.includes(toBeSet)) {
                 setError(`${coin ? 'Token' : 'Address'} has already been entered.`);
+                setValue('');
                 return;
             }
             setError('');
             const shallow = list && list.length !== 0 ? [...list] : [];
-            shallow.push(value);
+            shallow.push(toBeSet);
             setList(shallow);
             setValue('');
         }
@@ -80,7 +112,7 @@ export const ListInput = ({
     };
 
     useEffect(() => {
-        const interval = setInterval(() => setError(''), 10000);
+        const interval = setInterval(() => setError(''), 6000);
         return () => clearInterval(interval);
     }, [value]);
 
@@ -88,7 +120,6 @@ export const ListInput = ({
         if (list && list?.length > 0) setIsOpen(true);
     }, [list]);
 
-    // TODO: implement dropdown for available coins
     return (
         <>
             <div className="flex justify-between items-end">
@@ -106,40 +137,30 @@ export const ListInput = ({
                 >
                     <div className="flex flex-col justify-between gap-3">
                         <div className="w-full flex gap-3 items-center">
-                            <input
-                                type="text"
+                            <AutoCompleteInput
                                 value={value}
-                                className="text-2xl focus:outline-none flex-grow"
-                                placeholder={placeholder}
-                                onKeyDown={handleType}
+                                setValue={setValue}
                                 onChange={handleChange}
+                                onKeyDown={handleType}
+                                placeholder={placeholder}
+                                close={error.length !== 0}
+                                list={autocomplete}
                             />
                             {value && value.length > 2 && (
-                                <span className="text-sm text-gray-400">Press Enter</span>
+                                <span className="text-sm text-gray-400 whitespace-nowrap">
+                                    Press Enter
+                                </span>
                             )}
                         </div>
                         <div className="flex gap-2 flex-wrap min-h-[26.3px]">
                             {list?.map((el, i: number) => (
-                                <button
+                                <ListInputItem
                                     key={i}
-                                    onClick={(e) => (noDelete ? {} : removeFromList(el))}
-                                    className={`border border-black ${
-                                        noDelete
-                                            ? 'pl-3 pr-4 cursor-default'
-                                            : 'pl-3 pr-2 cursor-pointer'
-                                    } rounded-md flex items-center gap-2`}
-                                >
-                                    {coin ? (
-                                        <AssetDisplay
-                                            name={el}
-                                            size="sm"
-                                            className="max-h-[26.28px]"
-                                        />
-                                    ) : (
-                                        <span>{truncateAddress(el)}</span>
-                                    )}
-                                    {!noDelete && <IoIosClose className="w-6 h-6" />}
-                                </button>
+                                    value={el}
+                                    remove={removeFromList}
+                                    noDelete={noDelete}
+                                    coin={coin}
+                                />
                             ))}
                         </div>
                     </div>
