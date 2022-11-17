@@ -1,12 +1,11 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { combineReducers, configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
-import WalletSlice, { type IWalletState } from './wallet';
-import DialogControllerSlice, { type IDialogState, DialogType } from './modals';
+import { configureStore } from '@reduxjs/toolkit';
+import WalletSlice from './wallet';
+import DialogControllerSlice from './modals';
 import UserTokenSlice from './user-tokenBal';
-import TokenDataSlice, { type ITokenData } from './token-data';
+import TokenDataSlice from './token-data';
 import { enableMapSet } from 'immer';
-import { refreshTokenReserveList } from '../middleware/tokenReserveData';
 window.Buffer = window.Buffer || require('buffer').Buffer;
 
 enableMapSet();
@@ -18,7 +17,6 @@ export const Store = configureStore({
         user_tokens: UserTokenSlice,
         token_data: TokenDataSlice,
     },
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(refreshTokenReserveList),
 });
 
 export type RootState = ReturnType<typeof Store.getState>;

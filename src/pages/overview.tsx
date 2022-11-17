@@ -4,7 +4,7 @@ import { AppTemplate, GridView } from '../ui/templates';
 import { UserPerformanceCard, ProtocolStatsCard } from '../ui/features/overview';
 import { YourPositionsTable } from '../ui/tables';
 import { WalletButton } from '../ui/components/buttons';
-import { useProtocolData } from '../hooks/protocol';
+import { useProtocolData } from '../api/protocol';
 import { useUserData } from '../hooks/user';
 
 const Overview: React.FC = () => {

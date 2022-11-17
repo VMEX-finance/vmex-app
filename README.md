@@ -11,16 +11,6 @@ yarn
 Go to VMEX contracts repo and run `yarn link` in the sdk folder.
 Then, in this folder, run `yarn link @vmex/sdk`
 
-## Storybook
-
-To start the storybook server, run:
-
-```bash
-yarn storybook
-```
-
-Then, navigate to [Localhost, port 6006](localhost:6006).
-
 ## Development
 
 To start local development, run:
@@ -29,24 +19,25 @@ To start local development, run:
 yarn start
 ```
 
-### Directory
+## Directory
 
 ```
 src
-├── hooks                   # Hooks for api, ui, stores, and more
-│   ├── dialogs             # Managing dialog state
+├── api                     # sdk imports and exports as well as formatting
 │   ├── protocol            # Pulling protocol data including tranches, markets, and overview
+│   └── index.ts            
+├── hooks                   # Hooks for ui, stores, and more
+│   ├── dialogs             # Managing dialog state
 │   ├── ui                  # Strictly hooks for UI components
 │   ├── user                # Pulling user data including user activity, tokens, etc.
 │   ├── wallet              # Managing web3 wallet state
 │   └── redux.ts
-├── middleware              # ??? folder may not be necessary ???
 ├── models                  # Api data models/interfaces
+├── pages                   # Page Components that are passed to React DOM
 ├── store                   # Redux and context stores
 │   ├── contexts            # Managing dialog state
 │   ├── ...
 │   └── wallet.ts           # Redux state management for web3 wallet
-├── stories                 # Storybook components
 ├── ui                      # All user interface components
 │   ├── base                # Includes navbar, footer, and base layout
 │   ├── components          # Includes subcomponents to be used in larger UI components
