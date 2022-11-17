@@ -5,6 +5,7 @@ import { useTranchesData } from '../hooks/protocol';
 
 const Tranches: React.FC = () => {
     const { queryAllTranches } = useTranchesData();
+
     return (
         <AppTemplate title="tranches">
             <TranchesTable data={queryAllTranches.data} />

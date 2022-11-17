@@ -11,6 +11,7 @@ export type IYourSuppliesTableItemProps = {
     collateral: boolean;
     apy: number;
     tranche: string;
+    trancheId: number;
 };
 
 export type IYourSuppliesTableProps = {

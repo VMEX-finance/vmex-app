@@ -5,7 +5,7 @@ import { TIMER_CLOSE_DELAY } from '../../utils/constants';
 import { useMyTranchesContext, useTransactionsContext } from '../../store/contexts';
 import { DefaultInput, ListInput } from '../components/inputs';
 import { IDialogProps } from '.';
-import { ModalHeader } from '../modals/subcomponents';
+import { ModalFooter, ModalHeader } from '../modals/subcomponents';
 
 export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDialog }) => {
     const { newTransaction } = useTransactionsContext();
@@ -190,17 +190,15 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
 
             {error && !isSuccess && <p className="text-red-500">{error || 'Invalid input'}</p>}
 
-            <div className="mt-5 sm:mt-6 flex justify-end items-end">
-                <div className="flex gap-3">
-                    <Button
-                        disabled={isSuccess}
-                        onClick={handlePause}
-                        label={selectedTranche.isPaused ? 'Unpause Tranche' : 'Pause Tranche'}
-                        type="delete"
-                    />
-                    <Button disabled={isSuccess} onClick={handleSave} label="Save" primary />
-                </div>
-            </div>
+            <ModalFooter>
+                <Button
+                    disabled={isSuccess}
+                    onClick={handlePause}
+                    label={selectedTranche.isPaused ? 'Unpause Tranche' : 'Pause Tranche'}
+                    type="delete"
+                />
+                <Button disabled={isSuccess} onClick={handleSave} label="Save" primary />
+            </ModalFooter>
         </>
     );
 };

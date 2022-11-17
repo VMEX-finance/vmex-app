@@ -7,7 +7,7 @@ import { DefaultInput, ListInput } from '../components/inputs';
 import { IDialogProps } from '.';
 import { Stepper, StepperChild } from '../components/tabs';
 import { useStepper } from '../../hooks/ui/useStepper';
-import { ModalHeader } from '../modals/subcomponents';
+import { ModalFooter, ModalHeader } from '../modals/subcomponents';
 import { CreateTrancheAssetsTable } from '../tables';
 import { InnerCard } from '../components/cards';
 
@@ -145,23 +145,21 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
 
             {error && !isSuccess && <p className="text-red-500">{error || 'Invalid input'}</p>}
 
-            <div className="mt-5 sm:mt-6 flex justify-end items-end">
-                <div className="flex gap-3">
-                    <Button
-                        disabled={isSuccess || activeStep === 0}
-                        onClick={prevStep}
-                        label="Back"
-                        primary
-                    />
+            <ModalFooter>
+                <Button
+                    disabled={isSuccess || activeStep === 0}
+                    onClick={prevStep}
+                    label="Back"
+                    primary
+                />
 
-                    <Button
-                        disabled={isSuccess}
-                        onClick={activeStep === steps.length - 1 ? handleSubmit : nextStep}
-                        label={activeStep === steps.length - 1 ? 'Save' : 'Next'}
-                        primary
-                    />
-                </div>
-            </div>
+                <Button
+                    disabled={isSuccess}
+                    onClick={activeStep === steps.length - 1 ? handleSubmit : nextStep}
+                    label={activeStep === steps.length - 1 ? 'Save' : 'Next'}
+                    primary
+                />
+            </ModalFooter>
         </>
     );
 };
