@@ -1,7 +1,7 @@
 import React from 'react';
 import { AppTemplate } from '../ui/templates';
 import { TranchesTable } from '../ui/tables';
-import { useTranchesData } from '../hooks/protocol';
+import { useTranchesData } from '../api/protocol';
 
 const Tranches: React.FC = () => {
     const { queryAllTranches } = useTranchesData();

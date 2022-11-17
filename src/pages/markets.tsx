@@ -1,7 +1,7 @@
 import React from 'react';
 import { AppTemplate } from '../ui/templates';
 import { MarketsTable } from '../ui/tables';
-import { useMarketsData } from '../hooks/protocol';
+import { useMarketsData } from '../api/protocol';
 
 const Markets: React.FC = () => {
     const { queryAllMarkets } = useMarketsData();
