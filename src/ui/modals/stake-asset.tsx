@@ -8,7 +8,7 @@ import { inputMediator } from '../../utils/helpers';
 import { useTransactionsContext } from '../../store/contexts';
 import { TIMER_CLOSE_DELAY } from '../../utils/constants';
 import { IDialogProps } from '.';
-import { ModalHeader, ModalTableDisplay } from '../modals/subcomponents';
+import { ModalFooter, ModalHeader, ModalTableDisplay } from '../modals/subcomponents';
 
 export const StakeAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, closeDialog }) => {
     const { newTransaction } = useTransactionsContext();
@@ -73,7 +73,7 @@ export const StakeAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
                     </div>
                 )}
 
-                <div className="mt-5 sm:mt-6 flex justify-between items-end">
+                <ModalFooter>
                     <div className="flex flex-col">
                         <div className="flex items-center gap-2">
                             <FaGasPump />
@@ -92,7 +92,7 @@ export const StakeAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
                             label="Submit Transaction"
                         />
                     </div>
-                </div>
+                </ModalFooter>
             </>
         )
     );

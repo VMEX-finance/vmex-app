@@ -7,7 +7,7 @@ import { BasicToggle } from '../components/toggles';
 import { ActiveStatus, TransactionStatus } from '../components/statuses';
 import { useTransactionsContext } from '../../store/contexts';
 import { TIMER_CLOSE_DELAY } from '../../utils/constants';
-import { ModalHeader, ModalTableDisplay } from '../modals/subcomponents';
+import { ModalFooter, ModalHeader, ModalTableDisplay } from '../modals/subcomponents';
 
 interface IOwnedAssetDetails {
     name?: string;
@@ -147,13 +147,14 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
                         )}
                     </>
                 )}
-                <div className="mt-5 sm:mt-6">
+                <ModalFooter>
                     <Button
+                        primary
                         disabled={isSuccess || isError}
                         onClick={handleSubmit}
                         label={'Submit Transaction'}
                     />
-                </div>
+                </ModalFooter>
             </>
         )
     );

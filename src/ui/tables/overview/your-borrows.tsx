@@ -8,6 +8,7 @@ export type IYourBorrowsTableItemProps = {
     amount: number;
     apy: number;
     tranche: string;
+    trancheId: number;
 };
 
 export type IYourBorrowsTableProps = {
@@ -51,7 +52,7 @@ export const YourBorrowsTable: React.FC<IYourBorrowsTableProps> = ({ data }) => 
                                     i.asset
                                 }`}</td>
                                 <td>{percentFormatter.format(i.apy)}</td>
-                                <td className="">{'VMEX High'}</td>
+                                <td className="">{i.tranche}</td>
                                 {/* <td className="text-right hidden md:table-cell pr-3.5">
                                     <Button
                                         label={

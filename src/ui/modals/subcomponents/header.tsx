@@ -24,7 +24,7 @@ export const ModalHeader = ({ title, dialog, asset, tab, primary, onClick }: IMo
                     {primary ? (
                         <>
                             <div className="flex flex-row justify-between">
-                                <div className="mt-3 text-left sm:mt-5 flex flex-row gap-2">
+                                <div className="text-left flex flex-row gap-2">
                                     <Dialog.Title
                                         as="h3"
                                         className="text-xl leading-6 font-medium text-gray-900"
@@ -52,7 +52,7 @@ export const ModalHeader = ({ title, dialog, asset, tab, primary, onClick }: IMo
                     ) : (
                         <>
                             <div className="flex flex-row justify-between">
-                                <div className="mt-3 text-left sm:mt-5 flex flex-row gap-2">
+                                <div className="text-left flex flex-row gap-2">
                                     {onClick && (
                                         <Dialog.Title
                                             as="h3"
@@ -81,17 +81,17 @@ export const ModalHeader = ({ title, dialog, asset, tab, primary, onClick }: IMo
                 </>
             ) : (
                 <>
-                    <div className="flex flex-row justify-between items-center mt-3 sm:mt-5">
+                    <div className="flex flex-row justify-between items-center">
                         <div className="text-left">
                             <Dialog.Title
                                 as="h3"
                                 className="text-xl leading-6 font-medium text-gray-900"
                             >
-                                {title}
+                                {title} {asset ? asset : ''}
                             </Dialog.Title>
                         </div>
                         <button
-                            className="self-baseline h-fit w-fit cursor-pointer text-neutral-900 hover:text-neutral-600 transition duration-200"
+                            className="self-baseline h-fit w-fit cursor-pointer text-neutral-900 hover:text-neutral-600 transition duration-200 p-[0.5px]"
                             onClick={() => closeDialog(dialog)}
                         >
                             <IoIosClose className="w-7 h-7" />

@@ -8,7 +8,7 @@ import { inputMediator } from '../../utils/helpers';
 import { HealthFactor } from '../components/displays';
 import { useTransactionsContext } from '../../store/contexts';
 import { TIMER_CLOSE_DELAY } from '../../utils/constants';
-import { ModalHeader, ModalTableDisplay } from '../modals/subcomponents';
+import { ModalFooter, ModalHeader, ModalTableDisplay } from '../modals/subcomponents';
 import { IDialogProps } from '.';
 
 export const BorrowAssetDialog: React.FC<IDialogProps> = ({
@@ -83,25 +83,6 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
                                         },
                                     ]}
                                 />
-
-                                <div className="mt-5 sm:mt-6 flex justify-between items-end">
-                                    <div className="flex flex-col">
-                                        <div className="flex items-center gap-2">
-                                            <FaGasPump />
-                                            <span>Gas Limit</span>
-                                        </div>
-                                        <div>
-                                            <DropdownButton
-                                                items={[
-                                                    { text: 'Normal' },
-                                                    { text: 'Low' },
-                                                    { text: 'High' },
-                                                ]}
-                                                direction="right"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
                             </>
                         ) : (
                             <div className="mt-10 mb-8">
@@ -149,25 +130,6 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
                                         },
                                     ]}
                                 />
-
-                                <div className="mt-5 sm:mt-6 flex justify-between items-end">
-                                    <div className="flex flex-col">
-                                        <div className="flex items-center gap-2">
-                                            <FaGasPump />
-                                            <span>Gas Limit</span>
-                                        </div>
-                                        <div>
-                                            <DropdownButton
-                                                items={[
-                                                    { text: 'Normal' },
-                                                    { text: 'Low' },
-                                                    { text: 'High' },
-                                                ]}
-                                                direction="right"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
                             </>
                         ) : (
                             <div className="mt-10 mb-8">
@@ -176,9 +138,28 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
                         )}
                     </>
                 )}
-                <div className="mt-6">
-                    <Button disabled={isSuccess} onClick={handleClick} label="Submit Transaction" />
-                </div>
+                <ModalFooter between>
+                    <div className="mt-5 sm:mt-6 flex justify-between items-end">
+                        <div className="flex flex-col">
+                            <div className="flex items-center gap-2">
+                                <FaGasPump />
+                                <span>Gas Limit</span>
+                            </div>
+                            <div>
+                                <DropdownButton
+                                    items={[{ text: 'Normal' }, { text: 'Low' }, { text: 'High' }]}
+                                    direction="right"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <Button
+                        primary
+                        disabled={isSuccess}
+                        onClick={handleClick}
+                        label="Submit Transaction"
+                    />
+                </ModalFooter>
             </>
         )
     );

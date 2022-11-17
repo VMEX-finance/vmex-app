@@ -6,7 +6,7 @@ import { AssetDisplay } from '../components/displays';
 import { useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext, useTransactionsContext } from '../../store/contexts';
 import { TIMER_CLOSE_DELAY } from '../../utils/constants';
-import { ModalHeader, ModalTableDisplay } from '../modals/subcomponents';
+import { ModalFooter, ModalHeader, ModalTableDisplay } from '../modals/subcomponents';
 import { IDialogProps } from '.';
 
 export const SuppliedAssetDetailsDialog: React.FC<IDialogProps> = ({
@@ -21,10 +21,11 @@ export const SuppliedAssetDetailsDialog: React.FC<IDialogProps> = ({
     const [isSuccess, setIsSuccess] = React.useState(false);
     const [error, setError] = React.useState('');
 
-    const routeToTranche = (tranche: any) => {
-        setAsset(tranche.asset);
-        updateTranche('id', tranche.id);
-        navigate(`/tranches`);
+    const routeToTranche = (row: any) => {
+        setAsset(row.asset);
+        updateTranche('id', row.trancheId);
+        closeDialog('supplied-asset-details-dialog');
+        navigate(`/tranches/${row.tranche.replace(/\s+/g, '-')}`, { state: { view: 'details' } });
     };
 
     const handleSubmit = () => {
@@ -95,22 +96,18 @@ export const SuppliedAssetDetailsDialog: React.FC<IDialogProps> = ({
                         <TransactionStatus success={isSuccess} full />
                     </div>
                 )}
-                <div className="mt-5 sm:mt-6 flex justify-between">
+                <ModalFooter between>
+                    <Button label="View Tranche" onClick={() => routeToTranche(data)} />
                     <Button
+                        primary
                         onClick={handleSubmit}
                         label={
-                            <span className="flex items-center gap-2">
+                            <span className="flex items-center gap-2 px-2">
                                 Withdraw <MdOutlineArrowForward />
                             </span>
                         }
                     />
-                    <Button
-                        primary
-                        label="View Tranche"
-                        onClick={() => routeToTranche(data)}
-                        disabled
-                    />
-                </div>
+                </ModalFooter>
             </>
         )
     );

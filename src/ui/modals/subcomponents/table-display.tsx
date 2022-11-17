@@ -29,7 +29,9 @@ export const ModalTableDisplay = ({ title, content }: IModalTableDisplayProps) =
                         <span
                             key={i}
                             className={`${
-                                el.baseLink ? 'underline text-brand-purple cursor-pointer' : ''
+                                el.baseLink
+                                    ? 'underline text-brand-purple hover:text-opacity-80 duration-200 transition cursor-pointer'
+                                    : ''
                             }`}
                         >
                             {el.baseLink ? (

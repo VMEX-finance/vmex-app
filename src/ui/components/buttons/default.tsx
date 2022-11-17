@@ -30,6 +30,7 @@ export const Button = ({
             disabled={disabled}
             onClick={onClick}
             className={[
+                'h-fit',
                 'box-border',
                 'font-basefont',
                 `${typeof label === 'string' ? 'px-4' : 'px-2'} py-1`,
