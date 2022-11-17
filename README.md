@@ -4,14 +4,18 @@ This is the frontend application for the VMEX Finance Protocol.
 
 ## Installation
 
-``` bash
+```bash
 yarn
 ```
+
+Go to VMEX contracts repo and run `yarn link` in the sdk folder.
+Then, in this folder, run `yarn link @vmex/sdk`
 
 ## Storybook
 
 To start the storybook server, run:
-``` bash
+
+```bash
 yarn storybook
 ```
 
@@ -20,11 +24,13 @@ Then, navigate to [Localhost, port 6006](localhost:6006).
 ## Development
 
 To start local development, run:
-``` bash
+
+```bash
 yarn start
 ```
 
 ### Directory
+
 ```
 src
 ├── hooks                   # Hooks for api, ui, stores, and more
@@ -33,12 +39,12 @@ src
 │   ├── ui                  # Strictly hooks for UI components
 │   ├── user                # Pulling user data including user activity, tokens, etc.
 │   ├── wallet              # Managing web3 wallet state
-│   └── redux.ts    
+│   └── redux.ts
 ├── middleware              # ??? folder may not be necessary ???
 ├── models                  # Api data models/interfaces
 ├── store                   # Redux and context stores
 │   ├── contexts            # Managing dialog state
-│   ├── ...           
+│   ├── ...
 │   └── wallet.ts           # Redux state management for web3 wallet
 ├── stories                 # Storybook components
 ├── ui                      # All user interface components
