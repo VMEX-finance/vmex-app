@@ -35,7 +35,10 @@ export const loginWithMetamask = createAsyncThunk('connect_metamask', async (dat
             provider,
         };
     }
-    if (!(window as any).ethereum) throw Error('Please install Metamask browser extension');
+    if (!(window as any).ethereum) {
+        // TODO: try with web3modal instead in here
+        throw Error('Please install Metamask browser extension');
+    }
     const provider = new Web3Provider((window as any).ethereum);
     await provider.send('eth_requestAccounts', []);
     const signer = provider.getSigner();

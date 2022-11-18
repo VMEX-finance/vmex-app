@@ -9,7 +9,6 @@ type IUseWalletStateProps = {
     isLoading: boolean;
     error: any;
     connectMetamask: (e: any) => void;
-    connectWeb3Wallet: (e: any) => void;
 };
 
 export function useWalletState(): IUseWalletStateProps {
@@ -23,10 +22,5 @@ export function useWalletState(): IUseWalletStateProps {
         dispatch(loginWithMetamask());
     }
 
-    function connectWeb3Wallet(e: any): void {
-        e.preventDefault();
-        dispatch(loginWithMetamask()); // TODO: correct this to web3modal
-    }
-
-    return { provider, address, signer, isLoading, error, connectMetamask, connectWeb3Wallet };
+    return { provider, address, signer, isLoading, error, connectMetamask };
 }

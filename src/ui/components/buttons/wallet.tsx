@@ -8,7 +8,7 @@ import { useDialogController } from '../../../hooks/dialogs';
 
 export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: IButtonProps) => {
     const { openDialog } = useDialogController();
-    const { address, connectMetamask, connectWeb3Wallet } = useWalletState();
+    const { address, connectMetamask } = useWalletState();
     const { width } = useWindowSize();
 
     const mode = `transition duration-150 ${
@@ -38,7 +38,7 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
         return (
             <Button
                 primary
-                onClick={width > 1024 ? connectMetamask : connectWeb3Wallet}
+                onClick={connectMetamask}
                 className={['min-h-[36px] !py-2 mt-1', mode, className].join(' ')}
                 label={address ? truncateAddress(address) : label}
             />

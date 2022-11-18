@@ -28,7 +28,7 @@ export const Navbar: React.FC = () => {
         <nav className="flex flex-row sticky h-fit justify-between items-center top-0 font-basefont px-4 py-2 lg:px-6 2xl:px-10 lg:py-5 bg-neutral-900 lg:bg-[#FFF] z-[1000] shadow-lg lg:shadow-md">
             <div
                 className={`w-full
-                ${width < 1024 ? 'flex flex-row items-center justify-between' : 'grid grid-cols-3'}
+                ${width <= 1080 ? 'flex flex-row items-center justify-between' : 'grid grid-cols-3'}
             `}
             >
                 <a id="nav-logo" href="/">
@@ -40,11 +40,11 @@ export const Navbar: React.FC = () => {
                     />
                 </a>
 
-                {width > 1024 && (
+                {width >= 1024 && (
                     <div className="justify-self-center">
                         <div
                             className={
-                                'grid grid-flow-col auto-cols-max justify-between gap-[6px]s xl:gap-2 2xl:gap-4 w-max p-2 shadow-neutral-500 shadow-inner bg-black rounded-2xl'
+                                'grid grid-flow-col auto-cols-max justify-between gap-2 2xl:gap-4 w-max p-2 shadow-neutral-500 shadow-inner bg-black rounded-2xl'
                             }
                         >
                             {navItems.map((item) => (
@@ -84,7 +84,7 @@ export const Navbar: React.FC = () => {
                             className="!bg-white"
                         />
                     )}
-                    {width > 1024 ? (
+                    {width >= 1024 ? (
                         <WalletButton label={width > 1200 ? 'Connect Wallet' : 'Connect'} primary />
                     ) : (
                         <Menu as="div" className="relative inline-block">
