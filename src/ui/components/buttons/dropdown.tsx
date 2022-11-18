@@ -60,7 +60,9 @@ export const DropdownButton = ({
         }
     };
 
-    const mode = primary ? '!text-neutral-100 bg-neutral-800 shadow-lg' : '';
+    const mode = primary
+        ? '!text-neutral-100 bg-neutral-800 shadow-lg hover:bg-neutral-900'
+        : 'hover:bg-neutral-100';
 
     const textSize = size === 'lg' ? 'text-lg' : 'text-sm';
     const iconSize = size === 'lg' ? '30px' : '24px';
@@ -114,7 +116,7 @@ export const DropdownButton = ({
             <Menu as="div" className={`relative inline-block ${full ? 'w-full' : ''}`}>
                 <Menu.Button
                     className={`
-                        inline-flex items-center w-full rounded-lg font-medium focus:outline-none focus:ring-none hover:bg-neutral-100
+                        inline-flex items-center w-full rounded-lg font-medium focus:outline-none focus:ring-none transition duration-150
                         ${
                             className ? className : ''
                         } ${determineColor()} ${displayOnly} ${mode} ${textSize} ${paddingSize} ${withBorder} ${
@@ -149,7 +151,7 @@ export const DropdownButton = ({
                                 full ? 'w-full' : 'min-w-[180px]'
                             } rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-[999999]`}
                         >
-                            <div className={`p-2 flex flex-col ${multiselect ? 'gap-1' : ''}`}>
+                            <div className={`p-2 flex flex-col gap-1${multiselect ? 'gap-1' : ''}`}>
                                 {list &&
                                     list.map((item: any, i) => (
                                         <Menu.Item key={`${item}-${i}`}>
@@ -165,12 +167,12 @@ export const DropdownButton = ({
                                                                     {item?.status &&
                                                                     item.status === 'pending' ? (
                                                                         <CgSpinner
-                                                                            size="22px"
+                                                                            size="20px"
                                                                             className="animate-spin"
                                                                         />
                                                                     ) : (
                                                                         item?.status && (
-                                                                            <IoMdCheckmarkCircle size="22px" />
+                                                                            <IoMdCheckmarkCircle size="20px" />
                                                                         )
                                                                     )}
                                                                 </span>
