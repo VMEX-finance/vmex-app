@@ -25,10 +25,10 @@ export const Navbar: React.FC = () => {
     const navItems = ['Overview', 'Tranches', 'Markets', 'Staking', 'Governance', 'Develop'];
 
     return (
-        <nav className="flex flex-row sticky h-fit justify-between items-center top-0 font-basefont px-4 py-2 lg:px-6 2xl:px-10 lg:py-5 bg-neutral-900 lg:bg-[#EEEEEE] z-[1000] shadow-lg lg:shadow-none">
+        <nav className="flex flex-row sticky h-fit justify-between items-center top-0 font-basefont px-4 py-2 lg:px-6 2xl:px-10 lg:py-5 bg-neutral-900 lg:bg-[#FFF] z-[1000] shadow-lg lg:shadow-md">
             <div
                 className={`w-full
-                ${width < 1024 ? 'flex flex-row items-center justify-between' : 'grid grid-cols-3'}
+                ${width <= 1080 ? 'flex flex-row items-center justify-between' : 'grid grid-cols-3'}
             `}
             >
                 <a id="nav-logo" href="/">
@@ -40,11 +40,11 @@ export const Navbar: React.FC = () => {
                     />
                 </a>
 
-                {width > 1024 ? (
+                {width >= 1024 && (
                     <div className="justify-self-center">
                         <div
                             className={
-                                'grid grid-flow-col auto-cols-max justify-between gap-2 2xl:gap-4 w-max p-[8px] shadow-lg bg-black rounded-2xl'
+                                'grid grid-flow-col auto-cols-max justify-between gap-2 2xl:gap-4 w-max p-2 shadow-neutral-500 shadow-inner bg-black rounded-2xl'
                             }
                         >
                             {navItems.map((item) => (
@@ -57,34 +57,40 @@ export const Navbar: React.FC = () => {
                             ))}
                         </div>
                     </div>
-                ) : (
-                    <div className="flex items-center gap-4">
-                        {address && transactions && (
-                            <DropdownButton
-                                reverse
-                                items={transactions}
-                                baseLink={`https://etherscan.com`}
-                                label={
-                                    <span className="flex items-center gap-2">
-                                        {width > 1350 ? (
-                                            'Transactions'
-                                        ) : (
-                                            <BiTransferAlt
-                                                size={`${width < 1023 ? '28px' : '20px'}`}
-                                            />
-                                        )}
+                )}
+
+                <div className="flex items-center justify-end gap-3">
+                    {address && transactions && (
+                        <DropdownButton
+                            reverse
+                            items={transactions}
+                            baseLink={`https://etherscan.com`}
+                            selected={'Transactions'}
+                            label={
+                                width > 1400 ? (
+                                    ''
+                                ) : (
+                                    <span className="flex gap-2 items-center !max-h-[25px]">
+                                        <BiTransferAlt size={'24px'} />
                                         {
                                             transactions.filter((el) => el.status === 'pending')
                                                 .length
                                         }
                                     </span>
-                                }
-                            />
-                        )}
+                                )
+                            }
+                            border
+                            size="lg"
+                            className="!bg-white"
+                        />
+                    )}
+                    {width >= 1024 ? (
+                        <WalletButton label={width > 1200 ? 'Connect Wallet' : 'Connect'} primary />
+                    ) : (
                         <Menu as="div" className="relative inline-block">
                             <div>
                                 <Menu.Button className="inline-flex justify-center w-full rounded-md border shadow-sm px-2 md:px-3 py-1 bg-neutral-100 text-sm font-medium text-neutral-900 focus:outline-none focus:ring-2 focus:ring-offset-2">
-                                    <HiOutlineMenuAlt3 size="34px" />
+                                    <HiOutlineMenuAlt3 size="30px" />
                                 </Menu.Button>
                             </div>
 
@@ -120,29 +126,9 @@ export const Navbar: React.FC = () => {
                                 </Menu.Items>
                             </Transition>
                         </Menu>
-                    </div>
-                )}
-
-                {width > 1024 && (
-                    <div className="flex items-center justify-end gap-3">
-                        {address && transactions && (
-                            <DropdownButton
-                                reverse
-                                items={transactions}
-                                baseLink={`https://etherscan.com`}
-                                className="max-h-[36px]"
-                                label={
-                                    <span className="flex items-center gap-2">
-                                        {width < 1350 ? <BiTransferAlt /> : `Transactions`}
-                                        {transactions.filter((el) => el.status === 'pending')
-                                            .length > 0 && <CgSpinner className="animate-spin" />}
-                                    </span>
-                                }
-                            />
-                        )}
-                        <WalletButton label={width > 1200 ? 'Connect Wallet' : 'Connect'} primary />
-                    </div>
-                )}
+                    )}
+                </div>
+                {/* )} */}
             </div>
         </nav>
     );

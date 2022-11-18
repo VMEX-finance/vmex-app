@@ -41,11 +41,11 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                 <div className="max-w-[500px]">
                     {view ? (
                         <button
-                            className="flex gap-2 items-baseline hover:cursor-pointer"
+                            className="flex gap-2 items-baseline hover:cursor-pointer hover:text-neutral-800 transition duration-150"
                             onClick={routeChange}
                         >
-                            <img src="/elements/Vector.svg" alt="vector" />
-                            <p>Back to all</p>
+                            <img src="/elements/Vector.svg" alt="vector" className="w-3 h-3" />
+                            <p className="text-lg">Back to all</p>
                         </button>
                     ) : (
                         <>
@@ -85,11 +85,13 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                             onClick={() => openDialog('my-tranches-dialog')}
                             primary
                             disabled={myTranches?.length === 0}
+                            className="!text-lg"
                         />
                         <Button
-                            label={width > 768 ? 'Create Tranche' : <BiPlus size="24px" />}
+                            label={width > 768 ? 'Create Tranche' : <BiPlus size="28px" />}
                             onClick={() => openDialog('create-tranche-dialog')}
                             primary
+                            className="!text-lg"
                         />
                     </div>
                 )}
