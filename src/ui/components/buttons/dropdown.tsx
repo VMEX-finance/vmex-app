@@ -114,7 +114,7 @@ export const DropdownButton = ({
             <Menu as="div" className={`relative inline-block ${full ? 'w-full' : ''}`}>
                 <Menu.Button
                     className={`
-                        inline-flex items-center w-full rounded-lg font-medium focus:outline-none focus:ring-none
+                        inline-flex items-center w-full rounded-lg font-medium focus:outline-none focus:ring-none hover:bg-neutral-100
                         ${
                             className ? className : ''
                         } ${determineColor()} ${displayOnly} ${mode} ${textSize} ${paddingSize} ${withBorder} ${
@@ -158,9 +158,22 @@ export const DropdownButton = ({
                                                     <div className="flex items-center gap-2">
                                                         <MenuItemButton
                                                             label={
-                                                                uppercase
-                                                                    ? item.text.toUpperCase()
-                                                                    : item.text
+                                                                <span className="flex justify-between">
+                                                                    {uppercase
+                                                                        ? item.text.toUpperCase()
+                                                                        : item.text}
+                                                                    {item?.status &&
+                                                                    item.status === 'pending' ? (
+                                                                        <CgSpinner
+                                                                            size="22px"
+                                                                            className="animate-spin"
+                                                                        />
+                                                                    ) : (
+                                                                        item?.status && (
+                                                                            <IoMdCheckmarkCircle size="22px" />
+                                                                        )
+                                                                    )}
+                                                                </span>
                                                             }
                                                             onClick={
                                                                 baseLink
@@ -174,17 +187,6 @@ export const DropdownButton = ({
                                                             }
                                                             mobile
                                                         />
-                                                        {item?.status &&
-                                                        item.status === 'pending' ? (
-                                                            <CgSpinner
-                                                                size="24px"
-                                                                className="animate-spin"
-                                                            />
-                                                        ) : (
-                                                            item?.status && (
-                                                                <IoMdCheckmarkCircle size="24px" />
-                                                            )
-                                                        )}
                                                     </div>
                                                 ) : (
                                                     <MenuItemButton

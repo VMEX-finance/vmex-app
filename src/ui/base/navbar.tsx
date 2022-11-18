@@ -25,7 +25,7 @@ export const Navbar: React.FC = () => {
     const navItems = ['Overview', 'Tranches', 'Markets', 'Staking', 'Governance', 'Develop'];
 
     return (
-        <nav className="flex flex-row sticky h-fit justify-between items-center top-0 font-basefont px-4 py-2 lg:px-6 2xl:px-10 lg:py-5 bg-neutral-900 lg:bg-[#EEEEEE] z-[1000] shadow-lg lg:shadow-none">
+        <nav className="flex flex-row sticky h-fit justify-between items-center top-0 font-basefont px-4 py-2 lg:px-6 2xl:px-10 lg:py-5 bg-neutral-900 lg:bg-[#FFF] z-[1000] shadow-lg lg:shadow-md">
             <div
                 className={`w-full
                 ${width < 1024 ? 'flex flex-row items-center justify-between' : 'grid grid-cols-3'}
@@ -40,7 +40,7 @@ export const Navbar: React.FC = () => {
                     />
                 </a>
 
-                {width > 1024 ? (
+                {width > 1024 && (
                     <div className="justify-self-center">
                         <div
                             className={
@@ -57,34 +57,93 @@ export const Navbar: React.FC = () => {
                             ))}
                         </div>
                     </div>
-                ) : (
-                    <div className="flex items-center gap-4">
-                        {address && transactions && (
-                            <DropdownButton
-                                reverse
-                                items={transactions}
-                                baseLink={`https://etherscan.com`}
-                                label={
-                                    <span className="flex items-center gap-2">
-                                        {width > 1350 ? (
-                                            'Transactions'
-                                        ) : (
-                                            <BiTransferAlt
-                                                size={`${width < 1023 ? '28px' : '20px'}`}
-                                            />
-                                        )}
-                                        {
-                                            transactions.filter((el) => el.status === 'pending')
-                                                .length
-                                        }
-                                    </span>
-                                }
-                            />
-                        )}
+                )}
+
+                {/* // ) : (
+                //     <div className="flex items-center gap-4">
+                //         {address && transactions && (
+                //             <DropdownButton
+                //                 reverse
+                //                 items={transactions}
+                //                 baseLink={`https://etherscan.com`}
+                //                 label={
+                //                     <span className="flex items-center gap-2">
+                //                         {width > 1350 ? (
+                //                             'Transactions'
+                //                         ) : (
+                //                             <BiTransferAlt
+                //                                 size={`${width < 1023 ? '28px' : '20px'}`}
+                //                             />
+                //                         )}
+                //                         {
+                //                             transactions.filter((el) => el.status === 'pending')
+                //                                 .length
+                //                         }
+                //                     </span>
+                //                 }
+                //             />
+                //         )}
+                //         <Menu as="div" className="relative inline-block">
+                //             <div>
+                //                 <Menu.Button className="inline-flex justify-center w-full rounded-md border shadow-sm px-2 md:px-3 py-1 bg-neutral-100 text-sm font-medium text-neutral-900 focus:outline-none focus:ring-2 focus:ring-offset-2">
+                //                     <HiOutlineMenuAlt3 size="34px" />
+                //                 </Menu.Button>
+                //             </div>
+
+                //             <Transition
+                //                 as={Fragment}
+                //                 enter="transition ease-out duration-100"
+                //                 enterFrom="transform opacity-0 scale-95"
+                //                 enterTo="transform opacity-100 scale-100"
+                //                 leave="transition ease-in duration-75"
+                //                 leaveFrom="transform opacity-100 scale-100"
+                //                 leaveTo="transform opacity-0 scale-95"
+                //             >
+                //                 <Menu.Items className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                //                     <div className="p-2">
+                //                         {navItems.map((item, i) => (
+                //                             <Menu.Item key={`${item}-${i}`}>
+                //                                 {({ active }) => (
+                //                                     <MenuItemButton
+                //                                         key={item}
+                //                                         label={item}
+                //                                         onClick={navigateTo}
+                //                                         mobile
+                //                                     />
+                //                                 )}
+                //                             </Menu.Item>
+                //                         ))}
+                //                         <WalletButton
+                //                             label={'Connect Wallet'}
+                //                             primary
+                //                             className="!w-full"
+                //                         />
+                //                     </div>
+                //                 </Menu.Items>
+                //             </Transition>
+                //         </Menu>
+                //     </div>
+                // )}
+
+                {/* {width > 1024 && ( */}
+                <div className="flex items-center justify-end gap-3">
+                    {address && transactions && (
+                        <DropdownButton
+                            reverse
+                            items={transactions}
+                            baseLink={`https://etherscan.com`}
+                            selected={'Transactions'}
+                            border
+                            size="lg"
+                        />
+                    )}
+                    {width > 1024 ? (
+                        <WalletButton label={width > 1200 ? 'Connect Wallet' : 'Connect'} primary />
+                    ) : (
                         <Menu as="div" className="relative inline-block">
                             <div>
                                 <Menu.Button className="inline-flex justify-center w-full rounded-md border shadow-sm px-2 md:px-3 py-1 bg-neutral-100 text-sm font-medium text-neutral-900 focus:outline-none focus:ring-2 focus:ring-offset-2">
-                                    <HiOutlineMenuAlt3 size="34px" />
+                                    <HiOutlineMenuAlt3 size="30px" />
                                 </Menu.Button>
                             </div>
 
@@ -120,29 +179,9 @@ export const Navbar: React.FC = () => {
                                 </Menu.Items>
                             </Transition>
                         </Menu>
-                    </div>
-                )}
-
-                {width > 1024 && (
-                    <div className="flex items-center justify-end gap-3">
-                        {address && transactions && (
-                            <DropdownButton
-                                reverse
-                                items={transactions}
-                                baseLink={`https://etherscan.com`}
-                                className="max-h-[36px]"
-                                label={
-                                    <span className="flex items-center gap-2">
-                                        {width < 1350 ? <BiTransferAlt /> : `Transactions`}
-                                        {transactions.filter((el) => el.status === 'pending')
-                                            .length > 0 && <CgSpinner className="animate-spin" />}
-                                    </span>
-                                }
-                            />
-                        )}
-                        <WalletButton label={width > 1200 ? 'Connect Wallet' : 'Connect'} primary />
-                    </div>
-                )}
+                    )}
+                </div>
+                {/* )} */}
             </div>
         </nav>
     );

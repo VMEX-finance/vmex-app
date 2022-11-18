@@ -20,14 +20,14 @@ export const MenuItemButton = ({
             ? 'bg-white text-black'
             : mobile
             ? 'hover:!bg-neutral-200 text-neutral-900'
-            : 'bg-black text-white ';
+            : 'bg-black text-white hover:bg-neutral-800';
 
     const highlight = highlighted ? '!bg-neutral-900 !text-white hover:!bg-neutral-800' : '';
 
     return (
         <button
             className={[
-                'w-full px-3 xl:px-4 py-2 rounded-lg transition duration-200 hover:bg-neutral-700 whitespace-nowrap',
+                'w-full px-3 xl:px-4 py-2 rounded-lg transition duration-200 whitespace-nowrap',
                 mode,
                 highlight,
             ].join(' ')}
