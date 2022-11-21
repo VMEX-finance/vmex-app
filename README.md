@@ -19,7 +19,7 @@ To start local development, first clone the VMEX SDK/contracts repo and, in ther
 Then, in the VMEX App repo, run:
 
 ```bash
-yarn start
+yarn start:dev
 ```
 
 When adding new features, create a new branch based on `origin/develop`. Upon completing new features, create pull requests to `origin/develop`.
