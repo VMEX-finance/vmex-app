@@ -8,16 +8,21 @@ This is the frontend application for the VMEX Finance Protocol.
 yarn
 ```
 
-Go to VMEX contracts repo and run `yarn link` in the sdk folder.
-Then, in this folder, run `yarn link @vmex/sdk`
-
 ## Development
 
-To start local development, run:
+To start local development, first clone the VMEX SDK/contracts repo and, in there, run:
+
+1. `yarn compile`
+2. `yarn build`
+3. `yarn start:dev`
+
+Then, in the VMEX App repo, run:
 
 ```bash
 yarn start
 ```
+
+When adding new features, create a new branch based on `origin/develop`. Upon completing new features, create pull requests to `origin/develop`.
 
 ## Directory
 
@@ -50,3 +55,8 @@ src
 ├── index.css
 └── index.js
 ```
+
+### Site Links
+
+(Production Site)[https://app.vmex.finance]
+(Development Site)[https://royal-snow-5738.on.fleek.co/]
