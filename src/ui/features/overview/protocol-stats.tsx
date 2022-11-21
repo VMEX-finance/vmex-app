@@ -42,7 +42,7 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                         <div className="flex flex-col">
                             <h2 className="text-2xl">Total Value Locked (TVL)</h2>
                             <p className="text-3xl">
-                                {tvl ? usdFormatter.format(tvl as number) : ''}
+                                {tvl ? usdFormatter.format(tvl as number) : '$0'}
                             </p>
                         </div>
                         <div className="h-[100px] w-full">
