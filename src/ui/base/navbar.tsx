@@ -7,7 +7,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { DropdownButton, MenuItemButton, WalletButton } from '../components/buttons';
 import { useTransactionsContext } from '../../store/contexts';
 import { useWalletState } from '../../hooks/wallet';
-import { CgSpinner } from 'react-icons/cg';
 
 export const Navbar: React.FC = () => {
     const navigate = useNavigate();
@@ -60,7 +59,7 @@ export const Navbar: React.FC = () => {
                 )}
 
                 <div className="flex items-center justify-end gap-3">
-                    {address && transactions && (
+                    {address && transactions && transactions.length !== 0 && (
                         <DropdownButton
                             reverse
                             items={transactions}
