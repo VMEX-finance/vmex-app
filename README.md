@@ -59,4 +59,4 @@ src
 ### Site Links
 
 (Production Site)[https://app.vmex.finance]
-(Development Site)[https://royal-snow-5738.on.fleek.co/]
+(Development Site)[https://vmex-app-develop.on.fleek.co/]
