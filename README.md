@@ -10,7 +10,9 @@ yarn
 
 ## Development
 
-To start local development, first clone the VMEX SDK/contracts repo and, in there, run:
+To start local development, first clone the VMEX SDK/contracts repo and then (link)[https://classic.yarnpkg.com/lang/en/docs/cli/link/] the SDK package to the VMEX App Repo.
+
+Then, inside the VMEX monorepo, run:
 
 1. `yarn compile`
 2. `yarn build`
