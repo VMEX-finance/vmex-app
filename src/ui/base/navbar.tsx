@@ -118,7 +118,7 @@ export const Navbar: React.FC = () => {
                                                 )}
                                             </Menu.Item>
                                         ))}
-                                        <WalletButton />
+                                        <RainbowWalletButton primary/>
                                     </div>
                                 </Menu.Items>
                             </Transition>

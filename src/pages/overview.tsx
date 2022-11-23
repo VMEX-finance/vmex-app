@@ -3,13 +3,14 @@ import { AppTemplate, GridView } from '../ui/templates';
 import { UserPerformanceCard, ProtocolStatsCard } from '../ui/features';
 import { YourPositionsTable } from '../ui/tables';
 import { WalletButton } from '../ui/components/buttons';
+import { RainbowWalletButton } from '../ui/components/buttons';
 import { useProtocolData } from '../api/protocol';
 import { useUserData } from '../api/user';
 import { useAccount } from 'wagmi';
 import { useWalletState } from '../hooks/wallet';
 import { RainbowWalletButton } from '../ui/components/buttons';
 const Overview: React.FC = () => {
-    const { address } = useWalletState();
+    const { address } = useWalletState2();
     const { queryProtocolOverview } = useProtocolData();
     const { queryUserPerformance, queryUserActivity } = useUserData(address);
 
