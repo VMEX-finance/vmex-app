@@ -33,6 +33,7 @@ export const useModal = (dialog: IDialogNames): IUseModalProps => {
                 );
                 callback && callback();
 
+                setIsLoading(false);
                 setError('');
                 setIsSuccess(true);
 
