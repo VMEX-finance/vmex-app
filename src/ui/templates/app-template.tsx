@@ -1,7 +1,8 @@
+import { ToastNotification } from '../features';
 import React from 'react';
 import { Navbar } from '../../ui/base';
 import { DashboardTemplate } from './dashboard-template';
-import { ModalTemplate } from './modal-template';
+import { AllModalsInstance } from '../modals';
 
 interface IAppTemplateProps {
     children?: React.ReactElement | React.ReactElement[];
@@ -21,7 +22,6 @@ const AppTemplate: React.FC<IAppTemplateProps> = ({
     return (
         <div className="h-screen">
             <Navbar />
-            <ModalTemplate />
             <DashboardTemplate
                 title={title}
                 description={description}
@@ -30,6 +30,9 @@ const AppTemplate: React.FC<IAppTemplateProps> = ({
             >
                 {children}
             </DashboardTemplate>
+
+            <AllModalsInstance />
+            <ToastNotification />
         </div>
     );
 };

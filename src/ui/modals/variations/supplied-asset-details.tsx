@@ -1,15 +1,15 @@
 import React from 'react';
-import { MdCompareArrows, MdOutlineArrowForward } from 'react-icons/md';
-import { Button } from '../components/buttons';
-import { TransactionStatus } from '../components/statuses';
-import { AssetDisplay } from '../components/displays';
+import { MdOutlineArrowForward } from 'react-icons/md';
+import { Button } from '../../components/buttons';
+import { TransactionStatus } from '../../components/statuses';
+import { AssetDisplay } from '../../components/displays';
 import { useNavigate } from 'react-router-dom';
-import { useSelectedTrancheContext } from '../../store/contexts';
-import { IDialogProps } from '.';
-import { ModalFooter, ModalHeader, ModalTableDisplay } from '../modals/subcomponents';
-import { useModal } from '../../hooks/ui';
+import { useSelectedTrancheContext } from '../../../store/contexts';
+import { ModalFooter, ModalHeader, ModalTableDisplay } from '../../modals/subcomponents';
+import { IDialogProps } from '../utils';
+import { useModal } from '../../../hooks/ui';
 
-export const BorrowedAssetDetailsDialog: React.FC<IDialogProps> = ({
+export const SuppliedAssetDetailsDialog: React.FC<IDialogProps> = ({
     name,
     isOpen,
     data,
@@ -17,12 +17,12 @@ export const BorrowedAssetDetailsDialog: React.FC<IDialogProps> = ({
 }) => {
     const navigate = useNavigate();
     const { updateTranche, setAsset } = useSelectedTrancheContext();
-    const { isSuccess, submitTx, isLoading } = useModal('borrowed-asset-details-dialog');
+    const { submitTx, isSuccess, isLoading } = useModal('supplied-asset-details-dialog');
 
     const routeToTranche = (row: any) => {
         setAsset(row.asset);
         updateTranche('id', row.trancheId);
-        closeDialog('borrowed-asset-details-dialog');
+        closeDialog('supplied-asset-details-dialog');
         navigate(`/tranches/${row.tranche.replace(/\s+/g, '-')}`, { state: { view: 'details' } });
     };
 
@@ -34,46 +34,32 @@ export const BorrowedAssetDetailsDialog: React.FC<IDialogProps> = ({
         data &&
         data.asset && (
             <>
-                <ModalHeader title={name} dialog="borrowed-asset-details-dialog" />
+                <ModalHeader title={name} dialog="supplied-asset-details-dialog" />
                 {!isSuccess ? (
                     // Default State
                     <>
                         <h3 className="mt-5 text-gray-400">Overview</h3>
-                        <div className="grid grid-cols-3 items-center">
-                            <div className="flex flex-col">
-                                <AssetDisplay name={data.asset} className="mb-1" />
-                                <span>
-                                    {130.2} {data.asset} Borrowed
-                                </span>
-                                <span className="text-sm text-neutral-500">
-                                    ${'156,240.02'} USD
-                                </span>
-                            </div>
-                            <MdCompareArrows className="justify-self-center" size="32px" />
-                            <div className="flex flex-col">
-                                <AssetDisplay
-                                    name={'USDC'}
-                                    logo={`/tokens/token-${'USDC'}.svg`}
-                                    className="mb-1"
-                                />
-                                <span>
-                                    {'156,241.1'} {'USDC'} Collatoralized
-                                </span>
-                                <span className="text-sm text-neutral-500">
-                                    ${'156,240.02'} USD
-                                </span>
-                            </div>
+                        <div className="flex flex-col">
+                            <AssetDisplay
+                                name={data.asset}
+                                logo={`/tokens/token-${data.asset.toUpperCase()}.svg`}
+                                className="mb-1"
+                            />
+                            <span>
+                                {130.2} {data.asset.toUpperCase()} Supplied
+                            </span>
+                            <span className="text-sm text-neutral-500">${'156,240.02'} USD</span>
                         </div>
 
                         <ModalTableDisplay
-                            title="Loan Details"
+                            title="Staking Details"
                             content={[
                                 {
                                     label: 'Interest Rate',
                                     value: `${0.44}%`,
                                 },
                                 {
-                                    label: 'Date Borrowed',
+                                    label: 'Date Supplied',
                                     value: '12-23-2022 | 13:05',
                                 },
                                 {
@@ -98,13 +84,12 @@ export const BorrowedAssetDetailsDialog: React.FC<IDialogProps> = ({
                         <TransactionStatus success={isSuccess} full />
                     </div>
                 )}
-
                 <ModalFooter between>
                     <Button label="View Tranche" onClick={() => routeToTranche(data)} />
                     <Button
-                        onClick={handleSubmit}
                         primary
-                        label="Repay Loan"
+                        onClick={handleSubmit}
+                        label={'Withdraw'}
                         icon={<MdOutlineArrowForward />}
                         loading={isLoading}
                     />
