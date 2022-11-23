@@ -8,7 +8,7 @@ type IUseWalletStateProps = {
     signer: any;
     isLoading: boolean;
     error: any;
-    connectRainbow: () => void;
+    connectRainbow: (e: any) => void;
 };
 
 export function useWalletState2(): IUseWalletStateProps {
