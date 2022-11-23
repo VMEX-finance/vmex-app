@@ -10,7 +10,7 @@ import { ModalFooter, ModalHeader, ModalTableDisplay } from '../modals/subcompon
 import { useModal } from '../../hooks/ui';
 
 export const StakeAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, closeDialog }) => {
-    const { submitTx, isSuccess } = useModal('stake-asset-dialog');
+    const { submitTx, isSuccess, isLoading } = useModal('stake-asset-dialog');
     const [amount, setAmount] = useMediatedState(inputMediator, '');
 
     const handleSubmit = async () => {
@@ -77,6 +77,7 @@ export const StakeAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
                             disabled={isSuccess}
                             onClick={handleSubmit}
                             label="Submit Transaction"
+                            loading={isLoading}
                         />
                     </div>
                 </ModalFooter>

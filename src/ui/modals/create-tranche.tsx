@@ -13,7 +13,7 @@ import { InnerCard } from '../components/cards';
 import { useModal } from '../../hooks/ui';
 
 export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeDialog }) => {
-    const { setError, isSuccess, error, submitTx } = useModal('create-tranche-dialog');
+    const { setError, isSuccess, error, submitTx, isLoading } = useModal('create-tranche-dialog');
     const { newTranche, myTranches } = useMyTranchesContext();
     const { steps, nextStep, prevStep, activeStep } = useStepper([
         { name: 'Create Tranche', status: 'current' },
@@ -137,6 +137,7 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
                     onClick={activeStep === steps.length - 1 ? handleSubmit : nextStep}
                     label={activeStep === steps.length - 1 ? 'Save' : 'Next'}
                     primary
+                    loading={isLoading}
                 />
             </ModalFooter>
         </>

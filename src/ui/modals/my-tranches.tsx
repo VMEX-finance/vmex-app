@@ -8,7 +8,7 @@ import { ModalFooter, ModalHeader } from '../modals/subcomponents';
 import { useModal } from '../../hooks/ui';
 
 export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDialog }) => {
-    const { isSuccess, error, submitTx, setError } = useModal('my-tranches-dialog');
+    const { isSuccess, error, submitTx, setError, isLoading } = useModal('my-tranches-dialog');
     const { updateTranche, myTranches, deleteTranche, pauseTranche } = useMyTranchesContext();
 
     const [selectedTranche, setSelectedTranche] = React.useState(
@@ -161,8 +161,15 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
                     onClick={handlePause}
                     label={selectedTranche.isPaused ? 'Unpause Tranche' : 'Pause Tranche'}
                     type="delete"
+                    loading={isLoading}
                 />
-                <Button disabled={isSuccess} onClick={handleSave} label="Save" primary />
+                <Button
+                    disabled={isSuccess}
+                    onClick={handleSave}
+                    label="Save"
+                    loading={isLoading}
+                    primary
+                />
             </ModalFooter>
         </>
     );

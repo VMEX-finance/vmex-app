@@ -17,7 +17,7 @@ export const BorrowedAssetDetailsDialog: React.FC<IDialogProps> = ({
 }) => {
     const navigate = useNavigate();
     const { updateTranche, setAsset } = useSelectedTrancheContext();
-    const { isSuccess, submitTx } = useModal('borrowed-asset-details-dialog');
+    const { isSuccess, submitTx, isLoading } = useModal('borrowed-asset-details-dialog');
 
     const routeToTranche = (row: any) => {
         setAsset(row.asset);
@@ -104,11 +104,9 @@ export const BorrowedAssetDetailsDialog: React.FC<IDialogProps> = ({
                     <Button
                         onClick={handleSubmit}
                         primary
-                        label={
-                            <span className="flex items-center gap-2 px-2">
-                                Repay Loan <MdOutlineArrowForward />
-                            </span>
-                        }
+                        label="Repay Loan"
+                        icon={<MdOutlineArrowForward />}
+                        loading={isLoading}
                     />
                 </ModalFooter>
             </>

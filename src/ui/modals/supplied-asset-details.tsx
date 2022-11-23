@@ -18,7 +18,7 @@ export const SuppliedAssetDetailsDialog: React.FC<IDialogProps> = ({
 }) => {
     const navigate = useNavigate();
     const { updateTranche, setAsset } = useSelectedTrancheContext();
-    const { submitTx, isSuccess } = useModal('supplied-asset-details-dialog');
+    const { submitTx, isSuccess, isLoading } = useModal('supplied-asset-details-dialog');
 
     const routeToTranche = (row: any) => {
         setAsset(row.asset);
@@ -90,11 +90,9 @@ export const SuppliedAssetDetailsDialog: React.FC<IDialogProps> = ({
                     <Button
                         primary
                         onClick={handleSubmit}
-                        label={
-                            <span className="flex items-center gap-2 px-2">
-                                Withdraw <MdOutlineArrowForward />
-                            </span>
-                        }
+                        label={'Withdraw'}
+                        icon={<MdOutlineArrowForward />}
+                        loading={isLoading}
                     />
                 </ModalFooter>
             </>

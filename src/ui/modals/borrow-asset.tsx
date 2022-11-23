@@ -17,7 +17,7 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
     closeDialog,
     tab,
 }) => {
-    const { isSuccess, submitTx } = useModal('borrow-asset-dialog');
+    const { isSuccess, submitTx, isLoading } = useModal('borrow-asset-dialog');
     const [amount, setAmount] = useMediatedState(inputMediator, '');
     const [view, setView] = React.useState('Borrow');
 
@@ -145,6 +145,7 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
                         disabled={isSuccess}
                         onClick={handleClick}
                         label="Submit Transaction"
+                        loading={isLoading}
                     />
                 </ModalFooter>
             </>

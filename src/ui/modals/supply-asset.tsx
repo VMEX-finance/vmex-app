@@ -25,7 +25,7 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
     tab,
     closeDialog,
 }) => {
-    const { submitTx, isSuccess, error } = useModal('loan-asset-dialog');
+    const { submitTx, isSuccess, error, isLoading } = useModal('loan-asset-dialog');
 
     const [view, setView] = React.useState('Supply');
     const [asCollateral, setAsCollateral] = React.useState(false);
@@ -141,6 +141,7 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
                         disabled={isSuccess || error.length !== 0}
                         onClick={handleSubmit}
                         label={'Submit Transaction'}
+                        loading={isLoading}
                     />
                 </ModalFooter>
             </>
