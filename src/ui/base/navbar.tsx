@@ -80,7 +80,6 @@ export const Navbar: React.FC = () => {
                             }
                             border
                             size="lg"
-                            className="!bg-white"
                         />
                     )}
                     {width >= 1024 ? (

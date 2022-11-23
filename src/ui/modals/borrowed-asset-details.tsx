@@ -4,10 +4,10 @@ import { Button } from '../components/buttons';
 import { TransactionStatus } from '../components/statuses';
 import { AssetDisplay } from '../components/displays';
 import { useNavigate } from 'react-router-dom';
-import { useSelectedTrancheContext, useTransactionsContext } from '../../store/contexts';
-import { TIMER_CLOSE_DELAY } from '../../utils/constants';
+import { useSelectedTrancheContext } from '../../store/contexts';
 import { IDialogProps } from '.';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../modals/subcomponents';
+import { useModal } from '../../hooks/ui';
 
 export const BorrowedAssetDetailsDialog: React.FC<IDialogProps> = ({
     name,
@@ -17,9 +17,7 @@ export const BorrowedAssetDetailsDialog: React.FC<IDialogProps> = ({
 }) => {
     const navigate = useNavigate();
     const { updateTranche, setAsset } = useSelectedTrancheContext();
-    const { newTransaction } = useTransactionsContext();
-    const [isSuccess, setIsSuccess] = React.useState(false);
-    const [error, setError] = React.useState('');
+    const { isSuccess, submitTx } = useModal('borrowed-asset-details-dialog');
 
     const routeToTranche = (row: any) => {
         setAsset(row.asset);
@@ -28,18 +26,8 @@ export const BorrowedAssetDetailsDialog: React.FC<IDialogProps> = ({
         navigate(`/tranches/${row.tranche.replace(/\s+/g, '-')}`, { state: { view: 'details' } });
     };
 
-    const handleSubmit = () => {
-        setIsSuccess(true);
-        newTransaction(
-            `0x${Math.floor(Math.random() * 9)}...${Math.floor(Math.random() * 9)}${Math.floor(
-                Math.random() * 9,
-            )}a`,
-        );
-
-        setTimeout(() => {
-            setIsSuccess(false);
-            closeDialog('borrowed-asset-details-dialog');
-        }, TIMER_CLOSE_DELAY);
+    const handleSubmit = async () => {
+        await submitTx();
     };
 
     return (

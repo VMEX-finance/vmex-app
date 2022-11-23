@@ -5,29 +5,16 @@ import { CoinInput } from '../components/inputs';
 import { ActiveStatus, TransactionStatus } from '../components/statuses';
 import { Button, DropdownButton } from '../components/buttons';
 import { inputMediator } from '../../utils/helpers';
-import { useTransactionsContext } from '../../store/contexts';
-import { TIMER_CLOSE_DELAY } from '../../utils/constants';
 import { IDialogProps } from '.';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../modals/subcomponents';
+import { useModal } from '../../hooks/ui';
 
 export const StakeAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, closeDialog }) => {
-    const { newTransaction } = useTransactionsContext();
-    const [isSuccess, setIsSuccess] = React.useState(false);
-    const [error, setError] = React.useState('');
+    const { submitTx, isSuccess } = useModal('stake-asset-dialog');
     const [amount, setAmount] = useMediatedState(inputMediator, '');
 
-    const handleSubmit = () => {
-        setIsSuccess(true);
-        newTransaction(
-            `0x${Math.floor(Math.random() * 9)}...${Math.floor(Math.random() * 9)}${Math.floor(
-                Math.random() * 9,
-            )}s`,
-        );
-
-        setTimeout(() => {
-            setIsSuccess(false);
-            closeDialog('stake-asset-dialog');
-        }, TIMER_CLOSE_DELAY);
+    const handleSubmit = async () => {
+        await submitTx();
     };
 
     return (

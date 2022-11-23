@@ -6,10 +6,9 @@ import { CoinInput } from '../components/inputs';
 import { Button, DropdownButton } from '../components/buttons';
 import { inputMediator } from '../../utils/helpers';
 import { HealthFactor } from '../components/displays';
-import { useTransactionsContext } from '../../store/contexts';
-import { TIMER_CLOSE_DELAY } from '../../utils/constants';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../modals/subcomponents';
 import { IDialogProps } from '.';
+import { useModal } from '../../hooks/ui';
 
 export const BorrowAssetDialog: React.FC<IDialogProps> = ({
     name,
@@ -18,24 +17,12 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
     closeDialog,
     tab,
 }) => {
-    const { newTransaction } = useTransactionsContext();
-    const [isSuccess, setIsSuccess] = React.useState(false);
-    const [error, setError] = React.useState('');
+    const { isSuccess, submitTx } = useModal('borrow-asset-dialog');
     const [amount, setAmount] = useMediatedState(inputMediator, '');
     const [view, setView] = React.useState('Borrow');
 
-    const handleClick = () => {
-        setIsSuccess(true);
-        newTransaction(
-            `0x${Math.floor(Math.random() * 9)}...${Math.floor(Math.random() * 9)}${Math.floor(
-                Math.random() * 9,
-            )}n`,
-        );
-
-        setTimeout(() => {
-            setIsSuccess(false);
-            closeDialog('borrow-asset-dialog');
-        }, TIMER_CLOSE_DELAY);
+    const handleClick = async () => {
+        await submitTx();
     };
 
     return (

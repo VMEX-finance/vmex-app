@@ -2,7 +2,7 @@ import React from 'react';
 import { TransactionStatus } from '../components/statuses';
 import { Button } from '../components/buttons';
 import { AVAILABLE_ASSETS, TIMER_CLOSE_DELAY } from '../../utils/constants';
-import { useMyTranchesContext, useTransactionsContext } from '../../store/contexts';
+import { useMyTranchesContext } from '../../store/contexts';
 import { DefaultInput, ListInput } from '../components/inputs';
 import { IDialogProps } from '.';
 import { Stepper, StepperChild } from '../components/tabs';
@@ -10,17 +10,15 @@ import { useStepper } from '../../hooks/ui/useStepper';
 import { ModalFooter, ModalHeader } from '../modals/subcomponents';
 import { CreateTrancheAssetsTable } from '../tables';
 import { InnerCard } from '../components/cards';
+import { useModal } from '../../hooks/ui';
 
 export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeDialog }) => {
-    const { newTransaction } = useTransactionsContext();
+    const { setError, isSuccess, error, submitTx } = useModal('create-tranche-dialog');
     const { newTranche, myTranches } = useMyTranchesContext();
     const { steps, nextStep, prevStep, activeStep } = useStepper([
         { name: 'Create Tranche', status: 'current' },
         { name: 'Manage Assets', status: 'upcoming' },
     ]);
-
-    const [isSuccess, setIsSuccess] = React.useState(false);
-    const [error, setError] = React.useState('');
 
     const [_name, setName] = React.useState('');
     const [_whitelisted, setWhitelisted] = React.useState([]);
@@ -30,44 +28,24 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
     const [_collateralTokens, setCollateralTokens] = React.useState([]);
     const [_borrowLendTokens, setBorrowLendTokens] = React.useState([]);
 
-    const handleSubmit = () => {
-        if (
-            myTranches &&
-            myTranches.length > 0 &&
-            myTranches.map((obj) => obj.name).includes(_name)
-        ) {
+    const handleSubmit = async () => {
+        if (myTranches?.length > 0 && myTranches.map((obj) => obj.name).includes(_name))
             setError('Tranche name already in use.');
-            return;
-        }
-        if (!_name) {
-            setError('Please enter a tranche name.');
-            return;
-        }
-        if (_tokens?.length === 0) {
-            setError('Please enter tokens to be included in your tranche.');
-            return;
-        }
-        setError('');
-        setIsSuccess(true);
-        newTranche({
-            name: _name,
-            whitelisted: _whitelisted,
-            blacklisted: _blackListed,
-            tokens: _tokens,
-            adminFee: _adminFee,
-            lendAndBorrowTokens: _borrowLendTokens,
-            collateralTokens: _collateralTokens,
-        });
-        newTransaction(
-            `0x${Math.floor(Math.random() * 9)}...${Math.floor(Math.random() * 9)}${Math.floor(
-                Math.random() * 9,
-            )}s`,
-        );
+        if (!_name) setError('Please enter a tranche name.');
+        if (_tokens?.length === 0) setError('Please enter tokens to be included in your tranche.');
+        if (error) return;
 
-        setTimeout(() => {
-            setIsSuccess(false);
-            closeDialog('create-tranche-dialog');
-        }, TIMER_CLOSE_DELAY);
+        await submitTx(() => {
+            newTranche({
+                name: _name,
+                whitelisted: _whitelisted,
+                blacklisted: _blackListed,
+                tokens: _tokens,
+                adminFee: _adminFee,
+                lendAndBorrowTokens: _borrowLendTokens,
+                collateralTokens: _collateralTokens,
+            });
+        });
     };
 
     return (

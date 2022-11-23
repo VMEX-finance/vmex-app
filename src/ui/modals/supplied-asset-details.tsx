@@ -8,6 +8,7 @@ import { useSelectedTrancheContext, useTransactionsContext } from '../../store/c
 import { TIMER_CLOSE_DELAY } from '../../utils/constants';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../modals/subcomponents';
 import { IDialogProps } from '.';
+import { useModal } from '../../hooks/ui';
 
 export const SuppliedAssetDetailsDialog: React.FC<IDialogProps> = ({
     name,
@@ -17,9 +18,7 @@ export const SuppliedAssetDetailsDialog: React.FC<IDialogProps> = ({
 }) => {
     const navigate = useNavigate();
     const { updateTranche, setAsset } = useSelectedTrancheContext();
-    const { newTransaction } = useTransactionsContext();
-    const [isSuccess, setIsSuccess] = React.useState(false);
-    const [error, setError] = React.useState('');
+    const { submitTx, isSuccess } = useModal('supplied-asset-details-dialog');
 
     const routeToTranche = (row: any) => {
         setAsset(row.asset);
@@ -28,18 +27,8 @@ export const SuppliedAssetDetailsDialog: React.FC<IDialogProps> = ({
         navigate(`/tranches/${row.tranche.replace(/\s+/g, '-')}`, { state: { view: 'details' } });
     };
 
-    const handleSubmit = () => {
-        setIsSuccess(true);
-        newTransaction(
-            `0x${Math.floor(Math.random() * 9)}...${Math.floor(Math.random() * 9)}${Math.floor(
-                Math.random() * 9,
-            )}z`,
-        );
-
-        setTimeout(() => {
-            setIsSuccess(false);
-            closeDialog('supplied-asset-details-dialog');
-        }, TIMER_CLOSE_DELAY);
+    const handleSubmit = async () => {
+        await submitTx();
     };
 
     return (
