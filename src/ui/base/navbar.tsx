@@ -7,6 +7,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { DropdownButton, MenuItemButton, WalletButton } from '../components/buttons';
 import { useTransactionsContext } from '../../store/contexts';
 import { useWalletState } from '../../hooks/wallet';
+import { RainbowWalletButton } from '../components/buttons';
+import { CgSpinner } from 'react-icons/cg';
 
 export const Navbar: React.FC = () => {
     const navigate = useNavigate();
@@ -83,7 +85,7 @@ export const Navbar: React.FC = () => {
                         />
                     )}
                     {width >= 1024 ? (
-                        <WalletButton label={width > 1200 ? 'Connect Wallet' : 'Connect'} primary />
+                        <RainbowWalletButton />
                     ) : (
                         <Menu as="div" className="relative inline-block">
                             <div>
@@ -115,11 +117,7 @@ export const Navbar: React.FC = () => {
                                                 )}
                                             </Menu.Item>
                                         ))}
-                                        <WalletButton
-                                            label={'Connect Wallet'}
-                                            primary
-                                            className="!w-full"
-                                        />
+                                        <RainbowWalletButton />
                                     </div>
                                 </Menu.Items>
                             </Transition>
