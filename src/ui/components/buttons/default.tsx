@@ -1,4 +1,5 @@
 import React from 'react';
+import { CgSpinner } from 'react-icons/cg';
 
 export interface IButtonProps {
     label?: string | React.ReactNode;
@@ -8,6 +9,8 @@ export interface IButtonProps {
     className?: string;
     disabled?: boolean;
     type?: 'delete';
+    icon?: React.ReactNode;
+    loading?: boolean;
 }
 
 export const Button = ({
@@ -18,6 +21,8 @@ export const Button = ({
     className,
     disabled,
     type,
+    icon,
+    loading,
 }: IButtonProps) => {
     const mode = primary
         ? 'bg-black rounded-lg text-white hover:bg-neutral-800 border border-[1px] border-black'
@@ -53,7 +58,10 @@ export const Button = ({
                 }`,
             ].join(' ')}
         >
-            {label}
+            <span className="flex items-center gap-2">
+                {label || 'Submit'}
+                {loading ? <CgSpinner className="animate-spin" /> : icon}
+            </span>
         </button>
     );
 };

@@ -17,22 +17,34 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
         primary && !address ? '' : '!bg-white !text-black hover:!bg-neutral-100'
     }`;
 
-    const handleOpen = () => {
-        openDialog('my-tranches-dialog');
+    const renderDropdownItems = () => {
+        if (myTranches.length !== 0) {
+            return [
+                {
+                    text: 'My Tranches',
+                    onClick: () => openDialog('my-tranches-dialog'),
+                },
+                {
+                    text: 'Create Tranche',
+                    onClick: () => openDialog('create-tranche-dialog'),
+                },
+            ];
+        } else {
+            return [
+                {
+                    text: 'Create Tranche',
+                    onClick: () => openDialog('create-tranche-dialog'),
+                },
+            ];
+        }
     };
 
-    if (address && width > 1024 && myTranches.length !== 0) {
+    if (address && width > 1024) {
         return (
             <DropdownButton
                 className={['min-h-[36px]', mode, className].join(' ')}
                 selected={width > 1400 ? truncateAddress(address) : truncate(address, 3)}
-                items={[
-                    {
-                        text: 'My Tranches',
-                        onClick: handleOpen,
-                    },
-                    // TODO: add disconnect wallet here
-                ]}
+                items={renderDropdownItems()}
                 border
                 size="lg"
             />

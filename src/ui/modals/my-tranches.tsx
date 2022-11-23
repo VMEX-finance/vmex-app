@@ -1,17 +1,15 @@
 import React, { useEffect } from 'react';
 import { TransactionStatus } from '../components/statuses';
 import { Button, DropdownButton } from '../components/buttons';
-import { TIMER_CLOSE_DELAY } from '../../utils/constants';
-import { useMyTranchesContext, useTransactionsContext } from '../../store/contexts';
+import { useMyTranchesContext } from '../../store/contexts';
 import { DefaultInput, ListInput } from '../components/inputs';
 import { IDialogProps } from '.';
 import { ModalFooter, ModalHeader } from '../modals/subcomponents';
+import { useModal } from '../../hooks/ui';
 
 export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDialog }) => {
-    const { newTransaction } = useTransactionsContext();
+    const { isSuccess, error, submitTx, setError, isLoading } = useModal('my-tranches-dialog');
     const { updateTranche, myTranches, deleteTranche, pauseTranche } = useMyTranchesContext();
-    const [isSuccess, setIsSuccess] = React.useState(false);
-    const [error, setError] = React.useState('');
 
     const [selectedTranche, setSelectedTranche] = React.useState(
         myTranches.length > 0
@@ -39,66 +37,33 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
         setSelectedTranche(found as any);
     };
 
-    const handleSave = () => {
-        if (!_name) {
-            setError('Please enter a tranche name.');
-            return;
-        }
-        if (_tokens?.length === 0) {
-            setError('Please enter tokens to be included in your tranche.');
-            return;
-        }
-        setError('');
-        setIsSuccess(true);
-        updateTranche({
-            id: selectedTranche.id,
-            name: _name,
-            whitelisted: _whitelisted,
-            blacklisted: _blackListed,
-            tokens: _tokens,
-            adminFee: _adminFee,
-            pausedTokens: _pausedTokens,
+    const handleSave = async () => {
+        if (!_name) setError('Please enter a tranche name.');
+        if (_tokens?.length === 0) setError('Please enter tokens to be included in your tranche.');
+
+        await submitTx(() => {
+            updateTranche({
+                id: selectedTranche.id,
+                name: _name,
+                whitelisted: _whitelisted,
+                blacklisted: _blackListed,
+                tokens: _tokens,
+                adminFee: _adminFee,
+                pausedTokens: _pausedTokens,
+            });
+        }, false);
+    };
+
+    const handleDelete = async () => {
+        await submitTx(() => {
+            deleteTranche(selectedTranche.id);
         });
-        newTransaction(
-            `0x${Math.floor(Math.random() * 9)}...${Math.floor(Math.random() * 9)}${Math.floor(
-                Math.random() * 9,
-            )}s`,
-        );
-
-        setTimeout(() => {
-            setIsSuccess(false);
-            closeDialog('my-tranches-dialog');
-        }, TIMER_CLOSE_DELAY);
     };
 
-    const handleDelete = () => {
-        deleteTranche(selectedTranche.id);
-        setIsSuccess(true);
-        newTransaction(
-            `0x${Math.floor(Math.random() * 9)}...${Math.floor(Math.random() * 9)}${Math.floor(
-                Math.random() * 9,
-            )}s`,
-        );
-
-        setTimeout(() => {
-            setIsSuccess(false);
-            closeDialog('my-tranches-dialog');
-        }, TIMER_CLOSE_DELAY);
-    };
-
-    const handlePause = () => {
-        pauseTranche(selectedTranche.id);
-        setIsSuccess(true);
-
-        newTransaction(
-            `0x${Math.floor(Math.random() * 9)}...${Math.floor(Math.random() * 9)}${Math.floor(
-                Math.random() * 9,
-            )}s`,
-        );
-
-        setTimeout(() => {
-            setIsSuccess(false);
-        }, TIMER_CLOSE_DELAY);
+    const handlePause = async () => {
+        await submitTx(() => {
+            pauseTranche(selectedTranche.id);
+        }, false);
     };
 
     useEffect(() => {
@@ -196,8 +161,15 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
                     onClick={handlePause}
                     label={selectedTranche.isPaused ? 'Unpause Tranche' : 'Pause Tranche'}
                     type="delete"
+                    loading={isLoading}
                 />
-                <Button disabled={isSuccess} onClick={handleSave} label="Save" primary />
+                <Button
+                    disabled={isSuccess}
+                    onClick={handleSave}
+                    label="Save"
+                    loading={isLoading}
+                    primary
+                />
             </ModalFooter>
         </>
     );

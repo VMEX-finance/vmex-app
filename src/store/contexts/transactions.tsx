@@ -10,13 +10,15 @@ type ITransactionProps = {
 export type ITransactionsStoreProps = {
     transactions: Array<ITransactionProps>;
     setTransactions?: any;
-    newTransaction?: any;
-    updateTransaction?: any;
+    newTransaction: (hash: string) => void;
+    updateTransaction: (hash: string, status: string) => void;
 };
 
 // Context
 const TransactionsContext = createContext<ITransactionsStoreProps>({
     transactions: [],
+    newTransaction(hash) {},
+    updateTransaction(hash, status) {},
 });
 
 // Wrapper

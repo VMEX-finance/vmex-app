@@ -8,6 +8,7 @@ import { ActiveStatus, TransactionStatus } from '../components/statuses';
 import { useTransactionsContext } from '../../store/contexts';
 import { TIMER_CLOSE_DELAY } from '../../utils/constants';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../modals/subcomponents';
+import { useModal } from '../../hooks/ui';
 
 interface IOwnedAssetDetails {
     name?: string;
@@ -24,27 +25,14 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
     tab,
     closeDialog,
 }) => {
+    const { submitTx, isSuccess, error, isLoading } = useModal('loan-asset-dialog');
+
     const [view, setView] = React.useState('Supply');
-
-    const { newTransaction } = useTransactionsContext();
-
-    const [isSuccess, setIsSuccess] = React.useState(false);
-    const [isError, setIsError] = React.useState(false);
     const [asCollateral, setAsCollateral] = React.useState(false);
     const [amount, setAmount] = useMediatedState(inputMediator, '');
 
-    const handleSubmit = () => {
-        setIsSuccess(true);
-        newTransaction(
-            `0x${Math.floor(Math.random() * 9)}...${Math.floor(Math.random() * 9)}${Math.floor(
-                Math.random() * 9,
-            )}p`,
-        );
-
-        setTimeout(() => {
-            setIsSuccess(false);
-            closeDialog('loan-asset-dialog');
-        }, TIMER_CLOSE_DELAY);
+    const handleSubmit = async () => {
+        await submitTx();
     };
 
     return (
@@ -61,7 +49,7 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
                             onClick={setView}
                             primary
                         />
-                        {!isSuccess && !isError ? (
+                        {!isSuccess && !error ? (
                             // Default State
                             <>
                                 <h3 className="mt-5 text-gray-400">Amount</h3>
@@ -112,7 +100,7 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
                             tab={tab}
                             onClick={setView}
                         />
-                        {!isSuccess && !isError ? (
+                        {!isSuccess && !error ? (
                             // Default State
                             <>
                                 <h3 className="mt-5 text-gray-400">Amount</h3>
@@ -150,9 +138,10 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
                 <ModalFooter>
                     <Button
                         primary
-                        disabled={isSuccess || isError}
+                        disabled={isSuccess || error.length !== 0}
                         onClick={handleSubmit}
                         label={'Submit Transaction'}
+                        loading={isLoading}
                     />
                 </ModalFooter>
             </>

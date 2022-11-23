@@ -32,7 +32,7 @@ export const TransactionStatus = ({ success, size, full }: ISuccessStatus) => {
     return (
         <div
             className={`${determineColor()} flex items-center ${
-                full ? 'flex-col justify-center' : ''
+                full ? 'flex-col justify-center min-h-[300px]' : ''
             }`}
         >
             <div>
