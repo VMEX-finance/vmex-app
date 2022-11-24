@@ -145,7 +145,7 @@ export const DropdownButton = ({
                         leaveTo="transform opacity-0 scale-95"
                     >
                         <Menu.Items
-                            className={`origin-top-right absolute ${
+                            className={`origin-top-right absolute max-h-72 overflow-y-scroll ${
                                 direction === 'left' ? 'right-0' : ''
                             } bg-white mt-2 ${
                                 full ? 'w-full' : 'min-w-[180px]'
