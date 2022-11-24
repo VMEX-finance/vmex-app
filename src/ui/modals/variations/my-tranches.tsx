@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
-import { TransactionStatus } from '../components/statuses';
-import { Button, DropdownButton } from '../components/buttons';
-import { useMyTranchesContext } from '../../store/contexts';
-import { DefaultInput, ListInput } from '../components/inputs';
-import { IDialogProps } from '.';
-import { ModalFooter, ModalHeader } from '../modals/subcomponents';
-import { useModal } from '../../hooks/ui';
+import { TransactionStatus } from '../../components/statuses';
+import { Button, DropdownButton } from '../../components/buttons';
+import { useMyTranchesContext } from '../../../store/contexts';
+import { DefaultInput, ListInput } from '../../components/inputs';
+import { IDialogProps } from '../utils';
+import { ModalFooter, ModalHeader } from '../../modals/subcomponents';
+import { useModal } from '../../../hooks/ui';
 
 export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDialog }) => {
     const { isSuccess, error, submitTx, setError, isLoading } = useModal('my-tranches-dialog');

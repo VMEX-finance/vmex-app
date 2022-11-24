@@ -1,16 +1,16 @@
 import React from 'react';
-import { TransactionStatus } from '../components/statuses';
-import { Button } from '../components/buttons';
-import { AVAILABLE_ASSETS, TIMER_CLOSE_DELAY } from '../../utils/constants';
-import { useMyTranchesContext } from '../../store/contexts';
-import { DefaultInput, ListInput } from '../components/inputs';
-import { IDialogProps } from '.';
-import { Stepper, StepperChild } from '../components/tabs';
-import { useStepper } from '../../hooks/ui/useStepper';
-import { ModalFooter, ModalHeader } from '../modals/subcomponents';
-import { CreateTrancheAssetsTable } from '../tables';
-import { InnerCard } from '../components/cards';
-import { useModal } from '../../hooks/ui';
+import { TransactionStatus } from '../../components/statuses';
+import { Button } from '../../components/buttons';
+import { AVAILABLE_ASSETS } from '../../../utils/constants';
+import { useMyTranchesContext } from '../../../store/contexts';
+import { DefaultInput, ListInput } from '../../components/inputs';
+import { IDialogProps } from '../utils';
+import { Stepper, StepperChild } from '../../components/tabs';
+import { useStepper } from '../../../hooks/ui/useStepper';
+import { ModalFooter, ModalHeader } from '../../modals/subcomponents';
+import { CreateTrancheAssetsTable } from '../../tables';
+import { InnerCard } from '../../components/cards';
+import { useModal } from '../../../hooks/ui';
 
 export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeDialog }) => {
     const { setError, isSuccess, error, submitTx, isLoading } = useModal('create-tranche-dialog');
