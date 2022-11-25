@@ -11,7 +11,7 @@ export async function getProtocolOverviewData(): Promise<IProtocolProps> {
 
     return {
         // tvl: Number(ethers.utils.formatEther(tvl)),
-        tvl: 19234543,
+        tvl: 239334543,
         reserve: 248750,
         lenders: 267,
         borrowers: 473,
