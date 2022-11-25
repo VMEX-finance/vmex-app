@@ -42,15 +42,8 @@ const Overview: React.FC = () => {
                     <div className="mb-4">
                         <span className="text-lg lg:text-2xl">Please connect your wallet.</span>
                     </div>
-<<<<<<< HEAD
-<<<<<<< HEAD
+
                     <RainbowWalletButton primary />
-=======
-                    <ConnectButton accountStatus="address" chainStatus="none" showBalance={false} />
->>>>>>> 5961c17 (add Rainbow Wallet)
-=======
-                    <RainbowWalletButton />
->>>>>>> 681d2ec (almost finished rainbow)
                 </div>
             )}
         </AppTemplate>
