@@ -8,9 +8,9 @@ import { useProtocolData } from '../api/protocol';
 import { useUserData } from '../api/user';
 import { useAccount } from 'wagmi';
 import { useWalletState } from '../hooks/wallet';
-import { RainbowWalletButton } from '../ui/components/buttons';
 const Overview: React.FC = () => {
-    const { address } = useWalletState2();
+    // const { address } = useWalletState2();
+    const { isConnected } = useAccount();
     const { queryProtocolOverview } = useProtocolData();
     const { queryUserPerformance, queryUserActivity } = useUserData(address);
 
@@ -20,7 +20,7 @@ const Overview: React.FC = () => {
                 {...queryProtocolOverview.data}
                 isLoading={queryProtocolOverview.isLoading}
             />
-            {address ? (
+            {isConnected ? (
                 <GridView type="fixed">
                     <UserPerformanceCard
                         {...queryUserPerformance.data}
@@ -42,7 +42,11 @@ const Overview: React.FC = () => {
                     <div className="mb-4">
                         <span className="text-lg lg:text-2xl">Please connect your wallet.</span>
                     </div>
+<<<<<<< HEAD
                     <RainbowWalletButton primary />
+=======
+                    <ConnectButton accountStatus="address" chainStatus="none" showBalance={false} />
+>>>>>>> 5961c17 (add Rainbow Wallet)
                 </div>
             )}
         </AppTemplate>
