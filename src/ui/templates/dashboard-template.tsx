@@ -32,7 +32,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
 
     // TODO: cleanup / optimize
     return (
-        <div className="py-10 max-w-[120rem] mx-auto px-6 lg:px-8">
+        <div className="max-w-[125rem] mx-auto p-4 md:p-6 lg:p-10">
             <header
                 className={`${
                     view ? 'grid grid-flow-dense md:grid-cols-3' : 'flex flex-row'

@@ -4,6 +4,7 @@ import { ILineChartDataPointProps, ReLineChart } from '../../components/charts';
 import { NumberDisplay, PillDisplay } from '../../components/displays';
 import { TopTranchesTable } from '../../tables';
 import { usdFormatter } from '../../../utils/helpers';
+import { useWindowSize } from '../../../hooks/ui';
 
 export interface IProtocolProps {
     isLoading?: boolean;
@@ -34,6 +35,19 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
     topTranches,
     isLoading,
 }) => {
+    const { width } = useWindowSize();
+    const renderTopAssetsList = (arr: any[] | undefined) => {
+        if (arr) {
+            if (width > 1536) {
+                return arr;
+            } else {
+                return arr.slice(0, 4);
+            }
+        } else {
+            return [];
+        }
+    };
+
     return (
         <Card loading={isLoading}>
             <div className="flex flex-col xl:flex-row gap-2 md:gap-4 xl:gap-6 divide-y-2 xl:divide-y-0 xl:divide-x-2 divide-black">
@@ -42,7 +56,7 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                         <div className="flex flex-col">
                             <h2 className="text-2xl">Total Value Locked (TVL)</h2>
                             <p className="text-3xl">
-                                {tvl ? usdFormatter.format(tvl as number) : ''}
+                                {tvl ? usdFormatter.format(tvl as number) : '$0'}
                             </p>
                         </div>
                         <div className="h-[100px] w-full">
@@ -78,15 +92,14 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                         <div className="flex flex-col gap-1">
                             <span>Top Supplied Assets</span>
                             <div className="flex flex-wrap gap-1">
-                                {topSuppliedAssets &&
-                                    topSuppliedAssets.map((el, i) => (
-                                        <PillDisplay
-                                            key={`top-asset-${i}`}
-                                            type="asset"
-                                            asset={`${el.asset}`}
-                                            value={el.val}
-                                        />
-                                    ))}
+                                {renderTopAssetsList(topSuppliedAssets).map((el, i) => (
+                                    <PillDisplay
+                                        key={`top-asset-${i}`}
+                                        type="asset"
+                                        asset={`${el.asset}`}
+                                        value={el.val}
+                                    />
+                                ))}
                             </div>
                         </div>
                     </div>
@@ -100,15 +113,14 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                         <div className="flex flex-col gap-1">
                             <span>Top Borrowed Assets</span>
                             <div className="flex flex-wrap gap-1">
-                                {topBorrowedAssets &&
-                                    topBorrowedAssets.map((el, i) => (
-                                        <PillDisplay
-                                            key={`top-asset-${i}`}
-                                            type="asset"
-                                            asset={`${el.asset}`}
-                                            value={el.val}
-                                        />
-                                    ))}
+                                {renderTopAssetsList(topBorrowedAssets).map((el, i) => (
+                                    <PillDisplay
+                                        key={`top-asset-${i}`}
+                                        type="asset"
+                                        asset={`${el.asset}`}
+                                        value={el.val}
+                                    />
+                                ))}
                             </div>
                         </div>
                     </div>

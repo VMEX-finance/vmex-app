@@ -67,3 +67,20 @@ input[type='checkbox']:checked:after {
   position: relative;
   margin-right: 9px;
 }
+
+/* react-toastify */
+.Toastify__toast-container {
+  min-width: 360px;
+}
+
+.Toastify__toast {
+  border-radius: 8px;
+}
+
+.Toastify__progress-bar--success {
+  background: #86efac !important;
+}
+
+.Toastify__toast--success .Toastify__toast-icon svg {
+  fill: #86efac;
+}

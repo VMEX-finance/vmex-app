@@ -1,4 +1,6 @@
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import { ToastStatus } from '../../ui/components/statuses';
 
 // Types
 type ITransactionProps = {
@@ -10,13 +12,15 @@ type ITransactionProps = {
 export type ITransactionsStoreProps = {
     transactions: Array<ITransactionProps>;
     setTransactions?: any;
-    newTransaction?: any;
-    updateTransaction?: any;
+    newTransaction: (hash: string) => void;
+    updateTransaction: (hash: string, status: string) => void;
 };
 
 // Context
 const TransactionsContext = createContext<ITransactionsStoreProps>({
     transactions: [],
+    newTransaction(hash) {},
+    updateTransaction(hash, status) {},
 });
 
 // Wrapper
@@ -38,6 +42,28 @@ export function TransactionsStore(props: { children: ReactNode }) {
         const shallow = [...transactions];
         shallow.push({ text: hash, status: 'pending' });
         setTransactions(shallow);
+
+        toast.promise(
+            new Promise((resolve) => setTimeout(resolve, 10000)),
+            {
+                pending: {
+                    render() {
+                        return <ToastStatus status="pending" transaction={hash} />;
+                    },
+                },
+                error: {
+                    render({ data }) {
+                        return <ToastStatus status="error" transaction={hash} />;
+                    },
+                },
+                success: {
+                    render({ data }) {
+                        return <ToastStatus status="success" transaction={hash} />;
+                    },
+                },
+            },
+            { delay: 200 },
+        );
     };
 
     const updateTransaction = (hash: string, status = 'complete') => {

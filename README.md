@@ -10,7 +10,9 @@ yarn
 
 ## Development
 
-To start local development, first clone the VMEX SDK/contracts repo and, in there, run:
+To start local development, first clone the [VMEX SDK/contracts repo](https://github.com/VMEX-finance/vmex) and then [link](https://classic.yarnpkg.com/lang/en/docs/cli/link/) the SDK package to the VMEX App Repo.
+
+Then, inside the VMEX monorepo, run:
 
 1. `yarn compile`
 2. `yarn build`
@@ -19,7 +21,7 @@ To start local development, first clone the VMEX SDK/contracts repo and, in ther
 Then, in the VMEX App repo, run:
 
 ```bash
-yarn start
+yarn start:dev
 ```
 
 When adding new features, create a new branch based on `origin/develop`. Upon completing new features, create pull requests to `origin/develop`.
@@ -58,5 +60,5 @@ src
 
 ### Site Links
 
-(Production Site)[https://app.vmex.finance]
-(Development Site)[https://royal-snow-5738.on.fleek.co/]
+- [Production Site](https://app.vmex.finance)
+- [Development Site](https://vmex-app-develop.on.fleek.co/)

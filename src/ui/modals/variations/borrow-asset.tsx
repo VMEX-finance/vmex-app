@@ -1,67 +1,45 @@
 import React from 'react';
+import { FaGasPump } from 'react-icons/fa';
 import { useMediatedState } from 'react-use';
-import { inputMediator } from '../../utils/helpers';
-import { CoinInput } from '../components/inputs';
-import { Button } from '../components/buttons';
-import { BasicToggle } from '../components/toggles';
-import { ActiveStatus, TransactionStatus } from '../components/statuses';
-import { useTransactionsContext } from '../../store/contexts';
-import { TIMER_CLOSE_DELAY } from '../../utils/constants';
-import { ModalFooter, ModalHeader, ModalTableDisplay } from '../modals/subcomponents';
+import { TransactionStatus, ActiveStatus } from '../../components/statuses';
+import { CoinInput } from '../../components/inputs';
+import { Button, DropdownButton } from '../../components/buttons';
+import { inputMediator } from '../../../utils/helpers';
+import { HealthFactor } from '../../components/displays';
+import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
+import { IDialogProps } from '../utils';
+import { useModal } from '../../../hooks/ui';
 
-interface IOwnedAssetDetails {
-    name?: string;
-    isOpen?: boolean;
-    data?: any;
-    tab?: string;
-    closeDialog(e: any): void;
-}
-
-export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
+export const BorrowAssetDialog: React.FC<IDialogProps> = ({
     name,
     isOpen,
     data,
-    tab,
     closeDialog,
+    tab,
 }) => {
-    const [view, setView] = React.useState('Supply');
-
-    const { newTransaction } = useTransactionsContext();
-
-    const [isSuccess, setIsSuccess] = React.useState(false);
-    const [isError, setIsError] = React.useState(false);
-    const [asCollateral, setAsCollateral] = React.useState(false);
+    const { isSuccess, submitTx, isLoading } = useModal('borrow-asset-dialog');
     const [amount, setAmount] = useMediatedState(inputMediator, '');
+    const [view, setView] = React.useState('Borrow');
 
-    const handleSubmit = () => {
-        setIsSuccess(true);
-        newTransaction(
-            `0x${Math.floor(Math.random() * 9)}...${Math.floor(Math.random() * 9)}${Math.floor(
-                Math.random() * 9,
-            )}p`,
-        );
-
-        setTimeout(() => {
-            setIsSuccess(false);
-            closeDialog('loan-asset-dialog');
-        }, TIMER_CLOSE_DELAY);
+    const handleClick = async () => {
+        await submitTx();
     };
 
     return (
         data &&
         data.asset && (
             <>
-                {view?.includes('Supply') ? (
+                {view?.includes('Borrow') ? (
                     <>
                         <ModalHeader
-                            dialog="loan-asset-dialog"
+                            dialog="borrow-asset-dialog"
                             title={name}
                             asset={data.asset}
                             tab={tab}
                             onClick={setView}
                             primary
                         />
-                        {!isSuccess && !isError ? (
+                        {!isSuccess ? (
                             // Default State
                             <>
                                 <h3 className="mt-5 text-gray-400">Amount</h3>
@@ -73,26 +51,22 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
                                         name: data.asset,
                                     }}
                                     balance={'0.23'}
+                                    type="collateral"
                                 />
 
-                                <h3 className="mt-6 text-gray-400">Collaterize</h3>
-                                <div className="mt-1">
-                                    <BasicToggle
-                                        checked={asCollateral}
-                                        onChange={() => setAsCollateral(!asCollateral)}
-                                    />
-                                </div>
+                                <h3 className="mt-6 text-gray-400">Transaction Overview</h3>
+                                <HealthFactor liquidation={1.0} value={1.24} />
 
                                 <ModalTableDisplay
                                     title="Transaction Overview"
                                     content={[
                                         {
-                                            label: 'Supply APR (%)',
+                                            label: 'Borrow APR (%)',
                                             value: `${0.44}%`,
                                         },
                                         {
                                             label: 'Collateralization',
-                                            value: <ActiveStatus active={asCollateral} size="sm" />,
+                                            value: <ActiveStatus active={false} size="sm" />,
                                         },
                                     ]}
                                 />
@@ -106,13 +80,13 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
                 ) : (
                     <>
                         <ModalHeader
-                            dialog="loan-asset-dialog"
+                            dialog="borrow-asset-dialog"
                             title={name}
                             asset={data.asset}
                             tab={tab}
                             onClick={setView}
                         />
-                        {!isSuccess && !isError ? (
+                        {!isSuccess ? (
                             // Default State
                             <>
                                 <h3 className="mt-5 text-gray-400">Amount</h3>
@@ -124,17 +98,21 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
                                         name: data.asset,
                                     }}
                                     balance={'0.23'}
+                                    type="owed"
                                 />
+
+                                <h3 className="mt-6 text-gray-400">Transaction Overview</h3>
+                                <HealthFactor liquidation={1.0} value={1.24} />
 
                                 <ModalTableDisplay
                                     title="Transaction Overview"
                                     content={[
                                         {
-                                            label: 'Supply APR (%)',
+                                            label: 'Borrow APR (%)',
                                             value: `${0.44}%`,
                                         },
                                         {
-                                            label: 'Remaining Supply',
+                                            label: 'Remaining Balance',
                                             value: `${0.0}`,
                                         },
                                     ]}
@@ -147,12 +125,27 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
                         )}
                     </>
                 )}
-                <ModalFooter>
+                <ModalFooter between>
+                    <div className="mt-5 sm:mt-6 flex justify-between items-end">
+                        <div className="flex flex-col">
+                            <div className="flex items-center gap-2">
+                                <FaGasPump />
+                                <span>Gas Limit</span>
+                            </div>
+                            <div>
+                                <DropdownButton
+                                    items={[{ text: 'Normal' }, { text: 'Low' }, { text: 'High' }]}
+                                    direction="right"
+                                />
+                            </div>
+                        </div>
+                    </div>
                     <Button
                         primary
-                        disabled={isSuccess || isError}
-                        onClick={handleSubmit}
-                        label={'Submit Transaction'}
+                        disabled={isSuccess}
+                        onClick={handleClick}
+                        label="Submit Transaction"
+                        loading={isLoading}
                     />
                 </ModalFooter>
             </>
