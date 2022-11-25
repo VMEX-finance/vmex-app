@@ -2,16 +2,15 @@ import { useQuery } from '@tanstack/react-query';
 import { IProtocolProps } from '../../ui/features';
 import { MOCK_LINE_DATA_2, MOCK_TOP_ASSETS, MOCK_TOP_TRANCHES } from '../../utils/mock-data';
 import { IProtocolDataProps } from './types';
-// import { getTVL } from '@vmex/sdk';
-// import { ethers } from 'ethers';
-// import { SDK_PARAMS } from '../../utils/sdk-helpers';
+import { getTVL } from '@vmex/sdk';
+import { ethers } from 'ethers';
+import { SDK_PARAMS } from '../../utils/sdk-helpers';
 
 export async function getProtocolOverviewData(): Promise<IProtocolProps> {
-    // const tvl = await getTVL(SDK_PARAMS);
+    const tvl = await getTVL(SDK_PARAMS);
 
     return {
-        // tvl: Number(ethers.utils.formatEther(tvl)),
-        tvl: 239334543,
+        tvl: Number(ethers.utils.formatEther(tvl)),
         reserve: 248750,
         lenders: 267,
         borrowers: 473,
