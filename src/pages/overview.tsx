@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { AppTemplate, GridView } from '../ui/templates';
 import { UserPerformanceCard, ProtocolStatsCard } from '../ui/features';
 import { YourPositionsTable } from '../ui/tables';
