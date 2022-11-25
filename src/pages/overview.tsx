@@ -1,14 +1,17 @@
-import { useWalletState } from '../hooks/wallet';
 import React from 'react';
 import { AppTemplate, GridView } from '../ui/templates';
 import { UserPerformanceCard, ProtocolStatsCard } from '../ui/features/overview';
 import { YourPositionsTable } from '../ui/tables';
 import { WalletButton } from '../ui/components/buttons';
+import { RainbowWalletButton } from '../ui/components/buttons';
 import { useProtocolData } from '../api/protocol';
 import { useUserData } from '../hooks/user';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { useAccount } from 'wagmi';
 
 const Overview: React.FC = () => {
-    const { address } = useWalletState();
+    // const { address } = useWalletState2();
+    const { isConnected } = useAccount();
     const { queryProtocolOverview } = useProtocolData();
     const { queryUserPerformance, queryUserActivity } = useUserData();
 
@@ -18,7 +21,7 @@ const Overview: React.FC = () => {
                 {...queryProtocolOverview.data}
                 isLoading={queryProtocolOverview.isLoading}
             />
-            {address ? (
+            {isConnected ? (
                 <GridView type="fixed">
                     <UserPerformanceCard
                         {...queryUserPerformance.data}
@@ -40,7 +43,7 @@ const Overview: React.FC = () => {
                     <div className="mb-4">
                         <span className="text-lg lg:text-2xl">Please connect your wallet.</span>
                     </div>
-                    <WalletButton primary />
+                    <ConnectButton accountStatus="address" chainStatus="none" showBalance={false} />
                 </div>
             )}
         </AppTemplate>
