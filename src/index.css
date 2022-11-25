@@ -73,6 +73,10 @@ input[type='checkbox']:checked:after {
   min-width: 360px;
 }
 
+.Toastify__toast {
+  border-radius: 8px;
+}
+
 .Toastify__progress-bar--success {
   background: #86efac !important;
 }
