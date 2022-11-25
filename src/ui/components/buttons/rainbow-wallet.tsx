@@ -1,12 +1,20 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useWalletState2 } from '../../../hooks/wallet';
+import { IButtonProps } from './default';
+import { useConnect } from 'wagmi';
+
 export const RainbowWalletButton = () => {
-    const { connectRainbow } = useWalletState2();
     return <ConnectButton accountStatus="address" chainStatus="none" showBalance={false} />;
 };
 
-export const YourApp = () => {
+/* export const RainbowWalletButton = ({ primary, className, label = 'Connect Wallet' }: IButtonProps) => {
+   const { connectRainbow } = useWalletState2();
+    const { status } = useConnect();
+    useEffect(() => {
+        status == 'success' && connectRainbow()
+    },[status])
+
     return (
         <ConnectButton.Custom>
             {({
@@ -16,7 +24,7 @@ export const YourApp = () => {
                 openChainModal,
                 openConnectModal,
                 authenticationStatus,
-                mounted,
+                mounted
             }) => {
                 // Note: If your app doesn't use authentication, you
                 // can remove all 'authenticationStatus' checks
@@ -27,7 +35,7 @@ export const YourApp = () => {
                     chain &&
                     (!authenticationStatus || authenticationStatus === 'authenticated');
                 return (
-                    <div
+                    <div className={['bg-black', 'rounded-lg', 'text-white', 'hover:bg-neutral-800', 'border', 'border-[1px]', 'border-black', className].join(' ')}
                         {...(!ready && {
                             'aria-hidden': true,
                             style: {
@@ -59,33 +67,11 @@ export const YourApp = () => {
                                         style={{ display: 'flex', alignItems: 'center' }}
                                         type="button"
                                     >
-                                        {chain.hasIcon && (
-                                            <div
-                                                style={{
-                                                    background: chain.iconBackground,
-                                                    width: 12,
-                                                    height: 12,
-                                                    borderRadius: 999,
-                                                    overflow: 'hidden',
-                                                    marginRight: 4,
-                                                }}
-                                            >
-                                                {chain.iconUrl && (
-                                                    <img
-                                                        alt={chain.name ?? 'Chain icon'}
-                                                        src={chain.iconUrl}
-                                                        style={{ width: 12, height: 12 }}
-                                                    />
-                                                )}
-                                            </div>
-                                        )}
-                                        {chain.name}
+        
                                     </button>
                                     <button onClick={openAccountModal} type="button">
                                         {account.displayName}
-                                        {account.displayBalance
-                                            ? ` (${account.displayBalance})`
-                                            : ''}
+
                                     </button>
                                 </div>
                             );
@@ -96,3 +82,4 @@ export const YourApp = () => {
         </ConnectButton.Custom>
     );
 };
+ */

@@ -25,7 +25,7 @@ export const wagmiClient = createClient({
 export interface IWalletState {
     provider?: Web3Provider | JsonRpcProvider | Provider;
     address?: string;
-    signer?: Signer | any;
+    signer?: Signer;
     isLoading: boolean;
     error: null | string;
 }
@@ -59,23 +59,25 @@ export const loginWithRainbow = createAsyncThunk('connect_rainbow', async (thunk
     // }
 
     const provider = useProvider();
-    const { data: signer } = useSigner();
+    const result = useSigner();
+    const signer = result!;
     const { address } = useAccount();
+    const stringAddr = address?.toString();
     return {
         signer,
-        address,
+        stringAddr,
         provider,
     };
 });
 
-export const WalletSlice = createSlice({
+/* export const WalletSlice = createSlice({
     name: 'wallet',
     initialState: WalletState,
     reducers: {},
     extraReducers: (builder) => {
         builder.addCase(loginWithRainbow.fulfilled, (state, action) => {
             state.signer = action.payload?.signer;
-            state.address = action.payload?.address;
+            state.address = action.payload?.stringAddr;
             state.provider = action.payload?.provider;
         });
 
@@ -83,8 +85,6 @@ export const WalletSlice = createSlice({
             throw new Error('Failed to authenticate with Rainbow Kit');
         });
     },
-});
-
-export default WalletSlice.reducer;
+}); */
 
 export { WagmiConfig, RainbowKitProvider };

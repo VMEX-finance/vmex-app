@@ -1,7 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
-import WalletSlice from './rainbow';
+import WalletSlice from './wallet';
 import DialogControllerSlice from './modals';
 import UserTokenSlice from './user-tokenBal';
 import TokenDataSlice from './token-data';
