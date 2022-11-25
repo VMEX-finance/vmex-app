@@ -1,6 +1,5 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import React, { useEffect } from 'react';
-import { useWalletState2 } from '../../../hooks/wallet';
 import { IButtonProps } from './default';
 import { useConnect } from 'wagmi';
 

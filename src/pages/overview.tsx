@@ -1,4 +1,3 @@
-import { useWalletState2 } from '../hooks/wallet';
 import React from 'react';
 import { AppTemplate, GridView } from '../ui/templates';
 import { UserPerformanceCard, ProtocolStatsCard } from '../ui/features/overview';
