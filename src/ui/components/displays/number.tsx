@@ -41,7 +41,7 @@ export const NumberDisplay = ({
     };
 
     return (
-        <div className={`flex flex-col ${center ? 'text-center' : ''}`}>
+        <div className={`flex flex-col ${center ? 'text-center ' : ''}`}>
             <p className={`${labelSize()}`}>{label}</p>
             <p className={`${valueSize()} ${color}`}>{value}</p>
             {change && <PercentChangeDisplay value={change} />}
