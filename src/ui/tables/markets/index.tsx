@@ -5,12 +5,14 @@ import { muiCache, options, vmexTheme } from '../utils';
 import type { IMarketsAsset } from '../../../models/markets';
 import { MarketsCustomRow } from './custom-row';
 import MUIDataTable from 'mui-datatables';
+import { SpinnerLoader } from '../../components/loaders';
 
 interface ITableProps {
     data?: IMarketsAsset[];
+    loading?: boolean;
 }
 
-export const MarketsTable: React.FC<ITableProps> = ({ data }) => {
+export const MarketsTable: React.FC<ITableProps> = ({ data, loading }) => {
     const columns = [
         {
             name: 'asset',
@@ -170,6 +172,15 @@ export const MarketsTable: React.FC<ITableProps> = ({ data }) => {
                                     logo={logo}
                                 />
                             );
+                        },
+                        textLabels: {
+                            body: {
+                                noMatch: loading ? (
+                                    <SpinnerLoader />
+                                ) : (
+                                    'An error has occured while fetching tranches. Please refresh the page.'
+                                ),
+                            },
                         },
                     }}
                 />

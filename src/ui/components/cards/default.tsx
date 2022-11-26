@@ -1,5 +1,5 @@
 import React from 'react';
-import { CgSpinner } from 'react-icons/cg';
+import { SpinnerLoader } from '../loaders';
 
 type ICardProps = {
     children: React.ReactNode | React.ReactNode[];
@@ -19,12 +19,6 @@ export const Card = ({ children, color, black, padding, className, loading }: IC
     ${className ? className : ''}
   `}
     >
-        {loading ? (
-            <div className="flex justify-center items-center min-h-[200px]">
-                <CgSpinner className="animate-spin" size="36px" />
-            </div>
-        ) : (
-            <>{children}</>
-        )}
+        {loading ? <SpinnerLoader /> : <>{children}</>}
     </div>
 );
