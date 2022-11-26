@@ -9,6 +9,9 @@ import { useTransactionsContext } from '../../store/contexts';
 import { TIMER_CLOSE_DELAY } from '../../utils/constants';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../modals/subcomponents';
 import { useModal } from '../../hooks/ui';
+import { supply } from '@vmex/sdk';
+import { MAINNET_ASSET_MAPPINGS, NETWORK } from '../../utils/sdk-helpers';
+import { ethers } from 'ethers';
 
 interface IOwnedAssetDetails {
     name?: string;
@@ -32,7 +35,17 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
     const [amount, setAmount] = useMediatedState(inputMediator, '');
 
     const handleSubmit = async () => {
-        await submitTx();
+        console.log(MAINNET_ASSET_MAPPINGS.get(data.asset));
+        await submitTx({
+            underlying: MAINNET_ASSET_MAPPINGS.get(data.asset),
+            trancheId: data.tranche,
+            amount: amount,
+            signer: data.signer,
+            network: NETWORK,
+            // referrer: number,
+            // collateral: boolean,
+            // test: boolean
+        });
     };
 
     return (

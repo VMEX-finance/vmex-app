@@ -11,7 +11,7 @@ import { useWalletState } from '../hooks/wallet';
 const TrancheDetails: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { address } = useWalletState();
+    const { address, signer } = useWalletState();
     const { tranche, setTranche } = useSelectedTrancheContext();
     const [view, setView] = useState('tranche-overview');
 
@@ -25,6 +25,7 @@ const TrancheDetails: React.FC = () => {
     useEffect(() => {
         if (!tranche.id) navigate('/tranches');
         const found = MOCK_TRANCHES_DATA.find((el) => el.id === tranche.id);
+        console.log('found tranche', found);
         setTranche(found);
     }, [tranche, location]);
 
@@ -65,6 +66,8 @@ const TrancheDetails: React.FC = () => {
                                           canBeCollat: false,
                                           apy_perc: (Math.random() * 10).toFixed(2),
                                           amount: 0,
+                                          tranche: tranche.id,
+                                          signer: signer,
                                       }))
                                     : []
                             }

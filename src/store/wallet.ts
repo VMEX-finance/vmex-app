@@ -28,6 +28,7 @@ export const loginWithMetamask = createAsyncThunk('connect_metamask', async (dat
         //     await signer.getAddress(),
         //     formatEther("100.0")
         // ])
+        console.log(address);
 
         return {
             signer,

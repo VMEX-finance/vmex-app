@@ -14,9 +14,9 @@ To start local development, first clone the [VMEX SDK/contracts repo](https://gi
 
 Then, inside the VMEX monorepo, run:
 
-1. `yarn compile`
-2. `yarn build`
-3. `yarn start:dev`
+1. `yarn contracts compile`
+2. `yarn contracts build`
+3. `yarn contracts start:dev`
 
 Then, in the VMEX App repo, run:
 
@@ -32,7 +32,7 @@ When adding new features, create a new branch based on `origin/develop`. Upon co
 src
 ├── api                     # sdk imports and exports as well as formatting
 │   ├── protocol            # Pulling protocol data including tranches, markets, and overview
-│   └── index.ts            
+│   └── index.ts
 ├── hooks                   # Hooks for ui, stores, and more
 │   ├── dialogs             # Managing dialog state
 │   ├── ui                  # Strictly hooks for UI components
