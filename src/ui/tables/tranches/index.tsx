@@ -5,12 +5,14 @@ import { ThemeProvider } from '@mui/material/styles';
 import { muiCache, options, vmexTheme } from '../utils';
 import { TranchesCustomRow } from './custom-row';
 import MUIDataTable from 'mui-datatables';
+import { SpinnerLoader } from '../../components/loaders';
 
 interface IDataTable {
     data?: ITrancheProps[];
+    loading?: boolean;
 }
 
-export const TranchesTable: React.FC<IDataTable> = ({ data }) => {
+export const TranchesTable: React.FC<IDataTable> = ({ data, loading }) => {
     const columns = [
         {
             name: 'name',
@@ -114,6 +116,15 @@ export const TranchesTable: React.FC<IDataTable> = ({ data }) => {
                                     id={id}
                                 />
                             );
+                        },
+                        textLabels: {
+                            body: {
+                                noMatch: loading ? (
+                                    <SpinnerLoader />
+                                ) : (
+                                    'An error has occured while fetching tranches. Please refresh the page.'
+                                ),
+                            },
                         },
                     }}
                 />

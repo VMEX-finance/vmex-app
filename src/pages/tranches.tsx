@@ -8,7 +8,7 @@ const Tranches: React.FC = () => {
 
     return (
         <AppTemplate title="tranches">
-            <TranchesTable data={queryAllTranches.data} />
+            <TranchesTable data={queryAllTranches.data} loading={queryAllTranches.isLoading} />
         </AppTemplate>
     );
 };

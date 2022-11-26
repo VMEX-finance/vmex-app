@@ -1,3 +1,4 @@
+import { truncateAddress } from '../../../utils/helpers';
 import React from 'react';
 import { Card } from '../../components/cards';
 import { MultipleAssetsDisplay, NumberDisplay } from '../../components/displays';
@@ -36,7 +37,19 @@ export const TrancheInfoCard = ({ tranche }: any) => {
                     />
                     <NumberDisplay label="Upgradeable" value={`${tranche.upgradeable}`} size="xl" />
                     <NumberDisplay label="Whitelist" value={`${tranche.whitelist}`} size="xl" />
-                    <NumberDisplay label="Admin" value={`${tranche.admin}`} size="xl" />
+                    <NumberDisplay
+                        label="Admin"
+                        value={
+                            <a
+                                href={`https://etherscan.io/address/${tranche.admin}`}
+                                target="_blank"
+                                rel="noreferrer"
+                            >
+                                {truncateAddress(tranche.admin)}
+                            </a>
+                        }
+                        size="xl"
+                    />
                 </div>
             </div>
         </Card>
