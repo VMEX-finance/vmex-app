@@ -4,6 +4,7 @@ import { MOCK_TRANCHES_DATA } from '../../utils/mock-data';
 import { ITranchesDataProps } from './types';
 import { getAllTrancheData } from '@vmex/sdk';
 import { SDK_PARAMS, MAINNET_ASSET_MAPPINGS, flipAndLowerCase } from '../../utils/sdk-helpers';
+import { bigNumberToUSD } from '../../utils/helpers';
 
 export async function getAllTranches(): Promise<ITrancheProps[]> {
     const trancheData = await getAllTrancheData(SDK_PARAMS);
@@ -30,11 +31,11 @@ export async function getAllTranches(): Promise<ITrancheProps[]> {
         }
         slightlyMocked[i].assets = newAssets;
         // TODO: convert bignumber to usd, in analytics use oracles
-        slightlyMocked[i].tvl = trancheData[i].tvl.toString();
-        slightlyMocked[i].supplyTotal = trancheData[i].totalSupplied.toString();
-        slightlyMocked[i].borrowTotal = trancheData[i].totalBorrowed.toString();
+        slightlyMocked[i].tvl = bigNumberToUSD(trancheData[i].tvl, 18);
+        slightlyMocked[i].supplyTotal = bigNumberToUSD(trancheData[i].totalSupplied, 18);
+        slightlyMocked[i].borrowTotal = bigNumberToUSD(trancheData[i].totalBorrowed, 18);
 
-        slightlyMocked[i].liquidity = trancheData[i].availableLiquidity.toString();
+        slightlyMocked[i].liquidity = bigNumberToUSD(trancheData[i].availableLiquidity, 18);
         if (trancheData[i].upgradeable) {
             slightlyMocked[i].upgradeable = 'Yes';
         } else {

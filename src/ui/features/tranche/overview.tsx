@@ -40,21 +40,21 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                         center
                         size="xl"
                         label="TVL"
-                        value={`$${tvl}M`}
+                        value={`${tvl}`}
                         change={tvlChange}
                     />
                     <NumberDisplay
                         center
                         size="xl"
                         label="Supplied"
-                        value={`$${supplied}M`}
+                        value={`${supplied}`}
                         change={supplyChange}
                     />
                     <NumberDisplay
                         center
                         size="xl"
                         label="Borrowed"
-                        value={`$${borrowed}M`}
+                        value={`${borrowed}`}
                         change={borrowChange}
                     />
                 </div>

@@ -24,6 +24,7 @@ const TrancheDetails: React.FC = () => {
 
     useEffect(() => {
         if (!tranche.id) navigate('/tranches');
+
         const found = MOCK_TRANCHES_DATA.find((el) => el.id === tranche.id);
         console.log('found tranche', found);
         setTranche(found);

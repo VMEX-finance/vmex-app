@@ -6,21 +6,25 @@ import { TopTranchesTable } from '../../tables';
 import { bigNumberToUSD } from '../../../utils/helpers';
 import { useWindowSize } from '../../../hooks/ui';
 import { BigNumber } from 'ethers';
-import { AssetBalance, TrancheData } from '@vmex/sdk';
+import { TrancheData } from '@vmex/sdk';
 
+export interface AssetBalance {
+    asset: string;
+    amount: string;
+}
 export interface IProtocolProps {
     isLoading?: boolean;
-    tvl?: BigNumber;
-    reserve?: BigNumber;
+    tvl?: string;
+    reserve?: string;
     lenders?: number;
     borrowers?: number;
     markets?: number;
     graphData?: ILineChartDataPointProps[];
-    totalSupplied?: BigNumber;
-    totalBorrowed?: BigNumber;
-    topBorrowedAssets?: AssetBalance[]; // TODO: implement appropriate type
-    topSuppliedAssets?: AssetBalance[]; // TODO: implement appropriate type
-    topTranches?: TrancheData[]; // TODO: implement appropriate type
+    totalSupplied?: string;
+    totalBorrowed?: string;
+    topBorrowedAssets?: AssetBalance[];
+    topSuppliedAssets?: AssetBalance[];
+    topTranches?: TrancheData[];
 }
 
 export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
@@ -57,14 +61,14 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                     <div className="flex flex-col justify-between min-w-[90%] xl:min-w-[300px]">
                         <div className="flex flex-col">
                             <h2 className="text-2xl">Total Value Locked (TVL)</h2>
-                            <p className="text-3xl">{bigNumberToUSD(tvl, 18)}</p>
+                            <p className="text-3xl">{tvl ? tvl : '-'}</p>
                         </div>
                         <div className="h-[100px] w-full">
                             <ReLineChart data={graphData || []} color="#3CB55E" />
                         </div>
                     </div>
                     <div className="flex md:flex-col justify-between gap-1">
-                        <NumberDisplay label={'Reserves:'} value={bigNumberToUSD(reserve, 18)} />
+                        <NumberDisplay label={'Reserves:'} value={reserve ? reserve : '-'} />
                         <NumberDisplay
                             color="text-brand-purple"
                             label={'Lenders:'}
@@ -84,7 +88,7 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                         <NumberDisplay
                             size="xl"
                             label="Total Supplied"
-                            value={bigNumberToUSD(totalSupplied, 18)}
+                            value={totalSupplied ? totalSupplied : '-'}
                         />
                         <div className="flex flex-col gap-1">
                             <span>Top Supplied Assets</span>
@@ -93,8 +97,8 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                                     <PillDisplay
                                         key={`top-asset-${i}`}
                                         type="asset"
-                                        asset={`${el.asset}`}
-                                        value={el.val}
+                                        asset={el.asset}
+                                        value={el.amount}
                                     />
                                 ))}
                             </div>
@@ -102,11 +106,7 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                     </div>
 
                     <div className="flex flex-col gap-2">
-                        <NumberDisplay
-                            size="xl"
-                            label="Total Borrowed"
-                            value={bigNumberToUSD(totalBorrowed, 18)}
-                        />
+                        <NumberDisplay size="xl" label="Total Borrowed" value={totalBorrowed} />
                         <div className="flex flex-col gap-1">
                             <span>Top Borrowed Assets</span>
                             <div className="flex flex-wrap gap-1">
@@ -114,8 +114,8 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                                     <PillDisplay
                                         key={`top-asset-${i}`}
                                         type="asset"
-                                        asset={`${el.asset}`}
-                                        value={el.val}
+                                        asset={el.asset}
+                                        value={el.amount}
                                     />
                                 ))}
                             </div>

@@ -5,6 +5,7 @@ import { IProtocolDataProps } from './types';
 import { AssetBalance, getProtocolData } from '@vmex/sdk';
 import { ethers } from 'ethers';
 import { flipAndLowerCase, MAINNET_ASSET_MAPPINGS, SDK_PARAMS } from '../../utils/sdk-helpers';
+import { bigNumberToUSD } from '../../utils/helpers';
 
 export async function getProtocolOverviewData(): Promise<IProtocolProps> {
     const protocolData = await getProtocolData(SDK_PARAMS);
@@ -13,20 +14,23 @@ export async function getProtocolOverviewData(): Promise<IProtocolProps> {
     console.log(protocolData.topSuppliedAssets);
 
     return {
-        tvl: protocolData.tvl,
-        reserve: protocolData.totalReserves,
+        tvl: bigNumberToUSD(protocolData.tvl, 18),
+        reserve: bigNumberToUSD(protocolData.totalReserves, 18),
         lenders: protocolData.numLenders,
         borrowers: protocolData.numBorrowers,
         markets: protocolData.numTranches,
-        totalSupplied: protocolData.totalSupplied,
-        totalBorrowed: protocolData.totalBorrowed,
+        totalSupplied: bigNumberToUSD(protocolData.totalSupplied, 18),
+        totalBorrowed: bigNumberToUSD(protocolData.totalBorrowed, 18),
         topBorrowedAssets: protocolData.topBorrowedAssets
             .map((assetBalance: AssetBalance) => {
                 const assetName = reverseMapping.get(assetBalance.asset.toString().toLowerCase());
                 if (assetName) {
                     assetBalance.asset = assetName;
                 }
-                return assetBalance;
+                return {
+                    asset: assetBalance.asset,
+                    amount: bigNumberToUSD(assetBalance.amount, 18),
+                };
             })
             .slice(0, Math.min(protocolData.topBorrowedAssets.length, 5)),
         topSuppliedAssets: protocolData.topSuppliedAssets
@@ -35,7 +39,10 @@ export async function getProtocolOverviewData(): Promise<IProtocolProps> {
                 if (assetName) {
                     assetBalance.asset = assetName;
                 }
-                return assetBalance;
+                return {
+                    asset: assetBalance.asset,
+                    amount: bigNumberToUSD(assetBalance.amount, 18),
+                };
             })
             .slice(0, Math.min(protocolData.topBorrowedAssets.length, 5)),
         topTranches: protocolData.topTranches,

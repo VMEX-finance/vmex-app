@@ -3,13 +3,16 @@ import React from 'react';
 
 type IPillDisplayProps = {
     asset: string;
-    value: number;
+    value: string | number;
     type?: 'asset' | 'basic';
     formatter?: 'usd' | 'basic' | 'none';
 };
 
 export const PillDisplay = ({ asset, value, type, formatter = 'usd' }: IPillDisplayProps) => {
-    const determineFormat = (val: number) => {
+    const determineFormat = (val: number | string) => {
+        if (typeof val === 'string') {
+            return val;
+        }
         switch (formatter) {
             case 'usd':
                 return usdFormatter.format(val);

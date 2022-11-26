@@ -69,11 +69,11 @@ const TranchesCustomRow = (props: any) => {
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Supply</span>
-                    <span>${supplyTotal}M</span>
+                    <span>{supplyTotal}</span>
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Borrow</span>
-                    <span>${borrowTotal}M</span>
+                    <span>{borrowTotal}</span>
                 </td>
             </tr>
         );
