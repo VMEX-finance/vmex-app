@@ -9,7 +9,7 @@ import { useMyTranchesContext } from '../../../store/contexts';
 
 export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: IButtonProps) => {
     const { openDialog } = useDialogController();
-    const { address, connectMetamask } = useWalletState();
+    const { address, connectMetamask, isLoading } = useWalletState();
     const { width } = useWindowSize();
     const { myTranches } = useMyTranchesContext();
 
@@ -56,6 +56,7 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
                 onClick={connectMetamask} // TODO: add disconnect wallet here
                 className={['min-h-[36px] !py-2 mt-1', mode, className].join(' ')}
                 label={address ? truncateAddress(address) : label}
+                loading={isLoading} // TODO: fix so it shows loading state
             />
         );
     }

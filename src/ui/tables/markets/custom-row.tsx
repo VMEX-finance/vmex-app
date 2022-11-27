@@ -108,8 +108,8 @@ const MarketsCustomRow = (props: any) => {
                     {yourAmount} {asset}
                 </td>
                 <td>{available}</td>
-                <td>${supplyTotal}M</td>
-                <td>${borrowTotal}M</td>
+                <td>{supplyTotal}</td>
+                <td>{borrowTotal}</td>
                 <td className="text-lg" style={{ color: determineRatingColor(rating) }}>
                     {rating}
                 </td>

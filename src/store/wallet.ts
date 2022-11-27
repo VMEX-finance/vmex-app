@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { Web3Provider, JsonRpcProvider } from '@ethersproject/providers';
 import { Signer } from '@ethersproject/abstract-signer';
 import { formatEther } from '@ethersproject/units';
-// import { setupMockEnv } from "vmex/dist/src.ts/mock-env";
 
 export interface IWalletState {
     provider?: Web3Provider | JsonRpcProvider;
@@ -18,22 +17,19 @@ const WalletState: IWalletState = {
 };
 
 export const loginWithMetamask = createAsyncThunk('connect_metamask', async (data, thunkAPI) => {
+    let isLoading = true;
     if (process.env.REACT_APP_TEST) {
         console.log('authenticating with localhost provider');
         const provider = new JsonRpcProvider(process.env.REACT_APP_RPC);
         const signer = provider.getSigner();
         const address = await signer.getAddress();
-        // TODO: figure out why this code hangs!
-        // await provider.send("hardhat_setBalance", [
-        //     await signer.getAddress(),
-        //     formatEther("100.0")
-        // ])
-        console.log(address);
+        isLoading = false;
 
         return {
             signer,
             address,
             provider,
+            isLoading,
         };
     }
     if (!(window as any).ethereum) {
@@ -44,11 +40,13 @@ export const loginWithMetamask = createAsyncThunk('connect_metamask', async (dat
     await provider.send('eth_requestAccounts', []);
     const signer = provider.getSigner();
     const address = await signer.getAddress();
+    isLoading = false;
 
     return {
         signer,
         address,
         provider,
+        isLoading,
     };
 });
 
@@ -61,6 +59,7 @@ export const WalletSlice = createSlice({
             state.signer = action.payload?.signer;
             state.address = action.payload?.address;
             state.provider = action.payload?.provider;
+            state.isLoading = action.payload?.isLoading;
         });
 
         builder.addCase(loginWithMetamask.rejected, (state, action) => {
