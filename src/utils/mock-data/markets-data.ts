@@ -12,6 +12,8 @@ export const _mockAvailableAsset0: IMarketsAsset = {
     borrowTotal: 30.92,
     rating: 'A+',
     strategies: true,
+    canBeCollateral: true,
+    canBeBorrowed: true,
 };
 
 export const _mockAvailableAsset: IMarketsAsset = {
@@ -26,6 +28,8 @@ export const _mockAvailableAsset: IMarketsAsset = {
     borrowTotal: 9.04,
     rating: 'A+',
     strategies: false,
+    canBeCollateral: true,
+    canBeBorrowed: true,
 };
 
 export const _mockAvailableAsset2: IMarketsAsset = {
@@ -40,6 +44,8 @@ export const _mockAvailableAsset2: IMarketsAsset = {
     borrowTotal: 5.34,
     rating: 'C+',
     strategies: false,
+    canBeCollateral: true,
+    canBeBorrowed: true,
 };
 
 export const _mockAvailableAsset3: IMarketsAsset = {
@@ -54,6 +60,8 @@ export const _mockAvailableAsset3: IMarketsAsset = {
     borrowTotal: 9.14,
     rating: 'D+',
     strategies: false,
+    canBeCollateral: true,
+    canBeBorrowed: true,
 };
 
 export const _mockAvailableAsset4: IMarketsAsset = {
@@ -68,6 +76,8 @@ export const _mockAvailableAsset4: IMarketsAsset = {
     borrowTotal: 8.44,
     rating: 'A-',
     strategies: false,
+    canBeCollateral: true,
+    canBeBorrowed: true,
 };
 
 export const _mockAvailableAsset5: IMarketsAsset = {
@@ -82,6 +92,8 @@ export const _mockAvailableAsset5: IMarketsAsset = {
     borrowTotal: 4.19,
     rating: 'C',
     strategies: false,
+    canBeCollateral: true,
+    canBeBorrowed: true,
 };
 
 export const _mockAvailableAsset6: IMarketsAsset = {
@@ -96,6 +108,8 @@ export const _mockAvailableAsset6: IMarketsAsset = {
     borrowTotal: 11.24,
     rating: 'D',
     strategies: false,
+    canBeCollateral: true,
+    canBeBorrowed: true,
 };
 
 export const _mockAvailableAsset7: IMarketsAsset = {
@@ -110,6 +124,8 @@ export const _mockAvailableAsset7: IMarketsAsset = {
     borrowTotal: 5.98,
     rating: 'B+',
     strategies: false,
+    canBeCollateral: true,
+    canBeBorrowed: true,
 };
 
 export const _mockAvailableAsset8: IMarketsAsset = {
@@ -124,6 +140,8 @@ export const _mockAvailableAsset8: IMarketsAsset = {
     borrowTotal: 6.14,
     rating: 'B-',
     strategies: false,
+    canBeCollateral: true,
+    canBeBorrowed: true,
 };
 
 export const _mockAvailableAsset9: IMarketsAsset = {
@@ -138,6 +156,8 @@ export const _mockAvailableAsset9: IMarketsAsset = {
     borrowTotal: 13.42,
     rating: 'C-',
     strategies: false,
+    canBeCollateral: true,
+    canBeBorrowed: true,
 };
 
 export const _mockAvailableAsset10: IMarketsAsset = {
@@ -152,6 +172,8 @@ export const _mockAvailableAsset10: IMarketsAsset = {
     borrowTotal: 8.66,
     rating: 'D-',
     strategies: false,
+    canBeCollateral: true,
+    canBeBorrowed: true,
 };
 
 export const MOCK_MARKETS_DATA: Array<IMarketsAsset> = [

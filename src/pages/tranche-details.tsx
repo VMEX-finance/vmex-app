@@ -69,7 +69,7 @@ const TrancheDetails: React.FC = () => {
                                           asset: el.asset,
                                           canBeCollat: el.canBeCollateral,
                                           apy_perc: el.supplyApy,
-                                          amount: el.yourAmount,
+                                          amount: el.yourAmount.toString(),
                                           tranche: tranche.id,
                                           signer: signer,
                                       }))

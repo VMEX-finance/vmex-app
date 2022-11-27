@@ -19,13 +19,10 @@ export interface Asset {
 
 export type AvailableAsset = {
     asset: string;
-    logo: string;
-    unit: string;
-    amount: number;
-    apy_perc: number;
-    canBeCollat: boolean;
-    liquidity?: number;
-    tranches: Tranch[];
+    amount: number | string;
+    apy_perc?: number | string;
+    canBeCollat?: boolean;
+    liquidity?: number | string;
 };
 
 type Tranch = {
