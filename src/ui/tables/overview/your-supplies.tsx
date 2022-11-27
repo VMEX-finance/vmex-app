@@ -7,7 +7,7 @@ import { numberFormatter, percentFormatter } from '../../../utils/helpers';
 
 export type IYourSuppliesTableItemProps = {
     asset: string;
-    amount: number;
+    amount: string;
     collateral: boolean;
     apy: number;
     tranche: string;
@@ -51,9 +51,7 @@ export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({ data }) =
                                 <td className="whitespace-nowrap p-4 text-sm sm:pl-6">
                                     <AssetDisplay name={i.asset} />
                                 </td>
-                                <td className="">{`${numberFormatter.format(i.amount)} ${
-                                    i.asset
-                                }`}</td>
+                                <td className="">{`${i.amount} ${i.asset}`}</td>
                                 <td className="">
                                     <div className="w-10 h-10">
                                         {i.collateral ? (

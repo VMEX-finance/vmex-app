@@ -3,8 +3,12 @@ import { useQuery } from '@tanstack/react-query';
 import { MOCK_TRANCHES_DATA } from '../../utils/mock-data';
 import { ITranchesDataProps } from './types';
 import { getAllTrancheData } from '@vmex/sdk';
-import { SDK_PARAMS, MAINNET_ASSET_MAPPINGS, flipAndLowerCase } from '../../utils/sdk-helpers';
-import { bigNumberToUSD } from '../../utils/helpers';
+import {
+    bigNumberToUSD,
+    SDK_PARAMS,
+    MAINNET_ASSET_MAPPINGS,
+    flipAndLowerCase,
+} from '../../utils/sdk-helpers';
 
 export async function getAllTranches(): Promise<ITrancheProps[]> {
     const trancheData = await getAllTrancheData(SDK_PARAMS);

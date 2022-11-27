@@ -3,9 +3,14 @@ import { useQuery } from '@tanstack/react-query';
 import { MOCK_MARKETS_DATA } from '../../utils/mock-data';
 import { ITrancheMarketsDataProps } from './types';
 import { getTrancheMarketsData, MarketData, getAllMarketsData } from '@vmex/sdk';
-import { flipAndLowerCase, MAINNET_ASSET_MAPPINGS, SDK_PARAMS } from '../../utils/sdk-helpers';
+import {
+    bigNumberToUSD,
+    flipAndLowerCase,
+    MAINNET_ASSET_MAPPINGS,
+    SDK_PARAMS,
+} from '../../utils/sdk-helpers';
 import { BigNumber } from 'ethers';
-import { bigNumberToUSD } from '../../utils/helpers';
+
 export async function getTrancheMarkets(trancheId: number): Promise<IMarketsAsset[]> {
     const allMarketsData: MarketData[] = await getTrancheMarketsData({
         tranche: trancheId,

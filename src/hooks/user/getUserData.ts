@@ -1,4 +1,12 @@
+import { BorrowedAssetData, getUserSummaryData, SuppliedAssetData } from '@vmex/sdk';
 import { useQuery } from '@tanstack/react-query';
+import {
+    bigNumberToUSD,
+    flipAndLowerCase,
+    MAINNET_ASSET_MAPPINGS,
+    rayToPercent,
+    SDK_PARAMS,
+} from '../../utils/sdk-helpers';
 import { IUserPerformanceCardProps } from '../../ui/features';
 import {
     MOCK_LINE_DATA,
@@ -18,15 +26,47 @@ export function getUserPerformanceData(): IUserPerformanceCardProps {
     };
 }
 
-export function getUserActivityData(): IUserActivityDataProps {
+export async function getUserActivityData(userAddress: string): Promise<IUserActivityDataProps> {
+    console.log('getting user data for addr', userAddress);
+    if (!userAddress) {
+        return {
+            supplies: [],
+            borrows: [],
+        };
+    }
+
+    const summary = await getUserSummaryData({
+        user: userAddress,
+        network: SDK_PARAMS.network,
+        test: SDK_PARAMS.test,
+    });
+    const reverseMapping = flipAndLowerCase(MAINNET_ASSET_MAPPINGS);
+    console.log('got user data', summary);
     return {
-        supplies: MOCK_YOUR_SUPPLIES,
-        borrows: MOCK_YOUR_BORROWS,
+        supplies: summary.suppliedAssetData.map((assetData: SuppliedAssetData) => {
+            return {
+                asset: reverseMapping.get(assetData.asset.toLowerCase()) || assetData.asset,
+                amount: bigNumberToUSD(assetData.amount, 18),
+                collateral: assetData.isCollateral,
+                apy: rayToPercent(assetData.apy),
+                tranche: assetData.tranche.toString(),
+                trancheId: assetData.tranche.toNumber(),
+            };
+        }),
+        borrows: summary.borrowedAssetData.map((assetData: BorrowedAssetData) => {
+            return {
+                asset: reverseMapping.get(assetData.asset.toLowerCase()) || assetData.asset,
+                amount: bigNumberToUSD(assetData.amount, 18),
+                apy: rayToPercent(assetData.apy),
+                tranche: assetData.tranche.toString(),
+                trancheId: assetData.tranche.toNumber(),
+            };
+        }),
     };
 }
 
 // Master
-export function useUserData(): IUserDataProps {
+export function useUserData(userAddress: string): IUserDataProps {
     const queryUserPerformance = useQuery({
         queryKey: ['user-performance'],
         queryFn: getUserPerformanceData,
@@ -34,7 +74,7 @@ export function useUserData(): IUserDataProps {
 
     const queryUserActivity = useQuery({
         queryKey: ['user-activity'],
-        queryFn: getUserActivityData,
+        queryFn: () => getUserActivityData(userAddress),
     });
 
     return {

@@ -3,9 +3,15 @@ import { useQuery } from '@tanstack/react-query';
 import { MOCK_MARKETS_DATA } from '../../utils/mock-data';
 import { IMarketsDataProps } from './types';
 import { getAllMarketsData, MarketData } from '@vmex/sdk';
-import { flipAndLowerCase, MAINNET_ASSET_MAPPINGS, SDK_PARAMS } from '../../utils/sdk-helpers';
+import {
+    bigNumberToUSD,
+    flipAndLowerCase,
+    MAINNET_ASSET_MAPPINGS,
+    rayToPercent,
+    SDK_PARAMS,
+} from '../../utils/sdk-helpers';
 import { BigNumber } from 'ethers';
-import { bigNumberToUSD } from '../../utils/helpers';
+
 export async function getAllMarkets(): Promise<IMarketsAsset[]> {
     const allMarketsData: MarketData[] = await getAllMarketsData(SDK_PARAMS);
     const reverseMapping = flipAndLowerCase(MAINNET_ASSET_MAPPINGS);
@@ -15,18 +21,8 @@ export async function getAllMarkets(): Promise<IMarketsAsset[]> {
             asset: reverseMapping.get(marketData.asset.toLowerCase()) || marketData.asset,
             tranche: marketData.tranche.toString(),
             trancheId: marketData.tranche.toNumber(),
-            supplyApy:
-                marketData.supplyApy
-                    .div(
-                        BigNumber.from('10000000000000000000000'), // div by 10^22
-                    )
-                    .toNumber() / 1000, // div by 10^3 to get percent
-            borrowApy:
-                marketData.borrowApy
-                    .div(
-                        BigNumber.from('10000000000000000000000'), // div by 10^22
-                    )
-                    .toNumber() / 1000,
+            supplyApy: rayToPercent(marketData.supplyApy),
+            borrowApy: rayToPercent(marketData.borrowApy),
             yourAmount: 0,
             available: bigNumberToUSD(marketData.totalReserves, 18),
             supplyTotal: bigNumberToUSD(marketData.totalSupplied, 18),

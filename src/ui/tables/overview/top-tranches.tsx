@@ -1,4 +1,4 @@
-import { bigNumberToUSD, usdFormatter } from '../../../utils/helpers';
+import { bigNumberToUSD } from '../../../utils/sdk-helpers';
 import { TrancheData } from '@vmex/sdk';
 import React from 'react';
 
