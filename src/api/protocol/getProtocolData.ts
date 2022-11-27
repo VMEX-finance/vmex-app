@@ -15,8 +15,6 @@ export async function getProtocolOverviewData(): Promise<IProtocolProps> {
     const protocolData = await getProtocolData(SDK_PARAMS);
     const reverseMapping = flipAndLowerCase(MAINNET_ASSET_MAPPINGS);
 
-    console.log(protocolData.topSuppliedAssets);
-
     return {
         tvl: bigNumberToUSD(protocolData.tvl, 18),
         reserve: bigNumberToUSD(protocolData.totalReserves, 18),

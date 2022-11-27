@@ -1,9 +1,8 @@
 import { AssetDisplay } from '../../components/displays';
 import React from 'react';
-import { BsCheck } from 'react-icons/bs';
-import { IoIosClose } from 'react-icons/io';
 import { useDialogController } from '../../../hooks/dialogs';
-import { numberFormatter, percentFormatter } from '../../../utils/helpers';
+import { percentFormatter } from '../../../utils/helpers';
+import { BasicToggle } from '../../components/toggles';
 
 export type IYourSuppliesTableItemProps = {
     asset: string;
@@ -53,13 +52,7 @@ export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({ data }) =
                                 </td>
                                 <td className="">{`${i.amount} ${i.asset}`}</td>
                                 <td className="">
-                                    <div className="w-10 h-10">
-                                        {i.collateral ? (
-                                            <BsCheck className="w-full h-full text-emerald-600" />
-                                        ) : (
-                                            <IoIosClose className="w-full h-full text-red-600" />
-                                        )}
-                                    </div>
+                                    <BasicToggle checked={i.collateral} disabled />
                                 </td>
                                 <td>{percentFormatter.format(i.apy)}</td>
                                 <td>{i.tranche}</td>
