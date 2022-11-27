@@ -1,8 +1,7 @@
 import { IMarketsAsset } from '@models/markets';
 import { useQuery } from '@tanstack/react-query';
-import { MOCK_MARKETS_DATA } from '../../utils/mock-data';
 import { IMarketsDataProps } from './types';
-import { getAllMarketsData, MarketData } from '@vmex/sdk';
+import { getAllMarketsData, getAllTrancheData, MarketData } from '@vmex/sdk';
 import {
     bigNumberToUSD,
     flipAndLowerCase,
@@ -10,16 +9,32 @@ import {
     rayToPercent,
     SDK_PARAMS,
 } from '../../utils/sdk-helpers';
-import { BigNumber } from 'ethers';
 
 export async function getAllMarkets(): Promise<IMarketsAsset[]> {
     const allMarketsData: MarketData[] = await getAllMarketsData(SDK_PARAMS);
     const reverseMapping = flipAndLowerCase(MAINNET_ASSET_MAPPINGS);
 
+    const allTrancheData = await getAllTrancheData(SDK_PARAMS);
+    const findAssetInTranche = (searchAsset: string, trancheId: number): string => {
+        let trancheName = 'N/A';
+        allTrancheData.map((tranche) => {
+            if (tranche.id.toNumber() === trancheId) {
+                tranche.assets.map((asset) => {
+                    if (searchAsset === asset) {
+                        trancheName = tranche.name;
+                    }
+                });
+            }
+        });
+        return trancheName;
+    };
+
     return allMarketsData.map((marketData: MarketData) => {
+        const asset = reverseMapping.get(marketData.asset.toLowerCase()) || marketData.asset;
+
         return {
-            asset: reverseMapping.get(marketData.asset.toLowerCase()) || marketData.asset,
-            tranche: marketData.tranche.toString(),
+            asset,
+            tranche: findAssetInTranche(marketData.asset.toString(), marketData.tranche.toNumber()),
             trancheId: marketData.tranche.toNumber(),
             supplyApy: rayToPercent(marketData.supplyApy),
             borrowApy: rayToPercent(marketData.borrowApy),

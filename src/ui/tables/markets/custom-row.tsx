@@ -30,7 +30,7 @@ const MarketsCustomRow = (props: any) => {
     const route = (e: Event, market: IMarketsAsset, view = 'overview') => {
         e.stopPropagation();
         setAsset(market.asset);
-        updateTranche('id', market.trancheId);
+        updateTranche('id', market.trancheId.toString());
         navigate(`/tranches/${market.tranche.replace(/\s+/g, '-')}`, { state: { view } });
     };
 

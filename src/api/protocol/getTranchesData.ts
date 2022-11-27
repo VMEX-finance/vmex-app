@@ -15,7 +15,6 @@ export async function getAllTranches(): Promise<ITrancheProps[]> {
 
     let slightlyMocked: ITrancheProps[] = [];
     let reverseMapping = flipAndLowerCase(MAINNET_ASSET_MAPPINGS);
-    // console.log(reverseMapping)
 
     for (let i = 0; i < trancheData.length; i++) {
         slightlyMocked.push(MOCK_TRANCHES_DATA[i]);
@@ -25,12 +24,15 @@ export async function getAllTranches(): Promise<ITrancheProps[]> {
 
         for (let j = 0; j < trancheData[i].assets.length; j++) {
             let myasset = trancheData[i].assets[j].toString().toLowerCase();
-            // console.log(myasset)
             let myAssetSym = reverseMapping.get(myasset);
             if (typeof myAssetSym === 'string') {
                 newAssets.push(myAssetSym);
             } else {
-                console.log('ERROR: ADDRESS NOT FOUND IN DICT');
+                console.log(
+                    `Error: Token address, ${myAssetSym || ''}, not found in ${
+                        trancheData[i].name
+                    }`,
+                );
             }
         }
         slightlyMocked[i].assets = newAssets;
