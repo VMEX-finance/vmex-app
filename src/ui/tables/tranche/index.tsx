@@ -76,7 +76,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                             )}
                                         </div>
                                     ) : (
-                                        `$${el.liquidity}M`
+                                        `${el.liquidity}`
                                     )}
                                 </td>
                             </tr>
