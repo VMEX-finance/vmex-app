@@ -7,12 +7,15 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '../store/contexts';
 import { MOCK_TRANCHES_DATA } from '../utils/mock-data';
 import { useWalletState } from '../hooks/wallet';
+import { useTrancheMarketsData } from '../api/protocol';
+import { IMarketsAsset } from '@models/markets';
 
 const TrancheDetails: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const { address, signer } = useWalletState();
     const { tranche, setTranche } = useSelectedTrancheContext();
+    const { queryTrancheMarkets } = useTrancheMarketsData(tranche.id);
     const [view, setView] = useState('tranche-overview');
 
     useEffect(() => {
@@ -61,12 +64,12 @@ const TrancheDetails: React.FC = () => {
                         {/* TODO: Replace tables "data" prop with tranche table data prop */}
                         <TrancheTable
                             data={
-                                tranche.assets
-                                    ? tranche.assets.map((el: string) => ({
-                                          asset: el,
-                                          canBeCollat: false,
-                                          apy_perc: (Math.random() * 10).toFixed(2),
-                                          amount: 0,
+                                queryTrancheMarkets.data
+                                    ? queryTrancheMarkets.data.map((el: IMarketsAsset) => ({
+                                          asset: el.asset,
+                                          canBeCollat: el.canBeCollateral,
+                                          apy_perc: el.supplyApy,
+                                          amount: el.yourAmount,
                                           tranche: tranche.id,
                                           signer: signer,
                                       }))
@@ -79,11 +82,11 @@ const TrancheDetails: React.FC = () => {
                         <h3 className="text-2xl">Borrow</h3>
                         <TrancheTable
                             data={
-                                tranche.assets
-                                    ? tranche.assets.map((el: string) => ({
-                                          asset: el,
-                                          liquidity: (Math.random() * 30).toFixed(1),
-                                          apy_perc: (Math.random() * 10).toFixed(2),
+                                queryTrancheMarkets.data
+                                    ? queryTrancheMarkets.data.map((el: IMarketsAsset) => ({
+                                          asset: el.asset,
+                                          liquidity: el.available,
+                                          apy_perc: el.borrowApy,
                                           amount: 0,
                                       }))
                                     : []
