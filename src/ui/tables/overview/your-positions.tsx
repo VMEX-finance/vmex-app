@@ -50,7 +50,7 @@ export const YourPositionsTable: React.FC<IYourPositionsProps> = ({ type, data, 
             {data && data.length !== 0 ? (
                 <div>{determineTable()}</div>
             ) : (
-                <div className="w-full flex-col mt-20 text-center">
+                <div className="w-full flex-col my-10 lg:my-20 text-center">
                     <div className="mb-5">
                         <span>No Assets {determineNoDataMsg()}</span>
                     </div>
