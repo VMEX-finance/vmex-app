@@ -96,8 +96,8 @@ const TranchesCustomRow = (props: any) => {
                     {aggregateRating}
                 </td>
                 <td>{renderActivity(yourActivity)}</td>
-                <td>${supplyTotal}M</td>
-                <td>${borrowTotal}M</td>
+                <td>{supplyTotal}</td>
+                <td>{borrowTotal}</td>
                 <td className="text-right pr-3.5">
                     <Button
                         label={width > 1000 ? 'View Details' : 'Details'}

@@ -39,8 +39,9 @@ export async function getAllMarkets(): Promise<IMarketsAsset[]> {
 
 export function useMarketsData(): IMarketsDataProps {
     const queryAllMarkets = useQuery({
-        queryKey: ['all-tranches'],
+        queryKey: ['all-markets'],
         queryFn: getAllMarkets,
+        refetchOnMount: true,
     });
 
     return {
