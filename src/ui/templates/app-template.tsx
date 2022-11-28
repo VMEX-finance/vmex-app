@@ -2,7 +2,7 @@ import React from 'react';
 import { Navbar } from '../../ui/base';
 import { DashboardTemplate } from './dashboard-template';
 import { AllModalsInstance } from '../modals';
-import { toast, ToastContainer } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 interface IAppTemplateProps {

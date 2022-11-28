@@ -7,7 +7,11 @@ import { DropdownButton } from './dropdown';
 import { useDialogController } from '../../../hooks/dialogs';
 import { useMyTranchesContext } from '../../../store/contexts';
 
-export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: IButtonProps) => {
+export const WalletButton = ({
+    primary = true,
+    className,
+    label = 'Connect Wallet',
+}: IButtonProps) => {
     const { openDialog } = useDialogController();
     const { address, connectMetamask, isLoading } = useWalletState();
     const { width } = useWindowSize();
