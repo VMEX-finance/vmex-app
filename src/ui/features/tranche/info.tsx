@@ -17,12 +17,12 @@ export const TrancheInfoCard = ({ tranche }: any) => {
                 <div className="grid grid-cols-2 justify-between gap-7">
                     <NumberDisplay
                         label="Total Supplied"
-                        value={`${tranche.longSupply}`}
+                        value={`${tranche.supplyTotal}`}
                         size="xl"
                     />
                     <NumberDisplay
                         label="Total Borrowed"
-                        value={`${tranche.longBorrow}`}
+                        value={`${tranche.borrowTotal}`}
                         size="xl"
                     />
                     <NumberDisplay

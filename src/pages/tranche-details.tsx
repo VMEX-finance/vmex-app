@@ -69,7 +69,7 @@ const TrancheDetails: React.FC = () => {
                                           asset: el.asset,
                                           canBeCollat: el.canBeCollateral,
                                           apy_perc: el.supplyApy,
-                                          amount: el.yourAmount.toString(),
+                                          amount: el.yourAmount.toString(), //this needs to be gotten from user data fetching
                                           tranche: tranche.id,
                                           signer: signer,
                                       }))
@@ -83,12 +83,14 @@ const TrancheDetails: React.FC = () => {
                         <TrancheTable
                             data={
                                 queryTrancheMarkets.data
-                                    ? queryTrancheMarkets.data.map((el: IMarketsAsset) => ({
-                                          asset: el.asset,
-                                          liquidity: el.available,
-                                          apy_perc: el.borrowApy,
-                                          amount: 0,
-                                      }))
+                                    ? queryTrancheMarkets.data
+                                          .filter((el: IMarketsAsset) => el.canBeBorrowed)
+                                          .map((el: IMarketsAsset) => ({
+                                              asset: el.asset,
+                                              liquidity: el.available,
+                                              apy_perc: el.borrowApy,
+                                              amount: 0,
+                                          }))
                                     : []
                             }
                             type="borrow"
