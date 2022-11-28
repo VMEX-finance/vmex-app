@@ -166,14 +166,3 @@ export const percentFormatter = new Intl.NumberFormat('en-US', {
     maximumFractionDigits: 2,
     notation: 'compact',
 });
-
-export const bigNumberToUSD = (number: BigNumber | undefined, decimals: number): string => {
-    if (!number) {
-        console.log('given invalid bignumber');
-        return '$0';
-    }
-
-    return usdFormatter.format(
-        number.div(BigNumber.from('1'.padEnd(decimals + 1, '0'))).toNumber() as number,
-    );
-};

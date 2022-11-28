@@ -3,7 +3,6 @@ import React from 'react';
 import { ILineChartDataPointProps, ReLineChart } from '../../components/charts';
 import { NumberDisplay, PillDisplay } from '../../components/displays';
 import { TopTranchesTable } from '../../tables';
-import { bigNumberToUSD } from '../../../utils/helpers';
 import { useWindowSize } from '../../../hooks/ui';
 import { BigNumber } from 'ethers';
 import { TrancheData } from '@vmex/sdk';

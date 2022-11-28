@@ -1,10 +1,8 @@
 import React from 'react';
-import { useDialogController } from '../../../hooks/dialogs';
-import { AvailableAsset } from '../../../models/available-liquidity-model';
-import { BasicToggle } from '../../components/toggles';
-
 import { BsCheck } from 'react-icons/bs';
 import { IoIosClose } from 'react-icons/io';
+import { useDialogController } from '../../../hooks/dialogs';
+import { AvailableAsset } from '../../../models/available-liquidity-model';
 interface ITableProps {
     data: AvailableAsset[];
     type?: 'supply' | 'borrow';
@@ -21,7 +19,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
     return (
         <table className="min-w-full divide-y divide-gray-300 font-basefont">
             <thead className="">
-                <tr className="text-gray-400 text-sm font-semibold text-left">
+                <tr className="text-gray-900 text-sm font-semibold text-left">
                     <th scope="col" className="py-3.5 pl-4 sm:pl-6">
                         Asset
                     </th>
@@ -40,9 +38,6 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
             <tbody className="divide-y divide-gray-200 bg-white">
                 {data &&
                     data.map((el, i) => {
-                        {
-                            console.log('el:', el);
-                        }
                         return (
                             <tr
                                 key={`${el.asset}-${i}`}

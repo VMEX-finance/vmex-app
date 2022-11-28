@@ -1,13 +1,12 @@
 import { AssetDisplay } from '../../components/displays';
 import React from 'react';
-import { BsCheck } from 'react-icons/bs';
-import { IoIosClose } from 'react-icons/io';
 import { useDialogController } from '../../../hooks/dialogs';
-import { numberFormatter, percentFormatter } from '../../../utils/helpers';
+import { percentFormatter } from '../../../utils/helpers';
+import { BasicToggle } from '../../components/toggles';
 
 export type IYourSuppliesTableItemProps = {
     asset: string;
-    amount: number;
+    amount: string;
     collateral: boolean;
     apy: number;
     tranche: string;
@@ -38,34 +37,23 @@ export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({ data }) =
                 </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 bg-white">
-                {data &&
-                    data.map((i) => {
-                        return (
-                            <tr
-                                key={i.asset}
-                                className="text-left transition duration-200 hover:bg-neutral-200 hover:cursor-pointer"
-                                onClick={() =>
-                                    openDialog('supplied-asset-details-dialog', { ...i })
-                                }
-                            >
-                                <td className="whitespace-nowrap p-4 text-sm sm:pl-6">
-                                    <AssetDisplay name={i.asset} />
-                                </td>
-                                <td className="">{`${numberFormatter.format(i.amount)} ${
-                                    i.asset
-                                }`}</td>
-                                <td className="">
-                                    <div className="w-10 h-10">
-                                        {i.collateral ? (
-                                            <BsCheck className="w-full h-full text-emerald-600" />
-                                        ) : (
-                                            <IoIosClose className="w-full h-full text-red-600" />
-                                        )}
-                                    </div>
-                                </td>
-                                <td>{percentFormatter.format(i.apy)}</td>
-                                <td>{i.tranche}</td>
-                                {/* <td className="text-right pr-3.5 hidden md:table-cell">
+                {data.map((i) => {
+                    return (
+                        <tr
+                            key={i.asset}
+                            className="text-left transition duration-200 hover:bg-neutral-200 hover:cursor-pointer"
+                            onClick={() => openDialog('supplied-asset-details-dialog', { ...i })}
+                        >
+                            <td className="whitespace-nowrap p-4 text-sm sm:pl-6">
+                                <AssetDisplay name={i.asset} />
+                            </td>
+                            <td className="">{`${i.amount} ${i.asset}`}</td>
+                            <td className="">
+                                <BasicToggle checked={i.collateral} disabled />
+                            </td>
+                            <td>{percentFormatter.format(i.apy)}</td>
+                            <td>{i.tranche}</td>
+                            {/* <td className="text-right pr-3.5 hidden md:table-cell">
                                     <Button
                                         label={
                                             (width > 1535 && width < 2000) || width < 500
@@ -76,9 +64,9 @@ export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({ data }) =
                                         onClick={() => console.log('directing')}
                                     />
                                 </td> */}
-                            </tr>
-                        );
-                    })}
+                        </tr>
+                    );
+                })}
             </tbody>
         </table>
     );

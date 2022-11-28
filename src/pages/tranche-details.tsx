@@ -7,7 +7,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '../store/contexts';
 import { MOCK_TRANCHES_DATA } from '../utils/mock-data';
 import { useWalletState } from '../hooks/wallet';
-import { useTrancheMarketsData } from '../api/protocol';
+import { useTrancheMarketsData, useTranchesData } from '../api/protocol';
 import { IMarketsAsset } from '@models/markets';
 
 const TrancheDetails: React.FC = () => {
@@ -16,6 +16,7 @@ const TrancheDetails: React.FC = () => {
     const { address, signer } = useWalletState();
     const { tranche, setTranche } = useSelectedTrancheContext();
     const { queryTrancheMarkets } = useTrancheMarketsData(tranche.id);
+    const { queryAllTranches } = useTranchesData();
     const [view, setView] = useState('tranche-overview');
 
     useEffect(() => {
@@ -27,9 +28,7 @@ const TrancheDetails: React.FC = () => {
 
     useEffect(() => {
         if (!tranche.id) navigate('/tranches');
-
-        const found = MOCK_TRANCHES_DATA.find((el) => el.id === tranche.id);
-        console.log('found tranche', found);
+        const found = queryAllTranches.data?.find((el) => el.id === tranche.id);
         setTranche(found);
     }, [tranche, location]);
 

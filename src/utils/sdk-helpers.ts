@@ -1,4 +1,6 @@
 import { JsonRpcProvider } from '@ethersproject/providers';
+import { BigNumber } from 'ethers';
+import { usdFormatter } from './helpers';
 
 export const NETWORK = process.env.REACT_APP_TEST ? 'localhost' : 'mainnet';
 
@@ -47,3 +49,24 @@ export const MAINNET_ASSET_MAPPINGS = new Map<string, string>([
 
 export const flipAndLowerCase = (data: Map<string, string>): Map<string, string> =>
     new Map(Array.from(data, (entry) => [entry[1].toLowerCase(), entry[0]]));
+
+export const bigNumberToUSD = (number: BigNumber | undefined, decimals: number): string => {
+    if (!number) {
+        console.log('given invalid bignumber');
+        return '$0';
+    }
+
+    return usdFormatter.format(
+        number.div(BigNumber.from('1'.padEnd(decimals + 1, '0'))).toNumber() as number,
+    );
+};
+
+export const rayToPercent = (number: BigNumber): number => {
+    return (
+        number
+            .div(
+                BigNumber.from('10000000000000000000000'), // div by 10^22
+            )
+            .toNumber() / 1000
+    ); // div by 10^3 to get percent
+};

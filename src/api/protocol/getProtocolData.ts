@@ -4,14 +4,16 @@ import { MOCK_LINE_DATA_2, MOCK_TOP_ASSETS, MOCK_TOP_TRANCHES } from '../../util
 import { IProtocolDataProps } from './types';
 import { AssetBalance, getProtocolData } from '@vmex/sdk';
 import { ethers } from 'ethers';
-import { flipAndLowerCase, MAINNET_ASSET_MAPPINGS, SDK_PARAMS } from '../../utils/sdk-helpers';
-import { bigNumberToUSD } from '../../utils/helpers';
+import {
+    bigNumberToUSD,
+    flipAndLowerCase,
+    MAINNET_ASSET_MAPPINGS,
+    SDK_PARAMS,
+} from '../../utils/sdk-helpers';
 
 export async function getProtocolOverviewData(): Promise<IProtocolProps> {
     const protocolData = await getProtocolData(SDK_PARAMS);
     const reverseMapping = flipAndLowerCase(MAINNET_ASSET_MAPPINGS);
-
-    console.log(protocolData.topSuppliedAssets);
 
     return {
         tvl: bigNumberToUSD(protocolData.tvl, 18),

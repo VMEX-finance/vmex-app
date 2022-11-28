@@ -3,15 +3,18 @@ import { useQuery } from '@tanstack/react-query';
 import { MOCK_TRANCHES_DATA } from '../../utils/mock-data';
 import { ITranchesDataProps } from './types';
 import { getAllTrancheData } from '@vmex/sdk';
-import { SDK_PARAMS, MAINNET_ASSET_MAPPINGS, flipAndLowerCase } from '../../utils/sdk-helpers';
-import { bigNumberToUSD } from '../../utils/helpers';
+import {
+    bigNumberToUSD,
+    SDK_PARAMS,
+    MAINNET_ASSET_MAPPINGS,
+    flipAndLowerCase,
+} from '../../utils/sdk-helpers';
 
 export async function getAllTranches(): Promise<ITrancheProps[]> {
     const trancheData = await getAllTrancheData(SDK_PARAMS);
 
     let slightlyMocked: ITrancheProps[] = [];
     let reverseMapping = flipAndLowerCase(MAINNET_ASSET_MAPPINGS);
-    // console.log(reverseMapping)
 
     for (let i = 0; i < trancheData.length; i++) {
         slightlyMocked.push(MOCK_TRANCHES_DATA[i]);
@@ -21,12 +24,15 @@ export async function getAllTranches(): Promise<ITrancheProps[]> {
 
         for (let j = 0; j < trancheData[i].assets.length; j++) {
             let myasset = trancheData[i].assets[j].toString().toLowerCase();
-            // console.log(myasset)
             let myAssetSym = reverseMapping.get(myasset);
             if (typeof myAssetSym === 'string') {
                 newAssets.push(myAssetSym);
             } else {
-                console.log('ERROR: ADDRESS NOT FOUND IN DICT');
+                console.log(
+                    `Error: Token address, ${myAssetSym || ''}, not found in ${
+                        trancheData[i].name
+                    }`,
+                );
             }
         }
         slightlyMocked[i].assets = newAssets;

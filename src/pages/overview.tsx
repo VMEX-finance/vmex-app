@@ -10,7 +10,7 @@ import { useUserData } from '../hooks/user';
 const Overview: React.FC = () => {
     const { address } = useWalletState();
     const { queryProtocolOverview } = useProtocolData();
-    const { queryUserPerformance, queryUserActivity } = useUserData();
+    const { queryUserPerformance, queryUserActivity } = useUserData(address);
 
     return (
         <AppTemplate title="overview">

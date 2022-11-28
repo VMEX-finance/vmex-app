@@ -60,9 +60,9 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                 </div>
                 <div className="order-2 md:order-3">
                     <div className="flex flex-col justify-between">
-                        <div className="flex flex-col">
+                        <div className="flex flex-col items-end">
                             <h2 className="text-2xl">Grade</h2>
-                            <p className="text-3xl">{grade}</p>
+                            <p className="text-3xl">{grade || '-'}</p>
                         </div>
                     </div>
                 </div>
