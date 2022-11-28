@@ -27,13 +27,11 @@ export const CoinInput = ({ amount, setAmount, coin, balance, type }: ICoinInput
             </div>
             <div className="flex flex-col justify-between items-end gap-3">
                 <AssetDisplay logo={coin.logo} name={coin.name} />
-                <div className="text-xs text-right text-blue-700">
-                    <span
-                        className="hover:text-brand-purple cursor-pointer transition duration-200"
-                        onClick={() => (balance ? setAmount(balance) : {})}
-                    >
-                        MAX
-                    </span>
+                <button
+                    className="text-xs text-right text-blue-700 hover:text-brand-purple transition duration-150"
+                    onClick={() => (balance ? setAmount(balance) : {})}
+                >
+                    <span>MAX</span>
                     <p>
                         {`${
                             type === 'collateral'
@@ -44,7 +42,7 @@ export const CoinInput = ({ amount, setAmount, coin, balance, type }: ICoinInput
                         }:`}{' '}
                         {balance || 0.3213}
                     </p>
-                </div>
+                </button>
             </div>
         </div>
     );
