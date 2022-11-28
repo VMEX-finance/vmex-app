@@ -8,14 +8,11 @@ import Staking from './pages/staking';
 import Markets from './pages/markets';
 import Construction from './pages/construction';
 import TrancheDetails from './pages/tranche-details';
-import { useGeneralTokenData } from './hooks/user';
 import { SelectedTrancheStore, TransactionsStore, MyTranchesStore } from './store/contexts';
 
 const queryClient = new QueryClient();
 
 function App() {
-    useGeneralTokenData();
-
     return (
         <QueryClientProvider client={queryClient}>
             <MyTranchesStore>

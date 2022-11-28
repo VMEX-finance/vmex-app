@@ -69,7 +69,7 @@ export const DropdownButton = ({
     const paddingSize = size === 'lg' ? 'py-1 pl-4 pr-2' : 'pl-2';
     const withBorder = border ? 'border border-2 border-black' : '';
     const displayOnly = label
-        ? `lg:border lg:border-1 lg:border-black bg-white ${
+        ? `lg:border lg:border-black bg-white ${
               typeof label === 'string' ? '!px-4 !py-[3px]' : '!p-2'
           } !text-lg`
         : '';

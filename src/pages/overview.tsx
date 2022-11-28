@@ -4,7 +4,7 @@ import { UserPerformanceCard, ProtocolStatsCard } from '../ui/features/overview'
 import { YourPositionsTable } from '../ui/tables';
 import { WalletButton } from '../ui/components/buttons';
 import { useProtocolData } from '../api/protocol';
-import { useUserData } from '../hooks/user';
+import { useUserData } from '../api/user';
 import { useAccount } from 'wagmi';
 import { useWalletState } from '../hooks/wallet';
 
