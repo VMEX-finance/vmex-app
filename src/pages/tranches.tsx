@@ -5,10 +5,9 @@ import { useTranchesData } from '../api/protocol';
 
 const Tranches: React.FC = () => {
     const { queryAllTranches } = useTranchesData();
-
     return (
         <AppTemplate title="tranches">
-            <TranchesTable data={queryAllTranches.data} />
+            <TranchesTable data={queryAllTranches.data} loading={queryAllTranches.isLoading} />
         </AppTemplate>
     );
 };

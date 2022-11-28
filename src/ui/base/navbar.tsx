@@ -85,7 +85,7 @@ export const Navbar: React.FC = () => {
                         />
                     )}
                     {width >= 1024 ? (
-                        <RainbowWalletButton />
+                        <WalletButton />
                     ) : (
                         <Menu as="div" className="relative inline-block">
                             <div>
@@ -117,7 +117,7 @@ export const Navbar: React.FC = () => {
                                                 )}
                                             </Menu.Item>
                                         ))}
-                                        <RainbowWalletButton />
+                                        <WalletButton />
                                     </div>
                                 </Menu.Items>
                             </Transition>

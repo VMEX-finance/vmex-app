@@ -7,12 +7,16 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '../store/contexts';
 import { MOCK_TRANCHES_DATA } from '../utils/mock-data';
 import { useWalletState } from '../hooks/wallet';
+import { useTrancheMarketsData, useTranchesData } from '../api/protocol';
+import { IMarketsAsset } from '@models/markets';
 
 const TrancheDetails: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { address } = useWalletState();
+    const { address, signer } = useWalletState();
     const { tranche, setTranche } = useSelectedTrancheContext();
+    const { queryTrancheMarkets } = useTrancheMarketsData(tranche.id);
+    const { queryAllTranches } = useTranchesData();
     const [view, setView] = useState('tranche-overview');
 
     useEffect(() => {
@@ -24,7 +28,7 @@ const TrancheDetails: React.FC = () => {
 
     useEffect(() => {
         if (!tranche.id) navigate('/tranches');
-        const found = MOCK_TRANCHES_DATA.find((el) => el.id === tranche.id);
+        const found = queryAllTranches.data?.find((el) => el.id === tranche.id);
         setTranche(found);
     }, [tranche, location]);
 
@@ -59,12 +63,14 @@ const TrancheDetails: React.FC = () => {
                         {/* TODO: Replace tables "data" prop with tranche table data prop */}
                         <TrancheTable
                             data={
-                                tranche.assets
-                                    ? tranche.assets.map((el: string) => ({
-                                          asset: el,
-                                          canBeCollat: false,
-                                          apy_perc: (Math.random() * 10).toFixed(2),
-                                          amount: 0,
+                                queryTrancheMarkets.data
+                                    ? queryTrancheMarkets.data.map((el: IMarketsAsset) => ({
+                                          asset: el.asset,
+                                          canBeCollat: el.canBeCollateral,
+                                          apy_perc: el.supplyApy,
+                                          amount: el.yourAmount.toString(), //this needs to be gotten from user data fetching
+                                          tranche: tranche.id,
+                                          signer: signer,
                                       }))
                                     : []
                             }
@@ -75,13 +81,15 @@ const TrancheDetails: React.FC = () => {
                         <h3 className="text-2xl">Borrow</h3>
                         <TrancheTable
                             data={
-                                tranche.assets
-                                    ? tranche.assets.map((el: string) => ({
-                                          asset: el,
-                                          liquidity: (Math.random() * 30).toFixed(1),
-                                          apy_perc: (Math.random() * 10).toFixed(2),
-                                          amount: 0,
-                                      }))
+                                queryTrancheMarkets.data
+                                    ? queryTrancheMarkets.data
+                                          .filter((el: IMarketsAsset) => el.canBeBorrowed)
+                                          .map((el: IMarketsAsset) => ({
+                                              asset: el.asset,
+                                              liquidity: el.available,
+                                              apy_perc: el.borrowApy,
+                                              amount: 0,
+                                          }))
                                     : []
                             }
                             type="borrow"

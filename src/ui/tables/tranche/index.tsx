@@ -1,15 +1,15 @@
 import React from 'react';
+import { BsCheck } from 'react-icons/bs';
+import { IoIosClose } from 'react-icons/io';
 import { useDialogController } from '../../../hooks/dialogs';
 import { AvailableAsset } from '../../../models/available-liquidity-model';
-import { BasicToggle } from '../../components/toggles';
-
 interface ITableProps {
     data: AvailableAsset[];
     type?: 'supply' | 'borrow';
 }
 export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
     const { openDialog } = useDialogController();
-    const mode = type === 'supply' ? 'Collateral' : 'Liquidity';
+    const mode = type === 'supply' ? 'Can be collateral' : 'Available borrows';
 
     const fallbackImg = (asset: string) => {
         if (asset === 'triCrypto2') return 'CRV';
@@ -19,7 +19,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
     return (
         <table className="min-w-full divide-y divide-gray-300 font-basefont">
             <thead className="">
-                <tr className="text-gray-400 text-sm font-semibold text-left">
+                <tr className="text-gray-900 text-sm font-semibold text-left">
                     <th scope="col" className="py-3.5 pl-4 sm:pl-6">
                         Asset
                     </th>
@@ -67,9 +67,15 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                 <td>{el.apy_perc}%</td>
                                 <td>
                                     {type === 'supply' ? (
-                                        <BasicToggle checked={el.canBeCollat} disabled />
+                                        <div className="w-10 h-10">
+                                            {el.canBeCollat ? (
+                                                <BsCheck className="w-full h-full text-emerald-600" />
+                                            ) : (
+                                                <IoIosClose className="w-full h-full text-red-600" />
+                                            )}
+                                        </div>
                                     ) : (
-                                        `$${el.liquidity}M`
+                                        `${el.liquidity}`
                                     )}
                                 </td>
                             </tr>

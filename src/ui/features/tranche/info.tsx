@@ -1,3 +1,4 @@
+import { truncateAddress } from '../../../utils/helpers';
 import React from 'react';
 import { Card } from '../../components/cards';
 import { MultipleAssetsDisplay, NumberDisplay } from '../../components/displays';
@@ -16,17 +17,17 @@ export const TrancheInfoCard = ({ tranche }: any) => {
                 <div className="grid grid-cols-2 justify-between gap-7">
                     <NumberDisplay
                         label="Total Supplied"
-                        value={`$${tranche.longSupply}M`}
+                        value={`${tranche.supplyTotal}`}
                         size="xl"
                     />
                     <NumberDisplay
                         label="Total Borrowed"
-                        value={`$${tranche.longBorrow}M`}
+                        value={`${tranche.borrowTotal}`}
                         size="xl"
                     />
                     <NumberDisplay
                         label="Available Liquidity"
-                        value={`$${tranche.liquidity}`}
+                        value={`${tranche.liquidity}`}
                         size="xl"
                     />
                     <NumberDisplay
@@ -36,7 +37,19 @@ export const TrancheInfoCard = ({ tranche }: any) => {
                     />
                     <NumberDisplay label="Upgradeable" value={`${tranche.upgradeable}`} size="xl" />
                     <NumberDisplay label="Whitelist" value={`${tranche.whitelist}`} size="xl" />
-                    <NumberDisplay label="Admin" value={`${tranche.admin}`} size="xl" />
+                    <NumberDisplay
+                        label="Admin"
+                        value={
+                            <a
+                                href={`https://etherscan.io/address/${tranche.admin}`}
+                                target="_blank"
+                                rel="noreferrer"
+                            >
+                                {truncateAddress(tranche.admin)}
+                            </a>
+                        }
+                        size="xl"
+                    />
                 </div>
             </div>
         </Card>

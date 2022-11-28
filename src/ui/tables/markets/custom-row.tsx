@@ -30,7 +30,7 @@ const MarketsCustomRow = (props: any) => {
     const route = (e: Event, market: IMarketsAsset, view = 'overview') => {
         e.stopPropagation();
         setAsset(market.asset);
-        updateTranche('id', market.trancheId);
+        updateTranche('id', market.trancheId.toString());
         navigate(`/tranches/${market.tranche.replace(/\s+/g, '-')}`, { state: { view } });
     };
 
@@ -70,11 +70,11 @@ const MarketsCustomRow = (props: any) => {
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Supply</span>
-                    <span>${supplyTotal}M</span>
+                    <span>{supplyTotal}</span>
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Borrow</span>
-                    <span>${borrowTotal}M</span>
+                    <span>{borrowTotal}</span>
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Rating</span>
@@ -108,8 +108,8 @@ const MarketsCustomRow = (props: any) => {
                     {yourAmount} {asset}
                 </td>
                 <td>{available}</td>
-                <td>${supplyTotal}M</td>
-                <td>${borrowTotal}M</td>
+                <td>{supplyTotal}</td>
+                <td>{borrowTotal}</td>
                 <td className="text-lg" style={{ color: determineRatingColor(rating) }}>
                     {rating}
                 </td>

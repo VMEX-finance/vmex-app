@@ -22,7 +22,7 @@ export const useModal = (dialog: IDialogNames): IUseModalProps => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
 
-    const submitTx = async (callback: any, close = true) => {
+    const submitTx = async (callback?: any, close = true) => {
         if (!error) {
             setIsLoading(true);
             try {
@@ -31,7 +31,10 @@ export const useModal = (dialog: IDialogNames): IUseModalProps => {
                         Math.random() * 9,
                     )}${Math.floor(Math.random() * 9)}`,
                 );
-                callback && callback();
+                if (callback) {
+                    const res = await callback();
+                    console.log('CALLBACK RESPONSE:', res);
+                }
 
                 setIsLoading(false);
                 setError('');

@@ -8,12 +8,13 @@ import { useProtocolData } from '../api/protocol';
 import { useUserData } from '../hooks/user';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount } from 'wagmi';
+import { useWalletState } from '../hooks/wallet';
 
 const Overview: React.FC = () => {
-    // const { address } = useWalletState2();
+    const { address } = useWalletState();
     const { isConnected } = useAccount();
     const { queryProtocolOverview } = useProtocolData();
-    const { queryUserPerformance, queryUserActivity } = useUserData();
+    const { queryUserPerformance, queryUserActivity } = useUserData(address);
 
     return (
         <AppTemplate title="overview">

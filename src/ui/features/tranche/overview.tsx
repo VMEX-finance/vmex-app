@@ -40,29 +40,29 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                         center
                         size="xl"
                         label="TVL"
-                        value={`$${tvl}M`}
+                        value={`${tvl}`}
                         change={tvlChange}
                     />
                     <NumberDisplay
                         center
                         size="xl"
                         label="Supplied"
-                        value={`$${supplied}M`}
+                        value={`${supplied}`}
                         change={supplyChange}
                     />
                     <NumberDisplay
                         center
                         size="xl"
                         label="Borrowed"
-                        value={`$${borrowed}M`}
+                        value={`${borrowed}`}
                         change={borrowChange}
                     />
                 </div>
                 <div className="order-2 md:order-3">
                     <div className="flex flex-col justify-between">
-                        <div className="flex flex-col">
+                        <div className="flex flex-col items-end">
                             <h2 className="text-2xl">Grade</h2>
-                            <p className="text-3xl">{grade}</p>
+                            <p className="text-3xl">{grade || '-'}</p>
                         </div>
                     </div>
                 </div>

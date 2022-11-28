@@ -4,10 +4,10 @@ export const _mockAvailableTranche: ITrancheProps = {
     id: 1,
     name: 'VMEX High Quality',
     assets: ['USDC', 'WBTC', 'triCrypto2', 'AAVE', 'DAI', 'WETH', 'LINK', 'USDT'],
-    aggregateRating: 'A+',
-    yourActivity: 'none',
+    aggregateRating: 'A+', //offchain oracle
+    yourActivity: 'none', //FE tracking
     tvl: 18.62,
-    tvlChange: 3.86,
+    tvlChange: 3.86, //offchain contracts analytics
     supplyChange: 1.02,
     borrowChange: -1.95,
     supplyTotal: 10.18,

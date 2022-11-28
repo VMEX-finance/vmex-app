@@ -13,6 +13,10 @@ body {
   background-color: #eeeeee;
 }
 
+a {
+  @apply text-brand-blue hover:text-brand-purple transition duration-150 underline;
+}
+
 /* Checkbox */
 input[type='checkbox'] {
   background-color: #efefef;

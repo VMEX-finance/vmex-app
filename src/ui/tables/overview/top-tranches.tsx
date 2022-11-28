@@ -1,15 +1,9 @@
-import { usdFormatter } from '../../../utils/helpers';
+import { bigNumberToUSD } from '../../../utils/sdk-helpers';
+import { TrancheData } from '@vmex/sdk';
 import React from 'react';
 
-// TODO: add this to shared models
-export interface ITopTranchesItemProps {
-    name: string;
-    borrowed: number;
-    supplied: number;
-}
-
 interface ITableProps {
-    data: ITopTranchesItemProps[];
+    data: TrancheData[];
 }
 
 export const TopTranchesTable: React.FC<ITableProps> = ({ data }) => {
@@ -36,8 +30,8 @@ export const TopTranchesTable: React.FC<ITableProps> = ({ data }) => {
                         return (
                             <tr key={`${i.name}-${index}`} className="text-left">
                                 <td>{i.name}</td>
-                                <td>{usdFormatter.format(i.supplied)}</td>
-                                <td>{usdFormatter.format(i.borrowed)}</td>
+                                <td>{bigNumberToUSD(i.totalSupplied, 18)}</td>
+                                <td>{bigNumberToUSD(i.totalBorrowed, 18)}</td>
                             </tr>
                         );
                     })}

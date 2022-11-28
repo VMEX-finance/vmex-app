@@ -8,7 +8,7 @@ const Markets: React.FC = () => {
 
     return (
         <AppTemplate title="markets">
-            <MarketsTable data={queryAllMarkets.data} />
+            <MarketsTable data={queryAllMarkets.data} loading={queryAllMarkets.isLoading} />
         </AppTemplate>
     );
 };

@@ -10,4 +10,6 @@ export type IMarketsAsset = {
     borrowTotal: number | string;
     rating: string;
     strategies: boolean;
+    canBeCollateral: boolean;
+    canBeBorrowed: boolean;
 };

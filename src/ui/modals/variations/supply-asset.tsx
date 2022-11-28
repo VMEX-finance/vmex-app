@@ -5,8 +5,10 @@ import { CoinInput } from '../../components/inputs';
 import { Button } from '../../components/buttons';
 import { BasicToggle } from '../../components/toggles';
 import { ActiveStatus, TransactionStatus } from '../../components/statuses';
-import { ModalFooter, ModalHeader, ModalTableDisplay } from '../../modals/subcomponents';
+import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
 import { useModal } from '../../../hooks/ui';
+import { supply } from '@vmex/sdk';
+import { MAINNET_ASSET_MAPPINGS, NETWORK } from '../../../utils/sdk-helpers';
 
 interface IOwnedAssetDetails {
     name?: string;
@@ -30,7 +32,18 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
     const [amount, setAmount] = useMediatedState(inputMediator, '');
 
     const handleSubmit = async () => {
-        await submitTx();
+        await submitTx(async () => {
+            await supply({
+                underlying: MAINNET_ASSET_MAPPINGS.get(data.asset) || '',
+                trancheId: data.tranche,
+                amount: amount,
+                signer: data.signer,
+                network: NETWORK,
+                // referrer: number,
+                // collateral: boolean,
+                // test: boolean
+            });
+        });
     };
 
     return (

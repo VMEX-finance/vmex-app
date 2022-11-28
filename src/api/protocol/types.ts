@@ -14,3 +14,7 @@ export type ITranchesDataProps = {
 export type IMarketsDataProps = {
     queryAllMarkets: UseQueryResult<IMarketsAsset[], unknown>;
 };
+
+export type ITrancheMarketsDataProps = {
+    queryTrancheMarkets: UseQueryResult<IMarketsAsset[], unknown>;
+};
