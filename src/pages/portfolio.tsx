@@ -1,6 +1,6 @@
 import React from 'react';
 import { AppTemplate, GridView } from '../ui/templates';
-import { ProtocolStatsCard, UserPerformanceCard } from '../ui/features/overview';
+import { PortfolioStatsCard, UserPerformanceCard } from '../ui/features';
 import { YourPositionsTable } from '../ui/tables';
 import { WalletButton } from '../ui/components/buttons';
 import { useUserData } from '../api/user';
@@ -15,7 +15,7 @@ const Portfolio: React.FC = () => {
             {address ? (
                 <GridView type="fixed">
                     <div className="col-span-2 flex flex-col gap-4 md:gap-6 lg:gap-8">
-                        {/* <ProtocolStatsCard /> */}
+                        <PortfolioStatsCard />
                         <div className="flex flex-col lg:flex-row lg:grow gap-4 md:gap-6 lg:gap-8">
                             <YourPositionsTable
                                 type="supplies"

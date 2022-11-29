@@ -1,6 +1,6 @@
 import React from 'react';
 import { AppTemplate, GridView } from '../ui/templates';
-import { UserPerformanceCard, ProtocolStatsCard } from '../ui/features/overview';
+import { UserPerformanceCard, ProtocolStatsCard } from '../ui/features';
 import { YourPositionsTable } from '../ui/tables';
 import { WalletButton } from '../ui/components/buttons';
 import { useProtocolData } from '../api/protocol';
