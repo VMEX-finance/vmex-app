@@ -19,7 +19,7 @@ export interface Asset {
 
 export type AvailableAsset = {
     asset: string;
-    amount: number | string;
+    amount?: number | string;
     apy_perc?: number | string;
     canBeCollat?: boolean;
     liquidity?: number | string;
