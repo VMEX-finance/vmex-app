@@ -1,15 +1,31 @@
+import { useUserData } from '../../../api';
+import { useWalletState } from '../../../hooks/wallet';
 import React from 'react';
 import { BsCheck } from 'react-icons/bs';
 import { IoIosClose } from 'react-icons/io';
 import { useDialogController } from '../../../hooks/dialogs';
 import { AvailableAsset } from '../../../models/available-liquidity-model';
+
 interface ITableProps {
     data: AvailableAsset[];
     type?: 'supply' | 'borrow';
 }
 export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
+    const { address } = useWalletState();
+    const { queryUserActivity } = useUserData(address);
     const { openDialog } = useDialogController();
-    const mode = type === 'supply' ? 'Can be collateral' : 'Available borrows';
+    const mode = type === 'supply' ? 'Can Collateralize' : 'Available Borrows';
+    const userData =
+        type === 'supply' ? queryUserActivity.data?.supplies : queryUserActivity.data?.borrows;
+
+    const findAssetInUser = (asset: string) => {
+        if (queryUserActivity.isLoading) return `0 ${asset}`;
+        else {
+            const found = userData?.find((el) => el.asset.toLowerCase() === asset.toLowerCase());
+            if (found) return `${found?.amount} ${found?.asset}`;
+            else return `0 ${asset}`;
+        }
+    };
 
     const fallbackImg = (asset: string) => {
         if (asset === 'triCrypto2') return 'CRV';
@@ -62,7 +78,13 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                     </div>
                                 </td>
                                 <td>
-                                    {el.amount} {el.asset}
+                                    <span
+                                        className={`${
+                                            queryUserActivity.isLoading ? 'animate-pulse' : ''
+                                        }`}
+                                    >
+                                        {findAssetInUser(el.asset)}
+                                    </span>
                                 </td>
                                 <td>{el.apy_perc}%</td>
                                 <td>

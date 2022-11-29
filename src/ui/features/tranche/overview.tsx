@@ -1,6 +1,11 @@
 import { Card } from '../../components/cards';
 import React from 'react';
-import { MultipleAssetsDisplay, NumberDisplay } from '../../components/displays';
+import { AssetDisplay, MultipleAssetsDisplay, NumberDisplay } from '../../components/displays';
+import { useWindowSize } from '../../../hooks/ui';
+import { useDialogController } from '../../../hooks/dialogs';
+import { useUserData } from '../../../api';
+import { useWalletState } from '../../../hooks/wallet';
+import { IYourBorrowsTableItemProps, IYourSuppliesTableItemProps } from '../../../ui/tables';
 
 export interface ITrancheOverviewProps {
     assets?: string[];
@@ -23,6 +28,14 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
     borrowed,
     grade,
 }) => {
+    const { width } = useWindowSize();
+    const { openDialog } = useDialogController();
+    const { address } = useWalletState();
+    const {
+        queryUserActivity: { data },
+    } = useUserData(address);
+
+    const breakpoint = 768;
     return (
         <Card>
             <div
@@ -35,7 +48,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                         <MultipleAssetsDisplay assets={assets} />
                     </div>
                 </div>
-                <div className="flex flex-wrap justify-around md:justify-between items-center gap-6 md:gap-12 lg:gap-24 order-3 md:order-2">
+                <div className="flex flex-wrap justify-around lg:justify-between items-center gap-5 lg:gap-10 xl:gap-16 2xl:gap-20 order-3 lg:order-2 w-full lg:w-auto">
                     <NumberDisplay
                         center
                         size="xl"
@@ -58,7 +71,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                         change={borrowChange}
                     />
                 </div>
-                <div className="order-2 md:order-3">
+                <div className="order-2 lg:order-3 min-w-[162px] 2xl:min-w-[194px]">
                     <div className="flex flex-col justify-between">
                         <div className="flex flex-col items-end">
                             <h2 className="text-2xl">Grade</h2>
@@ -67,6 +80,65 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                     </div>
                 </div>
             </div>
+
+            {data?.borrows?.length !== 0 ||
+                (data?.supplies?.length !== 0 && (
+                    <div className="grid grid-cols-3 mt-4">
+                        <div className="text-center flex flex-col">
+                            <span className="text-sm">{width > breakpoint && 'User '}Supplies</span>
+                            <div className="flex flex-wrap gap-2">
+                                {data?.supplies?.length > 0 &&
+                                    data.supplies.map((el: IYourSuppliesTableItemProps) => (
+                                        <button
+                                            key={`${el.asset}`}
+                                            onClick={() =>
+                                                openDialog('supplied-asset-details-dialog', {
+                                                    ...el,
+                                                })
+                                            }
+                                        >
+                                            <AssetDisplay
+                                                name={el.asset}
+                                                size="sm"
+                                                value={el.amount}
+                                                border
+                                            />
+                                        </button>
+                                    ))}
+                            </div>
+                        </div>
+                        <div className="text-center flex flex-col">
+                            <span className="text-sm">{width > breakpoint && 'User '}Borrows</span>
+                            <div className="flex flex-wrap gap-2">
+                                {data?.borrows?.length > 0 &&
+                                    data.borrows.map((el: IYourBorrowsTableItemProps) => (
+                                        <button
+                                            key={`${el.asset}`}
+                                            onClick={() =>
+                                                openDialog('supplied-asset-details-dialog', {
+                                                    ...el,
+                                                })
+                                            }
+                                        >
+                                            <AssetDisplay
+                                                name={el.asset}
+                                                size="sm"
+                                                value={el.amount}
+                                                border
+                                            />
+                                        </button>
+                                    ))}
+                            </div>
+                        </div>
+                        <div className="text-center text-sm flex flex-col">
+                            <span>
+                                {width > breakpoint && 'User '}Health
+                                {width > breakpoint && ' Factor'}
+                            </span>
+                            <span>{'-'}</span>
+                        </div>
+                    </div>
+                ))}
         </Card>
     );
 };

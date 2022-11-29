@@ -97,7 +97,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                 )}
             </header>
             <main>
-                <div className="py-8 flex flex-col gap-8">
+                <div className="py-8 flex flex-col gap-4 md:gap-8">
                     {children ? (
                         children
                     ) : (

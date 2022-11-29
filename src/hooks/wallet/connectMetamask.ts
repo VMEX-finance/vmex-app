@@ -1,5 +1,4 @@
-import React from 'react';
-import { loginWithMetamask, IWalletState } from '../../store/wallet';
+import { loginWithMetamask } from '../../store/wallet';
 import { useAppSelector, useAppDispatch } from '../redux';
 
 type IUseWalletStateProps = {
