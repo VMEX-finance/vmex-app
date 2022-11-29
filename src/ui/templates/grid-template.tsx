@@ -28,7 +28,9 @@ const GridView: React.FC<IGridViewProps> = ({
         );
     } else {
         return (
-            <div className={`w-full grid grid-col lg:grid-flow-col-dense gap-8 ${className}`}>
+            <div
+                className={`w-full grid grid-col lg:grid-flow-col-dense gap-4 md:gap-8 ${className}`}
+            >
                 {children}
             </div>
         );

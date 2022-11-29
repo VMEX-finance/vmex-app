@@ -5,6 +5,8 @@ type IAssetDisplayProps = {
     name: string;
     className?: string;
     size?: 'lg' | 'md' | 'sm';
+    value?: string;
+    border?: boolean;
 };
 
 export const AssetDisplay = (props: IAssetDisplayProps) => {
@@ -19,14 +21,19 @@ export const AssetDisplay = (props: IAssetDisplayProps) => {
         }
     };
     return (
-        <div className={`flex items-center gap-1 ${props.className ? props.className : ''}`}>
+        <div
+            className={`flex items-center gap-1 rounded-lg ${
+                props.className ? props.className : ''
+            } ${props.border ? 'border border-1 border-black w-fit px-2' : ''}`}
+        >
             <img
                 src={props.logo ? props.logo : `/tokens/token-${props.name?.toUpperCase()}.svg`}
                 alt={props.name}
                 height={iconSize()}
                 width={iconSize()}
             />
-            {props.name?.toUpperCase()}
+            <span>{props.name?.toUpperCase()}</span>
+            {props.value && <span>{props.value}</span>}
         </div>
     );
 };

@@ -9,7 +9,7 @@ interface ITableProps {
 }
 export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
     const { openDialog } = useDialogController();
-    const mode = type === 'supply' ? 'Can be collateral' : 'Available borrows';
+    const mode = type === 'supply' ? 'Can Collateralize' : 'Available Borrows';
 
     const fallbackImg = (asset: string) => {
         if (asset === 'triCrypto2') return 'CRV';

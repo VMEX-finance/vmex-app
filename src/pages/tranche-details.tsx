@@ -5,7 +5,6 @@ import { Card } from '../ui/components/cards';
 import { TrancheTable } from '../ui/tables';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '../store/contexts';
-import { MOCK_TRANCHES_DATA } from '../utils/mock-data';
 import { useWalletState } from '../hooks/wallet';
 import { useTrancheMarketsData, useTranchesData } from '../api/protocol';
 import { IMarketsAsset } from '@models/markets';
@@ -58,9 +57,8 @@ const TrancheDetails: React.FC = () => {
                 </>
             ) : (
                 <GridView>
-                    <Card>
+                    <Card loading={queryTrancheMarkets.isLoading}>
                         <h3 className="text-2xl">Supply</h3>
-                        {/* TODO: Replace tables "data" prop with tranche table data prop */}
                         <TrancheTable
                             data={
                                 queryTrancheMarkets.data
@@ -77,7 +75,7 @@ const TrancheDetails: React.FC = () => {
                             type="supply"
                         />
                     </Card>
-                    <Card>
+                    <Card loading={queryTrancheMarkets.isLoading}>
                         <h3 className="text-2xl">Borrow</h3>
                         <TrancheTable
                             data={
