@@ -1,6 +1,6 @@
 import React from 'react';
 import { AppTemplate, GridView } from '../ui/templates';
-import { UserPerformanceCard } from '../ui/features/overview';
+import { ProtocolStatsCard, UserPerformanceCard } from '../ui/features/overview';
 import { YourPositionsTable } from '../ui/tables';
 import { WalletButton } from '../ui/components/buttons';
 import { useUserData } from '../api/user';
@@ -14,20 +14,27 @@ const Portfolio: React.FC = () => {
         <AppTemplate title="Portfolio">
             {address ? (
                 <GridView type="fixed">
-                    <UserPerformanceCard
-                        {...queryUserPerformance.data}
-                        isLoading={queryUserPerformance.isLoading}
-                    />
-                    <YourPositionsTable
-                        type="supplies"
-                        data={queryUserActivity.data?.supplies}
-                        isLoading={queryUserActivity.isLoading}
-                    />
-                    <YourPositionsTable
-                        type="borrows"
-                        data={queryUserActivity.data?.borrows}
-                        isLoading={queryUserActivity.isLoading}
-                    />
+                    <div className="col-span-2 flex flex-col gap-4 md:gap-6 lg:gap-8">
+                        {/* <ProtocolStatsCard /> */}
+                        <div className="flex flex-col lg:flex-row lg:grow gap-4 md:gap-6 lg:gap-8">
+                            <YourPositionsTable
+                                type="supplies"
+                                data={queryUserActivity.data?.supplies}
+                                isLoading={queryUserActivity.isLoading}
+                            />
+                            <YourPositionsTable
+                                type="borrows"
+                                data={queryUserActivity.data?.borrows}
+                                isLoading={queryUserActivity.isLoading}
+                            />
+                        </div>
+                    </div>
+                    <div className="col-span-2 2xl:col-span-1">
+                        <UserPerformanceCard
+                            {...queryUserPerformance.data}
+                            isLoading={queryUserPerformance.isLoading}
+                        />
+                    </div>
                 </GridView>
             ) : (
                 <div className="pt-10 lg:pt-20 text-center flex-col">
