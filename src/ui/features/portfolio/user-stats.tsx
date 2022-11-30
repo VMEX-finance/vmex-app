@@ -1,11 +1,15 @@
 import React from 'react';
 import { Card } from '../../components/cards';
 import { useWindowSize } from '../../../hooks/ui';
-import { NumberDisplay, PillDisplay } from '../../components/displays';
+import { NumberDisplay } from '../../components/displays';
 
-export interface IPortfolioProps {}
+export interface IPortfolioProps {
+    networth?: string;
+    supplied?: string;
+    borrowed?: string;
+}
 
-export const PortfolioStatsCard: React.FC<IPortfolioProps> = () => {
+export const PortfolioStatsCard: React.FC<IPortfolioProps> = ({ networth, supplied, borrowed }) => {
     const { width } = useWindowSize();
 
     return (
@@ -15,18 +19,18 @@ export const PortfolioStatsCard: React.FC<IPortfolioProps> = () => {
                     <div className="flex flex-col justify-between min-w-[90%] xl:min-w-[300px]">
                         <div className="flex flex-col">
                             <h2 className="text-2xl">Total Net Worth</h2>
-                            <p className="text-3xl">{'-'}</p>
+                            <p className="text-3xl">{networth || '-'}</p>
                         </div>
                     </div>
                 </div>
 
                 <div className="py-2 md:py-4 xl:py-0 xl:px-6 grid grid-cols-1 lg:grid-cols-2 gap-4 w-full">
                     <div className="flex flex-col gap-2">
-                        <NumberDisplay size="xl" label="Total Supplied" value={'-'} />
+                        <NumberDisplay size="xl" label="Total Supplied" value={supplied || '-'} />
                     </div>
 
                     <div className="flex flex-col gap-2">
-                        <NumberDisplay size="xl" label="Total Borrowed" value={'-'} />
+                        <NumberDisplay size="xl" label="Total Borrowed" value={borrowed || '-'} />
                     </div>
                 </div>
             </div>

@@ -10,6 +10,8 @@ const Portfolio: React.FC = () => {
     const { address } = useWalletState();
     const { queryUserPerformance, queryUserActivity } = useUserData(address);
 
+    console.log(queryUserPerformance.data);
+
     return (
         <AppTemplate title="Portfolio">
             {address ? (
