@@ -8,6 +8,8 @@ import Staking from './pages/staking';
 import Markets from './pages/markets';
 import Construction from './pages/construction';
 import TrancheDetails from './pages/tranche-details';
+import Portfolio from './pages/portfolio';
+
 import { SelectedTrancheStore, TransactionsStore, MyTranchesStore } from './store/contexts';
 
 const queryClient = new QueryClient();
@@ -27,6 +29,7 @@ function App() {
                                 <Route path="/staking" element={<Staking />} />
                                 <Route path="/governance" element={<Construction />} />
                                 <Route path="/develop" element={<Construction />} />
+                                <Route path="/portfolio" element={<Portfolio />} />
 
                                 {/* Dynamic Tranche Routes */}
                                 <Route path="/tranches/:name" element={<TrancheDetails />} />

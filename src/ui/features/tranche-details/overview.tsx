@@ -5,7 +5,7 @@ import { useWindowSize } from '../../../hooks/ui';
 import { useDialogController } from '../../../hooks/dialogs';
 import { useUserData } from '../../../api';
 import { useWalletState } from '../../../hooks/wallet';
-import { IYourBorrowsTableItemProps, IYourSuppliesTableItemProps } from '../../../ui/tables';
+import { IYourBorrowsTableItemProps, IYourSuppliesTableItemProps } from '../../tables';
 
 export interface ITrancheOverviewProps {
     assets?: string[];

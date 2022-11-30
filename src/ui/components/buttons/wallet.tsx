@@ -6,12 +6,14 @@ import { useWindowSize } from '../../../hooks/ui';
 import { DropdownButton } from './dropdown';
 import { useDialogController } from '../../../hooks/dialogs';
 import { useMyTranchesContext } from '../../../store/contexts';
+import { useNavigate } from 'react-router-dom';
 
 export const WalletButton = ({
     primary = true,
     className,
     label = 'Connect Wallet',
 }: IButtonProps) => {
+    const navigate = useNavigate();
     const { openDialog } = useDialogController();
     const { address, connectMetamask, isLoading } = useWalletState();
     const { width } = useWindowSize();
@@ -22,25 +24,25 @@ export const WalletButton = ({
     }`;
 
     const renderDropdownItems = () => {
+        let final = [
+            {
+                text: 'My Portfolio',
+                onClick: () => navigate('/portfolio'),
+            },
+            {
+                text: 'Create Tranche',
+                onClick: () => openDialog('create-tranche-dialog'),
+            },
+        ];
+
         if (myTranches.length !== 0) {
-            return [
-                {
-                    text: 'My Tranches',
-                    onClick: () => openDialog('my-tranches-dialog'),
-                },
-                {
-                    text: 'Create Tranche',
-                    onClick: () => openDialog('create-tranche-dialog'),
-                },
-            ];
-        } else {
-            return [
-                {
-                    text: 'Create Tranche',
-                    onClick: () => openDialog('create-tranche-dialog'),
-                },
-            ];
+            final.push({
+                text: 'My Tranches',
+                onClick: () => openDialog('my-tranches-dialog'),
+            });
         }
+
+        return final;
     };
 
     if (address && width > 1024) {
