@@ -105,6 +105,8 @@ export const TranchesTable: React.FC<IDataTable> = ({ data, loading }) => {
                                 borrowTotal,
                                 id,
                             ] = data;
+                            console.log('DATA: ');
+                            console.log(data);
                             return (
                                 <TranchesCustomRow
                                     name={name}

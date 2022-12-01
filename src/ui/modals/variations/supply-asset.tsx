@@ -71,7 +71,7 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
                                         logo: `/tokens/token-${data.asset}.svg`,
                                         name: data.asset,
                                     }}
-                                    balance={'0.23'}
+                                    balance={data.amount}
                                 />
 
                                 <h3 className="mt-6 text-gray-400">Collaterize</h3>
@@ -79,6 +79,7 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
                                     <BasicToggle
                                         checked={asCollateral}
                                         onChange={() => setAsCollateral(!asCollateral)}
+                                        disabled={!data.canBeCollat}
                                     />
                                 </div>
 
@@ -87,7 +88,7 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
                                     content={[
                                         {
                                             label: 'Supply APR (%)',
-                                            value: `${0.44}%`,
+                                            value: `${data.apy_perc}%`,
                                         },
                                         {
                                             label: 'Collateralization',

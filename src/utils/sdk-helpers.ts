@@ -1,6 +1,6 @@
 import { JsonRpcProvider } from '@ethersproject/providers';
-import { BigNumber } from 'ethers';
-import { usdFormatter } from './helpers';
+import { BigNumber, ethers } from 'ethers';
+import { usdFormatter, nativeTokenFormatter } from './helpers';
 
 export const NETWORK = process.env.REACT_APP_TEST ? 'localhost' : 'mainnet';
 
@@ -50,15 +50,59 @@ export const MAINNET_ASSET_MAPPINGS = new Map<string, string>([
 export const flipAndLowerCase = (data: Map<string, string>): Map<string, string> =>
     new Map(Array.from(data, (entry) => [entry[1].toLowerCase(), entry[0]]));
 
+export const DECIMALS = new Map<string, number>([
+    ['AAVE', 18],
+    ['BAT', 18],
+    ['BUSD', 18],
+    ['DAI', 18],
+    ['ENJ', 18],
+    ['KNC', 18],
+    ['LINK', 18],
+    ['MANA', 18],
+    ['MKR', 18],
+    ['REN', 18],
+    ['SNX', 18],
+    ['SUSD', 18],
+    ['TUSD', 18],
+    ['UNI', 18],
+    ['USDC', 6],
+    ['USDT', 6],
+    ['WBTC', 8],
+    ['WETH', 18],
+    ['YFI', 18],
+    ['ZRX', 18],
+    ['Tricrypto2', 18],
+    ['ThreePool', 18],
+    ['StethEth', 18],
+    ['Steth', 18],
+    ['FraxUSDC', 18],
+    ['Frax3Crv', 18],
+    ['Frax', 18],
+    ['BAL', 18],
+    ['CRV', 18],
+    ['CVX', 18],
+    ['BADGER', 18],
+    ['LDO', 18],
+    ['ALCX', 18],
+    ['Oneinch', 18],
+]);
+
 export const bigNumberToUSD = (number: BigNumber | undefined, decimals: number): string => {
     if (!number) {
         console.log('given invalid bignumber');
         return '$0';
     }
 
-    return usdFormatter.format(
-        number.div(BigNumber.from('1'.padEnd(decimals + 1, '0'))).toNumber() as number,
-    );
+    return usdFormatter.format(parseFloat(ethers.utils.formatUnits(number, decimals)));
+};
+
+export const bigNumberToNative = (number: BigNumber | undefined, decimals: number): string => {
+    if (!number) {
+        console.log('given invalid bignumber');
+        return '$0';
+    }
+
+    return nativeTokenFormatter.format(parseFloat(ethers.utils.formatUnits(number, decimals)));
 };
 
 export const rayToPercent = (number: BigNumber): number => {

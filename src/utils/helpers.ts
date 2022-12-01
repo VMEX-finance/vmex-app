@@ -160,6 +160,12 @@ export const numberFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
 });
 
+export const nativeTokenFormatter = new Intl.NumberFormat('en-US', {
+    notation: 'compact',
+    minimumFractionDigits: 3,
+    maximumFractionDigits: 3,
+});
+
 export const percentFormatter = new Intl.NumberFormat('en-US', {
     style: 'percent',
     minimumFractionDigits: 2,
