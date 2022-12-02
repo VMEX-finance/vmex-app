@@ -1,13 +1,13 @@
-import { useUserData, useUserTrancheData } from '../../../api';
-import { useWalletState } from '../../../hooks/wallet';
+import { useUserData, useUserTrancheData } from '../../../../api';
+import { useWalletState } from '../../../../hooks/wallet';
 import React from 'react';
 import { BsCheck } from 'react-icons/bs';
 import { IoIosClose } from 'react-icons/io';
-import { useDialogController } from '../../../hooks/dialogs';
-import { AvailableAsset } from '../../../models/available-liquidity-model';
-import { useSelectedTrancheContext } from '../../../store/contexts';
-import { NumberAndDollar } from '../../components/displays';
-import { useWindowSize } from '../../../hooks/ui';
+import { useDialogController } from '../../../../hooks/dialogs';
+import { AvailableAsset } from '../../../../models/available-liquidity-model';
+import { useSelectedTrancheContext } from '../../../../store/contexts';
+import { NumberAndDollar } from '../../../components/displays';
+import { useWindowSize } from '../../../../hooks/ui';
 
 interface ITableProps {
     data: AvailableAsset[];
@@ -71,8 +71,8 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                 return `${
                     liquidity
                         ? Math.min(
-                              parseFloat(found?.amountNative.replace(',', '')),
-                              parseFloat(liquidity.toString()),
+                              parseFloat(found?.amountNative.replaceAll(',', '')),
+                              parseFloat(liquidity.toString().replaceAll(',', '')),
                           )
                         : found?.amountNative
                 }`;

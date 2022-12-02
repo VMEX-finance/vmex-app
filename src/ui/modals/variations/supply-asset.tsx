@@ -28,7 +28,7 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
     const { submitTx, isSuccess, error, isLoading } = useModal('loan-asset-dialog');
 
     const [view, setView] = React.useState('Supply');
-    const [asCollateral, setAsCollateral] = React.useState(false);
+    const [asCollateral, setAsCollateral] = React.useState(true);
     const [amount, setAmount] = useMediatedState(inputMediator, '');
 
     const handleSubmit = async () => {

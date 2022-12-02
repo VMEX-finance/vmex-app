@@ -11,7 +11,7 @@ import { useWalletState } from '../hooks/wallet';
 const Overview: React.FC = () => {
     const { address } = useWalletState();
     const { queryProtocolOverview } = useProtocolData();
-    const { queryUserPerformance, queryUserActivity, queryUserWallet } = useUserData(address);
+    const { queryUserPerformance, queryUserActivity } = useUserData(address);
 
     return (
         <AppTemplate title="overview">
