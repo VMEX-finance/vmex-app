@@ -83,9 +83,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                 </div>
             </div>
 
-            {
-                // data?.borrows?.length !== 0 ||
-                //     (data?.supplies?.length !== 0 && (
+            {(data?.borrows?.length !== 0 || data?.supplies?.length !== 0) && (
                 <div className="grid grid-cols-3 mt-4">
                     <div className="text-center flex flex-col">
                         <span className="text-sm">{width > breakpoint && 'User '}Supplies</span>
@@ -109,7 +107,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                                           />
                                       </button>
                                   ))
-                                : '-'}
+                                : ''}
                         </div>
                     </div>
                     <div className="text-center flex flex-col">
@@ -134,7 +132,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                                           />
                                       </button>
                                   ))
-                                : '-'}
+                                : ''}
                         </div>
                     </div>
                     <div className="text-center text-sm flex flex-col">
@@ -145,8 +143,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                         <span>{data?.borrows?.length !== 0 ? data && data.healthFactor : '-'}</span>
                     </div>
                 </div>
-                // ))
-            }
+            )}
         </Card>
     );
 };
