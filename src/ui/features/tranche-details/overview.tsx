@@ -35,15 +35,21 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
     borrowed,
     grade,
 }) => {
-    const { width } = useWindowSize();
+    const { width, breakpoint } = useWindowSize();
     const { openDialog } = useDialogController();
     const { address } = useWalletState();
-    const { tranche, setTranche } = useSelectedTrancheContext();
+    const { tranche } = useSelectedTrancheContext();
     const {
-        queryUserTrancheData: { data, isLoading },
+        queryUserTrancheData: { data },
     } = useUserTrancheData(address, tranche.id);
 
-    const breakpoint = 768;
+    const calculateNetAPY = () => {
+        if (!data) return `0%`;
+        const supplySum = data?.supplies.reduce((partial, next) => partial + next.apy, 0);
+        const borrowSum = data?.borrows.reduce((partial, next) => partial + next.apy, 0);
+        return `${(supplySum - borrowSum).toFixed(3)}%`;
+    };
+
     return (
         <Card>
             <div
@@ -90,79 +96,86 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
             </div>
 
             {data && (data?.borrows?.length !== 0 || data?.supplies?.length !== 0) && (
-                <div className="grid grid-cols-3 mt-4">
-                    <div className="text-center flex flex-col">
-                        <span className="text-sm">{width > breakpoint && 'User '}Supplies</span>
-                        <div className="flex flex-wrap gap-2">
-                            {data?.supplies?.length
-                                ? data?.supplies?.length > 0 &&
-                                  data.supplies.map((el: IYourSuppliesTableItemProps) => (
-                                      <button
-                                          key={`${el.asset}`}
-                                          onClick={() =>
-                                              openDialog('supplied-asset-details-dialog', {
-                                                  ...el,
-                                              })
-                                          }
-                                      >
-                                          <AssetDisplay
-                                              name={el.asset}
-                                              size="sm"
-                                              value={usdFormatter().format(
-                                                  parseFloat(
-                                                      el.amount.slice(1).replaceAll(',', ''),
-                                                  ),
-                                              )}
-                                              border
-                                          />
-                                      </button>
-                                  ))
-                                : ''}
+                <>
+                    <div className="border-t-2 border-black md:border-0 mt-4" />
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                        <div className="text-center flex flex-col">
+                            <span className="text-sm">{width > breakpoint && 'User '}Supplies</span>
+                            <div className="flex flex-wrap gap-2">
+                                {data?.supplies?.length
+                                    ? data?.supplies?.length > 0 &&
+                                      data.supplies.map((el: IYourSuppliesTableItemProps) => (
+                                          <button
+                                              key={`${el.asset}`}
+                                              onClick={() =>
+                                                  openDialog('supplied-asset-details-dialog', {
+                                                      ...el,
+                                                  })
+                                              }
+                                          >
+                                              <AssetDisplay
+                                                  name={el.asset}
+                                                  size="sm"
+                                                  value={usdFormatter().format(
+                                                      parseFloat(
+                                                          el.amount.slice(1).replaceAll(',', ''),
+                                                      ),
+                                                  )}
+                                                  border
+                                              />
+                                          </button>
+                                      ))
+                                    : ''}
+                            </div>
+                        </div>
+                        <div className="text-center flex flex-col">
+                            <span className="text-sm">{width > breakpoint && 'User '}Borrows</span>
+                            <div className="flex flex-wrap gap-2">
+                                {data?.borrows?.length
+                                    ? data?.borrows?.length > 0 &&
+                                      data.borrows.map((el: IYourBorrowsTableItemProps) => (
+                                          <button
+                                              key={`${el.asset}`}
+                                              onClick={() =>
+                                                  openDialog('supplied-asset-details-dialog', {
+                                                      ...el,
+                                                  })
+                                              }
+                                          >
+                                              <AssetDisplay
+                                                  name={el.asset}
+                                                  size="sm"
+                                                  value={usdFormatter().format(
+                                                      parseFloat(
+                                                          el.amount.slice(1).replaceAll(',', ''),
+                                                      ),
+                                                  )}
+                                                  border
+                                              />
+                                          </button>
+                                      ))
+                                    : ''}
+                            </div>
+                        </div>
+                        <div className="text-center text-sm flex flex-col items-center">
+                            <span>
+                                {width > breakpoint && 'User '}Health
+                                {width > breakpoint && ' Factor'}
+                            </span>
+                            <HealthFactor
+                                value={
+                                    parseFloat(data?.healthFactor || '0') < 100
+                                        ? data?.healthFactor
+                                        : '0'
+                                }
+                            />
+                        </div>
+                        <div className="text-center text-sm flex flex-col items-center">
+                            <span>{width > breakpoint && 'User '}Net APY</span>
+                            <NumberDisplay value={calculateNetAPY()} />
                         </div>
                     </div>
-                    <div className="text-center flex flex-col">
-                        <span className="text-sm">{width > breakpoint && 'User '}Borrows</span>
-                        <div className="flex flex-wrap gap-2">
-                            {data?.borrows?.length
-                                ? data?.borrows?.length > 0 &&
-                                  data.borrows.map((el: IYourBorrowsTableItemProps) => (
-                                      <button
-                                          key={`${el.asset}`}
-                                          onClick={() =>
-                                              openDialog('supplied-asset-details-dialog', {
-                                                  ...el,
-                                              })
-                                          }
-                                      >
-                                          <AssetDisplay
-                                              name={el.asset}
-                                              size="sm"
-                                              value={usdFormatter().format(
-                                                  parseFloat(
-                                                      el.amount.slice(1).replaceAll(',', ''),
-                                                  ),
-                                              )}
-                                              border
-                                          />
-                                      </button>
-                                  ))
-                                : ''}
-                        </div>
-                    </div>
-                    <div className="text-center text-sm flex flex-col items-center">
-                        <span>
-                            {width > breakpoint && 'User '}Health
-                            {width > breakpoint && ' Factor'}
-                        </span>
-                        <HealthFactor
-                            value={
-                                parseFloat(data?.healthFactor || '0') < 100
-                                    ? data?.healthFactor
-                                    : '0'
-                            }
-                        />
-                    </div>
-                </div>
+                </>
             )}
         </Card>
     );
