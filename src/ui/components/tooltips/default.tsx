@@ -13,7 +13,7 @@ export const Tooltip = ({ text, content, size, disable }: ITooltipProps) => {
     return (
         <>
             <p data-tip={text}>{content || <BsInfoCircle size={size || '18px'} />}</p>
-            {!disable && <ReactTooltip backgroundColor="#000" />}
+            <ReactTooltip backgroundColor="#000" disable={disable} />
         </>
     );
 };

@@ -11,6 +11,9 @@ export type IUserDataProps = {
 export type IUserActivityDataProps = {
     supplies: IYourSuppliesTableItemProps[];
     borrows: IYourBorrowsTableItemProps[];
+    totalCollateralETH: string;
+    totalDebtETH: string;
+    availableBorrowsETH: string;
 };
 
 export type IWalletAssetProps = {

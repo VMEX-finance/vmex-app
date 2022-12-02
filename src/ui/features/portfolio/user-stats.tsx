@@ -5,8 +5,8 @@ import { NumberDisplay } from '../../components/displays';
 
 export interface IPortfolioProps {
     networth?: string;
-    supplied?: string;
-    borrowed?: string;
+    supplied?: string | number;
+    borrowed?: string | number;
     isLoading?: boolean;
 }
 

@@ -39,7 +39,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
     const { address } = useWalletState();
     const { tranche, setTranche } = useSelectedTrancheContext();
     const {
-        queryUserTrancheData: { data },
+        queryUserTrancheData: { data, isLoading },
     } = useUserTrancheData(address, tranche.id);
 
     const breakpoint = 768;
@@ -88,7 +88,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                 </div>
             </div>
 
-            {(data?.borrows?.length !== 0 || data?.supplies?.length !== 0) && (
+            {data && (data?.borrows?.length !== 0 || data?.supplies?.length !== 0) && (
                 <div className="grid grid-cols-3 mt-4">
                     <div className="text-center flex flex-col">
                         <span className="text-sm">{width > breakpoint && 'User '}Supplies</span>
@@ -145,7 +145,13 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                             {width > breakpoint && 'User '}Health
                             {width > breakpoint && ' Factor'}
                         </span>
-                        <HealthFactor value={data?.healthFactor} />
+                        <HealthFactor
+                            value={
+                                parseFloat(data?.healthFactor || '0') < 100
+                                    ? data?.healthFactor
+                                    : '0'
+                            }
+                        />
                     </div>
                 </div>
             )}
