@@ -6,6 +6,7 @@ import { IoIosClose } from 'react-icons/io';
 import { useDialogController } from '../../../hooks/dialogs';
 import { AvailableAsset } from '../../../models/available-liquidity-model';
 import { useSelectedTrancheContext } from '../../../store/contexts';
+import { NumberAndDollar } from '../../components/displays';
 
 interface ITableProps {
     data: AvailableAsset[];
@@ -31,26 +32,26 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
         }
     };
 
-    const findAssetInWallet = (asset: string) => {
+    const findAssetInWallet = (asset: string, usdValue = false) => {
         if (queryUserWallet.isLoading) return `0 ${asset}`;
         else {
             const userWalletData = queryUserWallet.data?.assets;
             const found = userWalletData?.find(
                 (el) => el.asset.toLowerCase() === asset.toLowerCase(),
             );
-            if (found) return `${found?.amountNative}`;
+            if (found) return `${usdValue ? found?.amount : found?.amountNative}`;
             else return `0`;
         }
     };
 
-    const findAmountBorrwable = (asset: string, liquidity: number | string | undefined) => {
+    const findAmountBorrowable = (asset: string, liquidity: number | string | undefined) => {
         if (queryUserTrancheData.isLoading) return `0 ${asset}`;
         else {
             const userWalletData = queryUserTrancheData.data?.assetBorrowingPower;
             const found = userWalletData?.find(
                 (el) => el.asset.toLowerCase() === asset.toLowerCase(),
             );
-            if (found)
+            if (found) {
                 return `${
                     liquidity
                         ? Math.min(
@@ -59,8 +60,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                           )
                         : found?.amountNative
                 }`;
-            //`${found?.amountNative}`//
-            else return `0`;
+            } else return `0`;
         }
     };
 
@@ -100,15 +100,13 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                         type === 'supply'
                                             ? 'loan-asset-dialog'
                                             : 'borrow-asset-dialog',
-                                        type === 'supply'
-                                            ? { ...el, amount: findAssetInWallet(el.asset) }
-                                            : {
-                                                  ...el,
-                                                  amount: findAmountBorrwable(
-                                                      el.asset,
-                                                      el.liquidity,
-                                                  ),
-                                              },
+                                        {
+                                            ...el,
+                                            amount:
+                                                type === 'supply'
+                                                    ? findAssetInWallet(el.asset)
+                                                    : findAmountBorrowable(el.asset, el.liquidity),
+                                        },
                                     )
                                 }
                             >
@@ -122,24 +120,28 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                         <div className="text-lg">{el.asset}</div>
                                     </div>
                                 </td>
-                                <td>
-                                    {type === 'supply' ? (
-                                        <span
-                                            className={`${
-                                                queryUserWallet.isLoading ? 'animate-pulse' : ''
-                                            }`}
-                                        >
-                                            {findAssetInWallet(el.asset)} {el.asset}
-                                        </span>
-                                    ) : (
-                                        <span
-                                            className={`${
-                                                queryUserWallet.isLoading ? 'animate-pulse' : ''
-                                            }`}
-                                        >
-                                            {findAmountBorrwable(el.asset, el.liquidity)} {el.asset}
-                                        </span>
-                                    )}
+                                <td
+                                    className={`${
+                                        queryUserWallet.isLoading ? 'animate-pulse' : ''
+                                    }`}
+                                >
+                                    <NumberAndDollar
+                                        value={`${
+                                            type === 'supply'
+                                                ? `${findAssetInWallet(el.asset)} ${el.asset}`
+                                                : `${findAmountBorrowable(
+                                                      el.asset,
+                                                      el.liquidity,
+                                                  )} ${el.asset}`
+                                        }`}
+                                        dollar={`${
+                                            type === 'supply'
+                                                ? `${findAssetInWallet(el.asset, true)}`
+                                                : ''
+                                        }`}
+                                        size="xs"
+                                        color="text-black"
+                                    />
                                 </td>
                                 <td>{el.apy_perc}%</td>
                                 <td>
