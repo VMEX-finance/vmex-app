@@ -1,7 +1,6 @@
 import React from 'react';
 import { Card } from '../../components/cards';
-import { useWindowSize } from '../../../hooks/ui';
-import { HealthFactor, NumberDisplay } from '../../components/displays';
+import { NumberDisplay } from '../../components/displays';
 
 export interface IPortfolioProps {
     networth?: string;
@@ -18,8 +17,6 @@ export const PortfolioStatsCard: React.FC<IPortfolioProps> = ({
     isLoading,
     avgHealth,
 }) => {
-    const { width } = useWindowSize();
-
     return (
         <Card loading={isLoading}>
             <div className="flex flex-col xl:flex-row gap-2 md:gap-4 xl:gap-6 divide-y-2 xl:divide-y-0 xl:divide-x-2 divide-black">
