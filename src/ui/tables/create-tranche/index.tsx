@@ -25,14 +25,12 @@ export const CreateTrancheAssetsTable = ({
     const addToList = (asset: AvailableCoins, list: AvailableCoins[]) => {
         const shallow = list.length > 0 ? [...list] : [];
         shallow.push(asset);
-        console.log(shallow);
         (list == lendAssets ? lendClick : collateralClick)?.(shallow as any);
     };
 
     const removeFromList = (asset: AvailableCoins, list: AvailableCoins[]) => {
         const shallow = list.length > 0 ? [...list] : [];
         const removed = (shallow as any).filter((e: string) => e !== asset);
-        console.log(removed);
         (list == lendAssets ? lendClick : collateralClick)?.(removed as any);
     };
 

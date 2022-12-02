@@ -50,7 +50,6 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
             const found = userWalletData?.find(
                 (el) => el.asset.toLowerCase() === asset.toLowerCase(),
             );
-            // console.log(found && liquidity ?Math.min(parseFloat(found?.amountNative), parseFloat(liquidity.toString())): "No liquidity")
             if (found)
                 return `${
                     liquidity
@@ -59,7 +58,8 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                               parseFloat(liquidity.toString()),
                           )
                         : found?.amountNative
-                }`; //`${found?.amountNative}`//
+                }`;
+            //`${found?.amountNative}`//
             else return `0`;
         }
     };

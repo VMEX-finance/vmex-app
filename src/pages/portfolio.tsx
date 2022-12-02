@@ -26,8 +26,6 @@ const Portfolio: React.FC = () => {
         return `$${sum}`;
     };
 
-    console.log(queryUserActivity.data?.supplies);
-
     return (
         <AppTemplate title="Portfolio">
             {address ? (
