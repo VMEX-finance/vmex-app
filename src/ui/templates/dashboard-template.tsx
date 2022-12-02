@@ -6,6 +6,7 @@ import { BiPlus } from 'react-icons/bi';
 import { useDialogController } from '../../hooks/dialogs';
 import { useMyTranchesContext } from '../../store/contexts';
 import { useWalletState } from '../../hooks/wallet';
+import { Tooltip } from '../components/tooltips';
 
 interface IDashboardTemplateProps {
     title?: string;
@@ -80,12 +81,18 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                 )}
                 {location.pathname === `/tranches` && address && (
                     <div className="flex gap-3 md:justify-end mt-2">
-                        <Button
-                            label={'My Tranches'}
-                            onClick={() => openDialog('my-tranches-dialog')}
-                            primary
-                            disabled={myTranches?.length === 0}
-                            className="!text-lg"
+                        <Tooltip
+                            text="Create a tranche first"
+                            disable={myTranches?.length !== 0}
+                            content={
+                                <Button
+                                    label={'My Tranches'}
+                                    onClick={() => openDialog('my-tranches-dialog')}
+                                    primary
+                                    disabled={myTranches?.length === 0}
+                                    className="!text-lg"
+                                />
+                            }
                         />
                         <Button
                             label={width > 768 ? 'Create Tranche' : <BiPlus size="28px" />}
