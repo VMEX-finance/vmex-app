@@ -12,6 +12,8 @@ import {
     MAINNET_ASSET_MAPPINGS,
     rayToPercent,
     SDK_PARAMS,
+    bigNumberToNative,
+    DECIMALS,
 } from '../../utils/sdk-helpers';
 import { IUserPerformanceCardProps } from '../../ui/features';
 import {
@@ -92,6 +94,12 @@ export async function _getUserWalletData(userAddress: string): Promise<IUserWall
             return {
                 asset: reverseMapping.get(assetData.asset.toLowerCase()) || assetData.asset,
                 amount: bigNumberToUSD(assetData.amount, 18),
+                amountNative: bigNumberToNative(
+                    assetData.amountNative,
+                    DECIMALS.get(
+                        reverseMapping.get(assetData.asset.toLowerCase()) || assetData.asset,
+                    ) || 18,
+                ),
             };
         }),
     };

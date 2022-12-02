@@ -3,9 +3,10 @@ import React from 'react';
 import { AssetDisplay, MultipleAssetsDisplay, NumberDisplay } from '../../components/displays';
 import { useWindowSize } from '../../../hooks/ui';
 import { useDialogController } from '../../../hooks/dialogs';
-import { useUserData } from '../../../api';
+import { useUserTrancheData } from '../../../api';
 import { useWalletState } from '../../../hooks/wallet';
 import { IYourBorrowsTableItemProps, IYourSuppliesTableItemProps } from '../../tables';
+import { useSelectedTrancheContext } from '../../../store/contexts';
 
 export interface ITrancheOverviewProps {
     assets?: string[];
@@ -31,9 +32,10 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
     const { width } = useWindowSize();
     const { openDialog } = useDialogController();
     const { address } = useWalletState();
+    const { tranche, setTranche } = useSelectedTrancheContext();
     const {
-        queryUserActivity: { data },
-    } = useUserData(address);
+        queryUserTrancheData: { data },
+    } = useUserTrancheData(address, tranche.id);
 
     const breakpoint = 768;
     return (
@@ -81,64 +83,70 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                 </div>
             </div>
 
-            {data?.borrows?.length !== 0 ||
-                (data?.supplies?.length !== 0 && (
-                    <div className="grid grid-cols-3 mt-4">
-                        <div className="text-center flex flex-col">
-                            <span className="text-sm">{width > breakpoint && 'User '}Supplies</span>
-                            <div className="flex flex-wrap gap-2">
-                                {data?.supplies?.length > 0 &&
-                                    data.supplies.map((el: IYourSuppliesTableItemProps) => (
-                                        <button
-                                            key={`${el.asset}`}
-                                            onClick={() =>
-                                                openDialog('supplied-asset-details-dialog', {
-                                                    ...el,
-                                                })
-                                            }
-                                        >
-                                            <AssetDisplay
-                                                name={el.asset}
-                                                size="sm"
-                                                value={el.amount}
-                                                border
-                                            />
-                                        </button>
-                                    ))}
-                            </div>
-                        </div>
-                        <div className="text-center flex flex-col">
-                            <span className="text-sm">{width > breakpoint && 'User '}Borrows</span>
-                            <div className="flex flex-wrap gap-2">
-                                {data?.borrows?.length > 0 &&
-                                    data.borrows.map((el: IYourBorrowsTableItemProps) => (
-                                        <button
-                                            key={`${el.asset}`}
-                                            onClick={() =>
-                                                openDialog('supplied-asset-details-dialog', {
-                                                    ...el,
-                                                })
-                                            }
-                                        >
-                                            <AssetDisplay
-                                                name={el.asset}
-                                                size="sm"
-                                                value={el.amount}
-                                                border
-                                            />
-                                        </button>
-                                    ))}
-                            </div>
-                        </div>
-                        <div className="text-center text-sm flex flex-col">
-                            <span>
-                                {width > breakpoint && 'User '}Health
-                                {width > breakpoint && ' Factor'}
-                            </span>
-                            <span>{'-'}</span>
+            {
+                // data?.borrows?.length !== 0 ||
+                //     (data?.supplies?.length !== 0 && (
+                <div className="grid grid-cols-3 mt-4">
+                    <div className="text-center flex flex-col">
+                        <span className="text-sm">{width > breakpoint && 'User '}Supplies</span>
+                        <div className="flex flex-wrap gap-2">
+                            {data?.supplies?.length
+                                ? data?.supplies?.length > 0 &&
+                                  data.supplies.map((el: IYourSuppliesTableItemProps) => (
+                                      <button
+                                          key={`${el.asset}`}
+                                          onClick={() =>
+                                              openDialog('supplied-asset-details-dialog', {
+                                                  ...el,
+                                              })
+                                          }
+                                      >
+                                          <AssetDisplay
+                                              name={el.asset}
+                                              size="sm"
+                                              value={el.amount}
+                                              border
+                                          />
+                                      </button>
+                                  ))
+                                : '-'}
                         </div>
                     </div>
-                ))}
+                    <div className="text-center flex flex-col">
+                        <span className="text-sm">{width > breakpoint && 'User '}Borrows</span>
+                        <div className="flex flex-wrap gap-2">
+                            {data?.borrows?.length
+                                ? data?.borrows?.length > 0 &&
+                                  data.borrows.map((el: IYourBorrowsTableItemProps) => (
+                                      <button
+                                          key={`${el.asset}`}
+                                          onClick={() =>
+                                              openDialog('supplied-asset-details-dialog', {
+                                                  ...el,
+                                              })
+                                          }
+                                      >
+                                          <AssetDisplay
+                                              name={el.asset}
+                                              size="sm"
+                                              value={el.amount}
+                                              border
+                                          />
+                                      </button>
+                                  ))
+                                : '-'}
+                        </div>
+                    </div>
+                    <div className="text-center text-sm flex flex-col">
+                        <span>
+                            {width > breakpoint && 'User '}Health
+                            {width > breakpoint && ' Factor'}
+                        </span>
+                        <span>{data?.borrows?.length !== 0 ? data && data.healthFactor : '-'}</span>
+                    </div>
+                </div>
+                // ))
+            }
         </Card>
     );
 };

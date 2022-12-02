@@ -16,6 +16,7 @@ export type IUserActivityDataProps = {
 export type IWalletAssetProps = {
     asset: string;
     amount: string;
+    amountNative: string;
 };
 
 export type IUserWalletDataProps = {
@@ -33,8 +34,8 @@ export type IUserTrancheData = {
     // currentLiquidationThreshold: string;
     // ltv: string;
     healthFactor: string;
-    // supplies: IYourSuppliesTableItemProps[];
-    // borrows: IYourBorrowsTableItemProps[];
+    supplies: IYourSuppliesTableItemProps[];
+    borrows: IYourBorrowsTableItemProps[];
     assetBorrowingPower: IAvailableBorrowData[];
 };
 

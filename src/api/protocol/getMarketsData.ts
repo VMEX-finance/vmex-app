@@ -40,6 +40,7 @@ export async function getAllMarkets(): Promise<IMarketsAsset[]> {
             borrowApy: rayToPercent(marketData.borrowApy),
             yourAmount: 0,
             available: bigNumberToUSD(marketData.totalReserves, 18),
+            availableNative: 0, //not used
             supplyTotal: bigNumberToUSD(marketData.totalSupplied, 18),
             borrowTotal: bigNumberToUSD(marketData.totalBorrowed, 18),
             rating: '-',

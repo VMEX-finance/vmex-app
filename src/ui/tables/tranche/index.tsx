@@ -38,20 +38,29 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
             const found = userWalletData?.find(
                 (el) => el.asset.toLowerCase() === asset.toLowerCase(),
             );
-            if (found) return `${found?.amount} ${found?.asset}`;
-            else return `0 ${asset}`;
+            if (found) return `${found?.amountNative}`;
+            else return `0`;
         }
     };
 
-    const findAmountBorrwable = (asset: string) => {
+    const findAmountBorrwable = (asset: string, liquidity: number | string | undefined) => {
         if (queryUserTrancheData.isLoading) return `0 ${asset}`;
         else {
             const userWalletData = queryUserTrancheData.data?.assetBorrowingPower;
             const found = userWalletData?.find(
                 (el) => el.asset.toLowerCase() === asset.toLowerCase(),
             );
-            if (found) return `${found?.amountNative} ${found?.asset}`;
-            else return `0 ${asset}`;
+            // console.log(found && liquidity ?Math.min(parseFloat(found?.amountNative), parseFloat(liquidity.toString())): "No liquidity")
+            if (found)
+                return `${
+                    liquidity
+                        ? Math.min(
+                              parseFloat(found?.amountNative.replace(',', '')),
+                              parseFloat(liquidity.toString()),
+                          )
+                        : found?.amountNative
+                }`; //`${found?.amountNative}`//
+            else return `0`;
         }
     };
 
@@ -91,7 +100,15 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                         type === 'supply'
                                             ? 'loan-asset-dialog'
                                             : 'borrow-asset-dialog',
-                                        { ...el },
+                                        type === 'supply'
+                                            ? { ...el, amount: findAssetInWallet(el.asset) }
+                                            : {
+                                                  ...el,
+                                                  amount: findAmountBorrwable(
+                                                      el.asset,
+                                                      el.liquidity,
+                                                  ),
+                                              },
                                     )
                                 }
                             >
@@ -112,7 +129,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                                 queryUserWallet.isLoading ? 'animate-pulse' : ''
                                             }`}
                                         >
-                                            {findAssetInWallet(el.asset)}
+                                            {findAssetInWallet(el.asset)} {el.asset}
                                         </span>
                                     ) : (
                                         <span
@@ -120,7 +137,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                                 queryUserWallet.isLoading ? 'animate-pulse' : ''
                                             }`}
                                         >
-                                            {findAmountBorrwable(el.asset)}
+                                            {findAmountBorrwable(el.asset, el.liquidity)} {el.asset}
                                         </span>
                                     )}
                                 </td>
@@ -135,7 +152,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                             )}
                                         </div>
                                     ) : (
-                                        `${el.liquidity}`
+                                        `${el.liquidity} ${el.asset}`
                                     )}
                                 </td>
                             </tr>

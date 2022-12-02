@@ -89,9 +89,10 @@ const TrancheDetails: React.FC = () => {
                                           .filter((el) => el.canBeBorrowed)
                                           .map((el) => ({
                                               asset: el.asset,
-                                              liquidity: el.available,
+                                              liquidity: el.availableNative,
                                               apy_perc: el.borrowApy,
-                                              amount: 0,
+                                              tranche: tranche.id,
+                                              signer: signer,
                                           }))
                                     : []
                             }

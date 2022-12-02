@@ -1,4 +1,10 @@
-import { getUserTrancheData, UserTrancheData, AvailableBorrowData } from '@vmex/sdk';
+import {
+    getUserTrancheData,
+    UserTrancheData,
+    AvailableBorrowData,
+    BorrowedAssetData,
+    SuppliedAssetData,
+} from '@vmex/sdk';
 import { useQuery } from '@tanstack/react-query';
 import {
     bigNumberToUSD,
@@ -10,6 +16,7 @@ import {
     SDK_PARAMS,
 } from '../../utils/sdk-helpers';
 import { IUserTrancheDataProps, IUserTrancheData } from './types';
+import { BigNumber } from 'ethers';
 
 export async function _getUserTrancheData(
     userAddress: string,
@@ -19,6 +26,8 @@ export async function _getUserTrancheData(
     if (!userAddress) {
         return {
             healthFactor: '0',
+            supplies: [],
+            borrows: [],
             assetBorrowingPower: [],
         };
     }
@@ -33,12 +42,6 @@ export async function _getUserTrancheData(
     const reverseMapping = flipAndLowerCase(MAINNET_ASSET_MAPPINGS);
 
     const tmp = userTrancheData.assetBorrowingPower.map((marketData: AvailableBorrowData) => {
-        console.log(reverseMapping.get(marketData.asset.toLowerCase()));
-        console.log(
-            DECIMALS.get(reverseMapping.get(marketData.asset.toLowerCase()) || marketData.asset) ||
-                18,
-        );
-        console.log(marketData.amountNative);
         return {
             asset: reverseMapping.get(marketData.asset.toLowerCase()) || marketData.asset,
 
@@ -53,7 +56,26 @@ export async function _getUserTrancheData(
     });
 
     return {
-        healthFactor: userTrancheData.healthFactor.toString(),
+        healthFactor: bigNumberToNative(userTrancheData.healthFactor, 18), //health factor has 18 decimals.
+        supplies: userTrancheData.suppliedAssetData.map((assetData: SuppliedAssetData) => {
+            return {
+                asset: reverseMapping.get(assetData.asset.toLowerCase()) || assetData.asset,
+                amount: bigNumberToUSD(assetData.amount, 18),
+                collateral: assetData.isCollateral,
+                apy: rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0)),
+                tranche: assetData.tranche.toString(),
+                trancheId: assetData.tranche.toNumber(),
+            };
+        }),
+        borrows: userTrancheData.borrowedAssetData.map((assetData: BorrowedAssetData) => {
+            return {
+                asset: reverseMapping.get(assetData.asset.toLowerCase()) || assetData.asset,
+                amount: bigNumberToUSD(assetData.amount, 18),
+                apy: rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0)),
+                tranche: assetData.tranche.toString(),
+                trancheId: assetData.tranche.toNumber(),
+            };
+        }),
         assetBorrowingPower: tmp,
     };
 }

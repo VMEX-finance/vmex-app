@@ -6,6 +6,7 @@ export type IMarketsAsset = {
     borrowApy: number | string;
     yourAmount: number | string;
     available: number | string;
+    availableNative: number | string;
     supplyTotal: number | string;
     borrowTotal: number | string;
     rating: string;

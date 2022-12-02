@@ -1,6 +1,6 @@
 import React from 'react';
 import { useMediatedState } from 'react-use';
-import { inputMediator } from '../../../utils/helpers';
+import { inputMediator, convertNativeTokenStringToNumber } from '../../../utils/helpers';
 import { CoinInput } from '../../components/inputs';
 import { Button } from '../../components/buttons';
 import { BasicToggle } from '../../components/toggles';
@@ -36,7 +36,7 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
             await supply({
                 underlying: MAINNET_ASSET_MAPPINGS.get(data.asset) || '',
                 trancheId: data.tranche,
-                amount: amount,
+                amount: convertNativeTokenStringToNumber(amount),
                 signer: data.signer,
                 network: NETWORK,
                 // referrer: number,
