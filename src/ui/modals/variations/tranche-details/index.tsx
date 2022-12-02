@@ -8,6 +8,7 @@ import { AvailableAsset } from '../../../../models/available-liquidity-model';
 import { useSelectedTrancheContext } from '../../../../store/contexts';
 import { NumberAndDollar } from '../../../components/displays';
 import { useWindowSize } from '../../../../hooks/ui';
+import { convertStringFormatToNumber } from '../../../../utils/helpers';
 
 interface ITableProps {
     data: AvailableAsset[];
@@ -39,12 +40,12 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
     const userData =
         type === 'supply' ? queryUserActivity.data?.supplies : queryUserActivity.data?.borrows;
 
-    const findAssetInUserSupplies = (asset: string) => {
+    const findAssetInUserSuppliesOrBorrows = (asset: string) => {
         if (queryUserActivity.isLoading) return `0 ${asset}`;
         else {
             const found = userData?.find((el) => el.asset.toLowerCase() === asset.toLowerCase());
-            if (found) return `${found?.amount} ${found?.asset}`;
-            else return `0 ${asset}`;
+            if (found) return `${found?.amountNative}`;
+            else return `0`;
         }
     };
 
@@ -71,8 +72,8 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                 return `${
                     liquidity
                         ? Math.min(
-                              parseFloat(found?.amountNative.replaceAll(',', '')),
-                              parseFloat(liquidity.toString().replaceAll(',', '')),
+                              parseFloat(convertStringFormatToNumber(found?.amountNative)),
+                              parseFloat(convertStringFormatToNumber(liquidity)),
                           )
                         : found?.amountNative
                 }`;
@@ -122,6 +123,9 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                                 type === 'supply'
                                                     ? findAssetInWallet(el.asset)
                                                     : findAmountBorrowable(el.asset, el.liquidity),
+                                            amountWithdrawOrRepay: findAssetInUserSuppliesOrBorrows(
+                                                el.asset,
+                                            ),
                                         },
                                     )
                                 }
