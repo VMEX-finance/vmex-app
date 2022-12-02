@@ -150,11 +150,12 @@ export const capFirst = (string: string | undefined) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
-export const usdFormatter = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    notation: 'compact',
-});
+export const usdFormatter = (isCompact = true) =>
+    new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        notation: isCompact ? 'compact' : 'standard',
+    });
 
 export const numberFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',

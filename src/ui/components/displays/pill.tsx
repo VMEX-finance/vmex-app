@@ -15,7 +15,7 @@ export const PillDisplay = ({ asset, value, type, formatter = 'usd' }: IPillDisp
         }
         switch (formatter) {
             case 'usd':
-                return usdFormatter.format(val);
+                return usdFormatter().format(val);
             case 'basic':
                 return numberFormatter.format(val);
             default:

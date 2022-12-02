@@ -56,6 +56,13 @@ export async function getUserActivityData(userAddress: string): Promise<IUserAct
                     REVERSE_MAINNET_ASSET_MAPPINGS.get(assetData.asset.toLowerCase()) ||
                     assetData.asset,
                 amount: bigNumberToUSD(assetData.amount, 18),
+                amountNative: bigNumberToNative(
+                    assetData.amountNative,
+                    DECIMALS.get(
+                        REVERSE_MAINNET_ASSET_MAPPINGS.get(assetData.asset.toLowerCase()) ||
+                            assetData.asset,
+                    ) || 18,
+                ),
                 collateral: assetData.isCollateral,
                 apy: rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0)),
                 tranche: assetData.tranche.toString(),
@@ -68,6 +75,13 @@ export async function getUserActivityData(userAddress: string): Promise<IUserAct
                     REVERSE_MAINNET_ASSET_MAPPINGS.get(assetData.asset.toLowerCase()) ||
                     assetData.asset,
                 amount: bigNumberToUSD(assetData.amount, 18),
+                amountNative: bigNumberToNative(
+                    assetData.amountNative,
+                    DECIMALS.get(
+                        REVERSE_MAINNET_ASSET_MAPPINGS.get(assetData.asset.toLowerCase()) ||
+                            assetData.asset,
+                    ) || 18,
+                ),
                 apy: rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0)),
                 tranche: assetData.tranche.toString(),
                 trancheId: assetData.tranche.toNumber(),

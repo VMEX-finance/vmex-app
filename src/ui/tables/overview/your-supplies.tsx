@@ -7,6 +7,7 @@ import { BasicToggle } from '../../components/toggles';
 export type IYourSuppliesTableItemProps = {
     asset: string;
     amount: string;
+    amountNative: string;
     collateral: boolean;
     apy: number;
     tranche: string;
@@ -47,7 +48,7 @@ export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({ data }) =
                             <td className="whitespace-nowrap p-4 text-sm sm:pl-6">
                                 <AssetDisplay name={i.asset} />
                             </td>
-                            <td className="">{`${i.amount} ${i.asset}`}</td>
+                            <td className="">{`${i.amountNative || i.amount} ${i.asset}`}</td>
                             <td className="">
                                 <BasicToggle checked={i.collateral} disabled />
                             </td>

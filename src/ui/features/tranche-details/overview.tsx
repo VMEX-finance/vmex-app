@@ -12,6 +12,7 @@ import { useUserTrancheData } from '../../../api';
 import { useWalletState } from '../../../hooks/wallet';
 import { IYourBorrowsTableItemProps, IYourSuppliesTableItemProps } from '../../tables';
 import { useSelectedTrancheContext } from '../../../store/contexts';
+import { usdFormatter } from '../../../utils/helpers';
 
 export interface ITrancheOverviewProps {
     assets?: string[];
@@ -107,7 +108,11 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                                           <AssetDisplay
                                               name={el.asset}
                                               size="sm"
-                                              value={el.amount}
+                                              value={usdFormatter().format(
+                                                  parseFloat(
+                                                      el.amount.slice(1).replaceAll(',', ''),
+                                                  ),
+                                              )}
                                               border
                                           />
                                       </button>
@@ -132,7 +137,11 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                                           <AssetDisplay
                                               name={el.asset}
                                               size="sm"
-                                              value={el.amount}
+                                              value={usdFormatter().format(
+                                                  parseFloat(
+                                                      el.amount.slice(1).replaceAll(',', ''),
+                                                  ),
+                                              )}
                                               border
                                           />
                                       </button>

@@ -89,18 +89,24 @@ export const DECIMALS = new Map<string, number>([
     ['Oneinch', 18],
 ]);
 
-export const bigNumberToUSD = (number: BigNumber | undefined, decimals: number): string => {
+export const bigNumberToUSD = (
+    number: BigNumber | undefined,
+    decimals: number,
+    dollarSign = true,
+): string => {
     if (!number) {
-        console.log('given invalid bignumber');
+        console.error('given invalid bignumber');
         return '$0';
     }
-
-    return usdFormatter.format(parseFloat(ethers.utils.formatUnits(number, decimals)));
+    const formatted = usdFormatter(false).format(
+        parseFloat(ethers.utils.formatUnits(number, decimals)),
+    );
+    return dollarSign ? formatted : formatted.slice(1);
 };
 
 export const bigNumberToNative = (number: BigNumber | undefined, decimals: number): string => {
     if (!number) {
-        console.log('given invalid bignumber');
+        console.error('given invalid bignumber');
         return '$0';
     }
 
@@ -119,7 +125,7 @@ export const rayToPercent = (number: BigNumber): number => {
 
 export const addDollarAmounts = (list: Array<string> | undefined, dollarSign = true) => {
     if (!list) return dollarSign ? `$0` : 0;
-    const withoutDollarSign = list.map((el) => parseFloat(el.slice(1)));
+    const withoutDollarSign = list.map((el) => parseFloat(el.slice(1).replaceAll(',', '')));
     const sum = withoutDollarSign.reduce((partial, next) => partial + next, 0);
     return dollarSign ? `$${sum.toString()}` : sum;
 };
