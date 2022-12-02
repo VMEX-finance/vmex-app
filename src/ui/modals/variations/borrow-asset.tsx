@@ -24,7 +24,6 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
     const [view, setView] = React.useState('Borrow');
 
     const handleClick = async () => {
-        console.log('Before submitting ts: amount: ', convertNativeTokenStringToNumber(amount));
         await submitTx(async () => {
             await borrow({
                 underlying: MAINNET_ASSET_MAPPINGS.get(data.asset) || '',

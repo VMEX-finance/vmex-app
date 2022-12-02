@@ -6,13 +6,14 @@ interface ITooltipProps {
     text: string;
     content?: ReactNode | string;
     size?: string;
+    disable?: boolean;
 }
 
-export const Tooltip = ({ text, content, size }: ITooltipProps) => {
+export const Tooltip = ({ text, content, size, disable }: ITooltipProps) => {
     return (
         <>
             <p data-tip={text}>{content || <BsInfoCircle size={size || '18px'} />}</p>
-            <ReactTooltip />
+            <ReactTooltip backgroundColor="#000" disable={disable} />
         </>
     );
 };

@@ -157,7 +157,10 @@ export const DropdownButton = ({
                                         <Menu.Item key={`${item}-${i}`}>
                                             {({ active }) =>
                                                 !multiselect ? (
-                                                    <div className="flex items-center gap-2">
+                                                    <div
+                                                        className="flex items-center gap-2"
+                                                        key={`dropdown-${i}`}
+                                                    >
                                                         <MenuItemButton
                                                             label={
                                                                 <span className="flex justify-between">
@@ -192,6 +195,7 @@ export const DropdownButton = ({
                                                     </div>
                                                 ) : (
                                                     <MenuItemButton
+                                                        key={`dropdown-${i}`}
                                                         label={
                                                             uppercase ? item.toUpperCase() : item
                                                         }

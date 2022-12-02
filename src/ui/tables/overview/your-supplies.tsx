@@ -1,4 +1,4 @@
-import { AssetDisplay } from '../../components/displays';
+import { AssetDisplay, NumberAndDollar } from '../../components/displays';
 import React from 'react';
 import { useDialogController } from '../../../hooks/dialogs';
 import { percentFormatter } from '../../../utils/helpers';
@@ -7,6 +7,7 @@ import { BasicToggle } from '../../components/toggles';
 export type IYourSuppliesTableItemProps = {
     asset: string;
     amount: string;
+    amountNative: string;
     collateral: boolean;
     apy: number;
     tranche: string;
@@ -47,7 +48,14 @@ export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({ data }) =
                             <td className="whitespace-nowrap p-4 text-sm sm:pl-6">
                                 <AssetDisplay name={i.asset} />
                             </td>
-                            <td className="">{`${i.amount} ${i.asset}`}</td>
+                            <td>
+                                <NumberAndDollar
+                                    value={`${i.amountNative} ${i.asset}`}
+                                    dollar={i.amount}
+                                    size="xs"
+                                    color="text-black"
+                                />
+                            </td>
                             <td className="">
                                 <BasicToggle checked={i.collateral} disabled />
                             </td>

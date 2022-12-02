@@ -68,9 +68,7 @@ export const Navbar: React.FC = () => {
                             baseLink={`https://etherscan.com`}
                             selected={'Transactions'}
                             label={
-                                width > 1400 ? (
-                                    ''
-                                ) : (
+                                width < 1400 && (
                                     <span className="flex gap-2 items-center !max-h-[25px]">
                                         <BiTransferAlt size={'24px'} />
                                         {
@@ -80,8 +78,8 @@ export const Navbar: React.FC = () => {
                                     </span>
                                 )
                             }
-                            border
                             size="lg"
+                            className="border border-1 border-black"
                         />
                     )}
                     {width >= 1024 ? (

@@ -1,11 +1,12 @@
 import React from 'react';
 import { useDialogController } from '../../../hooks/dialogs';
-import { AssetDisplay } from '../../components/displays';
-import { numberFormatter, percentFormatter } from '../../../utils/helpers';
+import { AssetDisplay, NumberAndDollar } from '../../components/displays';
+import { percentFormatter } from '../../../utils/helpers';
 
 export type IYourBorrowsTableItemProps = {
     asset: string;
     amount: string;
+    amountNative: string;
     apy: number;
     tranche: string;
     trancheId: number;
@@ -48,7 +49,14 @@ export const YourBorrowsTable: React.FC<IYourBorrowsTableProps> = ({ data }) => 
                                 <td className="whitespace-nowrap p-4 text-sm sm:pl-6">
                                     <AssetDisplay name={i.asset} />
                                 </td>
-                                <td className="">{`${i.amount} ${i.asset}`}</td>
+                                <td>
+                                    <NumberAndDollar
+                                        value={`${i.amountNative} ${i.asset}`}
+                                        dollar={i.amount}
+                                        size="xs"
+                                        color="text-black"
+                                    />
+                                </td>
                                 <td>{percentFormatter.format(i.apy)}</td>
                                 <td className="">{i.tranche}</td>
                                 {/* <td className="text-right hidden md:table-cell pr-3.5">

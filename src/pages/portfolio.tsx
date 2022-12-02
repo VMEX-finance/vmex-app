@@ -5,17 +5,43 @@ import { YourPositionsTable } from '../ui/tables';
 import { WalletButton } from '../ui/components/buttons';
 import { useUserData } from '../api/user';
 import { useWalletState } from '../hooks/wallet';
+import { addDollarAmounts } from '../utils/sdk-helpers';
 
 const Portfolio: React.FC = () => {
     const { address } = useWalletState();
     const { queryUserPerformance, queryUserActivity } = useUserData(address);
+
+    // TODO: is this how we're calculating networth or is (all wallet holdings + supplies) - borrows
+    const calculateNetworth = () => {
+        let sum = 0;
+        sum =
+            (addDollarAmounts(
+                queryUserActivity.data?.supplies.map((el) => el.amount),
+                false,
+            ) as number) -
+            (addDollarAmounts(
+                queryUserActivity.data?.borrows.map((el) => el.amount),
+                false,
+            ) as number);
+        return `$${sum}`;
+    };
 
     return (
         <AppTemplate title="Portfolio">
             {address ? (
                 <GridView type="fixed">
                     <div className="col-span-2 flex flex-col gap-4 md:gap-6 lg:gap-8">
-                        <PortfolioStatsCard />
+                        <PortfolioStatsCard
+                            isLoading={queryUserActivity.isLoading}
+                            networth={calculateNetworth()}
+                            supplied={addDollarAmounts(
+                                queryUserActivity.data?.supplies.map((el) => el.amount),
+                            )}
+                            borrowed={addDollarAmounts(
+                                queryUserActivity.data?.borrows.map((el) => el.amount),
+                            )}
+                            avgHealth={'0'} // TODO: add average health factor
+                        />
                         <div className="flex flex-col lg:flex-row lg:grow gap-4 md:gap-6 lg:gap-8">
                             <YourPositionsTable
                                 type="supplies"

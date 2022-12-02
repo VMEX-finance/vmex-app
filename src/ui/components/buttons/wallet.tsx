@@ -48,10 +48,9 @@ export const WalletButton = ({
     if (address && width > 1024) {
         return (
             <DropdownButton
-                className={['min-h-[36px]', mode, className].join(' ')}
+                className={['min-h-[36px] border-1 border border-black', mode, className].join(' ')}
                 selected={width > 1400 ? truncateAddress(address) : truncate(address, 3)}
                 items={renderDropdownItems()}
-                border
                 size="lg"
             />
         );

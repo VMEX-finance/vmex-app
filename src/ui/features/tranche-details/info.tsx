@@ -35,7 +35,6 @@ export const TrancheInfoCard = ({ tranche }: any) => {
                         value={`${tranche.poolUtilization}%`}
                         size="xl"
                     />
-                    <NumberDisplay label="Upgradeable" value={`${tranche.upgradeable}`} size="xl" />
                     <NumberDisplay label="Whitelist" value={`${tranche.whitelist}`} size="xl" />
                     <NumberDisplay
                         label="Admin"

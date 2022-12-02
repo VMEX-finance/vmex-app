@@ -37,7 +37,7 @@ const TranchesCustomRow = (props: any) => {
                         </div>
                     );
                 default:
-                    return width < 900 ? <>None</> : <></>;
+                    return <></>;
             }
         }
     };

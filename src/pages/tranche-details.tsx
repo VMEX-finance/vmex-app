@@ -11,8 +11,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '../store/contexts';
 import { useWalletState } from '../hooks/wallet';
 import { useTrancheMarketsData, useTranchesData } from '../api/protocol';
-import { IMarketsAsset } from '@models/markets';
-// import { useUserData } from '../hooks/user';
 
 const TrancheDetails: React.FC = () => {
     const navigate = useNavigate();
@@ -21,7 +19,6 @@ const TrancheDetails: React.FC = () => {
     const { tranche, setTranche } = useSelectedTrancheContext();
     const { queryTrancheMarkets } = useTrancheMarketsData(tranche.id);
     const { queryAllTranches } = useTranchesData();
-    // const { queryUserPerformance, queryUserActivity, queryUserWallet } = useUserData(address);
     const [view, setView] = useState('tranche-overview');
 
     useEffect(() => {
