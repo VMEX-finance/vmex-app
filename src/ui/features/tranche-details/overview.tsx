@@ -168,6 +168,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                                         ? data?.healthFactor
                                         : '0'
                                 }
+                                withChange={false}
                             />
                         </div>
                         <div className="text-center text-sm flex flex-col items-center">

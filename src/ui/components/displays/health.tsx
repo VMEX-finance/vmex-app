@@ -6,9 +6,15 @@ interface IHealthFactorProps {
     value?: number | string;
     liquidation?: number | string;
     size?: 'sm' | 'md' | 'lg';
+    withChange?: boolean;
 }
 
-export const HealthFactor = ({ value, liquidation, size = 'md' }: IHealthFactorProps) => {
+export const HealthFactor = ({
+    value,
+    liquidation,
+    size = 'md',
+    withChange = true,
+}: IHealthFactorProps) => {
     const determineSize = () => {
         switch (size) {
             case 'sm':
@@ -22,8 +28,12 @@ export const HealthFactor = ({ value, liquidation, size = 'md' }: IHealthFactorP
     return (
         <div className="flex flex-col">
             <div className="flex items-center gap-2">
-                <TbInfinity color="#8CE58F" size={`${determineSize()[0]}`} />
-                <BsArrowRight size={`${determineSize()[1]}`} />
+                {withChange && (
+                    <>
+                        <TbInfinity color="#8CE58F" size={`${determineSize()[0]}`} />
+                        <BsArrowRight size={`${determineSize()[1]}`} />
+                    </>
+                )}
                 {/* TODO: color should change based on health value */}
                 <span className={`${determineSize()[2]} text-[#D9D001] font-semibold`}>
                     {value || 0}
