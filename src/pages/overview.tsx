@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { AppTemplate, GridView } from '../ui/templates';
 import { UserPerformanceCard, ProtocolStatsCard } from '../ui/features';
 import { YourPositionsTable } from '../ui/tables';
@@ -11,7 +11,7 @@ import { useWalletState } from '../hooks/wallet';
 const Overview: React.FC = () => {
     const { address } = useWalletState();
     const { queryProtocolOverview } = useProtocolData();
-    const { queryUserPerformance, queryUserActivity } = useUserData(address);
+    const { queryUserPerformance, queryUserActivity, queryUserWallet } = useUserData(address);
 
     return (
         <AppTemplate title="overview">

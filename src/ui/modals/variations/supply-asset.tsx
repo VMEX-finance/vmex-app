@@ -1,6 +1,6 @@
 import React from 'react';
 import { useMediatedState } from 'react-use';
-import { inputMediator } from '../../../utils/helpers';
+import { inputMediator, convertNativeTokenStringToNumber } from '../../../utils/helpers';
 import { CoinInput } from '../../components/inputs';
 import { Button } from '../../components/buttons';
 import { BasicToggle } from '../../components/toggles';
@@ -36,7 +36,7 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
             await supply({
                 underlying: MAINNET_ASSET_MAPPINGS.get(data.asset) || '',
                 trancheId: data.tranche,
-                amount: amount,
+                amount: convertNativeTokenStringToNumber(amount),
                 signer: data.signer,
                 network: NETWORK,
                 // referrer: number,
@@ -71,7 +71,7 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
                                         logo: `/tokens/token-${data.asset}.svg`,
                                         name: data.asset,
                                     }}
-                                    balance={'0.23'}
+                                    balance={data.amount}
                                 />
 
                                 <h3 className="mt-6 text-gray-400">Collaterize</h3>
@@ -79,6 +79,7 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
                                     <BasicToggle
                                         checked={asCollateral}
                                         onChange={() => setAsCollateral(!asCollateral)}
+                                        disabled={!data.canBeCollat}
                                     />
                                 </div>
 
@@ -87,7 +88,7 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
                                     content={[
                                         {
                                             label: 'Supply APR (%)',
-                                            value: `${0.44}%`,
+                                            value: `${data.apy_perc}%`,
                                         },
                                         {
                                             label: 'Collateralization',

@@ -160,9 +160,19 @@ export const numberFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
 });
 
+export const nativeTokenFormatter = new Intl.NumberFormat('en-US', {
+    notation: 'standard',
+    minimumSignificantDigits: 5,
+    maximumSignificantDigits: 8,
+});
+
 export const percentFormatter = new Intl.NumberFormat('en-US', {
     style: 'percent',
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
     notation: 'compact',
 });
+
+export const convertNativeTokenStringToNumber = (amount: string) => {
+    return amount.replace(',', '');
+};

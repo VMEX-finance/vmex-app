@@ -4,11 +4,13 @@ import { useMediatedState } from 'react-use';
 import { TransactionStatus, ActiveStatus } from '../../components/statuses';
 import { CoinInput } from '../../components/inputs';
 import { Button, DropdownButton } from '../../components/buttons';
-import { inputMediator } from '../../../utils/helpers';
+import { inputMediator, convertNativeTokenStringToNumber } from '../../../utils/helpers';
 import { HealthFactor } from '../../components/displays';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
 import { IDialogProps } from '../utils';
 import { useModal } from '../../../hooks/ui';
+import { borrow } from '@vmex/sdk';
+import { MAINNET_ASSET_MAPPINGS, NETWORK } from '../../../utils/sdk-helpers';
 
 export const BorrowAssetDialog: React.FC<IDialogProps> = ({
     name,
@@ -22,7 +24,20 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
     const [view, setView] = React.useState('Borrow');
 
     const handleClick = async () => {
-        await submitTx();
+        console.log('Before submitting ts: amount: ', convertNativeTokenStringToNumber(amount));
+        await submitTx(async () => {
+            await borrow({
+                underlying: MAINNET_ASSET_MAPPINGS.get(data.asset) || '',
+                trancheId: data.tranche,
+                amount: convertNativeTokenStringToNumber(amount),
+                interestRateMode: 2,
+                signer: data.signer,
+                network: NETWORK,
+                // referrer: number,
+                // collateral: boolean,
+                // test: boolean
+            });
+        });
     };
 
     return (
@@ -50,7 +65,7 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
                                         logo: `/tokens/token-${data.asset}.svg`,
                                         name: data.asset,
                                     }}
-                                    balance={'0.23'}
+                                    balance={data.amount}
                                     type="collateral"
                                 />
 
@@ -62,7 +77,7 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
                                     content={[
                                         {
                                             label: 'Borrow APR (%)',
-                                            value: `${0.44}%`,
+                                            value: `${data.apy_perc}%`,
                                         },
                                         {
                                             label: 'Collateralization',

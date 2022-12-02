@@ -35,12 +35,12 @@ export const CoinInput = ({ amount, setAmount, coin, balance, type }: ICoinInput
                     <p>
                         {`${
                             type === 'collateral'
-                                ? 'Amount Collateralized'
+                                ? 'Amount Borrowable'
                                 : type === 'owed'
                                 ? 'Amount Owed'
                                 : 'Balance'
                         }:`}{' '}
-                        {balance || 0.3213}
+                        {balance || 0}
                     </p>
                 </button>
             </div>

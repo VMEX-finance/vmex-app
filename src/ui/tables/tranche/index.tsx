@@ -1,10 +1,11 @@
-import { useUserData } from '../../../api';
+import { useUserData, useUserTrancheData } from '../../../api';
 import { useWalletState } from '../../../hooks/wallet';
 import React from 'react';
 import { BsCheck } from 'react-icons/bs';
 import { IoIosClose } from 'react-icons/io';
 import { useDialogController } from '../../../hooks/dialogs';
 import { AvailableAsset } from '../../../models/available-liquidity-model';
+import { useSelectedTrancheContext } from '../../../store/contexts';
 
 interface ITableProps {
     data: AvailableAsset[];
@@ -12,18 +13,54 @@ interface ITableProps {
 }
 export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
     const { address } = useWalletState();
-    const { queryUserActivity } = useUserData(address);
+    const { tranche } = useSelectedTrancheContext();
+    const { queryUserActivity, queryUserWallet } = useUserData(address);
+    const { queryUserTrancheData } = useUserTrancheData(address, tranche.id);
     const { openDialog } = useDialogController();
-    const mode = type === 'supply' ? 'Can Collateralize' : 'Available Borrows';
+    const mode1 = type === 'supply' ? 'Wallet Balance' : 'Available Borrows';
+    const mode2 = type === 'supply' ? 'Can Collateralize' : 'Total liquidity';
     const userData =
         type === 'supply' ? queryUserActivity.data?.supplies : queryUserActivity.data?.borrows;
 
-    const findAssetInUser = (asset: string) => {
+    const findAssetInUserSupplies = (asset: string) => {
         if (queryUserActivity.isLoading) return `0 ${asset}`;
         else {
             const found = userData?.find((el) => el.asset.toLowerCase() === asset.toLowerCase());
             if (found) return `${found?.amount} ${found?.asset}`;
             else return `0 ${asset}`;
+        }
+    };
+
+    const findAssetInWallet = (asset: string) => {
+        if (queryUserWallet.isLoading) return `0 ${asset}`;
+        else {
+            const userWalletData = queryUserWallet.data?.assets;
+            const found = userWalletData?.find(
+                (el) => el.asset.toLowerCase() === asset.toLowerCase(),
+            );
+            if (found) return `${found?.amountNative}`;
+            else return `0`;
+        }
+    };
+
+    const findAmountBorrwable = (asset: string, liquidity: number | string | undefined) => {
+        if (queryUserTrancheData.isLoading) return `0 ${asset}`;
+        else {
+            const userWalletData = queryUserTrancheData.data?.assetBorrowingPower;
+            const found = userWalletData?.find(
+                (el) => el.asset.toLowerCase() === asset.toLowerCase(),
+            );
+            // console.log(found && liquidity ?Math.min(parseFloat(found?.amountNative), parseFloat(liquidity.toString())): "No liquidity")
+            if (found)
+                return `${
+                    liquidity
+                        ? Math.min(
+                              parseFloat(found?.amountNative.replace(',', '')),
+                              parseFloat(liquidity.toString()),
+                          )
+                        : found?.amountNative
+                }`; //`${found?.amountNative}`//
+            else return `0`;
         }
     };
 
@@ -40,13 +77,13 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                         Asset
                     </th>
                     <th scope="col" className="py-3.5">
-                        Balance
+                        {mode1}
                     </th>
                     <th scope="col" className="py-3.5">
                         APY
                     </th>
                     <th scope="col" className="py-3.5">
-                        {mode}
+                        {mode2}
                     </th>
                     <th scope="col" className="py-3.5"></th>
                 </tr>
@@ -63,7 +100,15 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                         type === 'supply'
                                             ? 'loan-asset-dialog'
                                             : 'borrow-asset-dialog',
-                                        { ...el },
+                                        type === 'supply'
+                                            ? { ...el, amount: findAssetInWallet(el.asset) }
+                                            : {
+                                                  ...el,
+                                                  amount: findAmountBorrwable(
+                                                      el.asset,
+                                                      el.liquidity,
+                                                  ),
+                                              },
                                     )
                                 }
                             >
@@ -78,13 +123,23 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                     </div>
                                 </td>
                                 <td>
-                                    <span
-                                        className={`${
-                                            queryUserActivity.isLoading ? 'animate-pulse' : ''
-                                        }`}
-                                    >
-                                        {findAssetInUser(el.asset)}
-                                    </span>
+                                    {type === 'supply' ? (
+                                        <span
+                                            className={`${
+                                                queryUserWallet.isLoading ? 'animate-pulse' : ''
+                                            }`}
+                                        >
+                                            {findAssetInWallet(el.asset)} {el.asset}
+                                        </span>
+                                    ) : (
+                                        <span
+                                            className={`${
+                                                queryUserWallet.isLoading ? 'animate-pulse' : ''
+                                            }`}
+                                        >
+                                            {findAmountBorrwable(el.asset, el.liquidity)} {el.asset}
+                                        </span>
+                                    )}
                                 </td>
                                 <td>{el.apy_perc}%</td>
                                 <td>
@@ -97,7 +152,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                             )}
                                         </div>
                                     ) : (
-                                        `${el.liquidity}`
+                                        `${el.liquidity} ${el.asset}`
                                     )}
                                 </td>
                             </tr>

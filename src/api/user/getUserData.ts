@@ -1,4 +1,10 @@
-import { BorrowedAssetData, getUserSummaryData, SuppliedAssetData } from '@vmex/sdk';
+import {
+    BorrowedAssetData,
+    getUserSummaryData,
+    SuppliedAssetData,
+    getUserWalletData,
+    UserWalletData,
+} from '@vmex/sdk';
 import { useQuery } from '@tanstack/react-query';
 import {
     bigNumberToUSD,
@@ -6,6 +12,8 @@ import {
     MAINNET_ASSET_MAPPINGS,
     rayToPercent,
     SDK_PARAMS,
+    bigNumberToNative,
+    DECIMALS,
 } from '../../utils/sdk-helpers';
 import { IUserPerformanceCardProps } from '../../ui/features';
 import {
@@ -14,7 +22,8 @@ import {
     MOCK_YOUR_BORROWS,
     MOCK_YOUR_SUPPLIES,
 } from '../../utils/mock-data';
-import { IUserActivityDataProps, IUserDataProps } from './types';
+import { IUserActivityDataProps, IUserDataProps, IUserWalletDataProps } from './types';
+import { BigNumber } from 'ethers';
 
 // Gets
 export function getUserPerformanceData(): IUserPerformanceCardProps {
@@ -48,7 +57,7 @@ export async function getUserActivityData(userAddress: string): Promise<IUserAct
                 asset: reverseMapping.get(assetData.asset.toLowerCase()) || assetData.asset,
                 amount: bigNumberToUSD(assetData.amount, 18),
                 collateral: assetData.isCollateral,
-                apy: rayToPercent(assetData.apy),
+                apy: rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0)),
                 tranche: assetData.tranche.toString(),
                 trancheId: assetData.tranche.toNumber(),
             };
@@ -57,9 +66,40 @@ export async function getUserActivityData(userAddress: string): Promise<IUserAct
             return {
                 asset: reverseMapping.get(assetData.asset.toLowerCase()) || assetData.asset,
                 amount: bigNumberToUSD(assetData.amount, 18),
-                apy: rayToPercent(assetData.apy),
+                apy: rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0)),
                 tranche: assetData.tranche.toString(),
                 trancheId: assetData.tranche.toNumber(),
+            };
+        }),
+    };
+}
+
+export async function _getUserWalletData(userAddress: string): Promise<IUserWalletDataProps> {
+    console.log('getting user wallet data for addr', userAddress);
+    if (!userAddress) {
+        return {
+            assets: [],
+        };
+    }
+
+    const res = await getUserWalletData({
+        user: userAddress,
+        network: SDK_PARAMS.network,
+        test: SDK_PARAMS.test,
+    });
+    const reverseMapping = flipAndLowerCase(MAINNET_ASSET_MAPPINGS);
+    console.log('got user wallet data', res);
+    return {
+        assets: res.map((assetData: UserWalletData) => {
+            return {
+                asset: reverseMapping.get(assetData.asset.toLowerCase()) || assetData.asset,
+                amount: bigNumberToUSD(assetData.amount, 18),
+                amountNative: bigNumberToNative(
+                    assetData.amountNative,
+                    DECIMALS.get(
+                        reverseMapping.get(assetData.asset.toLowerCase()) || assetData.asset,
+                    ) || 18,
+                ),
             };
         }),
     };
@@ -77,8 +117,14 @@ export function useUserData(userAddress: string): IUserDataProps {
         queryFn: () => getUserActivityData(userAddress),
     });
 
+    const queryUserWallet = useQuery({
+        queryKey: ['user-wallet'],
+        queryFn: () => _getUserWalletData(userAddress),
+    });
+
     return {
         queryUserPerformance,
         queryUserActivity,
+        queryUserWallet,
     };
 }

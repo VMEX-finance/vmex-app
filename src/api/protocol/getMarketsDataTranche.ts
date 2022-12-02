@@ -1,13 +1,14 @@
 import { IMarketsAsset } from '@models/markets';
 import { useQuery } from '@tanstack/react-query';
-import { MOCK_MARKETS_DATA } from '../../utils/mock-data';
 import { ITrancheMarketsDataProps } from './types';
 import { getTrancheMarketsData, MarketData, getAllMarketsData } from '@vmex/sdk';
 import {
     bigNumberToUSD,
+    bigNumberToNative,
     flipAndLowerCase,
     MAINNET_ASSET_MAPPINGS,
     SDK_PARAMS,
+    DECIMALS,
 } from '../../utils/sdk-helpers';
 import { BigNumber } from 'ethers';
 
@@ -38,6 +39,12 @@ export async function getTrancheMarkets(trancheId: number): Promise<IMarketsAsse
                     .toNumber() / 1000,
             yourAmount: 0, //TODO:
             available: bigNumberToUSD(marketData.totalReserves, 18),
+            availableNative: bigNumberToNative(
+                marketData.totalReservesNative,
+                DECIMALS.get(
+                    reverseMapping.get(marketData.asset.toLowerCase()) || marketData.asset,
+                ) || 18,
+            ),
             supplyTotal: bigNumberToUSD(marketData.totalSupplied, 18),
             borrowTotal: bigNumberToUSD(marketData.totalBorrowed, 18),
             rating: '-',
