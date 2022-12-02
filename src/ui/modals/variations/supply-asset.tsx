@@ -39,6 +39,7 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
                 amount: convertNativeTokenStringToNumber(amount),
                 signer: data.signer,
                 network: NETWORK,
+                collateral: asCollateral,
                 // referrer: number,
                 // collateral: boolean,
                 // test: boolean
