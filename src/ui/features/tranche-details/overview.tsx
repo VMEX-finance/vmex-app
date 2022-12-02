@@ -1,6 +1,11 @@
 import { Card } from '../../components/cards';
 import React from 'react';
-import { AssetDisplay, MultipleAssetsDisplay, NumberDisplay } from '../../components/displays';
+import {
+    AssetDisplay,
+    HealthFactor,
+    MultipleAssetsDisplay,
+    NumberDisplay,
+} from '../../components/displays';
 import { useWindowSize } from '../../../hooks/ui';
 import { useDialogController } from '../../../hooks/dialogs';
 import { useUserTrancheData } from '../../../api';
@@ -135,12 +140,12 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                                 : ''}
                         </div>
                     </div>
-                    <div className="text-center text-sm flex flex-col">
+                    <div className="text-center text-sm flex flex-col items-center">
                         <span>
                             {width > breakpoint && 'User '}Health
                             {width > breakpoint && ' Factor'}
                         </span>
-                        <span>{data?.borrows?.length !== 0 ? data && data.healthFactor : '-'}</span>
+                        <HealthFactor value={data?.healthFactor} />
                     </div>
                 </div>
             )}
