@@ -42,7 +42,6 @@ const Overview: React.FC = () => {
                     <div className="mb-4">
                         <span className="text-lg lg:text-2xl">Please connect your wallet.</span>
                     </div>
-
                     <RainbowWalletButton primary />
                 </div>
             )}
