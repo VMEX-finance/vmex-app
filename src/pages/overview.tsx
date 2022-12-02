@@ -7,7 +7,7 @@ import { useProtocolData } from '../api/protocol';
 import { useUserData } from '../api/user';
 import { useAccount } from 'wagmi';
 import { useWalletState } from '../hooks/wallet';
-
+import { RainbowWalletButton } from '../ui/components/buttons';
 const Overview: React.FC = () => {
     const { address } = useWalletState();
     const { queryProtocolOverview } = useProtocolData();
@@ -41,7 +41,7 @@ const Overview: React.FC = () => {
                     <div className="mb-4">
                         <span className="text-lg lg:text-2xl">Please connect your wallet.</span>
                     </div>
-                    <WalletButton />
+                    <RainbowWalletButton primary />
                 </div>
             )}
         </AppTemplate>

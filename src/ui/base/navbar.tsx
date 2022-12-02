@@ -83,7 +83,7 @@ export const Navbar: React.FC = () => {
                         />
                     )}
                     {width >= 1024 ? (
-                        <WalletButton />
+                        <RainbowWalletButton primary />
                     ) : (
                         <Menu as="div" className="relative inline-block">
                             <div>
