@@ -21,7 +21,7 @@ export const RainbowWalletButton = ({
     const { width } = useWindowSize();
     const { myTranches } = useMyTranchesContext();
     const { address } = useAccount();
-
+    const title = address ? truncateAddress(address) : label;
     const mode = `transition duration-150 ${
         primary && !address ? '' : '!bg-white !text-black hover:!bg-neutral-100'
     }`;
@@ -50,11 +50,7 @@ export const RainbowWalletButton = ({
     if (address && width > 1024) {
         return (
             <DropdownButton
-                className={[
-                    'min-h-[36px]',
-                    'bg-black rounded-lg text-white hover:bg-neutral-800 border border-[1px] border-black',
-                    className,
-                ].join(' ')}
+                className={['min-h-[36px]', mode, className].join(' ')}
                 selected={width > 1400 ? truncateAddress(address) : truncate(address, 3)}
                 items={renderDropdownItems()}
                 border
@@ -112,7 +108,7 @@ export const RainbowWalletButton = ({
                                             onClick={openConnectModal}
                                             type="button"
                                         >
-                                            {label}
+                                            {title}
                                         </button>
                                     );
                                 }
