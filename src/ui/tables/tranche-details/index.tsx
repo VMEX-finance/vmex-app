@@ -7,19 +7,35 @@ import { useDialogController } from '../../../hooks/dialogs';
 import { AvailableAsset } from '../../../models/available-liquidity-model';
 import { useSelectedTrancheContext } from '../../../store/contexts';
 import { NumberAndDollar } from '../../components/displays';
+import { useWindowSize } from '../../../hooks/ui';
 
 interface ITableProps {
     data: AvailableAsset[];
     type?: 'supply' | 'borrow';
 }
 export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
+    const { width, breakpoint } = useWindowSize();
     const { address } = useWalletState();
     const { tranche } = useSelectedTrancheContext();
     const { queryUserActivity, queryUserWallet } = useUserData(address);
     const { queryUserTrancheData } = useUserTrancheData(address, tranche.id);
     const { openDialog } = useDialogController();
-    const mode1 = type === 'supply' ? 'Wallet Balance' : 'Available Borrows';
-    const mode2 = type === 'supply' ? 'Can Collateralize' : 'Total liquidity';
+    const mode1 =
+        type === 'supply'
+            ? width > breakpoint
+                ? 'Wallet Balance'
+                : 'Balance'
+            : width > breakpoint
+            ? 'Available Borrows'
+            : 'Available';
+    const mode2 =
+        type === 'supply'
+            ? width > breakpoint
+                ? 'Can Collateralize'
+                : 'Collateral'
+            : width > breakpoint
+            ? 'Total liquidity'
+            : 'Liquidity';
     const userData =
         type === 'supply' ? queryUserActivity.data?.supplies : queryUserActivity.data?.borrows;
 
