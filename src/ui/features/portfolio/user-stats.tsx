@@ -45,12 +45,7 @@ export const PortfolioStatsCard: React.FC<IPortfolioProps> = ({
                         <NumberDisplay
                             size="xl"
                             label="Average Health Factor"
-                            value={
-                                <HealthFactor
-                                    size="lg"
-                                    value={parseFloat(avgHealth || '0') < 100 ? avgHealth : '0'}
-                                />
-                            }
+                            value={parseFloat(avgHealth || '0') < 100 ? avgHealth : '0'}
                         />
                     </div>
                 </div>
