@@ -9,13 +9,14 @@ import { Card } from '../ui/components/cards';
 import { TrancheTable } from '../ui/tables';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '../store/contexts';
-import { useWalletState } from '../hooks/wallet';
+import { useAccount, useSigner } from 'wagmi';
 import { useTrancheMarketsData, useTranchesData } from '../api/protocol';
 
 const TrancheDetails: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { address, signer } = useWalletState();
+    const { address } = useAccount();
+    const { data: signer } = useSigner();
     const { tranche, setTranche } = useSelectedTrancheContext();
     const { queryTrancheMarkets } = useTrancheMarketsData(tranche.id);
     const { queryAllTranches } = useTranchesData();

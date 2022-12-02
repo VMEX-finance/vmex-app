@@ -1,5 +1,5 @@
 import { useUserData, useUserTrancheData } from '../../../../api';
-import { useWalletState } from '../../../../hooks/wallet';
+import { useAccount } from 'wagmi';
 import React from 'react';
 import { BsCheck } from 'react-icons/bs';
 import { IoIosClose } from 'react-icons/io';
@@ -15,7 +15,7 @@ interface ITableProps {
 }
 export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
     const { width, breakpoint } = useWindowSize();
-    const { address } = useWalletState();
+    const { address } = useAccount();
     const { tranche } = useSelectedTrancheContext();
     const { queryUserActivity, queryUserWallet } = useUserData(address);
     const { queryUserTrancheData } = useUserTrancheData(address, tranche.id);

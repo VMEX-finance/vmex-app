@@ -6,15 +6,14 @@ import { BiTransferAlt } from 'react-icons/bi';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { DropdownButton, MenuItemButton, WalletButton } from '../components/buttons';
 import { useTransactionsContext } from '../../store/contexts';
-import { useWalletState } from '../../hooks/wallet';
-import { RainbowWalletButton } from '../components/buttons';
 import { CgSpinner } from 'react-icons/cg';
+import { useAccount } from 'wagmi';
 
 export const Navbar: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const { width } = useWindowSize();
-    const { address } = useWalletState();
+    const { isConnected } = useAccount();
     const { transactions } = useTransactionsContext();
 
     function navigateTo(e: any) {
@@ -61,7 +60,7 @@ export const Navbar: React.FC = () => {
                 )}
 
                 <div className="flex items-center justify-end gap-3">
-                    {address && transactions && transactions.length !== 0 && (
+                    {isConnected && transactions && transactions.length !== 0 && (
                         <DropdownButton
                             reverse
                             items={transactions}
@@ -83,10 +82,7 @@ export const Navbar: React.FC = () => {
                         />
                     )}
                     {width >= 1024 ? (
-                        <RainbowWalletButton
-                            primary
-                            label={width > 1200 ? 'Connect Wallet' : 'Connect'}
-                        />
+                        <WalletButton primary label={width > 1200 ? 'Connect Wallet' : 'Connect'} />
                     ) : (
                         <Menu as="div" className="relative inline-block">
                             <div>
@@ -118,7 +114,7 @@ export const Navbar: React.FC = () => {
                                                 )}
                                             </Menu.Item>
                                         ))}
-                                        <RainbowWalletButton primary/>
+                                        <WalletButton primary />
                                     </div>
                                 </Menu.Items>
                             </Transition>

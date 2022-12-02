@@ -9,7 +9,7 @@ import {
 import { useWindowSize } from '../../../hooks/ui';
 import { useDialogController } from '../../../hooks/dialogs';
 import { useUserTrancheData } from '../../../api';
-import { useWalletState } from '../../../hooks/wallet';
+import { useAccount } from 'wagmi';
 import { IYourBorrowsTableItemProps, IYourSuppliesTableItemProps } from '../../tables';
 import { useSelectedTrancheContext } from '../../../store/contexts';
 import { usdFormatter } from '../../../utils/helpers';
@@ -37,7 +37,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
 }) => {
     const { width, breakpoint } = useWindowSize();
     const { openDialog } = useDialogController();
-    const { address } = useWalletState();
+    const { address } = useAccount();
     const { tranche } = useSelectedTrancheContext();
     const {
         queryUserTrancheData: { data },

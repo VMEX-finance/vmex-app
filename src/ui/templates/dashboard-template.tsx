@@ -5,7 +5,6 @@ import { useWindowSize } from '../../hooks/ui';
 import { BiPlus } from 'react-icons/bi';
 import { useDialogController } from '../../hooks/dialogs';
 import { useMyTranchesContext } from '../../store/contexts';
-import { useWalletState } from '../../hooks/wallet';
 import { Tooltip } from '../components/tooltips';
 
 import { useAccount } from 'wagmi';
@@ -31,7 +30,6 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
     const routeChange = () => navigate(-1);
     const isConnected = useAccount();
     const { width } = useWindowSize();
-    const { address } = useWalletState();
 
     // TODO: cleanup / optimize
     return (
