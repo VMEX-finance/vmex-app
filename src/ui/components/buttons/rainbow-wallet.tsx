@@ -112,7 +112,7 @@ export const RainbowWalletButton = ({
                                             onClick={openConnectModal}
                                             type="button"
                                         >
-                                            Connect Wallet
+                                            {label}
                                         </button>
                                     );
                                 }
