@@ -6,6 +6,8 @@ import { muiCache, options, vmexTheme } from '../utils';
 import { TranchesCustomRow } from './custom-row';
 import MUIDataTable from 'mui-datatables';
 import { SpinnerLoader } from '../../components/loaders';
+import { useWalletState } from '../../../hooks/wallet';
+import { useUserData } from '../../../api';
 
 interface IDataTable {
     data?: ITrancheProps[];
@@ -13,6 +15,21 @@ interface IDataTable {
 }
 
 export const TranchesTable: React.FC<IDataTable> = ({ data, loading }) => {
+    const { address } = useWalletState();
+    const { queryUserActivity } = useUserData(address);
+
+    const renderActivity = (trancheId: string) => {
+        let activity = '';
+        queryUserActivity?.data?.borrows.map((borrow) => {
+            if (borrow.trancheId === Number(trancheId)) activity = 'borrowed';
+        });
+        queryUserActivity?.data?.supplies.map((supply) => {
+            if (supply.trancheId === Number(trancheId) && activity === '') activity = 'supplied';
+            else if (supply.trancheId === Number(trancheId) && activity !== '') activity = 'both';
+        });
+        return activity;
+    };
+
     const columns = [
         {
             name: 'name',
@@ -110,7 +127,7 @@ export const TranchesTable: React.FC<IDataTable> = ({ data, loading }) => {
                                     name={name}
                                     assets={assets}
                                     aggregateRating={aggregateRating}
-                                    yourActivity={yourActivity}
+                                    yourActivity={renderActivity(id)}
                                     supplyTotal={supplyTotal}
                                     borrowTotal={borrowTotal}
                                     id={id}
