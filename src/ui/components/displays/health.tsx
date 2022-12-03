@@ -11,9 +11,10 @@ import { DECIMALS } from '../../../utils/sdk-helpers';
 interface IHealthFactorProps {
     // initialHF?: number | string;
     // afterHF?: number | string;
-    asset: string;
-    amount: string;
-    type: 'supply' | 'withdraw' | 'borrow' | 'repay' | 'no collateral';
+    asset?: string;
+    amount?: string;
+    type?: 'supply' | 'withdraw' | 'borrow' | 'repay' | 'no collateral';
+    value?: string;
     // liquidation?: number | string;
     size?: 'sm' | 'md' | 'lg';
     withChange?: boolean;
@@ -26,6 +27,7 @@ export const HealthFactor = ({
     asset,
     amount,
     type,
+    value,
     size = 'md',
     withChange = true,
 }: IHealthFactorProps) => {
@@ -89,6 +91,9 @@ export const HealthFactor = ({
     };
 
     const determineHFFinal = () => {
+        if (!asset || !amount) {
+            return undefined;
+        }
         let a = findAssetInMarketsData(asset);
         let d = DECIMALS.get(asset);
         if (!a || !d || amount == '') {
@@ -159,7 +164,7 @@ export const HealthFactor = ({
                     </>
                 )}
                 {/* TODO: color should change based on health value */}
-                {determineHFFinal()}
+                {withChange ? determineHFFinal() : determineHFInitial()}
             </div>
             {
                 <div>
