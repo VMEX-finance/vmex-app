@@ -1,14 +1,14 @@
-import { useUserData, useUserTrancheData } from '../../../../api';
+import { useUserData, useUserTrancheData } from '../../../api';
 import { useAccount } from 'wagmi';
 import React from 'react';
 import { BsCheck } from 'react-icons/bs';
 import { IoIosClose } from 'react-icons/io';
-import { useDialogController } from '../../../../hooks/dialogs';
-import { AvailableAsset } from '../../../../models/available-liquidity-model';
-import { useSelectedTrancheContext } from '../../../../store/contexts';
-import { NumberAndDollar } from '../../../components/displays';
-import { useWindowSize } from '../../../../hooks/ui';
-import { convertStringFormatToNumber } from '../../../../utils/helpers';
+import { useDialogController } from '../../../hooks/dialogs';
+import { AvailableAsset } from '../../../models/available-liquidity-model';
+import { useSelectedTrancheContext } from '../../../store/contexts';
+import { NumberAndDollar } from '../../components/displays';
+import { useWindowSize } from '../../../hooks/ui';
+import { convertStringFormatToNumber } from '../../../utils/helpers';
 
 interface ITableProps {
     data: AvailableAsset[];

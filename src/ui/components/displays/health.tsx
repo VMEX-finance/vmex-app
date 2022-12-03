@@ -2,28 +2,22 @@ import React from 'react';
 import { TbInfinity } from 'react-icons/tb';
 import { BsArrowRight } from 'react-icons/bs';
 import { useUserTrancheData, useTrancheMarketsData } from '../../../api';
-import { useWalletState } from '../../../hooks/wallet';
 import { useSelectedTrancheContext } from '../../../store/contexts';
 import { convertStringFormatToNumber } from '../../../utils/helpers';
 import { ethers, BigNumber } from 'ethers';
 import { DECIMALS } from '../../../utils/sdk-helpers';
+import { useAccount } from 'wagmi';
 
 interface IHealthFactorProps {
-    // initialHF?: number | string;
-    // afterHF?: number | string;
     asset?: string;
     amount?: string;
     type?: 'supply' | 'withdraw' | 'borrow' | 'repay' | 'no collateral';
     value?: string;
-    // liquidation?: number | string;
     size?: 'sm' | 'md' | 'lg';
     withChange?: boolean;
 }
 
 export const HealthFactor = ({
-    // initialHF,
-    // afterHF,
-    // liquidation,
     asset,
     amount,
     type,
@@ -31,9 +25,8 @@ export const HealthFactor = ({
     size = 'md',
     withChange = true,
 }: IHealthFactorProps) => {
-    const { address } = useWalletState();
+    const { address } = useAccount();
     const { tranche } = useSelectedTrancheContext();
-    console.log('ADDRESS: ', address);
     const { queryUserTrancheData } = useUserTrancheData(address, tranche.id);
 
     const { queryTrancheMarkets } = useTrancheMarketsData(tranche.id);

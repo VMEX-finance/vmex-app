@@ -53,7 +53,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
     return (
         <Card>
             <div
-                className="flex flex-col flow md:flex-row justify-between font-basefont gap-4 md:gap-8"
+                className="flex flex-col flow md:flex-row justify-between font-basefont gap-4 xl:gap-8"
                 style={{ flexFlow: 'wrap' }}
             >
                 <div className="flex flex-col justify-between order-1">

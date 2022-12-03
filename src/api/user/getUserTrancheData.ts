@@ -23,7 +23,6 @@ export async function _getUserTrancheData(
     userAddress: string,
     trancheId: number,
 ): Promise<IUserTrancheData> {
-    console.log('getting user tranche data for addr', userAddress);
     if (!userAddress) {
         return {
             totalCollateralETH: BigNumber.from('0'),

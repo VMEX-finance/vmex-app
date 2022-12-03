@@ -23,16 +23,18 @@ const Overview: React.FC = () => {
                         {...queryUserPerformance.data}
                         isLoading={queryUserPerformance.isLoading}
                     />
-                    <YourPositionsTable
-                        type="supplies"
-                        data={queryUserActivity.data?.supplies}
-                        isLoading={queryUserActivity.isLoading}
-                    />
-                    <YourPositionsTable
-                        type="borrows"
-                        data={queryUserActivity.data?.borrows}
-                        isLoading={queryUserActivity.isLoading}
-                    />
+                    <div className="flex flex-col gap-4 xl:gap-8 lg:flex-row 2xl:col-span-2">
+                        <YourPositionsTable
+                            type="supplies"
+                            data={queryUserActivity.data?.supplies}
+                            isLoading={queryUserActivity.isLoading}
+                        />
+                        <YourPositionsTable
+                            type="borrows"
+                            data={queryUserActivity.data?.borrows}
+                            isLoading={queryUserActivity.isLoading}
+                        />
+                    </div>
                 </GridView>
             ) : (
                 <div className="pt-10 lg:pt-20 text-center flex-col">
