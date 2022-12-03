@@ -1,5 +1,5 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { IButtonProps } from './default';
 import { useAccount } from 'wagmi';
 import { useDialogController } from '../../../hooks/dialogs';
@@ -8,10 +8,6 @@ import { useWindowSize } from '../../../hooks/ui';
 import { DropdownButton } from './dropdown';
 import { truncateAddress, truncate } from '../../../utils/helpers';
 import { useNavigate } from 'react-router-dom';
-
-/* export const RainbowWalletButton = () => {
-    return <ConnectButton accountStatus="address" chainStatus="none" showBalance={false} />;
-}; */
 
 export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: IButtonProps) => {
     const navigate = useNavigate();
@@ -45,6 +41,7 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
 
         return final;
     };
+
     if (address && width > 1024) {
         return (
             <DropdownButton
@@ -74,6 +71,17 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
                         account &&
                         chain &&
                         (!authenticationStatus || authenticationStatus === 'authenticated');
+
+                    const determineConnection = () => {
+                        if (!connected) {
+                            return { onClick: openConnectModal, render: title };
+                        } else if (chain.unsupported) {
+                            return { onClick: openChainModal, render: 'Wrong Network' };
+                        } else {
+                            return { onClick: openAccountModal, render: account.displayName };
+                        }
+                    };
+
                     return (
                         <div
                             {...(!ready && {
@@ -86,57 +94,13 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
                             })}
                         >
                             {(() => {
-                                if (!connected) {
-                                    return (
-                                        <button
-                                            className={[
-                                                'h-fit',
-                                                'box-border',
-                                                'font-basefont',
-                                                `${
-                                                    typeof label === 'string' ? 'px-4' : 'px-2'
-                                                } py-1`,
-                                                'transition duration-200',
-                                                'min-h-[36px] !py-2 mt-1',
-                                                mode,
-                                                className,
-                                                'bg-black rounded-lg text-white hover:bg-neutral-800 border border-[1px] border-black',
-                                            ].join(' ')}
-                                            onClick={openConnectModal}
-                                            type="button"
-                                        >
-                                            {title}
-                                        </button>
-                                    );
-                                }
-                                if (chain.unsupported) {
-                                    return (
-                                        <button
-                                            onClick={openChainModal}
-                                            type="button"
-                                            className={[
-                                                'h-fit',
-                                                'box-border',
-                                                'font-basefont',
-                                                `${
-                                                    typeof label === 'string' ? 'px-4' : 'px-2'
-                                                } py-1`,
-                                                'transition duration-200',
-                                                'min-h-[36px] !py-2 mt-1',
-                                                mode,
-                                                className,
-                                                'bg-black rounded-lg text-white hover:bg-neutral-800 border border-[1px] border-black',
-                                            ].join(' ')}
-                                        >
-                                            Wrong network
-                                        </button>
-                                    );
-                                }
                                 return (
-                                    <div style={{ display: 'flex', gap: 12 }}>
+                                    <div className="flex gap-3 justify-center">
                                         <button
+                                            onClick={determineConnection().onClick}
+                                            type="button"
                                             className={[
-                                                'h-fit',
+                                                'h-fit w-full',
                                                 'box-border',
                                                 'font-basefont',
                                                 `${
@@ -146,30 +110,10 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
                                                 'min-h-[36px] !py-2 mt-1',
                                                 mode,
                                                 className,
-                                                'bg-black rounded-lg text-white hover:bg-neutral-800 border border-[1px] border-black',
-                                            ].join(' ')}
-                                            onClick={openChainModal}
-                                            style={{ display: 'flex', alignItems: 'center' }}
-                                            type="button"
-                                        ></button>
-                                        <button
-                                            onClick={openAccountModal}
-                                            type="button"
-                                            className={[
-                                                'h-fit',
-                                                'box-border',
-                                                'font-basefont',
-                                                `${
-                                                    typeof label === 'string' ? 'px-4' : 'px-2'
-                                                } py-1`,
-                                                'transition duration-200',
-                                                'min-h-[36px] !py-2 mt-1',
-                                                mode,
-                                                className,
-                                                'bg-black rounded-lg text-white hover:bg-neutral-800 border border-[1px] border-black',
+                                                'bg-black rounded-lg text-white hover:bg-neutral-800 border border-black',
                                             ].join(' ')}
                                         >
-                                            {account.displayName}
+                                            {determineConnection().render}
                                         </button>
                                     </div>
                                 );
