@@ -22,6 +22,7 @@ export const PillDisplay = ({ asset, value, type, formatter = 'usd' }: IPillDisp
                 return val;
         }
     };
+
     if (type === 'asset') {
         return (
             <div className="bg-neutral-900 text-white rounded-3xl flex items-center gap-4 w-fit px-3 py-1">
@@ -40,8 +41,8 @@ export const PillDisplay = ({ asset, value, type, formatter = 'usd' }: IPillDisp
     } else {
         return (
             <div className="bg-transparent border border-neutral-100 rounded-3xl flex items-center gap-3 w-fit px-5 py-1">
-                <span className="text-2xl">{asset || 'ETH'}</span>
-                <span className="text-xl">{determineFormat(value) || 0}</span>
+                <span className="text-xl">{asset || 'ETH'}</span>
+                <span className="text-lg">{determineFormat(value) || 0}</span>
             </div>
         );
     }

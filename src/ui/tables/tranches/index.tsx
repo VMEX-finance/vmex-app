@@ -113,15 +113,8 @@ export const TranchesTable: React.FC<IDataTable> = ({ data, loading }) => {
                     options={{
                         ...options,
                         customRowRender: (data: any) => {
-                            const [
-                                name,
-                                assets,
-                                aggregateRating,
-                                yourActivity,
-                                supplyTotal,
-                                borrowTotal,
-                                id,
-                            ] = data;
+                            const [name, assets, aggregateRating, supplyTotal, borrowTotal, id] =
+                                data;
                             return (
                                 <TranchesCustomRow
                                     name={name}

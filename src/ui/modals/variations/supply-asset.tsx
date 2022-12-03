@@ -1,14 +1,16 @@
 import React from 'react';
 import { useMediatedState } from 'react-use';
-import { inputMediator, convertNativeTokenStringToNumber } from '../../../utils/helpers';
+import { inputMediator, convertStringFormatToNumber } from '../../../utils/helpers';
 import { CoinInput } from '../../components/inputs';
 import { Button } from '../../components/buttons';
 import { BasicToggle } from '../../components/toggles';
 import { ActiveStatus, TransactionStatus } from '../../components/statuses';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
 import { useModal } from '../../../hooks/ui';
-import { supply } from '@vmex/sdk';
+import { supply, withdraw } from '@vmex/sdk';
 import { MAINNET_ASSET_MAPPINGS, NETWORK } from '../../../utils/sdk-helpers';
+import { HealthFactor } from '../../components/displays';
+import { useUserTrancheData } from '../../../api';
 
 interface IOwnedAssetDetails {
     name?: string;
@@ -18,31 +20,40 @@ interface IOwnedAssetDetails {
     closeDialog(e: any): void;
 }
 
-export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
-    name,
-    isOpen,
-    data,
-    tab,
-    closeDialog,
-}) => {
+export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, data, tab }) => {
     const { submitTx, isSuccess, error, isLoading } = useModal('loan-asset-dialog');
 
     const [view, setView] = React.useState('Supply');
     const [asCollateral, setAsCollateral] = React.useState(true);
     const [amount, setAmount] = useMediatedState(inputMediator, '');
 
+    const { queryUserTrancheData } = useUserTrancheData(data.signer, data.tranche);
+
     const handleSubmit = async () => {
         await submitTx(async () => {
-            await supply({
-                underlying: MAINNET_ASSET_MAPPINGS.get(data.asset) || '',
-                trancheId: data.tranche,
-                amount: convertNativeTokenStringToNumber(amount),
-                signer: data.signer,
-                network: NETWORK,
-                // referrer: number,
-                // collateral: boolean,
-                // test: boolean
-            });
+            view?.includes('Supply')
+                ? await supply({
+                      underlying: MAINNET_ASSET_MAPPINGS.get(data.asset) || '',
+                      trancheId: data.tranche,
+                      amount: convertStringFormatToNumber(amount),
+                      signer: data.signer,
+                      network: NETWORK,
+                      collateral: asCollateral,
+                      // referrer: number,
+                      // collateral: boolean,
+                      // test: boolean
+                  })
+                : await withdraw({
+                      asset: MAINNET_ASSET_MAPPINGS.get(data.asset) || '',
+                      trancheId: data.tranche,
+                      amount: convertStringFormatToNumber(amount),
+                      signer: data.signer,
+                      network: NETWORK,
+                      interestRateMode: 2,
+                      // referrer: number,
+                      // collateral: boolean,
+                      // test: boolean
+                  });
         });
     };
 
@@ -82,6 +93,9 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
                                         disabled={!data.canBeCollat}
                                     />
                                 </div>
+
+                                <h3 className="mt-6 text-gray-400">Health Factor</h3>
+                                <HealthFactor asset={data.asset} amount={amount} type={'supply'} />
 
                                 <ModalTableDisplay
                                     title="Transaction Overview"
@@ -123,19 +137,27 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
                                         logo: `/tokens/token-${data.asset}.svg`,
                                         name: data.asset,
                                     }}
-                                    balance={'0.23'}
+                                    balance={data.amountWithdrawOrRepay}
+                                />
+                                <h3 className="mt-6 text-gray-400">Health Factor</h3>
+                                <HealthFactor
+                                    asset={data.asset}
+                                    amount={amount}
+                                    type={'withdraw'}
                                 />
 
                                 <ModalTableDisplay
                                     title="Transaction Overview"
                                     content={[
                                         {
-                                            label: 'Supply APR (%)',
-                                            value: `${0.44}%`,
-                                        },
-                                        {
                                             label: 'Remaining Supply',
-                                            value: `${0.0}`,
+                                            value: `${
+                                                parseFloat(
+                                                    convertStringFormatToNumber(
+                                                        data.amountWithdrawOrRepay,
+                                                    ),
+                                                ) - parseFloat(convertStringFormatToNumber(amount))
+                                            } ${data.asset}`,
                                         },
                                     ]}
                                 />

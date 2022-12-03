@@ -1,6 +1,7 @@
 import { UseQueryResult } from '@tanstack/react-query';
 import { IUserPerformanceCardProps } from '@ui/features';
 import { IYourBorrowsTableItemProps, IYourSuppliesTableItemProps } from '@ui/tables';
+import { BigNumber } from 'ethers';
 
 export type IUserDataProps = {
     queryUserPerformance: UseQueryResult<IUserPerformanceCardProps, unknown>;
@@ -20,6 +21,7 @@ export type IWalletAssetProps = {
     asset: string;
     amount: string;
     amountNative: string;
+    currentPrice: BigNumber; //18 decimals
 };
 
 export type IUserWalletDataProps = {
@@ -31,10 +33,10 @@ export type IUserTrancheDataProps = {
 };
 
 export type IUserTrancheData = {
-    // totalCollateralETH: string;
-    // totalDebtETH: string;
+    totalCollateralETH: BigNumber;
+    totalDebtETH: BigNumber;
     // availableBorrowsETH: string;
-    // currentLiquidationThreshold: string;
+    currentLiquidationThreshold: BigNumber;
     // ltv: string;
     healthFactor: string;
     supplies: IYourSuppliesTableItemProps[];

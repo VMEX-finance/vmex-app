@@ -1,5 +1,3 @@
-import { ITrancheProps } from '../../models/tranches';
-
 export const MOCK_LINE_DATA = [
     {
         xaxis: '07/20/2022',

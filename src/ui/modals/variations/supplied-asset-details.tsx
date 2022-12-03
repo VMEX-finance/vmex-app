@@ -9,12 +9,7 @@ import { ModalFooter, ModalHeader, ModalTableDisplay } from '../../modals/subcom
 import { IDialogProps } from '../utils';
 import { useModal } from '../../../hooks/ui';
 
-export const SuppliedAssetDetailsDialog: React.FC<IDialogProps> = ({
-    name,
-    isOpen,
-    data,
-    closeDialog,
-}) => {
+export const SuppliedAssetDetailsDialog: React.FC<IDialogProps> = ({ name, data, closeDialog }) => {
     const navigate = useNavigate();
     const { updateTranche, setAsset } = useSelectedTrancheContext();
     const { submitTx, isSuccess, isLoading } = useModal('supplied-asset-details-dialog');

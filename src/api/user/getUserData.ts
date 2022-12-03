@@ -117,6 +117,7 @@ export async function _getUserWalletData(userAddress: string): Promise<IUserWall
                             assetData.asset,
                     ) || 18,
                 ),
+                currentPrice: assetData.currentPrice,
             };
         }),
     };

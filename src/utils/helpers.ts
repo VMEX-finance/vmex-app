@@ -1,5 +1,3 @@
-import { BigNumber } from 'ethers';
-
 export function truncateAddress(s: string) {
     return `${s.slice(0, 3)}...${s.slice(-4)}`;
 }
@@ -174,6 +172,6 @@ export const percentFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
 });
 
-export const convertNativeTokenStringToNumber = (amount: string) => {
-    return amount.replace(',', '');
+export const convertStringFormatToNumber = (amount: string | number) => {
+    return amount.toString().replace(',', '');
 };

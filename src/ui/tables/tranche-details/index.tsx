@@ -1,13 +1,14 @@
-import { useUserData, useUserTrancheData } from '../../../../api';
+import { useUserData, useUserTrancheData } from '../../../api';
 import { useAccount } from 'wagmi';
 import React from 'react';
 import { BsCheck } from 'react-icons/bs';
 import { IoIosClose } from 'react-icons/io';
-import { useDialogController } from '../../../../hooks/dialogs';
-import { AvailableAsset } from '../../../../models/available-liquidity-model';
-import { useSelectedTrancheContext } from '../../../../store/contexts';
-import { NumberAndDollar } from '../../../components/displays';
-import { useWindowSize } from '../../../../hooks/ui';
+import { useDialogController } from '../../../hooks/dialogs';
+import { AvailableAsset } from '../../../models/available-liquidity-model';
+import { useSelectedTrancheContext } from '../../../store/contexts';
+import { NumberAndDollar } from '../../components/displays';
+import { useWindowSize } from '../../../hooks/ui';
+import { convertStringFormatToNumber } from '../../../utils/helpers';
 
 interface ITableProps {
     data: AvailableAsset[];
@@ -39,17 +40,17 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
     const userData =
         type === 'supply' ? queryUserActivity.data?.supplies : queryUserActivity.data?.borrows;
 
-    const findAssetInUserSupplies = (asset: string) => {
-        if (queryUserActivity.isLoading) return `0 ${asset}`;
+    const findAssetInUserSuppliesOrBorrows = (asset: string) => {
+        if (queryUserActivity.isLoading) return `0`;
         else {
             const found = userData?.find((el) => el.asset.toLowerCase() === asset.toLowerCase());
-            if (found) return `${found?.amount} ${found?.asset}`;
-            else return `0 ${asset}`;
+            if (found) return `${found?.amountNative}`;
+            else return `0`;
         }
     };
 
     const findAssetInWallet = (asset: string, usdValue = false) => {
-        if (queryUserWallet.isLoading) return `0 ${asset}`;
+        if (queryUserWallet.isLoading) return `0`;
         else {
             const userWalletData = queryUserWallet.data?.assets;
             const found = userWalletData?.find(
@@ -61,7 +62,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
     };
 
     const findAmountBorrowable = (asset: string, liquidity: number | string | undefined) => {
-        if (queryUserTrancheData.isLoading) return `0 ${asset}`;
+        if (queryUserTrancheData.isLoading) return `0`;
         else {
             const userWalletData = queryUserTrancheData.data?.assetBorrowingPower;
             const found = userWalletData?.find(
@@ -71,8 +72,8 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                 return `${
                     liquidity
                         ? Math.min(
-                              parseFloat(found?.amountNative.replaceAll(',', '')),
-                              parseFloat(liquidity.toString().replaceAll(',', '')),
+                              parseFloat(convertStringFormatToNumber(found?.amountNative)),
+                              parseFloat(convertStringFormatToNumber(liquidity)),
                           )
                         : found?.amountNative
                 }`;
@@ -122,6 +123,9 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                                 type === 'supply'
                                                     ? findAssetInWallet(el.asset)
                                                     : findAmountBorrowable(el.asset, el.liquidity),
+                                            amountWithdrawOrRepay: findAssetInUserSuppliesOrBorrows(
+                                                el.asset,
+                                            ),
                                         },
                                     )
                                 }
