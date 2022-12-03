@@ -81,7 +81,7 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
                                 />
 
                                 <h3 className="mt-6 text-gray-400">Health Factor</h3>
-                                <HealthFactor liquidation={1.0} value={1.24} />
+                                <HealthFactor asset={data.asset} amount={amount} type={'borrow'} />
 
                                 <ModalTableDisplay
                                     title="Transaction Overview"
@@ -128,7 +128,7 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
                                 />
 
                                 <h3 className="mt-6 text-gray-400">Health Factor</h3>
-                                <HealthFactor liquidation={1.0} value={1.24} />
+                                <HealthFactor asset={data.asset} amount={amount} type={'repay'} />
 
                                 <ModalTableDisplay
                                     title="Transaction Overview"

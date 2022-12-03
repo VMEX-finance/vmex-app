@@ -1,3 +1,5 @@
+import { BigNumber } from 'ethers';
+
 export type IMarketsAsset = {
     asset: string;
     tranche: string;
@@ -13,4 +15,7 @@ export type IMarketsAsset = {
     strategies: boolean;
     canBeCollateral: boolean;
     canBeBorrowed: boolean;
+    currentPrice: BigNumber;
+    collateralCap: BigNumber;
+    liquidationThreshold: BigNumber;
 };

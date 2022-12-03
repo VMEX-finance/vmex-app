@@ -10,6 +10,7 @@ import { useModal } from '../../../hooks/ui';
 import { supply, withdraw } from '@vmex/sdk';
 import { MAINNET_ASSET_MAPPINGS, NETWORK } from '../../../utils/sdk-helpers';
 import { HealthFactor } from '../../components/displays';
+import { useUserTrancheData } from '../../../api';
 
 interface IOwnedAssetDetails {
     name?: string;
@@ -31,6 +32,8 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
     const [view, setView] = React.useState('Supply');
     const [asCollateral, setAsCollateral] = React.useState(true);
     const [amount, setAmount] = useMediatedState(inputMediator, '');
+
+    const { queryUserTrancheData } = useUserTrancheData(data.signer, data.tranche);
 
     const handleSubmit = async () => {
         await submitTx(async () => {
@@ -98,7 +101,7 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
                                 </div>
 
                                 <h3 className="mt-6 text-gray-400">Health Factor</h3>
-                                <HealthFactor liquidation={1.0} value={1.24} />
+                                <HealthFactor asset={data.asset} amount={amount} type={'supply'} />
 
                                 <ModalTableDisplay
                                     title="Transaction Overview"
@@ -143,7 +146,11 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
                                     balance={data.amountWithdrawOrRepay}
                                 />
                                 <h3 className="mt-6 text-gray-400">Health Factor</h3>
-                                <HealthFactor liquidation={1.0} value={1.24} />
+                                <HealthFactor
+                                    asset={data.asset}
+                                    amount={amount}
+                                    type={'withdraw'}
+                                />
 
                                 <ModalTableDisplay
                                     title="Transaction Overview"

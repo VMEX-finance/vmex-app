@@ -67,6 +67,7 @@ export async function getUserActivityData(userAddress: string): Promise<IUserAct
                 apy: rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0)),
                 tranche: assetData.tranche.toString(),
                 trancheId: assetData.tranche.toNumber(),
+                // collateralCap: assetData.collateralCap,
             };
         }),
         borrows: summary.borrowedAssetData.map((assetData: BorrowedAssetData) => {
@@ -117,6 +118,7 @@ export async function _getUserWalletData(userAddress: string): Promise<IUserWall
                             assetData.asset,
                     ) || 18,
                 ),
+                currentPrice: assetData.currentPrice,
             };
         }),
     };

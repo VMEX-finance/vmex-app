@@ -26,6 +26,9 @@ export async function _getUserTrancheData(
     console.log('getting user tranche data for addr', userAddress);
     if (!userAddress) {
         return {
+            totalCollateralETH: BigNumber.from('0'),
+            totalDebtETH: BigNumber.from('0'),
+            currentLiquidationThreshold: BigNumber.from('0'),
             healthFactor: '0',
             supplies: [],
             borrows: [],
@@ -57,6 +60,9 @@ export async function _getUserTrancheData(
     });
 
     return {
+        totalCollateralETH: userTrancheData.totalCollateralETH,
+        totalDebtETH: userTrancheData.totalDebtETH,
+        currentLiquidationThreshold: userTrancheData.currentLiquidationThreshold,
         healthFactor: bigNumberToNative(userTrancheData.healthFactor, 18), //health factor has 18 decimals.
         supplies: userTrancheData.suppliedAssetData.map((assetData: SuppliedAssetData) => {
             return {
@@ -73,6 +79,7 @@ export async function _getUserTrancheData(
                 apy: rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0)),
                 tranche: assetData.tranche.toString(),
                 trancheId: assetData.tranche.toNumber(),
+                // collateralCap: assetData.collateralCap,
             };
         }),
         borrows: userTrancheData.borrowedAssetData.map((assetData: BorrowedAssetData) => {

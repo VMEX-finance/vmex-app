@@ -51,6 +51,9 @@ export async function getTrancheMarkets(trancheId: number): Promise<IMarketsAsse
             strategies: marketData.strategyAddress != '0x0000000000000000000000000000000000000000',
             canBeCollateral: marketData.canBeCollateral,
             canBeBorrowed: marketData.canBeBorrowed,
+            currentPrice: marketData.currentPriceETH,
+            collateralCap: marketData.collateralCap,
+            liquidationThreshold: marketData.liquidationThreshold,
         };
     });
 }

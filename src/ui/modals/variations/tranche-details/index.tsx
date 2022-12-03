@@ -41,7 +41,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
         type === 'supply' ? queryUserActivity.data?.supplies : queryUserActivity.data?.borrows;
 
     const findAssetInUserSuppliesOrBorrows = (asset: string) => {
-        if (queryUserActivity.isLoading) return `0 ${asset}`;
+        if (queryUserActivity.isLoading) return `0`;
         else {
             const found = userData?.find((el) => el.asset.toLowerCase() === asset.toLowerCase());
             if (found) return `${found?.amountNative}`;
@@ -50,7 +50,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
     };
 
     const findAssetInWallet = (asset: string, usdValue = false) => {
-        if (queryUserWallet.isLoading) return `0 ${asset}`;
+        if (queryUserWallet.isLoading) return `0`;
         else {
             const userWalletData = queryUserWallet.data?.assets;
             const found = userWalletData?.find(
@@ -62,7 +62,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
     };
 
     const findAmountBorrowable = (asset: string, liquidity: number | string | undefined) => {
-        if (queryUserTrancheData.isLoading) return `0 ${asset}`;
+        if (queryUserTrancheData.isLoading) return `0`;
         else {
             const userWalletData = queryUserTrancheData.data?.assetBorrowingPower;
             const found = userWalletData?.find(
