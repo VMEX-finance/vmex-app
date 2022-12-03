@@ -3,7 +3,6 @@ import React from 'react';
 import { useDialogController } from '../../../hooks/dialogs';
 import { percentFormatter } from '../../../utils/helpers';
 import { BasicToggle } from '../../components/toggles';
-import { BigNumber } from 'ethers';
 
 export type IYourSuppliesTableItemProps = {
     asset: string;
@@ -13,7 +12,6 @@ export type IYourSuppliesTableItemProps = {
     apy: number;
     tranche: string;
     trancheId: number;
-    // collateralCap: BigNumber;
 };
 
 export type IYourSuppliesTableProps = {

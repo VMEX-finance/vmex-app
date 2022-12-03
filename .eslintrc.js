@@ -29,7 +29,7 @@ module.exports = {
         'space-before-blocks': 'error',
         'import/prefer-default-export': 'off',
         'prettier/prettier': 'off',
-        'no-unused-vars': 'warn',
+        'no-unused-vars': 'off',
         'jsx-a11y/no-static-element-interactions': 'warn',
         'jsx-a11y/click-events-have-key-events': 'warn',
         'jsx-a11y/anchor-is-valid': 'warn',

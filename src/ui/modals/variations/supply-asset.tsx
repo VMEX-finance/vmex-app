@@ -20,13 +20,7 @@ interface IOwnedAssetDetails {
     closeDialog(e: any): void;
 }
 
-export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({
-    name,
-    isOpen,
-    data,
-    tab,
-    closeDialog,
-}) => {
+export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, data, tab }) => {
     const { submitTx, isSuccess, error, isLoading } = useModal('loan-asset-dialog');
 
     const [view, setView] = React.useState('Supply');

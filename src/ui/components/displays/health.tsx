@@ -97,20 +97,14 @@ export const HealthFactor = ({
             .parseUnits(convertStringFormatToNumber(amount), d)
             .mul(a.currentPrice)
             .div(ethers.utils.parseUnits('1', d)); //18 decimals
-        console.log();
-        console.log();
-        console.log();
-        console.log('ethAmount: ', ethAmount);
 
         if (type === 'withdraw') {
-            console.log(a.collateralCap);
             let amountCappedNotUsed = ethAmount.gt(a.collateralCap)
                 ? ethAmount.sub(a.collateralCap)
                 : BigNumber.from('0');
             if (ethAmount.lte(amountCappedNotUsed)) {
                 return determineHFInitial();
             }
-            console.log('amountCappedNotUsed: ', amountCappedNotUsed);
             let amountDecrease = ethAmount.sub(amountCappedNotUsed);
             let totalCollateralETH = queryUserTrancheData.data?.totalCollateralETH;
             let totalDebtInETH = queryUserTrancheData.data?.totalDebtETH;
