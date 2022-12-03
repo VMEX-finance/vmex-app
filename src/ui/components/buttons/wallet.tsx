@@ -17,7 +17,7 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
     const { address } = useAccount();
     const title = address ? truncateAddress(address) : label;
     const mode = `transition duration-150 ${
-        primary && !address ? '' : '!bg-white !text-black hover:!bg-neutral-100'
+        primary && !address ? '' : 'bg-white text-black hover:!bg-neutral-100'
     }`;
 
     const renderDropdownItems = () => {
@@ -95,27 +95,23 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
                         >
                             {(() => {
                                 return (
-                                    <div className="flex gap-3 justify-center">
-                                        <button
-                                            onClick={determineConnection().onClick}
-                                            type="button"
-                                            className={[
-                                                'h-fit w-full',
-                                                'box-border',
-                                                'font-basefont',
-                                                `${
-                                                    typeof label === 'string' ? 'px-4' : 'px-2'
-                                                } py-1`,
-                                                'transition duration-200',
-                                                'min-h-[36px] !py-2 mt-1',
-                                                mode,
-                                                className,
-                                                'bg-black rounded-lg text-white hover:bg-neutral-800 border border-black',
-                                            ].join(' ')}
-                                        >
-                                            {determineConnection().render}
-                                        </button>
-                                    </div>
+                                    <button
+                                        onClick={determineConnection().onClick}
+                                        type="button"
+                                        className={[
+                                            'h-fit w-full',
+                                            'box-border',
+                                            'font-basefont',
+                                            `${typeof label === 'string' ? 'px-4' : 'px-2'} py-1`,
+                                            'transition duration-200',
+                                            'min-h-[36px] !py-2',
+                                            mode,
+                                            className,
+                                            'bg-black rounded-lg text-white hover:bg-neutral-800 border border-black',
+                                        ].join(' ')}
+                                    >
+                                        {determineConnection().render}
+                                    </button>
                                 );
                             })()}
                         </div>
