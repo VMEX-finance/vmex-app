@@ -1,7 +1,6 @@
 import '@rainbow-me/rainbowkit/styles.css';
 import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
-import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
 import { Web3Provider, JsonRpcProvider } from '@ethersproject/providers';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';

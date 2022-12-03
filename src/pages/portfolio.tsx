@@ -4,11 +4,11 @@ import { PortfolioStatsCard, UserPerformanceCard } from '../ui/features';
 import { YourPositionsTable } from '../ui/tables';
 import { WalletButton } from '../ui/components/buttons';
 import { useUserData } from '../api/user';
-import { useWalletState } from '../hooks/wallet';
+import { useAccount } from 'wagmi';
 import { addDollarAmounts } from '../utils/sdk-helpers';
 
 const Portfolio: React.FC = () => {
-    const { address } = useWalletState();
+    const { address } = useAccount();
     const { queryUserPerformance, queryUserActivity } = useUserData(address);
 
     // TODO: is this how we're calculating networth or is (all wallet holdings + supplies) - borrows

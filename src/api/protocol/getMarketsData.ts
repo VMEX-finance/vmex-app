@@ -17,9 +17,9 @@ export async function getAllMarkets(): Promise<IMarketsAsset[]> {
     const allTrancheData = await getAllTrancheData(SDK_PARAMS);
     const findAssetInTranche = (searchAsset: string, trancheId: number): string => {
         let trancheName = 'N/A';
-        allTrancheData.map((tranche) => {
+        allTrancheData.map((tranche: any) => {
             if (tranche.id.toNumber() === trancheId) {
-                tranche.assets.map((asset) => {
+                tranche.assets.map((asset: any) => {
                     if (searchAsset === asset) {
                         trancheName = tranche.name;
                     }

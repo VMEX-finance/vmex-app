@@ -123,7 +123,7 @@ export async function _getUserWalletData(userAddress: string): Promise<IUserWall
 }
 
 // Master
-export function useUserData(userAddress: string): IUserDataProps {
+export function useUserData(userAddress: any): IUserDataProps {
     const queryUserPerformance = useQuery({
         queryKey: ['user-performance'],
         queryFn: getUserPerformanceData,

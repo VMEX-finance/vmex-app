@@ -6,7 +6,7 @@ import { muiCache, options, vmexTheme } from '../utils';
 import { TranchesCustomRow } from './custom-row';
 import MUIDataTable from 'mui-datatables';
 import { SpinnerLoader } from '../../components/loaders';
-import { useWalletState } from '../../../hooks/wallet';
+import { useAccount } from 'wagmi';
 import { useUserData } from '../../../api';
 
 interface IDataTable {
@@ -15,7 +15,7 @@ interface IDataTable {
 }
 
 export const TranchesTable: React.FC<IDataTable> = ({ data, loading }) => {
-    const { address } = useWalletState();
+    const { address } = useAccount();
     const { queryUserActivity } = useUserData(address);
 
     const renderActivity = (trancheId: string) => {

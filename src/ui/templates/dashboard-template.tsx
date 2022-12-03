@@ -5,9 +5,9 @@ import { useWindowSize } from '../../hooks/ui';
 import { BiPlus } from 'react-icons/bi';
 import { useDialogController } from '../../hooks/dialogs';
 import { useMyTranchesContext } from '../../store/contexts';
-import { useWalletState } from '../../hooks/wallet';
 import { Tooltip } from '../components/tooltips';
 
+import { useAccount } from 'wagmi';
 interface IDashboardTemplateProps {
     title?: string;
     children?: React.ReactElement | React.ReactElement[];
@@ -28,8 +28,8 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
     const location = useLocation();
     const navigate = useNavigate();
     const routeChange = () => navigate(-1);
+    const isConnected = useAccount();
     const { width } = useWindowSize();
-    const { address } = useWalletState();
 
     // TODO: cleanup / optimize
     return (
@@ -69,7 +69,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                                 label="Overview"
                                 onClick={() => setView('tranche-overview')}
                                 primary={view.includes('overview')}
-                                disabled={!address}
+                                disabled={!isConnected}
                             />
                             <Button
                                 label="Details"
@@ -79,7 +79,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                         </div>
                     </>
                 )}
-                {location.pathname === `/tranches` && address && (
+                {location.pathname === `/tranches` && isConnected && (
                     <div className="flex gap-3 md:justify-end mt-2">
                         <Tooltip
                             text="Create a tranche first"
