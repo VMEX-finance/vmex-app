@@ -41,18 +41,18 @@ export async function _getUserTrancheData(
         test: SDK_PARAMS.test,
     });
 
-    console.log('Got user tranche data: ', userTrancheData);
-    const reverseMapping = flipAndLowerCase(MAINNET_ASSET_MAPPINGS);
-
     const tmp = userTrancheData.assetBorrowingPower.map((marketData: AvailableBorrowData) => {
         return {
-            asset: reverseMapping.get(marketData.asset.toLowerCase()) || marketData.asset,
+            asset:
+                REVERSE_MAINNET_ASSET_MAPPINGS.get(marketData.asset.toLowerCase()) ||
+                marketData.asset,
 
             amountUSD: bigNumberToUSD(marketData.amountUSD, 18),
             amountNative: bigNumberToNative(
                 marketData.amountNative,
                 DECIMALS.get(
-                    reverseMapping.get(marketData.asset.toLowerCase()) || marketData.asset,
+                    REVERSE_MAINNET_ASSET_MAPPINGS.get(marketData.asset.toLowerCase()) ||
+                        marketData.asset,
                 ) || 18,
             ),
         };
@@ -65,7 +65,9 @@ export async function _getUserTrancheData(
         healthFactor: bigNumberToNative(userTrancheData.healthFactor, 18), //health factor has 18 decimals.
         supplies: userTrancheData.suppliedAssetData.map((assetData: SuppliedAssetData) => {
             return {
-                asset: reverseMapping.get(assetData.asset.toLowerCase()) || assetData.asset,
+                asset:
+                    REVERSE_MAINNET_ASSET_MAPPINGS.get(assetData.asset.toLowerCase()) ||
+                    assetData.asset,
                 amount: bigNumberToUSD(assetData.amount, 18),
                 amountNative: bigNumberToNative(
                     assetData.amountNative,
@@ -82,7 +84,9 @@ export async function _getUserTrancheData(
         }),
         borrows: userTrancheData.borrowedAssetData.map((assetData: BorrowedAssetData) => {
             return {
-                asset: reverseMapping.get(assetData.asset.toLowerCase()) || assetData.asset,
+                asset:
+                    REVERSE_MAINNET_ASSET_MAPPINGS.get(assetData.asset.toLowerCase()) ||
+                    assetData.asset,
                 amount: bigNumberToUSD(assetData.amount, 18),
                 amountNative: bigNumberToNative(
                     assetData.amountNative,
