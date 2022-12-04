@@ -76,10 +76,9 @@ export const HealthFactor = ({
         if (totalDebtInETH.eq(BigNumber.from('0'))) {
             return undefined;
         }
-        return totalCollateralInETH
-            .mul(liquidationThreshold)
-            .div(BigNumber.from('10000'))
+        return liquidationThreshold
             .mul(ethers.utils.parseEther('1'))
+            .div(BigNumber.from('10000'))
             .div(totalDebtInETH);
     };
 
@@ -89,57 +88,85 @@ export const HealthFactor = ({
         }
         let a = findAssetInMarketsData(asset);
         let d = DECIMALS.get(asset);
-        if (!a || !d || amount == '') {
+        if (!a || !d || amount == '' || !parseFloat(amount)) {
             return undefined;
         }
 
-        let ethAmount = ethers.utils
-            .parseUnits(convertStringFormatToNumber(amount), d)
-            .mul(a.currentPrice)
-            .div(ethers.utils.parseUnits('1', d)); //18 decimals
+        try {
+            let ethAmount = ethers.utils
+                .parseUnits(convertStringFormatToNumber(amount), d)
+                .mul(a.currentPrice)
+                .div(ethers.utils.parseUnits('1', d)); //18 decimals
+            console.log('ethAmount: ', ethAmount);
 
-        if (type === 'withdraw') {
-            let amountCappedNotUsed = ethAmount.gt(a.collateralCap)
-                ? ethAmount.sub(a.collateralCap)
-                : BigNumber.from('0');
-            if (ethAmount.lte(amountCappedNotUsed)) {
-                return determineHFInitial();
-            }
-            let amountDecrease = ethAmount.sub(amountCappedNotUsed);
             let totalCollateralETH = queryUserTrancheData.data?.totalCollateralETH;
             let totalDebtInETH = queryUserTrancheData.data?.totalDebtETH;
             let currentLiquidationThreshold =
                 queryUserTrancheData.data?.currentLiquidationThreshold;
+
+            let collateralAfter, liquidationThresholdAfter;
+
             if (!totalCollateralETH || !currentLiquidationThreshold || !totalDebtInETH) {
                 return undefined;
             }
-            let collateralAfterDecrease = totalCollateralETH.sub(amountDecrease);
-            console.log('collateralAfterDecrease: ', collateralAfterDecrease);
-            let liquidationThresholdAfterDecrease = totalCollateralETH
-                .mul(currentLiquidationThreshold)
-                .sub(amountDecrease.mul(a.liquidationThreshold))
-                .div(collateralAfterDecrease);
+            if (type === 'supply') {
+                collateralAfter = totalCollateralETH.add(ethAmount);
 
-            console.log('liquidationThresholdAfterDecrease: ', liquidationThresholdAfterDecrease);
+                if (collateralAfter.gte(a.collateralCap)) {
+                    collateralAfter = a.collateralCap;
+                }
+
+                let amountIncrease = collateralAfter.sub(totalCollateralETH);
+
+                liquidationThresholdAfter = totalCollateralETH
+                    .mul(currentLiquidationThreshold) //this is sum of all (asset liquidation threshold * asset collateral amount)
+                    .add(amountIncrease.mul(a.liquidationThreshold));
+                // .div(collateralAfter); //do at later step
+            }
+
+            if (type === 'withdraw') {
+                console.log(a.collateralCap);
+                let amountCappedNotUsed = ethAmount.gt(a.collateralCap)
+                    ? ethAmount.sub(a.collateralCap)
+                    : BigNumber.from('0');
+                if (ethAmount.lte(amountCappedNotUsed)) {
+                    return determineHFInitial();
+                }
+                console.log('amountCappedNotUsed: ', amountCappedNotUsed);
+                let amountDecrease = ethAmount.sub(amountCappedNotUsed);
+
+                collateralAfter = totalCollateralETH.sub(amountDecrease);
+
+                liquidationThresholdAfter = totalCollateralETH
+                    .mul(currentLiquidationThreshold)
+                    .sub(amountDecrease.mul(a.liquidationThreshold))
+                    .div(collateralAfter);
+            }
+
+            if (!collateralAfter || !liquidationThresholdAfter) {
+                return undefined;
+            }
+
+            console.log('collateralBefore: ', totalCollateralETH);
+            console.log('collateralAfter: ', collateralAfter);
+
+            console.log('currentLiquidationThreshold: ', currentLiquidationThreshold);
+            console.log('liquidationThresholdAfter: ', liquidationThresholdAfter);
 
             let healthFactorAfterDecrease = calculateHealthFactorFromBalances(
-                collateralAfterDecrease,
+                collateralAfter,
                 totalDebtInETH,
-                liquidationThresholdAfterDecrease,
+                liquidationThresholdAfter,
             );
 
             return formatHF(
-                healthFactorAfterDecrease && ethers.utils.formatUnits(healthFactorAfterDecrease, d),
+                healthFactorAfterDecrease &&
+                    ethers.utils.formatUnits(healthFactorAfterDecrease, 18), //HF always has 18 decimals
                 false,
             );
+        } catch {
+            return undefined;
         }
-        return queryUserTrancheData.data?.borrows ? (
-            <span className={`${determineSize()[2]} text-[#D9D001] font-semibold`}>
-                {queryUserTrancheData.data?.healthFactor || 0}
-            </span>
-        ) : (
-            <TbInfinity color="#8CE58F" size={`${determineSize()[0]}`} />
-        );
     };
     return (
         <div className="flex flex-col">
