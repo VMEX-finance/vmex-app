@@ -80,6 +80,7 @@ export async function _getUserTrancheData(
                 apy: rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0)),
                 tranche: assetData.tranche.toString(),
                 trancheId: assetData.tranche.toNumber(),
+                // collateralCap: assetData.collateralCap,
             };
         }),
         borrows: userTrancheData.borrowedAssetData.map((assetData: BorrowedAssetData) => {
