@@ -30,31 +30,31 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, data, ta
     const { queryUserTrancheData } = useUserTrancheData(data.signer, data.tranche);
 
     const handleSubmit = async () => {
-        await submitTx(async () => {
-            view?.includes('Supply')
-                ? await supply({
-                      underlying: MAINNET_ASSET_MAPPINGS.get(data.asset) || '',
-                      trancheId: data.tranche,
-                      amount: convertStringFormatToNumber(amount),
-                      signer: data.signer,
-                      network: NETWORK,
-                      collateral: asCollateral,
-                      // referrer: number,
-                      // collateral: boolean,
-                      // test: boolean
-                  })
-                : await withdraw({
-                      asset: MAINNET_ASSET_MAPPINGS.get(data.asset) || '',
-                      trancheId: data.tranche,
-                      amount: convertStringFormatToNumber(amount),
-                      signer: data.signer,
-                      network: NETWORK,
-                      interestRateMode: 2,
-                      // referrer: number,
-                      // collateral: boolean,
-                      // test: boolean
-                  });
-        });
+        // await submitTx(async () => {
+        //     view?.includes('Supply')
+        //         ? await supply({
+        //               underlying: MAINNET_ASSET_MAPPINGS.get(data.asset) || '',
+        //               trancheId: data.tranche,
+        //               amount: convertStringFormatToNumber(amount),
+        //               signer: data.signer,
+        //               network: NETWORK,
+        //               collateral: asCollateral,
+        //               // referrer: number,
+        //               // collateral: boolean,
+        //               // test: boolean
+        //           })
+        //         : await withdraw({
+        //               asset: MAINNET_ASSET_MAPPINGS.get(data.asset) || '',
+        //               trancheId: data.tranche,
+        //               amount: convertStringFormatToNumber(amount),
+        //               signer: data.signer,
+        //               network: NETWORK,
+        //               interestRateMode: 2,
+        //               // referrer: number,
+        //               // collateral: boolean,
+        //               // test: boolean
+        //           });
+        // });
     };
 
     return (
