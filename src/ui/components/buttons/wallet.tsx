@@ -17,7 +17,7 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
     const { address } = useAccount();
     const title = address ? truncateAddress(address) : label;
     const mode = `transition duration-150 ${
-        primary && !address ? '' : 'bg-white text-black hover:!bg-neutral-100'
+        primary && !address ? '' : 'bg-white text-black hover:bg-neutral-100'
     }`;
 
     const renderDropdownItems = () => {
