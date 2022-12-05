@@ -17,20 +17,18 @@ export const MultipleAssetsDisplay = ({ assets, show = 4, size }: IMultipleAsset
         }
     };
 
-    const fallbackImg = (asset: string) => {
-        if (asset === 'triCrypto2') return 'CRV';
-        else return asset;
-    };
-
     return (
         <div className={`flex flex-wrap items-center ${show === 'all' ? 'gap-3' : 'xl:gap-2'}`}>
             {mapAssets().map((el, i) => (
-                <img
-                    key={`tranches-asset-${i}`}
-                    src={`/tokens/token-${fallbackImg(el)}.svg`}
-                    alt={el}
-                    className={`${size ? size : 'h-8 w-8'}`}
-                />
+                <>
+                    {console.log(el)}
+                    <img
+                        key={`tranches-asset-${i}`}
+                        src={`/coins/${el.toLowerCase()}.svg`}
+                        alt={el}
+                        className={`${size ? size : 'h-8 w-8'}`}
+                    />
+                </>
             ))}
             {show !== 'all' && assets && assets.length > (show ? show : 4) && (
                 <Tooltip

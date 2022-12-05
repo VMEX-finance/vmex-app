@@ -37,7 +37,7 @@ export const SuppliedAssetDetailsDialog: React.FC<IDialogProps> = ({ name, data,
                         <div className="flex flex-col">
                             <AssetDisplay
                                 name={data.asset}
-                                logo={`/tokens/token-${data.asset.toUpperCase()}.svg`}
+                                logo={`/coins/${data.asset?.toLowerCase()}.svg`}
                                 className="mb-1"
                             />
                             <span>

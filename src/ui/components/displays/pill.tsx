@@ -28,7 +28,7 @@ export const PillDisplay = ({ asset, value, type, formatter = 'usd' }: IPillDisp
             <div className="bg-neutral-900 text-white rounded-3xl flex items-center gap-4 w-fit px-3 py-1">
                 <div className="flex gap-1">
                     <img
-                        src={`/tokens/token-${asset.toUpperCase()}.svg`}
+                        src={`/coins/${asset.toLowerCase()}.svg`}
                         alt={asset}
                         height="24"
                         width="24"

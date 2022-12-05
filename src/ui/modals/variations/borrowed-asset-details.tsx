@@ -53,7 +53,7 @@ export const BorrowedAssetDetailsDialog: React.FC<IDialogProps> = ({
                             <div className="flex flex-col">
                                 <AssetDisplay
                                     name={'USDC'}
-                                    logo={`/tokens/token-${'USDC'}.svg`}
+                                    logo={`/coins/${'usdc'}.svg`}
                                     className="mb-1"
                                 />
                                 <span>
