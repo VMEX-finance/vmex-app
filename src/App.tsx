@@ -19,7 +19,7 @@ function App() {
     const [showLoading, setShowLoading] = useState(true);
 
     useEffect(() => {
-        const timeout = setTimeout(() => setShowLoading(false), 4000);
+        const timeout = setTimeout(() => setShowLoading(false), 4400);
         return () => clearTimeout(timeout);
     }, []);
 
