@@ -27,7 +27,7 @@ export const AssetDisplay = (props: IAssetDisplayProps) => {
             } ${props.border ? 'border border-1 border-black w-fit px-2' : ''}`}
         >
             <img
-                src={props.logo ? props.logo : `/tokens/token-${props.name?.toUpperCase()}.svg`}
+                src={props.logo ? props.logo : `/coins/${props.name?.toLowerCase()}.svg`}
                 alt={props.name}
                 height={iconSize()}
                 width={iconSize()}

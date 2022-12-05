@@ -32,7 +32,7 @@ export const AvailableAssetDisplay = ({
       `}
             onClick={setSelected ? setSelected : () => {}}
         >
-            <AssetDisplay name={asset} logo={`/tokens/token-${asset.toUpperCase()}.svg`} />
+            <AssetDisplay name={asset} logo={`/coins/${asset.toLowerCase()}.svg`} />
             <div className="flex flex-col text-right">
                 <span className="text-neutral-600 text-sm">
                     {amount || 0} {asset.toUpperCase()}

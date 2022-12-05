@@ -73,7 +73,7 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
                                     amount={amount}
                                     setAmount={setAmount}
                                     coin={{
-                                        logo: `/tokens/token-${data.asset}.svg`,
+                                        logo: `/coins/${data.asset?.toLowerCase()}.svg`,
                                         name: data.asset,
                                     }}
                                     balance={data.amount}
@@ -120,7 +120,7 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
                                     amount={amount}
                                     setAmount={setAmount}
                                     coin={{
-                                        logo: `/tokens/token-${data.asset}.svg`,
+                                        logo: `/coins/${data.asset?.toLowerCase()}.svg`,
                                         name: data.asset,
                                     }}
                                     balance={data.amountWithdrawOrRepay}
