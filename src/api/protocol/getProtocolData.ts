@@ -1,9 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { IProtocolProps } from '../../ui/features';
-import { MOCK_LINE_DATA_2, MOCK_TOP_ASSETS, MOCK_TOP_TRANCHES } from '../../utils/mock-data';
+import { MOCK_LINE_DATA_2 } from '../../utils/mock-data';
 import { IProtocolDataProps } from './types';
 import { AssetBalance, getProtocolData } from '@vmex/sdk';
-import { ethers } from 'ethers';
 import {
     bigNumberToUSD,
     flipAndLowerCase,

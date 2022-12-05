@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 
+import { FullPageLoader } from './ui/components/loaders';
 import Overview from './pages/overview';
 import Tranches from './pages/tranches';
 import Staking from './pages/staking';
@@ -15,8 +16,16 @@ import { SelectedTrancheStore, TransactionsStore, MyTranchesStore } from './stor
 const queryClient = new QueryClient();
 
 function App() {
+    const [showLoading, setShowLoading] = useState(true);
+
+    useEffect(() => {
+        const timeout = setTimeout(() => setShowLoading(false), 4000);
+        return () => clearTimeout(timeout);
+    }, []);
+
     return (
         <QueryClientProvider client={queryClient}>
+            <FullPageLoader loading={showLoading} />
             <MyTranchesStore>
                 <TransactionsStore>
                     <SelectedTrancheStore>
