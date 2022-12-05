@@ -5,7 +5,7 @@ import {
     YourSuppliesTable,
     IYourBorrowsTableItemProps,
     IYourSuppliesTableItemProps,
-} from '..';
+} from '.';
 import { Button } from '../../components/buttons';
 import { useNavigate } from 'react-router-dom';
 
@@ -13,9 +13,15 @@ interface IYourPositionsProps {
     type: 'borrows' | 'supplies';
     data?: IYourBorrowsTableItemProps[] | IYourSuppliesTableItemProps[];
     isLoading?: boolean;
+    withHealth?: boolean;
 }
 
-export const YourPositionsTable: React.FC<IYourPositionsProps> = ({ type, data, isLoading }) => {
+export const YourPositionsTable: React.FC<IYourPositionsProps> = ({
+    type,
+    data,
+    isLoading,
+    withHealth,
+}) => {
     const navigate = useNavigate();
     const determineTitle = () => {
         switch (type) {
@@ -38,9 +44,19 @@ export const YourPositionsTable: React.FC<IYourPositionsProps> = ({ type, data, 
     const determineTable = () => {
         switch (type) {
             case 'supplies':
-                return <YourSuppliesTable data={(data as IYourSuppliesTableItemProps[]) || []} />;
+                return (
+                    <YourSuppliesTable
+                        withHealth={withHealth}
+                        data={(data as IYourSuppliesTableItemProps[]) || []}
+                    />
+                );
             case 'borrows':
-                return <YourBorrowsTable data={(data as IYourBorrowsTableItemProps[]) || []} />;
+                return (
+                    <YourBorrowsTable
+                        withHealth={withHealth}
+                        data={(data as IYourBorrowsTableItemProps[]) || []}
+                    />
+                );
         }
     };
 

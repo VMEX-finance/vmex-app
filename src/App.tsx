@@ -19,17 +19,16 @@ function App() {
     const [showLoading, setShowLoading] = useState(true);
 
     useEffect(() => {
-        const timeout = setTimeout(() => setShowLoading(false), 4400);
+        const timeout = setTimeout(() => setShowLoading(false), 5000);
         return () => clearTimeout(timeout);
     }, []);
 
     return (
         <QueryClientProvider client={queryClient}>
-            <FullPageLoader loading={showLoading} />
             <MyTranchesStore>
                 <TransactionsStore>
                     <SelectedTrancheStore>
-                        <BrowserRouter>
+                        <FullPageLoader loading={showLoading} onlyHome>
                             <Routes>
                                 <Route index element={<Navigate to="/overview" />} />
                                 <Route path="/overview" element={<Overview />} />
@@ -43,7 +42,7 @@ function App() {
                                 {/* Dynamic Tranche Routes */}
                                 <Route path="/tranches/:name" element={<TrancheDetails />} />
                             </Routes>
-                        </BrowserRouter>
+                        </FullPageLoader>
                     </SelectedTrancheStore>
                 </TransactionsStore>
             </MyTranchesStore>
