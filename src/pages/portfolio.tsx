@@ -47,11 +47,13 @@ const Portfolio: React.FC = () => {
                                 type="supplies"
                                 data={queryUserActivity.data?.supplies}
                                 isLoading={queryUserActivity.isLoading}
+                                withHealth
                             />
                             <YourPositionsTable
                                 type="borrows"
                                 data={queryUserActivity.data?.borrows}
                                 isLoading={queryUserActivity.isLoading}
+                                withHealth
                             />
                         </div>
                     </div>

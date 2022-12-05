@@ -10,15 +10,19 @@ export type IYourBorrowsTableItemProps = {
     apy: number;
     tranche: string;
     trancheId: number;
+    healthFactor?: string | number;
 };
 
 export type IYourBorrowsTableProps = {
     data: IYourBorrowsTableItemProps[];
+    withHealth?: boolean;
 };
 
-export const YourBorrowsTable: React.FC<IYourBorrowsTableProps> = ({ data }) => {
+export const YourBorrowsTable: React.FC<IYourBorrowsTableProps> = ({ data, withHealth }) => {
     const { openDialog } = useDialogController();
-    const headers = ['Asset', 'Amount', 'APY%', 'Tranche'];
+    const headers = withHealth
+        ? ['Asset', 'Amount', 'APY%', 'Tranche', 'Health']
+        : ['Asset', 'Amount', 'APY%', 'Tranche'];
 
     return (
         <table className="min-w-full divide-y divide-gray-300 font-basefont">
@@ -59,6 +63,7 @@ export const YourBorrowsTable: React.FC<IYourBorrowsTableProps> = ({ data }) => 
                                 </td>
                                 <td>{percentFormatter.format(i.apy)}</td>
                                 <td className="">{i.tranche}</td>
+                                {withHealth && <td>{i.healthFactor}</td>}
                                 {/* <td className="text-right hidden md:table-cell pr-3.5">
                                     <Button
                                         label={
