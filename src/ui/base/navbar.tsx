@@ -144,7 +144,7 @@ const MobileDropdownMenu = ({
                     <div className="flex flex-col justify-center gap-1 border-2 border-neutral-800 rounded-xl mt-1">
                         <WalletButton
                             primary
-                            className="border-0 !bg-neutral-800 !rounded-b-none !text-white hover:!bg-neutral-700"
+                            className="border-0 !bg-neutral-900 !rounded-b-none !text-white hover:!bg-neutral-800"
                         />
                         {isConnected && (
                             <>

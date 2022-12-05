@@ -112,21 +112,25 @@ export const TranchesTable: React.FC<IDataTable> = ({ data, loading }) => {
                     data={data || []}
                     options={{
                         ...options,
-                        customRowRender: (data: any) => {
-                            const [name, assets, aggregateRating, supplyTotal, borrowTotal, id] =
-                                data;
-                            return (
-                                <TranchesCustomRow
-                                    name={name}
-                                    assets={assets}
-                                    aggregateRating={aggregateRating}
-                                    yourActivity={renderActivity(id)}
-                                    supplyTotal={supplyTotal}
-                                    borrowTotal={borrowTotal}
-                                    id={id}
-                                />
-                            );
-                        },
+                        customRowRender: ([
+                            name,
+                            assets,
+                            aggregateRating,
+                            yourActivity,
+                            supplyTotal,
+                            borrowTotal,
+                            id,
+                        ]) => (
+                            <TranchesCustomRow
+                                name={name}
+                                assets={assets}
+                                aggregateRating={aggregateRating}
+                                yourActivity={renderActivity(id)}
+                                supplyTotal={supplyTotal}
+                                borrowTotal={borrowTotal}
+                                id={id}
+                            />
+                        ),
                         textLabels: {
                             body: {
                                 noMatch: loading ? (
