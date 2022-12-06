@@ -64,7 +64,9 @@ export const HealthFactor = ({
     const determineHFInitial = () => {
         return formatHF(
             queryUserTrancheData.data?.healthFactor || 0,
-            queryUserTrancheData.data?.borrows ? false : true,
+            queryUserTrancheData.data?.borrows && queryUserTrancheData.data?.borrows.length != 0
+                ? false
+                : true,
         );
     };
 
@@ -73,7 +75,7 @@ export const HealthFactor = ({
         totalDebtInETH: BigNumber,
         liquidationThreshold: BigNumber,
     ) => {
-        if (totalDebtInETH.eq(BigNumber.from('0'))) {
+        if (totalDebtInETH.lte(BigNumber.from('0'))) {
             return undefined;
         }
         return liquidationThreshold
@@ -97,18 +99,20 @@ export const HealthFactor = ({
                 .parseUnits(convertStringFormatToNumber(amount), d)
                 .mul(a.currentPrice)
                 .div(ethers.utils.parseUnits('1', d)); //18 decimals
-            console.log('ethAmount: ', ethAmount);
+            // console.log('ethAmount: ', ethAmount);
 
             let totalCollateralETH = queryUserTrancheData.data?.totalCollateralETH;
             let totalDebtInETH = queryUserTrancheData.data?.totalDebtETH;
             let currentLiquidationThreshold =
                 queryUserTrancheData.data?.currentLiquidationThreshold;
 
-            let collateralAfter, liquidationThresholdAfter;
-
             if (!totalCollateralETH || !currentLiquidationThreshold || !totalDebtInETH) {
                 return undefined;
             }
+
+            let collateralAfter = totalCollateralETH;
+            let debtAfter = totalDebtInETH;
+            let liquidationThresholdAfter = currentLiquidationThreshold;
             if (type === 'supply') {
                 collateralAfter = totalCollateralETH.add(ethAmount);
 
@@ -132,30 +136,29 @@ export const HealthFactor = ({
                 if (ethAmount.lte(amountCappedNotUsed)) {
                     return determineHFInitial();
                 }
-                console.log('amountCappedNotUsed: ', amountCappedNotUsed);
+                // console.log('amountCappedNotUsed: ', amountCappedNotUsed);
                 let amountDecrease = ethAmount.sub(amountCappedNotUsed);
 
                 collateralAfter = totalCollateralETH.sub(amountDecrease);
 
                 liquidationThresholdAfter = totalCollateralETH
                     .mul(currentLiquidationThreshold)
-                    .sub(amountDecrease.mul(a.liquidationThreshold))
-                    .div(collateralAfter);
+                    .sub(amountDecrease.mul(a.liquidationThreshold));
             }
 
-            if (!collateralAfter || !liquidationThresholdAfter) {
-                return undefined;
+            if (type === 'borrow') {
+                debtAfter = totalDebtInETH.add(ethAmount);
+                liquidationThresholdAfter = currentLiquidationThreshold.mul(totalCollateralETH);
             }
 
-            console.log('collateralBefore: ', totalCollateralETH);
-            console.log('collateralAfter: ', collateralAfter);
-
-            console.log('currentLiquidationThreshold: ', currentLiquidationThreshold);
-            console.log('liquidationThresholdAfter: ', liquidationThresholdAfter);
+            if (type === 'repay') {
+                debtAfter = totalDebtInETH.sub(ethAmount);
+                liquidationThresholdAfter = currentLiquidationThreshold.mul(totalCollateralETH);
+            }
 
             let healthFactorAfterDecrease = calculateHealthFactorFromBalances(
                 collateralAfter,
-                totalDebtInETH,
+                debtAfter,
                 liquidationThresholdAfter,
             );
 

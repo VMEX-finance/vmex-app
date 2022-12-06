@@ -25,6 +25,7 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
 
     const handleClick = async () => {
         await submitTx(async () => {
+            console.log('Attempting to submit ts');
             view?.includes('Borrow')
                 ? await borrow({
                       underlying: MAINNET_ASSET_MAPPINGS.get(data.asset) || '',

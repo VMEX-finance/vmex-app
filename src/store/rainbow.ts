@@ -8,7 +8,10 @@ import { useProvider, useSigner, useAccount } from 'wagmi';
 import { Signer } from '@ethersproject/abstract-signer';
 import { Provider } from '@wagmi/core';
 
-export const { chains, provider } = configureChains([chain.mainnet], [publicProvider()]);
+export const { chains, provider } = configureChains(
+    [process.env.REACT_APP_TEST ? chain.hardhat : chain.mainnet],
+    [publicProvider()],
+);
 
 export const { connectors } = getDefaultWallets({
     appName: 'VMEX',
