@@ -20,6 +20,7 @@ export const BorrowedAssetDetailsDialog: React.FC<IDialogProps> = ({
     data,
     closeDialog,
 }) => {
+    console.log(data);
     const { pathname } = useLocation();
     const navigate = useNavigate();
     const { updateTranche, setAsset } = useSelectedTrancheContext();
@@ -58,26 +59,12 @@ export const BorrowedAssetDetailsDialog: React.FC<IDialogProps> = ({
                     // Default State
                     <>
                         <h3 className="mt-5 text-gray-400">Overview</h3>
-                        <div className="grid grid-cols-3 items-center">
+                        <div className="grid grid-cols-1 items-center">
                             <div className="flex flex-col">
                                 <AssetDisplay name={data.asset} className="mb-1" />
                                 <NumberAndDollar
-                                    value={`${data.amountNative} Supplied`}
+                                    value={`${data.amountNative} Accrued Debt`}
                                     dollar={`${data.amount} USD`}
-                                    size="sm"
-                                    color="text-black"
-                                />
-                            </div>
-                            <MdCompareArrows className="justify-self-center" size="32px" />
-                            <div className="flex flex-col">
-                                <AssetDisplay
-                                    name={'USDC'}
-                                    logo={`/coins/${'usdc'}.svg`}
-                                    className="mb-1"
-                                />
-                                <NumberAndDollar
-                                    value={`156.1 Collatoralized`} // TODO: implement collateral
-                                    dollar={`$156.1 USD`}
                                     size="sm"
                                     color="text-black"
                                 />
@@ -90,10 +77,6 @@ export const BorrowedAssetDetailsDialog: React.FC<IDialogProps> = ({
                                 {
                                     label: 'Interest Rate',
                                     value: `${data.apy}%`,
-                                },
-                                {
-                                    label: 'Interest Accrued',
-                                    value: `$${13.56}`, // TODO: implement interest accrued
                                 },
                             ]}
                         />

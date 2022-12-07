@@ -68,11 +68,7 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
 
         await submitTx(() => {
             console.log('Started ts for tranche creation');
-            // console.log("borrow: ", _borrowLendTokens)
-            // console.log("borrow: ", canBorrow)
 
-            // // console.log("collateral: ", _collateralTokens)
-            // console.log("collateral: ", canBeCollateral)
             initTranche({
                 name: _name,
                 whitelisted: _whitelisted,

@@ -24,7 +24,7 @@ Then, in the VMEX App repo, run:
 yarn start:dev
 ```
 
-*Note: Make sure your Metamask network is set to localhost:8545 with a chain ID 31337*
+*Note: Make sure your Metamask network is set to localhost:8545 with a chain ID 31337 and reset your MetaMask account if needed*
 
 When adding new features, create a new branch based on `origin/develop`. Upon completing new features, create pull requests to `origin/develop`.
 

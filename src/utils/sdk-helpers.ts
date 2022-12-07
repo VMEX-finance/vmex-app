@@ -129,3 +129,17 @@ export const addDollarAmounts = (list: Array<string> | undefined, dollarSign = t
     const sum = withoutDollarSign.reduce((partial, next) => partial + next, 0);
     return dollarSign ? `$${sum.toString()}` : sum;
 };
+
+export const calculateHealthFactorFromBalances = (
+    totalCollateralInETH: BigNumber,
+    totalDebtInETH: BigNumber,
+    liquidationThreshold: BigNumber,
+) => {
+    if (totalDebtInETH.lte(BigNumber.from('0'))) {
+        return undefined;
+    }
+    return liquidationThreshold
+        .mul(ethers.utils.parseEther('1'))
+        .div(BigNumber.from('10000'))
+        .div(totalDebtInETH);
+};
