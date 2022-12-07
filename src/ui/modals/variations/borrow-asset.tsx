@@ -22,7 +22,7 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
     const { isSuccess, submitTx, isLoading } = useModal('borrow-asset-dialog');
     const [amount, setAmount] = useMediatedState(inputMediator, '');
     const [view, setView] = React.useState('Borrow');
-
+    console.log(data);
     const handleClick = async () => {
         await submitTx(async () => {
             console.log('Attempting to submit ts');
@@ -63,7 +63,7 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
                             title={name}
                             asset={data.asset}
                             tab={tab}
-                            onClick={setView}
+                            onClick={Number(data.amountWithdrawOrRepay) !== 0 ? setView : () => {}}
                             primary
                         />
                         {!isSuccess ? (

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useMediatedState } from 'react-use';
 import { inputMediator, convertStringFormatToNumber } from '../../../utils/helpers';
 import { CoinInput } from '../../components/inputs';
@@ -65,7 +65,7 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, data, ta
                             title={name}
                             asset={data.asset}
                             tab={tab}
-                            onClick={setView}
+                            onClick={Number(data.amountWithdrawOrRepay) !== 0 ? setView : () => {}}
                             primary
                         />
                         {!isSuccess && !error ? (
