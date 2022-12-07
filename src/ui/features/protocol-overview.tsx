@@ -4,8 +4,8 @@ import { ILineChartDataPointProps, ReLineChart } from '../components/charts';
 import { NumberDisplay, PillDisplay } from '../components/displays';
 import { TopTranchesTable } from '../tables';
 import { useWindowSize } from '../../hooks/ui';
-import { BigNumber } from 'ethers';
 import { TrancheData } from '@vmex/sdk';
+import { makeCompact } from '../../utils/helpers';
 
 export interface AssetBalance {
     asset: string;
@@ -60,14 +60,17 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                     <div className="flex flex-col justify-between min-w-[90%] xl:min-w-[300px]">
                         <div className="flex flex-col">
                             <h2 className="text-2xl">Total Value Locked (TVL)</h2>
-                            <p className="text-3xl">{tvl ? tvl : '-'}</p>
+                            <p className="text-3xl">{tvl ? makeCompact(tvl, true) : '-'}</p>
                         </div>
                         <div className="h-[100px] w-full">
                             <ReLineChart data={graphData || []} color="#3CB55E" />
                         </div>
                     </div>
                     <div className="flex md:flex-col justify-between gap-1">
-                        <NumberDisplay label={'Reserves:'} value={reserve ? reserve : '-'} />
+                        <NumberDisplay
+                            label={'Reserves:'}
+                            value={reserve ? makeCompact(reserve) : '-'}
+                        />
                         <NumberDisplay
                             color="text-brand-purple"
                             label={'Lenders:'}

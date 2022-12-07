@@ -97,7 +97,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
     };
 
     return (
-        <table className="min-w-full divide-y divide-gray-300 font-basefont">
+        <table className={`min-w-full divide-y divide-gray-300 font-basefont`}>
             <thead className="">
                 <tr className="text-gray-900 text-sm font-semibold text-left">
                     <th scope="col" className="py-3.5 pl-4 sm:pl-6">
