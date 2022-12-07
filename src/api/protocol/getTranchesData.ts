@@ -1,6 +1,6 @@
 import { ITrancheProps } from '@models/tranches';
 import { useQuery } from '@tanstack/react-query';
-import { MOCK_TRANCHES_DATA } from '../../utils/mock-data';
+// import { MOCK_TRANCHES_DATA } from '../../utils/mock-data';
 import { ITranchesDataProps } from './types';
 import { getAllTrancheData } from '@vmex/sdk';
 import {
@@ -17,9 +17,6 @@ export async function getAllTranches(): Promise<ITrancheProps[]> {
     let reverseMapping = flipAndLowerCase(MAINNET_ASSET_MAPPINGS);
 
     for (let i = 0; i < trancheData.length; i++) {
-        slightlyMocked.push(MOCK_TRANCHES_DATA[i]);
-        slightlyMocked[i].id = trancheData[i].id.toString();
-        slightlyMocked[i].name = trancheData[i].name;
         let newAssets: string[] = [];
 
         for (let j = 0; j < trancheData[i].assets.length; j++) {
@@ -35,27 +32,40 @@ export async function getAllTranches(): Promise<ITrancheProps[]> {
                 );
             }
         }
-        slightlyMocked[i].assets = newAssets;
-        // TODO: convert bignumber to usd, in analytics use oracles
-        slightlyMocked[i].tvl = bigNumberToUSD(trancheData[i].tvl, 18);
-        slightlyMocked[i].supplyTotal = bigNumberToUSD(trancheData[i].totalSupplied, 18);
-        slightlyMocked[i].borrowTotal = bigNumberToUSD(trancheData[i].totalBorrowed, 18);
 
-        slightlyMocked[i].liquidity = bigNumberToUSD(trancheData[i].availableLiquidity, 18);
-        if (trancheData[i].upgradeable) {
-            slightlyMocked[i].upgradeable = 'Yes';
-        } else {
-            slightlyMocked[i].upgradeable = 'No';
-        }
-
-        slightlyMocked[i].utilization = trancheData[i].utilization.toString();
-        slightlyMocked[i].admin = trancheData[i].admin.toString();
+        slightlyMocked.push({
+            id: trancheData[i].id.toString(),
+            name: trancheData[i].name,
+            assets: newAssets,
+            aggregateRating: trancheData[i].grade.toString(), //offchain oracle
+            yourActivity: 'none', //FE tracking
+            tvl: bigNumberToUSD(trancheData[i].tvl, 18),
+            tvlChange: 3.86, //offchain contracts analytics
+            supplyChange: 1.02,
+            borrowChange: -1.95,
+            supplyTotal: bigNumberToUSD(trancheData[i].totalSupplied, 18),
+            borrowTotal: bigNumberToUSD(trancheData[i].totalBorrowed, 18),
+            liquidity: bigNumberToUSD(trancheData[i].availableLiquidity, 18),
+            poolUtilization: '0.00',
+            upgradeable: 'Yes',
+            admin: trancheData[i].admin.toString(),
+            platformFee: 10,
+            adminFee: '1.00',
+            oracle: 'Chainlink',
+            whitelist: 'No',
+            ltv: 0,
+            liquidThreshold: 0,
+            liquidPenalty: 0,
+            collateral: 'Yes',
+            statisticsSupplied: 1.85,
+            utilization: trancheData[i].utilization.toString(),
+            statisticsBorrowed: 1.43,
+            reserveFactor: 0.21,
+            strategy: '11.12',
+        });
         if (trancheData[i].whitelist) {
             slightlyMocked[i].whitelist = 'Yes';
-        } else {
-            slightlyMocked[i].whitelist = 'No';
         }
-        slightlyMocked[i].aggregateRating = trancheData[i].grade.toString();
     }
 
     return slightlyMocked;

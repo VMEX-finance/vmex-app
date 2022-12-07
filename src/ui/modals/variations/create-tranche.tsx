@@ -3,6 +3,7 @@ import { TransactionStatus } from '../../components/statuses';
 import { Button } from '../../components/buttons';
 import { AVAILABLE_ASSETS } from '../../../utils/constants';
 import { useMyTranchesContext } from '../../../store/contexts';
+import { initTranche } from '@vmex/sdk';
 import { DefaultInput, ListInput } from '../../components/inputs';
 import { IDialogProps } from '../utils';
 import { Stepper, StepperChild } from '../../components/tabs';
@@ -11,8 +12,13 @@ import { ModalFooter, ModalHeader } from '../../modals/subcomponents';
 import { CreateTrancheAssetsTable } from '../../tables';
 import { InnerCard } from '../../components/cards';
 import { useModal } from '../../../hooks/ui';
+import { MAINNET_ASSET_MAPPINGS, NETWORK } from '../../../utils/sdk-helpers';
+import { useAccount, useSigner } from 'wagmi';
+import { ethers } from 'ethers';
 
 export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeDialog }) => {
+    const { address } = useAccount();
+    const { data: signer } = useSigner();
     const { setError, isSuccess, error, submitTx, isLoading } = useModal('create-tranche-dialog');
     const { newTranche, myTranches } = useMyTranchesContext();
     const { steps, nextStep, prevStep, activeStep } = useStepper([
@@ -21,10 +27,11 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
     ]);
 
     const [_name, setName] = React.useState('');
+    const [treasuryAddress, setTreasuryAddress] = React.useState(address ? address : '');
     const [_whitelisted, setWhitelisted] = React.useState([]);
     const [_blackListed, setBlackListed] = React.useState([]);
     const [_tokens, setTokens] = React.useState([]);
-    const [_adminFee, setAdminFee] = React.useState('0.2');
+    const [_adminFee, setAdminFee] = React.useState('20');
     const [_collateralTokens, setCollateralTokens] = React.useState([]);
     const [_borrowLendTokens, setBorrowLendTokens] = React.useState([]);
 
@@ -34,16 +41,52 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
         if (!_name) setError('Please enter a tranche name.');
         if (_tokens?.length === 0) setError('Please enter tokens to be included in your tranche.');
         if (error) return;
+        if (!signer) return;
+        let canBorrow: boolean[] = [];
+        let canBeCollateral: boolean[] = [];
+
+        let assets = _tokens.map((el: string) => {
+            let tmp = MAINNET_ASSET_MAPPINGS.get(el);
+            const findBorrow = _borrowLendTokens.find((el1) => el1 == el);
+            if (findBorrow) {
+                canBorrow.push(true);
+            } else {
+                canBorrow.push(false);
+            }
+
+            const findCollat = _collateralTokens.find((el1) => el1 == el);
+            if (findCollat) {
+                canBeCollateral.push(true);
+            } else {
+                canBeCollateral.push(false);
+            }
+
+            if (tmp) return tmp;
+            else return '';
+        });
+        if (!assets) return;
 
         await submitTx(() => {
-            newTranche({
+            console.log('Started ts for tranche creation');
+            // console.log("borrow: ", _borrowLendTokens)
+            // console.log("borrow: ", canBorrow)
+
+            // // console.log("collateral: ", _collateralTokens)
+            // console.log("collateral: ", canBeCollateral)
+            initTranche({
                 name: _name,
                 whitelisted: _whitelisted,
                 blacklisted: _blackListed,
-                tokens: _tokens,
-                adminFee: _adminFee,
-                lendAndBorrowTokens: _borrowLendTokens,
-                collateralTokens: _collateralTokens,
+                assetAddresses: assets,
+                reserveFactors: new Array(_tokens.length).fill(
+                    ethers.utils.parseUnits(_adminFee, 2),
+                ),
+                canBorrow: canBorrow,
+                canBeCollateral: canBeCollateral,
+                admin: signer,
+                treasuryAddress: treasuryAddress,
+                incentivesController: '0x0000000000000000000000000000000000000000', //disabled for now
+                network: NETWORK,
             });
         });
     };
@@ -64,7 +107,7 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
                                 onType={setName}
                                 size="2xl"
                                 placeholder="VMEX High Quality..."
-                                title="Name"
+                                title="Tranche Name"
                                 required
                             />
                             <DefaultInput
@@ -78,6 +121,14 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
                                 required
                             />
                         </div>
+                        <DefaultInput
+                            value={treasuryAddress}
+                            onType={setTreasuryAddress}
+                            size="2xl"
+                            placeholder=""
+                            title="Treasury Address"
+                            required
+                        />
                         <ListInput
                             title="Whitelisted"
                             list={_whitelisted}
@@ -102,6 +153,7 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
                             required
                         />
                     </StepperChild>
+
                     <StepperChild active={activeStep === 1}>
                         <div className="mt-6">
                             <InnerCard className="max-h-60 overflow-y-auto">

@@ -25,8 +25,8 @@ export type ITrancheProps = {
     supplyChange?: number;
     borrowTotal: number | string;
     borrowChange?: number;
-    longSupply: number | string;
-    longBorrow: number | string;
+    longSupply?: number | string;
+    longBorrow?: number | string;
     liquidity: number | string;
     poolUtilization: number | string;
     upgradeable: 'Yes' | 'No';
