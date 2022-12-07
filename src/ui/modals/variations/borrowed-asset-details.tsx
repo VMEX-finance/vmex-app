@@ -87,11 +87,6 @@ export const BorrowedAssetDetailsDialog: React.FC<IDialogProps> = ({
                                 },
                             ]}
                         />
-
-                        <h3 className="mt-6 text-gray-400">Price Analytics</h3>
-                        <div className="grid gap-2">
-                            <div className="min-h-[100px]"></div>
-                        </div>
                     </>
                 ) : (
                     <div className="mt-10 mb-8">

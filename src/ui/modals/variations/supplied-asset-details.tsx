@@ -1,18 +1,25 @@
 import React from 'react';
 import { MdOutlineArrowForward } from 'react-icons/md';
 import { Button } from '../../components/buttons';
-import { TransactionStatus } from '../../components/statuses';
-import { AssetDisplay } from '../../components/displays';
-import { useNavigate } from 'react-router-dom';
+import { ActiveStatus, TransactionStatus } from '../../components/statuses';
+import { AssetDisplay, NumberAndDollar } from '../../components/displays';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '../../../store/contexts';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../../modals/subcomponents';
 import { IDialogProps } from '../utils';
 import { useModal } from '../../../hooks/ui';
+import { CoinInput } from '../../components/inputs';
+import { useMediatedState } from 'react-use';
+import { inputMediator, convertStringFormatToNumber } from '../../../utils/helpers';
+import { MAINNET_ASSET_MAPPINGS, NETWORK } from '../../../utils/sdk-helpers';
+import { withdraw } from '@vmex/sdk';
 
 export const SuppliedAssetDetailsDialog: React.FC<IDialogProps> = ({ name, data, closeDialog }) => {
+    const { pathname } = useLocation();
     const navigate = useNavigate();
     const { updateTranche, setAsset } = useSelectedTrancheContext();
     const { submitTx, isSuccess, isLoading } = useModal('supplied-asset-details-dialog');
+    const [amount, setAmount] = useMediatedState(inputMediator, '');
 
     const routeToTranche = (row: any) => {
         setAsset(row.asset);
@@ -22,7 +29,19 @@ export const SuppliedAssetDetailsDialog: React.FC<IDialogProps> = ({ name, data,
     };
 
     const handleSubmit = async () => {
-        await submitTx();
+        await submitTx(async () => {
+            await withdraw({
+                asset: MAINNET_ASSET_MAPPINGS.get(data.asset) || '',
+                trancheId: data.tranche,
+                amount: convertStringFormatToNumber(amount),
+                signer: data.signer,
+                network: NETWORK,
+                interestRateMode: 2,
+                // referrer: number,
+                // collateral: boolean,
+                // test: boolean
+            });
+        });
     };
 
     return (
@@ -40,39 +59,42 @@ export const SuppliedAssetDetailsDialog: React.FC<IDialogProps> = ({ name, data,
                                 logo={`/coins/${data.asset?.toLowerCase()}.svg`}
                                 className="mb-1"
                             />
-                            <span>
-                                {130.2} {data.asset.toUpperCase()} Supplied
-                            </span>
-                            <span className="text-sm text-neutral-500">${'156,240.02'} USD</span>
+                            <NumberAndDollar
+                                value={`${data.amountNative} ${data.asset?.toUpperCase()} Supplied`}
+                                dollar={`${data.amount} USD`}
+                                size="sm"
+                                color="text-black"
+                            />
                         </div>
 
                         <ModalTableDisplay
                             title="Staking Details"
                             content={[
                                 {
-                                    label: 'Interest Rate',
-                                    value: `${0.44}%`,
+                                    label: 'Collateral',
+                                    value: <ActiveStatus active={data.collateral} />,
                                 },
                                 {
-                                    label: 'Date Supplied',
-                                    value: '12-23-2022 | 13:05',
+                                    label: 'Interest Rate',
+                                    value: `${data.apy}%`,
                                 },
                                 {
                                     label: 'Interest Accrued',
-                                    value: `$${13.56}`,
-                                },
-                                {
-                                    label: 'TX Hash',
-                                    value: '0x932...2134',
-                                    baseLink: `https://etherscan.com/tx/`,
+                                    value: `$${13.56}`, // TODO: add true sum of interest accrued in USD
                                 },
                             ]}
                         />
 
-                        <h3 className="mt-6 text-gray-400">Price Analytics</h3>
-                        <div className="grid gap-2">
-                            <div className="min-h-[100px]"></div>
-                        </div>
+                        <h3 className="mt-5 text-gray-400">Withdraw Amount</h3>
+                        <CoinInput
+                            amount={amount}
+                            setAmount={setAmount}
+                            coin={{
+                                logo: `/coins/${data.asset?.toLowerCase()}.svg`,
+                                name: data.asset,
+                            }}
+                            balance={data.amountNative}
+                        />
                     </>
                 ) : (
                     <div className="mt-10 mb-8">
@@ -80,13 +102,18 @@ export const SuppliedAssetDetailsDialog: React.FC<IDialogProps> = ({ name, data,
                     </div>
                 )}
                 <ModalFooter between>
-                    <Button label="View Tranche" onClick={() => routeToTranche(data)} />
+                    {!pathname.includes('/tranches') ? (
+                        <Button label="View Tranche" onClick={() => routeToTranche(data)} />
+                    ) : (
+                        <div></div>
+                    )}
                     <Button
                         primary
                         onClick={handleSubmit}
                         label={'Withdraw'}
                         icon={<MdOutlineArrowForward />}
                         loading={isLoading}
+                        disabled={!amount}
                     />
                 </ModalFooter>
             </>

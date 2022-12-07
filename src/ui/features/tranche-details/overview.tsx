@@ -137,7 +137,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                                           <button
                                               key={`${el.asset}`}
                                               onClick={() =>
-                                                  openDialog('supplied-asset-details-dialog', {
+                                                  openDialog('borrowed-asset-details-dialog', {
                                                       ...el,
                                                   })
                                               }
