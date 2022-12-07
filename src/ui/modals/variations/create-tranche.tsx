@@ -3,7 +3,6 @@ import { TransactionStatus } from '../../components/statuses';
 import { Button } from '../../components/buttons';
 import { AVAILABLE_ASSETS } from '../../../utils/constants';
 import { useMyTranchesContext } from '../../../store/contexts';
-import { initTranche } from '@vmex/sdk';
 import { DefaultInput, ListInput } from '../../components/inputs';
 import { IDialogProps } from '../utils';
 import { Stepper, StepperChild } from '../../components/tabs';
@@ -15,6 +14,7 @@ import { useModal } from '../../../hooks/ui';
 import { MAINNET_ASSET_MAPPINGS, NETWORK } from '../../../utils/sdk-helpers';
 import { useAccount, useSigner } from 'wagmi';
 import { ethers } from 'ethers';
+import { initTranche } from '@vmex/sdk';
 
 export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeDialog }) => {
     const { address } = useAccount();
