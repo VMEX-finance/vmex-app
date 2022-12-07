@@ -45,7 +45,7 @@ export const useModal = (dialog: IDialogNames): IUseModalProps => {
                     close && closeDialog(dialog);
                 }, TIMER_CLOSE_DELAY);
             } catch (err) {
-                console.log('Error in submitting ts:', err);
+                console.error('Error in submitting tx:', err);
                 setError(String(err));
                 setIsSuccess(false);
             }
