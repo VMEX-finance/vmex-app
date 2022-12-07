@@ -60,7 +60,7 @@ export const SuppliedAssetDetailsDialog: React.FC<IDialogProps> = ({ name, data,
                                 className="mb-1"
                             />
                             <NumberAndDollar
-                                value={`${data.amountNative} ${data.asset?.toUpperCase()} Supplied`}
+                                value={`${data.amountNative} Supplied`}
                                 dollar={`${data.amount} USD`}
                                 size="sm"
                                 color="text-black"
