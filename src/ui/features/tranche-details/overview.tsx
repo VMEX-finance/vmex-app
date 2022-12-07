@@ -12,7 +12,7 @@ import { useUserTrancheData } from '../../../api';
 import { useAccount } from 'wagmi';
 import { IYourBorrowsTableItemProps, IYourSuppliesTableItemProps } from '../../tables';
 import { useSelectedTrancheContext } from '../../../store/contexts';
-import { usdFormatter } from '../../../utils/helpers';
+import { makeCompact, usdFormatter } from '../../../utils/helpers';
 
 export interface ITrancheOverviewProps {
     assets?: string[];
@@ -67,21 +67,21 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                         center
                         size="xl"
                         label="TVL"
-                        value={`${tvl}`}
+                        value={`${makeCompact(tvl, true)}`}
                         change={tvlChange}
                     />
                     <NumberDisplay
                         center
                         size="xl"
                         label="Supplied"
-                        value={`${supplied}`}
+                        value={`${makeCompact(supplied, true)}`}
                         change={supplyChange}
                     />
                     <NumberDisplay
                         center
                         size="xl"
                         label="Borrowed"
-                        value={`${borrowed}`}
+                        value={`${makeCompact(borrowed, true)}`}
                         change={borrowChange}
                     />
                 </div>
@@ -137,7 +137,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                                           <button
                                               key={`${el.asset}`}
                                               onClick={() =>
-                                                  openDialog('supplied-asset-details-dialog', {
+                                                  openDialog('borrowed-asset-details-dialog', {
                                                       ...el,
                                                   })
                                               }

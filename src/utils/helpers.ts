@@ -82,38 +82,6 @@ export const calculateTimeDiff = (date: Date) => {
     };
 };
 
-export const renderAsset = (asset: AvailableChains | AvailableCoins | string) => {
-    let formatted;
-
-    if (asset?.length > 4 && asset?.toLowerCase() !== 'renbtc') {
-        switch (asset.toLowerCase()) {
-            case 'polygon':
-                formatted = 'matic';
-                break;
-            case 'avalanche':
-                formatted = 'avax';
-                break;
-            case 'bitcoin':
-                formatted = 'btc';
-                break;
-            case 'arbitrum':
-                formatted = 'arb';
-                break;
-            case 'zcash':
-            case 'renzec':
-                formatted = 'zec';
-                break;
-            default:
-                formatted = 'eth';
-                break;
-        }
-    } else {
-        formatted = asset?.toLowerCase();
-    }
-
-    return `/assets/svg-coins/${formatted}.svg`;
-};
-
 export const redirectChainExplorer = (
     chain: AvailableChains | 'renvm',
     hash: string | any,
@@ -154,6 +122,18 @@ export const usdFormatter = (isCompact = true) =>
         currency: 'USD',
         notation: isCompact ? 'compact' : 'standard',
     });
+
+export const makeCompact = (amount: string | number | undefined, decimalsOnly = false) => {
+    if (!amount) return '$0';
+    let _amount: string;
+    if (typeof amount === 'number') _amount = String(amount);
+    else _amount = amount;
+    if (decimalsOnly)
+        return _amount.length > 5 && _amount.includes('.') ? _amount.split('.')[0] : _amount;
+    if (_amount.includes('$')) _amount = _amount.slice(1);
+    if (_amount.includes(',')) _amount = _amount.replaceAll(',', '');
+    return usdFormatter().format(parseFloat(_amount));
+};
 
 export const numberFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',

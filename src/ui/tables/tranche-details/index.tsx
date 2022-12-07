@@ -81,8 +81,23 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
         }
     };
 
+    const isInList = (asset: string) => {
+        if (!queryUserTrancheData.data) return [];
+        const list = (
+            type === 'borrow'
+                ? queryUserTrancheData.data.borrows
+                : queryUserTrancheData.data.supplies
+        ).map((el) => el.asset);
+
+        return list.includes(asset) ? (
+            <span className="absolute -translate-x-4 w-2 h-2 bg-brand-green-neon rounded-full" />
+        ) : (
+            <></>
+        );
+    };
+
     return (
-        <table className="min-w-full divide-y divide-gray-300 font-basefont">
+        <table className={`min-w-full divide-y divide-gray-300 font-basefont`}>
             <thead className="">
                 <tr className="text-gray-900 text-sm font-semibold text-left">
                     <th scope="col" className="py-3.5 pl-4 sm:pl-6">
@@ -127,6 +142,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                             >
                                 <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                                     <div className="flex items-center gap-2">
+                                        {isInList(el.asset)}
                                         <img
                                             src={`/coins/${el.asset?.toLowerCase()}.svg`}
                                             alt={el.asset}

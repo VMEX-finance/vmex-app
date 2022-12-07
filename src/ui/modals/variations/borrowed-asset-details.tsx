@@ -2,12 +2,17 @@ import React from 'react';
 import { MdCompareArrows, MdOutlineArrowForward } from 'react-icons/md';
 import { Button } from '../../components/buttons';
 import { TransactionStatus } from '../../components/statuses';
-import { AssetDisplay } from '../../components/displays';
-import { useNavigate } from 'react-router-dom';
+import { AssetDisplay, NumberAndDollar } from '../../components/displays';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '../../../store/contexts';
 import { IDialogProps } from '../utils';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../../modals/subcomponents';
 import { useModal } from '../../../hooks/ui';
+import { MAINNET_ASSET_MAPPINGS, NETWORK } from '../../../utils/sdk-helpers';
+import { convertStringFormatToNumber, inputMediator } from '../../../utils/helpers';
+import { useMediatedState } from 'react-use';
+import { repay } from '@vmex/sdk';
+import { CoinInput } from '../../components/inputs';
 
 export const BorrowedAssetDetailsDialog: React.FC<IDialogProps> = ({
     name,
@@ -15,9 +20,11 @@ export const BorrowedAssetDetailsDialog: React.FC<IDialogProps> = ({
     data,
     closeDialog,
 }) => {
+    const { pathname } = useLocation();
     const navigate = useNavigate();
     const { updateTranche, setAsset } = useSelectedTrancheContext();
     const { isSuccess, submitTx, isLoading } = useModal('borrowed-asset-details-dialog');
+    const [amount, setAmount] = useMediatedState(inputMediator, '');
 
     const routeToTranche = (row: any) => {
         setAsset(row.asset);
@@ -27,7 +34,19 @@ export const BorrowedAssetDetailsDialog: React.FC<IDialogProps> = ({
     };
 
     const handleSubmit = async () => {
-        await submitTx();
+        await submitTx(async () => {
+            await repay({
+                asset: MAINNET_ASSET_MAPPINGS.get(data.asset) || '',
+                trancheId: data.tranche,
+                amount: convertStringFormatToNumber(amount),
+                rateMode: 2,
+                signer: data.signer,
+                network: NETWORK,
+                // referrer: number,
+                // collateral: boolean,
+                // test: boolean
+            });
+        });
     };
 
     return (
@@ -42,12 +61,12 @@ export const BorrowedAssetDetailsDialog: React.FC<IDialogProps> = ({
                         <div className="grid grid-cols-3 items-center">
                             <div className="flex flex-col">
                                 <AssetDisplay name={data.asset} className="mb-1" />
-                                <span>
-                                    {130.2} {data.asset} Borrowed
-                                </span>
-                                <span className="text-sm text-neutral-500">
-                                    ${'156,240.02'} USD
-                                </span>
+                                <NumberAndDollar
+                                    value={`${data.amountNative} Supplied`}
+                                    dollar={`${data.amount} USD`}
+                                    size="sm"
+                                    color="text-black"
+                                />
                             </div>
                             <MdCompareArrows className="justify-self-center" size="32px" />
                             <div className="flex flex-col">
@@ -56,12 +75,12 @@ export const BorrowedAssetDetailsDialog: React.FC<IDialogProps> = ({
                                     logo={`/coins/${'usdc'}.svg`}
                                     className="mb-1"
                                 />
-                                <span>
-                                    {'156,241.1'} {'USDC'} Collatoralized
-                                </span>
-                                <span className="text-sm text-neutral-500">
-                                    ${'156,240.02'} USD
-                                </span>
+                                <NumberAndDollar
+                                    value={`156.1 Collatoralized`} // TODO: implement collateral
+                                    dollar={`$156.1 USD`}
+                                    size="sm"
+                                    color="text-black"
+                                />
                             </div>
                         </div>
 
@@ -70,28 +89,25 @@ export const BorrowedAssetDetailsDialog: React.FC<IDialogProps> = ({
                             content={[
                                 {
                                     label: 'Interest Rate',
-                                    value: `${0.44}%`,
-                                },
-                                {
-                                    label: 'Date Borrowed',
-                                    value: '12-23-2022 | 13:05',
+                                    value: `${data.apy}%`,
                                 },
                                 {
                                     label: 'Interest Accrued',
-                                    value: `$${13.56}`,
-                                },
-                                {
-                                    label: 'TX Hash',
-                                    value: '0x932...2134',
-                                    baseLink: `https://etherscan.com/tx/`,
+                                    value: `$${13.56}`, // TODO: implement interest accrued
                                 },
                             ]}
                         />
 
-                        <h3 className="mt-6 text-gray-400">Price Analytics</h3>
-                        <div className="grid gap-2">
-                            <div className="min-h-[100px]"></div>
-                        </div>
+                        <h3 className="mt-5 text-gray-400">Repay Amount</h3>
+                        <CoinInput
+                            amount={amount}
+                            setAmount={setAmount}
+                            coin={{
+                                logo: `/coins/${data.asset?.toLowerCase()}.svg`,
+                                name: data.asset,
+                            }}
+                            balance={data.amountNative}
+                        />
                     </>
                 ) : (
                     <div className="mt-10 mb-8">
@@ -100,13 +116,18 @@ export const BorrowedAssetDetailsDialog: React.FC<IDialogProps> = ({
                 )}
 
                 <ModalFooter between>
-                    <Button label="View Tranche" onClick={() => routeToTranche(data)} />
+                    {!pathname.includes('/tranches') ? (
+                        <Button label="View Tranche" onClick={() => routeToTranche(data)} />
+                    ) : (
+                        <div></div>
+                    )}
                     <Button
                         onClick={handleSubmit}
                         primary
                         label="Repay Loan"
                         icon={<MdOutlineArrowForward />}
                         loading={isLoading}
+                        disabled={!amount}
                     />
                 </ModalFooter>
             </>
