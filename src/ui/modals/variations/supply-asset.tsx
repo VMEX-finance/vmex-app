@@ -26,7 +26,7 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, data, ta
     const [view, setView] = React.useState('Supply');
     const [asCollateral, setAsCollateral] = React.useState(true);
     const [amount, setAmount] = useMediatedState(inputMediator, '');
-    const { getTrancheMarket } = useTrancheMarketsData(data?.trancheId);
+    const { getTrancheMarket, queryTrancheMarkets } = useTrancheMarketsData(data?.trancheId);
     const { data: signer } = useSigner();
 
     const handleSubmit = async () => {
@@ -160,6 +160,7 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, data, ta
                                         {
                                             label: 'Remaining Supply',
                                             value: `${getTrancheMarket(data.asset).supplyTotal}`, // TODO: make this reactive to input amount
+                                            loading: queryTrancheMarkets.isLoading,
                                         },
                                     ]}
                                 />

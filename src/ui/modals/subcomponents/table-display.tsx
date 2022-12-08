@@ -4,6 +4,7 @@ type IModalTableItemProps = {
     label: string;
     value: string | number | ReactNode;
     baseLink?: string;
+    loading?: boolean;
 };
 
 type IModalTableDisplayProps = {
@@ -28,7 +29,7 @@ export const ModalTableDisplay = ({ title, content }: IModalTableDisplayProps) =
                     {content.map((el, i) => (
                         <span
                             key={i}
-                            className={`${
+                            className={`${el.loading ? 'animate-pulse' : ''} ${
                                 el.baseLink
                                     ? 'underline text-brand-purple hover:text-opacity-80 duration-200 transition cursor-pointer'
                                     : ''
