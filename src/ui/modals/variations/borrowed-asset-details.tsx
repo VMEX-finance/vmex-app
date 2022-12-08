@@ -20,7 +20,6 @@ export const BorrowedAssetDetailsDialog: React.FC<IDialogProps> = ({
     data,
     closeDialog,
 }) => {
-    console.log(data);
     const { pathname } = useLocation();
     const navigate = useNavigate();
     const { updateTranche, setAsset } = useSelectedTrancheContext();

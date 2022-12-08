@@ -22,6 +22,7 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
     const { isSuccess, submitTx, isLoading } = useModal('borrow-asset-dialog');
     const [amount, setAmount] = useMediatedState(inputMediator, '');
     const [view, setView] = React.useState('Borrow');
+
     const handleClick = async () => {
         await submitTx(async () => {
             view?.includes('Borrow')
