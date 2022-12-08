@@ -1,6 +1,7 @@
 import { bigNumberToUSD } from '../../../utils/sdk-helpers';
 import { TrancheData } from '@vmex/sdk';
 import React from 'react';
+import { makeCompact } from '../../../utils/helpers';
 
 interface ITableProps {
     data: TrancheData[];
@@ -30,8 +31,8 @@ export const TopTranchesTable: React.FC<ITableProps> = ({ data }) => {
                         return (
                             <tr key={`${i.name}-${index}`} className="text-left">
                                 <td>{i.name}</td>
-                                <td>{bigNumberToUSD(i.totalSupplied, 18)}</td>
-                                <td>{bigNumberToUSD(i.totalBorrowed, 18)}</td>
+                                <td>{makeCompact(bigNumberToUSD(i.totalSupplied, 18))}</td>
+                                <td>{makeCompact(bigNumberToUSD(i.totalBorrowed, 18))}</td>
                             </tr>
                         );
                     })}
