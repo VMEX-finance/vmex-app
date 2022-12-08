@@ -69,7 +69,7 @@ const TrancheDetails: React.FC = () => {
                                     ? queryTrancheMarkets.data.map((el) => ({
                                           asset: el.asset,
                                           canBeCollat: el.canBeCollateral,
-                                          apy_perc: el.supplyApy,
+                                          apy: el.supplyApy,
                                           tranche: tranche.id,
                                           signer: signer,
                                       }))
@@ -88,7 +88,7 @@ const TrancheDetails: React.FC = () => {
                                           .map((el) => ({
                                               asset: el.asset,
                                               liquidity: el.availableNative,
-                                              apy_perc: el.borrowApy,
+                                              apy: el.borrowApy,
                                               tranche: tranche.id,
                                               signer: signer,
                                           }))

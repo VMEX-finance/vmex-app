@@ -3,10 +3,16 @@ import { IUserPerformanceCardProps } from '@ui/features';
 import { IYourBorrowsTableItemProps, IYourSuppliesTableItemProps } from '@ui/tables';
 import { BigNumber } from 'ethers';
 
+type ITokenBalanceProps = {
+    amount: string;
+    amountNative: string;
+};
+
 export type IUserDataProps = {
     queryUserPerformance: UseQueryResult<IUserPerformanceCardProps, unknown>;
     queryUserActivity: UseQueryResult<IUserActivityDataProps, unknown>;
     queryUserWallet: UseQueryResult<IUserWalletDataProps, unknown>;
+    getTokenBalance: (asset: string) => ITokenBalanceProps;
 };
 
 export type IUserActivityDataProps = {

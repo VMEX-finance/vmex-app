@@ -2,8 +2,6 @@ import React from 'react';
 import { useDialogController } from '../../hooks/dialogs';
 import {
     BorrowAssetDialog,
-    BorrowedAssetDetailsDialog,
-    SuppliedAssetDetailsDialog,
     StakeAssetDialog,
     SupplyAssetDialog,
     CreateTrancheDialog,
@@ -23,14 +21,6 @@ export const AllModalsInstance: React.FC = () => {
             </React.Fragment>
 
             <React.Fragment>
-                <ModalWrapper {...getDialogProps('borrowed-asset-details-dialog')}>
-                    <BorrowedAssetDetailsDialog
-                        {...getDialogProps('borrowed-asset-details-dialog')}
-                    />
-                </ModalWrapper>
-            </React.Fragment>
-
-            <React.Fragment>
                 <ModalWrapper {...getDialogProps('borrow-asset-dialog')}>
                     <BorrowAssetDialog {...getDialogProps('borrow-asset-dialog')} />
                 </ModalWrapper>
@@ -39,14 +29,6 @@ export const AllModalsInstance: React.FC = () => {
             <React.Fragment>
                 <ModalWrapper {...getDialogProps('stake-asset-dialog')}>
                     <StakeAssetDialog {...getDialogProps('stake-asset-dialog')} />
-                </ModalWrapper>
-            </React.Fragment>
-
-            <React.Fragment>
-                <ModalWrapper {...getDialogProps('supplied-asset-details-dialog')}>
-                    <SuppliedAssetDetailsDialog
-                        {...getDialogProps('supplied-asset-details-dialog')}
-                    />
                 </ModalWrapper>
             </React.Fragment>
 

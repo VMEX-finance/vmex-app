@@ -10,6 +10,7 @@ import { useModal } from '../../../hooks/ui';
 import { supply, withdraw } from '@vmex/sdk';
 import { MAINNET_ASSET_MAPPINGS, NETWORK } from '../../../utils/sdk-helpers';
 import { HealthFactor } from '../../components/displays';
+import { useTrancheMarketsData } from '@app/api';
 
 interface IOwnedAssetDetails {
     name?: string;
@@ -21,7 +22,6 @@ interface IOwnedAssetDetails {
 
 export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, data, tab }) => {
     const { submitTx, isSuccess, error, isLoading } = useModal('loan-asset-dialog');
-
     const [view, setView] = React.useState('Supply');
     const [asCollateral, setAsCollateral] = React.useState(true);
     const [amount, setAmount] = useMediatedState(inputMediator, '');
@@ -54,6 +54,12 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, data, ta
         });
     };
 
+    useEffect(() => {
+        if (data?.view) setView('Withdraw');
+    }, [data?.view]);
+
+    // TODO: get appropriate remaining supply and fix button to not be clickable in disabled terms
+    console.log(data);
     return (
         data &&
         data.asset && (
@@ -99,7 +105,7 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, data, ta
                                     content={[
                                         {
                                             label: 'Supply APR (%)',
-                                            value: `${data.apy_perc}%`,
+                                            value: `${data.apy}%`,
                                         },
                                         {
                                             label: 'Collateralization',
@@ -121,7 +127,7 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, data, ta
                             title={name}
                             asset={data.asset}
                             tab={tab}
-                            onClick={setView}
+                            onClick={data?.view ? () => {} : setView}
                         />
                         {!isSuccess && !error ? (
                             // Default State
@@ -134,7 +140,7 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, data, ta
                                         logo: `/coins/${data.asset?.toLowerCase()}.svg`,
                                         name: data.asset,
                                     }}
-                                    balance={data.amountWithdrawOrRepay}
+                                    balance={data.amountWithdrawOrRepay || data.amountNative}
                                 />
                                 <h3 className="mt-6 text-gray-400">Health Factor</h3>
                                 <HealthFactor

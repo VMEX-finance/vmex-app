@@ -48,7 +48,9 @@ export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({ data, wit
                         <tr
                             key={i.asset}
                             className="text-left transition duration-200 hover:bg-neutral-200 hover:cursor-pointer"
-                            onClick={() => openDialog('supplied-asset-details-dialog', { ...i })}
+                            onClick={() =>
+                                openDialog('loan-asset-dialog', { ...i, view: 'Withdraw' })
+                            }
                         >
                             <td className="whitespace-nowrap p-4 text-sm sm:pl-6">
                                 <AssetDisplay name={i.asset} />
@@ -64,7 +66,7 @@ export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({ data, wit
                             <td className="">
                                 <BasicToggle checked={i.collateral} disabled />
                             </td>
-                            <td>{percentFormatter.format(i.apy)}</td>
+                            <td>{i.apy}%</td>
                             <td>{i.tranche}</td>
                             {withHealth && <td>{i.healthFactor}</td>}
                             {/* <td className="text-right pr-3.5 hidden md:table-cell">

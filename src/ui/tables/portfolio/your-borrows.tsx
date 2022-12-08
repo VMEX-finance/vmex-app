@@ -47,7 +47,7 @@ export const YourBorrowsTable: React.FC<IYourBorrowsTableProps> = ({ data, withH
                                 key={i.asset}
                                 className="text-left transition duration-200 hover:bg-neutral-200 hover:cursor-pointer"
                                 onClick={() =>
-                                    openDialog('borrowed-asset-details-dialog', { ...i })
+                                    openDialog('borrow-asset-dialog', { ...i, view: 'Repay' })
                                 }
                             >
                                 <td className="whitespace-nowrap p-4 text-sm sm:pl-6">
@@ -61,8 +61,8 @@ export const YourBorrowsTable: React.FC<IYourBorrowsTableProps> = ({ data, withH
                                         color="text-black"
                                     />
                                 </td>
-                                <td>{percentFormatter.format(i.apy)}</td>
-                                <td className="">{i.tranche}</td>
+                                <td>{i.apy}%</td>
+                                <td>{i.tranche}</td>
                                 {withHealth && <td>{i.healthFactor}</td>}
                                 {/* <td className="text-right hidden md:table-cell pr-3.5">
                                     <Button
