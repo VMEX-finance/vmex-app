@@ -8,6 +8,11 @@ type ITokenBalanceProps = {
     amountNative: string;
 };
 
+export type ITrancheInteractedProps = {
+    tranche: string;
+    id: number;
+};
+
 export type IUserDataProps = {
     queryUserPerformance: UseQueryResult<IUserPerformanceCardProps, unknown>;
     queryUserActivity: UseQueryResult<IUserActivityDataProps, unknown>;
@@ -21,6 +26,7 @@ export type IUserActivityDataProps = {
     totalCollateralETH: string;
     totalDebtETH: string;
     availableBorrowsETH: string;
+    tranchesInteractedWith: ITrancheInteractedProps[];
 };
 
 export type IWalletAssetProps = {

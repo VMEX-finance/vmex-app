@@ -1,7 +1,6 @@
-import { IMarketsAsset } from '@models/markets';
-import { ITrancheProps } from '@models/tranches';
 import { UseQueryResult } from '@tanstack/react-query';
 import { IProtocolProps } from '@ui/features';
+import { IMarketsAsset, ITrancheProps } from '../models';
 
 export type IProtocolDataProps = {
     queryProtocolOverview: UseQueryResult<IProtocolProps, unknown>;

@@ -3,17 +3,18 @@ import React, { useEffect, useState } from 'react';
 import { Card } from '../../components/cards';
 import { PillDisplay } from '../../components/displays';
 import { DropdownButton } from '../../components/buttons';
+import { ITrancheInteractedProps } from '../../../api/user/types';
 
 type ILoanedAssetProps = {
     asset: string;
-    amount: number;
+    amount: string | number;
 };
 
 export type IUserPerformanceCardProps = {
-    tranches?: any[];
+    tranches?: ITrancheInteractedProps[];
     profitLossChart?: ILineChartDataPointProps[];
     insuranceChart?: ILineChartDataPointProps[];
-    loanedAssets?: ILoanedAssetProps[];
+    loanedAssets?: ILoanedAssetProps[] | undefined;
     isLoading?: boolean;
 };
 
@@ -30,7 +31,10 @@ export const UserPerformanceCard: React.FC<IUserPerformanceCardProps> = ({
     useEffect(() => {
         if (tranches) {
             const starter = [{ text: 'All Tranches' }];
-            setTranchesDropdown([...starter, ...tranches] as any);
+            setTranchesDropdown([
+                ...starter,
+                ...tranches.map(({ id, tranche }) => ({ id, text: tranche })),
+            ] as any);
         }
     }, [tranches]);
 

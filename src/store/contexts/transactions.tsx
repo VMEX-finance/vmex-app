@@ -39,12 +39,13 @@ export function TransactionsStore(props: { children: ReactNode }) {
     }, [transactions]);
 
     const newTransaction = (hash: string) => {
+        if (!hash) return;
         const shallow = [...transactions];
         shallow.push({ text: hash, status: 'pending' });
         setTransactions(shallow);
 
         toast.promise(
-            new Promise((resolve) => setTimeout(resolve, 10000)),
+            new Promise((resolve) => setTimeout(resolve, 10000)), // TODO: make this reactive to ACTUALLY show when transaction in completed
             {
                 pending: {
                     render() {

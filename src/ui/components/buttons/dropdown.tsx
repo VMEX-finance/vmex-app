@@ -4,6 +4,7 @@ import { RiArrowDropDownLine } from 'react-icons/ri';
 import { CgSpinner } from 'react-icons/cg';
 import { IoMdCheckmarkCircle } from 'react-icons/io';
 import { MenuItemButton } from './menu-item';
+import { truncate as _truncate } from '../../../utils/helpers';
 
 interface IDropdownItemProps {
     text: string;
@@ -26,6 +27,7 @@ export interface IDropdownProps {
     title?: string;
     uppercase?: boolean;
     className?: string;
+    truncate?: boolean;
 }
 
 export const DropdownButton = ({
@@ -44,6 +46,7 @@ export const DropdownButton = ({
     title,
     uppercase,
     className,
+    truncate,
 }: IDropdownProps) => {
     const [list, setList] = useState([]);
 
@@ -165,7 +168,14 @@ export const DropdownButton = ({
                                                             label={
                                                                 <span className="flex justify-between">
                                                                     {uppercase
-                                                                        ? item.text.toUpperCase()
+                                                                        ? truncate
+                                                                            ? _truncate(
+                                                                                  item.text.toUpperCase(),
+                                                                                  3,
+                                                                              )
+                                                                            : item.text.toUpperCase()
+                                                                        : truncate
+                                                                        ? _truncate(item.text, 3)
                                                                         : item.text}
                                                                     {item?.status &&
                                                                     item.status === 'pending' ? (

@@ -6,6 +6,8 @@ import { WalletButton } from '../ui/components/buttons';
 import { useProtocolData } from '../api/protocol';
 import { useUserData } from '../api/user';
 import { useAccount } from 'wagmi';
+import { numberFormatter } from '../utils/helpers';
+
 const Overview: React.FC = () => {
     const { address, isConnected } = useAccount();
     const { queryProtocolOverview } = useProtocolData();
@@ -21,7 +23,14 @@ const Overview: React.FC = () => {
                 <GridView type="fixed">
                     <UserPerformanceCard
                         {...queryUserPerformance.data}
-                        isLoading={queryUserPerformance.isLoading}
+                        isLoading={queryUserPerformance.isLoading || queryUserActivity.isLoading}
+                        loanedAssets={queryUserActivity.data?.supplies?.map((el) => ({
+                            asset: el.asset,
+                            amount: numberFormatter.format(
+                                parseFloat(el.amountNative.replaceAll(',', '')),
+                            ),
+                        }))}
+                        tranches={queryUserActivity.data?.tranchesInteractedWith}
                     />
                     <div className="flex flex-col gap-4 xl:gap-8 lg:flex-row 2xl:col-span-2">
                         <YourPositionsTable

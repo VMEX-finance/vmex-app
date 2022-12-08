@@ -1,17 +1,16 @@
-import { IMarketsAsset } from '@models/markets';
 import { useQuery } from '@tanstack/react-query';
 import { ITrancheMarketsDataProps } from './types';
-import { getTrancheMarketsData, MarketData, getAllMarketsData } from '@vmex/sdk';
+import { getTrancheMarketsData, MarketData } from '@vmex/sdk';
 import {
     bigNumberToUSD,
     bigNumberToNative,
-    flipAndLowerCase,
-    MAINNET_ASSET_MAPPINGS,
     SDK_PARAMS,
     DECIMALS,
+    REVERSE_MAINNET_ASSET_MAPPINGS,
 } from '../../utils/sdk-helpers';
 import { BigNumber } from 'ethers';
 import { AVAILABLE_ASSETS } from '../../utils/constants';
+import { IMarketsAsset } from '../models';
 
 export async function getTrancheMarkets(trancheId: number): Promise<IMarketsAsset[]> {
     const allMarketsData: MarketData[] = await getTrancheMarketsData({
@@ -19,11 +18,12 @@ export async function getTrancheMarkets(trancheId: number): Promise<IMarketsAsse
         network: SDK_PARAMS.network,
         test: SDK_PARAMS.test,
     });
-    const reverseMapping = flipAndLowerCase(MAINNET_ASSET_MAPPINGS);
 
     return allMarketsData.map((marketData: MarketData) => {
         return {
-            asset: reverseMapping.get(marketData.asset.toLowerCase()) || marketData.asset,
+            asset:
+                REVERSE_MAINNET_ASSET_MAPPINGS.get(marketData.asset.toLowerCase()) ||
+                marketData.asset,
             tranche: marketData.tranche.toString(),
             trancheId: marketData.tranche.toNumber(),
             supplyApy:
@@ -43,7 +43,8 @@ export async function getTrancheMarkets(trancheId: number): Promise<IMarketsAsse
             availableNative: bigNumberToNative(
                 marketData.totalReservesNative,
                 DECIMALS.get(
-                    reverseMapping.get(marketData.asset.toLowerCase()) || marketData.asset,
+                    REVERSE_MAINNET_ASSET_MAPPINGS.get(marketData.asset.toLowerCase()) ||
+                        marketData.asset,
                 ) || 18,
             ),
             supplyTotal: bigNumberToUSD(marketData.totalSupplied, 18),

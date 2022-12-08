@@ -16,7 +16,7 @@ import {
     REVERSE_MAINNET_ASSET_MAPPINGS,
 } from '../../utils/sdk-helpers';
 import { IUserPerformanceCardProps } from '../../ui/features';
-import { MOCK_LINE_DATA, MOCK_LINE_DATA_2, MOCK_YOUR_SUPPLIES } from '../../utils/mock-data';
+import { MOCK_LINE_DATA, MOCK_LINE_DATA_2 } from '../../utils/mock-data';
 import { IUserActivityDataProps, IUserDataProps, IUserWalletDataProps } from './types';
 import { BigNumber } from 'ethers';
 import { AVAILABLE_ASSETS } from '../../utils/constants';
@@ -24,10 +24,8 @@ import { AVAILABLE_ASSETS } from '../../utils/constants';
 // Gets
 export function getUserPerformanceData(): IUserPerformanceCardProps {
     return {
-        tranches: [],
         profitLossChart: MOCK_LINE_DATA,
         insuranceChart: MOCK_LINE_DATA_2,
-        loanedAssets: MOCK_YOUR_SUPPLIES,
     };
 }
 
@@ -39,6 +37,7 @@ export async function getUserActivityData(userAddress: string): Promise<IUserAct
             availableBorrowsETH: '0',
             totalCollateralETH: '0',
             totalDebtETH: '0',
+            tranchesInteractedWith: [],
         };
     }
 
@@ -62,6 +61,14 @@ export async function getUserActivityData(userAddress: string): Promise<IUserAct
         });
         return trancheName;
     };
+
+    const tranchesInteractedWith = [
+        ...summary.borrowedAssetData,
+        ...summary.suppliedAssetData,
+    ].filter(
+        (value, index, self) =>
+            index === self.findIndex((t) => t.tranche.toNumber() === value.tranche.toNumber()),
+    );
 
     return {
         availableBorrowsETH: bigNumberToNative(summary.availableBorrowsETH, 18),
@@ -105,6 +112,10 @@ export async function getUserActivityData(userAddress: string): Promise<IUserAct
                 trancheId: assetData.tranche.toNumber(),
             };
         }),
+        tranchesInteractedWith: tranchesInteractedWith.map((assetData) => ({
+            tranche: findAssetInTranche(assetData.asset, assetData.tranche.toNumber()),
+            id: assetData.tranche.toNumber(),
+        })),
     };
 }
 

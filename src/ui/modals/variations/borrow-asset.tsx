@@ -11,7 +11,7 @@ import { IDialogProps } from '../utils';
 import { useModal } from '../../../hooks/ui';
 import { borrow, repay } from '@vmex/sdk';
 import { MAINNET_ASSET_MAPPINGS, NETWORK } from '../../../utils/sdk-helpers';
-import { useAccount } from 'wagmi';
+import { useAccount, useSigner } from 'wagmi';
 import { useUserData } from '../../../api';
 
 export const BorrowAssetDialog: React.FC<IDialogProps> = ({
@@ -21,21 +21,22 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
     closeDialog,
     tab,
 }) => {
-    const { isSuccess, submitTx, isLoading } = useModal('borrow-asset-dialog');
+    const { isSuccess, submitTx, isLoading, error } = useModal('borrow-asset-dialog');
     const [amount, setAmount] = useMediatedState(inputMediator, '');
     const [view, setView] = React.useState('Borrow');
     const { address } = useAccount();
     const { getTokenBalance } = useUserData(address);
+    const { data: signer } = useSigner();
 
     const handleClick = async () => {
         await submitTx(async () => {
-            view?.includes('Borrow')
+            const res = view?.includes('Borrow')
                 ? await borrow({
                       underlying: MAINNET_ASSET_MAPPINGS.get(data.asset) || '',
                       trancheId: data.tranche,
                       amount: convertStringFormatToNumber(amount),
                       interestRateMode: 2,
-                      signer: data.signer,
+                      signer: data.signer || signer,
                       network: NETWORK,
                       // referrer: number,
                       // collateral: boolean,
@@ -46,12 +47,13 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
                       trancheId: data.tranche,
                       amount: convertStringFormatToNumber(amount),
                       rateMode: 2,
-                      signer: data.signer,
+                      signer: data.signer || signer,
                       network: NETWORK,
                       // referrer: number,
                       // collateral: boolean,
                       // test: boolean
                   });
+            return res;
         });
     };
 
@@ -73,7 +75,7 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
                             onClick={Number(data.amountWithdrawOrRepay) !== 0 ? setView : () => {}}
                             primary
                         />
-                        {!isSuccess ? (
+                        {!isSuccess && !error ? (
                             // Default State
                             <>
                                 <h3 className="mt-5 text-gray-400">Amount</h3>
@@ -120,7 +122,7 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
                             tab={tab}
                             onClick={data?.view ? () => {} : setView}
                         />
-                        {!isSuccess ? (
+                        {!isSuccess && !error ? (
                             // Default State
                             <>
                                 <h3 className="mt-5 text-gray-400">Amount</h3>
@@ -150,7 +152,7 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
                                                               getTokenBalance(
                                                                   data.asset,
                                                               ).amountNative.replaceAll(',', ''),
-                                                          ) - parseFloat(amount)
+                                                          ) - parseFloat(amount.replaceAll(',', ''))
                                                       ).toLocaleString('en-US')
                                                     : getTokenBalance(data.asset).amountNative
                                             } ${data.asset}`,
@@ -182,12 +184,7 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
                     </div>
                     <Button
                         primary
-                        disabled={
-                            isSuccess ||
-                            !amount ||
-                            amount > data.amount ||
-                            amount > data.amountWithdrawOrRepay
-                        }
+                        disabled={isSuccess || error.length !== 0 || !amount}
                         onClick={handleClick}
                         label="Submit Transaction"
                         loading={isLoading}

@@ -41,8 +41,8 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
         if (!_name) setError('Please enter a tranche name.');
         if (_tokens?.length === 0) setError('Please enter tokens to be included in your tranche.');
 
-        await submitTx(() => {
-            updateTranche({
+        await submitTx(async () => {
+            const res = await updateTranche({
                 id: selectedTranche.id,
                 name: _name,
                 whitelisted: _whitelisted,
@@ -51,18 +51,21 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
                 adminFee: _adminFee,
                 pausedTokens: _pausedTokens,
             });
+            return res;
         }, false);
     };
 
     const handleDelete = async () => {
-        await submitTx(() => {
-            deleteTranche(selectedTranche.id);
+        await submitTx(async () => {
+            const res = await deleteTranche(selectedTranche.id);
+            return res;
         });
     };
 
     const handlePause = async () => {
-        await submitTx(() => {
-            pauseTranche(selectedTranche.id);
+        await submitTx(async () => {
+            const res = await pauseTranche(selectedTranche.id);
+            return res;
         }, false);
     };
 

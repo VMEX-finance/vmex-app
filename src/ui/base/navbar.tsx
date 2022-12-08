@@ -71,7 +71,7 @@ export const Navbar: React.FC = () => {
                         <DropdownButton
                             reverse
                             items={transactions}
-                            baseLink={`https://etherscan.com`}
+                            baseLink={`https://etherscan.io/tx`}
                             selected={'Transactions'}
                             label={
                                 width < 1400 && (
@@ -85,7 +85,10 @@ export const Navbar: React.FC = () => {
                                 )
                             }
                             size="lg"
-                            className="border border-1 border-black"
+                            className={`border border-1 border-black ${
+                                width < 1400 ? '!py-[0.45rem]' : ''
+                            }`}
+                            truncate
                         />
                     )}
 

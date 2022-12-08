@@ -1,14 +1,15 @@
-import { IMarketsAsset } from '@models/markets';
 import { useQuery } from '@tanstack/react-query';
 import { IMarketsDataProps } from './types';
 import { getAllMarketsData, getAllTrancheData, MarketData } from '@vmex/sdk';
 import {
+    bigNumberToNative,
     bigNumberToUSD,
     flipAndLowerCase,
     MAINNET_ASSET_MAPPINGS,
     rayToPercent,
     SDK_PARAMS,
 } from '../../utils/sdk-helpers';
+import { IMarketsAsset } from '../models';
 
 export async function getAllMarkets(): Promise<IMarketsAsset[]> {
     const allMarketsData: MarketData[] = await getAllMarketsData(SDK_PARAMS);

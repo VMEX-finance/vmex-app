@@ -1,4 +1,4 @@
-import { AvailableAsset } from '../../models/available-liquidity-model';
+import { AvailableAsset } from '@app/api/models';
 
 export const MOCK_STAKE_ASSET_DATA: AvailableAsset = {
     asset: 'USDC',
