@@ -6,8 +6,8 @@ import { useWindowSize } from '../../../hooks/ui';
 import { determineRatingColor } from '../../../utils/helpers';
 import { BsCheck } from 'react-icons/bs';
 import { IoIosClose } from 'react-icons/io';
-import type { IMarketsAsset } from '../../../models/markets';
 import { AssetDisplay } from '../../components/displays';
+import { IMarketsAsset } from '@app/api/models';
 
 const MarketsCustomRow = (props: any) => {
     const {

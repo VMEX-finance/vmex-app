@@ -1,5 +1,4 @@
 import React from 'react';
-import type { ITrancheProps } from '../../../models/tranches';
 import { CacheProvider } from '@emotion/react';
 import { ThemeProvider } from '@mui/material/styles';
 import { muiCache, options, vmexTheme } from '../utils';
@@ -8,6 +7,7 @@ import MUIDataTable from 'mui-datatables';
 import { SpinnerLoader } from '../../components/loaders';
 import { useAccount } from 'wagmi';
 import { useUserData } from '../../../api';
+import { ITrancheProps } from '@app/api/models';
 
 interface IDataTable {
     data?: ITrancheProps[];

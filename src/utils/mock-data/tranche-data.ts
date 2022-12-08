@@ -1,4 +1,4 @@
-import { ITrancheProps } from '@models/tranches';
+import { ITrancheProps } from '../../api/models';
 
 export const _mockAvailableTranche: ITrancheProps = {
     id: 1,

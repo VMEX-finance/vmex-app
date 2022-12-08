@@ -1,6 +1,4 @@
-import { ITrancheProps } from '@models/tranches';
 import { useQuery } from '@tanstack/react-query';
-// import { MOCK_TRANCHES_DATA } from '../../utils/mock-data';
 import { ITranchesDataProps } from './types';
 import { getAllTrancheData } from '@vmex/sdk';
 import {
@@ -9,6 +7,7 @@ import {
     MAINNET_ASSET_MAPPINGS,
     flipAndLowerCase,
 } from '../../utils/sdk-helpers';
+import { ITrancheProps } from '../models';
 
 export async function getAllTranches(): Promise<ITrancheProps[]> {
     const trancheData = await getAllTrancheData(SDK_PARAMS);

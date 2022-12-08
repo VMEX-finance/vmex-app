@@ -2,10 +2,10 @@ import React from 'react';
 import { CacheProvider } from '@emotion/react';
 import { ThemeProvider } from '@mui/material/styles';
 import { muiCache, options, vmexTheme } from '../utils';
-import type { IMarketsAsset } from '../../../models/markets';
 import { MarketsCustomRow } from './custom-row';
 import MUIDataTable from 'mui-datatables';
 import { SpinnerLoader } from '../../components/loaders';
+import { IMarketsAsset } from '@app/api/models';
 
 interface ITableProps {
     data?: IMarketsAsset[];
