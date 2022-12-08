@@ -100,7 +100,7 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                                         key={`top-asset-${i}`}
                                         type="asset"
                                         asset={el.asset}
-                                        value={el.amount}
+                                        value={makeCompact(el.amount)}
                                     />
                                 ))}
                             </div>
@@ -117,7 +117,7 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                                         key={`top-asset-${i}`}
                                         type="asset"
                                         asset={el.asset}
-                                        value={el.amount}
+                                        value={makeCompact(el.amount)}
                                     />
                                 ))}
                             </div>
