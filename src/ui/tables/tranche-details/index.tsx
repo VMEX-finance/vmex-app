@@ -18,7 +18,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
     const { width, breakpoint } = useWindowSize();
     const { address } = useAccount();
     const { tranche } = useSelectedTrancheContext();
-    const { queryUserActivity, queryUserWallet } = useUserData(address);
+    const { queryUserWallet } = useUserData(address);
     const { queryUserTrancheData } = useUserTrancheData(address, tranche.id);
     const { openDialog } = useDialogController();
     const mode1 =
@@ -38,10 +38,12 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
             ? 'Total liquidity'
             : 'Liquidity';
     const userData =
-        type === 'supply' ? queryUserActivity.data?.supplies : queryUserActivity.data?.borrows;
+        type === 'supply'
+            ? queryUserTrancheData.data?.supplies
+            : queryUserTrancheData.data?.borrows;
 
     const findAssetInUserSuppliesOrBorrows = (asset: string) => {
-        if (queryUserActivity.isLoading) return `0`;
+        if (queryUserTrancheData.isLoading) return `0`;
         else {
             const found = userData?.find((el) => el.asset.toLowerCase() === asset.toLowerCase());
             if (found) return `${found?.amountNative}`;
