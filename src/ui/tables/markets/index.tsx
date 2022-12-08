@@ -6,6 +6,9 @@ import { MarketsCustomRow } from './custom-row';
 import MUIDataTable from 'mui-datatables';
 import { SpinnerLoader } from '../../components/loaders';
 import { IMarketsAsset } from '@app/api/models';
+import { useAccount } from 'wagmi';
+import { useUserData } from '../../../api';
+import { numberFormatter } from '../../../utils/helpers';
 
 interface ITableProps {
     data?: IMarketsAsset[];
@@ -13,6 +16,22 @@ interface ITableProps {
 }
 
 export const MarketsTable: React.FC<ITableProps> = ({ data, loading }) => {
+    const { address } = useAccount();
+    const { queryUserActivity } = useUserData(address);
+
+    const renderYourAmount = (asset: string) => {
+        let amount = 0;
+        queryUserActivity?.data?.supplies.map((supply) => {
+            if (supply.asset === asset)
+                amount = amount + parseFloat(supply.amountNative.replaceAll(',', ''));
+        });
+        queryUserActivity?.data?.borrows.map((borrow) => {
+            if (borrow.asset === asset)
+                amount = amount - parseFloat(borrow.amountNative.replaceAll(',', ''));
+        });
+        return numberFormatter.format(amount);
+    };
+
     const columns = [
         {
             name: 'asset',
@@ -163,7 +182,7 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading }) => {
                                     trancheId={trancheId}
                                     supplyApy={supplyApy}
                                     borrowApy={borrowApy}
-                                    yourAmount={yourAmount}
+                                    yourAmount={renderYourAmount(asset)}
                                     available={available}
                                     borrowTotal={borrowTotal}
                                     supplyTotal={supplyTotal}
