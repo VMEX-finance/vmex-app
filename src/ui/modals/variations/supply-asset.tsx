@@ -11,6 +11,7 @@ import { supply, withdraw } from '@vmex/sdk';
 import { MAINNET_ASSET_MAPPINGS, NETWORK } from '../../../utils/sdk-helpers';
 import { HealthFactor } from '../../components/displays';
 import { useTrancheMarketsData } from '../../../api';
+import { useSigner } from 'wagmi';
 
 interface IOwnedAssetDetails {
     name?: string;
@@ -26,15 +27,16 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, data, ta
     const [asCollateral, setAsCollateral] = React.useState(true);
     const [amount, setAmount] = useMediatedState(inputMediator, '');
     const { getTrancheMarket } = useTrancheMarketsData(data?.trancheId);
-    console.log(data);
+    const { data: signer } = useSigner();
+
     const handleSubmit = async () => {
         await submitTx(async () => {
-            view?.includes('Supply')
+            const res = view?.includes('Supply')
                 ? await supply({
                       underlying: MAINNET_ASSET_MAPPINGS.get(data.asset) || '',
                       trancheId: data.tranche,
                       amount: convertStringFormatToNumber(amount),
-                      signer: data.signer,
+                      signer: data.signer || signer,
                       network: NETWORK,
                       collateral: asCollateral,
                       // referrer: number,
@@ -45,13 +47,14 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, data, ta
                       asset: MAINNET_ASSET_MAPPINGS.get(data.asset) || '',
                       trancheId: data.tranche,
                       amount: convertStringFormatToNumber(amount),
-                      signer: data.signer,
+                      signer: data.signer || signer,
                       network: NETWORK,
                       interestRateMode: 2,
                       // referrer: number,
                       // collateral: boolean,
                       // test: boolean
                   });
+            return res;
         });
     };
 

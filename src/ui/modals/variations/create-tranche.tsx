@@ -66,10 +66,8 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
         });
         if (!assets) return;
 
-        await submitTx(() => {
-            console.log('Started ts for tranche creation');
-
-            initTranche({
+        await submitTx(async () => {
+            const res = await initTranche({
                 name: _name,
                 whitelisted: _whitelisted,
                 blacklisted: _blackListed,
@@ -84,6 +82,7 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
                 incentivesController: '0x0000000000000000000000000000000000000000', //disabled for now
                 network: NETWORK,
             });
+            return res;
         });
     };
 

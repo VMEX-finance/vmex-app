@@ -26,14 +26,9 @@ export const useModal = (dialog: IDialogNames): IUseModalProps => {
         if (!error) {
             setIsLoading(true);
             try {
-                newTransaction(
-                    `0xAz${Math.floor(Math.random() * 9)}...${Math.floor(
-                        Math.random() * 9,
-                    )}${Math.floor(Math.random() * 9)}`,
-                );
                 if (callback) {
-                    const res = await callback();
-                    console.log('CALLBACK RESPONSE:', res);
+                    const txHash = await callback();
+                    newTransaction(txHash);
                 }
 
                 setIsLoading(false);
