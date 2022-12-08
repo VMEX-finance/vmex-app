@@ -118,7 +118,6 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
             <tbody className="divide-y divide-gray-200 bg-white">
                 {data &&
                     data.map((el, i) => {
-                        console.log(el);
                         return (
                             <tr
                                 key={`${el.asset}-${i}`}

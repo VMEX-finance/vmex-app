@@ -70,7 +70,8 @@ const TrancheDetails: React.FC = () => {
                                           asset: el.asset,
                                           canBeCollat: el.canBeCollateral,
                                           apy: el.supplyApy,
-                                          tranche: tranche.id,
+                                          tranche: el.tranche,
+                                          trancheId: el.trancheId,
                                           signer: signer,
                                       }))
                                     : []
@@ -89,7 +90,8 @@ const TrancheDetails: React.FC = () => {
                                               asset: el.asset,
                                               liquidity: el.availableNative,
                                               apy: el.borrowApy,
-                                              tranche: tranche.id,
+                                              tranche: el.tranche,
+                                              trancheId: el.trancheId,
                                               signer: signer,
                                           }))
                                     : []

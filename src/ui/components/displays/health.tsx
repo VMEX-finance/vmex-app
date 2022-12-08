@@ -130,7 +130,6 @@ export const HealthFactor = ({
             }
 
             if (type === 'withdraw') {
-                console.log(a.collateralCap);
                 let amountCappedNotUsed = ethAmount.gt(a.collateralCap)
                     ? ethAmount.sub(a.collateralCap)
                     : BigNumber.from('0');
