@@ -156,7 +156,7 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, data, ta
                                     content={[
                                         {
                                             label: 'Remaining Supply',
-                                            value: `${getTrancheMarket(data.asset).supplyTotal}`, // TODO: denominate this in native amount
+                                            value: `${getTrancheMarket(data.asset).supplyTotal}`, // TODO: make this reactive to input amount
                                         },
                                     ]}
                                 />

@@ -150,7 +150,7 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
                                                               getTokenBalance(
                                                                   data.asset,
                                                               ).amountNative.replaceAll(',', ''),
-                                                          ) - parseFloat(amount)
+                                                          ) - parseFloat(amount.replaceAll(',', ''))
                                                       ).toLocaleString('en-US')
                                                     : getTokenBalance(data.asset).amountNative
                                             } ${data.asset}`,

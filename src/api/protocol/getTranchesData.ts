@@ -6,6 +6,7 @@ import {
     SDK_PARAMS,
     MAINNET_ASSET_MAPPINGS,
     flipAndLowerCase,
+    bigNumberToNative,
 } from '../../utils/sdk-helpers';
 import { ITrancheProps } from '../models';
 

@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { IMarketsDataProps } from './types';
 import { getAllMarketsData, getAllTrancheData, MarketData } from '@vmex/sdk';
 import {
+    bigNumberToNative,
     bigNumberToUSD,
     flipAndLowerCase,
     MAINNET_ASSET_MAPPINGS,

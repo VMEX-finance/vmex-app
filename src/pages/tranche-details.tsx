@@ -35,6 +35,8 @@ const TrancheDetails: React.FC = () => {
         setTranche(found);
     }, [tranche, location]);
 
+    console.log(tranche);
+
     return (
         <AppTemplate
             title={tranche?.name || 'Tranche Name'}
