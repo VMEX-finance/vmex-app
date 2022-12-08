@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FaGasPump } from 'react-icons/fa';
 import { useMediatedState } from 'react-use';
 import { TransactionStatus, ActiveStatus } from '../../components/statuses';
@@ -11,6 +11,8 @@ import { IDialogProps } from '../utils';
 import { useModal } from '../../../hooks/ui';
 import { borrow, repay } from '@vmex/sdk';
 import { MAINNET_ASSET_MAPPINGS, NETWORK } from '../../../utils/sdk-helpers';
+import { useAccount } from 'wagmi';
+import { useUserData } from '../../../api';
 
 export const BorrowAssetDialog: React.FC<IDialogProps> = ({
     name,
@@ -22,6 +24,8 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
     const { isSuccess, submitTx, isLoading } = useModal('borrow-asset-dialog');
     const [amount, setAmount] = useMediatedState(inputMediator, '');
     const [view, setView] = React.useState('Borrow');
+    const { address } = useAccount();
+    const { getTokenBalance } = useUserData(address);
 
     const handleClick = async () => {
         await submitTx(async () => {
@@ -50,6 +54,10 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
                   });
         });
     };
+
+    useEffect(() => {
+        if (data?.view) setView('Repay');
+    }, [data?.view]);
 
     return (
         data &&
@@ -88,7 +96,7 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
                                     content={[
                                         {
                                             label: 'Borrow APR (%)',
-                                            value: `${data.apy_perc}%`,
+                                            value: `${data.apy}%`,
                                         },
                                         {
                                             label: 'Collateralization',
@@ -110,7 +118,7 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
                             title={name}
                             asset={data.asset}
                             tab={tab}
-                            onClick={setView}
+                            onClick={data?.view ? () => {} : setView}
                         />
                         {!isSuccess ? (
                             // Default State
@@ -123,7 +131,7 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
                                         logo: `/coins/${data.asset?.toLowerCase()}.svg`,
                                         name: data.asset,
                                     }}
-                                    balance={data.amountWithdrawOrRepay}
+                                    balance={data.amountWithdrawOrRepay || data.amountNative}
                                     type="owed"
                                 />
 
@@ -136,12 +144,16 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
                                         {
                                             label: 'Remaining Balance',
                                             value: `${
-                                                parseFloat(
-                                                    convertStringFormatToNumber(
-                                                        data.amountWithdrawOrRepay,
-                                                    ),
-                                                ) - parseFloat(convertStringFormatToNumber(amount))
-                                            }`,
+                                                amount
+                                                    ? (
+                                                          parseFloat(
+                                                              getTokenBalance(
+                                                                  data.asset,
+                                                              ).amountNative.replaceAll(',', ''),
+                                                          ) - parseFloat(amount)
+                                                      ).toLocaleString('en-US')
+                                                    : getTokenBalance(data.asset).amountNative
+                                            } ${data.asset}`,
                                         },
                                     ]}
                                 />
@@ -170,7 +182,12 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
                     </div>
                     <Button
                         primary
-                        disabled={isSuccess}
+                        disabled={
+                            isSuccess ||
+                            !amount ||
+                            amount > data.amount ||
+                            amount > data.amountWithdrawOrRepay
+                        }
                         onClick={handleClick}
                         label="Submit Transaction"
                         loading={isLoading}

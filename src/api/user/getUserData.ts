@@ -4,6 +4,7 @@ import {
     SuppliedAssetData,
     getUserWalletData,
     UserWalletData,
+    getAllTrancheData,
 } from '@vmex/sdk';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -18,6 +19,7 @@ import { IUserPerformanceCardProps } from '../../ui/features';
 import { MOCK_LINE_DATA, MOCK_LINE_DATA_2, MOCK_YOUR_SUPPLIES } from '../../utils/mock-data';
 import { IUserActivityDataProps, IUserDataProps, IUserWalletDataProps } from './types';
 import { BigNumber } from 'ethers';
+import { AVAILABLE_ASSETS } from '../../utils/constants';
 
 // Gets
 export function getUserPerformanceData(): IUserPerformanceCardProps {
@@ -46,6 +48,21 @@ export async function getUserActivityData(userAddress: string): Promise<IUserAct
         test: SDK_PARAMS.test,
     });
 
+    const allTrancheData = await getAllTrancheData(SDK_PARAMS);
+    const findAssetInTranche = (searchAsset: string, trancheId: number): string => {
+        let trancheName = 'N/A';
+        allTrancheData.map((tranche: any) => {
+            if (tranche.id.toNumber() === trancheId) {
+                tranche.assets.map((asset: any) => {
+                    if (searchAsset === asset) {
+                        trancheName = tranche.name;
+                    }
+                });
+            }
+        });
+        return trancheName;
+    };
+
     return {
         availableBorrowsETH: bigNumberToNative(summary.availableBorrowsETH, 18),
         totalCollateralETH: bigNumberToNative(summary.totalCollateralETH, 18),
@@ -65,7 +82,7 @@ export async function getUserActivityData(userAddress: string): Promise<IUserAct
                 ),
                 collateral: assetData.isCollateral,
                 apy: rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0)),
-                tranche: assetData.tranche.toString(),
+                tranche: findAssetInTranche(assetData.asset, assetData.tranche.toNumber()),
                 trancheId: assetData.tranche.toNumber(),
                 // collateralCap: assetData.collateralCap,
             };
@@ -84,14 +101,16 @@ export async function getUserActivityData(userAddress: string): Promise<IUserAct
                     ) || 18,
                 ),
                 apy: rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0)),
-                tranche: assetData.tranche.toString(),
+                tranche: findAssetInTranche(assetData.asset, assetData.tranche.toNumber()),
                 trancheId: assetData.tranche.toNumber(),
             };
         }),
     };
 }
 
-export async function _getUserWalletData(userAddress: string): Promise<IUserWalletDataProps> {
+export async function _getUserWalletData(
+    userAddress: string | undefined,
+): Promise<IUserWalletDataProps> {
     if (!userAddress) {
         return {
             assets: [],
@@ -141,9 +160,26 @@ export function useUserData(userAddress: any): IUserDataProps {
         queryFn: () => _getUserWalletData(userAddress),
     });
 
+    const getTokenBalance = (asset: string) => {
+        if (!AVAILABLE_ASSETS.includes(asset) || !queryUserWallet.data) {
+            console.log(`Token Balance for ${asset} not found`);
+            return {
+                amountNative: '0',
+                amount: '$0',
+            };
+        } else {
+            const found = queryUserWallet.data.assets.find((el) => el.asset === asset);
+            return {
+                amountNative: found?.amountNative || '0',
+                amount: found?.amount || '$0',
+            };
+        }
+    };
+
     return {
         queryUserPerformance,
         queryUserActivity,
         queryUserWallet,
+        getTokenBalance,
     };
 }

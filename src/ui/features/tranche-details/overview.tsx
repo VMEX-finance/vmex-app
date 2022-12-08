@@ -108,8 +108,9 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                                           <button
                                               key={`${el.asset}`}
                                               onClick={() =>
-                                                  openDialog('supplied-asset-details-dialog', {
+                                                  openDialog('loan-asset-dialog', {
                                                       ...el,
+                                                      view: 'Withdraw',
                                                   })
                                               }
                                           >
@@ -137,8 +138,9 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                                           <button
                                               key={`${el.asset}`}
                                               onClick={() =>
-                                                  openDialog('borrowed-asset-details-dialog', {
+                                                  openDialog('borrow-asset-dialog', {
                                                       ...el,
+                                                      view: 'Repay',
                                                   })
                                               }
                                           >
@@ -169,6 +171,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                                         : '0'
                                 }
                                 withChange={false}
+                                center
                             />
                         </div>
                         <div className="text-center text-sm flex flex-col items-center">

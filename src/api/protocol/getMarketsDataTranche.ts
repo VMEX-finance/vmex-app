@@ -11,6 +11,7 @@ import {
     DECIMALS,
 } from '../../utils/sdk-helpers';
 import { BigNumber } from 'ethers';
+import { AVAILABLE_ASSETS } from '../../utils/constants';
 
 export async function getTrancheMarkets(trancheId: number): Promise<IMarketsAsset[]> {
     const allMarketsData: MarketData[] = await getTrancheMarketsData({
@@ -65,7 +66,57 @@ export function useTrancheMarketsData(trancheId: number): ITrancheMarketsDataPro
         refetchOnMount: true,
     });
 
+    const getTrancheMarket = (asset: string) => {
+        if (!AVAILABLE_ASSETS.includes(asset) || !queryTrancheMarkets.data) {
+            console.log(`Tranche market for ${asset} not found`);
+            return {
+                asset: '',
+                tranche: '',
+                trancheId: 0,
+                supplyApy: 0,
+                borrowApy: 0,
+                yourAmount: 0, //TODO:
+                available: '$0',
+                availableNative: '0',
+                supplyTotal: '$0',
+                borrowTotal: '$0',
+                rating: '-',
+                strategies: false,
+                canBeCollateral: false,
+                canBeBorrowed: false,
+                currentPrice: BigNumber.from('0'),
+                collateralCap: BigNumber.from('0'),
+                liquidationThreshold: BigNumber.from('0'),
+            };
+        } else {
+            const found = queryTrancheMarkets.data.find((el) => el.asset === asset);
+            if (found) return found;
+            else {
+                return {
+                    asset: '',
+                    tranche: '',
+                    trancheId: 0,
+                    supplyApy: 0,
+                    borrowApy: 0,
+                    yourAmount: 0, //TODO:
+                    available: '$0',
+                    availableNative: '0',
+                    supplyTotal: '$0',
+                    borrowTotal: '$0',
+                    rating: '-',
+                    strategies: false,
+                    canBeCollateral: false,
+                    canBeBorrowed: false,
+                    currentPrice: BigNumber.from('0'),
+                    collateralCap: BigNumber.from('0'),
+                    liquidationThreshold: BigNumber.from('0'),
+                };
+            }
+        }
+    };
+
     return {
         queryTrancheMarkets,
+        getTrancheMarket,
     };
 }

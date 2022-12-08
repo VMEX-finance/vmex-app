@@ -10,6 +10,7 @@ import { useModal } from '../../../hooks/ui';
 import { supply, withdraw } from '@vmex/sdk';
 import { MAINNET_ASSET_MAPPINGS, NETWORK } from '../../../utils/sdk-helpers';
 import { HealthFactor } from '../../components/displays';
+import { useTrancheMarketsData } from '../../../api';
 
 interface IOwnedAssetDetails {
     name?: string;
@@ -21,11 +22,11 @@ interface IOwnedAssetDetails {
 
 export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, data, tab }) => {
     const { submitTx, isSuccess, error, isLoading } = useModal('loan-asset-dialog');
-
     const [view, setView] = React.useState('Supply');
     const [asCollateral, setAsCollateral] = React.useState(true);
     const [amount, setAmount] = useMediatedState(inputMediator, '');
-
+    const { getTrancheMarket } = useTrancheMarketsData(data?.trancheId);
+    console.log(data);
     const handleSubmit = async () => {
         await submitTx(async () => {
             view?.includes('Supply')
@@ -54,6 +55,10 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, data, ta
         });
     };
 
+    useEffect(() => {
+        if (data?.view) setView('Withdraw');
+    }, [data?.view]);
+
     return (
         data &&
         data.asset && (
@@ -79,7 +84,7 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, data, ta
                                         logo: `/coins/${data.asset?.toLowerCase()}.svg`,
                                         name: data.asset,
                                     }}
-                                    balance={data.amount}
+                                    balance={data?.amount?.replaceAll(',', '')}
                                 />
 
                                 <h3 className="mt-6 text-gray-400">Collaterize</h3>
@@ -99,7 +104,7 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, data, ta
                                     content={[
                                         {
                                             label: 'Supply APR (%)',
-                                            value: `${data.apy_perc}%`,
+                                            value: `${data.apy}%`,
                                         },
                                         {
                                             label: 'Collateralization',
@@ -121,7 +126,7 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, data, ta
                             title={name}
                             asset={data.asset}
                             tab={tab}
-                            onClick={setView}
+                            onClick={data?.view ? () => {} : setView}
                         />
                         {!isSuccess && !error ? (
                             // Default State
@@ -134,7 +139,10 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, data, ta
                                         logo: `/coins/${data.asset?.toLowerCase()}.svg`,
                                         name: data.asset,
                                     }}
-                                    balance={data.amountWithdrawOrRepay}
+                                    balance={
+                                        data.amountWithdrawOrRepay?.replaceAll(',', '') ||
+                                        data.amountNative?.replaceAll(',', '')
+                                    }
                                 />
                                 <h3 className="mt-6 text-gray-400">Health Factor</h3>
                                 <HealthFactor
@@ -148,13 +156,7 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, data, ta
                                     content={[
                                         {
                                             label: 'Remaining Supply',
-                                            value: `${
-                                                parseFloat(
-                                                    convertStringFormatToNumber(
-                                                        data.amountWithdrawOrRepay,
-                                                    ),
-                                                ) - parseFloat(convertStringFormatToNumber(amount))
-                                            } ${data.asset}`,
+                                            value: `${getTrancheMarket(data.asset).supplyTotal}`, // TODO: denominate this in native amount
                                         },
                                     ]}
                                 />
@@ -169,7 +171,7 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, data, ta
                 <ModalFooter>
                     <Button
                         primary
-                        disabled={isSuccess || error.length !== 0}
+                        disabled={isSuccess || error.length !== 0 || !amount}
                         onClick={handleSubmit}
                         label={'Submit Transaction'}
                         loading={isLoading}

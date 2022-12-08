@@ -4,7 +4,7 @@ export type AssetExposureType = {
     logo: string;
     amount: number | string;
     collateral_perc: number;
-    apy_perc: number;
+    apy: number;
     insurance_perc: number;
     tranche_id: number;
 };

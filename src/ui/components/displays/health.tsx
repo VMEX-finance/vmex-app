@@ -3,7 +3,7 @@ import { TbInfinity } from 'react-icons/tb';
 import { BsArrowRight } from 'react-icons/bs';
 import { useUserTrancheData, useTrancheMarketsData } from '../../../api';
 import { useSelectedTrancheContext } from '../../../store/contexts';
-import { convertStringFormatToNumber } from '../../../utils/helpers';
+import { convertStringFormatToNumber, numberFormatter } from '../../../utils/helpers';
 import { ethers, BigNumber } from 'ethers';
 import { calculateHealthFactorFromBalances, DECIMALS } from '../../../utils/sdk-helpers';
 import { useAccount } from 'wagmi';
@@ -16,6 +16,7 @@ interface IHealthFactorProps {
     value?: string;
     size?: 'sm' | 'md' | 'lg';
     withChange?: boolean;
+    center?: boolean;
 }
 
 export const HealthFactor = ({
@@ -25,6 +26,7 @@ export const HealthFactor = ({
     value,
     size = 'md',
     withChange = true,
+    center,
 }: IHealthFactorProps) => {
     const { address } = useAccount();
     const { tranche } = useSelectedTrancheContext();
@@ -71,7 +73,7 @@ export const HealthFactor = ({
             <TbInfinity color="#8CE58F" size={`${determineSize()[0]}`} />
         ) : (
             <span className={`${determineSize()[2]} ${determineColor(hf)} font-semibold`}>
-                {hf}
+                {numberFormatter.format(typeof hf === 'string' ? parseFloat(hf) : hf)}
             </span>
         );
     };
@@ -128,7 +130,6 @@ export const HealthFactor = ({
             }
 
             if (type === 'withdraw') {
-                console.log(a.collateralCap);
                 let amountCappedNotUsed = ethAmount.gt(a.collateralCap)
                     ? ethAmount.sub(a.collateralCap)
                     : BigNumber.from('0');
@@ -172,14 +173,13 @@ export const HealthFactor = ({
 
     return (
         <div>
-            <div className="flex items-center gap-2 justify-center">
+            <div className={`flex items-center gap-2 ${center ? 'justify-center' : ''}`}>
                 {withChange && (
                     <>
                         {determineHFInitial()}
                         <BsArrowRight size={`${determineSize()[1]}`} />
                     </>
                 )}
-                {/* TODO: color should change based on health value */}
                 {withChange ? determineHFFinal() : determineHFInitial()}
             </div>
             {
