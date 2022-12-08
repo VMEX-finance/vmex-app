@@ -50,6 +50,15 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
         return `${(supplySum - borrowSum).toFixed(3)}%`;
     };
 
+    const renderUserInteractions = (
+        type: 'supplies' | 'borrows',
+    ): IYourBorrowsTableItemProps[] | IYourSuppliesTableItemProps[] => {
+        if (data && data[type].length > 0) return data[type];
+        else return [];
+    };
+
+    const buttonClass = `transition duration-150 hover:bg-neutral-100 rounded-lg`;
+
     return (
         <Card>
             <div
@@ -95,68 +104,61 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                 </div>
             </div>
 
-            {data && (data?.borrows?.length !== 0 || data?.supplies?.length !== 0) && (
+            {(renderUserInteractions('borrows').length !== 0 ||
+                renderUserInteractions('supplies').length !== 0) && (
                 <>
                     <div className="border-t-2 border-black md:border-0 mt-4" />
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
                         <div className="text-center flex flex-col">
                             <span className="text-sm">{width > breakpoint && 'User '}Supplies</span>
                             <div className="flex flex-wrap gap-2">
-                                {data?.supplies?.length
-                                    ? data?.supplies?.length > 0 &&
-                                      data.supplies.map((el: IYourSuppliesTableItemProps) => (
-                                          <button
-                                              key={`${el.asset}`}
-                                              onClick={() =>
-                                                  openDialog('loan-asset-dialog', {
-                                                      ...el,
-                                                      view: 'Withdraw',
-                                                  })
-                                              }
-                                          >
-                                              <AssetDisplay
-                                                  name={el.asset}
-                                                  size="sm"
-                                                  value={usdFormatter().format(
-                                                      parseFloat(
-                                                          el.amount.slice(1).replaceAll(',', ''),
-                                                      ),
-                                                  )}
-                                                  border
-                                              />
-                                          </button>
-                                      ))
-                                    : ''}
+                                {renderUserInteractions('supplies').map((el) => (
+                                    <button
+                                        key={`${el.asset}`}
+                                        onClick={() =>
+                                            openDialog('loan-asset-dialog', {
+                                                ...el,
+                                                view: 'Withdraw',
+                                            })
+                                        }
+                                        className={buttonClass}
+                                    >
+                                        <AssetDisplay
+                                            name={el.asset}
+                                            size="sm"
+                                            value={usdFormatter().format(
+                                                parseFloat(el.amount.slice(1).replaceAll(',', '')),
+                                            )}
+                                            border
+                                        />
+                                    </button>
+                                ))}
                             </div>
                         </div>
                         <div className="text-center flex flex-col">
                             <span className="text-sm">{width > breakpoint && 'User '}Borrows</span>
                             <div className="flex flex-wrap gap-2">
-                                {data?.borrows?.length
-                                    ? data?.borrows?.length > 0 &&
-                                      data.borrows.map((el: IYourBorrowsTableItemProps) => (
-                                          <button
-                                              key={`${el.asset}`}
-                                              onClick={() =>
-                                                  openDialog('borrow-asset-dialog', {
-                                                      ...el,
-                                                      view: 'Repay',
-                                                  })
-                                              }
-                                          >
-                                              <AssetDisplay
-                                                  name={el.asset}
-                                                  size="sm"
-                                                  value={usdFormatter().format(
-                                                      parseFloat(
-                                                          el.amount.slice(1).replaceAll(',', ''),
-                                                      ),
-                                                  )}
-                                                  border
-                                              />
-                                          </button>
-                                      ))
-                                    : ''}
+                                {renderUserInteractions('borrows').map((el) => (
+                                    <button
+                                        key={`${el.asset}`}
+                                        onClick={() =>
+                                            openDialog('borrow-asset-dialog', {
+                                                ...el,
+                                                view: 'Repay',
+                                            })
+                                        }
+                                        className={buttonClass}
+                                    >
+                                        <AssetDisplay
+                                            name={el.asset}
+                                            size="sm"
+                                            value={usdFormatter().format(
+                                                parseFloat(el.amount.slice(1).replaceAll(',', '')),
+                                            )}
+                                            border
+                                        />
+                                    </button>
+                                ))}
                             </div>
                         </div>
                         <div className="text-center text-sm flex flex-col items-center">
