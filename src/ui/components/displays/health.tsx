@@ -5,8 +5,9 @@ import { useUserTrancheData, useTrancheMarketsData } from '../../../api';
 import { useSelectedTrancheContext } from '../../../store/contexts';
 import { convertStringFormatToNumber } from '../../../utils/helpers';
 import { ethers, BigNumber } from 'ethers';
-import { DECIMALS } from '../../../utils/sdk-helpers';
+import { calculateHealthFactorFromBalances, DECIMALS } from '../../../utils/sdk-helpers';
 import { useAccount } from 'wagmi';
+import { HEALTH } from '../../../utils/constants';
 
 interface IHealthFactorProps {
     asset?: string;
@@ -28,7 +29,6 @@ export const HealthFactor = ({
     const { address } = useAccount();
     const { tranche } = useSelectedTrancheContext();
     const { queryUserTrancheData } = useUserTrancheData(address, tranche.id);
-
     const { queryTrancheMarkets } = useTrancheMarketsData(tranche.id);
 
     const determineSize = () => {
@@ -42,6 +42,19 @@ export const HealthFactor = ({
         }
     };
 
+    const determineColor = (health: number | string | undefined) => {
+        if (!health) return 'text-black';
+        let _health;
+        if (typeof health === 'string') _health = parseFloat(health);
+        else _health = health;
+
+        if (_health > HEALTH['GREAT']) return 'text-brand-green';
+        else if (_health > HEALTH['GOOD']) return 'text-green-300';
+        else if (_health > HEALTH['OKAY']) return 'text-yellow-400';
+        else if (_health > HEALTH['BAD']) return 'text-red-300';
+        else return 'text-red-500';
+    };
+
     const findAssetInMarketsData = (asset: string) => {
         if (queryTrancheMarkets.isLoading) return undefined;
         else {
@@ -53,35 +66,23 @@ export const HealthFactor = ({
         }
     };
 
-    const formatHF = (hf: number | string | undefined, isInf: boolean) => {
+    const renderHealth = (hf: number | string | undefined, isInf: boolean) => {
         return isInf || !hf ? (
             <TbInfinity color="#8CE58F" size={`${determineSize()[0]}`} />
         ) : (
-            <span className={`${determineSize()[2]} text-[#D9D001] font-semibold`}>{hf}</span>
+            <span className={`${determineSize()[2]} ${determineColor(hf)} font-semibold`}>
+                {hf}
+            </span>
         );
     };
 
     const determineHFInitial = () => {
-        return formatHF(
+        return renderHealth(
             queryUserTrancheData.data?.healthFactor || 0,
             queryUserTrancheData.data?.borrows && queryUserTrancheData.data?.borrows.length != 0
                 ? false
                 : true,
         );
-    };
-
-    const calculateHealthFactorFromBalances = (
-        totalCollateralInETH: BigNumber,
-        totalDebtInETH: BigNumber,
-        liquidationThreshold: BigNumber,
-    ) => {
-        if (totalDebtInETH.lte(BigNumber.from('0'))) {
-            return undefined;
-        }
-        return liquidationThreshold
-            .mul(ethers.utils.parseEther('1'))
-            .div(BigNumber.from('10000'))
-            .div(totalDebtInETH);
     };
 
     const determineHFFinal = () => {
@@ -99,7 +100,6 @@ export const HealthFactor = ({
                 .parseUnits(convertStringFormatToNumber(amount), d)
                 .mul(a.currentPrice)
                 .div(ethers.utils.parseUnits('1', d)); //18 decimals
-            // console.log('ethAmount: ', ethAmount);
 
             let totalCollateralETH = queryUserTrancheData.data?.totalCollateralETH;
             let totalDebtInETH = queryUserTrancheData.data?.totalDebtETH;
@@ -123,9 +123,8 @@ export const HealthFactor = ({
                 let amountIncrease = collateralAfter.sub(totalCollateralETH);
 
                 liquidationThresholdAfter = totalCollateralETH
-                    .mul(currentLiquidationThreshold) //this is sum of all (asset liquidation threshold * asset collateral amount)
+                    .mul(currentLiquidationThreshold)
                     .add(amountIncrease.mul(a.liquidationThreshold));
-                // .div(collateralAfter); //do at later step
             }
 
             if (type === 'withdraw') {
@@ -136,7 +135,6 @@ export const HealthFactor = ({
                 if (ethAmount.lte(amountCappedNotUsed)) {
                     return determineHFInitial();
                 }
-                // console.log('amountCappedNotUsed: ', amountCappedNotUsed);
                 let amountDecrease = ethAmount.sub(amountCappedNotUsed);
 
                 collateralAfter = totalCollateralETH.sub(amountDecrease);
@@ -162,7 +160,7 @@ export const HealthFactor = ({
                 liquidationThresholdAfter,
             );
 
-            return formatHF(
+            return renderHealth(
                 healthFactorAfterDecrease &&
                     ethers.utils.formatUnits(healthFactorAfterDecrease, 18), //HF always has 18 decimals
                 false,
@@ -171,9 +169,10 @@ export const HealthFactor = ({
             return undefined;
         }
     };
+
     return (
-        <div className="flex flex-col">
-            <div className="flex items-center gap-2">
+        <div>
+            <div className="flex items-center gap-2 justify-center">
                 {withChange && (
                     <>
                         {determineHFInitial()}
@@ -185,7 +184,7 @@ export const HealthFactor = ({
             </div>
             {
                 <div>
-                    <span className="text-sm text-neutral-800">{`Liquidation at <1.0`}</span>
+                    <span className="text-xs text-neutral-500 leading-0">{`Liquidation at <1.0`}</span>
                 </div>
             }
         </div>

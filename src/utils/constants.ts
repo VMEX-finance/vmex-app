@@ -1,3 +1,11 @@
+export const HEALTH = {
+    GREAT: 5,
+    GOOD: 3,
+    OKAY: 2,
+    BAD: 1.5,
+    DEAD: 1,
+};
+
 export const TIMER_CLOSE_DELAY = 1500;
 
 export const AVAILABLE_ASSETS = [
