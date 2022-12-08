@@ -105,5 +105,5 @@ export const percentFormatter = new Intl.NumberFormat('en-US', {
 
 export const convertStringFormatToNumber = (amount: string | number) => {
     if (!amount) return 'N/A';
-    return amount.toString().replace(',', '');
+    return amount.toString().replaceAll(',', '');
 };
