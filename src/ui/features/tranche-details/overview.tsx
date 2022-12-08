@@ -169,6 +169,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                                         : '0'
                                 }
                                 withChange={false}
+                                center
                             />
                         </div>
                         <div className="text-center text-sm flex flex-col items-center">

@@ -16,6 +16,7 @@ interface IHealthFactorProps {
     value?: string;
     size?: 'sm' | 'md' | 'lg';
     withChange?: boolean;
+    center?: boolean;
 }
 
 export const HealthFactor = ({
@@ -25,6 +26,7 @@ export const HealthFactor = ({
     value,
     size = 'md',
     withChange = true,
+    center,
 }: IHealthFactorProps) => {
     const { address } = useAccount();
     const { tranche } = useSelectedTrancheContext();
@@ -172,7 +174,7 @@ export const HealthFactor = ({
 
     return (
         <div>
-            <div className="flex items-center gap-2 justify-center">
+            <div className={`flex items-center gap-2 ${center ? 'justify-center' : ''}`}>
                 {withChange && (
                     <>
                         {determineHFInitial()}

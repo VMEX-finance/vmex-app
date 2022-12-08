@@ -170,7 +170,7 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
                     </div>
                     <Button
                         primary
-                        disabled={isSuccess}
+                        disabled={isSuccess || !amount || amount > data.amount}
                         onClick={handleClick}
                         label="Submit Transaction"
                         loading={isLoading}
