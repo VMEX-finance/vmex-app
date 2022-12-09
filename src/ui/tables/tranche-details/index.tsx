@@ -101,7 +101,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
     return (
         <table className={`min-w-full divide-y divide-gray-300 font-basefont`}>
             <thead className="">
-                <tr className="text-gray-900 text-sm font-semibold text-left">
+                <tr className="text-neutral900 text-sm font-semibold text-left">
                     <th scope="col" className="py-3.5 pl-4 sm:pl-6">
                         Asset
                     </th>
@@ -117,13 +117,13 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                     <th scope="col" className="py-3.5"></th>
                 </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200 bg-white">
+            <tbody className="divide-y divide-gray-200">
                 {data &&
                     data.map((el, i) => {
                         return (
                             <tr
                                 key={`${el.asset}-${i}`}
-                                className="text-left transition duration-200 hover:bg-neutral-200 hover:cursor-pointer"
+                                className="text-left transition duration-200 hover:bg-neutral-200 dark:hover:bg-neutral-900 hover:cursor-pointer"
                                 onClick={() =>
                                     openDialog(
                                         type === 'supply'

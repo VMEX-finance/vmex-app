@@ -57,133 +57,143 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
         else return [];
     };
 
-    const buttonClass = `transition duration-150 hover:bg-neutral-100 rounded-lg`;
+    const buttonClass = `transition duration-150 hover:bg-neutral-100 rounded-lg dark:bg-neutral-800 dark:hover:bg-neutral-700`;
 
     return (
-        <Card>
-            <div
-                className="flex flex-col flow md:flex-row justify-between font-basefont gap-4 xl:gap-8"
-                style={{ flexFlow: 'wrap' }}
-            >
-                <div className="flex flex-col justify-between order-1">
-                    <div className="flex flex-col gap-1">
-                        <h2 className="text-2xl">Assets</h2>
-                        <MultipleAssetsDisplay assets={assets} />
+        <>
+            <Card>
+                <div
+                    className="flex flex-col flow md:flex-row justify-between font-basefont gap-4 xl:gap-8"
+                    style={{ flexFlow: 'wrap' }}
+                >
+                    <div className="flex flex-col justify-between order-1">
+                        <div className="flex flex-col gap-1">
+                            <h2 className="text-2xl">Assets</h2>
+                            <MultipleAssetsDisplay assets={assets} />
+                        </div>
                     </div>
-                </div>
-                <div className="flex flex-wrap justify-around lg:justify-between items-center gap-5 lg:gap-10 xl:gap-16 2xl:gap-20 order-3 lg:order-2 w-full lg:w-auto">
-                    <NumberDisplay
-                        center
-                        size="xl"
-                        label="TVL"
-                        value={`${makeCompact(tvl, true)}`}
-                        change={tvlChange}
-                    />
-                    <NumberDisplay
-                        center
-                        size="xl"
-                        label="Supplied"
-                        value={`${makeCompact(supplied, true)}`}
-                        change={supplyChange}
-                    />
-                    <NumberDisplay
-                        center
-                        size="xl"
-                        label="Borrowed"
-                        value={`${makeCompact(borrowed, true)}`}
-                        change={borrowChange}
-                    />
-                </div>
-                <div className="order-2 lg:order-3 min-w-[162px] 2xl:min-w-[194px]">
-                    <div className="flex flex-col justify-between">
-                        <div className="flex flex-col items-end">
-                            <h2 className="text-2xl">Grade</h2>
-                            <p className="text-3xl">{grade || '-'}</p>
+                    <div className="flex flex-wrap justify-around lg:justify-between items-center gap-5 lg:gap-10 xl:gap-16 2xl:gap-20 order-3 lg:order-2 w-full lg:w-auto">
+                        <NumberDisplay
+                            center
+                            size="xl"
+                            label="TVL"
+                            value={`${makeCompact(tvl, true)}`}
+                            change={tvlChange}
+                        />
+                        <NumberDisplay
+                            center
+                            size="xl"
+                            label="Supplied"
+                            value={`${makeCompact(supplied, true)}`}
+                            change={supplyChange}
+                        />
+                        <NumberDisplay
+                            center
+                            size="xl"
+                            label="Borrowed"
+                            value={`${makeCompact(borrowed, true)}`}
+                            change={borrowChange}
+                        />
+                    </div>
+                    <div className="order-2 lg:order-3 min-w-[162px] 2xl:min-w-[194px]">
+                        <div className="flex flex-col justify-between">
+                            <div className="flex flex-col items-end">
+                                <h2 className="text-2xl">Grade</h2>
+                                <p className="text-3xl">{grade || '-'}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            {(renderUserInteractions('borrows').length !== 0 ||
-                renderUserInteractions('supplies').length !== 0) && (
-                <>
-                    <div className="border-t-2 border-black md:border-0 mt-4" />
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-                        <div className="text-center flex flex-col">
-                            <span className="text-sm">{width > breakpoint && 'User '}Supplies</span>
-                            <div className="flex flex-wrap gap-2">
-                                {renderUserInteractions('supplies').map((el) => (
-                                    <button
-                                        key={`${el.asset}`}
-                                        onClick={() =>
-                                            openDialog('loan-asset-dialog', {
-                                                ...el,
-                                                view: 'Withdraw',
-                                            })
-                                        }
-                                        className={buttonClass}
-                                    >
-                                        <AssetDisplay
-                                            name={el.asset}
-                                            size="sm"
-                                            value={usdFormatter().format(
-                                                parseFloat(el.amount.slice(1).replaceAll(',', '')),
-                                            )}
-                                            border
-                                        />
-                                    </button>
-                                ))}
+                {(renderUserInteractions('borrows').length !== 0 ||
+                    renderUserInteractions('supplies').length !== 0) && (
+                    <>
+                        <div className="border-t-2 border-black md:border-0 mt-4" />
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                            <div className="text-center flex flex-col">
+                                <span className="text-sm">
+                                    {width > breakpoint && 'User '}Supplies
+                                </span>
+                                <div className="flex flex-wrap gap-2">
+                                    {renderUserInteractions('supplies').map((el) => (
+                                        <button
+                                            key={`${el.asset}`}
+                                            onClick={() =>
+                                                openDialog('loan-asset-dialog', {
+                                                    ...el,
+                                                    view: 'Withdraw',
+                                                })
+                                            }
+                                            className={buttonClass}
+                                        >
+                                            <AssetDisplay
+                                                name={el.asset}
+                                                size="sm"
+                                                value={usdFormatter().format(
+                                                    parseFloat(
+                                                        el.amount.slice(1).replaceAll(',', ''),
+                                                    ),
+                                                )}
+                                                border
+                                            />
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                            <div className="text-center flex flex-col">
+                                <span className="text-sm">
+                                    {width > breakpoint && 'User '}Borrows
+                                </span>
+                                <div className="flex flex-wrap gap-2">
+                                    {renderUserInteractions('borrows').map((el) => (
+                                        <button
+                                            key={`${el.asset}`}
+                                            onClick={() =>
+                                                openDialog('borrow-asset-dialog', {
+                                                    ...el,
+                                                    view: 'Repay',
+                                                })
+                                            }
+                                            className={buttonClass}
+                                        >
+                                            <AssetDisplay
+                                                name={el.asset}
+                                                size="sm"
+                                                value={usdFormatter().format(
+                                                    parseFloat(
+                                                        el.amount.slice(1).replaceAll(',', ''),
+                                                    ),
+                                                )}
+                                                border
+                                            />
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                            <div className="text-center text-sm flex flex-col items-center">
+                                <span>
+                                    {width > breakpoint && 'User '}Health
+                                    {width > breakpoint && ' Factor'}
+                                </span>
+                                <HealthFactor
+                                    value={
+                                        parseFloat(data?.healthFactor || '0') < 100
+                                            ? data?.healthFactor
+                                            : '0'
+                                    }
+                                    withChange={false}
+                                    center
+                                />
+                            </div>
+                            <div className="text-center text-sm flex flex-col items-center">
+                                <span>{width > breakpoint && 'User '}Net APY</span>
+                                <NumberDisplay value={calculateNetAPY()} />
                             </div>
                         </div>
-                        <div className="text-center flex flex-col">
-                            <span className="text-sm">{width > breakpoint && 'User '}Borrows</span>
-                            <div className="flex flex-wrap gap-2">
-                                {renderUserInteractions('borrows').map((el) => (
-                                    <button
-                                        key={`${el.asset}`}
-                                        onClick={() =>
-                                            openDialog('borrow-asset-dialog', {
-                                                ...el,
-                                                view: 'Repay',
-                                            })
-                                        }
-                                        className={buttonClass}
-                                    >
-                                        <AssetDisplay
-                                            name={el.asset}
-                                            size="sm"
-                                            value={usdFormatter().format(
-                                                parseFloat(el.amount.slice(1).replaceAll(',', '')),
-                                            )}
-                                            border
-                                        />
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                        <div className="text-center text-sm flex flex-col items-center">
-                            <span>
-                                {width > breakpoint && 'User '}Health
-                                {width > breakpoint && ' Factor'}
-                            </span>
-                            <HealthFactor
-                                value={
-                                    parseFloat(data?.healthFactor || '0') < 100
-                                        ? data?.healthFactor
-                                        : '0'
-                                }
-                                withChange={false}
-                                center
-                            />
-                        </div>
-                        <div className="text-center text-sm flex flex-col items-center">
-                            <span>{width > breakpoint && 'User '}Net APY</span>
-                            <NumberDisplay value={calculateNetAPY()} />
-                        </div>
-                    </div>
-                </>
-            )}
-        </Card>
+                    </>
+                )}
+            </Card>
+        </>
     );
 };
 export { TrancheTVLDataCard };

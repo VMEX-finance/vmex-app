@@ -29,7 +29,9 @@ export const NumberAndDollar = ({
     };
 
     return (
-        <div className={`flex flex-col ${color ? color : 'text-brand-purple'}`}>
+        <div
+            className={`flex flex-col ${color ? color : 'text-brand-purple'} dark:text-neutral-100`}
+        >
             {label && <span className="text-neutral-100">{label}</span>}
             <span className={`${determineSize()[0]} leading-4`}>{value || '0.0'}</span>
             {dollar && (

@@ -1,11 +1,16 @@
 import { Menu, Transition } from '@headlessui/react';
 import { useWindowSize } from '../../hooks/ui';
-import React, { Fragment } from 'react';
+import React, { Fragment, useContext } from 'react';
 import { HiOutlineMenuAlt3 } from 'react-icons/hi';
 import { BiTransferAlt } from 'react-icons/bi';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { DropdownButton, MenuItemButton, WalletButton } from '../components/buttons';
-import { useMyTranchesContext, useTransactionsContext } from '../../store/contexts';
+import {
+    DropdownButton,
+    MenuItemButton,
+    WalletButton,
+    ToggleThemeButton,
+} from '../components/buttons';
+import { ThemeContext, useMyTranchesContext, useTransactionsContext } from '../../store/contexts';
 import { useAccount } from 'wagmi';
 import { useDialogController } from '../../hooks/dialogs/useDialogController';
 import { IDialogNames } from '@store/modals';
@@ -13,6 +18,7 @@ import { IDialogNames } from '@store/modals';
 const navItems = ['Overview', 'Tranches', 'Markets', 'Staking', 'Governance', 'Develop'];
 
 export const Navbar: React.FC = () => {
+    const { isDark } = useContext(ThemeContext);
     const navigate = useNavigate();
     const location = useLocation();
     const { width } = useWindowSize();
@@ -28,7 +34,7 @@ export const Navbar: React.FC = () => {
     }
 
     return (
-        <nav className="flex justify-center flex-row sticky h-fit items-center top-0 font-basefont px-4 py-2 lg:px-6 2xl:px-10 lg:py-5 bg-neutral-900 lg:bg-[#FFF] z-[1000] shadow-lg lg:shadow-md">
+        <nav className="flex justify-center flex-row sticky h-fit items-center top-0 font-basefont px-4 py-2 lg:px-6 2xl:px-10 lg:py-5 bg-neutral-900 dark:bg-black lg:bg-[#FFF] dark:lg:bg-black z-[1000] shadow-lg lg:shadow-md">
             <div
                 className={`w-full max-w-[150rem]
                 ${width <= 1080 ? 'flex flex-row items-center justify-between' : 'grid grid-cols-3'}
@@ -37,7 +43,7 @@ export const Navbar: React.FC = () => {
                 {/* Desktop/Mobile Left Nav */}
                 <a id="nav-logo" href="/">
                     <img
-                        src="/VMEX-logo.svg"
+                        src={isDark && width >= 1024 ? '/VMEX-logo-white.svg' : '/VMEX-logo.svg'}
                         alt="VMEX Finance Logo"
                         width="100"
                         className="invert lg:invert-0"
@@ -49,7 +55,7 @@ export const Navbar: React.FC = () => {
                     <div className="justify-self-center">
                         <div
                             className={
-                                'grid grid-flow-col auto-cols-max justify-between gap-2 2xl:gap-4 w-max p-2 shadow-neutral-500 shadow-inner bg-black rounded-2xl'
+                                'grid grid-flow-col auto-cols-max justify-between gap-2 2xl:gap-4 w-max p-2 shadow-neutral-500 shadow-inner dark:shadow-none bg-black dark:bg-neutral-900 rounded-2xl'
                             }
                         >
                             {navItems.map((item) => (
@@ -66,6 +72,7 @@ export const Navbar: React.FC = () => {
 
                 {/* Desktop/Mobile Right Nav */}
                 <div className="flex items-center justify-end gap-3">
+                    {width <= 1024 && <ToggleThemeButton />}
                     {/* Transactions Dropdown */}
                     {isConnected && transactions && transactions.length !== 0 && (
                         <DropdownButton

@@ -107,7 +107,7 @@ export const DropdownButton = ({
         <>
             {title && (
                 <div className="flex items-baseline justify-between">
-                    <h3 className="mt-6 mb-2 text-gray-400">{title}</h3>
+                    <h3 className="mt-6 mb-2 text-neutral400">{title}</h3>
                     {multiselect && (
                         <span className="text-sm">
                             {selected?.length > 0 ? selected.length : 0} Selected
@@ -118,7 +118,7 @@ export const DropdownButton = ({
 
             <Menu as="div" className={`relative inline-block ${full ? 'w-full' : ''}`}>
                 <Menu.Button
-                    className={`
+                    className={`dark:bg-neutral-100 dark:hover:bg-neutral-200 dark:!text-neutral-900
                         inline-flex items-center w-full rounded-lg font-medium focus:outline-none focus:ring-none transition duration-150
                         ${
                             className ? className : ''

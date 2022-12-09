@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { CacheProvider } from '@emotion/react';
 import { ThemeProvider } from '@mui/material/styles';
 import { muiCache, options, vmexTheme } from '../utils';
@@ -7,7 +7,8 @@ import MUIDataTable from 'mui-datatables';
 import { SpinnerLoader } from '../../components/loaders';
 import { useAccount } from 'wagmi';
 import { useUserData } from '../../../api';
-import { ITrancheProps } from '@app/api/models';
+import { ITrancheProps } from '../../../api/models';
+import { ThemeContext } from '../../../store/contexts';
 
 interface IDataTable {
     data?: ITrancheProps[];
@@ -15,6 +16,7 @@ interface IDataTable {
 }
 
 export const TranchesTable: React.FC<IDataTable> = ({ data, loading }) => {
+    const { isDark } = useContext(ThemeContext);
     const { address } = useAccount();
     const { queryUserActivity } = useUserData(address);
 
@@ -105,7 +107,7 @@ export const TranchesTable: React.FC<IDataTable> = ({ data, loading }) => {
 
     return (
         <CacheProvider value={muiCache}>
-            <ThemeProvider theme={vmexTheme()}>
+            <ThemeProvider theme={vmexTheme(isDark)}>
                 <MUIDataTable
                     title={['All Available Tranches']}
                     columns={columns}

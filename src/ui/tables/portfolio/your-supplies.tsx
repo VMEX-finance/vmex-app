@@ -35,19 +35,19 @@ export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({ data, wit
                         <th
                             key={`table-header-${i}`}
                             scope="col"
-                            className={`py-3 text-left text-sm font-semibold text-gray-900 first-of-type:pl-2 first-of-type:md:pl-6`}
+                            className={`py-3 text-left text-sm font-semibold text-neutral900 first-of-type:pl-2 first-of-type:md:pl-6`}
                         >
                             {el}
                         </th>
                     ))}
                 </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200 bg-white">
+            <tbody className="divide-y divide-gray-200">
                 {data.map((i) => {
                     return (
                         <tr
                             key={i.asset}
-                            className="text-left transition duration-200 hover:bg-neutral-200 hover:cursor-pointer"
+                            className="text-left transition duration-200 hover:bg-neutral-200 dark:hover:bg-neutral-900 hover:cursor-pointer"
                             onClick={() =>
                                 openDialog('loan-asset-dialog', { ...i, view: 'Withdraw' })
                             }

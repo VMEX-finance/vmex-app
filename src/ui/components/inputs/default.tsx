@@ -54,14 +54,14 @@ export const DefaultInput = ({
                         <Tooltip
                             text={tooltip}
                             content={
-                                <h3 className="mt-6 mb-1 text-gray-400">
+                                <h3 className="mt-6 mb-1 text-neutral400">
                                     {title}
                                     {required && <span className="text-red-500 ml-1">*</span>}
                                 </h3>
                             }
                         />
                     ) : (
-                        <h3 className="mt-6 mb-1 text-gray-400">
+                        <h3 className="mt-6 mb-1 text-neutral400">
                             {title}
                             {required && <span className="text-red-500 ml-1">*</span>}
                         </h3>
@@ -76,7 +76,7 @@ export const DefaultInput = ({
                     type={type !== 'string' ? 'number' : 'text'}
                     step={type === 'percent' ? '0.1' : '1'}
                     onKeyDown={entering}
-                    className={`w-full ${textSize()} outline-none border-b-[3px] focus:border-black border-neutral-600`}
+                    className={`w-full ${textSize()} outline-none border-b-[3px] focus:border-black dark:focus:border-white border-neutral-600 dark:bg-black`}
                 />
                 {onEnter && <button onClick={onEnter}>Save</button>}
             </div>

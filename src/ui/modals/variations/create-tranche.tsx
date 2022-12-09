@@ -20,7 +20,7 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
     const { address } = useAccount();
     const { data: signer } = useSigner();
     const { setError, isSuccess, error, submitTx, isLoading } = useModal('create-tranche-dialog');
-    const { newTranche, myTranches } = useMyTranchesContext();
+    const { myTranches } = useMyTranchesContext();
     const { steps, nextStep, prevStep, activeStep } = useStepper([
         { name: 'Create Tranche', status: 'current' },
         { name: 'Manage Assets', status: 'upcoming' },
@@ -169,7 +169,9 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
                 </div>
             )}
 
-            {error && !isSuccess && <p className="text-red-500">{error || 'Invalid input'}</p>}
+            {error && !isSuccess && (
+                <p className="text-red-500 break-words">{error || 'Invalid input'}</p>
+            )}
 
             <ModalFooter>
                 <Button
@@ -180,7 +182,7 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
                 />
 
                 <Button
-                    disabled={isSuccess}
+                    disabled={isSuccess || error !== ''}
                     onClick={activeStep === steps.length - 1 ? handleSubmit : nextStep}
                     label={activeStep === steps.length - 1 ? 'Save' : 'Next'}
                     primary

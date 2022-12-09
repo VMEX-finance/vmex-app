@@ -1,9 +1,9 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import React from 'react';
+import React, { useContext } from 'react';
 import { IButtonProps } from './default';
 import { useAccount } from 'wagmi';
 import { useDialogController } from '../../../hooks/dialogs';
-import { useMyTranchesContext } from '../../../store/contexts';
+import { ThemeContext, useMyTranchesContext } from '../../../store/contexts';
 import { useWindowSize } from '../../../hooks/ui';
 import { DropdownButton } from './dropdown';
 import { truncateAddress, truncate } from '../../../utils/helpers';
@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 
 export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: IButtonProps) => {
     const navigate = useNavigate();
+    const { theme, setTheme } = useContext(ThemeContext);
     const { openDialog } = useDialogController();
     const { width } = useWindowSize();
     const { myTranches } = useMyTranchesContext();
@@ -22,6 +23,10 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
 
     const renderDropdownItems = () => {
         let final = [
+            {
+                text: theme === 'light' ? 'Dark Mode' : 'Light Mode',
+                onClick: () => setTheme(theme === 'light' ? 'dark' : 'light'),
+            },
             {
                 text: 'My Portfolio',
                 onClick: () => navigate('/portfolio'),

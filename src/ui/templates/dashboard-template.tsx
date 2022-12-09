@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from '../components/buttons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useWindowSize } from '../../hooks/ui';
-import { BiPlus } from 'react-icons/bi';
+import { BiChevronLeft, BiPlus } from 'react-icons/bi';
 import { useDialogController } from '../../hooks/dialogs';
 import { useMyTranchesContext } from '../../store/contexts';
 import { Tooltip } from '../components/tooltips';
@@ -42,25 +42,27 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                 <div className="max-w-[500px]">
                     {view ? (
                         <button
-                            className="flex gap-2 items-baseline hover:cursor-pointer hover:text-neutral-800 transition duration-150"
+                            className="flex items-center hover:cursor-pointer hover:text-neutral-800 dark:text-neutral-100 transition duration-150"
                             onClick={routeChange}
                         >
-                            <img src="/elements/Vector.svg" alt="vector" className="w-3 h-3" />
+                            <BiChevronLeft size="22px" />
                             <p className="text-lg">Back to all</p>
                         </button>
                     ) : (
                         <>
-                            <h1 className="text-3xl font-basefont capitalize leading-tight text-gray-900">
+                            <h1 className="text-3xl font-basefont capitalize leading-tight text-neutral-900 dark:text-neutral-100">
                                 {title}
                             </h1>
-                            {description && <p className="mt-1">{description}</p>}
+                            {description && (
+                                <p className="mt-1 dark:text-neutral-100">{description}</p>
+                            )}
                         </>
                     )}
                 </div>
                 {view && (
                     <>
                         <div className="justify-center">
-                            <h1 className="text-3xl font-basefont capitalize leading-tight text-gray-900 text-center">
+                            <h1 className="text-3xl font-basefont capitalize leading-tight text-neutral-900 dark:text-neutral-100 text-center">
                                 {title}
                             </h1>
                         </div>
@@ -81,19 +83,26 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                 )}
                 {location.pathname === `/tranches` && isConnected && (
                     <div className="flex gap-3 md:justify-end mt-2">
-                        <Tooltip
-                            text="Create a tranche first"
-                            disable={myTranches?.length !== 0}
-                            content={
-                                <Button
-                                    label={'My Tranches'}
-                                    onClick={() => openDialog('my-tranches-dialog')}
-                                    primary
-                                    disabled={myTranches?.length === 0}
-                                    className="!text-lg"
-                                />
-                            }
-                        />
+                        {myTranches?.length > 0 ? (
+                            <Button
+                                label={'My Tranches'}
+                                onClick={() => openDialog('my-tranches-dialog')}
+                                primary
+                                className="!text-lg"
+                            />
+                        ) : (
+                            <Tooltip
+                                text="Create a tranche first"
+                                content={
+                                    <Button
+                                        label={'My Tranches'}
+                                        primary
+                                        disabled={myTranches?.length === 0}
+                                        className="!text-lg"
+                                    />
+                                }
+                            />
+                        )}
                         <Button
                             label={width > 768 ? 'Create Tranche' : <BiPlus size="28px" />}
                             onClick={() => openDialog('create-tranche-dialog')}

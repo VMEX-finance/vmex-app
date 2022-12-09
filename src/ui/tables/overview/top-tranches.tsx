@@ -18,14 +18,14 @@ export const TopTranchesTable: React.FC<ITableProps> = ({ data }) => {
                         <th
                             key={`table-header-${i}`}
                             scope="col"
-                            className={`py-3 text-left text-sm font-semibold text-gray-900`}
+                            className={`py-3 text-left text-sm font-semibold`}
                         >
                             {el}
                         </th>
                     ))}
                 </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200 bg-white">
+            <tbody className="divide-y divide-gray-200">
                 {data &&
                     data.slice(0, 5).map((i, index: number) => {
                         return (
