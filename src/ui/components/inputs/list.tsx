@@ -32,7 +32,7 @@ export const ListInputItem = ({
 }) => (
     <button
         onClick={(e) => (noDelete ? {} : remove(value))}
-        className={`border border-black ${
+        className={`border border-black dark:bg-neutral-800 ${
             noDelete ? 'pl-3 pr-4 cursor-default' : 'pl-3 pr-2 cursor-pointer'
         } rounded-md flex items-center gap-2`}
     >

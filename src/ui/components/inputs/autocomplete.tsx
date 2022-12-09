@@ -33,7 +33,7 @@ export const AutoCompleteInput: FC<IAutoCompleteInputProps> = ({
             <input
                 type="text"
                 value={value}
-                className="text-2xl focus:outline-none flex-grow"
+                className="text-2xl focus:outline-none flex-grow dark:bg-black"
                 placeholder={placeholder}
                 onKeyDown={onKeyDown}
                 onChange={onChange}
@@ -52,14 +52,14 @@ export const AutoCompleteInput: FC<IAutoCompleteInputProps> = ({
                     show={isFocused && !close}
                 >
                     <div
-                        className={`origin-top-right absolute bg-white mt-10 min-w-[180px]
+                        className={`origin-top-right absolute bg-white dark:bg-black mt-10 min-w-[180px]
         rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-[999999]`}
                     >
                         <div className={`p-2 flex flex-col max-h-[200px] overflow-y-scroll`}>
                             {renderList().map((item: any, i) => (
                                 <button
                                     key={`${item}-${i}`}
-                                    className="transition duration-150 hover:bg-neutral-200 py-2 rounded-lg"
+                                    className="transition duration-150 hover:bg-neutral-200 dark:hover:bg-neutral-800 py-2 rounded-lg"
                                     onClick={(e) => {
                                         setValue(item);
                                         setTimeout(() => {}, 200);

@@ -118,7 +118,7 @@ export const DropdownButton = ({
 
             <Menu as="div" className={`relative inline-block ${full ? 'w-full' : ''}`}>
                 <Menu.Button
-                    className={`
+                    className={`dark:bg-neutral-100 dark:hover:bg-neutral-200 dark:!text-neutral-900
                         inline-flex items-center w-full rounded-lg font-medium focus:outline-none focus:ring-none transition duration-150
                         ${
                             className ? className : ''

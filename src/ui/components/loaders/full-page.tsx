@@ -37,10 +37,12 @@ export const FullPageLoader = ({
                 leaveFrom="opacity-100"
                 leaveTo="opacity-0"
             >
-                <div className="absolute top-0 left-0 h-screen w-full bg-[#eee] z-[9999]">
+                <div className="absolute top-0 left-0 h-screen w-full bg-[#eee] dark:bg-neutral-900 z-[9999]">
                     <div className="flex flex-col gap-5 justify-center items-center h-full animate-pulse">
                         <img src="/VMEX-logo-only.png" alt="VMEX Logo" width="165" height="150" />
-                        {text && <p className="text-center font-medium">{text}</p>}
+                        {text && (
+                            <p className="text-center font-medium dark:text-neutral-100">{text}</p>
+                        )}
                     </div>
                 </div>
             </Transition>
