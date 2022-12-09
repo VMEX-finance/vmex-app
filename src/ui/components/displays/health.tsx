@@ -69,7 +69,7 @@ export const HealthFactor = ({
     };
 
     const renderHealth = (hf: number | string | undefined, isInf: boolean) => {
-        return isInf || !hf ? (
+        return isInf || !hf || Number(hf) > 100 ? (
             <TbInfinity color="#8CE58F" size={`${determineSize()[0]}`} />
         ) : (
             <span className={`${determineSize()[2]} ${determineColor(hf)} font-semibold`}>
