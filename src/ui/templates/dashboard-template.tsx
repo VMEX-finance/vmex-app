@@ -83,19 +83,26 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                 )}
                 {location.pathname === `/tranches` && isConnected && (
                     <div className="flex gap-3 md:justify-end mt-2">
-                        <Tooltip
-                            text="Create a tranche first"
-                            disable={myTranches?.length !== 0}
-                            content={
-                                <Button
-                                    label={'My Tranches'}
-                                    onClick={() => openDialog('my-tranches-dialog')}
-                                    primary
-                                    disabled={myTranches?.length === 0}
-                                    className="!text-lg"
-                                />
-                            }
-                        />
+                        {myTranches?.length > 0 ? (
+                            <Button
+                                label={'My Tranches'}
+                                onClick={() => openDialog('my-tranches-dialog')}
+                                primary
+                                className="!text-lg"
+                            />
+                        ) : (
+                            <Tooltip
+                                text="Create a tranche first"
+                                content={
+                                    <Button
+                                        label={'My Tranches'}
+                                        primary
+                                        disabled={myTranches?.length === 0}
+                                        className="!text-lg"
+                                    />
+                                }
+                            />
+                        )}
                         <Button
                             label={width > 768 ? 'Create Tranche' : <BiPlus size="28px" />}
                             onClick={() => openDialog('create-tranche-dialog')}
