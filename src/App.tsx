@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
+import { Routes, Route, Navigate } from 'react-router-dom';
 
 import { FullPageLoader } from './ui/components/loaders';
 import Overview from './pages/overview';
@@ -11,10 +10,6 @@ import Construction from './pages/construction';
 import TrancheDetails from './pages/tranche-details';
 import Portfolio from './pages/portfolio';
 
-import { SelectedTrancheStore, TransactionsStore, MyTranchesStore } from './store/contexts';
-
-const queryClient = new QueryClient();
-
 function App() {
     const [showLoading, setShowLoading] = useState(true);
 
@@ -24,29 +19,21 @@ function App() {
     }, []);
 
     return (
-        <QueryClientProvider client={queryClient}>
-            <MyTranchesStore>
-                <TransactionsStore>
-                    <SelectedTrancheStore>
-                        <FullPageLoader loading={showLoading} onlyHome>
-                            <Routes>
-                                <Route index element={<Navigate to="/overview" />} />
-                                <Route path="/overview" element={<Overview />} />
-                                <Route path="/tranches" element={<Tranches />} />
-                                <Route path="/markets" element={<Markets />} />
-                                <Route path="/staking" element={<Staking />} />
-                                <Route path="/governance" element={<Construction />} />
-                                <Route path="/develop" element={<Construction />} />
-                                <Route path="/portfolio" element={<Portfolio />} />
+        <FullPageLoader loading={showLoading} onlyHome>
+            <Routes>
+                <Route index element={<Navigate to="/overview" />} />
+                <Route path="/overview" element={<Overview />} />
+                <Route path="/tranches" element={<Tranches />} />
+                <Route path="/markets" element={<Markets />} />
+                <Route path="/staking" element={<Staking />} />
+                <Route path="/governance" element={<Construction />} />
+                <Route path="/develop" element={<Construction />} />
+                <Route path="/portfolio" element={<Portfolio />} />
 
-                                {/* Dynamic Tranche Routes */}
-                                <Route path="/tranches/:name" element={<TrancheDetails />} />
-                            </Routes>
-                        </FullPageLoader>
-                    </SelectedTrancheStore>
-                </TransactionsStore>
-            </MyTranchesStore>
-        </QueryClientProvider>
+                {/* Dynamic Tranche Routes */}
+                <Route path="/tranches/:name" element={<TrancheDetails />} />
+            </Routes>
+        </FullPageLoader>
     );
 }
 
