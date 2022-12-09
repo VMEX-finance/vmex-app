@@ -43,7 +43,7 @@ export const Navbar: React.FC = () => {
                 {/* Desktop/Mobile Left Nav */}
                 <a id="nav-logo" href="/">
                     <img
-                        src={isDark ? '/VMEX-logo-white.svg' : '/VMEX-logo.svg'}
+                        src={isDark && width >= 1024 ? '/VMEX-logo-white.svg' : '/VMEX-logo.svg'}
                         alt="VMEX Finance Logo"
                         width="100"
                         className="invert lg:invert-0"
