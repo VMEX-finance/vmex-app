@@ -10,7 +10,6 @@ export const muiCache = createCache({
 });
 
 export function vmexTheme(isDark = false) {
-    console.log(isDark);
     return createTheme({
         palette: {
             mode: isDark ? 'dark' : 'light',

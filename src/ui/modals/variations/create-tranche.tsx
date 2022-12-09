@@ -20,7 +20,7 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
     const { address } = useAccount();
     const { data: signer } = useSigner();
     const { setError, isSuccess, error, submitTx, isLoading } = useModal('create-tranche-dialog');
-    const { newTranche, myTranches } = useMyTranchesContext();
+    const { myTranches } = useMyTranchesContext();
     const { steps, nextStep, prevStep, activeStep } = useStepper([
         { name: 'Create Tranche', status: 'current' },
         { name: 'Manage Assets', status: 'upcoming' },

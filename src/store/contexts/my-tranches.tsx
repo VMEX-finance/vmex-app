@@ -1,4 +1,7 @@
-import React, { createContext, ReactNode, useContext, useState } from 'react';
+import { useTranchesData } from '../../api';
+import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { useAccount } from 'wagmi';
+import { ITrancheProps } from '@app/api/models';
 
 // Types
 type IMyTrancheProps = {
@@ -31,10 +34,13 @@ const TranchesContext = createContext<ITranchesStoreProps>({
 
 // Wrapper
 export function MyTranchesStore(props: { children: ReactNode }) {
+    const { address } = useAccount();
+    const { queryAllTranches } = useTranchesData();
     const [myTranches, setMyTranches] = useState<Array<IMyTrancheProps>>([]);
     const [error, setError] = useState('');
 
-    // TODO: push this new tranche to mock tranches
+    console.log(queryAllTranches.data);
+
     const newTranche = ({
         name,
         whitelisted,
@@ -111,6 +117,26 @@ export function MyTranchesStore(props: { children: ReactNode }) {
             setMyTranches(shallow);
         }
     };
+
+    useEffect(() => {
+        if (queryAllTranches.data) {
+            const shallow: any[] = [];
+            queryAllTranches.data.map((el) => {
+                if (el.admin === address)
+                    shallow.push({
+                        id: Number(el.id),
+                        name: el.name,
+                        whitelisted: [], // TODO: fix this
+                        blacklisted: [], // TODO: fix this
+                        tokens: el.assets,
+                        adminFee: el.adminFee.toString(),
+                        lendAndBorrowTokens: [], // TODO: fix this
+                        collateralTokens: [], // TODO: fix this
+                    });
+            });
+            setMyTranches(shallow);
+        }
+    }, [queryAllTranches.data]);
 
     return (
         <TranchesContext.Provider
