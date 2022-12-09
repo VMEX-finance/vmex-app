@@ -79,7 +79,7 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, data, ta
                         {!isSuccess && !error ? (
                             // Default State
                             <>
-                                <h3 className="mt-5 text-gray-400">Amount</h3>
+                                <h3 className="mt-5 text-neutral400">Amount</h3>
                                 <CoinInput
                                     amount={amount}
                                     setAmount={setAmount}
@@ -90,7 +90,7 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, data, ta
                                     balance={data?.amount?.replaceAll(',', '')}
                                 />
 
-                                <h3 className="mt-6 text-gray-400">Collaterize</h3>
+                                <h3 className="mt-6 text-neutral400">Collaterize</h3>
                                 <div className="mt-1">
                                     <BasicToggle
                                         checked={asCollateral}
@@ -99,7 +99,7 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, data, ta
                                     />
                                 </div>
 
-                                <h3 className="mt-6 text-gray-400">Health Factor</h3>
+                                <h3 className="mt-6 text-neutral400">Health Factor</h3>
                                 <HealthFactor asset={data.asset} amount={amount} type={'supply'} />
 
                                 <ModalTableDisplay
@@ -134,7 +134,7 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, data, ta
                         {!isSuccess && !error ? (
                             // Default State
                             <>
-                                <h3 className="mt-5 text-gray-400">Amount</h3>
+                                <h3 className="mt-5 text-neutral400">Amount</h3>
                                 <CoinInput
                                     amount={amount}
                                     setAmount={setAmount}
@@ -147,7 +147,7 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, data, ta
                                         data.amountNative?.replaceAll(',', '')
                                     }
                                 />
-                                <h3 className="mt-6 text-gray-400">Health Factor</h3>
+                                <h3 className="mt-6 text-neutral400">Health Factor</h3>
                                 <HealthFactor
                                     asset={data.asset}
                                     amount={amount}

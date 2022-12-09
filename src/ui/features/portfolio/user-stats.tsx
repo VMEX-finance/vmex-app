@@ -19,7 +19,7 @@ export const PortfolioStatsCard: React.FC<IPortfolioProps> = ({
 }) => {
     return (
         <Card loading={isLoading}>
-            <div className="flex flex-col xl:flex-row gap-2 md:gap-4 xl:gap-6 divide-y-2 xl:divide-y-0 xl:divide-x-2 divide-black">
+            <div className="flex flex-col xl:flex-row gap-2 md:gap-4 xl:gap-6 divide-y-2 xl:divide-y-0 xl:divide-x-2 divide-black dark:divide-white">
                 <div className="flex flex-col md:flex-row font-basefont gap-8">
                     <div className="flex flex-col justify-between min-w-[90%] xl:min-w-[300px]">
                         <div className="flex flex-col">

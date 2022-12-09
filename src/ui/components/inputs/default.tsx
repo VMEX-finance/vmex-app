@@ -54,14 +54,14 @@ export const DefaultInput = ({
                         <Tooltip
                             text={tooltip}
                             content={
-                                <h3 className="mt-6 mb-1 text-gray-400">
+                                <h3 className="mt-6 mb-1 text-neutral400">
                                     {title}
                                     {required && <span className="text-red-500 ml-1">*</span>}
                                 </h3>
                             }
                         />
                     ) : (
-                        <h3 className="mt-6 mb-1 text-gray-400">
+                        <h3 className="mt-6 mb-1 text-neutral400">
                             {title}
                             {required && <span className="text-red-500 ml-1">*</span>}
                         </h3>

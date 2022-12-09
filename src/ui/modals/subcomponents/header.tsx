@@ -27,14 +27,14 @@ export const ModalHeader = ({ title, dialog, asset, tab, primary, onClick }: IMo
                                 <div className="text-left flex flex-row gap-2">
                                     <Dialog.Title
                                         as="h3"
-                                        className="text-xl leading-6 font-medium text-gray-900"
+                                        className="text-xl leading-6 font-medium text-neutral900"
                                     >
                                         {title}
                                     </Dialog.Title>
                                     {onClick && (
                                         <Dialog.Title
                                             as="h3"
-                                            className="text-xl leading-6 font-medium text-gray-400 cursor-pointer"
+                                            className="text-xl leading-6 font-medium text-neutral400 cursor-pointer"
                                             onClick={() => onClick(tab)}
                                         >
                                             {tab}
@@ -56,7 +56,7 @@ export const ModalHeader = ({ title, dialog, asset, tab, primary, onClick }: IMo
                                     {onClick && (
                                         <Dialog.Title
                                             as="h3"
-                                            className="text-xl leading-6 font-medium text-gray-400 cursor-pointer"
+                                            className="text-xl leading-6 font-medium text-neutral400 cursor-pointer"
                                             onClick={() => onClick(title)}
                                         >
                                             {title}
@@ -64,7 +64,7 @@ export const ModalHeader = ({ title, dialog, asset, tab, primary, onClick }: IMo
                                     )}
                                     <Dialog.Title
                                         as="h3"
-                                        className="text-xl leading-6 font-medium text-gray-900"
+                                        className="text-xl leading-6 font-medium text-neutral900"
                                     >
                                         {tab}
                                     </Dialog.Title>
@@ -85,7 +85,7 @@ export const ModalHeader = ({ title, dialog, asset, tab, primary, onClick }: IMo
                         <div className="text-left">
                             <Dialog.Title
                                 as="h3"
-                                className="text-xl leading-6 font-medium text-gray-900"
+                                className="text-xl leading-6 font-medium text-neutral900"
                             >
                                 {title} {asset ? asset : ''}
                             </Dialog.Title>

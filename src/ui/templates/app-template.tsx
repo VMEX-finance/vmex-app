@@ -21,7 +21,7 @@ const AppTemplate: React.FC<IAppTemplateProps> = ({
     setView,
 }) => {
     return (
-        <div className="min-h-screen bg-[#eee] dark:bg-neutral-800">
+        <div className="min-h-screen bg-[#eee] dark:bg-neutral-900">
             <Navbar />
             <DashboardTemplate
                 title={title}

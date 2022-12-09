@@ -30,7 +30,7 @@ const Portfolio: React.FC = () => {
         <AppTemplate title="Portfolio">
             {address ? (
                 <GridView type="fixed">
-                    <div className="col-span-2 flex flex-col gap-4 md:gap-6 lg:gap-8">
+                    <div className="col-span-2 flex flex-col gap-4 xl:gap-8">
                         <PortfolioStatsCard
                             isLoading={queryUserActivity.isLoading}
                             networth={calculateNetworth()}
@@ -42,7 +42,7 @@ const Portfolio: React.FC = () => {
                             )}
                             avgHealth={'0'} // TODO: add average health factor
                         />
-                        <div className="flex flex-col lg:flex-row lg:grow gap-4 md:gap-6 lg:gap-8">
+                        <div className="flex flex-col lg:flex-row lg:grow gap-4 xl:gap-8">
                             <YourPositionsTable
                                 type="supplies"
                                 data={queryUserActivity.data?.supplies}

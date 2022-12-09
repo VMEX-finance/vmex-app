@@ -107,7 +107,7 @@ export const DropdownButton = ({
         <>
             {title && (
                 <div className="flex items-baseline justify-between">
-                    <h3 className="mt-6 mb-2 text-gray-400">{title}</h3>
+                    <h3 className="mt-6 mb-2 text-neutral400">{title}</h3>
                     {multiselect && (
                         <span className="text-sm">
                             {selected?.length > 0 ? selected.length : 0} Selected

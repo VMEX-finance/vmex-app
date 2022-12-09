@@ -78,7 +78,7 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
                         {!isSuccess && !error ? (
                             // Default State
                             <>
-                                <h3 className="mt-5 text-gray-400">Amount</h3>
+                                <h3 className="mt-5 text-neutral400">Amount</h3>
                                 <CoinInput
                                     amount={amount}
                                     setAmount={setAmount}
@@ -90,7 +90,7 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
                                     type="collateral"
                                 />
 
-                                <h3 className="mt-6 text-gray-400">Health Factor</h3>
+                                <h3 className="mt-6 text-neutral400">Health Factor</h3>
                                 <HealthFactor asset={data.asset} amount={amount} type={'borrow'} />
 
                                 <ModalTableDisplay
@@ -125,7 +125,7 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
                         {!isSuccess && !error ? (
                             // Default State
                             <>
-                                <h3 className="mt-5 text-gray-400">Amount</h3>
+                                <h3 className="mt-5 text-neutral400">Amount</h3>
                                 <CoinInput
                                     amount={amount}
                                     setAmount={setAmount}
@@ -137,7 +137,7 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
                                     type="owed"
                                 />
 
-                                <h3 className="mt-6 text-gray-400">Health Factor</h3>
+                                <h3 className="mt-6 text-neutral400">Health Factor</h3>
                                 <HealthFactor asset={data.asset} amount={amount} type={'repay'} />
 
                                 <ModalTableDisplay

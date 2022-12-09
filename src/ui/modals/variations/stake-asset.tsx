@@ -25,7 +25,7 @@ export const StakeAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
                 {!isSuccess ? (
                     // Default State
                     <>
-                        <h3 className="mt-5 text-gray-400">Amount</h3>
+                        <h3 className="mt-5 text-neutral400">Amount</h3>
                         <CoinInput
                             amount={amount}
                             setAmount={setAmount}

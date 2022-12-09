@@ -57,7 +57,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
         else return [];
     };
 
-    const buttonClass = `transition duration-150 hover:bg-neutral-100 rounded-lg`;
+    const buttonClass = `transition duration-150 hover:bg-neutral-100 rounded-lg dark:bg-neutral-800 dark:hover:bg-neutral-700`;
 
     return (
         <>

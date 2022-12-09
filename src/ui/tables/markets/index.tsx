@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { CacheProvider } from '@emotion/react';
 import { ThemeProvider } from '@mui/material/styles';
 import { muiCache, options, vmexTheme } from '../utils';
@@ -9,6 +9,7 @@ import { IMarketsAsset } from '@app/api/models';
 import { useAccount } from 'wagmi';
 import { useUserData } from '../../../api';
 import { numberFormatter } from '../../../utils/helpers';
+import { ThemeContext } from '../../../store/contexts';
 
 interface ITableProps {
     data?: IMarketsAsset[];
@@ -16,6 +17,7 @@ interface ITableProps {
 }
 
 export const MarketsTable: React.FC<ITableProps> = ({ data, loading }) => {
+    const { isDark } = useContext(ThemeContext);
     const { address } = useAccount();
     const { queryUserActivity } = useUserData(address);
 
@@ -152,7 +154,7 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading }) => {
 
     return (
         <CacheProvider value={muiCache}>
-            <ThemeProvider theme={vmexTheme()}>
+            <ThemeProvider theme={vmexTheme(isDark)}>
                 <MUIDataTable
                     title={['All Available Assets']}
                     columns={columns}

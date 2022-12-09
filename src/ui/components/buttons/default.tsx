@@ -27,7 +27,7 @@ export const Button = ({
     const mode = primary
         ? 'bg-black rounded-lg text-white hover:bg-neutral-800 border border-[1px] border-black'
         : border
-        ? `bg-white text-neutral-900 border-[1px] border-black border-solid rounded-lg hover:bg-neutral-800 hover:text-white`
+        ? `bg-white text-neutral-900 border-[1px] border-black border-solid rounded-lg hover:bg-neutral-100`
         : 'bg-white text-neutral-900 rounded-lg hover:bg-neutral-200';
 
     return (
@@ -35,6 +35,11 @@ export const Button = ({
             disabled={disabled}
             onClick={onClick}
             className={[
+                `${
+                    primary
+                        ? 'dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200'
+                        : 'dark:bg-black dark:text-neutral-100 dark:hover:bg-neutral-900'
+                } ${disabled ? 'dark:border-transparent' : 'dark:border-neutral-100'}`,
                 'h-fit',
                 'box-border',
                 'font-basefont',
@@ -51,7 +56,7 @@ export const Button = ({
                     disabled
                         ? `${
                               primary
-                                  ? '!bg-neutral-700 !text-neutral-300'
+                                  ? '!bg-neutral-700 dark:!bg-neutral-400 !text-neutral-300 dark:!text-neutral-800'
                                   : 'hover:!bg-inherit hover:!text-inherit'
                           } !cursor-not-allowed`
                         : ''

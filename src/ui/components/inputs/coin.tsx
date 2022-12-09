@@ -23,7 +23,7 @@ export const CoinInput = ({ amount, setAmount, coin, balance, type }: ICoinInput
                     className="text-2xl focus:outline-none max-w-[200px]"
                     placeholder="0.00"
                 />
-                <div className="text-gray-400">USD</div>
+                <div className="text-neutral400">USD</div>
             </div>
             <div className="flex flex-col justify-between items-end gap-3">
                 <AssetDisplay logo={coin.logo} name={coin.name} />

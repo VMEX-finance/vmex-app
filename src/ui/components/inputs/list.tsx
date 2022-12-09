@@ -123,7 +123,7 @@ export const ListInput = ({
     return (
         <>
             <div className="flex justify-between items-end">
-                <h3 className="mt-6 mb-1 text-gray-400">
+                <h3 className="mt-6 mb-1 text-neutral400">
                     {title}
                     {required && <span className="text-red-500 ml-1">*</span>}
                 </h3>
@@ -147,7 +147,7 @@ export const ListInput = ({
                                 list={autocomplete}
                             />
                             {value && value.length > 2 && (
-                                <span className="text-sm text-gray-400 whitespace-nowrap">
+                                <span className="text-sm text-neutral400 whitespace-nowrap">
                                     Press Enter
                                 </span>
                             )}
