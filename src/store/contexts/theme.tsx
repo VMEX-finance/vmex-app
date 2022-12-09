@@ -1,4 +1,10 @@
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
+
+type IThemeProps = {
+    theme: string;
+    setTheme: Dispatch<SetStateAction<string>>;
+    isDark: boolean;
+};
 
 const getInitialTheme = () => {
     if (typeof window !== 'undefined' && window.localStorage) {
@@ -16,10 +22,15 @@ const getInitialTheme = () => {
     return 'light'; // light theme as the default;
 };
 
-export const ThemeContext = React.createContext<any>({});
+export const ThemeContext = React.createContext<IThemeProps>({
+    theme: '',
+    setTheme: () => {},
+    isDark: false,
+});
 
 export const ThemeProvider = ({ initialTheme, children }: any) => {
     const [theme, setTheme] = React.useState(getInitialTheme);
+    const isDark = theme === 'dark' ? true : false;
 
     const rawSetTheme = (rawTheme: any) => {
         const root = window.document.documentElement;
@@ -39,5 +50,11 @@ export const ThemeProvider = ({ initialTheme, children }: any) => {
         rawSetTheme(theme);
     }, [theme]);
 
-    return <ThemeContext.Provider value={{ theme, setTheme }}>{children}</ThemeContext.Provider>;
+    return (
+        <ThemeContext.Provider value={{ theme, setTheme, isDark }}>
+            {children}
+        </ThemeContext.Provider>
+    );
 };
+
+export const themeContext = React.createContext<any>(ThemeContext);

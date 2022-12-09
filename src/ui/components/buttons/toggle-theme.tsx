@@ -2,7 +2,7 @@ import { ThemeContext } from '../../../store/contexts';
 import React from 'react';
 import { FaMoon, FaSun } from 'react-icons/fa';
 
-const ToggleButton = () => {
+const ToggleThemeButton = () => {
     const { theme, setTheme } = React.useContext(ThemeContext);
 
     return (
@@ -22,4 +22,4 @@ const ToggleButton = () => {
     );
 };
 
-export default ToggleButton;
+export { ToggleThemeButton };
