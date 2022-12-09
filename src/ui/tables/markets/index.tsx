@@ -9,7 +9,11 @@ import { IMarketsAsset } from '@app/api/models';
 import { useAccount } from 'wagmi';
 import { useUserData } from '../../../api';
 import { numberFormatter } from '../../../utils/helpers';
+<<<<<<< HEAD
 import { ThemeContext } from '../../../store/contexts';
+=======
+import { bigNumberToUnformattedString } from '../../../utils/sdk-helpers';
+>>>>>>> f942387 (bignumber precision instead of converting)
 
 interface ITableProps {
     data?: IMarketsAsset[];
@@ -25,11 +29,15 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading }) => {
         let amount = 0;
         queryUserActivity?.data?.supplies.map((supply) => {
             if (supply.asset === asset)
-                amount = amount + parseFloat(supply.amountNative.replaceAll(',', ''));
+                amount =
+                    amount +
+                    parseFloat(bigNumberToUnformattedString(supply.amountNative, supply.asset));
         });
         queryUserActivity?.data?.borrows.map((borrow) => {
             if (borrow.asset === asset)
-                amount = amount - parseFloat(borrow.amountNative.replaceAll(',', ''));
+                amount =
+                    amount -
+                    parseFloat(bigNumberToUnformattedString(borrow.amountNative, borrow.asset));
         });
         return numberFormatter.format(amount);
     };

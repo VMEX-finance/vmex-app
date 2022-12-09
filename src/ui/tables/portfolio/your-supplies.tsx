@@ -8,7 +8,7 @@ import { BigNumber } from 'ethers';
 export type IYourSuppliesTableItemProps = {
     asset: string;
     amount: string;
-    amountNative: string;
+    amountNative: BigNumber;
     collateral: boolean;
     apy: number;
     tranche: string;

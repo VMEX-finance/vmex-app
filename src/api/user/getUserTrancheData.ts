@@ -15,6 +15,7 @@ import {
     rayToPercent,
     SDK_PARAMS,
     REVERSE_MAINNET_ASSET_MAPPINGS,
+    bigNumberToUnformattedString,
 } from '../../utils/sdk-helpers';
 import { IUserTrancheDataProps, IUserTrancheData } from './types';
 import { BigNumber } from 'ethers';
@@ -42,19 +43,12 @@ export async function _getUserTrancheData(
     });
 
     const tmp = userTrancheData.assetBorrowingPower.map((marketData: AvailableBorrowData) => {
+        let asset =
+            REVERSE_MAINNET_ASSET_MAPPINGS.get(marketData.asset.toLowerCase()) || marketData.asset;
         return {
-            asset:
-                REVERSE_MAINNET_ASSET_MAPPINGS.get(marketData.asset.toLowerCase()) ||
-                marketData.asset,
-
+            asset: asset,
             amountUSD: bigNumberToUSD(marketData.amountUSD, 18),
-            amountNative: bigNumberToNative(
-                marketData.amountNative,
-                DECIMALS.get(
-                    REVERSE_MAINNET_ASSET_MAPPINGS.get(marketData.asset.toLowerCase()) ||
-                        marketData.asset,
-                ) || 18,
-            ),
+            amountNative: marketData.amountNative,
         };
     });
 
@@ -62,20 +56,14 @@ export async function _getUserTrancheData(
         totalCollateralETH: userTrancheData.totalCollateralETH,
         totalDebtETH: userTrancheData.totalDebtETH,
         currentLiquidationThreshold: userTrancheData.currentLiquidationThreshold,
-        healthFactor: bigNumberToNative(userTrancheData.healthFactor, 18), //health factor has 18 decimals.
+        healthFactor: bigNumberToUnformattedString(userTrancheData.healthFactor, 'ETH'), //health factor has 18 decimals.
         supplies: userTrancheData.suppliedAssetData.map((assetData: SuppliedAssetData) => {
             return {
                 asset:
                     REVERSE_MAINNET_ASSET_MAPPINGS.get(assetData.asset.toLowerCase()) ||
                     assetData.asset,
                 amount: bigNumberToUSD(assetData.amount, 18),
-                amountNative: bigNumberToNative(
-                    assetData.amountNative,
-                    DECIMALS.get(
-                        REVERSE_MAINNET_ASSET_MAPPINGS.get(assetData.asset.toLowerCase()) ||
-                            assetData.asset,
-                    ) || 18,
-                ),
+                amountNative: assetData.amountNative,
                 collateral: assetData.isCollateral,
                 apy: rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0)),
                 tranche: assetData.tranche.toString(),
@@ -89,13 +77,14 @@ export async function _getUserTrancheData(
                     REVERSE_MAINNET_ASSET_MAPPINGS.get(assetData.asset.toLowerCase()) ||
                     assetData.asset,
                 amount: bigNumberToUSD(assetData.amount, 18),
-                amountNative: bigNumberToNative(
-                    assetData.amountNative,
-                    DECIMALS.get(
-                        REVERSE_MAINNET_ASSET_MAPPINGS.get(assetData.asset.toLowerCase()) ||
-                            assetData.asset,
-                    ) || 18,
-                ),
+                amountNative: assetData.amountNative,
+                // bigNumberToNative(
+                //     assetData.amountNative,
+                //     DECIMALS.get(
+                //         REVERSE_MAINNET_ASSET_MAPPINGS.get(assetData.asset.toLowerCase()) ||
+                //             assetData.asset,
+                //     ) || 18,
+                // ),
                 apy: rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0)),
                 tranche: assetData.tranche.toString(),
                 trancheId: assetData.tranche.toNumber(),

@@ -12,6 +12,11 @@ import { MAINNET_ASSET_MAPPINGS, NETWORK } from '../../../utils/sdk-helpers';
 import { HealthFactor } from '../../components/displays';
 import { useTrancheMarketsData } from '../../../api';
 import { useSigner } from 'wagmi';
+import {
+    unformattedStringToBigNumber,
+    bigNumberToNative,
+    bigNumberToUnformattedString,
+} from '../../../utils/sdk-helpers';
 
 interface IOwnedAssetDetails {
     name?: string;
@@ -38,7 +43,7 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, data, ta
                       amount: convertStringFormatToNumber(amount),
                       signer: data.signer || signer,
                       network: NETWORK,
-                      collateral: asCollateral,
+                      //   collateral: asCollateral,
                       // referrer: number,
                       // collateral: boolean,
                       // test: boolean
@@ -87,7 +92,10 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, data, ta
                                         logo: `/coins/${data.asset?.toLowerCase()}.svg`,
                                         name: data.asset,
                                     }}
-                                    balance={data?.amount?.replaceAll(',', '')}
+                                    balance={bigNumberToUnformattedString(
+                                        data?.amount,
+                                        data?.asset,
+                                    )}
                                 />
 
                                 <h3 className="mt-6 text-neutral400">Collaterize</h3>
@@ -97,7 +105,7 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, data, ta
                                         onChange={() => setAsCollateral(!asCollateral)}
                                         disabled={!data.canBeCollat}
                                     />
-                                </div>
+                                </div> */}
 
                                 <h3 className="mt-6 text-neutral400">Health Factor</h3>
                                 <HealthFactor asset={data.asset} amount={amount} type={'supply'} />
@@ -142,10 +150,10 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, data, ta
                                         logo: `/coins/${data.asset?.toLowerCase()}.svg`,
                                         name: data.asset,
                                     }}
-                                    balance={
-                                        data.amountWithdrawOrRepay?.replaceAll(',', '') ||
-                                        data.amountNative?.replaceAll(',', '')
-                                    }
+                                    balance={bigNumberToUnformattedString(
+                                        data.amountWithdrawOrRepay || data.amountNative,
+                                        data.asset,
+                                    )}
                                 />
                                 <h3 className="mt-6 text-neutral400">Health Factor</h3>
                                 <HealthFactor
@@ -159,7 +167,20 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, data, ta
                                     content={[
                                         {
                                             label: 'Remaining Supply',
-                                            value: `${getTrancheMarket(data.asset).supplyTotal}`, // TODO: make this reactive to input amount
+                                            value: amount
+                                                ? bigNumberToNative(
+                                                      data.amountWithdrawOrRepay.sub(
+                                                          unformattedStringToBigNumber(
+                                                              amount,
+                                                              data.asset,
+                                                          ),
+                                                      ),
+                                                      data.asset,
+                                                  )
+                                                : bigNumberToNative(
+                                                      data.amountWithdrawOrRepay,
+                                                      data.asset,
+                                                  ),
                                             loading: queryTrancheMarkets.isLoading,
                                         },
                                     ]}

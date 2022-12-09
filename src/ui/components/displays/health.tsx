@@ -3,7 +3,7 @@ import { TbInfinity } from 'react-icons/tb';
 import { BsArrowRight } from 'react-icons/bs';
 import { useUserTrancheData, useTrancheMarketsData } from '../../../api';
 import { useSelectedTrancheContext } from '../../../store/contexts';
-import { convertStringFormatToNumber, numberFormatter } from '../../../utils/helpers';
+import { convertStringFormatToNumber, HFFormatter } from '../../../utils/helpers';
 import { ethers, BigNumber } from 'ethers';
 import { calculateHealthFactorFromBalances, DECIMALS } from '../../../utils/sdk-helpers';
 import { useAccount } from 'wagmi';
@@ -73,7 +73,7 @@ export const HealthFactor = ({
             <TbInfinity color="#8CE58F" size={`${determineSize()[0]}`} />
         ) : (
             <span className={`${determineSize()[2]} ${determineColor(hf)} font-semibold`}>
-                {numberFormatter.format(typeof hf === 'string' ? parseFloat(hf) : hf)}
+                {HFFormatter.format(typeof hf === 'string' ? parseFloat(hf) : hf)}
             </span>
         );
     };

@@ -13,6 +13,12 @@ import { borrow, repay } from '@vmex/sdk';
 import { MAINNET_ASSET_MAPPINGS, NETWORK } from '../../../utils/sdk-helpers';
 import { useAccount, useSigner } from 'wagmi';
 import { useUserData } from '../../../api';
+import { ethers } from 'ethers';
+import {
+    unformattedStringToBigNumber,
+    bigNumberToNative,
+    bigNumberToUnformattedString,
+} from '../../../utils/sdk-helpers';
 
 export const BorrowAssetDialog: React.FC<IDialogProps> = ({
     name,
@@ -86,7 +92,7 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
                                         logo: `/coins/${data.asset?.toLowerCase()}.svg`,
                                         name: data.asset,
                                     }}
-                                    balance={data.amount}
+                                    balance={bigNumberToUnformattedString(data.amount, data.asset)}
                                     type="collateral"
                                 />
 
@@ -100,10 +106,6 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
                                             label: 'Borrow APR (%)',
                                             value: `${data.apy}%`,
                                         },
-                                        {
-                                            label: 'Collateralization',
-                                            value: <ActiveStatus active={false} size="sm" />,
-                                        },
                                     ]}
                                 />
                             </>
@@ -114,6 +116,7 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
                         )}
                     </>
                 ) : (
+                    //repay
                     <>
                         <ModalHeader
                             dialog="borrow-asset-dialog"
@@ -133,7 +136,10 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
                                         logo: `/coins/${data.asset?.toLowerCase()}.svg`,
                                         name: data.asset,
                                     }}
-                                    balance={data.amountWithdrawOrRepay || data.amountNative}
+                                    balance={bigNumberToUnformattedString(
+                                        data.amountWithdrawOrRepay || data.amountNative,
+                                        data.asset,
+                                    )}
                                     type="owed"
                                 />
 
@@ -147,14 +153,19 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
                                             label: 'Remaining Balance',
                                             value: `${
                                                 amount
-                                                    ? (
-                                                          parseFloat(
-                                                              getTokenBalance(
+                                                    ? bigNumberToNative(
+                                                          data.amountWithdrawOrRepay.sub(
+                                                              unformattedStringToBigNumber(
+                                                                  amount,
                                                                   data.asset,
-                                                              ).amountNative.replaceAll(',', ''),
-                                                          ) - parseFloat(amount.replaceAll(',', ''))
-                                                      ).toLocaleString('en-US')
-                                                    : getTokenBalance(data.asset).amountNative
+                                                              ),
+                                                          ),
+                                                          data.asset,
+                                                      )
+                                                    : bigNumberToNative(
+                                                          data.amountWithdrawOrRepay,
+                                                          data.asset,
+                                                      )
                                             } ${data.asset}`,
                                         },
                                     ]}

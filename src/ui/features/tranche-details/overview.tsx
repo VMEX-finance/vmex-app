@@ -45,9 +45,21 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
 
     const calculateNetAPY = () => {
         if (!data) return `0%`;
-        const supplySum = data?.supplies.reduce((partial, next) => partial + next.apy, 0);
-        const borrowSum = data?.borrows.reduce((partial, next) => partial + next.apy, 0);
-        return `${(supplySum - borrowSum).toFixed(3)}%`;
+        const supplyTotal = data?.supplies.reduce(
+            (partial, next) => partial + parseFloat(next.amount.slice(1).replaceAll(',', '')),
+            0,
+        );
+        const supplySum = data?.supplies.reduce(
+            (partial, next) =>
+                partial + next.apy * parseFloat(next.amount.slice(1).replaceAll(',', '')),
+            0,
+        );
+        const borrowSum = data?.borrows.reduce(
+            (partial, next) =>
+                partial + next.apy * parseFloat(next.amount.slice(1).replaceAll(',', '')),
+            0,
+        );
+        return `${((supplySum - borrowSum) / supplyTotal).toFixed(3)}%`;
     };
 
     const renderUserInteractions = (

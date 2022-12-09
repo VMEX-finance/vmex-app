@@ -5,7 +5,7 @@ import { BigNumber } from 'ethers';
 
 type ITokenBalanceProps = {
     amount: string;
-    amountNative: string;
+    amountNative: BigNumber;
 };
 
 export type ITrancheInteractedProps = {
@@ -32,7 +32,7 @@ export type IUserActivityDataProps = {
 export type IWalletAssetProps = {
     asset: string;
     amount: string;
-    amountNative: string;
+    amountNative: BigNumber;
     currentPrice: BigNumber; //18 decimals
 };
 
@@ -59,5 +59,5 @@ export type IUserTrancheData = {
 export type IAvailableBorrowData = {
     asset: string;
     amountUSD: string;
-    amountNative: string;
+    amountNative: BigNumber;
 };

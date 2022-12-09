@@ -7,6 +7,7 @@ import { useProtocolData } from '../api/protocol';
 import { useUserData } from '../api/user';
 import { useAccount } from 'wagmi';
 import { numberFormatter } from '../utils/helpers';
+import { bigNumberToUnformattedString } from '../utils/sdk-helpers';
 
 const Overview: React.FC = () => {
     const { address, isConnected } = useAccount();
@@ -27,7 +28,7 @@ const Overview: React.FC = () => {
                         loanedAssets={queryUserActivity.data?.supplies?.map((el) => ({
                             asset: el.asset,
                             amount: numberFormatter.format(
-                                parseFloat(el.amountNative.replaceAll(',', '')),
+                                parseFloat(bigNumberToUnformattedString(el.amountNative, el.asset)),
                             ),
                         }))}
                         tranches={queryUserActivity.data?.tranchesInteractedWith}

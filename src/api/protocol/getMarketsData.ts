@@ -10,6 +10,7 @@ import {
     SDK_PARAMS,
 } from '../../utils/sdk-helpers';
 import { IMarketsAsset } from '../models';
+import { BigNumber } from 'ethers';
 
 export async function getAllMarkets(): Promise<IMarketsAsset[]> {
     const allMarketsData: MarketData[] = await getAllMarketsData(SDK_PARAMS);
@@ -41,7 +42,7 @@ export async function getAllMarkets(): Promise<IMarketsAsset[]> {
             borrowApy: rayToPercent(marketData.borrowApy),
             yourAmount: 0,
             available: bigNumberToUSD(marketData.totalReserves, 18),
-            availableNative: 0, //not used
+            availableNative: BigNumber.from('0'), //not used
             supplyTotal: bigNumberToUSD(marketData.totalSupplied, 18),
             borrowTotal: bigNumberToUSD(marketData.totalBorrowed, 18),
             rating: '-',

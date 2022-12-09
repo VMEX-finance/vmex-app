@@ -8,7 +8,7 @@ export type IMarketsAsset = {
     borrowApy: number | string;
     yourAmount: number | string;
     available: number | string;
-    availableNative: number | string;
+    availableNative: BigNumber;
     supplyTotal: number | string;
     borrowTotal: number | string;
     rating: string;
@@ -56,8 +56,9 @@ export type ITrancheProps = {
 export type AvailableAsset = {
     asset: string;
     amount?: number | string;
-    amountNative?: number | string;
+    amountNative?: BigNumber;
     apy?: number | string;
     canBeCollat?: boolean;
     liquidity?: number | string;
+    liquidityNative?: BigNumber;
 };

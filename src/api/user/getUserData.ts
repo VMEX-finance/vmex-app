@@ -71,22 +71,16 @@ export async function getUserActivityData(userAddress: string): Promise<IUserAct
     );
 
     return {
-        availableBorrowsETH: bigNumberToNative(summary.availableBorrowsETH, 18),
-        totalCollateralETH: bigNumberToNative(summary.totalCollateralETH, 18),
-        totalDebtETH: bigNumberToNative(summary.totalDebtETH, 18),
+        availableBorrowsETH: bigNumberToNative(summary.availableBorrowsETH, 'ETH'),
+        totalCollateralETH: bigNumberToNative(summary.totalCollateralETH, 'ETH'),
+        totalDebtETH: bigNumberToNative(summary.totalDebtETH, 'ETH'),
         supplies: summary.suppliedAssetData.map((assetData: SuppliedAssetData) => {
             return {
                 asset:
                     REVERSE_MAINNET_ASSET_MAPPINGS.get(assetData.asset.toLowerCase()) ||
                     assetData.asset,
                 amount: bigNumberToUSD(assetData.amount, 18),
-                amountNative: bigNumberToNative(
-                    assetData.amountNative,
-                    DECIMALS.get(
-                        REVERSE_MAINNET_ASSET_MAPPINGS.get(assetData.asset.toLowerCase()) ||
-                            assetData.asset,
-                    ) || 18,
-                ),
+                amountNative: assetData.amountNative,
                 collateral: assetData.isCollateral,
                 apy: rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0)),
                 tranche: findAssetInTranche(assetData.asset, assetData.tranche.toNumber()),
@@ -100,13 +94,7 @@ export async function getUserActivityData(userAddress: string): Promise<IUserAct
                     REVERSE_MAINNET_ASSET_MAPPINGS.get(assetData.asset.toLowerCase()) ||
                     assetData.asset,
                 amount: bigNumberToUSD(assetData.amount, 18),
-                amountNative: bigNumberToNative(
-                    assetData.amountNative,
-                    DECIMALS.get(
-                        REVERSE_MAINNET_ASSET_MAPPINGS.get(assetData.asset.toLowerCase()) ||
-                            assetData.asset,
-                    ) || 18,
-                ),
+                amountNative: assetData.amountNative,
                 apy: rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0)),
                 tranche: findAssetInTranche(assetData.asset, assetData.tranche.toNumber()),
                 trancheId: assetData.tranche.toNumber(),
@@ -141,13 +129,7 @@ export async function _getUserWalletData(
                     REVERSE_MAINNET_ASSET_MAPPINGS.get(assetData.asset.toLowerCase()) ||
                     assetData.asset,
                 amount: bigNumberToUSD(assetData.amount, 18),
-                amountNative: bigNumberToNative(
-                    assetData.amountNative,
-                    DECIMALS.get(
-                        REVERSE_MAINNET_ASSET_MAPPINGS.get(assetData.asset.toLowerCase()) ||
-                            assetData.asset,
-                    ) || 18,
-                ),
+                amountNative: assetData.amountNative,
                 currentPrice: assetData.currentPrice,
             };
         }),
@@ -175,13 +157,13 @@ export function useUserData(userAddress: any): IUserDataProps {
         if (!AVAILABLE_ASSETS.includes(asset) || !queryUserWallet.data) {
             console.log(`Token Balance for ${asset} not found`);
             return {
-                amountNative: '0',
+                amountNative: BigNumber.from('0'),
                 amount: '$0',
             };
         } else {
             const found = queryUserWallet.data.assets.find((el) => el.asset === asset);
             return {
-                amountNative: found?.amountNative || '0',
+                amountNative: found?.amountNative || BigNumber.from('0'),
                 amount: found?.amount || '$0',
             };
         }

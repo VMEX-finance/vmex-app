@@ -2,11 +2,12 @@ import React from 'react';
 import { useDialogController } from '../../../hooks/dialogs';
 import { AssetDisplay, NumberAndDollar } from '../../components/displays';
 import { percentFormatter } from '../../../utils/helpers';
+import { BigNumber } from 'ethers';
 
 export type IYourBorrowsTableItemProps = {
     asset: string;
     amount: string;
-    amountNative: string;
+    amountNative: BigNumber;
     apy: number;
     tranche: string;
     trancheId: number;

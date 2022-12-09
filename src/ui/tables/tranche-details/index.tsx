@@ -9,6 +9,10 @@ import { NumberAndDollar } from '../../components/displays';
 import { useWindowSize } from '../../../hooks/ui';
 import { convertStringFormatToNumber } from '../../../utils/helpers';
 import { AvailableAsset } from '@app/api/models';
+import { BigNumber } from 'ethers';
+import { bigNumberToNative } from '../../../utils/sdk-helpers';
+
+import { bigNumberToUnformattedString } from '../../../utils/sdk-helpers';
 
 interface ITableProps {
     data: AvailableAsset[];
@@ -51,7 +55,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
         }
     };
 
-    const findAssetInWallet = (asset: string, usdValue = false) => {
+    const findAssetInWallet = (asset: string, usdValue = false): BigNumber | string => {
         if (queryUserWallet.isLoading) return `0`;
         else {
             const userWalletData = queryUserWallet.data?.assets;
@@ -63,22 +67,26 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
         }
     };
 
-    const findAmountBorrowable = (asset: string, liquidity: number | string | undefined) => {
+    const findAmountBorrowable = (
+        asset: string,
+        liquidity: number | string | undefined,
+        liquidityNative: BigNumber | undefined,
+        usdValue = false,
+    ) => {
         if (queryUserTrancheData.isLoading) return `0`;
         else {
             const userWalletData = queryUserTrancheData.data?.assetBorrowingPower;
             const found = userWalletData?.find(
                 (el) => el.asset.toLowerCase() === asset.toLowerCase(),
             );
-            if (found) {
-                return `${
-                    liquidity
-                        ? Math.min(
-                              parseFloat(convertStringFormatToNumber(found?.amountNative)),
-                              parseFloat(convertStringFormatToNumber(liquidity)),
-                          )
-                        : found?.amountNative
-                }`;
+            if (found && liquidity && liquidityNative) {
+                return usdValue
+                    ? `${found?.amountNative.lt(liquidityNative) ? found?.amountUSD : liquidity}`
+                    : `${
+                          found?.amountNative.lt(liquidityNative)
+                              ? found?.amountNative
+                              : liquidityNative
+                      }`;
             } else return `0`;
         }
     };
@@ -133,10 +141,16 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                             ...el,
                                             amount:
                                                 type === 'supply'
-                                                    ? findAssetInWallet(el.asset)
-                                                    : findAmountBorrowable(el.asset, el.liquidity),
-                                            amountWithdrawOrRepay: findAssetInUserSuppliesOrBorrows(
-                                                el.asset,
+                                                    ? BigNumber.from(findAssetInWallet(el.asset))
+                                                    : BigNumber.from(
+                                                          findAmountBorrowable(
+                                                              el.asset,
+                                                              el.liquidity,
+                                                              el.liquidityNative,
+                                                          ),
+                                                      ),
+                                            amountWithdrawOrRepay: BigNumber.from(
+                                                findAssetInUserSuppliesOrBorrows(el.asset),
                                             ),
                                         },
                                     )
@@ -161,16 +175,30 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                     <NumberAndDollar
                                         value={`${
                                             type === 'supply'
-                                                ? `${findAssetInWallet(el.asset)} ${el.asset}`
-                                                : `${findAmountBorrowable(
+                                                ? `${bigNumberToNative(
+                                                      BigNumber.from(findAssetInWallet(el.asset)),
                                                       el.asset,
-                                                      el.liquidity,
+                                                  )} ${el.asset}`
+                                                : `${bigNumberToNative(
+                                                      BigNumber.from(
+                                                          findAmountBorrowable(
+                                                              el.asset,
+                                                              el.liquidity,
+                                                              el.liquidityNative,
+                                                          ),
+                                                      ),
+                                                      el.asset,
                                                   )} ${el.asset}`
                                         }`}
                                         dollar={`${
                                             type === 'supply'
                                                 ? `${findAssetInWallet(el.asset, true)}`
-                                                : ''
+                                                : `${findAmountBorrowable(
+                                                      el.asset,
+                                                      el.liquidity,
+                                                      el.liquidityNative,
+                                                      true,
+                                                  )}`
                                         }`}
                                         size="xs"
                                         color="text-black"
@@ -187,7 +215,9 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                             )}
                                         </div>
                                     ) : (
-                                        `${el.liquidity} ${el.asset}`
+                                        `${bigNumberToNative(el.liquidityNative, el.asset)} ${
+                                            el.asset
+                                        }`
                                     )}
                                 </td>
                             </tr>
