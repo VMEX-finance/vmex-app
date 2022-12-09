@@ -9,6 +9,7 @@ import { useMyTranchesContext, useTransactionsContext } from '../../store/contex
 import { useAccount } from 'wagmi';
 import { useDialogController } from '../../hooks/dialogs/useDialogController';
 import { IDialogNames } from '@store/modals';
+import ToggleButton from '../components/buttons/toggle';
 
 const navItems = ['Overview', 'Tranches', 'Markets', 'Staking', 'Governance', 'Develop'];
 
@@ -66,6 +67,7 @@ export const Navbar: React.FC = () => {
 
                 {/* Desktop/Mobile Right Nav */}
                 <div className="flex items-center justify-end gap-3">
+                    {width <= 1024 && <ToggleButton />}
                     {/* Transactions Dropdown */}
                     {isConnected && transactions && transactions.length !== 0 && (
                         <DropdownButton
