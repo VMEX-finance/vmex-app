@@ -29,6 +29,7 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
 }) => {
     const { isSuccess, submitTx, isLoading, error } = useModal('borrow-asset-dialog');
     const [amount, setAmount] = useMediatedState(inputMediator, '');
+    const [isMax, setIsMax] = React.useState(false);
     const [view, setView] = React.useState('Borrow');
     const { address } = useAccount();
     const { getTokenBalance } = useUserData(address);
@@ -36,6 +37,7 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
 
     const handleClick = async () => {
         await submitTx(async () => {
+            console.log('isMax: ', isMax);
             const res = view?.includes('Borrow')
                 ? await borrow({
                       underlying: MAINNET_ASSET_MAPPINGS.get(data.asset) || '',
@@ -55,6 +57,7 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
                       rateMode: 2,
                       signer: data.signer || signer,
                       network: NETWORK,
+                      isMax: isMax,
                       // referrer: number,
                       // collateral: boolean,
                       // test: boolean
@@ -94,6 +97,7 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
                                     }}
                                     balance={bigNumberToUnformattedString(data.amount, data.asset)}
                                     type="collateral"
+                                    setIsMax={setIsMax}
                                 />
 
                                 <h3 className="mt-6 text-neutral400">Health Factor</h3>
@@ -141,6 +145,7 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
                                         data.asset,
                                     )}
                                     type="owed"
+                                    setIsMax={setIsMax}
                                 />
 
                                 <h3 className="mt-6 text-neutral400">Health Factor</h3>

@@ -9,11 +9,8 @@ import { IMarketsAsset } from '@app/api/models';
 import { useAccount } from 'wagmi';
 import { useUserData } from '../../../api';
 import { numberFormatter } from '../../../utils/helpers';
-<<<<<<< HEAD
 import { ThemeContext } from '../../../store/contexts';
-=======
 import { bigNumberToUnformattedString } from '../../../utils/sdk-helpers';
->>>>>>> f942387 (bignumber precision instead of converting)
 
 interface ITableProps {
     data?: IMarketsAsset[];

@@ -29,7 +29,8 @@ interface IOwnedAssetDetails {
 export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, data, tab }) => {
     const { submitTx, isSuccess, error, isLoading } = useModal('loan-asset-dialog');
     const [view, setView] = React.useState('Supply');
-    const [asCollateral, setAsCollateral] = React.useState(true);
+    // const [asCollateral, setAsCollateral] = React.useState(true);
+    const [isMax, setIsMax] = React.useState(false);
     const [amount, setAmount] = useMediatedState(inputMediator, '');
     const { getTrancheMarket, queryTrancheMarkets } = useTrancheMarketsData(data?.trancheId);
     const { data: signer } = useSigner();
@@ -55,6 +56,7 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, data, ta
                       signer: data.signer || signer,
                       network: NETWORK,
                       interestRateMode: 2,
+                      isMax: isMax,
                       // referrer: number,
                       // collateral: boolean,
                       // test: boolean
@@ -96,9 +98,10 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, data, ta
                                         data?.amount,
                                         data?.asset,
                                     )}
+                                    setIsMax={setIsMax}
                                 />
 
-                                <h3 className="mt-6 text-neutral400">Collaterize</h3>
+                                {/* <h3 className="mt-6 text-neutral400">Collaterize</h3>
                                 <div className="mt-1">
                                     <BasicToggle
                                         checked={asCollateral}
@@ -119,7 +122,9 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, data, ta
                                         },
                                         {
                                             label: 'Collateralization',
-                                            value: <ActiveStatus active={asCollateral} size="sm" />,
+                                            value: (
+                                                <ActiveStatus active={data.canBeCollat} size="sm" />
+                                            ),
                                         },
                                     ]}
                                 />
@@ -154,6 +159,7 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, data, ta
                                         data.amountWithdrawOrRepay || data.amountNative,
                                         data.asset,
                                     )}
+                                    setIsMax={setIsMax}
                                 />
                                 <h3 className="mt-6 text-neutral400">Health Factor</h3>
                                 <HealthFactor

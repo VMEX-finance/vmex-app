@@ -10,14 +10,21 @@ export interface ICoinInput {
     };
     balance?: string;
     type?: 'collateral' | 'owed' | 'default';
+    setIsMax: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const CoinInput = ({ amount, setAmount, coin, balance, type }: ICoinInput) => {
+export const CoinInput = ({ amount, setAmount, coin, balance, type, setIsMax }: ICoinInput) => {
     const onChange = (e: any) => {
         const myamount = e.target.value;
         if (!myamount || myamount.match(/^\d{1,}(\.\d{0,})?$/)) {
             setAmount(myamount);
+            setIsMax(false);
         }
+    };
+
+    const onMaxButtonClick = () => {
+        balance ? setAmount(balance) : {};
+        setIsMax(true);
     };
 
     return (
@@ -36,7 +43,7 @@ export const CoinInput = ({ amount, setAmount, coin, balance, type }: ICoinInput
                 <AssetDisplay logo={coin.logo} name={coin.name} />
                 <button
                     className="text-xs text-right text-blue-700 hover:text-brand-purple transition duration-150"
-                    onClick={() => (balance ? setAmount(balance) : {})}
+                    onClick={onMaxButtonClick}
                 >
                     <span>MAX</span>
                     <p>
