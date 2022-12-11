@@ -95,7 +95,7 @@ export const SupplyAssetDialog: React.FC<IOwnedAssetDetails> = ({ name, data, ta
                                         name: data.asset,
                                     }}
                                     balance={bigNumberToUnformattedString(
-                                        data?.amount,
+                                        data?.amountNative,
                                         data?.asset,
                                     )}
                                     setIsMax={setIsMax}

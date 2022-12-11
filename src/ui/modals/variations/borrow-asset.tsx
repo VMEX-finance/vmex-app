@@ -95,7 +95,10 @@ export const BorrowAssetDialog: React.FC<IDialogProps> = ({
                                         logo: `/coins/${data.asset?.toLowerCase()}.svg`,
                                         name: data.asset,
                                     }}
-                                    balance={bigNumberToUnformattedString(data.amount, data.asset)}
+                                    balance={bigNumberToUnformattedString(
+                                        data.amountNative,
+                                        data.asset,
+                                    )}
                                     type="collateral"
                                     setIsMax={setIsMax}
                                 />

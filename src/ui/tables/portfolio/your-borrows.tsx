@@ -3,6 +3,7 @@ import { useDialogController } from '../../../hooks/dialogs';
 import { AssetDisplay, NumberAndDollar } from '../../components/displays';
 import { percentFormatter } from '../../../utils/helpers';
 import { BigNumber } from 'ethers';
+import { bigNumberToNative } from '../../../utils/sdk-helpers';
 
 export type IYourBorrowsTableItemProps = {
     asset: string;
@@ -56,7 +57,9 @@ export const YourBorrowsTable: React.FC<IYourBorrowsTableProps> = ({ data, withH
                                 </td>
                                 <td>
                                     <NumberAndDollar
-                                        value={`${i.amountNative} ${i.asset}`}
+                                        value={`${bigNumberToNative(i.amountNative, i.asset)} ${
+                                            i.asset
+                                        }`}
                                         dollar={i.amount}
                                         size="xs"
                                         color="text-black"

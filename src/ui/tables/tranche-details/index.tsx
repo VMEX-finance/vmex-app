@@ -139,7 +139,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                             : 'borrow-asset-dialog',
                                         {
                                             ...el,
-                                            amount:
+                                            amountNative:
                                                 type === 'supply'
                                                     ? BigNumber.from(findAssetInWallet(el.asset))
                                                     : BigNumber.from(
