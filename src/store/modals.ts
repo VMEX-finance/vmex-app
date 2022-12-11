@@ -20,7 +20,8 @@ export type IDialogNames =
     | 'borrow-asset-dialog'
     | 'stake-asset-dialog'
     | 'my-tranches-dialog'
-    | 'create-tranche-dialog';
+    | 'create-tranche-dialog'
+    | 'your-supplies-table';
 
 const DialogControllerState: IDialogState = {
     dialogs: new Map<string, DialogType>([

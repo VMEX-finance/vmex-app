@@ -4,11 +4,12 @@ import { Switch } from '@headlessui/react';
 interface IToggleProps {
     checked?: boolean;
     onChange?: any;
+    onClick?: any;
     colors?: string[];
     disabled?: boolean;
 }
 
-export const BasicToggle = ({ checked, onChange, colors, disabled }: IToggleProps) => {
+export const BasicToggle = ({ checked, onChange, onClick, colors, disabled }: IToggleProps) => {
     const [enabled, setEnabled] = useState(false);
 
     return (
@@ -16,6 +17,7 @@ export const BasicToggle = ({ checked, onChange, colors, disabled }: IToggleProp
             disabled={disabled}
             checked={checked || enabled}
             onChange={onChange || setEnabled}
+            onClick={onClick}
             className={`${
                 colors
                     ? checked || enabled
