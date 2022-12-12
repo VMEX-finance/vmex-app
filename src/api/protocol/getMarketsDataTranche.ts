@@ -3,14 +3,12 @@ import { ITrancheMarketsDataProps } from './types';
 import { getTrancheMarketsData, MarketData } from '@vmex/sdk';
 import {
     bigNumberToUSD,
-    bigNumberToNative,
     SDK_PARAMS,
-    DECIMALS,
     REVERSE_MAINNET_ASSET_MAPPINGS,
 } from '../../utils/sdk-helpers';
 import { BigNumber } from 'ethers';
 import { AVAILABLE_ASSETS } from '../../utils/constants';
-import { IMarketsAsset } from '../models';
+import { IMarketsAsset } from '../types';
 
 export async function getTrancheMarkets(trancheId: number): Promise<IMarketsAsset[]> {
     const allMarketsData: MarketData[] = await getTrancheMarketsData({

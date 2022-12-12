@@ -19,6 +19,7 @@ import {
     bigNumberToNative,
     bigNumberToUnformattedString,
 } from '../../../utils/sdk-helpers';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
     name,
@@ -33,7 +34,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
     const [view, setView] = React.useState('Borrow');
     const { address } = useAccount();
     const { data: signer } = useSigner();
-
+    const queryClient = useQueryClient();
     const { findAssetInUserSuppliesOrBorrows, findAmountBorrowable } = useUserTrancheData(
         address,
         data?.trancheId || 0,
@@ -67,6 +68,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
                           // collateral: boolean,
                           // test: boolean
                       });
+                queryClient.invalidateQueries(['user-tranche']);
                 return res;
             });
         }
@@ -162,7 +164,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
 
                             <h3 className="mt-6 text-neutral400">Health Factor</h3>
                             <HealthFactor asset={data.asset} amount={amount} type={'repay'} />
-                            {console.log(bigNumberToNative(amountRepay, data.asset))}
+
                             <ModalTableDisplay
                                 title="Transaction Overview"
                                 content={[

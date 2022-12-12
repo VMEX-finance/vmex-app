@@ -27,7 +27,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
     // const [asCollateral, setAsCollateral] = React.useState(true);
     const [isMax, setIsMax] = React.useState(false);
     const [amount, setAmount] = useMediatedState(inputMediator, '');
-    const { queryTrancheMarkets, getTrancheMarket } = useTrancheMarketsData(data?.trancheId || 0);
+    const { getTrancheMarket } = useTrancheMarketsData(data?.trancheId || 0);
     const { data: signer } = useSigner();
     const { address } = useAccount();
 

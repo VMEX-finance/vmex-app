@@ -1,5 +1,15 @@
 import { BigNumber } from 'ethers';
 
+export type IQueryKeys =
+    | 'user-tranche'
+    | 'user-performance'
+    | 'user-activity'
+    | 'user-wallet'
+    | 'all-markets'
+    | 'tranche-markets'
+    | 'protocol-overview'
+    | 'all-tranches';
+
 export type IMarketsAsset = {
     asset: string;
     tranche: string;

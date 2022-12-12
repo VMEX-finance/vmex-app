@@ -1,7 +1,7 @@
 import { useTranchesData } from '../../api';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
-import { ITrancheProps } from '@app/api/models';
+import { ITrancheProps } from '@app/api/types';
 
 // Types
 type IMyTrancheProps = {
