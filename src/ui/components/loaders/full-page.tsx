@@ -40,7 +40,7 @@ export const FullPageLoader = ({
     }, [loading]);
 
     return (
-        <>
+        <div className={`${determineShow() ? '!overflow-hidden' : ''}`}>
             <Transition
                 show={determineShow()}
                 leave="transition-opacity duration-500"
@@ -57,6 +57,6 @@ export const FullPageLoader = ({
                 </div>
             </Transition>
             {children}
-        </>
+        </div>
     );
 };

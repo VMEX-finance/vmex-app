@@ -157,11 +157,12 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
                                 balance={bigNumberToUnformattedString(amountRepay, data.asset)}
                                 type="owed"
                                 setIsMax={setIsMax}
+                                loading={Number(bigNumberToNative(amountRepay, data.asset)) === 0}
                             />
 
                             <h3 className="mt-6 text-neutral400">Health Factor</h3>
                             <HealthFactor asset={data.asset} amount={amount} type={'repay'} />
-
+                            {console.log(bigNumberToNative(amountRepay, data.asset))}
                             <ModalTableDisplay
                                 title="Transaction Overview"
                                 content={[
@@ -180,6 +181,9 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
                                                   )
                                                 : bigNumberToNative(amountRepay, data.asset)
                                         } ${data.asset}`,
+                                        loading:
+                                            Number(bigNumberToNative(amountRepay, data.asset)) ===
+                                            0,
                                     },
                                 ]}
                             />

@@ -39,8 +39,6 @@ export function MyTranchesStore(props: { children: ReactNode }) {
     const [myTranches, setMyTranches] = useState<Array<IMyTrancheProps>>([]);
     const [error, setError] = useState('');
 
-    console.log(queryAllTranches.data);
-
     const newTranche = ({
         name,
         whitelisted,

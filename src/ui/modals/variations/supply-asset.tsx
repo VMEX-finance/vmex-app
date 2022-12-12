@@ -170,6 +170,9 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                                     data.asset,
                                 )}
                                 setIsMax={setIsMax}
+                                loading={
+                                    Number(bigNumberToNative(amountWithdraw, data.asset)) === 0
+                                }
                             />
                             <h3 className="mt-6 text-neutral400">Health Factor</h3>
                             <HealthFactor asset={data.asset} amount={amount} type={'withdraw'} />
@@ -191,7 +194,10 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                                                       data.asset,
                                                   )
                                                 : bigNumberToNative(amountWithdraw, data.asset),
-                                        loading: queryTrancheMarkets.isLoading,
+                                        loading:
+                                            Number(
+                                                bigNumberToNative(amountWithdraw, data.asset),
+                                            ) === 0,
                                     },
                                 ]}
                             />
