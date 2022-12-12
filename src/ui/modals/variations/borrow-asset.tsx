@@ -193,7 +193,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
             )}
             <ModalFooter between>
                 <div className="mt-5 sm:mt-6 flex justify-between items-end">
-                    <div className="flex flex-col">
+                    {/* <div className="flex flex-col">
                         <div className="flex items-center gap-2">
                             <FaGasPump />
                             <span>Gas Limit</span>
@@ -204,7 +204,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
                                 direction="right"
                             />
                         </div>
-                    </div>
+                    </div> */}
                 </div>
                 <Button
                     primary
