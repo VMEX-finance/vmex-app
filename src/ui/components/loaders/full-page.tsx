@@ -1,5 +1,5 @@
 import { Transition } from '@headlessui/react';
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useMarketsData, useProtocolData, useTranchesData } from '../../../api';
 
@@ -29,8 +29,18 @@ export const FullPageLoader = ({
         }
     };
 
+    useEffect(() => {
+        if (document) {
+            if (loading && (pathname === '/' || pathname === '/overview')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = 'auto';
+            }
+        }
+    }, [loading]);
+
     return (
-        <div className={`${determineShow() ? '!overflow-hidden' : ''}`}>
+        <>
             <Transition
                 show={determineShow()}
                 leave="transition-opacity duration-500"
@@ -47,6 +57,6 @@ export const FullPageLoader = ({
                 </div>
             </Transition>
             {children}
-        </div>
+        </>
     );
 };
