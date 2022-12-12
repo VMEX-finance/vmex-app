@@ -1,3 +1,16 @@
+export type AssetDetails = {
+    asset: string;
+    trancheId: number;
+    view: 'Withdraw' | 'Supply';
+};
+export type ISupplyBorrowProps = {
+    name?: string;
+    isOpen?: boolean;
+    data?: AssetDetails;
+    tab?: string;
+    closeDialog(e: any): void;
+};
+
 export type IDialogProps = {
     name?: string;
     isOpen?: boolean;

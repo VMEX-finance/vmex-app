@@ -38,7 +38,6 @@ export async function getTrancheMarkets(trancheId: number): Promise<IMarketsAsse
                         BigNumber.from('10000000000000000000000'), // div by 10^22
                     )
                     .toNumber() / 1000,
-            yourAmount: 0, //TODO:
             available: bigNumberToUSD(marketData.totalReserves, 18),
             availableNative: marketData.totalReservesNative,
             supplyTotal: bigNumberToUSD(marketData.totalSupplied, 18),
@@ -70,7 +69,6 @@ export function useTrancheMarketsData(trancheId: number): ITrancheMarketsDataPro
                 trancheId: 0,
                 supplyApy: 0,
                 borrowApy: 0,
-                yourAmount: 0, //TODO:
                 available: '$0',
                 availableNative: BigNumber.from('0'),
                 supplyTotal: '$0',
@@ -93,7 +91,6 @@ export function useTrancheMarketsData(trancheId: number): ITrancheMarketsDataPro
                     trancheId: 0,
                     supplyApy: 0,
                     borrowApy: 0,
-                    yourAmount: 0, //TODO:
                     available: '$0',
                     availableNative: BigNumber.from('0'),
                     supplyTotal: '$0',

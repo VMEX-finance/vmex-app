@@ -83,7 +83,11 @@ export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({ data, wit
                             key={i.asset}
                             className="text-left transition duration-200 hover:bg-neutral-200 dark:hover:bg-neutral-900 hover:cursor-pointer"
                             onClick={() =>
-                                openDialog('loan-asset-dialog', { ...i, view: 'Withdraw' })
+                                openDialog('loan-asset-dialog', {
+                                    asset: i.asset,
+                                    trancheId: i.trancheId,
+                                    view: 'Withdraw',
+                                })
                             }
                         >
                             <td className="whitespace-nowrap p-4 text-sm sm:pl-6">

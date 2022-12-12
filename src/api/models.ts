@@ -6,8 +6,7 @@ export type IMarketsAsset = {
     trancheId: number;
     supplyApy: number | string;
     borrowApy: number | string;
-    yourAmount: number | string;
-    available: number | string;
+    available: string;
     availableNative: BigNumber;
     supplyTotal: number | string;
     borrowTotal: number | string;
@@ -57,8 +56,8 @@ export type AvailableAsset = {
     asset: string;
     amount?: number | string;
     amountNative?: BigNumber;
-    apy?: number | string;
+    apy: number | string;
     canBeCollat?: boolean;
-    liquidity?: number | string;
+    liquidity?: string;
     liquidityNative?: BigNumber;
 };

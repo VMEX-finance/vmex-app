@@ -101,7 +101,50 @@ export function useUserTrancheData(userAddress: any, trancheId: number): IUserTr
         refetchOnMount: true,
     });
 
+    const findAssetInUserSuppliesOrBorrows = (asset: string, type: 'supply' | 'borrow') => {
+        if (queryUserTrancheData.isLoading) return undefined;
+        else {
+            const userData =
+                type === 'supply'
+                    ? queryUserTrancheData.data?.supplies
+                    : queryUserTrancheData.data?.borrows;
+            return userData?.find((el) => el.asset.toLowerCase() === asset.toLowerCase());
+        }
+    };
+
+    const findAmountBorrowable = (
+        asset: string,
+        liquidity: string | undefined,
+        liquidityNative: BigNumber | undefined,
+    ) => {
+        if (queryUserTrancheData.isLoading)
+            return {
+                amountNative: BigNumber.from('0'),
+                amount: '$0',
+            };
+        else {
+            const userWalletData = queryUserTrancheData.data?.assetBorrowingPower;
+            const found = userWalletData?.find(
+                (el) => el.asset.toLowerCase() === asset.toLowerCase(),
+            );
+            if (found && liquidity && liquidityNative) {
+                return {
+                    amount: found?.amountNative.lt(liquidityNative) ? found?.amountUSD : liquidity,
+                    amountNative: found?.amountNative.lt(liquidityNative)
+                        ? found?.amountNative
+                        : liquidityNative,
+                };
+            } else
+                return {
+                    amountNative: BigNumber.from('0'),
+                    amount: '$0',
+                };
+        }
+    };
+
     return {
         queryUserTrancheData,
+        findAssetInUserSuppliesOrBorrows,
+        findAmountBorrowable,
     };
 }

@@ -49,7 +49,11 @@ export const YourBorrowsTable: React.FC<IYourBorrowsTableProps> = ({ data, withH
                                 key={i.asset}
                                 className="text-left transition duration-200 hover:bg-neutral-200 dark:hover:bg-neutral-900 hover:cursor-pointer"
                                 onClick={() =>
-                                    openDialog('borrow-asset-dialog', { ...i, view: 'Repay' })
+                                    openDialog('borrow-asset-dialog', {
+                                        asset: i.asset,
+                                        trancheId: i.trancheId,
+                                        view: 'Repay',
+                                    })
                                 }
                             >
                                 <td className="whitespace-nowrap p-4 text-sm sm:pl-6">
