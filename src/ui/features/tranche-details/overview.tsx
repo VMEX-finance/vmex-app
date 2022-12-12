@@ -70,6 +70,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
     };
 
     const buttonClass = `transition duration-150 hover:bg-neutral-100 rounded-lg dark:bg-neutral-800 dark:hover:bg-neutral-700`;
+    const assetDisplayClass = `transition duration-150 py-1 px-2 bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700`;
 
     return (
         <>
@@ -139,6 +140,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                                             className={buttonClass}
                                         >
                                             <AssetDisplay
+                                                className={assetDisplayClass}
                                                 name={el.asset}
                                                 size="sm"
                                                 value={usdFormatter().format(
@@ -146,7 +148,6 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                                                         el.amount.slice(1).replaceAll(',', ''),
                                                     ),
                                                 )}
-                                                border
                                             />
                                         </button>
                                     ))}
@@ -169,6 +170,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                                             className={buttonClass}
                                         >
                                             <AssetDisplay
+                                                className={assetDisplayClass}
                                                 name={el.asset}
                                                 size="sm"
                                                 value={usdFormatter().format(
@@ -176,7 +178,6 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                                                         el.amount.slice(1).replaceAll(',', ''),
                                                     ),
                                                 )}
-                                                border
                                             />
                                         </button>
                                     ))}

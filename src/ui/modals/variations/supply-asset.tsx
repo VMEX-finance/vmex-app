@@ -3,7 +3,6 @@ import { useMediatedState } from 'react-use';
 import { inputMediator, convertStringFormatToNumber } from '../../../utils/helpers';
 import { CoinInput } from '../../components/inputs';
 import { Button } from '../../components/buttons';
-import { BasicToggle } from '../../components/toggles';
 import { ActiveStatus, TransactionStatus } from '../../components/statuses';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
 import { useModal } from '../../../hooks/ui';
@@ -19,7 +18,7 @@ import {
 } from '../../../utils/sdk-helpers';
 import { useUserData, useUserTrancheData } from '../../../api';
 import { BigNumber } from 'ethers';
-import { IYourBorrowsTableItemProps, IYourSuppliesTableItemProps } from '@ui/tables';
+import { IYourSuppliesTableItemProps } from '@ui/tables';
 import { ISupplyBorrowProps } from '../utils';
 
 export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, data, tab }) => {
@@ -171,6 +170,9 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                                     data.asset,
                                 )}
                                 setIsMax={setIsMax}
+                                loading={
+                                    Number(bigNumberToNative(amountWithdraw, data.asset)) === 0
+                                }
                             />
                             <h3 className="mt-6 text-neutral400">Health Factor</h3>
                             <HealthFactor asset={data.asset} amount={amount} type={'withdraw'} />
@@ -192,7 +194,10 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                                                       data.asset,
                                                   )
                                                 : bigNumberToNative(amountWithdraw, data.asset),
-                                        loading: queryTrancheMarkets.isLoading,
+                                        loading:
+                                            Number(
+                                                bigNumberToNative(amountWithdraw, data.asset),
+                                            ) === 0,
                                     },
                                 ]}
                             />

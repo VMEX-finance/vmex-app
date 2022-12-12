@@ -107,7 +107,7 @@ export const bigNumberToUSD = (
 export const bigNumberToNative = (number: BigNumber | undefined, asset: string): string => {
     if (!number) {
         console.error('given invalid bignumber');
-        return '$0';
+        return '0';
     }
 
     let decimals =

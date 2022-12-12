@@ -157,11 +157,12 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
                                 balance={bigNumberToUnformattedString(amountRepay, data.asset)}
                                 type="owed"
                                 setIsMax={setIsMax}
+                                loading={Number(bigNumberToNative(amountRepay, data.asset)) === 0}
                             />
 
                             <h3 className="mt-6 text-neutral400">Health Factor</h3>
                             <HealthFactor asset={data.asset} amount={amount} type={'repay'} />
-
+                            {console.log(bigNumberToNative(amountRepay, data.asset))}
                             <ModalTableDisplay
                                 title="Transaction Overview"
                                 content={[
@@ -180,6 +181,9 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
                                                   )
                                                 : bigNumberToNative(amountRepay, data.asset)
                                         } ${data.asset}`,
+                                        loading:
+                                            Number(bigNumberToNative(amountRepay, data.asset)) ===
+                                            0,
                                     },
                                 ]}
                             />
@@ -193,7 +197,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
             )}
             <ModalFooter between>
                 <div className="mt-5 sm:mt-6 flex justify-between items-end">
-                    <div className="flex flex-col">
+                    {/* <div className="flex flex-col">
                         <div className="flex items-center gap-2">
                             <FaGasPump />
                             <span>Gas Limit</span>
@@ -204,7 +208,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
                                 direction="right"
                             />
                         </div>
-                    </div>
+                    </div> */}
                 </div>
                 <Button
                     primary

@@ -32,7 +32,7 @@ export const Button = ({
 
     return (
         <button
-            disabled={disabled}
+            disabled={disabled || loading}
             onClick={onClick}
             className={[
                 `${
