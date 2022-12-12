@@ -93,7 +93,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                         title={name}
                         asset={data.asset}
                         tab={tab}
-                        onClick={!amountWithdraw?.eq(BigNumber.from('0')) ? setView : () => {}}
+                        onClick={amountWithdraw ? setView : () => {}}
                         primary
                     />
                     {!isSuccess && !error ? (

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { FaGasPump } from 'react-icons/fa';
 import { useMediatedState } from 'react-use';
-import { TransactionStatus, ActiveStatus } from '../../components/statuses';
+import { TransactionStatus } from '../../components/statuses';
 import { CoinInput } from '../../components/inputs';
 import { Button, DropdownButton } from '../../components/buttons';
 import { inputMediator, convertStringFormatToNumber } from '../../../utils/helpers';
@@ -12,7 +12,7 @@ import { useModal } from '../../../hooks/ui';
 import { borrow, repay } from '@vmex/sdk';
 import { MAINNET_ASSET_MAPPINGS, NETWORK } from '../../../utils/sdk-helpers';
 import { useAccount, useSigner } from 'wagmi';
-import { useUserData, useUserTrancheData, useTrancheMarketsData } from '../../../api';
+import { useUserTrancheData, useTrancheMarketsData } from '../../../api';
 import { BigNumber } from 'ethers';
 import {
     unformattedStringToBigNumber,
@@ -32,7 +32,6 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
     const [isMax, setIsMax] = React.useState(false);
     const [view, setView] = React.useState('Borrow');
     const { address } = useAccount();
-    const { getTokenBalance } = useUserData(address);
     const { data: signer } = useSigner();
 
     const { findAssetInUserSuppliesOrBorrows, findAmountBorrowable } = useUserTrancheData(
@@ -44,7 +43,6 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
     const handleClick = async () => {
         if (data && signer) {
             await submitTx(async () => {
-                console.log('isMax: ', isMax);
                 const res = view?.includes('Borrow')
                     ? await borrow({
                           underlying: MAINNET_ASSET_MAPPINGS.get(data.asset) || '',
@@ -87,10 +85,6 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
     const amountRepay =
         findAssetInUserSuppliesOrBorrows(data?.asset || '', 'borrow')?.amountNative ||
         BigNumber.from('0');
-
-    console.log('data: ', data);
-    console.log('amountRepay: ', amountRepay);
-    console.log('amountBorrwable: ', amountBorrwable);
 
     return data && data.asset ? (
         <>
