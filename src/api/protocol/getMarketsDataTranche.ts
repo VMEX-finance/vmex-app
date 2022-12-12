@@ -20,10 +20,10 @@ export async function getTrancheMarkets(trancheId: number): Promise<IMarketsAsse
     });
 
     return allMarketsData.map((marketData: MarketData) => {
+        let asset =
+            REVERSE_MAINNET_ASSET_MAPPINGS.get(marketData.asset.toLowerCase()) || marketData.asset;
         return {
-            asset:
-                REVERSE_MAINNET_ASSET_MAPPINGS.get(marketData.asset.toLowerCase()) ||
-                marketData.asset,
+            asset: asset,
             tranche: marketData.tranche.toString(),
             trancheId: marketData.tranche.toNumber(),
             supplyApy:
@@ -38,15 +38,8 @@ export async function getTrancheMarkets(trancheId: number): Promise<IMarketsAsse
                         BigNumber.from('10000000000000000000000'), // div by 10^22
                     )
                     .toNumber() / 1000,
-            yourAmount: 0, //TODO:
             available: bigNumberToUSD(marketData.totalReserves, 18),
-            availableNative: bigNumberToNative(
-                marketData.totalReservesNative,
-                DECIMALS.get(
-                    REVERSE_MAINNET_ASSET_MAPPINGS.get(marketData.asset.toLowerCase()) ||
-                        marketData.asset,
-                ) || 18,
-            ),
+            availableNative: marketData.totalReservesNative,
             supplyTotal: bigNumberToUSD(marketData.totalSupplied, 18),
             borrowTotal: bigNumberToUSD(marketData.totalBorrowed, 18),
             rating: '-',
@@ -76,9 +69,8 @@ export function useTrancheMarketsData(trancheId: number): ITrancheMarketsDataPro
                 trancheId: 0,
                 supplyApy: 0,
                 borrowApy: 0,
-                yourAmount: 0, //TODO:
                 available: '$0',
-                availableNative: '0',
+                availableNative: BigNumber.from('0'),
                 supplyTotal: '$0',
                 borrowTotal: '$0',
                 rating: '-',
@@ -99,9 +91,8 @@ export function useTrancheMarketsData(trancheId: number): ITrancheMarketsDataPro
                     trancheId: 0,
                     supplyApy: 0,
                     borrowApy: 0,
-                    yourAmount: 0, //TODO:
                     available: '$0',
-                    availableNative: '0',
+                    availableNative: BigNumber.from('0'),
                     supplyTotal: '$0',
                     borrowTotal: '$0',
                     rating: '-',

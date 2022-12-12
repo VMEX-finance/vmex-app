@@ -2,11 +2,13 @@ import React from 'react';
 import { useDialogController } from '../../../hooks/dialogs';
 import { AssetDisplay, NumberAndDollar } from '../../components/displays';
 import { percentFormatter } from '../../../utils/helpers';
+import { BigNumber } from 'ethers';
+import { bigNumberToNative } from '../../../utils/sdk-helpers';
 
 export type IYourBorrowsTableItemProps = {
     asset: string;
     amount: string;
-    amountNative: string;
+    amountNative: BigNumber;
     apy: number;
     tranche: string;
     trancheId: number;
@@ -47,7 +49,11 @@ export const YourBorrowsTable: React.FC<IYourBorrowsTableProps> = ({ data, withH
                                 key={i.asset}
                                 className="text-left transition duration-200 hover:bg-neutral-200 dark:hover:bg-neutral-900 hover:cursor-pointer"
                                 onClick={() =>
-                                    openDialog('borrow-asset-dialog', { ...i, view: 'Repay' })
+                                    openDialog('borrow-asset-dialog', {
+                                        asset: i.asset,
+                                        trancheId: i.trancheId,
+                                        view: 'Repay',
+                                    })
                                 }
                             >
                                 <td className="whitespace-nowrap p-4 text-sm sm:pl-6">
@@ -55,7 +61,9 @@ export const YourBorrowsTable: React.FC<IYourBorrowsTableProps> = ({ data, withH
                                 </td>
                                 <td>
                                     <NumberAndDollar
-                                        value={`${i.amountNative} ${i.asset}`}
+                                        value={`${bigNumberToNative(i.amountNative, i.asset)} ${
+                                            i.asset
+                                        }`}
                                         dollar={i.amount}
                                         size="xs"
                                         color="text-black"

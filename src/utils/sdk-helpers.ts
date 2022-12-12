@@ -104,13 +104,50 @@ export const bigNumberToUSD = (
     return dollarSign ? formatted : formatted.slice(1);
 };
 
-export const bigNumberToNative = (number: BigNumber | undefined, decimals: number): string => {
+export const bigNumberToNative = (number: BigNumber | undefined, asset: string): string => {
     if (!number) {
         console.error('given invalid bignumber');
         return '$0';
     }
 
+    let decimals =
+        DECIMALS.get(REVERSE_MAINNET_ASSET_MAPPINGS.get(asset.toLowerCase()) || asset) || 18;
+
     return nativeTokenFormatter.format(parseFloat(ethers.utils.formatUnits(number, decimals)));
+};
+
+export const bigNumberToUnformattedString = (
+    number: BigNumber | undefined,
+    asset: string,
+): string => {
+    if (!number) {
+        console.error('given invalid bignumber');
+        return '0';
+    }
+
+    return ethers.utils.formatUnits(
+        number,
+        DECIMALS.get(REVERSE_MAINNET_ASSET_MAPPINGS.get(asset.toLowerCase()) || asset) || 18,
+    );
+};
+
+export const unformattedStringToBigNumber = (
+    number: string | undefined,
+    asset: string,
+): BigNumber => {
+    if (!number) {
+        console.error('given invalid number');
+        return BigNumber.from('0');
+    }
+
+    try {
+        return ethers.utils.parseUnits(
+            number,
+            DECIMALS.get(REVERSE_MAINNET_ASSET_MAPPINGS.get(asset.toLowerCase()) || asset) || 18,
+        );
+    } catch {
+        return BigNumber.from('0');
+    }
 };
 
 export const rayToPercent = (number: BigNumber): number => {

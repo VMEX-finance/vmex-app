@@ -90,6 +90,12 @@ export const numberFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
 });
 
+export const HFFormatter = new Intl.NumberFormat('en-US', {
+    notation: 'compact',
+    minimumSignificantDigits: 5,
+    maximumSignificantDigits: 8,
+});
+
 export const nativeTokenFormatter = new Intl.NumberFormat('en-US', {
     notation: 'standard',
     minimumSignificantDigits: 5,

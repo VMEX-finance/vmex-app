@@ -5,7 +5,7 @@ import { BigNumber } from 'ethers';
 
 type ITokenBalanceProps = {
     amount: string;
-    amountNative: string;
+    amountNative: BigNumber;
 };
 
 export type ITrancheInteractedProps = {
@@ -32,7 +32,7 @@ export type IUserActivityDataProps = {
 export type IWalletAssetProps = {
     asset: string;
     amount: string;
-    amountNative: string;
+    amountNative: BigNumber;
     currentPrice: BigNumber; //18 decimals
 };
 
@@ -42,6 +42,15 @@ export type IUserWalletDataProps = {
 
 export type IUserTrancheDataProps = {
     queryUserTrancheData: UseQueryResult<IUserTrancheData, unknown>;
+    findAssetInUserSuppliesOrBorrows: (
+        asset: string,
+        type: 'supply' | 'borrow',
+    ) => IYourSuppliesTableItemProps | IYourBorrowsTableItemProps | undefined;
+    findAmountBorrowable: (
+        asset: string,
+        liquidity: string | undefined,
+        liquidityNative: BigNumber | undefined,
+    ) => ITokenBalanceProps;
 };
 
 export type IUserTrancheData = {
@@ -59,5 +68,5 @@ export type IUserTrancheData = {
 export type IAvailableBorrowData = {
     asset: string;
     amountUSD: string;
-    amountNative: string;
+    amountNative: BigNumber;
 };

@@ -9,17 +9,22 @@ import { NumberAndDollar } from '../../components/displays';
 import { useWindowSize } from '../../../hooks/ui';
 import { convertStringFormatToNumber } from '../../../utils/helpers';
 import { AvailableAsset } from '@app/api/models';
+import { BigNumber } from 'ethers';
+import { bigNumberToNative } from '../../../utils/sdk-helpers';
+
+import { bigNumberToUnformattedString } from '../../../utils/sdk-helpers';
 
 interface ITableProps {
     data: AvailableAsset[];
-    type?: 'supply' | 'borrow';
+    type: 'supply' | 'borrow';
 }
 export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
     const { width, breakpoint } = useWindowSize();
     const { address } = useAccount();
     const { tranche } = useSelectedTrancheContext();
-    const { queryUserWallet } = useUserData(address);
-    const { queryUserTrancheData } = useUserTrancheData(address, tranche.id);
+    const { queryUserWallet, getTokenBalance } = useUserData(address);
+    const { queryUserTrancheData, findAssetInUserSuppliesOrBorrows, findAmountBorrowable } =
+        useUserTrancheData(address, tranche.id);
     const { openDialog } = useDialogController();
     const mode1 =
         type === 'supply'
@@ -37,51 +42,6 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
             : width > breakpoint
             ? 'Total liquidity'
             : 'Liquidity';
-    const userData =
-        type === 'supply'
-            ? queryUserTrancheData.data?.supplies
-            : queryUserTrancheData.data?.borrows;
-
-    const findAssetInUserSuppliesOrBorrows = (asset: string) => {
-        if (queryUserTrancheData.isLoading) return `0`;
-        else {
-            const found = userData?.find((el) => el.asset.toLowerCase() === asset.toLowerCase());
-            if (found) return `${found?.amountNative}`;
-            else return `0`;
-        }
-    };
-
-    const findAssetInWallet = (asset: string, usdValue = false) => {
-        if (queryUserWallet.isLoading) return `0`;
-        else {
-            const userWalletData = queryUserWallet.data?.assets;
-            const found = userWalletData?.find(
-                (el) => el.asset.toLowerCase() === asset.toLowerCase(),
-            );
-            if (found) return `${usdValue ? found?.amount : found?.amountNative}`;
-            else return `0`;
-        }
-    };
-
-    const findAmountBorrowable = (asset: string, liquidity: number | string | undefined) => {
-        if (queryUserTrancheData.isLoading) return `0`;
-        else {
-            const userWalletData = queryUserTrancheData.data?.assetBorrowingPower;
-            const found = userWalletData?.find(
-                (el) => el.asset.toLowerCase() === asset.toLowerCase(),
-            );
-            if (found) {
-                return `${
-                    liquidity
-                        ? Math.min(
-                              parseFloat(convertStringFormatToNumber(found?.amountNative)),
-                              parseFloat(convertStringFormatToNumber(liquidity)),
-                          )
-                        : found?.amountNative
-                }`;
-            } else return `0`;
-        }
-    };
 
     const isInList = (asset: string) => {
         if (!queryUserTrancheData.data) return [];
@@ -130,14 +90,8 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                             ? 'loan-asset-dialog'
                                             : 'borrow-asset-dialog',
                                         {
-                                            ...el,
-                                            amount:
-                                                type === 'supply'
-                                                    ? findAssetInWallet(el.asset)
-                                                    : findAmountBorrowable(el.asset, el.liquidity),
-                                            amountWithdrawOrRepay: findAssetInUserSuppliesOrBorrows(
-                                                el.asset,
-                                            ),
+                                            asset: el.asset,
+                                            trancheId: tranche.id,
                                         },
                                     )
                                 }
@@ -161,16 +115,31 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                     <NumberAndDollar
                                         value={`${
                                             type === 'supply'
-                                                ? `${findAssetInWallet(el.asset)} ${el.asset}`
-                                                : `${findAmountBorrowable(
+                                                ? `${bigNumberToNative(
+                                                      BigNumber.from(
+                                                          getTokenBalance(el.asset).amountNative,
+                                                      ),
                                                       el.asset,
-                                                      el.liquidity,
+                                                  )} ${el.asset}`
+                                                : `${bigNumberToNative(
+                                                      findAmountBorrowable(
+                                                          el.asset,
+                                                          el.liquidity,
+                                                          el.liquidityNative,
+                                                      ).amountNative,
+                                                      el.asset,
                                                   )} ${el.asset}`
                                         }`}
                                         dollar={`${
                                             type === 'supply'
-                                                ? `${findAssetInWallet(el.asset, true)}`
-                                                : ''
+                                                ? `${getTokenBalance(el.asset).amount}`
+                                                : `${
+                                                      findAmountBorrowable(
+                                                          el.asset,
+                                                          el.liquidity,
+                                                          el.liquidityNative,
+                                                      ).amount
+                                                  }`
                                         }`}
                                         size="xs"
                                         color="text-black"
@@ -187,7 +156,9 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                             )}
                                         </div>
                                     ) : (
-                                        `${el.liquidity} ${el.asset}`
+                                        `${bigNumberToNative(el.liquidityNative, el.asset)} ${
+                                            el.asset
+                                        }`
                                     )}
                                 </td>
                             </tr>

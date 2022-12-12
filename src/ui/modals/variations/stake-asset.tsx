@@ -12,6 +12,7 @@ import { useModal } from '../../../hooks/ui';
 export const StakeAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, closeDialog }) => {
     const { submitTx, isSuccess, isLoading } = useModal('stake-asset-dialog');
     const [amount, setAmount] = useMediatedState(inputMediator, '');
+    const [isMax, setIsMax] = React.useState(false);
 
     const handleSubmit = async () => {
         await submitTx();
@@ -34,6 +35,7 @@ export const StakeAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
                                 name: data.asset,
                             }}
                             balance={'0.23'}
+                            setIsMax={setIsMax}
                         />
 
                         <ModalTableDisplay
