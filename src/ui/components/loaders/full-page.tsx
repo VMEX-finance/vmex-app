@@ -29,25 +29,15 @@ export const FullPageLoader = ({
         }
     };
 
-    useEffect(() => {
-        if (document) {
-            if (loading && (pathname === '/' || pathname === '/overview')) {
-                document.body.style.overflow = 'hidden';
-            } else {
-                document.body.style.overflow = 'auto';
-            }
-        }
-    }, [loading]);
-
     return (
-        <div className={`${determineShow() ? '!overflow-hidden' : ''}`}>
+        <>
             <Transition
                 show={determineShow()}
                 leave="transition-opacity duration-500"
                 leaveFrom="opacity-100"
                 leaveTo="opacity-0"
             >
-                <div className="absolute top-0 left-0 h-screen w-full bg-[#eee] dark:bg-neutral-900 z-[9999]">
+                <div className="top-0 left-0 h-screen w-full bg-[#eee] dark:bg-neutral-900 z-[9999] fixed">
                     <div className="flex flex-col gap-5 justify-center items-center h-full animate-pulse">
                         <img src="/VMEX-logo-only.png" alt="VMEX Logo" width="165" height="150" />
                         {text && (
@@ -57,6 +47,6 @@ export const FullPageLoader = ({
                 </div>
             </Transition>
             {children}
-        </div>
+        </>
     );
 };
