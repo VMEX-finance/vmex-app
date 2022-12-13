@@ -31,10 +31,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
     const { data: signer } = useSigner();
     const { address } = useAccount();
 
-    const { findAssetInUserSuppliesOrBorrows, findAmountBorrowable } = useUserTrancheData(
-        address,
-        data?.trancheId || 0,
-    );
+    const { findAssetInUserSuppliesOrBorrows } = useUserTrancheData(address, data?.trancheId || 0);
     const { getTokenBalance } = useUserData(address);
 
     const handleSubmit = async () => {
