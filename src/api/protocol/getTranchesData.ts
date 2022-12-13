@@ -4,24 +4,21 @@ import { getAllTrancheData } from '@vmex/sdk';
 import {
     bigNumberToUSD,
     SDK_PARAMS,
-    MAINNET_ASSET_MAPPINGS,
-    flipAndLowerCase,
-    bigNumberToNative,
+    REVERSE_MAINNET_ASSET_MAPPINGS,
 } from '../../utils/sdk-helpers';
-import { ITrancheProps } from '../models';
+import { ITrancheProps } from '../types';
 
 export async function getAllTranches(): Promise<ITrancheProps[]> {
     const trancheData = await getAllTrancheData(SDK_PARAMS);
 
     let slightlyMocked: ITrancheProps[] = [];
-    let reverseMapping = flipAndLowerCase(MAINNET_ASSET_MAPPINGS);
 
     for (let i = 0; i < trancheData.length; i++) {
         let newAssets: string[] = [];
 
         for (let j = 0; j < trancheData[i].assets.length; j++) {
             let myasset = trancheData[i].assets[j].toString().toLowerCase();
-            let myAssetSym = reverseMapping.get(myasset);
+            let myAssetSym = REVERSE_MAINNET_ASSET_MAPPINGS.get(myasset);
             if (typeof myAssetSym === 'string') {
                 newAssets.push(myAssetSym);
             } else {

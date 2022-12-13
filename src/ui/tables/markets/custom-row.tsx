@@ -7,7 +7,7 @@ import { determineRatingColor } from '../../../utils/helpers';
 import { BsCheck } from 'react-icons/bs';
 import { IoIosClose } from 'react-icons/io';
 import { AssetDisplay } from '../../components/displays';
-import { IMarketsAsset } from '@app/api/models';
+import { IMarketsAsset } from '@app/api/types';
 
 const MarketsCustomRow = (props: any) => {
     const {

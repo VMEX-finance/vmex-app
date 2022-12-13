@@ -8,7 +8,7 @@ import { useSelectedTrancheContext } from '../../../store/contexts';
 import { NumberAndDollar } from '../../components/displays';
 import { useWindowSize } from '../../../hooks/ui';
 import { convertStringFormatToNumber } from '../../../utils/helpers';
-import { AvailableAsset } from '@app/api/models';
+import { AvailableAsset } from '@app/api/types';
 import { BigNumber } from 'ethers';
 import { bigNumberToNative } from '../../../utils/sdk-helpers';
 

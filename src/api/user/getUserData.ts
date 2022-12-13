@@ -12,7 +12,6 @@ import {
     rayToPercent,
     SDK_PARAMS,
     bigNumberToNative,
-    DECIMALS,
     REVERSE_MAINNET_ASSET_MAPPINGS,
 } from '../../utils/sdk-helpers';
 import { IUserPerformanceCardProps } from '../../ui/features';

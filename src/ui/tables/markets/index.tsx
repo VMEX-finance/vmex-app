@@ -5,7 +5,7 @@ import { muiCache, options, vmexTheme } from '../utils';
 import { MarketsCustomRow } from './custom-row';
 import MUIDataTable from 'mui-datatables';
 import { SpinnerLoader } from '../../components/loaders';
-import { IMarketsAsset } from '@app/api/models';
+import { IMarketsAsset } from '@app/api/types';
 import { useAccount } from 'wagmi';
 import { useUserData } from '../../../api';
 import { numberFormatter } from '../../../utils/helpers';

@@ -1,3 +1,6 @@
+import { IQueryKeys } from '@app/api/types';
+import { useQueryClient } from '@tanstack/react-query';
+
 export function truncateAddress(s: string) {
     return `${s.slice(0, 3)}...${s.slice(-4)}`;
 }

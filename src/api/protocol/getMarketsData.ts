@@ -9,7 +9,7 @@ import {
     rayToPercent,
     SDK_PARAMS,
 } from '../../utils/sdk-helpers';
-import { IMarketsAsset } from '../models';
+import { IMarketsAsset } from '../types';
 import { BigNumber } from 'ethers';
 
 export async function getAllMarkets(): Promise<IMarketsAsset[]> {
