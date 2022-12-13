@@ -16,10 +16,16 @@ const getTVLChartData = async () => {
                     depositHistory {
                         amount
                         timestamp
+                        reserve {
+                            name
+                        }
                     }
                     borrowHistory {
                         amount
                         timestamp
+                        reserve {
+                            name
+                        }
                     }
                 }
             }
