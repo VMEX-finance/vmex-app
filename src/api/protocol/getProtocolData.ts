@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 import { IProtocolProps } from '../../ui/features';
-import { MOCK_LINE_DATA_2 } from '../../utils/mock-data';
 import { IProtocolDataProps } from './types';
 import { AssetBalance, getProtocolData } from '@vmex/sdk';
 import {
@@ -9,13 +8,11 @@ import {
     MAINNET_ASSET_MAPPINGS,
     SDK_PARAMS,
 } from '../../utils/sdk-helpers';
-import { getTVLChartData } from '../subgraph';
 
 export async function getProtocolOverviewData(): Promise<IProtocolProps> {
     const protocolData = await getProtocolData(SDK_PARAMS);
-    const protocolChartData = await getTVLChartData();
     const reverseMapping = flipAndLowerCase(MAINNET_ASSET_MAPPINGS);
-    console.log(protocolChartData);
+
     return {
         tvl: bigNumberToUSD(protocolData.tvl, 18),
         reserve: bigNumberToUSD(protocolData.totalReserves, 18),
@@ -49,7 +46,6 @@ export async function getProtocolOverviewData(): Promise<IProtocolProps> {
             })
             .slice(0, Math.min(protocolData.topBorrowedAssets.length, 5)),
         topTranches: protocolData.topTranches,
-        graphData: MOCK_LINE_DATA_2,
     };
 }
 

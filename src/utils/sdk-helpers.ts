@@ -1,5 +1,5 @@
 import { JsonRpcProvider } from '@ethersproject/providers';
-import { BigNumber, ethers } from 'ethers';
+import { BigNumber, BigNumberish, ethers } from 'ethers';
 import { usdFormatter, nativeTokenFormatter } from './helpers';
 
 export const NETWORK = process.env.REACT_APP_TEST ? 'localhost' : 'mainnet';
@@ -90,7 +90,7 @@ export const DECIMALS = new Map<string, number>([
 ]);
 
 export const bigNumberToUSD = (
-    number: BigNumber | undefined,
+    number: BigNumberish | undefined,
     decimals: number,
     dollarSign = true,
 ): string => {
@@ -101,7 +101,7 @@ export const bigNumberToUSD = (
     const formatted = usdFormatter(false).format(
         parseFloat(ethers.utils.formatUnits(number, decimals)),
     );
-    return dollarSign ? formatted : formatted.slice(1);
+    return dollarSign ? formatted : formatted.slice(1).replaceAll(',', '');
 };
 
 export const bigNumberToNative = (number: BigNumber | undefined, asset: string): string => {

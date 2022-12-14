@@ -6,6 +6,7 @@ import { TopTranchesTable } from '../tables';
 import { useWindowSize } from '../../hooks/ui';
 import { TrancheData } from '@vmex/sdk';
 import { makeCompact } from '../../utils/helpers';
+import { useSubgraphChartData } from '../../api/subgraph';
 
 export interface AssetBalance {
     asset: string;
@@ -18,7 +19,6 @@ export interface IProtocolProps {
     lenders?: number;
     borrowers?: number;
     markets?: number;
-    graphData?: ILineChartDataPointProps[];
     totalSupplied?: string;
     totalBorrowed?: string;
     topBorrowedAssets?: AssetBalance[];
@@ -32,7 +32,6 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
     lenders,
     borrowers,
     markets,
-    graphData,
     totalBorrowed,
     totalSupplied,
     topBorrowedAssets,
@@ -40,6 +39,7 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
     topTranches,
     isLoading,
 }) => {
+    const { queryTVLChartData } = useSubgraphChartData();
     const { width } = useWindowSize();
     const renderTopAssetsList = (arr: any[] | undefined) => {
         if (arr) {
@@ -63,7 +63,7 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                             <p className="text-3xl">{tvl ? makeCompact(tvl, true) : '-'}</p>
                         </div>
                         <div className="h-[100px] w-full">
-                            <ReLineChart data={graphData || []} color="#3CB55E" />
+                            <ReLineChart data={queryTVLChartData.data || []} color="#3CB55E" />
                         </div>
                     </div>
                     <div className="flex md:flex-col justify-between gap-1">

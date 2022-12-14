@@ -3,7 +3,7 @@ import { LineChart, Line, Tooltip, ResponsiveContainer, XAxis, YAxis } from 'rec
 import { CustomTooltip } from './custom-tooltip';
 
 export type ILineChartDataPointProps = {
-    xaxis?: string | number; // x axis
+    xaxis: string | number; // x axis
     value: number; // y axis
     value2?: number; // y axis
     value3?: number; // y axis
