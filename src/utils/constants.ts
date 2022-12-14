@@ -1,5 +1,5 @@
 export const SUBGRAPH_ENDPOINT = process.env.REACT_APP_TEST
-    ? 'http://localhost:8000/subgraphs/name/vmex-finance/'
+    ? 'http://localhost:8000/subgraphs/name/vmex-finance'
     : 'TODO:add-deployed-link';
 
 export const HEALTH = {

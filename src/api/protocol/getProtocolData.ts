@@ -9,11 +9,13 @@ import {
     MAINNET_ASSET_MAPPINGS,
     SDK_PARAMS,
 } from '../../utils/sdk-helpers';
+import { getTVLChartData } from '../subgraph';
 
 export async function getProtocolOverviewData(): Promise<IProtocolProps> {
     const protocolData = await getProtocolData(SDK_PARAMS);
+    const protocolChartData = await getTVLChartData();
     const reverseMapping = flipAndLowerCase(MAINNET_ASSET_MAPPINGS);
-
+    console.log(protocolChartData);
     return {
         tvl: bigNumberToUSD(protocolData.tvl, 18),
         reserve: bigNumberToUSD(protocolData.totalReserves, 18),

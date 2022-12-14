@@ -1,41 +1,37 @@
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 import { useQuery } from '@tanstack/react-query';
-import { SUBGRAPH_ENDPOINT } from '@utils/constants';
+import { SUBGRAPH_ENDPOINT } from '../../utils/constants';
 
 const client = new ApolloClient({
     uri: SUBGRAPH_ENDPOINT,
     cache: new InMemoryCache(),
 });
 
-const getTVLChartData = async () => {
+export const getTVLChartData = async () => {
     const { data, error } = await client.query({
         query: gql`
-            query QueryProtocolTVL {
+            query MyQuery {
                 tranches {
                     id
-                    depositHistory {
-                        amount
-                        timestamp
-                        reserve {
-                            name
-                        }
-                    }
                     borrowHistory {
-                        amount
                         timestamp
-                        reserve {
-                            name
-                        }
+                        amount
+                    }
+                    depositHistory {
+                        timestamp
+                        amount
                     }
                 }
             }
         `,
     });
-
-    console.log('getTVLChartData:', data);
+    if (error) return [];
+    else {
+        const { borrowHistory, depositHistory } = data;
+    }
 };
 
-const getTrancheChartData = async (trancheId?: string | number) => {
+export const getTrancheChartData = async (trancheId?: string | number) => {
     if (!trancheId) return [];
     const { data, error } = await client.query({
         query: gql`
