@@ -6,10 +6,13 @@ import { DropdownButton } from '../../components/buttons';
 import ReactTooltip from 'react-tooltip';
 import { useSelectedTrancheContext } from '../../../store/contexts';
 import { NumberDisplay } from '../../components/displays';
+import { useSubgraphTrancheData } from '../../../api/subgraph';
 
 // TODO: Implement interface
 export const TrancheStatisticsCard = ({ tranche }: any) => {
     const { asset, setAsset } = useSelectedTrancheContext();
+    const { queryTrancheAssetData } = useSubgraphTrancheData(tranche.id);
+
     return (
         <>
             <Card black>

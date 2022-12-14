@@ -1,12 +1,12 @@
 import { Card } from '../components/cards';
 import React from 'react';
-import { ILineChartDataPointProps, ReLineChart } from '../components/charts';
+import { ReLineChart } from '../components/charts';
 import { NumberDisplay, PillDisplay } from '../components/displays';
 import { TopTranchesTable } from '../tables';
 import { useWindowSize } from '../../hooks/ui';
 import { TrancheData } from '@vmex/sdk';
 import { makeCompact } from '../../utils/helpers';
-import { useSubgraphChartData } from '../../api/subgraph';
+import { useSubgraphProtocolData } from '../../api/subgraph';
 
 export interface AssetBalance {
     asset: string;
@@ -39,7 +39,7 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
     topTranches,
     isLoading,
 }) => {
-    const { queryTVLChartData } = useSubgraphChartData();
+    const { queryTVLChartData } = useSubgraphProtocolData();
     const { width } = useWindowSize();
     const renderTopAssetsList = (arr: any[] | undefined) => {
         if (arr) {
