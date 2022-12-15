@@ -60,6 +60,7 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
             });
 
             tranche.borrowHistory.map((el) => {
+                console.log(el);
                 const asset = el.reserve.symbol.slice(0, -1);
                 // TODO: fix to be in terms of USD, not native amounts (use oracles)
                 const usdAmount = parseFloat(

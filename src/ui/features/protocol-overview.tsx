@@ -6,7 +6,9 @@ import { TopTranchesTable } from '../tables';
 import { useWindowSize } from '../../hooks/ui';
 import { TrancheData } from '@vmex/sdk';
 import { makeCompact } from '../../utils/helpers';
-import { useMarketsData, useSubgraphProtocolData } from '../../api';
+import { useSubgraphProtocolData } from '../../api';
+import { bigNumberToUSD } from '../../utils/sdk-helpers';
+import { ethers } from 'ethers';
 
 export interface AssetBalance {
     asset: string;
@@ -40,7 +42,6 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
     isLoading,
 }) => {
     const { queryProtocolTVLChart } = useSubgraphProtocolData();
-    const { getAssetsPrices } = useMarketsData();
     const { width } = useWindowSize();
 
     const renderTopAssetsList = (_arr: AssetBalance[] | undefined) => {
@@ -57,9 +58,6 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
         }
     };
 
-    console.log(queryProtocolTVLChart.data);
-    console.log(getAssetsPrices());
-
     return (
         <Card loading={isLoading}>
             <div className="flex flex-col xl:flex-row gap-2 md:gap-4 xl:gap-6 divide-y-2 xl:divide-y-0 xl:divide-x-2 divide-black">
@@ -70,15 +68,7 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                             <p className="text-3xl">{tvl ? makeCompact(tvl, true) : '-'}</p>
                         </div>
                         <div className="h-[100px] w-full">
-                            <ReLineChart
-                                data={
-                                    queryProtocolTVLChart.data?.map((el) => ({
-                                        ...el,
-                                        value: getAssetsPrices(el.asset) * el.value,
-                                    })) || []
-                                }
-                                color="#3CB55E"
-                            />
+                            <ReLineChart data={queryProtocolTVLChart.data || []} color="#3CB55E" />
                         </div>
                     </div>
                     <div className="flex md:flex-col justify-between gap-1">

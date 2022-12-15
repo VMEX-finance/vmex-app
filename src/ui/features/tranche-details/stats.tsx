@@ -8,6 +8,7 @@ import { useSelectedTrancheContext } from '../../../store/contexts';
 import { NumberDisplay } from '../../components/displays';
 import { IGraphTrancheAssetProps } from '../../../api/subgraph/types';
 import { numberFormatter, percentFormatter } from '../../../utils/helpers';
+import { useTrancheMarketsData } from '../../../api';
 
 type ITrancheStatisticsCardProps = {
     tranche?: any;
