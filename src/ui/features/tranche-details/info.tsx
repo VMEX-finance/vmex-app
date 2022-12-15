@@ -1,4 +1,4 @@
-import { percentFormatter, truncateAddress } from '../../../utils/helpers';
+import { makeCompact, percentFormatter, truncateAddress } from '../../../utils/helpers';
 import React from 'react';
 import { Card } from '../../components/cards';
 import { MultipleAssetsDisplay, NumberDisplay } from '../../components/displays';
@@ -11,6 +11,19 @@ type ITrancheInfoCard = {
 
 export const TrancheInfoCard = ({ tranche }: ITrancheInfoCard) => {
     const { tranche: _tranche } = useSelectedTrancheContext();
+
+    const calculatePoolUtility = () => {
+        if (_tranche) {
+            const supplied = parseFloat(_tranche.supplyTotal.slice(1).replaceAll(',', ''));
+            const borrowed = parseFloat(_tranche.borrowTotal.slice(1).replaceAll(',', ''));
+            const final = (supplied - borrowed) / supplied;
+            return percentFormatter.format(final);
+        } else {
+            return percentFormatter.format(0);
+        }
+    };
+
+    calculatePoolUtility();
 
     return (
         <Card>
@@ -38,9 +51,10 @@ export const TrancheInfoCard = ({ tranche }: ITrancheInfoCard) => {
                     />
                     <NumberDisplay
                         label="Pool Utilization"
-                        value={`${percentFormatter.format(
-                            tranche?.utilityRate || _tranche.poolUtilization,
-                        )}`}
+                        value={calculatePoolUtility()}
+                        // value={`${percentFormatter.format(
+                        //     tranche?.utilityRate || _tranche.poolUtilization
+                        // )}`} // TODO
                         size="xl"
                     />
                     <NumberDisplay
