@@ -67,6 +67,10 @@ const TrancheDetails: React.FC = () => {
                                     ? (queryTrancheData.data.assetsData as any)[asset]
                                     : {}
                             }
+                            tempSupplyRate={
+                                queryTrancheMarkets.data?.find((el) => el.asset === asset)
+                                    ?.supplyApy
+                            }
                         />
                     </GridView>
                 </>

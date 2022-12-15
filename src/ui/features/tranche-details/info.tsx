@@ -23,8 +23,6 @@ export const TrancheInfoCard = ({ tranche }: ITrancheInfoCard) => {
         }
     };
 
-    calculatePoolUtility();
-
     return (
         <Card>
             <div className="flex flex-col gap-8">

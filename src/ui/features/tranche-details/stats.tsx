@@ -14,12 +14,14 @@ type ITrancheStatisticsCardProps = {
     tranche?: any;
     assetData?: IGraphTrancheAssetProps;
     loading?: boolean;
+    tempSupplyRate?: string | number;
 };
 
 export const TrancheStatisticsCard = ({
     tranche,
     assetData,
     loading,
+    tempSupplyRate,
 }: ITrancheStatisticsCardProps) => {
     const { asset, setAsset } = useSelectedTrancheContext();
     const [rerender, setRerender] = useState(false);
@@ -64,7 +66,10 @@ export const TrancheStatisticsCard = ({
                     <div className="flex gap-6 mb-3 mt-1">
                         <NumberDisplay
                             label="Supply APY"
-                            value={`${percentFormatter.format(assetData?.supplyRate)}`}
+                            value={
+                                tempSupplyRate ||
+                                `${percentFormatter.format(assetData?.supplyRate)}`
+                            }
                             color="text-brand-green"
                         />
                         <NumberDisplay
