@@ -25,7 +25,7 @@ export type IGraphTrancheAssetProps =
           optimalUtilityRate: number;
           reserveFactor: string;
           liquidationThreshold: string;
-          totalDeposits: string;
+          totalBorrowed: string;
           utilityRate: string;
           borrowRate: string;
           supplyRate: string;

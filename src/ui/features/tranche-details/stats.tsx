@@ -34,8 +34,6 @@ export const TrancheStatisticsCard = ({
         return () => clearTimeout(timeout);
     }, [asset]);
 
-    console.log('assetData:', assetData);
-
     return (
         <>
             <Card black loading={loading || !assetData || rerender} className="min-h-[852px]">
@@ -158,7 +156,7 @@ export const TrancheStatisticsCard = ({
                         />
                         <NumberDisplay
                             label="Total Borrowed"
-                            value={`${numberFormatter.format(assetData?.totalDeposits)} ${asset}`}
+                            value={`${numberFormatter.format(assetData?.totalBorrowed)} ${asset}`}
                             color="text-white"
                             center
                         />

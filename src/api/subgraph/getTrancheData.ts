@@ -53,24 +53,35 @@ export const getSubgraphTrancheData = async (
                         ), // Not 100% why it's 25 decimals
                         reserveFactor: item.reserveFactor,
                         liquidationThreshold: item.reserveLiquidationThreshold,
-                        totalDeposits: utils.formatUnits(item.totalDeposits, item.decimals),
+                        totalBorrowed: utils.formatUnits(
+                            String(
+                                Math.abs(
+                                    Number(item.availableLiquidity) - Number(item.totalDeposits),
+                                ),
+                            ),
+                            item.decimals,
+                        ),
                         utilityRate: `${item.utilizationRate}`,
                         borrowRate: utils.formatUnits(item.variableBorrowRate, 27),
                         supplyRate: '0',
                         liquidationPenalty: '0',
                         collateral: true,
                         oracle: 'Chainlink',
-                        totalSupplied: '0',
+                        totalSupplied: utils.formatUnits(item.totalDeposits, item.decimals),
                     },
                 }),
             {},
         );
 
-        return {
+        const returnObj = {
             assetsData: finalObj,
             utilityRate: '0',
             assets: data.tranche.reserves.map((el: any) => el.symbol.slice(0, -1)),
         };
+
+        console.log('getSubgraphTrancheData:', returnObj);
+
+        return returnObj;
     }
 };
 
