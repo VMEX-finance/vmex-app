@@ -24,6 +24,7 @@ type ILineChartProps = {
     yaxis?: boolean;
     labels?: boolean;
     type?: 'asset-stats' | 'utilization' | 'default';
+    noTooltip?: boolean;
 };
 
 export const ReLineChart = (props: ILineChartProps) => {
@@ -101,7 +102,7 @@ export const ReLineChart = (props: ILineChartProps) => {
                         right: props.yaxis ? 50 : 10,
                     }}
                 >
-                    <Tooltip content={<CustomTooltip type={props.type} />} />
+                    {!props.noTooltip && <Tooltip content={<CustomTooltip type={props.type} />} />}
                     <Line
                         dot={{ r: 0 }}
                         type="monotone"

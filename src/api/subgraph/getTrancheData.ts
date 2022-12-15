@@ -1,13 +1,17 @@
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 import { useQuery } from '@tanstack/react-query';
 import { SUBGRAPH_ENDPOINT } from '../../utils/constants';
+import { IGraphTrancheDataProps, ISubgraphTrancheData } from './types';
+import { utils } from 'ethers';
 
 const client = new ApolloClient({
     uri: SUBGRAPH_ENDPOINT,
     cache: new InMemoryCache(),
 });
 
-export const getTrancheAssetData = async (_trancheId: string | number) => {
+export const getSubgraphTrancheData = async (
+    _trancheId: string | number,
+): Promise<IGraphTrancheDataProps> => {
     if (!_trancheId) return {};
 
     const trancheId = String(_trancheId);
@@ -35,18 +39,48 @@ export const getTrancheAssetData = async (_trancheId: string | number) => {
     });
 
     if (error) return {};
-    console.log('getTrancheChartData:', data.tranche);
-    return data.tranche;
+    else {
+        const assets = data.tranche.reserves;
+        const finalObj = assets.reduce(
+            (obj: any, item: any) =>
+                Object.assign(obj, {
+                    [item.symbol.slice(0, -1)]: {
+                        liquidity: utils.formatUnits(item.availableLiquidity, item.decimals),
+                        ltv: item.baseLTVasCollateral,
+                        liquidityRate: `${utils.formatUnits(item.liquidityRate, 27)}%`,
+                        optimalUtilityRate: parseFloat(
+                            utils.formatUnits(item.optimalUtilisationRate, 27),
+                        ), // Not 100% why it's 25 decimals
+                        reserveFactor: item.reserveFactor,
+                        liquidationThreshold: item.reserveLiquidationThreshold,
+                        totalDeposits: utils.formatUnits(item.totalDeposits, item.decimals),
+                        utilityRate: `${item.utilizationRate}`,
+                        borrowRate: utils.formatUnits(item.variableBorrowRate, 27),
+                        supplyRate: '0',
+                        liquidationPenalty: '0',
+                        collateral: true,
+                        oracle: 'Chainlink',
+                        totalSupplied: '0',
+                    },
+                }),
+            {},
+        );
+
+        return {
+            assetsData: finalObj,
+            utilityRate: '0',
+            assets: data.tranche.reserves.map((el: any) => el.symbol.slice(0, -1)),
+        };
+    }
 };
 
-export function useSubgraphTrancheData(trancheId: string | number) {
-    console.log(trancheId);
-    const queryTrancheAssetData = useQuery({
-        queryKey: ['subgraph-asset-stats'],
-        queryFn: () => getTrancheAssetData(trancheId),
+export function useSubgraphTrancheData(trancheId: string | number): ISubgraphTrancheData {
+    const queryTrancheData = useQuery({
+        queryKey: ['subgraph-tranche-data'],
+        queryFn: () => getSubgraphTrancheData(trancheId),
     });
 
     return {
-        queryTrancheAssetData,
+        queryTrancheData,
     };
 }

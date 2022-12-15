@@ -88,7 +88,7 @@ export const getTVLChartData = async () => {
 
 export function useSubgraphProtocolData() {
     const queryTVLChartData = useQuery({
-        queryKey: ['subgraph-charts-tvl'],
+        queryKey: ['subgraph-protocol-charts'],
         queryFn: () => getTVLChartData(),
         refetchInterval: 1 * 60 * 1000, // Refetch every minute
     });
