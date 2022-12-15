@@ -41,15 +41,18 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
 }) => {
     const { queryTVLChartData } = useSubgraphProtocolData();
     const { width } = useWindowSize();
-    const renderTopAssetsList = (arr: any[] | undefined) => {
-        if (arr) {
+
+    const renderTopAssetsList = (_arr: AssetBalance[] | undefined) => {
+        if (!_arr) return [];
+        else {
+            const arr = _arr.filter(
+                (el) => parseFloat(el.amount.includes('$') ? el.amount.slice(1) : el.amount) !== 0,
+            );
             if (width > 1536) {
                 return arr;
             } else {
                 return arr.slice(0, 4);
             }
-        } else {
-            return [];
         }
     };
 
