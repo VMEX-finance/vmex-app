@@ -3,17 +3,17 @@ import { useQuery } from '@tanstack/react-query';
 import { ILineChartDataPointProps } from '@ui/components/charts';
 import { SUBGRAPH_ENDPOINT } from '../../utils/constants';
 import { bigNumberToUSD, DECIMALS } from '../../utils/sdk-helpers';
-import { IGraphTrancheProps } from './types';
+import { IGraphProtocolDataProps, IGraphTrancheProps, ISubgraphProtocolData } from './types';
 
 const client = new ApolloClient({
     uri: SUBGRAPH_ENDPOINT,
     cache: new InMemoryCache(),
 });
 
-export const getTVLChartData = async () => {
+export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointProps[] | any> => {
     const { data, error } = await client.query({
         query: gql`
-            query MyQuery {
+            query QueryProtocolTVL {
                 tranches {
                     id
                     borrowHistory {
@@ -86,14 +86,57 @@ export const getTVLChartData = async () => {
     }
 };
 
-export function useSubgraphProtocolData() {
-    const queryTVLChartData = useQuery({
+// TODO
+export async function getSubgraphProtocolData(): Promise<IGraphProtocolDataProps> {
+    const { data, error } = await client.query({
+        query: gql`
+            query QueryProtocolData {
+                deposits {
+                    user {
+                        id
+                    }
+                }
+                borrows {
+                    user {
+                        id
+                    }
+                }
+            }
+        `,
+    });
+    if (error) return {};
+    else {
+        const uniqueBorrowers: string[] = [];
+        const uniqueLenders: string[] = [];
+        // History of all users that have borrowed or deposited - NOT JUST CURRENT
+        data.borrows.map(({ user }: any) => {
+            if (uniqueBorrowers.includes(user.id) === false) uniqueBorrowers.push(user.id);
+        });
+        data.deposits.map(({ user }: any) => {
+            if (uniqueLenders.includes(user.id) === false) uniqueLenders.push(user.id);
+        });
+        console.log('getSubgraphProtocolData:', data);
+        return {
+            uniqueLenders,
+            uniqueBorrowers,
+        };
+    }
+}
+
+export function useSubgraphProtocolData(): ISubgraphProtocolData {
+    const queryProtocolTVLChart = useQuery({
         queryKey: ['subgraph-protocol-charts'],
-        queryFn: () => getTVLChartData(),
+        queryFn: () => getSubgraphProtocolChart(),
         refetchInterval: 1 * 60 * 1000, // Refetch every minute
     });
 
+    const queryProtocolData = useQuery({
+        queryKey: ['subgraph-protocol-data'],
+        queryFn: () => getSubgraphProtocolData(),
+    });
+
     return {
-        queryTVLChartData,
+        queryProtocolTVLChart,
+        queryProtocolData,
     };
 }

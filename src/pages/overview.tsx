@@ -8,10 +8,12 @@ import { useUserData } from '../api/user';
 import { useAccount } from 'wagmi';
 import { numberFormatter } from '../utils/helpers';
 import { bigNumberToUnformattedString } from '../utils/sdk-helpers';
+import { useSubgraphProtocolData } from '../api/subgraph';
 
 const Overview: React.FC = () => {
     const { address, isConnected } = useAccount();
     const { queryProtocolOverview } = useProtocolData();
+    const { queryProtocolData } = useSubgraphProtocolData();
     const { queryUserPerformance, queryUserActivity } = useUserData(address);
 
     return (
@@ -19,6 +21,8 @@ const Overview: React.FC = () => {
             <ProtocolStatsCard
                 {...queryProtocolOverview.data}
                 isLoading={queryProtocolOverview.isLoading}
+                lenders={queryProtocolData.data?.uniqueLenders.length}
+                borrowers={queryProtocolData.data?.uniqueBorrowers.length}
             />
             {isConnected ? (
                 <GridView type="fixed">

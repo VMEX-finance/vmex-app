@@ -43,6 +43,7 @@ export const getSubgraphUserData = async (address: string): Promise<IGraphUserDa
                         action
                         reserve {
                             symbol
+                            decimals
                         }
                     }
                 }
