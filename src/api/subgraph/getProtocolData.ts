@@ -82,6 +82,7 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
                 plot.value = plot.value + graphData[index - 1].value;
             }
         });
+        console.log('getSubgraphProtocolChart:', graphData);
         return graphData;
     }
 };
@@ -115,11 +116,13 @@ export async function getSubgraphProtocolData(): Promise<IGraphProtocolDataProps
         data.deposits.map(({ user }: any) => {
             if (uniqueLenders.includes(user.id) === false) uniqueLenders.push(user.id);
         });
-        console.log('getSubgraphProtocolData:', data);
-        return {
-            uniqueLenders,
+
+        const returnObj = {
             uniqueBorrowers,
+            uniqueLenders,
         };
+        console.log('getSubgraphProtocolData:', returnObj);
+        return returnObj;
     }
 }
 

@@ -54,7 +54,9 @@ export const getSubgraphUserData = async (address: string): Promise<IGraphUserDa
 
     if (error) return {};
     else {
-        return data;
+        const returnObj = data;
+        console.log('getSubgraphUserData:', returnObj);
+        return returnObj;
     }
 };
 

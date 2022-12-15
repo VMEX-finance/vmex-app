@@ -80,7 +80,6 @@ export const getSubgraphTrancheData = async (
         };
 
         console.log('getSubgraphTrancheData:', returnObj);
-
         return returnObj;
     }
 };
