@@ -48,6 +48,12 @@ export type IGraphTrancheDataProps = {
     platformFee?: string;
 };
 
+export type IGraphUserDataProps = {} | Record<any, any>;
+
 export type ISubgraphTrancheData = {
     queryTrancheData: UseQueryResult<IGraphTrancheDataProps, unknown>;
+};
+
+export type ISubgraphUserData = {
+    queryUserData: UseQueryResult<any, unknown>;
 };
