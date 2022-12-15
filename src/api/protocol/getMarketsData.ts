@@ -4,13 +4,14 @@ import { getAllMarketsData, getAllTrancheData, MarketData } from '@vmex/sdk';
 import {
     bigNumberToNative,
     bigNumberToUSD,
+    DECIMALS,
     flipAndLowerCase,
     MAINNET_ASSET_MAPPINGS,
     rayToPercent,
     SDK_PARAMS,
 } from '../../utils/sdk-helpers';
 import { IMarketsAsset } from '../types';
-import { BigNumber } from 'ethers';
+import { BigNumber, utils } from 'ethers';
 
 export async function getAllMarkets(): Promise<IMarketsAsset[]> {
     const allMarketsData: MarketData[] = await getAllMarketsData(SDK_PARAMS);
@@ -63,7 +64,53 @@ export function useMarketsData(): IMarketsDataProps {
         refetchOnMount: true,
     });
 
+    const getAssetsPrices = (_asset?: string) => {
+        if (!queryAllMarkets.data) return {};
+        else {
+            const assets: any[] = [];
+            queryAllMarkets.data.map((el: any) => {
+                if (assets.includes(el.asset) === false) assets.push(el);
+            });
+            // Not sure why USDC, WBTC, and USDT bigNumbers are off, but DAI is fine
+            const dai = assets.find((el) => el.asset === 'DAI');
+            const finalObj = assets.reduce(
+                (obj: any, item: any) =>
+                    Object.assign(obj, {
+                        [item.asset]: {
+                            ethPrice:
+                                item.asset === 'USDC' || item.asset === 'USDT'
+                                    ? parseFloat(
+                                          utils.formatUnits(
+                                              dai.currentPrice,
+                                              DECIMALS.get(dai.asset),
+                                          ),
+                                      )
+                                    : parseFloat(
+                                          utils.formatUnits(
+                                              item.currentPrice,
+                                              DECIMALS.get(item.asset),
+                                          ),
+                                      ),
+                            usdPrice: '$0',
+                        },
+                    }),
+                {},
+            );
+            if (_asset) {
+                const asset = finalObj[_asset];
+                if (asset) {
+                    return finalObj[_asset];
+                } else {
+                    return { ethPrice: '0', usdPrice: '$0' };
+                }
+            } else {
+                return finalObj;
+            }
+        }
+    };
+
     return {
         queryAllMarkets,
+        getAssetsPrices,
     };
 }

@@ -7,6 +7,7 @@ export type ILineChartDataPointProps = {
     value: number; // y axis
     value2?: number; // y axis
     value3?: number; // y axis
+    asset?: string;
 };
 
 type ILineChartProps = {

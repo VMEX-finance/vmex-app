@@ -4,11 +4,10 @@ import { UserPerformanceCard, ProtocolStatsCard } from '../ui/features';
 import { YourPositionsTable } from '../ui/tables';
 import { WalletButton } from '../ui/components/buttons';
 import { useProtocolData } from '../api/protocol';
-import { useUserData } from '../api/user';
+import { useUserData, useSubgraphProtocolData } from '../api';
 import { useAccount } from 'wagmi';
 import { numberFormatter } from '../utils/helpers';
 import { bigNumberToUnformattedString } from '../utils/sdk-helpers';
-import { useSubgraphProtocolData } from '../api/subgraph';
 
 const Overview: React.FC = () => {
     const { address, isConnected } = useAccount();

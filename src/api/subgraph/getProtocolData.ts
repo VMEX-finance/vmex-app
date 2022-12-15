@@ -46,13 +46,14 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
                 );
                 const date = new Date(el.timestamp * 1000).toLocaleDateString();
 
-                if (graphData.length === 0) graphData.push({ value: usdAmount, xaxis: date });
+                if (graphData.length === 0)
+                    graphData.push({ asset, value: usdAmount, xaxis: date });
                 else {
                     graphData.map((plot) => {
                         if (plot.xaxis === date) {
                             plot.value = plot.value + usdAmount;
                         } else {
-                            graphData.push({ value: usdAmount, xaxis: date });
+                            graphData.push({ asset, value: usdAmount, xaxis: date });
                         }
                     });
                 }
@@ -70,7 +71,7 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
                     if (plot.xaxis === date) {
                         plot.value = plot.value - usdAmount;
                     } else {
-                        graphData.push({ value: -usdAmount, xaxis: date });
+                        graphData.push({ asset, value: -usdAmount, xaxis: date });
                     }
                 });
             });

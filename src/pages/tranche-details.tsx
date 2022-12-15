@@ -10,8 +10,7 @@ import { TrancheTable } from '../ui/tables';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '../store/contexts';
 import { useAccount, useSigner } from 'wagmi';
-import { useTrancheMarketsData, useTranchesData } from '../api/protocol';
-import { useSubgraphTrancheData } from '../api/subgraph';
+import { useTrancheMarketsData, useTranchesData, useSubgraphTrancheData } from '../api';
 
 const TrancheDetails: React.FC = () => {
     const navigate = useNavigate();
