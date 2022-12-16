@@ -69,7 +69,7 @@ export const TrancheStatisticsCard = ({
                             value={
                                 tempSupplyRate ||
                                 `${percentFormatter.format(assetData?.supplyRate)}`
-                            }
+                            } // TODO
                             color="text-brand-green"
                         />
                         <NumberDisplay

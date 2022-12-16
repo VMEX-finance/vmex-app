@@ -78,8 +78,8 @@ export const getSubgraphTrancheData = async (
             assetsData: finalObj,
             utilityRate: '0',
             assets: data.tranche.reserves.map((el: any) => el.symbol.slice(0, -1)),
-            adminFee: 2,
-            platformFee: 3,
+            adminFee: 0.02,
+            platformFee: 0.03,
         };
 
         console.log('getSubgraphTrancheData:', returnObj);

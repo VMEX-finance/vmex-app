@@ -13,7 +13,7 @@ export const TrancheInfoCard = ({ tranche }: ITrancheInfoCard) => {
     const { tranche: _tranche } = useSelectedTrancheContext();
 
     const calculatePoolUtility = () => {
-        if (_tranche) {
+        if (_tranche && _tranche.supplyTotal !== '$0.00' && _tranche.borrowTotal !== '$0.00') {
             const supplied = parseFloat(_tranche.supplyTotal.slice(1).replaceAll(',', ''));
             const borrowed = parseFloat(_tranche.borrowTotal.slice(1).replaceAll(',', ''));
             const final = (supplied - borrowed) / supplied;
