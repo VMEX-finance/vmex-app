@@ -8,10 +8,6 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import {
     bigNumberToUSD,
-    bigNumberToNative,
-    flipAndLowerCase,
-    MAINNET_ASSET_MAPPINGS,
-    DECIMALS,
     rayToPercent,
     SDK_PARAMS,
     REVERSE_MAINNET_ASSET_MAPPINGS,

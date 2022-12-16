@@ -49,17 +49,7 @@ export type AvailableChains =
     | 'zcash';
 
 // TODO: update
-export type AvailableCoins =
-    | 'usdc'
-    | 'renbtc'
-    | 'btc'
-    | 'wbtc'
-    | 'usdt'
-    | 'eth'
-    | 'matic'
-    | 'avax'
-    | 'zec'
-    | 'ibbtc';
+export type AvailableCoins = 'usdc' | 'wbtc' | 'usdt' | 'qeth';
 
 export const truncate = (str: string, show = 6) => {
     if (str && str.length > 20) {

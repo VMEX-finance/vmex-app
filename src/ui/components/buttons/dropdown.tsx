@@ -64,13 +64,14 @@ export const DropdownButton = ({
     };
 
     const mode = primary
-        ? '!text-neutral-100 bg-neutral-800 shadow-lg hover:bg-neutral-900'
+        ? '!text-neutral-100 bg-neutral-800 shadow-lg hover:bg-neutral-700'
         : 'hover:bg-neutral-100';
 
     const textSize = size === 'lg' ? 'text-lg' : 'text-sm';
     const iconSize = size === 'lg' ? '30px' : '24px';
     const paddingSize = size === 'lg' ? 'py-1 pl-4 pr-2' : 'pl-2';
     const withBorder = border ? 'border border-2 border-black' : '';
+    const roundedSize = size === 'lg' ? 'rounded-lg' : 'rounded-md';
     const displayOnly = label
         ? `lg:border lg:border-black bg-white ${
               typeof label === 'string' ? '!px-4 !py-[3px]' : '!p-2'
@@ -119,12 +120,16 @@ export const DropdownButton = ({
             <Menu as="div" className={`relative inline-block ${full ? 'w-full' : ''}`}>
                 <Menu.Button
                     className={`dark:bg-neutral-100 dark:hover:bg-neutral-200 dark:!text-neutral-900
-                        inline-flex items-center w-full rounded-lg font-medium focus:outline-none focus:ring-none transition duration-150
-                        ${
-                            className ? className : ''
-                        } ${determineColor()} ${displayOnly} ${mode} ${textSize} ${paddingSize} ${withBorder} ${
-                        full ? 'w-full' : ''
-                    }
+                        inline-flex items-center w-full font-medium focus:outline-none focus:ring-none transition duration-150
+                        ${className ? className : ''} 
+                        ${determineColor()} 
+                        ${displayOnly} 
+                        ${mode} 
+                        ${textSize} 
+                        ${paddingSize} 
+                        ${withBorder} 
+                        ${full ? 'w-full' : ''}
+                        ${roundedSize}
                     `}
                 >
                     {label ? (

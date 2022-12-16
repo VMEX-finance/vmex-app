@@ -4,7 +4,7 @@ import { UserPerformanceCard, ProtocolStatsCard } from '../ui/features';
 import { YourPositionsTable } from '../ui/tables';
 import { WalletButton } from '../ui/components/buttons';
 import { useProtocolData } from '../api/protocol';
-import { useUserData } from '../api/user';
+import { useUserData, useSubgraphProtocolData } from '../api';
 import { useAccount } from 'wagmi';
 import { numberFormatter } from '../utils/helpers';
 import { bigNumberToUnformattedString } from '../utils/sdk-helpers';
@@ -12,6 +12,7 @@ import { bigNumberToUnformattedString } from '../utils/sdk-helpers';
 const Overview: React.FC = () => {
     const { address, isConnected } = useAccount();
     const { queryProtocolOverview } = useProtocolData();
+    const { queryProtocolData } = useSubgraphProtocolData();
     const { queryUserPerformance, queryUserActivity } = useUserData(address);
 
     return (
@@ -19,6 +20,8 @@ const Overview: React.FC = () => {
             <ProtocolStatsCard
                 {...queryProtocolOverview.data}
                 isLoading={queryProtocolOverview.isLoading}
+                lenders={queryProtocolData.data?.uniqueLenders.length}
+                borrowers={queryProtocolData.data?.uniqueBorrowers.length}
             />
             {isConnected ? (
                 <GridView type="fixed">
@@ -51,7 +54,7 @@ const Overview: React.FC = () => {
                     <div className="mb-4">
                         <span className="text-lg lg:text-2xl">Please connect your wallet.</span>
                     </div>
-                    <WalletButton primary />
+                    <WalletButton primary className="w-fit" />
                 </div>
             )}
         </AppTemplate>

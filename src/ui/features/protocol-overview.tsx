@@ -1,11 +1,14 @@
 import { Card } from '../components/cards';
 import React from 'react';
-import { ILineChartDataPointProps, ReLineChart } from '../components/charts';
+import { ReLineChart } from '../components/charts';
 import { NumberDisplay, PillDisplay } from '../components/displays';
 import { TopTranchesTable } from '../tables';
 import { useWindowSize } from '../../hooks/ui';
 import { TrancheData } from '@vmex/sdk';
 import { makeCompact } from '../../utils/helpers';
+import { useSubgraphProtocolData } from '../../api';
+import { bigNumberToUSD } from '../../utils/sdk-helpers';
+import { ethers } from 'ethers';
 
 export interface AssetBalance {
     asset: string;
@@ -18,7 +21,6 @@ export interface IProtocolProps {
     lenders?: number;
     borrowers?: number;
     markets?: number;
-    graphData?: ILineChartDataPointProps[];
     totalSupplied?: string;
     totalBorrowed?: string;
     topBorrowedAssets?: AssetBalance[];
@@ -32,7 +34,6 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
     lenders,
     borrowers,
     markets,
-    graphData,
     totalBorrowed,
     totalSupplied,
     topBorrowedAssets,
@@ -40,16 +41,20 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
     topTranches,
     isLoading,
 }) => {
+    const { queryProtocolTVLChart } = useSubgraphProtocolData();
     const { width } = useWindowSize();
-    const renderTopAssetsList = (arr: any[] | undefined) => {
-        if (arr) {
+
+    const renderTopAssetsList = (_arr: AssetBalance[] | undefined) => {
+        if (!_arr) return [];
+        else {
+            const arr = _arr.filter(
+                (el) => parseFloat(el.amount.includes('$') ? el.amount.slice(1) : el.amount) !== 0,
+            );
             if (width > 1536) {
                 return arr;
             } else {
                 return arr.slice(0, 4);
             }
-        } else {
-            return [];
         }
     };
 
@@ -63,7 +68,7 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                             <p className="text-3xl">{tvl ? makeCompact(tvl, true) : '-'}</p>
                         </div>
                         <div className="h-[100px] w-full">
-                            <ReLineChart data={graphData || []} color="#3CB55E" />
+                            <ReLineChart data={queryProtocolTVLChart.data || []} color="#3CB55E" />
                         </div>
                     </div>
                     <div className="flex md:flex-col justify-between gap-1">

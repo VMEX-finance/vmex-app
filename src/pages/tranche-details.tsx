@@ -10,16 +10,19 @@ import { TrancheTable } from '../ui/tables';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '../store/contexts';
 import { useAccount, useSigner } from 'wagmi';
-import { useTrancheMarketsData, useTranchesData } from '../api/protocol';
+import { useTrancheMarketsData, useTranchesData, useSubgraphTrancheData } from '../api';
 
 const TrancheDetails: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const { address } = useAccount();
     const { data: signer } = useSigner();
-    const { tranche, setTranche } = useSelectedTrancheContext();
+    const { tranche, setTranche, asset } = useSelectedTrancheContext();
+
     const { queryTrancheMarkets } = useTrancheMarketsData(tranche.id);
+    const { queryTrancheData } = useSubgraphTrancheData(tranche.id);
     const { queryAllTranches } = useTranchesData();
+
     const [view, setView] = useState('tranche-overview');
 
     useEffect(() => {
@@ -43,7 +46,7 @@ const TrancheDetails: React.FC = () => {
             setView={setView}
         >
             <TrancheTVLDataCard
-                assets={tranche.assets}
+                assets={queryTrancheData.data?.assets || tranche.assets}
                 grade={tranche.aggregateRating}
                 tvl={tranche.tvl}
                 tvlChange={tranche.tvlChange}
@@ -55,8 +58,20 @@ const TrancheDetails: React.FC = () => {
             {view.includes('details') ? (
                 <>
                     <GridView className="lg:grid-cols-[1fr_2fr]">
-                        <TrancheInfoCard tranche={tranche} />
-                        <TrancheStatisticsCard tranche={tranche} />
+                        <TrancheInfoCard tranche={queryTrancheData.data} />
+                        <TrancheStatisticsCard
+                            tranche={queryTrancheData.data}
+                            loading={queryTrancheData.isLoading}
+                            assetData={
+                                queryTrancheData.data && asset
+                                    ? (queryTrancheData.data.assetsData as any)[asset]
+                                    : {}
+                            }
+                            tempSupplyRate={
+                                queryTrancheMarkets.data?.find((el) => el.asset === asset)
+                                    ?.supplyApy
+                            }
+                        />
                     </GridView>
                 </>
             ) : (

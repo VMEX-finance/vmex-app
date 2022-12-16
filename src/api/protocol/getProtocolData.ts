@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 import { IProtocolProps } from '../../ui/features';
-import { MOCK_LINE_DATA_2 } from '../../utils/mock-data';
 import { IProtocolDataProps } from './types';
 import { AssetBalance, getProtocolData } from '@vmex/sdk';
 import {
@@ -47,7 +46,6 @@ export async function getProtocolOverviewData(): Promise<IProtocolProps> {
             })
             .slice(0, Math.min(protocolData.topBorrowedAssets.length, 5)),
         topTranches: protocolData.topTranches,
-        graphData: MOCK_LINE_DATA_2,
     };
 }
 

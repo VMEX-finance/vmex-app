@@ -69,7 +69,7 @@ const Portfolio: React.FC = () => {
                     <div className="mb-4">
                         <span className="text-lg lg:text-2xl">Please connect your wallet.</span>
                     </div>
-                    <WalletButton />
+                    <WalletButton primary className="w-fit" />
                 </div>
             )}
         </AppTemplate>

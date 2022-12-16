@@ -136,30 +136,3 @@ export const MOCK_MULTI_LINE_DATA = [
         value2: parseFloat((Math.random() * 2).toFixed(2)),
     },
 ];
-
-export const MOCK_UTILITIZATION_LINE_DATA = [
-    {
-        xaxis: 0,
-        value: 0,
-    },
-    {
-        xaxis: 20,
-        value: 0,
-    },
-    {
-        xaxis: 40,
-        value: 0,
-    },
-    {
-        xaxis: 60,
-        value: 0,
-    },
-    {
-        xaxis: 80,
-        value: 0,
-    },
-    {
-        xaxis: 100,
-        value: 100,
-    },
-];
