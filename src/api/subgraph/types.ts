@@ -45,8 +45,8 @@ export type IGraphTrancheDataProps = {
     assets?: string[];
     whitelist?: boolean;
     admin?: string;
-    adminFee?: string;
-    platformFee?: string;
+    adminFee?: number;
+    platformFee?: number;
 };
 
 export type IGraphProtocolDataProps =

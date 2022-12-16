@@ -154,7 +154,7 @@ export function useUserData(userAddress: any): IUserDataProps {
 
     const getTokenBalance = (asset: string) => {
         if (!AVAILABLE_ASSETS.includes(asset) || !queryUserWallet.data) {
-            if (queryUserWallet.data) console.log(`Token Balance for ${asset} not found`);
+            if (queryUserWallet.data) console.warn(`Token Balance for ${asset} not found`);
             return {
                 amountNative: BigNumber.from('0'),
                 amount: '$0',

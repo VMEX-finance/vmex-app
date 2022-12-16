@@ -31,6 +31,7 @@ export const getSubgraphTrancheData = async (
                         reserveLiquidationThreshold
                         totalDeposits
                         availableLiquidity
+                        usageAsCollateralEnabled
                     }
                 }
             }
@@ -50,7 +51,7 @@ export const getSubgraphTrancheData = async (
                         liquidityRate: `${utils.formatUnits(item.liquidityRate, 27)}%`,
                         optimalUtilityRate: parseFloat(
                             utils.formatUnits(item.optimalUtilisationRate, 27),
-                        ), // Not 100% why it's 25 decimals
+                        ), // Not 100% why it's 27 decimals
                         reserveFactor: item.reserveFactor,
                         liquidationThreshold: item.reserveLiquidationThreshold,
                         totalBorrowed: utils.formatUnits(
@@ -63,10 +64,10 @@ export const getSubgraphTrancheData = async (
                         ),
                         utilityRate: `${item.utilizationRate}`,
                         borrowRate: utils.formatUnits(item.variableBorrowRate, 27),
-                        supplyRate: '0',
-                        liquidationPenalty: '0',
-                        collateral: true,
-                        oracle: 'Chainlink',
+                        supplyRate: '0', // TODO
+                        liquidationPenalty: '0', // TODO
+                        collateral: true, // TODO
+                        oracle: 'Chainlink', // TODO
                         totalSupplied: utils.formatUnits(item.totalDeposits, item.decimals),
                     },
                 }),
@@ -77,6 +78,8 @@ export const getSubgraphTrancheData = async (
             assetsData: finalObj,
             utilityRate: '0',
             assets: data.tranche.reserves.map((el: any) => el.symbol.slice(0, -1)),
+            adminFee: 2,
+            platformFee: 3,
         };
 
         console.log('getSubgraphTrancheData:', returnObj);

@@ -19,6 +19,7 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
                     borrowHistory {
                         timestamp
                         amount
+                        assetPriceUSD
                         reserve {
                             symbol
                         }
@@ -26,6 +27,7 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
                     depositHistory {
                         timestamp
                         amount
+                        assetPriceUSD
                         reserve {
                             symbol
                         }
@@ -62,6 +64,7 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
             tranche.borrowHistory.map((el) => {
                 const asset = el.reserve.symbol.slice(0, -1);
                 // TODO: fix to be in terms of USD, not native amounts (use oracles)
+                // Multiply this 'amount' by 'assetPriceUSD' when oracle is connected
                 const usdAmount = parseFloat(
                     bigNumberToUSD(el.amount, DECIMALS.get(asset) || 18, false),
                 );

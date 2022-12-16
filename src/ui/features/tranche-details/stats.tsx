@@ -6,12 +6,12 @@ import { DropdownButton } from '../../components/buttons';
 import ReactTooltip from 'react-tooltip';
 import { useSelectedTrancheContext } from '../../../store/contexts';
 import { NumberDisplay } from '../../components/displays';
-import { IGraphTrancheAssetProps } from '../../../api/subgraph/types';
+import { IGraphTrancheAssetProps, IGraphTrancheDataProps } from '../../../api/subgraph/types';
 import { numberFormatter, percentFormatter } from '../../../utils/helpers';
 import { useTrancheMarketsData } from '../../../api';
 
 type ITrancheStatisticsCardProps = {
-    tranche?: any;
+    tranche?: IGraphTrancheDataProps | any;
     assetData?: IGraphTrancheAssetProps;
     loading?: boolean;
     tempSupplyRate?: string | number;
@@ -168,13 +168,13 @@ export const TrancheStatisticsCard = ({
                         />
                         <NumberDisplay
                             label="Admin Fee"
-                            value={`${tranche.adminFee || 1}%`}
+                            value={percentFormatter.format(tranche?.adminFee)}
                             color="text-white"
                             center
                         />
                         <NumberDisplay
                             label="Platform Fee"
-                            value={`${tranche.platformFee || 1}%`} // TODO
+                            value={percentFormatter.format(tranche?.platformFee)}
                             color="text-white"
                             center
                         />
