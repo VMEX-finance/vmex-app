@@ -1,3 +1,4 @@
+import { IAvailableCoins } from '../../utils/helpers';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
 // Types
@@ -14,7 +15,7 @@ const PricesContext = createContext<IPricesStoreProps>({});
 export function PricesStore(props: { children: ReactNode }) {
     const [prices, setPrices] = useState({});
 
-    const updatePrice = (key: string, val: any) => {
+    const updatePrice = (key: IAvailableCoins, val: any) => {
         setPrices({
             ...prices,
             [key]: val,
