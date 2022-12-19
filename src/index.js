@@ -11,6 +11,7 @@ import {
     SelectedTrancheStore,
     TransactionsStore,
     ThemeProvider,
+    PricesStore,
 } from './store/contexts';
 
 const queryClient = new QueryClient();
@@ -20,21 +21,23 @@ root.render(
     <React.StrictMode>
         <ThemeProvider>
             <QueryClientProvider client={queryClient}>
-                <MyTranchesStore>
-                    <TransactionsStore>
-                        <SelectedTrancheStore>
-                            <ReduxProvider>
-                                <WagmiConfig client={wagmiClient}>
-                                    <RainbowKitProvider chains={chains}>
-                                        <Router>
-                                            <App />
-                                        </Router>
-                                    </RainbowKitProvider>
-                                </WagmiConfig>
-                            </ReduxProvider>
-                        </SelectedTrancheStore>
-                    </TransactionsStore>
-                </MyTranchesStore>
+                <PricesStore>
+                    <MyTranchesStore>
+                        <TransactionsStore>
+                            <SelectedTrancheStore>
+                                <ReduxProvider>
+                                    <WagmiConfig client={wagmiClient}>
+                                        <RainbowKitProvider chains={chains}>
+                                            <Router>
+                                                <App />
+                                            </Router>
+                                        </RainbowKitProvider>
+                                    </WagmiConfig>
+                                </ReduxProvider>
+                            </SelectedTrancheStore>
+                        </TransactionsStore>
+                    </MyTranchesStore>
+                </PricesStore>
             </QueryClientProvider>
         </ThemeProvider>
     </React.StrictMode>,
