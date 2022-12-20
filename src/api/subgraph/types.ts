@@ -1,5 +1,6 @@
 import { UseQueryResult } from '@tanstack/react-query';
 import { ILineChartDataPointProps } from '../../ui/components/charts';
+import { ITrancheProps } from '../types';
 
 export type IGraphHistoryProps = {
     action?: 'Borrow' | 'Deposit';
@@ -62,8 +63,16 @@ export type ISubgraphTrancheData = {
     queryTrancheData: UseQueryResult<IGraphTrancheDataProps, unknown>;
 };
 
+export type ISubgraphMarketsData = {
+    queryMarketsChart: UseQueryResult<ILineChartDataPointProps[][], unknown>;
+};
+
 export type ISubgraphUserData = {
     queryUserData: UseQueryResult<any, unknown>;
+};
+
+export type ISubgraphTranchesDataProps = {
+    queryAllTranches: UseQueryResult<ITrancheProps[], unknown>;
 };
 
 export type ISubgraphProtocolData = {

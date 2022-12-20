@@ -17,6 +17,7 @@ const SelectedTrancheContext = createContext<ISelectedTrancheStoreProps>({});
 export function SelectedTrancheStore(props: { children: ReactNode }) {
     const [tranche, setTranche] = useState({});
     const [asset, setAsset] = useState('');
+    console.log('STS tranche', tranche);
 
     const updateTranche = (key: string, val: any) => {
         setTranche({

@@ -48,7 +48,6 @@ export const getSubgraphTrancheData = async (
                     [item.symbol.slice(0, -1)]: {
                         liquidity: utils.formatUnits(item.availableLiquidity, item.decimals),
                         ltv: item.baseLTVasCollateral,
-                        liquidityRate: `${utils.formatUnits(item.liquidityRate, 27)}%`,
                         optimalUtilityRate: parseFloat(
                             utils.formatUnits(item.optimalUtilisationRate, 27),
                         ), // Not 100% why it's 27 decimals
@@ -64,7 +63,7 @@ export const getSubgraphTrancheData = async (
                         ),
                         utilityRate: `${item.utilizationRate}`,
                         borrowRate: utils.formatUnits(item.variableBorrowRate, 27),
-                        supplyRate: '0', // TODO
+                        supplyRate: utils.formatUnits(item.liquidityRate, 27),
                         liquidationPenalty: '0', // TODO
                         collateral: true, // TODO
                         oracle: 'Chainlink', // TODO
