@@ -127,7 +127,7 @@ export function MyTranchesStore(props: { children: ReactNode }) {
                         whitelisted: [], // TODO: fix this
                         blacklisted: [], // TODO: fix this
                         tokens: el.assets,
-                        adminFee: el.adminFee.toString(),
+                        adminFee: el.adminFee ? el.adminFee.toString() : '0',
                         lendAndBorrowTokens: [], // TODO: fix this
                         collateralTokens: [], // TODO: fix this
                     });

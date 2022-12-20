@@ -57,22 +57,21 @@ const TrancheDetails: React.FC = () => {
             />
             {view.includes('details') ? (
                 <>
+                    {/* {queryTrancheData.data && queryTrancheData.data.assetsData && ( */}
                     <GridView className="lg:grid-cols-[1fr_2fr]">
                         <TrancheInfoCard tranche={queryTrancheData.data} />
                         <TrancheStatisticsCard
                             tranche={queryTrancheData.data}
+                            trancheId={tranche.id}
                             loading={queryTrancheData.isLoading}
                             assetData={
-                                queryTrancheData.data && asset
+                                queryTrancheData.data && queryTrancheData.data.assetsData && asset
                                     ? (queryTrancheData.data.assetsData as any)[asset]
                                     : {}
                             }
-                            tempSupplyRate={
-                                queryTrancheMarkets.data?.find((el) => el.asset === asset)
-                                    ?.supplyApy
-                            }
                         />
                     </GridView>
+                    {/* )} */}
                 </>
             ) : (
                 <GridView>
