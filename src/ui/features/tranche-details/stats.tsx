@@ -107,7 +107,6 @@ export const TrancheStatisticsCard = ({
                                     type="utilization"
                                     yaxis
                                     xaxis
-                                    noTooltip
                                 />
                             </div>
                         </div>
