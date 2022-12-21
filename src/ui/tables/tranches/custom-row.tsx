@@ -60,7 +60,7 @@ const TranchesCustomRow = (props: any) => {
                 <td className="flex justify-between">
                     <span className="font-bold">Rating</span>
                     <span style={{ color: determineRatingColor(aggregateRating) }}>
-                        {aggregateRating}
+                        {aggregateRating || '-'}
                     </span>
                 </td>
                 <td className="flex justify-between">
@@ -68,11 +68,11 @@ const TranchesCustomRow = (props: any) => {
                     <span>{renderActivity(yourActivity)}</span>
                 </td>
                 <td className="flex justify-between">
-                    <span className="font-bold">Supply</span>
+                    <span className="font-bold">Supplied</span>
                     <span>{supplyTotal}</span>
                 </td>
                 <td className="flex justify-between">
-                    <span className="font-bold">Borrow</span>
+                    <span className="font-bold">Borrowed</span>
                     <span>{borrowTotal}</span>
                 </td>
             </tr>
@@ -100,7 +100,7 @@ const TranchesCustomRow = (props: any) => {
                 <td>{borrowTotal}</td>
                 <td className="text-right pr-3.5">
                     <Button
-                        label={width > 1000 ? 'View Details' : 'Details'}
+                        label="View Details"
                         onClick={(e: any) => route(e, { id, name }, 'details')}
                     />
                 </td>
