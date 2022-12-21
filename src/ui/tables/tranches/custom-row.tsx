@@ -60,7 +60,7 @@ const TranchesCustomRow = (props: any) => {
                 <td className="flex justify-between">
                     <span className="font-bold">Rating</span>
                     <span style={{ color: determineRatingColor(aggregateRating) }}>
-                        {aggregateRating}
+                        {aggregateRating || '-'}
                     </span>
                 </td>
                 <td className="flex justify-between">
@@ -68,11 +68,11 @@ const TranchesCustomRow = (props: any) => {
                     <span>{renderActivity(yourActivity)}</span>
                 </td>
                 <td className="flex justify-between">
-                    <span className="font-bold">Supply</span>
+                    <span className="font-bold">Supplied</span>
                     <span>{supplyTotal}</span>
                 </td>
                 <td className="flex justify-between">
-                    <span className="font-bold">Borrow</span>
+                    <span className="font-bold">Borrowed</span>
                     <span>{borrowTotal}</span>
                 </td>
             </tr>
@@ -83,7 +83,7 @@ const TranchesCustomRow = (props: any) => {
             <tr
                 key={name}
                 className="text-left transition duration-200 hover:bg-neutral-200 dark:hover:bg-neutral-900 hover:cursor-pointer border-y-[1px] dark:border-neutral-100"
-                onClick={(e: any) => route(e, props)}
+                onClick={(e: any) => route(e, { id, name }, 'details')}
             >
                 <td className="whitespace-nowrap py-4 pl-2 md:pl-4 pr-3">
                     <span>{name}</span>
@@ -99,10 +99,7 @@ const TranchesCustomRow = (props: any) => {
                 <td>{supplyTotal}</td>
                 <td>{borrowTotal}</td>
                 <td className="text-right pr-3.5">
-                    <Button
-                        label={width > 1000 ? 'View Details' : 'Details'}
-                        onClick={(e: any) => route(e, { id, name }, 'details')}
-                    />
+                    <Button label="Supply / Borrow" onClick={(e: any) => route(e, props)} />
                 </td>
             </tr>
         );
