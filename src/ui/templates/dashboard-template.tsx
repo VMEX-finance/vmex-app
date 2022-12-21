@@ -1,13 +1,13 @@
 import React from 'react';
-import { Button } from '../components/buttons';
+import { Button, LinkButton } from '../components/buttons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useWindowSize } from '../../hooks/ui';
 import { BiChevronLeft, BiPlus } from 'react-icons/bi';
 import { useDialogController } from '../../hooks/dialogs';
 import { useMyTranchesContext } from '../../store/contexts';
 import { Tooltip } from '../components/tooltips';
-
 import { useAccount } from 'wagmi';
+
 interface IDashboardTemplateProps {
     title?: string;
     children?: React.ReactElement | React.ReactElement[];
@@ -41,13 +41,10 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
             >
                 <div className="max-w-[500px]">
                     {view ? (
-                        <button
-                            className="flex items-center hover:cursor-pointer hover:text-neutral-800 dark:text-neutral-100 transition duration-150"
-                            onClick={routeChange}
-                        >
+                        <LinkButton onClick={routeChange}>
                             <BiChevronLeft size="22px" />
                             <p className="text-lg">Back to all</p>
-                        </button>
+                        </LinkButton>
                     ) : (
                         <>
                             <h1 className="text-3xl font-basefont capitalize leading-tight text-neutral-900 dark:text-neutral-100">
@@ -66,18 +63,23 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                                 {title}
                             </h1>
                         </div>
-                        <div className="flex gap-3 md:justify-end mt-2">
-                            <Button
-                                label="Overview"
+                        <div className="flex gap-3 md:justify-end">
+                            <LinkButton
                                 onClick={() => setView('tranche-overview')}
-                                primary={view.includes('overview')}
                                 disabled={!isConnected}
-                            />
-                            <Button
-                                label="Details"
+                                className="text-lg px-1"
+                                highlight={view.includes('tranche-overview')}
+                            >
+                                Supply/Borrow
+                            </LinkButton>
+                            <LinkButton
                                 onClick={() => setView('tranche-details')}
-                                primary={view.includes('details')}
-                            />
+                                disabled={!isConnected}
+                                className="text-lg px-1"
+                                highlight={view.includes('tranche-details')}
+                            >
+                                Details
+                            </LinkButton>
                         </div>
                     </>
                 )}
