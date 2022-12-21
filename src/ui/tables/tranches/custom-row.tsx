@@ -83,7 +83,7 @@ const TranchesCustomRow = (props: any) => {
             <tr
                 key={name}
                 className="text-left transition duration-200 hover:bg-neutral-200 dark:hover:bg-neutral-900 hover:cursor-pointer border-y-[1px] dark:border-neutral-100"
-                onClick={(e: any) => route(e, { id, name }, 'details')}
+                onClick={(e: any) => route(e, props)}
             >
                 <td className="whitespace-nowrap py-4 pl-2 md:pl-4 pr-3">
                     <span>{name}</span>
@@ -99,7 +99,10 @@ const TranchesCustomRow = (props: any) => {
                 <td>{supplyTotal}</td>
                 <td>{borrowTotal}</td>
                 <td className="text-right pr-3.5">
-                    <Button label="Supply / Borrow" onClick={(e: any) => route(e, props)} />
+                    <Button
+                        label="View Details"
+                        onClick={(e: any) => route(e, { id, name }, 'details')}
+                    />
                 </td>
             </tr>
         );
