@@ -25,7 +25,7 @@ export const CustomTooltip = ({ active, payload, label, type }: ICustomTooltipPr
         } else if (type === 'utilization') {
             return (
                 <div className="bg-black text-white px-2 py-1 flex flex-col">
-                    <span>Utilization: {payload[0]?.value}%</span>
+                    <span>Utilization: {payload[0]?.value.toFixed(2)}%</span>
                 </div>
             );
         } else {
