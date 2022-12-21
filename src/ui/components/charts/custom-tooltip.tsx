@@ -13,13 +13,9 @@ export const CustomTooltip = ({ active, payload, label, type }: ICustomTooltipPr
         if (type === 'asset-stats') {
             return (
                 <div className="bg-black text-white px-2 py-1 flex flex-col">
-                    {payload.map((el: any, i: number) => (
-                        <>
-                            <span className="font-semibold">{label}</span>
-                            <span>Supply APY: {payload[i]?.payload?.value.toFixed(2) || 0}%</span>
-                            <span>Borrow APY: {payload[i]?.payload?.value2.toFixed(2) || 0}%</span>
-                        </>
-                    ))}
+                    <span className="font-semibold">{label}</span>
+                    <span>Supply APY: {payload[0]?.payload?.value.toFixed(2) || 0}%</span>
+                    <span>Borrow APY: {payload[0]?.payload?.value2.toFixed(2) || 0}%</span>
                 </div>
             );
         } else if (type === 'utilization') {
