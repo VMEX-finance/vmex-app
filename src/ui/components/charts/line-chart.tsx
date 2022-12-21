@@ -71,6 +71,7 @@ export const ReLineChart = (props: ILineChartProps) => {
     };
 
     console.log('DATED DATA:', datedData);
+    console.log('PROPS DATA:', props.data);
 
     return (
         <>
@@ -113,24 +114,26 @@ export const ReLineChart = (props: ILineChartProps) => {
                         stroke={props.color || '#8884d8'}
                         activeDot={{ r: 3 }}
                     />
-                    {props.data.length > 0 && props.data[0].value2 && (
-                        <Line
-                            dot={{ r: 0 }}
-                            type="monotone"
-                            dataKey={props.dataKey2 || 'value2'}
-                            stroke={props.color2 || '#fff'}
-                            activeDot={{ r: 3 }}
-                        />
-                    )}
-                    {props.data.length > 0 && props.data[0].value3 && (
-                        <Line
-                            dot={{ r: 0 }}
-                            type="monotone"
-                            dataKey={props.dataKey3 || 'value3'}
-                            stroke={props.color3 || '#7667db'}
-                            activeDot={{ r: 3 }}
-                        />
-                    )}
+                    {props.data.length > 0 &&
+                        (props.data[0].value2 || props.data[0].value2 === 0) && (
+                            <Line
+                                dot={{ r: 0 }}
+                                type="monotone"
+                                dataKey={props.dataKey2 || 'value2'}
+                                stroke={props.color2 || '#fff'}
+                                activeDot={{ r: 3 }}
+                            />
+                        )}
+                    {props.data.length > 0 &&
+                        (props.data[0].value3 || props.data[0].value3 === 0) && (
+                            <Line
+                                dot={{ r: 0 }}
+                                type="monotone"
+                                dataKey={props.dataKey3 || 'value3'}
+                                stroke={props.color3 || '#7667db'}
+                                activeDot={{ r: 3 }}
+                            />
+                        )}
                     {props.xaxis && <XAxis dataKey="xaxis" tickLine={false} />}
                     {props.yaxis && <YAxis tickLine={false} domain={[2, 'auto']} />}
                 </LineChart>
