@@ -70,9 +70,6 @@ export const ReLineChart = (props: ILineChartProps) => {
         setDatedData(rangeData);
     };
 
-    console.log('DATED DATA:', datedData);
-    console.log('PROPS DATA:', props.data);
-
     return (
         <>
             {props.timeseries && (
@@ -95,48 +92,56 @@ export const ReLineChart = (props: ILineChartProps) => {
                 </div>
             )}
             <ResponsiveContainer width="100%" height="100%">
-                <LineChart
-                    width={500}
-                    height={300}
-                    data={datedData}
-                    margin={{
-                        top: 10,
-                        bottom: 10,
-                        left: 10,
-                        right: props.yaxis ? 50 : 10,
-                    }}
-                >
-                    {!props.noTooltip && <Tooltip content={<CustomTooltip type={props.type} />} />}
-                    <Line
-                        dot={{ r: 0 }}
-                        type="monotone"
-                        dataKey={props.dataKey || 'value'}
-                        stroke={props.color || '#8884d8'}
-                        activeDot={{ r: 3 }}
-                    />
-                    {props.data.length > 0 &&
-                        (props.data[0].value2 || props.data[0].value2 === 0) && (
-                            <Line
-                                dot={{ r: 0 }}
-                                type="monotone"
-                                dataKey={props.dataKey2 || 'value2'}
-                                stroke={props.color2 || '#fff'}
-                                activeDot={{ r: 3 }}
-                            />
+                {props.data?.length > 0 ? (
+                    <LineChart
+                        width={500}
+                        height={300}
+                        data={datedData}
+                        margin={{
+                            top: 10,
+                            bottom: 10,
+                            left: 10,
+                            right: props.yaxis ? 50 : 10,
+                        }}
+                    >
+                        {!props.noTooltip && (
+                            <Tooltip content={<CustomTooltip type={props.type} />} />
                         )}
-                    {props.data.length > 0 &&
-                        (props.data[0].value3 || props.data[0].value3 === 0) && (
-                            <Line
-                                dot={{ r: 0 }}
-                                type="monotone"
-                                dataKey={props.dataKey3 || 'value3'}
-                                stroke={props.color3 || '#7667db'}
-                                activeDot={{ r: 3 }}
-                            />
-                        )}
-                    {props.xaxis && <XAxis dataKey="xaxis" tickLine={false} />}
-                    {props.yaxis && <YAxis tickLine={false} domain={[2, 'auto']} />}
-                </LineChart>
+                        <Line
+                            dot={{ r: 0 }}
+                            type="monotone"
+                            dataKey={props.dataKey || 'value'}
+                            stroke={props.color || '#8884d8'}
+                            activeDot={{ r: 3 }}
+                        />
+                        {props.data.length > 0 &&
+                            (props.data[0].value2 || props.data[0].value2 === 0) && (
+                                <Line
+                                    dot={{ r: 0 }}
+                                    type="monotone"
+                                    dataKey={props.dataKey2 || 'value2'}
+                                    stroke={props.color2 || '#fff'}
+                                    activeDot={{ r: 3 }}
+                                />
+                            )}
+                        {props.data.length > 0 &&
+                            (props.data[0].value3 || props.data[0].value3 === 0) && (
+                                <Line
+                                    dot={{ r: 0 }}
+                                    type="monotone"
+                                    dataKey={props.dataKey3 || 'value3'}
+                                    stroke={props.color3 || '#7667db'}
+                                    activeDot={{ r: 3 }}
+                                />
+                            )}
+                        {props.xaxis && <XAxis dataKey="xaxis" tickLine={false} />}
+                        {props.yaxis && <YAxis tickLine={false} domain={[2, 'auto']} />}
+                    </LineChart>
+                ) : (
+                    <div className="flex items-center justify-center h-full">
+                        <p>No Data Available</p>
+                    </div>
+                )}
             </ResponsiveContainer>
         </>
     );

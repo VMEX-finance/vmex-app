@@ -1,7 +1,6 @@
 import { ReLineChart } from '../../components/charts';
 import React, { useEffect, useState } from 'react';
 import { Card } from '../../components/cards';
-import { MOCK_MULTI_LINE_DATA } from '../../../utils/mock-data';
 import { DropdownButton } from '../../components/buttons';
 import ReactTooltip from 'react-tooltip';
 import { useSelectedTrancheContext } from '../../../store/contexts';
@@ -34,13 +33,13 @@ export const TrancheStatisticsCard = ({
     // Re-render for charts
     useEffect(() => {
         setRerender(true);
-        const timeout = setTimeout(() => setRerender(false), 1000);
+        const timeout = setTimeout(() => setRerender(false), 300);
         return () => clearTimeout(timeout);
     }, [asset]);
 
     return (
         <>
-            <Card black loading={loading || !assetData || rerender} className="min-h-[852px]">
+            <Card black loading={loading || !assetData || rerender}>
                 <div className="flex justify-between items-center">
                     <div className="flex items-center gap-4">
                         <h3 className="text-2xl">Asset Statistics</h3>
@@ -89,7 +88,7 @@ export const TrancheStatisticsCard = ({
                     <div className="grid grid-cols-1 w-full gap-6 xl:gap-10">
                         <div className="w-full h-[240px]">
                             <ReLineChart
-                                data={queryMarketsChart.data?.supplyBorrowRateChart || []} // TODO
+                                data={queryMarketsChart.data?.supplyBorrowRateChart || []}
                                 color="#3CB55E"
                                 color2="#7667db"
                                 type="asset-stats"

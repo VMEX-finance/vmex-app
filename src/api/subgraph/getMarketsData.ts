@@ -52,7 +52,7 @@ export const getSubgraphMarketsChart = async (
         let supplyBorrowRateChart: ILineChartDataPointProps[] = [];
         let utilizationChart: ILineChartDataPointProps[] = [];
 
-        const paramsHistory = data.reserve.paramsHistory;
+        const { paramsHistory } = data.reserve;
 
         paramsHistory.map((histItem: any) => {
             const date = new Date(histItem.timestamp * 1000).toLocaleDateString();
@@ -70,10 +70,6 @@ export const getSubgraphMarketsChart = async (
         });
         supplyBorrowRateChart.reverse();
         utilizationChart.reverse();
-
-        console.log('MOCK DATA:', MOCK_MULTI_LINE_DATA);
-
-        console.log('getSubgraphMarketsChart:', { supplyBorrowRateChart, utilizationChart });
 
         return {
             supplyBorrowRateChart,
