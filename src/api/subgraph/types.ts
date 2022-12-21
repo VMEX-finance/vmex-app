@@ -63,8 +63,12 @@ export type ISubgraphTrancheData = {
     queryTrancheData: UseQueryResult<IGraphTrancheDataProps, unknown>;
 };
 
+export type ISubgraphMarketsChartsProps = {
+    supplyBorrowRateChart: ILineChartDataPointProps[];
+    utilizationChart: ILineChartDataPointProps[];
+};
 export type ISubgraphMarketsData = {
-    queryMarketsChart: UseQueryResult<ILineChartDataPointProps[][], unknown>;
+    queryMarketsChart: UseQueryResult<ISubgraphMarketsChartsProps, unknown>;
 };
 
 export type ISubgraphUserData = {

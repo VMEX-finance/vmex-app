@@ -59,8 +59,8 @@ export const getSubgraphMarketsChart = async (
 
             supplyBorrowRateChart.push({
                 xaxis: date,
-                value: parseFloat(utils.formatUnits(histItem.liquidityRate, 27)),
-                value2: parseFloat(utils.formatUnits(histItem.variableBorrowRate, 27)),
+                value: parseFloat(utils.formatUnits(histItem.liquidityRate, 27)) * 100,
+                value2: parseFloat(utils.formatUnits(histItem.variableBorrowRate, 27)) * 100,
             });
 
             utilizationChart.push({
@@ -71,10 +71,14 @@ export const getSubgraphMarketsChart = async (
         supplyBorrowRateChart.reverse();
         utilizationChart.reverse();
 
-        console.log('mock_data', MOCK_MULTI_LINE_DATA);
+        console.log('MOCK DATA:', MOCK_MULTI_LINE_DATA);
 
-        console.log('getSubgraphMarketsChart:', [supplyBorrowRateChart, utilizationChart]);
-        return [supplyBorrowRateChart, utilizationChart];
+        console.log('getSubgraphMarketsChart:', { supplyBorrowRateChart, utilizationChart });
+
+        return {
+            supplyBorrowRateChart,
+            utilizationChart,
+        };
     }
 };
 

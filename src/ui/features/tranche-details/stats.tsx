@@ -26,11 +26,10 @@ export const TrancheStatisticsCard = ({
     const { asset, setAsset } = useSelectedTrancheContext();
     const [rerender, setRerender] = useState(false);
     const { queryMarketsChart } = useSubgraphMarketsData(trancheId, asset);
-    console.log('query markets chart data aa', queryMarketsChart.data);
 
     useEffect(() => {
         if (!asset && tranche?.assets) setAsset(tranche.assets[0]);
-    }, []);
+    }, [tranche]);
 
     // Re-render for charts
     useEffect(() => {
@@ -90,7 +89,7 @@ export const TrancheStatisticsCard = ({
                     <div className="grid grid-cols-1 w-full gap-6 xl:gap-10">
                         <div className="w-full h-[240px]">
                             <ReLineChart
-                                data={queryMarketsChart.data?.at(0) || []} // TODO
+                                data={queryMarketsChart.data?.supplyBorrowRateChart || []} // TODO
                                 color="#3CB55E"
                                 color2="#7667db"
                                 type="asset-stats"
@@ -103,7 +102,7 @@ export const TrancheStatisticsCard = ({
                             <span className="text-lg">Utilization Curve</span>
                             <div className="w-full h-[120px]">
                                 <ReLineChart
-                                    data={queryMarketsChart.data?.at(1) || []}
+                                    data={queryMarketsChart.data?.utilizationChart || []}
                                     color="#fff"
                                     type="utilization"
                                     yaxis

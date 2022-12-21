@@ -9,9 +9,6 @@ type ICustomTooltipProps = {
 };
 
 export const CustomTooltip = ({ active, payload, label, type }: ICustomTooltipProps) => {
-    console.log('PAYLOAD', payload);
-    console.log('ACTIVE', active);
-    console.log('LABEL', label);
     if (active && payload && payload.length) {
         if (type === 'asset-stats') {
             return (
@@ -19,14 +16,8 @@ export const CustomTooltip = ({ active, payload, label, type }: ICustomTooltipPr
                     {payload.map((el: any, i: number) => (
                         <>
                             <span className="font-semibold">{label}</span>
-                            <span>
-                                Supply APY:{' '}
-                                {percentFormatter.format(payload[i]?.payload?.value || 0)}
-                            </span>
-                            <span>
-                                Borrow APY:{' '}
-                                {percentFormatter.format(payload[i]?.payload?.value2 || 0)}
-                            </span>
+                            <span>Supply APY: {payload[i]?.payload?.value.toFixed(2) || 0}%</span>
+                            <span>Borrow APY: {payload[i]?.payload?.value2.toFixed(2) || 0}%</span>
                         </>
                     ))}
                 </div>
