@@ -1,4 +1,4 @@
-import { Button } from '../../components/buttons';
+import { SplitButton } from '../../components/buttons';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '../../../store/contexts';
@@ -8,6 +8,7 @@ import { BsCheck } from 'react-icons/bs';
 import { IoIosClose } from 'react-icons/io';
 import { AssetDisplay } from '../../components/displays';
 import { IMarketsAsset } from '@app/api/types';
+import { useDialogController } from '../../../hooks/dialogs';
 
 const MarketsCustomRow = (props: any) => {
     const {
@@ -26,12 +27,28 @@ const MarketsCustomRow = (props: any) => {
     const navigate = useNavigate();
     const { width } = useWindowSize();
     const { updateTranche, setAsset } = useSelectedTrancheContext();
+    const { openDialog } = useDialogController();
 
     const route = (e: Event, market: IMarketsAsset, view = 'overview') => {
         e.stopPropagation();
         setAsset(market.asset);
         updateTranche('id', market.trancheId.toString());
         navigate(`/tranches/${market.tranche.replace(/\s+/g, '-')}`, { state: { view } });
+    };
+
+    const handleActionClick = (e: any) => {
+        e.stopPropagation();
+        if (e.target.innerHTML === 'Supply') {
+            openDialog('loan-asset-dialog', {
+                asset: asset,
+                trancheId: tranche.id,
+            });
+        } else {
+            openDialog('borrow-asset-dialog', {
+                asset: asset,
+                trancheId: tranche.id,
+            });
+        }
     };
 
     // Mobile
@@ -88,6 +105,20 @@ const MarketsCustomRow = (props: any) => {
                         <IoIosClose className="w-6 h-6 text-[#FF1F00]" />
                     )}
                 </td>
+                <td>
+                    <SplitButton
+                        full
+                        className="mt-1 mb-2"
+                        content={{
+                            left: 'Supply',
+                            right: 'Borrow',
+                        }}
+                        onClick={{
+                            left: handleActionClick,
+                            right: handleActionClick,
+                        }}
+                    />
+                </td>
             </tr>
         );
         // Desktop
@@ -96,7 +127,7 @@ const MarketsCustomRow = (props: any) => {
             <tr
                 key={`${asset}-${trancheId}`}
                 className="text-left transition duration-200 hover:bg-neutral-200 dark:hover:bg-neutral-900 hover:cursor-pointer border-y-[1px] dark:border-neutral-100"
-                onClick={(e: any) => route(e, props)}
+                onClick={(e: any) => route(e, props, 'details')}
             >
                 <td className="whitespace-nowrap py-4 pl-2 md:pl-4 pr-2 text-sm">
                     <AssetDisplay name={asset} />
@@ -123,9 +154,15 @@ const MarketsCustomRow = (props: any) => {
                     </div>
                 </td>
                 <td className="text-right pr-3.5">
-                    <Button
-                        label={width > 1536 ? 'View Details' : 'Details'}
-                        onClick={(e: any) => route(e, props, 'details')}
+                    <SplitButton
+                        content={{
+                            left: 'Supply',
+                            right: 'Borrow',
+                        }}
+                        onClick={{
+                            left: handleActionClick,
+                            right: handleActionClick,
+                        }}
                     />
                 </td>
             </tr>
