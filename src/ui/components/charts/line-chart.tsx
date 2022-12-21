@@ -70,6 +70,8 @@ export const ReLineChart = (props: ILineChartProps) => {
         setDatedData(rangeData);
     };
 
+    console.log('DATED DATA:', datedData);
+
     return (
         <>
             {props.timeseries && (
