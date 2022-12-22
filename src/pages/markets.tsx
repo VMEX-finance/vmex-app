@@ -1,14 +1,14 @@
 import React from 'react';
 import { AppTemplate } from '../ui/templates';
 import { MarketsTable } from '../ui/tables';
-import { useMarketsData } from '../api/protocol';
+import { useSubgraphAllMarketsData } from '../api/subgraph';
 
 const Markets: React.FC = () => {
-    const { queryAllMarkets } = useMarketsData();
+    const { queryAllMarketsData } = useSubgraphAllMarketsData();
 
     return (
         <AppTemplate title="markets">
-            <MarketsTable data={queryAllMarkets.data} loading={queryAllMarkets.isLoading} />
+            <MarketsTable data={queryAllMarketsData.data} loading={queryAllMarketsData.isLoading} />
         </AppTemplate>
     );
 };

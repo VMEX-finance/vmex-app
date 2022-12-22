@@ -19,9 +19,9 @@ const TrancheDetails: React.FC = () => {
     const { data: signer } = useSigner();
     const { tranche, setTranche, asset } = useSelectedTrancheContext();
 
-    const { queryTrancheMarkets } = useTrancheMarketsData(tranche.id);
+    // const { queryTrancheMarkets } = useTrancheMarketsData(tranche.id);
     const { queryTrancheData } = useSubgraphTrancheData(tranche.id);
-    const { queryAllTranches } = useTranchesData();
+    // const { queryAllTranches } = useTranchesData();
 
     const [view, setView] = useState('tranche-overview');
 
@@ -34,9 +34,10 @@ const TrancheDetails: React.FC = () => {
 
     useEffect(() => {
         if (!tranche.id) navigate('/tranches');
-        const found = queryAllTranches.data?.find((el) => el.id === tranche.id);
-        setTranche(found);
-    }, [tranche, location]);
+        // const found = queryAllTranches.data?.find((el) => el.id === tranche.id);
+        console.log('tranche detail data', queryTrancheData.data);
+        if (queryTrancheData.data) setTranche(queryTrancheData.data);
+    }, [tranche, location, queryTrancheData]);
 
     return (
         <AppTemplate
@@ -57,9 +58,11 @@ const TrancheDetails: React.FC = () => {
             />
             {view.includes('details') ? (
                 <>
-                    {/* {queryTrancheData.data && queryTrancheData.data.assetsData && ( */}
                     <GridView className="lg:grid-cols-[1fr_2fr]">
-                        <TrancheInfoCard tranche={queryTrancheData.data} />
+                        <TrancheInfoCard
+                            tranche={queryTrancheData.data}
+                            loading={queryTrancheData.isLoading}
+                        />
                         <TrancheStatisticsCard
                             tranche={queryTrancheData.data}
                             trancheId={tranche.id}
@@ -71,44 +74,51 @@ const TrancheDetails: React.FC = () => {
                             }
                         />
                     </GridView>
-                    {/* )} */}
                 </>
             ) : (
                 <GridView>
-                    <Card loading={queryTrancheMarkets.isLoading}>
+                    <Card loading={queryTrancheData.isLoading}>
                         <h3 className="text-2xl">Supply</h3>
                         <TrancheTable
                             data={
-                                queryTrancheMarkets.data
-                                    ? queryTrancheMarkets.data.map((el) => ({
-                                          asset: el.asset,
-                                          canBeCollat: el.canBeCollateral,
-                                          apy: el.supplyApy,
-                                          tranche: el.tranche,
-                                          trancheId: el.trancheId,
-                                          signer: signer,
-                                      }))
+                                queryTrancheData.data && queryTrancheData.data.assetsData
+                                    ? Object.keys(queryTrancheData.data.assetsData).map(
+                                          (asset) => ({
+                                              asset: asset,
+                                              canBeCollat: (
+                                                  queryTrancheData.data.assetsData as any
+                                              )[asset].collateral,
+                                              apy: (queryTrancheData.data.assetsData as any)[asset]
+                                                  .supplyRate,
+                                              tranche: queryTrancheData.data?.name,
+                                              trancheId: tranche.id,
+                                              signer: signer,
+                                          }),
+                                      )
                                     : []
                             }
                             type="supply"
                         />
                     </Card>
-                    <Card loading={queryTrancheMarkets.isLoading}>
+                    <Card loading={queryTrancheData.isLoading}>
                         <h3 className="text-2xl">Borrow</h3>
                         <TrancheTable
                             data={
-                                queryTrancheMarkets.data
-                                    ? queryTrancheMarkets.data
-                                          .filter((el) => el.canBeBorrowed)
-                                          .map((el) => ({
-                                              asset: el.asset,
-                                              liquidity: el.available,
-                                              liquidityNative: el.availableNative,
-                                              apy: el.borrowApy,
-                                              tranche: el.tranche,
-                                              trancheId: el.trancheId,
+                                queryTrancheData.data && queryTrancheData.data.assetsData
+                                    ? Object.keys(queryTrancheData.data.assetsData).map(
+                                          (asset) => ({
+                                              asset: asset,
+                                              liquidity: (queryTrancheData.data.assetsData as any)[
+                                                  asset
+                                              ].availableLiquidity,
+                                              //   liquidityNative: el.availableNative,
+                                              apy: (queryTrancheData.data.assetsData as any)[asset]
+                                                  .borrowRate,
+                                              tranche: queryTrancheData.data?.name,
+                                              trancheId: tranche.id,
                                               signer: signer,
-                                          }))
+                                          }),
+                                      )
                                     : []
                             }
                             type="borrow"

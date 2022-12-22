@@ -7,13 +7,21 @@ import { IGraphTrancheDataProps } from '../../../api/subgraph/types';
 
 type ITrancheInfoCard = {
     tranche?: IGraphTrancheDataProps;
+    loading?: boolean;
 };
 
-export const TrancheInfoCard = ({ tranche }: ITrancheInfoCard) => {
+export const TrancheInfoCard = ({ tranche, loading }: ITrancheInfoCard) => {
     const { tranche: _tranche } = useSelectedTrancheContext();
 
     const calculatePoolUtility = () => {
-        if (_tranche && _tranche.supplyTotal !== '$0.00' && _tranche.borrowTotal !== '$0.00') {
+        if (
+            !loading &&
+            _tranche &&
+            _tranche.supplyTotal &&
+            _tranche.borrowTotal &&
+            _tranche.supplyTotal !== '$0.00' &&
+            _tranche.borrowTotal !== '$0.00'
+        ) {
             const supplied = parseFloat(_tranche.supplyTotal.slice(1).replaceAll(',', ''));
             const borrowed = parseFloat(_tranche.borrowTotal.slice(1).replaceAll(',', ''));
             const final = (supplied - borrowed) / supplied;
@@ -24,7 +32,7 @@ export const TrancheInfoCard = ({ tranche }: ITrancheInfoCard) => {
     };
 
     return (
-        <Card>
+        <Card loading={loading}>
             <div className="flex flex-col gap-8">
                 <div>
                     <h2 className="text-2xl mb-6">Info</h2>
@@ -70,7 +78,8 @@ export const TrancheInfoCard = ({ tranche }: ITrancheInfoCard) => {
                                 target="_blank"
                                 rel="noreferrer"
                             >
-                                {truncateAddress(tranche?.admin || _tranche.admin)}
+                                {(tranche?.admin || _tranche.admin) &&
+                                    truncateAddress(tranche?.admin || _tranche.admin)}
                             </a>
                         }
                         size="xl"

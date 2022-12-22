@@ -161,7 +161,7 @@ export const TrancheStatisticsCard = ({
                         />
                         <NumberDisplay
                             label="Admin Fee"
-                            value={percentFormatter.format(tranche?.adminFee)}
+                            value={percentFormatter.format(assetData?.reserveFactor)}
                             color="text-white"
                             center
                         />

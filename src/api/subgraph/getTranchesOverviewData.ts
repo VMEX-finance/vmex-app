@@ -22,7 +22,7 @@ export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]
                     reserves {
                         symbol
                         totalDeposits
-                        totalLiquidity
+                        availableLiquidity
                         totalCurrentVariableDebt
                     }
                 }
@@ -49,7 +49,7 @@ export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]
                 assets.reduce(
                     (obj: any, item: any) =>
                         Object.assign(obj, {
-                            tvl: obj.tvl + item.totalLiquidity,
+                            tvl: obj.tvl + item.availableLiquidity,
                             supplyTotal: obj.supplyTotal + item.totalDeposits,
                             borrowTotal: obj.borrowTotal + item.totalCurrentVariableDebt,
                         }),

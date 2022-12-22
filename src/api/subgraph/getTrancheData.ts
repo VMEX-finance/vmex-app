@@ -19,6 +19,8 @@ export const getSubgraphTrancheData = async (
         query: gql`
             query QueryTranche($trancheId: String!) {
                 tranche(id: $trancheId) {
+                    name
+                    emergencyTrancheAdmin
                     reserves {
                         symbol
                         baseLTVasCollateral
@@ -29,9 +31,12 @@ export const getSubgraphTrancheData = async (
                         variableBorrowRate
                         liquidityRate
                         reserveLiquidationThreshold
+                        reserveLiquidationBonus
                         totalDeposits
                         availableLiquidity
+                        totalCurrentVariableDebt
                         usageAsCollateralEnabled
+                        borrowingEnabled
                     }
                 }
             }
@@ -50,35 +55,53 @@ export const getSubgraphTrancheData = async (
                         ltv: item.baseLTVasCollateral,
                         optimalUtilityRate: parseFloat(
                             utils.formatUnits(item.optimalUtilisationRate, 27),
-                        ), // Not 100% why it's 27 decimals
+                        ),
                         reserveFactor: item.reserveFactor,
                         liquidationThreshold: item.reserveLiquidationThreshold,
-                        totalBorrowed: utils.formatUnits(
-                            String(
-                                Math.abs(
-                                    Number(item.availableLiquidity) - Number(item.totalDeposits),
-                                ),
-                            ),
-                            item.decimals,
-                        ),
                         utilityRate: `${item.utilizationRate}`,
                         borrowRate: utils.formatUnits(item.variableBorrowRate, 27),
                         supplyRate: utils.formatUnits(item.liquidityRate, 27),
-                        liquidationPenalty: '0', // TODO
-                        collateral: true, // TODO
+                        liquidationPenalty: utils.formatUnits(item.reserveLiquidationBonus, 5),
+                        collateral: item.usageAsCollateralEnabled,
+                        canBeBorrowed: item.borrowingEnabled,
                         oracle: 'Chainlink', // TODO
                         totalSupplied: utils.formatUnits(item.totalDeposits, item.decimals),
+                        totalBorrowed: utils.formatUnits(
+                            item.totalCurrentVariableDebt,
+                            item.decimals,
+                        ),
                     },
                 }),
             {},
+        );
+
+        const summaryData = assets.reduce(
+            (obj: any, item: any) =>
+                Object.assign(obj, {
+                    tvl: obj.tvl + item.availableLiquidity,
+                    supplyTotal: obj.supplyTotal + item.totalDeposits,
+                    borrowTotal: obj.borrowTotal + item.totalCurrentVariableDebt,
+                }),
+            {
+                tvl: 0,
+                supplyTotal: 0,
+                borrowTotal: 0,
+            },
         );
 
         const returnObj = {
             assetsData: finalObj,
             utilityRate: '0',
             assets: data.tranche.reserves.map((el: any) => el.symbol.slice(0, -1)),
-            adminFee: 0.02,
-            platformFee: 0.03,
+            adminFee: 0.02, // TODO
+            platformFee: 0.03, // TODO
+            id: trancheId,
+            name: data.tranche.name,
+            admin: data.tranche.emergencyTrancheAdmin,
+            availableLiquidity: summaryData.tvl,
+            totalSupplied: summaryData.supplyTotal,
+            totalBorrowed: summaryData.borrowTotal,
+            tvl: summaryData.tvl,
         };
 
         console.log('getSubgraphTrancheData:', returnObj);

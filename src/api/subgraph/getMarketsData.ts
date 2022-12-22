@@ -1,11 +1,12 @@
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 import { useQuery } from '@tanstack/react-query';
 import { SUBGRAPH_ENDPOINT } from '../../utils/constants';
-import { ISubgraphMarketsData } from './types';
+import { IGraphTrancheAssetProps, ISubgraphAllMarketsData, ISubgraphMarketsChart } from './types';
 import { ILineChartDataPointProps } from '@ui/components/charts';
-import { utils } from 'ethers';
+import { BigNumber, utils } from 'ethers';
 import { MAINNET_ASSET_MAPPINGS } from '../../utils/sdk-helpers';
 import { MOCK_MULTI_LINE_DATA } from '../../utils/mock-data';
+import { IMarketsAsset } from '../types';
 
 const client = new ApolloClient({
     uri: SUBGRAPH_ENDPOINT,
@@ -78,10 +79,62 @@ export const getSubgraphMarketsChart = async (
     }
 };
 
+export const getSubgraphAllMarketsData = async (): Promise<IMarketsAsset[]> => {
+    // TODO: Scale this in case # markets > 1000
+    const { data, error } = await client.query({
+        query: gql`
+            query QueryAllMarkets {
+                reserves(orderBy: availableLiquidity, orderDirection: desc) {
+                    symbol
+                    tranche {
+                        id
+                        name
+                    }
+                    liquidityRate
+                    variableBorrowRate
+                    availableLiquidity
+                    totalDeposits
+                    totalCurrentVariableDebt
+                    usageAsCollateralEnabled
+                    borrowingEnabled
+                    reserveLiquidationThreshold
+                }
+            }
+        `,
+    });
+
+    if (error) return [];
+    else {
+        const returnObj: IMarketsAsset[] = [];
+        data.reserves.map((reserve: any) => {
+            returnObj.push({
+                asset: reserve.symbol.slice(0, -1),
+                tranche: reserve.tranche.name,
+                trancheId: reserve.tranche.id,
+                borrowApy: utils.formatUnits(reserve.variableBorrowRate, 27),
+                supplyApy: utils.formatUnits(reserve.liquidityRate, 27),
+                available: utils.formatUnits(reserve.availableLiquidity, reserve.decimals),
+                availableNative: reserve.availableLiquidity,
+                supplyTotal: utils.formatUnits(reserve.totalDeposits, reserve.decimals),
+                borrowTotal: utils.formatUnits(reserve.totalCurrentVariableDebt, reserve.decimals),
+                rating: '-',
+                strategies: false, //TODO
+                canBeCollateral: reserve.usageAsCollateralEnabled,
+                canBeBorrowed: reserve.borrowingEnabled,
+                currentPrice: BigNumber.from('0'), // TODO
+                collateralCap: BigNumber.from('0'), // TODO
+                liquidationThreshold: reserve.reserveLiquidationThreshold,
+            });
+        });
+
+        return returnObj;
+    }
+};
+
 export function useSubgraphMarketsData(
     _trancheId: string | number,
     _underlyingAsset: string | undefined,
-): ISubgraphMarketsData {
+): ISubgraphMarketsChart {
     const underlyingAsset = MAINNET_ASSET_MAPPINGS.get(_underlyingAsset || '')?.toLowerCase();
     const queryMarketsChart = useQuery({
         queryKey: [`subgraph-markets-chart-${_trancheId}-${underlyingAsset}`],
@@ -90,5 +143,16 @@ export function useSubgraphMarketsData(
 
     return {
         queryMarketsChart,
+    };
+}
+
+export function useSubgraphAllMarketsData(): ISubgraphAllMarketsData {
+    const queryAllMarketsData = useQuery({
+        queryKey: [`subgraph-all-markets-data`],
+        queryFn: () => getSubgraphAllMarketsData(),
+    });
+
+    return {
+        queryAllMarketsData,
     };
 }

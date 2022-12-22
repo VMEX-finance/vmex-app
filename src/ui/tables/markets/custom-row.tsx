@@ -71,11 +71,11 @@ const MarketsCustomRow = (props: any) => {
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Supply APY</span>
-                    <span>{supplyApy}%</span>
+                    <span>{supplyApy}</span>
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Borrow APY</span>
-                    <span>{borrowApy}%</span>
+                    <span>{borrowApy}</span>
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Your Amount</span>

@@ -8,7 +8,7 @@ import { SpinnerLoader } from '../../components/loaders';
 import { IMarketsAsset } from '@app/api/types';
 import { useAccount } from 'wagmi';
 import { useUserData } from '../../../api';
-import { numberFormatter } from '../../../utils/helpers';
+import { numberFormatter, percentFormatter } from '../../../utils/helpers';
 import { ThemeContext } from '../../../store/contexts';
 import { bigNumberToUnformattedString } from '../../../utils/sdk-helpers';
 
@@ -187,8 +187,8 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading }) => {
                                     asset={asset}
                                     tranche={tranche}
                                     trancheId={trancheId}
-                                    supplyApy={supplyApy}
-                                    borrowApy={borrowApy}
+                                    supplyApy={percentFormatter.format(supplyApy)}
+                                    borrowApy={percentFormatter.format(borrowApy)}
                                     yourAmount={renderYourAmount(asset)}
                                     available={available}
                                     borrowTotal={borrowTotal}
