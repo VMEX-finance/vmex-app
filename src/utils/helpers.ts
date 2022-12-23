@@ -1,6 +1,3 @@
-import { IQueryKeys } from '@app/api/types';
-import { useQueryClient } from '@tanstack/react-query';
-
 export function truncateAddress(s: string) {
     return `${s.slice(0, 3)}...${s.slice(-4)}`;
 }
@@ -38,18 +35,41 @@ export const determineRatingColor = (s: string) => {
     }
 };
 
-export type AvailableChains =
-    | 'bitcoin'
-    | 'ethereum'
-    | 'bitcoin'
-    | 'avalanche'
-    | 'polygon'
-    | 'arbitrum'
-    | 'optimism'
-    | 'zcash';
-
-// TODO: update
-export type AvailableCoins = 'usdc' | 'wbtc' | 'usdt' | 'qeth';
+export type IAvailableCoins =
+    | 'AAVE'
+    | 'BAT'
+    | 'BUSD'
+    | 'DAI'
+    | 'ENJ'
+    | 'KNC'
+    | 'LINK'
+    | 'MANA'
+    | 'MKR'
+    | 'REN'
+    | 'SNX'
+    | 'SUSD'
+    | 'TUSD'
+    | 'UNI'
+    | 'USDC'
+    | 'USDT'
+    | 'WBTC'
+    | 'WETH'
+    | 'YFI'
+    | 'ZRX'
+    | 'Tricrypto2'
+    | 'ThreePool'
+    | 'StethEth'
+    | 'Steth'
+    | 'FraxUSDC'
+    | 'Frax3Crv'
+    | 'Frax'
+    | 'BAL'
+    | 'CRV'
+    | 'CVX'
+    | 'BADGER'
+    | 'LDO'
+    | 'ALCX'
+    | 'Oneinch';
 
 export const truncate = (str: string, show = 6) => {
     if (str && str.length > 20) {

@@ -10,7 +10,8 @@ export type IQueryKeys =
     | 'protocol-overview'
     | 'all-tranches'
     | 'subgraph-tranche-data'
-    | 'subgraph-protocol-charts';
+    | 'subgraph-protocol-charts'
+    | 'asset-prices';
 
 export type IMarketsAsset = {
     asset: string;

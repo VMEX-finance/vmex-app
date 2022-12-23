@@ -113,7 +113,11 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                     </div>
 
                     <div className="flex flex-col gap-2">
-                        <NumberDisplay size="xl" label="Total Borrowed" value={totalBorrowed} />
+                        <NumberDisplay
+                            size="xl"
+                            label="Total Borrowed"
+                            value={totalBorrowed ? totalBorrowed : '-'}
+                        />
                         <div className="flex flex-col gap-1">
                             <span>Top Borrowed Assets</span>
                             <div className="flex flex-wrap gap-1">
