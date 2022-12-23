@@ -8,8 +8,9 @@ import {
 } from '../../utils/sdk-helpers';
 import { utils } from 'ethers';
 import { IAssetPricesProps, IPricesDataProps } from './types';
+import { IAvailableCoins } from '../../utils/helpers';
 
-export async function getAllAssetPrices(): Promise<Record<string, IAssetPricesProps>> {
+export async function getAllAssetPrices(): Promise<Record<IAvailableCoins, IAssetPricesProps>> {
     const pricesMap = await getAssetPrices({
         assets: Array.from(MAINNET_ASSET_MAPPINGS.values()),
         ...SDK_PARAMS,
@@ -35,7 +36,7 @@ export function usePricesData(): IPricesDataProps {
     });
 
     return {
-        prices: queryAssetPrices.data || {},
+        prices: queryAssetPrices.data,
         isLoading: queryAssetPrices.isLoading,
         isError: queryAssetPrices.isError,
     };
