@@ -3,4 +3,3 @@ export * from './my-tranches';
 export * from './supply-context';
 export * from './transactions';
 export * from './theme';
-export * from './prices';
