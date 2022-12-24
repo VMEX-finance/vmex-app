@@ -4,7 +4,7 @@ import { UserPerformanceCard, ProtocolStatsCard } from '../ui/features';
 import { YourPositionsTable } from '../ui/tables';
 import { WalletButton } from '../ui/components/buttons';
 import { useProtocolData } from '../api/protocol';
-import { useUserData, useSubgraphProtocolData } from '../api';
+import { useUserData, useSubgraphProtocolData, useSubgraphUserData } from '../api';
 import { useAccount } from 'wagmi';
 import { numberFormatter } from '../utils/helpers';
 import { bigNumberToUnformattedString } from '../utils/sdk-helpers';
@@ -14,6 +14,7 @@ const Overview: React.FC = () => {
     const { queryProtocolOverview } = useProtocolData();
     const { queryProtocolData } = useSubgraphProtocolData();
     const { queryUserPerformance, queryUserActivity } = useUserData(address);
+    const { queryUserPnlChart } = useSubgraphUserData(address || '');
 
     return (
         <AppTemplate title="overview">
@@ -35,6 +36,7 @@ const Overview: React.FC = () => {
                             ),
                         }))}
                         tranches={queryUserActivity.data?.tranchesInteractedWith}
+                        profitLossChart={queryUserPnlChart.data || []}
                     />
                     <div className="flex flex-col gap-4 xl:gap-8 lg:flex-row 2xl:col-span-2">
                         <YourPositionsTable

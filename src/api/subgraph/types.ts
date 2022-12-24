@@ -84,6 +84,7 @@ export type ISubgraphAllMarketsData = {
 };
 
 export type ISubgraphUserData = {
+    queryUserPnlChart: UseQueryResult<ILineChartDataPointProps[], unknown>;
     queryUserData: UseQueryResult<any, unknown>;
 };
 
