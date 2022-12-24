@@ -3,6 +3,9 @@ import { useQuery } from '@tanstack/react-query';
 import { SUBGRAPH_ENDPOINT } from '../../utils/constants';
 import { IGraphTrancheDataProps, ISubgraphTrancheData } from './types';
 import { utils } from 'ethers';
+import { getAllAssetPrices } from '../prices';
+import { nativeAmountToUSD } from '../../utils/sdk-helpers';
+import { usdFormatter } from '../../utils/helpers';
 
 const client = new ApolloClient({
     uri: SUBGRAPH_ENDPOINT,
@@ -47,6 +50,7 @@ export const getSubgraphTrancheData = async (
     if (error) return {};
     else {
         const assets = data.tranche.reserves;
+        const prices = await getAllAssetPrices();
         const finalObj = assets.reduce(
             (obj: any, item: any) =>
                 Object.assign(obj, {
@@ -64,7 +68,7 @@ export const getSubgraphTrancheData = async (
                         liquidationPenalty: utils.formatUnits(item.reserveLiquidationBonus, 5),
                         collateral: item.usageAsCollateralEnabled,
                         canBeBorrowed: item.borrowingEnabled,
-                        oracle: 'Chainlink', // TODO
+                        oracle: 'Chainlink', // TODO: map to human readable name // (prices as any)[item.symbol.slice(0, -1)].oracle
                         totalSupplied: utils.formatUnits(item.totalDeposits, item.decimals),
                         totalBorrowed: utils.formatUnits(
                             item.totalCurrentVariableDebt,
@@ -76,12 +80,26 @@ export const getSubgraphTrancheData = async (
         );
 
         const summaryData = assets.reduce(
-            (obj: any, item: any) =>
-                Object.assign(obj, {
-                    tvl: obj.tvl + item.availableLiquidity,
-                    supplyTotal: obj.supplyTotal + item.totalDeposits,
-                    borrowTotal: obj.borrowTotal + item.totalCurrentVariableDebt,
-                }),
+            (obj: any, item: any) => {
+                const asset = item.symbol.slice(0, -1);
+                const assetUSDPrice = (prices as any)[asset].usdPrice;
+
+                return Object.assign(obj, {
+                    tvl:
+                        obj.tvl +
+                        nativeAmountToUSD(item.availableLiquidity, item.decimals, assetUSDPrice),
+                    supplyTotal:
+                        obj.supplyTotal +
+                        nativeAmountToUSD(item.totalDeposits, item.decimals, assetUSDPrice),
+                    borrowTotal:
+                        obj.borrowTotal +
+                        nativeAmountToUSD(
+                            item.totalCurrentVariableDebt,
+                            item.decimals,
+                            assetUSDPrice,
+                        ),
+                });
+            },
             {
                 tvl: 0,
                 supplyTotal: 0,
@@ -98,10 +116,10 @@ export const getSubgraphTrancheData = async (
             id: trancheId,
             name: data.tranche.name,
             admin: data.tranche.emergencyTrancheAdmin,
-            availableLiquidity: summaryData.tvl,
-            totalSupplied: summaryData.supplyTotal,
-            totalBorrowed: summaryData.borrowTotal,
-            tvl: summaryData.tvl,
+            availableLiquidity: usdFormatter().format(summaryData.tvl),
+            totalSupplied: usdFormatter().format(summaryData.supplyTotal),
+            totalBorrowed: usdFormatter().format(summaryData.borrowTotal),
+            tvl: usdFormatter().format(summaryData.tvl),
         };
 
         console.log('getSubgraphTrancheData:', returnObj);

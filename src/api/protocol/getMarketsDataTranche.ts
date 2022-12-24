@@ -45,7 +45,7 @@ export async function getTrancheMarkets(trancheId: number): Promise<IMarketsAsse
             canBeCollateral: marketData.canBeCollateral,
             canBeBorrowed: marketData.canBeBorrowed,
             currentPrice: marketData.currentPriceETH,
-            collateralCap: marketData.collateralCap,
+            collateralCap: BigNumber.from('0'), //marketData.collateralCap,
             liquidationThreshold: marketData.liquidationThreshold,
         };
     });

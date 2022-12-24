@@ -7,6 +7,7 @@ export type IGraphHistoryProps = {
     amount: string;
     timestamp: number;
     reserve: {
+        decimals: number;
         symbol: string;
         name?: string;
     };

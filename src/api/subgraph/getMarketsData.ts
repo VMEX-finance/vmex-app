@@ -4,9 +4,11 @@ import { SUBGRAPH_ENDPOINT } from '../../utils/constants';
 import { IGraphTrancheAssetProps, ISubgraphAllMarketsData, ISubgraphMarketsChart } from './types';
 import { ILineChartDataPointProps } from '@ui/components/charts';
 import { BigNumber, utils } from 'ethers';
-import { MAINNET_ASSET_MAPPINGS } from '../../utils/sdk-helpers';
+import { MAINNET_ASSET_MAPPINGS, nativeAmountToUSD } from '../../utils/sdk-helpers';
 import { MOCK_MULTI_LINE_DATA } from '../../utils/mock-data';
 import { IMarketsAsset } from '../types';
+import { getAllAssetPrices } from '../prices';
+import { usdFormatter } from '../../utils/helpers';
 
 const client = new ApolloClient({
     uri: SUBGRAPH_ENDPOINT,
@@ -86,6 +88,7 @@ export const getSubgraphAllMarketsData = async (): Promise<IMarketsAsset[]> => {
             query QueryAllMarkets {
                 reserves(orderBy: availableLiquidity, orderDirection: desc) {
                     symbol
+                    decimals
                     tranche {
                         id
                         name
@@ -105,18 +108,33 @@ export const getSubgraphAllMarketsData = async (): Promise<IMarketsAsset[]> => {
 
     if (error) return [];
     else {
+        const prices = await getAllAssetPrices();
+
         const returnObj: IMarketsAsset[] = [];
         data.reserves.map((reserve: any) => {
+            const asset = reserve.symbol.slice(0, -1);
+            const assetUSDPrice = (prices as any)[asset].usdPrice;
+
             returnObj.push({
-                asset: reserve.symbol.slice(0, -1),
+                asset: asset,
                 tranche: reserve.tranche.name,
                 trancheId: reserve.tranche.id,
                 borrowApy: utils.formatUnits(reserve.variableBorrowRate, 27),
                 supplyApy: utils.formatUnits(reserve.liquidityRate, 27),
-                available: utils.formatUnits(reserve.availableLiquidity, reserve.decimals),
+                available: usdFormatter().format(
+                    nativeAmountToUSD(reserve.availableLiquidity, reserve.decimals, assetUSDPrice),
+                ),
                 availableNative: reserve.availableLiquidity,
-                supplyTotal: utils.formatUnits(reserve.totalDeposits, reserve.decimals),
-                borrowTotal: utils.formatUnits(reserve.totalCurrentVariableDebt, reserve.decimals),
+                supplyTotal: usdFormatter().format(
+                    nativeAmountToUSD(reserve.totalDeposits, reserve.decimals, assetUSDPrice),
+                ),
+                borrowTotal: usdFormatter().format(
+                    nativeAmountToUSD(
+                        reserve.totalCurrentVariableDebt,
+                        reserve.decimals,
+                        assetUSDPrice,
+                    ),
+                ),
                 rating: '-',
                 strategies: false, //TODO
                 canBeCollateral: reserve.usageAsCollateralEnabled,

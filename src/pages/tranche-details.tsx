@@ -49,11 +49,11 @@ const TrancheDetails: React.FC = () => {
             <TrancheTVLDataCard
                 assets={queryTrancheData.data?.assets || tranche.assets}
                 grade={tranche.aggregateRating}
-                tvl={tranche.tvl}
+                tvl={queryTrancheData.data?.tvl || tranche.tvl}
                 tvlChange={tranche.tvlChange}
-                supplied={tranche.supplyTotal}
+                supplied={queryTrancheData.data?.totalSupplied || tranche.supplyTotal}
                 supplyChange={tranche.supplyChange}
-                borrowed={tranche.borrowTotal}
+                borrowed={queryTrancheData.data?.totalBorrowed || tranche.borrowTotal}
                 borrowChange={tranche.borrowChange}
             />
             {view.includes('details') ? (

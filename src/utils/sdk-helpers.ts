@@ -104,6 +104,16 @@ export const bigNumberToUSD = (
     return dollarSign ? formatted : formatted.slice(1).replaceAll(',', '');
 };
 
+export const nativeAmountToUSD = (
+    amount: string,
+    decimals: number,
+    assetUSDPrice: number,
+): number => {
+    return parseFloat(
+        (Number(ethers.utils.formatUnits(amount, decimals)) * assetUSDPrice).toFixed(2),
+    );
+};
+
 export const bigNumberToNative = (number: BigNumber | undefined, asset: string): string => {
     if (!number) {
         console.error('given invalid bignumber');

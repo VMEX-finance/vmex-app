@@ -2,7 +2,8 @@ import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 import { useQuery } from '@tanstack/react-query';
 import { ILineChartDataPointProps } from '@ui/components/charts';
 import { SUBGRAPH_ENDPOINT } from '../../utils/constants';
-import { bigNumberToUSD, DECIMALS } from '../../utils/sdk-helpers';
+import { bigNumberToUSD, DECIMALS, nativeAmountToUSD } from '../../utils/sdk-helpers';
+import { getAllAssetPrices } from '../prices';
 import { IGraphProtocolDataProps, IGraphTrancheProps, ISubgraphProtocolData } from './types';
 
 const client = new ApolloClient({
@@ -16,20 +17,20 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
             query QueryProtocolTVL {
                 tranches {
                     id
-                    borrowHistory {
+                    borrowHistory(orderBy: timestamp, orderDirection: asc) {
                         timestamp
                         amount
-                        assetPriceUSD
                         reserve {
                             symbol
+                            decimals
                         }
                     }
-                    depositHistory {
+                    depositHistory(orderBy: timestamp, orderDirection: asc) {
                         timestamp
                         amount
-                        assetPriceUSD
                         reserve {
                             symbol
+                            decimals
                         }
                     }
                 }
@@ -39,25 +40,21 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
     if (error) return [];
     else {
         let graphData: ILineChartDataPointProps[] = [];
+        const prices = await getAllAssetPrices();
         data.tranches.map((tranche: IGraphTrancheProps) => {
             tranche.depositHistory.map((el) => {
                 const asset = el.reserve.symbol.slice(0, -1);
                 // TODO: fix to be in terms of USD, not native amounts (use oracles)
-                const usdAmount = parseFloat(
-                    bigNumberToUSD(el.amount, DECIMALS.get(asset) || 18, false),
-                );
-                const date = new Date(el.timestamp * 1000).toLocaleDateString();
 
-                if (graphData.length === 0)
+                const assetUSDPrice = (prices as any)[asset].usdPrice;
+                const usdAmount = nativeAmountToUSD(el.amount, el.reserve.decimals, assetUSDPrice);
+                const date = new Date(el.timestamp * 1000).toLocaleString();
+
+                const found = graphData.find((element) => element.xaxis === date);
+                if (found) {
+                    found.value = found.value + usdAmount;
+                } else {
                     graphData.push({ asset, value: usdAmount, xaxis: date });
-                else {
-                    graphData.map((plot) => {
-                        if (plot.xaxis === date) {
-                            plot.value = plot.value + usdAmount;
-                        } else {
-                            graphData.push({ asset, value: usdAmount, xaxis: date });
-                        }
-                    });
                 }
             });
 
@@ -65,18 +62,16 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
                 const asset = el.reserve.symbol.slice(0, -1);
                 // TODO: fix to be in terms of USD, not native amounts (use oracles)
                 // Multiply this 'amount' by 'assetPriceUSD' when oracle is connected
-                const usdAmount = parseFloat(
-                    bigNumberToUSD(el.amount, DECIMALS.get(asset) || 18, false),
-                );
-                const date = new Date(el.timestamp * 1000).toLocaleDateString();
+                const assetUSDPrice = (prices as any)[asset].usdPrice;
+                const usdAmount = nativeAmountToUSD(el.amount, el.reserve.decimals, assetUSDPrice);
+                const date = new Date(el.timestamp * 1000).toLocaleString();
 
-                graphData.map((plot) => {
-                    if (plot.xaxis === date) {
-                        plot.value = plot.value - usdAmount;
-                    } else {
-                        graphData.push({ asset, value: -usdAmount, xaxis: date });
-                    }
-                });
+                const found = graphData.find((element) => element.xaxis === date);
+                if (found) {
+                    found.value = found.value + usdAmount;
+                } else {
+                    graphData.push({ asset, value: usdAmount, xaxis: date });
+                }
             });
         });
 

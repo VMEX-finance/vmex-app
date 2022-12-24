@@ -21,7 +21,7 @@ export async function getAllAssetPrices(): Promise<Record<IAvailableCoins, IAsse
         const asset = REVERSE_MAINNET_ASSET_MAPPINGS.get(key.toLowerCase()) || key;
         (returnObj as any)[asset] = {
             oracle,
-            usdPrice: parseFloat(utils.formatUnits(priceUSD, DECIMALS.get(asset))),
+            usdPrice: parseFloat(utils.formatUnits(priceUSD, 18)),
         };
     });
 

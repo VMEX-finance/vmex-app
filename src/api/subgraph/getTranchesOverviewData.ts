@@ -3,7 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 import { SUBGRAPH_ENDPOINT } from '../../utils/constants';
 import { ISubgraphTrancheData, ISubgraphTranchesDataProps } from './types';
 import { ITrancheProps } from '../types';
-import { utils } from 'ethers';
+import { getAllAssetPrices, usePricesData } from '../prices';
+import { nativeAmountToUSD } from '../../utils/sdk-helpers';
 
 const client = new ApolloClient({
     uri: SUBGRAPH_ENDPOINT,
@@ -24,6 +25,7 @@ export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]
                         totalDeposits
                         availableLiquidity
                         totalCurrentVariableDebt
+                        decimals
                     }
                 }
             }
@@ -33,6 +35,10 @@ export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]
     if (error) return [];
     else {
         const tranches = data.tranches;
+
+        console.log('getting prices in tranchesoverview');
+        const prices = await getAllAssetPrices();
+        console.log('got prices in tranchesoverview', prices);
 
         let finalObj: Map<
             string,
@@ -47,12 +53,28 @@ export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]
             finalObj.set(
                 tranche.id,
                 assets.reduce(
-                    (obj: any, item: any) =>
-                        Object.assign(obj, {
-                            tvl: obj.tvl + item.availableLiquidity,
-                            supplyTotal: obj.supplyTotal + item.totalDeposits,
-                            borrowTotal: obj.borrowTotal + item.totalCurrentVariableDebt,
-                        }),
+                    (obj: any, item: any) => {
+                        const assetUSDPrice = (prices as any)[item.symbol.slice(0, -1)].usdPrice;
+                        return Object.assign(obj, {
+                            tvl:
+                                obj.tvl +
+                                nativeAmountToUSD(
+                                    item.availableLiquidity,
+                                    item.decimals,
+                                    assetUSDPrice,
+                                ),
+                            supplyTotal:
+                                obj.supplyTotal +
+                                nativeAmountToUSD(item.totalDeposits, item.decimals, assetUSDPrice),
+                            borrowTotal:
+                                obj.borrowTotal +
+                                nativeAmountToUSD(
+                                    item.totalCurrentVariableDebt,
+                                    item.decimals,
+                                    assetUSDPrice,
+                                ),
+                        });
+                    },
                     {
                         tvl: 0,
                         supplyTotal: 0,
