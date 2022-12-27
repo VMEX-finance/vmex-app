@@ -4,16 +4,10 @@ import { ReLineChart } from '../components/charts';
 import { NumberDisplay, PillDisplay } from '../components/displays';
 import { TopTranchesTable } from '../tables';
 import { useWindowSize } from '../../hooks/ui';
-import { TrancheData } from '@vmex/sdk';
 import { makeCompact } from '../../utils/helpers';
 import { useSubgraphProtocolData } from '../../api';
-import { bigNumberToUSD } from '../../utils/sdk-helpers';
-import { ethers } from 'ethers';
+import { AssetBalance, TrancheData } from '@app/api/types';
 
-export interface AssetBalance {
-    asset: string;
-    amount: string;
-}
 export interface IProtocolProps {
     isLoading?: boolean;
     tvl?: string;

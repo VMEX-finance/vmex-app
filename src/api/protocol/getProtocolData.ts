@@ -45,7 +45,13 @@ export async function getProtocolOverviewData(): Promise<IProtocolProps> {
                 };
             })
             .slice(0, Math.min(protocolData.topBorrowedAssets.length, 5)),
-        topTranches: protocolData.topTranches,
+        topTranches: protocolData.topTranches.map((tranche: any) => {
+            return {
+                name: tranche.asset,
+                totalBorrowed: tranche.totalBorrowed.toString(),
+                totalSupplied: tranche.totalSupplied.toString(),
+            };
+        }),
     };
 }
 

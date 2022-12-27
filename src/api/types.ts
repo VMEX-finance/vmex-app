@@ -74,3 +74,14 @@ export type AvailableAsset = {
     liquidity?: string;
     liquidityNative?: BigNumber;
 };
+
+export interface AssetBalance {
+    asset: string;
+    amount: string;
+}
+
+export interface TrancheData {
+    name: string;
+    totalSupplied: string;
+    totalBorrowed: string;
+}

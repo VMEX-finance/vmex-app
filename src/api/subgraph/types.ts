@@ -1,6 +1,6 @@
 import { UseQueryResult } from '@tanstack/react-query';
 import { ILineChartDataPointProps } from '../../ui/components/charts';
-import { IMarketsAsset, ITrancheProps } from '../types';
+import { AssetBalance, IMarketsAsset, ITrancheProps, TrancheData } from '../types';
 
 export type IGraphHistoryProps = {
     action?: 'Borrow' | 'Deposit';
@@ -60,8 +60,16 @@ export type IGraphTrancheDataProps = {
 
 export type IGraphProtocolDataProps =
     | {
+          tvl: string;
+          reserve: string;
+          totalSupplied: string;
+          totalBorrowed: string;
           uniqueLenders: string[];
           uniqueBorrowers: string[];
+          markets: number;
+          topBorrowedAssets: AssetBalance[];
+          topSuppliedAssets: AssetBalance[];
+          topTranches: TrancheData[];
       }
     | Record<any, any>;
 
