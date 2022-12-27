@@ -92,8 +92,11 @@ export function useUserTrancheData(userAddress: any, trancheId: number): IUserTr
         refetchOnMount: true,
     });
 
-    const findAssetInUserSuppliesOrBorrows = (asset: string, type: 'supply' | 'borrow') => {
-        if (queryUserTrancheData.isLoading) return undefined;
+    const findAssetInUserSuppliesOrBorrows = (
+        asset: string | undefined,
+        type: 'supply' | 'borrow',
+    ) => {
+        if (queryUserTrancheData.isLoading || !asset) return undefined;
         else {
             const userData =
                 type === 'supply'

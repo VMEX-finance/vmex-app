@@ -10,7 +10,7 @@ import { TrancheTable } from '../ui/tables';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '../store/contexts';
 import { useAccount, useSigner } from 'wagmi';
-import { useTrancheMarketsData, useTranchesData, useSubgraphTrancheData } from '../api';
+import { useSubgraphTrancheData } from '../api';
 import { percentFormatter } from '../utils/helpers';
 
 const TrancheDetails: React.FC = () => {
@@ -19,10 +19,7 @@ const TrancheDetails: React.FC = () => {
     const { address } = useAccount();
     const { data: signer } = useSigner();
     const { tranche, setTranche, asset } = useSelectedTrancheContext();
-
-    // const { queryTrancheMarkets } = useTrancheMarketsData(tranche.id);
     const { queryTrancheData } = useSubgraphTrancheData(tranche.id);
-    // const { queryAllTranches } = useTranchesData();
 
     const [view, setView] = useState('tranche-overview');
 
@@ -36,7 +33,6 @@ const TrancheDetails: React.FC = () => {
     useEffect(() => {
         if (!tranche.id) navigate('/tranches');
         if (queryTrancheData.data) setTranche(queryTrancheData.data);
-        console.log(queryTrancheData.data);
     }, [tranche, location, queryTrancheData]);
 
     return (

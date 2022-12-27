@@ -43,7 +43,7 @@ export type IUserWalletDataProps = {
 export type IUserTrancheDataProps = {
     queryUserTrancheData: UseQueryResult<IUserTrancheData, unknown>;
     findAssetInUserSuppliesOrBorrows: (
-        asset: string,
+        asset: string | undefined,
         type: 'supply' | 'borrow',
     ) => IYourSuppliesTableItemProps | IYourBorrowsTableItemProps | undefined;
     findAmountBorrowable: (

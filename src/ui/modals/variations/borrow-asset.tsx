@@ -85,8 +85,12 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
     );
     const apy = getTrancheMarket(data?.asset || '').borrowApy;
     const amountRepay =
-        findAssetInUserSuppliesOrBorrows(data?.asset || '', 'borrow')?.amountNative ||
+        findAssetInUserSuppliesOrBorrows(data?.asset, 'borrow')?.amountNative ||
+        data?.amountNative ||
         BigNumber.from('0');
+
+    console.log('DATA:', data);
+    console.log('AMOUNT REPAY:', amountRepay);
 
     return data && data.asset ? (
         <>
@@ -97,7 +101,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
                         title={name}
                         asset={data.asset}
                         tab={tab}
-                        onClick={!amountRepay.eq(BigNumber.from('0')) ? setView : () => {}}
+                        onClick={!amountRepay?.eq(BigNumber.from('0')) ? setView : () => {}}
                         primary
                     />
                     {!isSuccess && !error ? (

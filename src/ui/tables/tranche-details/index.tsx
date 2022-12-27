@@ -9,7 +9,7 @@ import { NumberAndDollar } from '../../components/displays';
 import { useWindowSize } from '../../../hooks/ui';
 import { AvailableAsset } from '@app/api/types';
 import { BigNumber } from 'ethers';
-import { bigNumberToNative, bigNumberToUnformattedString } from '../../../utils/sdk-helpers';
+import { bigNumberToNative } from '../../../utils/sdk-helpers';
 import { numberFormatter } from '../../../utils/helpers';
 
 interface ITableProps {
