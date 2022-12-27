@@ -66,10 +66,7 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                         </div>
                     </div>
                     <div className="flex md:flex-col justify-between gap-1">
-                        <NumberDisplay
-                            label={'Reserves:'}
-                            value={reserve ? makeCompact(reserve) : '-'}
-                        />
+                        <NumberDisplay label={'Reserves:'} value={reserve ? reserve : '-'} />
                         <NumberDisplay
                             color="text-brand-purple"
                             label={'Lenders:'}

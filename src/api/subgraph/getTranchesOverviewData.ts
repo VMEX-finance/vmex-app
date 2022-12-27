@@ -1,7 +1,7 @@
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 import { useQuery } from '@tanstack/react-query';
 import { SUBGRAPH_ENDPOINT } from '../../utils/constants';
-import { ISubgraphTrancheData, ISubgraphTranchesDataProps } from './types';
+import { ISubgraphTranchesDataProps } from './types';
 import { ITrancheProps } from '../types';
 import { getAllAssetPrices, usePricesData } from '../prices';
 import { nativeAmountToUSD } from '../../utils/sdk-helpers';
@@ -34,11 +34,8 @@ export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]
 
     if (error) return [];
     else {
-        const tranches = data.tranches;
-
-        console.log('getting prices in tranchesoverview');
+        const { tranches } = data;
         const prices = await getAllAssetPrices();
-        console.log('got prices in tranchesoverview', prices);
 
         let finalObj: Map<
             string,
