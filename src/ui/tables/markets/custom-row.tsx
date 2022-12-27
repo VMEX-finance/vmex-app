@@ -133,8 +133,8 @@ const MarketsCustomRow = (props: any) => {
                     <AssetDisplay name={asset} />
                 </td>
                 <td className="min-w-[150px]">{tranche}</td>
-                <td>{supplyApy}%</td>
-                <td>{borrowApy}%</td>
+                <td>{supplyApy}</td>
+                <td>{borrowApy}</td>
                 <td>
                     {yourAmount} {asset}
                 </td>
