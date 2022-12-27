@@ -48,7 +48,12 @@ export const UserPerformanceCard: React.FC<IUserPerformanceCardProps> = ({
             <div className="grid grid-cols-1 gap-3 w-full px-3">
                 <div className="grid w-full h-[240px]">
                     <h4>Profit / Loss (P&L)</h4>
-                    <ReLineChart data={profitLossChart || []} color="#3CB55E" timeseries />
+                    <ReLineChart
+                        data={profitLossChart || []}
+                        color="#3CB55E"
+                        type="usd"
+                        timeseries
+                    />
                 </div>
                 {/* <div className="grid w-full h-[240px]">
                     <h4>Insurance Utilization</h4>
