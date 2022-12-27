@@ -14,20 +14,11 @@ import {
     bigNumberToNative,
     REVERSE_MAINNET_ASSET_MAPPINGS,
 } from '../../utils/sdk-helpers';
-import { IUserPerformanceCardProps } from '../../ui/features';
-import { MOCK_LINE_DATA, MOCK_LINE_DATA_2 } from '../../utils/mock-data';
 import { IUserActivityDataProps, IUserDataProps, IUserWalletDataProps } from './types';
 import { BigNumber } from 'ethers';
 import { AVAILABLE_ASSETS } from '../../utils/constants';
 
 // Gets
-export function getUserPerformanceData(): IUserPerformanceCardProps {
-    return {
-        profitLossChart: MOCK_LINE_DATA,
-        insuranceChart: MOCK_LINE_DATA_2,
-    };
-}
-
 export async function getUserActivityData(userAddress: string): Promise<IUserActivityDataProps> {
     if (!userAddress) {
         return {
@@ -137,11 +128,6 @@ export async function _getUserWalletData(
 
 // Master
 export function useUserData(userAddress: any): IUserDataProps {
-    const queryUserPerformance = useQuery({
-        queryKey: ['user-performance'],
-        queryFn: getUserPerformanceData,
-    });
-
     const queryUserActivity = useQuery({
         queryKey: ['user-activity'],
         queryFn: () => getUserActivityData(userAddress),
@@ -177,7 +163,6 @@ export function useUserData(userAddress: any): IUserDataProps {
     };
 
     return {
-        queryUserPerformance,
         queryUserActivity,
         queryUserWallet,
         getTokenBalance,

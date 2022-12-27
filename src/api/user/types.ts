@@ -15,7 +15,6 @@ export type ITrancheInteractedProps = {
 };
 
 export type IUserDataProps = {
-    queryUserPerformance: UseQueryResult<IUserPerformanceCardProps, unknown>;
     queryUserActivity: UseQueryResult<IUserActivityDataProps, unknown>;
     queryUserWallet: UseQueryResult<IUserWalletDataProps, unknown>;
     getTokenBalance: (asset: string) => ITokenBalanceProps;

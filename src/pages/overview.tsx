@@ -11,7 +11,7 @@ import { bigNumberToUnformattedString } from '../utils/sdk-helpers';
 const Overview: React.FC = () => {
     const { address, isConnected } = useAccount();
     const { queryProtocolData } = useSubgraphProtocolData();
-    const { queryUserPerformance, queryUserActivity } = useUserData(address);
+    const { queryUserActivity } = useUserData(address);
     const { queryUserPnlChart } = useSubgraphUserData(address || '');
 
     return (
@@ -32,8 +32,7 @@ const Overview: React.FC = () => {
             {isConnected ? (
                 <GridView type="fixed">
                     <UserPerformanceCard
-                        {...queryUserPerformance.data}
-                        isLoading={queryUserPerformance.isLoading || queryUserActivity.isLoading}
+                        isLoading={queryUserActivity.isLoading || queryUserPnlChart.isLoading}
                         loanedAssets={queryUserActivity.data?.supplies?.map((el) => ({
                             asset: el.asset,
                             amount: numberFormatter.format(
