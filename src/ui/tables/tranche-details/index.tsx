@@ -26,6 +26,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
     const { queryUserTrancheData, findAssetInUserSuppliesOrBorrows, findAmountBorrowable } =
         useUserTrancheData(address, tranche.id);
     const { openDialog } = useDialogController();
+
     const mode1 =
         type === 'supply'
             ? width > breakpoint
@@ -34,6 +35,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
             : width > breakpoint
             ? 'Available Borrows'
             : 'Available';
+
     const mode2 =
         type === 'supply'
             ? width > breakpoint
@@ -51,11 +53,17 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                 : queryUserTrancheData.data.supplies
         ).map((el) => el.asset);
 
-        return list.includes(asset) ? (
-            <span className="absolute -translate-x-4 w-2 h-2 bg-brand-green-neon rounded-full" />
-        ) : (
-            <></>
-        );
+        return list.includes(asset) ? true : false;
+    };
+
+    const compareListsSorter = (a: any, b: any) => {
+        if (isInList(a.asset)) {
+            return -1;
+        }
+        if (isInList(b.asset)) {
+            return 1;
+        }
+        return 0;
     };
 
     return (
@@ -79,7 +87,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
             </thead>
             <tbody className="divide-y divide-gray-200">
                 {data &&
-                    data.map((el, i) => {
+                    data.sort(compareListsSorter).map((el, i) => {
                         return (
                             <tr
                                 key={`${el.asset}-${i}`}
@@ -98,7 +106,11 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                             >
                                 <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                                     <div className="flex items-center gap-2">
-                                        {isInList(el.asset)}
+                                        {isInList(el.asset) ? (
+                                            <span className="absolute -translate-x-4 w-2 h-2 bg-brand-green-neon rounded-full" />
+                                        ) : (
+                                            <></>
+                                        )}
                                         <img
                                             src={`/coins/${el.asset?.toLowerCase()}.svg`}
                                             alt={el.asset}
