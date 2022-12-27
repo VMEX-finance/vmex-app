@@ -145,7 +145,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                         color="text-black"
                                     />
                                 </td>
-                                <td>{el.apy}%</td>
+                                <td>{el.apy}</td>
                                 <td>
                                     {type === 'supply' ? (
                                         <div className="w-10 h-10">

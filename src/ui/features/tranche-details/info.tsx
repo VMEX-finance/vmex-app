@@ -58,14 +58,11 @@ export const TrancheInfoCard = ({ tranche, loading }: ITrancheInfoCard) => {
                     <NumberDisplay
                         label="Pool Utilization"
                         value={calculatePoolUtility()}
-                        // value={`${percentFormatter.format(
-                        //     tranche?.utilityRate || _tranche.poolUtilization
-                        // )}`} // TODO
                         size="xl"
                     />
                     <NumberDisplay
                         label="Whitelist"
-                        value={`${tranche?.whitelist || _tranche.whitelist}`}
+                        value={`${tranche?.whitelist || _tranche.whitelist || 'No'}`}
                         size="xl"
                     />
                     <NumberDisplay

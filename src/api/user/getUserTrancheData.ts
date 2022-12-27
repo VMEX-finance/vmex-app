@@ -41,11 +41,12 @@ export async function _getUserTrancheData(
     });
 
     const tmp = userTrancheData.assetBorrowingPower.map((marketData: AvailableBorrowData) => {
+        console.log('MARKET DATA', marketData);
         let asset =
             REVERSE_MAINNET_ASSET_MAPPINGS.get(marketData.asset.toLowerCase()) || marketData.asset;
         return {
             asset: asset,
-            amountUSD: bigNumberToUSD(marketData.amountUSD, DECIMALS.get(asset) || 18),
+            amountUSD: bigNumberToUSD(marketData.amountUSD, 18),
             amountNative: marketData.amountNative,
         };
     });
@@ -60,13 +61,7 @@ export async function _getUserTrancheData(
                 asset:
                     REVERSE_MAINNET_ASSET_MAPPINGS.get(assetData.asset.toLowerCase()) ||
                     assetData.asset,
-                amount: bigNumberToUSD(
-                    assetData.amount,
-                    DECIMALS.get(
-                        REVERSE_MAINNET_ASSET_MAPPINGS.get(assetData.asset.toLowerCase()) ||
-                            assetData.asset,
-                    ) || 18,
-                ),
+                amount: bigNumberToUSD(assetData.amount, 18),
                 amountNative: assetData.amountNative,
                 collateral: assetData.isCollateral,
                 apy: rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0)),
@@ -79,13 +74,7 @@ export async function _getUserTrancheData(
                 asset:
                     REVERSE_MAINNET_ASSET_MAPPINGS.get(assetData.asset.toLowerCase()) ||
                     assetData.asset,
-                amount: bigNumberToUSD(
-                    assetData.amount,
-                    DECIMALS.get(
-                        REVERSE_MAINNET_ASSET_MAPPINGS.get(assetData.asset.toLowerCase()) ||
-                            assetData.asset,
-                    ) || 18,
-                ),
+                amount: bigNumberToUSD(assetData.amount, 18),
                 amountNative: assetData.amountNative,
                 apy: rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0)),
                 tranche: assetData.tranche.toString(),
