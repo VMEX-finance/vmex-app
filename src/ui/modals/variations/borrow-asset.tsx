@@ -89,9 +89,6 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
         data?.amountNative ||
         BigNumber.from('0');
 
-    console.log('DATA:', data);
-    console.log('AMOUNT REPAY:', amountRepay);
-
     return data && data.asset ? (
         <>
             {view?.includes('Borrow') ? (

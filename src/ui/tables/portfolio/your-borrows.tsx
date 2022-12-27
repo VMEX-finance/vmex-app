@@ -50,8 +50,7 @@ export const YourBorrowsTable: React.FC<IYourBorrowsTableProps> = ({ data, withH
                                 className="text-left transition duration-200 hover:bg-neutral-200 dark:hover:bg-neutral-900 hover:cursor-pointer"
                                 onClick={() =>
                                     openDialog('borrow-asset-dialog', {
-                                        asset: i.asset,
-                                        trancheId: i.trancheId,
+                                        ...i,
                                         view: 'Repay',
                                     })
                                 }

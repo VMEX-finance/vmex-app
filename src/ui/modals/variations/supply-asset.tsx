@@ -24,13 +24,11 @@ import { ISupplyBorrowProps } from '../utils';
 export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, data, tab }) => {
     const { submitTx, isSuccess, error, isLoading } = useModal('loan-asset-dialog');
     const [view, setView] = React.useState('Supply');
-    // const [asCollateral, setAsCollateral] = React.useState(true);
     const [isMax, setIsMax] = React.useState(false);
     const [amount, setAmount] = useMediatedState(inputMediator, '');
     const { getTrancheMarket } = useTrancheMarketsData(data?.trancheId || 0);
     const { data: signer } = useSigner();
     const { address } = useAccount();
-
     const { findAssetInUserSuppliesOrBorrows } = useUserTrancheData(address, data?.trancheId || 0);
     const { getTokenBalance } = useUserData(address);
 
@@ -44,7 +42,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                           amount: convertStringFormatToNumber(amount),
                           signer: signer,
                           network: NETWORK,
-                          //   collateral: asCollateral,
+                          // collateral: asCollateral,
                           // referrer: number,
                           // collateral: boolean,
                           // test: boolean
@@ -68,13 +66,14 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
 
     const amountWalletNative = getTokenBalance(data?.asset || '');
     const apy = getTrancheMarket(data?.asset || '').borrowApy;
-    const amountWithdraw = findAssetInUserSuppliesOrBorrows(
-        data?.asset || '',
-        'supply',
-    )?.amountNative;
+    const amountWithdraw =
+        findAssetInUserSuppliesOrBorrows(data?.asset, 'supply')?.amountNative || data?.amountNative;
     const collateral = (
         findAssetInUserSuppliesOrBorrows(data?.asset || '', 'supply') as IYourSuppliesTableItemProps
     )?.collateral;
+
+    console.log('DATA:', data);
+    console.log('AMOUNT REPAY:', amountWithdraw);
 
     useEffect(() => {
         if (data?.view) setView('Withdraw');
