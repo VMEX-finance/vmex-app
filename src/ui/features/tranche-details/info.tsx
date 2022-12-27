@@ -13,24 +13,6 @@ type ITrancheInfoCard = {
 export const TrancheInfoCard = ({ tranche, loading }: ITrancheInfoCard) => {
     const { tranche: _tranche } = useSelectedTrancheContext();
 
-    const calculatePoolUtility = () => {
-        if (
-            !loading &&
-            _tranche &&
-            _tranche.supplyTotal &&
-            _tranche.borrowTotal &&
-            _tranche.supplyTotal !== '$0.00' &&
-            _tranche.borrowTotal !== '$0.00'
-        ) {
-            const supplied = parseFloat(_tranche.supplyTotal.slice(1).replaceAll(',', ''));
-            const borrowed = parseFloat(_tranche.borrowTotal.slice(1).replaceAll(',', ''));
-            const final = (supplied - borrowed) / supplied;
-            return percentFormatter.format(final);
-        } else {
-            return percentFormatter.format(0);
-        }
-    };
-
     return (
         <Card loading={loading}>
             <div className="flex flex-col gap-8">
@@ -57,7 +39,7 @@ export const TrancheInfoCard = ({ tranche, loading }: ITrancheInfoCard) => {
                     />
                     <NumberDisplay
                         label="Pool Utilization"
-                        value={calculatePoolUtility()}
+                        value={_tranche.poolUtilization}
                         size="xl"
                     />
                     <NumberDisplay

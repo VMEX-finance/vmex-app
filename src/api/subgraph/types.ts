@@ -56,6 +56,7 @@ export type IGraphTrancheDataProps = {
     borrowChange?: number;
     name?: string;
     id?: string;
+    poolUtilization?: string;
 };
 
 export type IGraphProtocolDataProps =

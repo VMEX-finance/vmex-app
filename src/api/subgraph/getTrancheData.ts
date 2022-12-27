@@ -5,7 +5,7 @@ import { IGraphTrancheDataProps, ISubgraphTrancheData } from './types';
 import { utils } from 'ethers';
 import { getAllAssetPrices } from '../prices';
 import { nativeAmountToUSD } from '../../utils/sdk-helpers';
-import { usdFormatter } from '../../utils/helpers';
+import { usdFormatter, percentFormatter } from '../../utils/helpers';
 
 const client = new ApolloClient({
     uri: SUBGRAPH_ENDPOINT,
@@ -120,6 +120,9 @@ export const getSubgraphTrancheData = async (
             totalSupplied: usdFormatter().format(summaryData.supplyTotal),
             totalBorrowed: usdFormatter().format(summaryData.borrowTotal),
             tvl: usdFormatter().format(summaryData.tvl),
+            poolUtilization: percentFormatter.format(
+                1 - (summaryData.supplyTotal - summaryData.borrowTotal) / summaryData.supplyTotal,
+            ),
         };
 
         console.log('getSubgraphTrancheData:', returnObj);
