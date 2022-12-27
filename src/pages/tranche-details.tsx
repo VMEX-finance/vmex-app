@@ -35,9 +35,8 @@ const TrancheDetails: React.FC = () => {
 
     useEffect(() => {
         if (!tranche.id) navigate('/tranches');
-        // const found = queryAllTranches.data?.find((el) => el.id === tranche.id);
-        console.log('tranche detail data', queryTrancheData.data);
         if (queryTrancheData.data) setTranche(queryTrancheData.data);
+        console.log(queryTrancheData.data);
     }, [tranche, location, queryTrancheData]);
 
     return (

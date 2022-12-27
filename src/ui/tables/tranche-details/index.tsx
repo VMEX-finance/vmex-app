@@ -7,12 +7,10 @@ import { useDialogController } from '../../../hooks/dialogs';
 import { useSelectedTrancheContext } from '../../../store/contexts';
 import { NumberAndDollar } from '../../components/displays';
 import { useWindowSize } from '../../../hooks/ui';
-import { convertStringFormatToNumber } from '../../../utils/helpers';
 import { AvailableAsset } from '@app/api/types';
 import { BigNumber } from 'ethers';
 import { bigNumberToNative } from '../../../utils/sdk-helpers';
-
-import { bigNumberToUnformattedString } from '../../../utils/sdk-helpers';
+import { makeCompact, numberFormatter } from '../../../utils/helpers';
 
 interface ITableProps {
     data: AvailableAsset[];
@@ -46,7 +44,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
             : 'Liquidity';
 
     const isInList = (asset: string) => {
-        if (!queryUserTrancheData.data) return [];
+        if (!queryUserTrancheData.data) return false;
         const list = (
             type === 'borrow'
                 ? queryUserTrancheData.data.borrows
@@ -57,12 +55,8 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
     };
 
     const compareListsSorter = (a: any, b: any) => {
-        if (isInList(a.asset)) {
-            return -1;
-        }
-        if (isInList(b.asset)) {
-            return 1;
-        }
+        if (isInList(a.asset)) return -1;
+        if (isInList(b.asset)) return 1;
         return 0;
     };
 
@@ -85,7 +79,10 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                     <th scope="col" className="py-3.5"></th>
                 </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody
+                className="divide-y import { convertStringFormatToNumber } from '../../../utils/helpers';
+divide-gray-200"
+            >
                 {data &&
                     data.sort(compareListsSorter).map((el, i) => {
                         return (
@@ -168,9 +165,9 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                             )}
                                         </div>
                                     ) : (
-                                        `${bigNumberToNative(el.liquidityNative, el.asset)} ${
-                                            el.asset
-                                        }`
+                                        `${numberFormatter.format(
+                                            parseFloat(el.liquidity || '') || 0,
+                                        )} ${el.asset}`
                                     )}
                                 </td>
                             </tr>

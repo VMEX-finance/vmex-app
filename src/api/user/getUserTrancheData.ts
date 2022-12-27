@@ -15,7 +15,6 @@ import {
 } from '../../utils/sdk-helpers';
 import { IUserTrancheDataProps, IUserTrancheData } from './types';
 import { BigNumber } from 'ethers';
-import { DECIMALS } from '../../utils/sdk-helpers';
 
 export async function _getUserTrancheData(
     userAddress: string,
@@ -41,7 +40,6 @@ export async function _getUserTrancheData(
     });
 
     const tmp = userTrancheData.assetBorrowingPower.map((marketData: AvailableBorrowData) => {
-        console.log('MARKET DATA', marketData);
         let asset =
             REVERSE_MAINNET_ASSET_MAPPINGS.get(marketData.asset.toLowerCase()) || marketData.asset;
         return {
