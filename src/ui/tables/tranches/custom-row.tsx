@@ -25,6 +25,13 @@ const TranchesCustomRow = (props: any) => {
         const size = '20px';
         if (status) {
             switch (status.toLowerCase()) {
+                case 'loading':
+                    return (
+                        <div className="flex gap-2 animate-pulse">
+                            <BsArrowDownCircle size={size} />
+                            <BsArrowUpCircle size={size} />
+                        </div>
+                    );
                 case 'supplied':
                     return <Tooltip text="Supplying" content={<BsArrowDownCircle size={size} />} />;
                 case 'borrowed':

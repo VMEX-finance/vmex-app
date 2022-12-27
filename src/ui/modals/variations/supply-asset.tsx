@@ -66,7 +66,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
         }
     };
 
-    const amountWalletNative = getTokenBalance(data?.asset || '').amountNative;
+    const amountWalletNative = getTokenBalance(data?.asset || '');
     const apy = getTrancheMarket(data?.asset || '').borrowApy;
     const amountWithdraw = findAssetInUserSuppliesOrBorrows(
         data?.asset || '',
@@ -104,10 +104,11 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                                     name: data.asset,
                                 }}
                                 balance={bigNumberToUnformattedString(
-                                    amountWalletNative,
+                                    amountWalletNative.amountNative,
                                     data.asset,
                                 )}
                                 setIsMax={setIsMax}
+                                loading={amountWalletNative.loading}
                             />
 
                             {/* <h3 className="mt-6 text-neutral400">Collaterize</h3>

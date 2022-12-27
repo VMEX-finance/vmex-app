@@ -24,6 +24,11 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading }) => {
 
     const renderYourAmount = (asset: string) => {
         let amount = 0;
+        if (queryUserActivity.isLoading)
+            return {
+                amount,
+                loading: true,
+            };
         queryUserActivity?.data?.supplies.map((supply) => {
             if (supply.asset === asset)
                 amount =
@@ -36,7 +41,10 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading }) => {
                     amount -
                     parseFloat(bigNumberToUnformattedString(borrow.amountNative, borrow.asset));
         });
-        return numberFormatter.format(amount);
+        return {
+            amount: numberFormatter.format(amount),
+            loading: false,
+        };
     };
 
     const columns = [

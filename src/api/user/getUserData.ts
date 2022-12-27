@@ -153,17 +153,25 @@ export function useUserData(userAddress: any): IUserDataProps {
     });
 
     const getTokenBalance = (asset: string) => {
+        if (queryUserWallet.isLoading)
+            return {
+                amountNative: BigNumber.from('0'),
+                amount: '$0',
+                loading: true,
+            };
         if (!AVAILABLE_ASSETS.includes(asset) || !queryUserWallet.data) {
             if (queryUserWallet.data) console.warn(`Token Balance for ${asset} not found`);
             return {
                 amountNative: BigNumber.from('0'),
                 amount: '$0',
+                loading: false,
             };
         } else {
             const found = queryUserWallet.data.assets.find((el) => el.asset === asset);
             return {
                 amountNative: found?.amountNative || BigNumber.from('0'),
                 amount: found?.amount || '$0',
+                loading: false,
             };
         }
     };

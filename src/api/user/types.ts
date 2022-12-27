@@ -6,6 +6,7 @@ import { BigNumber } from 'ethers';
 type ITokenBalanceProps = {
     amount: string;
     amountNative: BigNumber;
+    loading?: boolean;
 };
 
 export type ITrancheInteractedProps = {

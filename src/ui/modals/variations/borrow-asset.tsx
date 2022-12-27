@@ -82,7 +82,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
         data?.asset || '',
         getTrancheMarket(data?.asset || '').available,
         getTrancheMarket(data?.asset || '').availableNative,
-    ).amountNative;
+    );
     const apy = getTrancheMarket(data?.asset || '').borrowApy;
     const amountRepay =
         findAssetInUserSuppliesOrBorrows(data?.asset || '', 'borrow')?.amountNative ||
@@ -111,9 +111,13 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
                                     logo: `/coins/${data.asset?.toLowerCase()}.svg`,
                                     name: data.asset,
                                 }}
-                                balance={bigNumberToUnformattedString(amountBorrwable, data.asset)}
+                                balance={bigNumberToUnformattedString(
+                                    amountBorrwable.amountNative,
+                                    data.asset,
+                                )}
                                 type="collateral"
                                 setIsMax={setIsMax}
+                                loading={amountBorrwable.loading}
                             />
 
                             <h3 className="mt-6 text-neutral400">Health Factor</h3>

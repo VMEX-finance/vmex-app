@@ -125,6 +125,7 @@ export function useUserTrancheData(userAddress: any, trancheId: number): IUserTr
             return {
                 amountNative: BigNumber.from('0'),
                 amount: '$0',
+                loading: true,
             };
         else {
             const userWalletData = queryUserTrancheData.data?.assetBorrowingPower;
@@ -137,11 +138,13 @@ export function useUserTrancheData(userAddress: any, trancheId: number): IUserTr
                     amountNative: found?.amountNative.lt(liquidityNative)
                         ? found?.amountNative
                         : liquidityNative,
+                    loading: false,
                 };
             } else
                 return {
                     amountNative: BigNumber.from('0'),
                     amount: '$0',
+                    loading: false,
                 };
         }
     };

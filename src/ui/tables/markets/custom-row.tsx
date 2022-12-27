@@ -79,7 +79,9 @@ const MarketsCustomRow = (props: any) => {
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Your Amount</span>
-                    <span>{yourAmount}</span>
+                    <span className={`${yourAmount.loading ? 'animate-pulse' : ''}`}>
+                        {yourAmount.amount}
+                    </span>
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Available</span>
@@ -135,8 +137,8 @@ const MarketsCustomRow = (props: any) => {
                 <td className="min-w-[150px]">{tranche}</td>
                 <td>{supplyApy}</td>
                 <td>{borrowApy}</td>
-                <td>
-                    {yourAmount} {asset}
+                <td className={`${yourAmount.loading ? 'animate-pulse' : ''}`}>
+                    {yourAmount.amount} {asset}
                 </td>
                 <td>{available}</td>
                 <td>{supplyTotal}</td>
