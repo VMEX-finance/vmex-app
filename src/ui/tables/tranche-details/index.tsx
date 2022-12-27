@@ -1,4 +1,4 @@
-import { useUserData, useUserTrancheData } from '../../../api';
+import { useTrancheMarketsData, useUserData, useUserTrancheData } from '../../../api';
 import { useAccount } from 'wagmi';
 import React from 'react';
 import { BsCheck } from 'react-icons/bs';
@@ -9,7 +9,7 @@ import { NumberAndDollar } from '../../components/displays';
 import { useWindowSize } from '../../../hooks/ui';
 import { AvailableAsset } from '@app/api/types';
 import { BigNumber } from 'ethers';
-import { bigNumberToNative } from '../../../utils/sdk-helpers';
+import { bigNumberToNative, bigNumberToUnformattedString } from '../../../utils/sdk-helpers';
 import { numberFormatter } from '../../../utils/helpers';
 
 interface ITableProps {
@@ -21,8 +21,8 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
     const { address } = useAccount();
     const { tranche } = useSelectedTrancheContext();
     const { queryUserWallet, getTokenBalance } = useUserData(address);
-    const { queryUserTrancheData, findAssetInUserSuppliesOrBorrows, findAmountBorrowable } =
-        useUserTrancheData(address, tranche.id);
+    const { queryUserTrancheData, findAmountBorrowable } = useUserTrancheData(address, tranche.id);
+    const { getTrancheMarket } = useTrancheMarketsData(tranche.id || 0);
     const { openDialog } = useDialogController();
 
     const mode1 =
@@ -52,6 +52,14 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
         ).map((el) => el.asset);
 
         return list.includes(asset) ? true : false;
+    };
+
+    const amountBorrwable = (asset: string) => {
+        return findAmountBorrowable(
+            asset,
+            getTrancheMarket(asset).available,
+            getTrancheMarket(asset).availableNative,
+        );
     };
 
     const compareListsSorter = (a: any, b: any) => {
@@ -128,24 +136,14 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                                       el.asset,
                                                   )} ${el.asset}`
                                                 : `${bigNumberToNative(
-                                                      findAmountBorrowable(
-                                                          el.asset,
-                                                          el.liquidity,
-                                                          el.liquidityNative,
-                                                      ).amountNative,
+                                                      amountBorrwable(el.asset).amountNative,
                                                       el.asset,
                                                   )} ${el.asset}`
                                         }`}
                                         dollar={`${
                                             type === 'supply'
                                                 ? `${getTokenBalance(el.asset).amount}`
-                                                : `${
-                                                      findAmountBorrowable(
-                                                          el.asset,
-                                                          el.liquidity,
-                                                          el.liquidityNative,
-                                                      ).amount
-                                                  }`
+                                                : `${amountBorrwable(el.asset).amount}`
                                         }`}
                                         size="xs"
                                         color="text-black"
