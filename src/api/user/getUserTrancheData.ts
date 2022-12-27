@@ -15,12 +15,13 @@ import {
 } from '../../utils/sdk-helpers';
 import { IUserTrancheDataProps, IUserTrancheData } from './types';
 import { BigNumber } from 'ethers';
+import { DECIMALS } from '../../utils/sdk-helpers';
 
 export async function _getUserTrancheData(
     userAddress: string,
     trancheId: number,
 ): Promise<IUserTrancheData> {
-    if (!userAddress) {
+    if (!userAddress || !trancheId) {
         return {
             totalCollateralETH: BigNumber.from('0'),
             totalDebtETH: BigNumber.from('0'),
@@ -31,8 +32,9 @@ export async function _getUserTrancheData(
             assetBorrowingPower: [],
         };
     }
+
     const userTrancheData: UserTrancheData = await getUserTrancheData({
-        tranche: trancheId.toString(),
+        tranche: String(trancheId),
         user: userAddress,
         network: SDK_PARAMS.network,
         test: SDK_PARAMS.test,
@@ -43,12 +45,12 @@ export async function _getUserTrancheData(
             REVERSE_MAINNET_ASSET_MAPPINGS.get(marketData.asset.toLowerCase()) || marketData.asset;
         return {
             asset: asset,
-            amountUSD: bigNumberToUSD(marketData.amountUSD, 18),
+            amountUSD: bigNumberToUSD(marketData.amountUSD, DECIMALS.get(asset) || 18),
             amountNative: marketData.amountNative,
         };
     });
 
-    return {
+    const returnObj = {
         totalCollateralETH: userTrancheData.totalCollateralETH,
         totalDebtETH: userTrancheData.totalDebtETH,
         currentLiquidationThreshold: userTrancheData.currentLiquidationThreshold,
@@ -58,13 +60,18 @@ export async function _getUserTrancheData(
                 asset:
                     REVERSE_MAINNET_ASSET_MAPPINGS.get(assetData.asset.toLowerCase()) ||
                     assetData.asset,
-                amount: bigNumberToUSD(assetData.amount, 18),
+                amount: bigNumberToUSD(
+                    assetData.amount,
+                    DECIMALS.get(
+                        REVERSE_MAINNET_ASSET_MAPPINGS.get(assetData.asset.toLowerCase()) ||
+                            assetData.asset,
+                    ) || 18,
+                ),
                 amountNative: assetData.amountNative,
                 collateral: assetData.isCollateral,
                 apy: rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0)),
                 tranche: assetData.tranche.toString(),
                 trancheId: assetData.tranche.toNumber(),
-                // collateralCap: assetData.collateralCap,
             };
         }),
         borrows: userTrancheData.borrowedAssetData.map((assetData: BorrowedAssetData) => {
@@ -72,15 +79,14 @@ export async function _getUserTrancheData(
                 asset:
                     REVERSE_MAINNET_ASSET_MAPPINGS.get(assetData.asset.toLowerCase()) ||
                     assetData.asset,
-                amount: bigNumberToUSD(assetData.amount, 18),
+                amount: bigNumberToUSD(
+                    assetData.amount,
+                    DECIMALS.get(
+                        REVERSE_MAINNET_ASSET_MAPPINGS.get(assetData.asset.toLowerCase()) ||
+                            assetData.asset,
+                    ) || 18,
+                ),
                 amountNative: assetData.amountNative,
-                // bigNumberToNative(
-                //     assetData.amountNative,
-                //     DECIMALS.get(
-                //         REVERSE_MAINNET_ASSET_MAPPINGS.get(assetData.asset.toLowerCase()) ||
-                //             assetData.asset,
-                //     ) || 18,
-                // ),
                 apy: rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0)),
                 tranche: assetData.tranche.toString(),
                 trancheId: assetData.tranche.toNumber(),
@@ -88,6 +94,8 @@ export async function _getUserTrancheData(
         }),
         assetBorrowingPower: tmp,
     };
+    console.log('_getUserTrancheData:', returnObj);
+    return returnObj;
 }
 
 export function useUserTrancheData(userAddress: any, trancheId: number): IUserTrancheDataProps {

@@ -41,12 +41,12 @@ const MarketsCustomRow = (props: any) => {
         if (e.target.innerHTML === 'Supply') {
             openDialog('loan-asset-dialog', {
                 asset: asset,
-                trancheId: tranche.id,
+                trancheId: trancheId,
             });
         } else {
             openDialog('borrow-asset-dialog', {
                 asset: asset,
-                trancheId: tranche.id,
+                trancheId: trancheId,
             });
         }
     };
