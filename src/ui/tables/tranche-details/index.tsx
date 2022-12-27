@@ -10,7 +10,7 @@ import { useWindowSize } from '../../../hooks/ui';
 import { AvailableAsset } from '@app/api/types';
 import { BigNumber } from 'ethers';
 import { bigNumberToNative } from '../../../utils/sdk-helpers';
-import { makeCompact, numberFormatter } from '../../../utils/helpers';
+import { numberFormatter } from '../../../utils/helpers';
 
 interface ITableProps {
     data: AvailableAsset[];
@@ -79,10 +79,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                     <th scope="col" className="py-3.5"></th>
                 </tr>
             </thead>
-            <tbody
-                className="divide-y import { convertStringFormatToNumber } from '../../../utils/helpers';
-divide-gray-200"
-            >
+            <tbody className="divide-y divide-gray-200">
                 {data &&
                     data.sort(compareListsSorter).map((el, i) => {
                         return (
