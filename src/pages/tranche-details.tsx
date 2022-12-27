@@ -10,7 +10,8 @@ import { TrancheTable } from '../ui/tables';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '../store/contexts';
 import { useAccount, useSigner } from 'wagmi';
-import { useTrancheMarketsData, useTranchesData, useSubgraphTrancheData } from '../api';
+import { useSubgraphTrancheData } from '../api';
+import { percentFormatter } from '../utils/helpers';
 
 const TrancheDetails: React.FC = () => {
     const navigate = useNavigate();
@@ -18,10 +19,7 @@ const TrancheDetails: React.FC = () => {
     const { address } = useAccount();
     const { data: signer } = useSigner();
     const { tranche, setTranche, asset } = useSelectedTrancheContext();
-
-    // const { queryTrancheMarkets } = useTrancheMarketsData(tranche.id);
     const { queryTrancheData } = useSubgraphTrancheData(tranche.id);
-    // const { queryAllTranches } = useTranchesData();
 
     const [view, setView] = useState('tranche-overview');
 
@@ -34,8 +32,6 @@ const TrancheDetails: React.FC = () => {
 
     useEffect(() => {
         if (!tranche.id) navigate('/tranches');
-        // const found = queryAllTranches.data?.find((el) => el.id === tranche.id);
-        console.log('tranche detail data', queryTrancheData.data);
         if (queryTrancheData.data) setTranche(queryTrancheData.data);
     }, [tranche, location, queryTrancheData]);
 
@@ -88,8 +84,10 @@ const TrancheDetails: React.FC = () => {
                                               canBeCollat: (
                                                   queryTrancheData.data.assetsData as any
                                               )[asset].collateral,
-                                              apy: (queryTrancheData.data.assetsData as any)[asset]
-                                                  .supplyRate,
+                                              apy: percentFormatter.format(
+                                                  (queryTrancheData.data.assetsData as any)[asset]
+                                                      .supplyRate,
+                                              ),
                                               tranche: queryTrancheData.data?.name,
                                               trancheId: tranche.id,
                                               signer: signer,
@@ -110,10 +108,11 @@ const TrancheDetails: React.FC = () => {
                                               asset: asset,
                                               liquidity: (queryTrancheData.data.assetsData as any)[
                                                   asset
-                                              ].availableLiquidity,
-                                              //   liquidityNative: el.availableNative,
-                                              apy: (queryTrancheData.data.assetsData as any)[asset]
-                                                  .borrowRate,
+                                              ].liquidity,
+                                              apy: percentFormatter.format(
+                                                  (queryTrancheData.data.assetsData as any)[asset]
+                                                      .borrowRate,
+                                              ),
                                               tranche: queryTrancheData.data?.name,
                                               trancheId: tranche.id,
                                               signer: signer,

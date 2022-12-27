@@ -24,7 +24,7 @@ type ILineChartProps = {
     xaxis?: boolean;
     yaxis?: boolean;
     labels?: boolean;
-    type?: 'asset-stats' | 'utilization' | 'default';
+    type?: 'asset-stats' | 'utilization' | 'usd' | 'default';
     noTooltip?: boolean;
 };
 

@@ -3,17 +3,15 @@ import { AppTemplate, GridView } from '../ui/templates';
 import { UserPerformanceCard, ProtocolStatsCard } from '../ui/features';
 import { YourPositionsTable } from '../ui/tables';
 import { WalletButton } from '../ui/components/buttons';
-import { useProtocolData } from '../api/protocol';
 import { useUserData, useSubgraphProtocolData, useSubgraphUserData } from '../api';
 import { useAccount } from 'wagmi';
-import { numberFormatter, usdFormatter } from '../utils/helpers';
+import { numberFormatter } from '../utils/helpers';
 import { bigNumberToUnformattedString } from '../utils/sdk-helpers';
 
 const Overview: React.FC = () => {
     const { address, isConnected } = useAccount();
-    const { queryProtocolOverview } = useProtocolData();
     const { queryProtocolData } = useSubgraphProtocolData();
-    const { queryUserPerformance, queryUserActivity } = useUserData(address);
+    const { queryUserActivity } = useUserData(address);
     const { queryUserPnlChart } = useSubgraphUserData(address || '');
 
     return (
@@ -34,8 +32,7 @@ const Overview: React.FC = () => {
             {isConnected ? (
                 <GridView type="fixed">
                     <UserPerformanceCard
-                        {...queryUserPerformance.data}
-                        isLoading={queryUserPerformance.isLoading || queryUserActivity.isLoading}
+                        isLoading={queryUserActivity.isLoading || queryUserPnlChart.isLoading}
                         loanedAssets={queryUserActivity.data?.supplies?.map((el) => ({
                             asset: el.asset,
                             amount: numberFormatter.format(

@@ -5,7 +5,7 @@ type ICustomTooltipProps = {
     active?: any;
     payload?: any;
     label?: any;
-    type?: 'asset-stats' | 'utilization' | 'default';
+    type?: 'asset-stats' | 'utilization' | 'usd' | 'default';
 };
 
 export const CustomTooltip = ({ active, payload, label, type }: ICustomTooltipProps) => {
@@ -22,6 +22,15 @@ export const CustomTooltip = ({ active, payload, label, type }: ICustomTooltipPr
             return (
                 <div className="bg-black text-white px-2 py-1 flex flex-col">
                     <span>Utilization: {payload[0]?.value.toFixed(2)}%</span>
+                </div>
+            );
+        } else if (type === 'usd') {
+            return (
+                <div className="bg-black text-white px-2 py-1 flex flex-col">
+                    <span className="font-semibold">{payload[0]?.payload?.xaxis}</span>
+                    {payload.map((el: any, i: number) => (
+                        <span key={`tooltip-${i}`}>Amount: ${payload[i]?.value.toFixed(2)}</span>
+                    ))}
                 </div>
             );
         } else {

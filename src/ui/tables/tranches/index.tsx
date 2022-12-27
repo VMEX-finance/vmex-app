@@ -23,6 +23,7 @@ export const TranchesTable: React.FC<IDataTable> = ({ data, loading }) => {
 
     const renderActivity = (trancheId: string) => {
         let activity = '';
+        if (queryUserActivity.isLoading) activity = 'loading';
         queryUserActivity?.data?.borrows.map((borrow) => {
             if (borrow.trancheId === Number(trancheId)) activity = 'borrowed';
         });

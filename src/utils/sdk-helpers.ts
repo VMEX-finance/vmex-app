@@ -174,7 +174,7 @@ export const addDollarAmounts = (list: Array<string> | undefined, dollarSign = t
     if (!list) return dollarSign ? `$0` : 0;
     const withoutDollarSign = list.map((el) => parseFloat(el.slice(1).replaceAll(',', '')));
     const sum = withoutDollarSign.reduce((partial, next) => partial + next, 0);
-    return dollarSign ? `$${sum.toString()}` : sum;
+    return dollarSign ? `$${sum.toFixed(2).toString()}` : sum.toFixed(2);
 };
 
 export const calculateHealthFactorFromBalances = (

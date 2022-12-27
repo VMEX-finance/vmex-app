@@ -6,6 +6,7 @@ import { BigNumber } from 'ethers';
 type ITokenBalanceProps = {
     amount: string;
     amountNative: BigNumber;
+    loading?: boolean;
 };
 
 export type ITrancheInteractedProps = {
@@ -14,7 +15,6 @@ export type ITrancheInteractedProps = {
 };
 
 export type IUserDataProps = {
-    queryUserPerformance: UseQueryResult<IUserPerformanceCardProps, unknown>;
     queryUserActivity: UseQueryResult<IUserActivityDataProps, unknown>;
     queryUserWallet: UseQueryResult<IUserWalletDataProps, unknown>;
     getTokenBalance: (asset: string) => ITokenBalanceProps;
@@ -43,7 +43,7 @@ export type IUserWalletDataProps = {
 export type IUserTrancheDataProps = {
     queryUserTrancheData: UseQueryResult<IUserTrancheData, unknown>;
     findAssetInUserSuppliesOrBorrows: (
-        asset: string,
+        asset: string | undefined,
         type: 'supply' | 'borrow',
     ) => IYourSuppliesTableItemProps | IYourBorrowsTableItemProps | undefined;
     findAmountBorrowable: (

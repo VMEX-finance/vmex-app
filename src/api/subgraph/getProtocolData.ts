@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { ILineChartDataPointProps } from '@ui/components/charts';
 import { usdFormatter } from '../../utils/helpers';
 import { SUBGRAPH_ENDPOINT } from '../../utils/constants';
-import { bigNumberToUSD, DECIMALS, nativeAmountToUSD } from '../../utils/sdk-helpers';
+import { nativeAmountToUSD } from '../../utils/sdk-helpers';
 import { getAllAssetPrices } from '../prices';
 import { AssetBalance, TrancheData } from '../types';
 import { IGraphProtocolDataProps, IGraphTrancheProps, ISubgraphProtocolData } from './types';
@@ -62,8 +62,6 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
 
             tranche.borrowHistory.map((el) => {
                 const asset = el.reserve.symbol.slice(0, -1);
-                // TODO: fix to be in terms of USD, not native amounts (use oracles)
-                // Multiply this 'amount' by 'assetPriceUSD' when oracle is connected
                 const assetUSDPrice = (prices as any)[asset].usdPrice;
                 const usdAmount = nativeAmountToUSD(el.amount, el.reserve.decimals, assetUSDPrice);
                 const date = new Date(el.timestamp * 1000).toLocaleString();
@@ -84,7 +82,7 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
             }
         });
         console.log('getSubgraphProtocolChart:', graphData);
-        return graphData;
+        return graphData.sort((a, b) => new Date(a.xaxis).valueOf() - new Date(b.xaxis).valueOf());
     }
 };
 

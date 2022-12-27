@@ -1,11 +1,10 @@
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 import { useQuery } from '@tanstack/react-query';
 import { SUBGRAPH_ENDPOINT } from '../../utils/constants';
-import { IGraphTrancheAssetProps, ISubgraphAllMarketsData, ISubgraphMarketsChart } from './types';
+import { ISubgraphAllMarketsData, ISubgraphMarketsChart } from './types';
 import { ILineChartDataPointProps } from '@ui/components/charts';
 import { BigNumber, utils } from 'ethers';
 import { MAINNET_ASSET_MAPPINGS, nativeAmountToUSD } from '../../utils/sdk-helpers';
-import { MOCK_MULTI_LINE_DATA } from '../../utils/mock-data';
 import { IMarketsAsset } from '../types';
 import { getAllAssetPrices } from '../prices';
 import { usdFormatter } from '../../utils/helpers';
@@ -27,13 +26,9 @@ export const getSubgraphMarketsChart = async (
         return [];
     }
 
-    console.log('original tranche id is', _trancheId);
     const trancheId = _trancheId.toString();
-    console.log('tranche id is', trancheId);
     const poolId = '0xd6c850aebfdc46d7f4c207e445cc0d6b0919bdbe'; // TODO: address of LendingPoolConfigurator
     const reserveId = getReserveId(_underlyingAsset, poolId, trancheId);
-
-    console.log('reserve id is', reserveId);
     const { data, error } = await client.query({
         query: gql`
             query QueryTranche($reserveId: String!) {

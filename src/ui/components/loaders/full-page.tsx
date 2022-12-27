@@ -1,7 +1,6 @@
 import { Transition } from '@headlessui/react';
-import React, { ReactNode, useEffect } from 'react';
+import React, { ReactNode } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useMarketsData, useProtocolData, useTranchesData } from '../../../api';
 
 type IFullPageLoader = {
     loading?: boolean;
@@ -17,9 +16,6 @@ export const FullPageLoader = ({
     children,
 }: IFullPageLoader) => {
     const { pathname } = useLocation();
-    useProtocolData();
-    useTranchesData();
-    useMarketsData();
 
     const determineShow = () => {
         if (onlyHome) {

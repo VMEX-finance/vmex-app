@@ -1,4 +1,4 @@
-import { useUserData, useUserTrancheData } from '../../../api';
+import { useTrancheMarketsData, useUserData, useUserTrancheData } from '../../../api';
 import { useAccount } from 'wagmi';
 import React from 'react';
 import { BsCheck } from 'react-icons/bs';
@@ -7,12 +7,10 @@ import { useDialogController } from '../../../hooks/dialogs';
 import { useSelectedTrancheContext } from '../../../store/contexts';
 import { NumberAndDollar } from '../../components/displays';
 import { useWindowSize } from '../../../hooks/ui';
-import { convertStringFormatToNumber } from '../../../utils/helpers';
 import { AvailableAsset } from '@app/api/types';
 import { BigNumber } from 'ethers';
 import { bigNumberToNative } from '../../../utils/sdk-helpers';
-
-import { bigNumberToUnformattedString } from '../../../utils/sdk-helpers';
+import { numberFormatter } from '../../../utils/helpers';
 
 interface ITableProps {
     data: AvailableAsset[];
@@ -23,9 +21,10 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
     const { address } = useAccount();
     const { tranche } = useSelectedTrancheContext();
     const { queryUserWallet, getTokenBalance } = useUserData(address);
-    const { queryUserTrancheData, findAssetInUserSuppliesOrBorrows, findAmountBorrowable } =
-        useUserTrancheData(address, tranche.id);
+    const { queryUserTrancheData, findAmountBorrowable } = useUserTrancheData(address, tranche.id);
+    const { getTrancheMarket } = useTrancheMarketsData(tranche.id || 0);
     const { openDialog } = useDialogController();
+
     const mode1 =
         type === 'supply'
             ? width > breakpoint
@@ -34,6 +33,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
             : width > breakpoint
             ? 'Available Borrows'
             : 'Available';
+
     const mode2 =
         type === 'supply'
             ? width > breakpoint
@@ -44,18 +44,28 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
             : 'Liquidity';
 
     const isInList = (asset: string) => {
-        if (!queryUserTrancheData.data) return [];
+        if (!queryUserTrancheData.data) return false;
         const list = (
             type === 'borrow'
                 ? queryUserTrancheData.data.borrows
                 : queryUserTrancheData.data.supplies
         ).map((el) => el.asset);
 
-        return list.includes(asset) ? (
-            <span className="absolute -translate-x-4 w-2 h-2 bg-brand-green-neon rounded-full" />
-        ) : (
-            <></>
+        return list.includes(asset) ? true : false;
+    };
+
+    const amountBorrwable = (asset: string) => {
+        return findAmountBorrowable(
+            asset,
+            getTrancheMarket(asset).available,
+            getTrancheMarket(asset).availableNative,
         );
+    };
+
+    const compareListsSorter = (a: any, b: any) => {
+        if (isInList(a.asset)) return -1;
+        if (isInList(b.asset)) return 1;
+        return 0;
     };
 
     return (
@@ -79,7 +89,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
             </thead>
             <tbody className="divide-y divide-gray-200">
                 {data &&
-                    data.map((el, i) => {
+                    data.sort(compareListsSorter).map((el, i) => {
                         return (
                             <tr
                                 key={`${el.asset}-${i}`}
@@ -98,7 +108,11 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                             >
                                 <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                                     <div className="flex items-center gap-2">
-                                        {isInList(el.asset)}
+                                        {isInList(el.asset) ? (
+                                            <span className="absolute -translate-x-4 w-2 h-2 bg-brand-green-neon rounded-full" />
+                                        ) : (
+                                            <></>
+                                        )}
                                         <img
                                             src={`/coins/${el.asset?.toLowerCase()}.svg`}
                                             alt={el.asset}
@@ -122,30 +136,20 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                                       el.asset,
                                                   )} ${el.asset}`
                                                 : `${bigNumberToNative(
-                                                      findAmountBorrowable(
-                                                          el.asset,
-                                                          el.liquidity,
-                                                          el.liquidityNative,
-                                                      ).amountNative,
+                                                      amountBorrwable(el.asset).amountNative,
                                                       el.asset,
                                                   )} ${el.asset}`
                                         }`}
                                         dollar={`${
                                             type === 'supply'
                                                 ? `${getTokenBalance(el.asset).amount}`
-                                                : `${
-                                                      findAmountBorrowable(
-                                                          el.asset,
-                                                          el.liquidity,
-                                                          el.liquidityNative,
-                                                      ).amount
-                                                  }`
+                                                : `${amountBorrwable(el.asset).amount}`
                                         }`}
                                         size="xs"
                                         color="text-black"
                                     />
                                 </td>
-                                <td>{el.apy}%</td>
+                                <td>{el.apy}</td>
                                 <td>
                                     {type === 'supply' ? (
                                         <div className="w-10 h-10">
@@ -156,9 +160,9 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                             )}
                                         </div>
                                     ) : (
-                                        `${bigNumberToNative(el.liquidityNative, el.asset)} ${
-                                            el.asset
-                                        }`
+                                        `${numberFormatter.format(
+                                            parseFloat(el.liquidity || '') || 0,
+                                        )} ${el.asset}`
                                     )}
                                 </td>
                             </tr>

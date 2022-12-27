@@ -62,14 +62,15 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                             <p className="text-3xl">{tvl ? makeCompact(tvl, true) : '-'}</p>
                         </div>
                         <div className="h-[100px] w-full">
-                            <ReLineChart data={queryProtocolTVLChart.data || []} color="#3CB55E" />
+                            <ReLineChart
+                                data={queryProtocolTVLChart.data || []}
+                                color="#3CB55E"
+                                type="usd"
+                            />
                         </div>
                     </div>
                     <div className="flex md:flex-col justify-between gap-1">
-                        <NumberDisplay
-                            label={'Reserves:'}
-                            value={reserve ? makeCompact(reserve) : '-'}
-                        />
+                        <NumberDisplay label={'Reserves:'} value={reserve ? reserve : '-'} />
                         <NumberDisplay
                             color="text-brand-purple"
                             label={'Lenders:'}
