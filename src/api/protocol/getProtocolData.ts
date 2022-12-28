@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { IProtocolProps } from '../../ui/features';
 import { IProtocolDataProps } from './types';
-import { AssetBalance, getProtocolData } from '@vmex/sdk';
+import { AssetBalance, getProtocolData } from '@vmexfinance/sdk';
 import {
     bigNumberToUSD,
     flipAndLowerCase,
@@ -45,7 +45,13 @@ export async function getProtocolOverviewData(): Promise<IProtocolProps> {
                 };
             })
             .slice(0, Math.min(protocolData.topBorrowedAssets.length, 5)),
-        topTranches: protocolData.topTranches,
+        topTranches: protocolData.topTranches.map((tranche: any) => {
+            return {
+                name: tranche.asset,
+                totalBorrowed: tranche.totalBorrowed.toString(),
+                totalSupplied: tranche.totalSupplied.toString(),
+            };
+        }),
     };
 }
 

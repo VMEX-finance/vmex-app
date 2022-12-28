@@ -9,6 +9,7 @@ import { useAccount } from 'wagmi';
 import { useUserData } from '../../../api';
 import { ITrancheProps } from '../../../api/types';
 import { ThemeContext } from '../../../store/contexts';
+import { usdFormatter } from '../../../utils/helpers';
 
 interface IDataTable {
     data?: ITrancheProps[];
@@ -22,6 +23,7 @@ export const TranchesTable: React.FC<IDataTable> = ({ data, loading }) => {
 
     const renderActivity = (trancheId: string) => {
         let activity = '';
+        if (queryUserActivity.isLoading) activity = 'loading';
         queryUserActivity?.data?.borrows.map((borrow) => {
             if (borrow.trancheId === Number(trancheId)) activity = 'borrowed';
         });
@@ -128,8 +130,8 @@ export const TranchesTable: React.FC<IDataTable> = ({ data, loading }) => {
                                 assets={assets}
                                 aggregateRating={aggregateRating}
                                 yourActivity={renderActivity(id)}
-                                supplyTotal={supplyTotal}
-                                borrowTotal={borrowTotal}
+                                supplyTotal={usdFormatter().format(supplyTotal)}
+                                borrowTotal={usdFormatter().format(borrowTotal)}
                                 id={id}
                             />
                         ),

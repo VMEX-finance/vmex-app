@@ -5,11 +5,14 @@ import { YourPositionsTable } from '../ui/tables';
 import { WalletButton } from '../ui/components/buttons';
 import { useUserData } from '../api/user';
 import { useAccount } from 'wagmi';
-import { addDollarAmounts } from '../utils/sdk-helpers';
+import { addDollarAmounts, bigNumberToUnformattedString } from '../utils/sdk-helpers';
+import { useSubgraphUserData } from '../api/subgraph';
+import { numberFormatter } from '../utils/helpers';
 
 const Portfolio: React.FC = () => {
     const { address } = useAccount();
-    const { queryUserPerformance, queryUserActivity } = useUserData(address);
+    const { queryUserActivity } = useUserData(address);
+    const { queryUserPnlChart } = useSubgraphUserData(address || '');
 
     // TODO: is this how we're calculating networth or is (all wallet holdings + supplies) - borrows
     const calculateNetworth = () => {
@@ -23,7 +26,7 @@ const Portfolio: React.FC = () => {
                 queryUserActivity.data?.borrows.map((el) => el.amount),
                 false,
             ) as number);
-        return `$${sum}`;
+        return `$${sum ? sum.toFixed(2) : '0.00'}`;
     };
 
     return (
@@ -59,8 +62,17 @@ const Portfolio: React.FC = () => {
                     </div>
                     <div className="col-span-2 2xl:col-span-1">
                         <UserPerformanceCard
-                            {...queryUserPerformance.data}
-                            isLoading={queryUserPerformance.isLoading}
+                            isLoading={queryUserActivity.isLoading || queryUserPnlChart.isLoading}
+                            loanedAssets={queryUserActivity.data?.supplies?.map((el) => ({
+                                asset: el.asset,
+                                amount: numberFormatter.format(
+                                    parseFloat(
+                                        bigNumberToUnformattedString(el.amountNative, el.asset),
+                                    ),
+                                ),
+                            }))}
+                            tranches={queryUserActivity.data?.tranchesInteractedWith}
+                            profitLossChart={queryUserPnlChart.data || []}
                         />
                     </div>
                 </GridView>

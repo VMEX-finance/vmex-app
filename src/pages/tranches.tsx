@@ -1,10 +1,10 @@
 import React from 'react';
 import { AppTemplate } from '../ui/templates';
 import { TranchesTable } from '../ui/tables';
-import { useTranchesData } from '../api/protocol';
+import { useSubgraphTranchesOverviewData } from '../api/subgraph';
 
 const Tranches: React.FC = () => {
-    const { queryAllTranches } = useTranchesData();
+    const { queryAllTranches } = useSubgraphTranchesOverviewData();
     return (
         <AppTemplate title="tranches">
             <TranchesTable data={queryAllTranches.data} loading={queryAllTranches.isLoading} />

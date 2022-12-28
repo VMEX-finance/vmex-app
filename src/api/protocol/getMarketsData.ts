@@ -1,13 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { IMarketsDataProps } from './types';
-import { getAllMarketsData, getAllTrancheData, MarketData } from '@vmex/sdk';
+import { getAllMarketsData, getAllTrancheData, MarketData } from '@vmexfinance/sdk';
 import {
-    bigNumberToNative,
     bigNumberToUSD,
     DECIMALS,
-    flipAndLowerCase,
-    MAINNET_ASSET_MAPPINGS,
     rayToPercent,
+    REVERSE_MAINNET_ASSET_MAPPINGS,
     SDK_PARAMS,
 } from '../../utils/sdk-helpers';
 import { IMarketsAsset } from '../types';
@@ -15,7 +13,6 @@ import { BigNumber, utils } from 'ethers';
 
 export async function getAllMarkets(): Promise<IMarketsAsset[]> {
     const allMarketsData: MarketData[] = await getAllMarketsData(SDK_PARAMS);
-    const reverseMapping = flipAndLowerCase(MAINNET_ASSET_MAPPINGS);
 
     const allTrancheData = await getAllTrancheData(SDK_PARAMS);
     const findAssetInTranche = (searchAsset: string, trancheId: number): string => {
@@ -33,7 +30,8 @@ export async function getAllMarkets(): Promise<IMarketsAsset[]> {
     };
 
     return allMarketsData.map((marketData: MarketData) => {
-        const asset = reverseMapping.get(marketData.asset.toLowerCase()) || marketData.asset;
+        const asset =
+            REVERSE_MAINNET_ASSET_MAPPINGS.get(marketData.asset.toLowerCase()) || marketData.asset;
 
         return {
             asset,
@@ -51,7 +49,7 @@ export async function getAllMarkets(): Promise<IMarketsAsset[]> {
             canBeCollateral: marketData.canBeCollateral,
             canBeBorrowed: marketData.canBeBorrowed,
             currentPrice: marketData.currentPriceETH,
-            collateralCap: marketData.collateralCap,
+            collateralCap: BigNumber.from('0'), //marketData.collateralCap,
             liquidationThreshold: marketData.liquidationThreshold,
         };
     });

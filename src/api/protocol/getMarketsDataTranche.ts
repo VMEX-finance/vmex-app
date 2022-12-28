@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { ITrancheMarketsDataProps } from './types';
-import { getTrancheMarketsData, MarketData } from '@vmex/sdk';
+import { getTrancheMarketsData, MarketData } from '@vmexfinance/sdk';
 import {
     bigNumberToUSD,
     SDK_PARAMS,
@@ -45,7 +45,7 @@ export async function getTrancheMarkets(trancheId: number): Promise<IMarketsAsse
             canBeCollateral: marketData.canBeCollateral,
             canBeBorrowed: marketData.canBeBorrowed,
             currentPrice: marketData.currentPriceETH,
-            collateralCap: marketData.collateralCap,
+            collateralCap: BigNumber.from('0'), //marketData.collateralCap,
             liquidationThreshold: marketData.liquidationThreshold,
         };
     });

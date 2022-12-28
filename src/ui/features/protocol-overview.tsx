@@ -4,16 +4,10 @@ import { ReLineChart } from '../components/charts';
 import { NumberDisplay, PillDisplay } from '../components/displays';
 import { TopTranchesTable } from '../tables';
 import { useWindowSize } from '../../hooks/ui';
-import { TrancheData } from '@vmex/sdk';
 import { makeCompact } from '../../utils/helpers';
 import { useSubgraphProtocolData } from '../../api';
-import { bigNumberToUSD } from '../../utils/sdk-helpers';
-import { ethers } from 'ethers';
+import { AssetBalance, TrancheData } from '@app/api/types';
 
-export interface AssetBalance {
-    asset: string;
-    amount: string;
-}
 export interface IProtocolProps {
     isLoading?: boolean;
     tvl?: string;
@@ -68,14 +62,15 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                             <p className="text-3xl">{tvl ? makeCompact(tvl, true) : '-'}</p>
                         </div>
                         <div className="h-[100px] w-full">
-                            <ReLineChart data={queryProtocolTVLChart.data || []} color="#3CB55E" />
+                            <ReLineChart
+                                data={queryProtocolTVLChart.data || []}
+                                color="#3CB55E"
+                                type="usd"
+                            />
                         </div>
                     </div>
                     <div className="flex md:flex-col justify-between gap-1">
-                        <NumberDisplay
-                            label={'Reserves:'}
-                            value={reserve ? makeCompact(reserve) : '-'}
-                        />
+                        <NumberDisplay label={'Reserves:'} value={reserve ? reserve : '-'} />
                         <NumberDisplay
                             color="text-brand-purple"
                             label={'Lenders:'}
@@ -113,7 +108,11 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                     </div>
 
                     <div className="flex flex-col gap-2">
-                        <NumberDisplay size="xl" label="Total Borrowed" value={totalBorrowed} />
+                        <NumberDisplay
+                            size="xl"
+                            label="Total Borrowed"
+                            value={totalBorrowed ? totalBorrowed : '-'}
+                        />
                         <div className="flex flex-col gap-1">
                             <span>Top Borrowed Assets</span>
                             <div className="flex flex-wrap gap-1">

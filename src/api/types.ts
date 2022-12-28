@@ -10,7 +10,8 @@ export type IQueryKeys =
     | 'protocol-overview'
     | 'all-tranches'
     | 'subgraph-tranche-data'
-    | 'subgraph-protocol-charts';
+    | 'subgraph-protocol-charts'
+    | 'asset-prices';
 
 export type IMarketsAsset = {
     asset: string;
@@ -32,36 +33,36 @@ export type IMarketsAsset = {
 };
 
 export type ITrancheProps = {
-    id: number | string;
-    name: string;
-    assets: string[];
-    aggregateRating: string;
-    yourActivity: 'borrowed' | 'supplied' | 'both' | 'none'; // Can also be represented in another way if necessary (i.e. 1 = 'deposited', 2 = 'supplied', etc.)
-    tvl: number | string;
+    id?: number | string;
+    name?: string;
+    assets?: string[];
+    aggregateRating?: string;
+    yourActivity?: 'borrowed' | 'supplied' | 'both' | 'none'; // Can also be represented in another way if necessary (i.e. 1 = 'deposited', 2 = 'supplied', etc.)
+    tvl?: number | string;
     tvlChange?: number;
-    supplyTotal: number | string;
+    supplyTotal?: number | string;
     supplyChange?: number;
-    borrowTotal: number | string;
+    borrowTotal?: number | string;
     borrowChange?: number;
     longSupply?: number | string;
     longBorrow?: number | string;
-    liquidity: number | string;
-    poolUtilization: number | string;
-    upgradeable: 'Yes' | 'No';
-    admin: string;
-    platformFee: number | string;
-    adminFee: number | string;
-    oracle: string;
-    whitelist: 'Yes' | 'No';
-    ltv: number | string;
-    liquidThreshold: number | string;
-    liquidPenalty: number | string;
-    collateral: 'Yes' | 'No';
-    statisticsSupplied: number | string;
-    statisticsBorrowed: number | string;
-    utilization: number | string;
-    reserveFactor: number | string;
-    strategy: number | string;
+    liquidity?: number | string;
+    poolUtilization?: number | string;
+    upgradeable?: 'Yes' | 'No';
+    admin?: string;
+    platformFee?: number | string;
+    adminFee?: number | string;
+    oracle?: string;
+    whitelist?: 'Yes' | 'No';
+    ltv?: number | string;
+    liquidThreshold?: number | string;
+    liquidPenalty?: number | string;
+    collateral?: 'Yes' | 'No';
+    statisticsSupplied?: number | string;
+    statisticsBorrowed?: number | string;
+    utilization?: number | string;
+    reserveFactor?: number | string;
+    strategy?: number | string;
 };
 
 export type AvailableAsset = {
@@ -73,3 +74,14 @@ export type AvailableAsset = {
     liquidity?: string;
     liquidityNative?: BigNumber;
 };
+
+export interface AssetBalance {
+    asset: string;
+    amount: string;
+}
+
+export interface TrancheData {
+    name: string;
+    totalSupplied: string;
+    totalBorrowed: string;
+}

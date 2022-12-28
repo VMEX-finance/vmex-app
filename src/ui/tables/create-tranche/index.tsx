@@ -1,13 +1,13 @@
-import { AvailableCoins } from '../../../utils/helpers';
+import { IAvailableCoins } from '../../../utils/helpers';
 import React from 'react';
 import { Checkbox } from '../../components/buttons';
 import { AssetDisplay } from '../../components/displays';
 
 // TODO: make a way to see which assets cannot be lent / collateralized / etc
 type ICreateTrancheAssetsTableProps = {
-    assets: AvailableCoins[];
-    lendAssets: AvailableCoins[];
-    collateralAssets: AvailableCoins[];
+    assets: IAvailableCoins[];
+    lendAssets: IAvailableCoins[];
+    collateralAssets: IAvailableCoins[];
     lendClick?: React.Dispatch<React.SetStateAction<any>>;
     collateralClick?: React.Dispatch<React.SetStateAction<any>>;
 };
@@ -19,16 +19,16 @@ export const CreateTrancheAssetsTable = ({
     lendClick,
     collateralClick,
 }: ICreateTrancheAssetsTableProps) => {
-    const isInList = (asset: AvailableCoins, list?: AvailableCoins[]) =>
+    const isInList = (asset: IAvailableCoins, list?: IAvailableCoins[]) =>
         list && list.includes(asset) ? true : false;
 
-    const addToList = (asset: AvailableCoins, list: AvailableCoins[]) => {
+    const addToList = (asset: IAvailableCoins, list: IAvailableCoins[]) => {
         const shallow = list.length > 0 ? [...list] : [];
         shallow.push(asset);
         (list == lendAssets ? lendClick : collateralClick)?.(shallow as any);
     };
 
-    const removeFromList = (asset: AvailableCoins, list: AvailableCoins[]) => {
+    const removeFromList = (asset: IAvailableCoins, list: IAvailableCoins[]) => {
         const shallow = list.length > 0 ? [...list] : [];
         const removed = (shallow as any).filter((e: string) => e !== asset);
         (list == lendAssets ? lendClick : collateralClick)?.(removed as any);

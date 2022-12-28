@@ -4,7 +4,7 @@ import {
     AvailableBorrowData,
     BorrowedAssetData,
     SuppliedAssetData,
-} from '@vmex/sdk';
+} from '@vmexfinance/sdk';
 import { useQuery } from '@tanstack/react-query';
 import {
     bigNumberToUSD,
@@ -20,7 +20,7 @@ export async function _getUserTrancheData(
     userAddress: string,
     trancheId: number,
 ): Promise<IUserTrancheData> {
-    if (!userAddress) {
+    if (!userAddress || !trancheId) {
         return {
             totalCollateralETH: BigNumber.from('0'),
             totalDebtETH: BigNumber.from('0'),
@@ -31,8 +31,9 @@ export async function _getUserTrancheData(
             assetBorrowingPower: [],
         };
     }
+
     const userTrancheData: UserTrancheData = await getUserTrancheData({
-        tranche: trancheId.toString(),
+        tranche: String(trancheId),
         user: userAddress,
         network: SDK_PARAMS.network,
         test: SDK_PARAMS.test,
@@ -48,7 +49,7 @@ export async function _getUserTrancheData(
         };
     });
 
-    return {
+    const returnObj = {
         totalCollateralETH: userTrancheData.totalCollateralETH,
         totalDebtETH: userTrancheData.totalDebtETH,
         currentLiquidationThreshold: userTrancheData.currentLiquidationThreshold,
@@ -64,7 +65,6 @@ export async function _getUserTrancheData(
                 apy: rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0)),
                 tranche: assetData.tranche.toString(),
                 trancheId: assetData.tranche.toNumber(),
-                // collateralCap: assetData.collateralCap,
             };
         }),
         borrows: userTrancheData.borrowedAssetData.map((assetData: BorrowedAssetData) => {
@@ -74,13 +74,6 @@ export async function _getUserTrancheData(
                     assetData.asset,
                 amount: bigNumberToUSD(assetData.amount, 18),
                 amountNative: assetData.amountNative,
-                // bigNumberToNative(
-                //     assetData.amountNative,
-                //     DECIMALS.get(
-                //         REVERSE_MAINNET_ASSET_MAPPINGS.get(assetData.asset.toLowerCase()) ||
-                //             assetData.asset,
-                //     ) || 18,
-                // ),
                 apy: rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0)),
                 tranche: assetData.tranche.toString(),
                 trancheId: assetData.tranche.toNumber(),
@@ -88,6 +81,8 @@ export async function _getUserTrancheData(
         }),
         assetBorrowingPower: tmp,
     };
+    console.log('_getUserTrancheData:', returnObj);
+    return returnObj;
 }
 
 export function useUserTrancheData(userAddress: any, trancheId: number): IUserTrancheDataProps {
@@ -97,8 +92,11 @@ export function useUserTrancheData(userAddress: any, trancheId: number): IUserTr
         refetchOnMount: true,
     });
 
-    const findAssetInUserSuppliesOrBorrows = (asset: string, type: 'supply' | 'borrow') => {
-        if (queryUserTrancheData.isLoading) return undefined;
+    const findAssetInUserSuppliesOrBorrows = (
+        asset: string | undefined,
+        type: 'supply' | 'borrow',
+    ) => {
+        if (queryUserTrancheData.isLoading || !asset) return undefined;
         else {
             const userData =
                 type === 'supply'
@@ -117,6 +115,7 @@ export function useUserTrancheData(userAddress: any, trancheId: number): IUserTr
             return {
                 amountNative: BigNumber.from('0'),
                 amount: '$0',
+                loading: true,
             };
         else {
             const userWalletData = queryUserTrancheData.data?.assetBorrowingPower;
@@ -129,11 +128,13 @@ export function useUserTrancheData(userAddress: any, trancheId: number): IUserTr
                     amountNative: found?.amountNative.lt(liquidityNative)
                         ? found?.amountNative
                         : liquidityNative,
+                    loading: false,
                 };
             } else
                 return {
                     amountNative: BigNumber.from('0'),
                     amount: '$0',
+                    loading: false,
                 };
         }
     };

@@ -1,7 +1,12 @@
+import { BigNumber } from 'ethers';
+
 export type AssetDetails = {
     asset: string;
     trancheId: number;
     view: 'Withdraw' | 'Supply';
+    amountNative?: BigNumber;
+    amount?: string;
+    apy?: number;
 };
 export type ISupplyBorrowProps = {
     name?: string;

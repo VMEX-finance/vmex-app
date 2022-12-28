@@ -9,7 +9,7 @@ import { HealthFactor } from '../../components/displays';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
 import { ISupplyBorrowProps } from '../utils';
 import { useModal } from '../../../hooks/ui';
-import { borrow, repay } from '@vmex/sdk';
+import { borrow, repay } from '@vmexfinance/sdk';
 import { MAINNET_ASSET_MAPPINGS, NETWORK } from '../../../utils/sdk-helpers';
 import { useAccount, useSigner } from 'wagmi';
 import { useUserTrancheData, useTrancheMarketsData } from '../../../api';
@@ -82,10 +82,11 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
         data?.asset || '',
         getTrancheMarket(data?.asset || '').available,
         getTrancheMarket(data?.asset || '').availableNative,
-    ).amountNative;
+    );
     const apy = getTrancheMarket(data?.asset || '').borrowApy;
     const amountRepay =
-        findAssetInUserSuppliesOrBorrows(data?.asset || '', 'borrow')?.amountNative ||
+        findAssetInUserSuppliesOrBorrows(data?.asset, 'borrow')?.amountNative ||
+        data?.amountNative ||
         BigNumber.from('0');
 
     return data && data.asset ? (
@@ -97,7 +98,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
                         title={name}
                         asset={data.asset}
                         tab={tab}
-                        onClick={!amountRepay.eq(BigNumber.from('0')) ? setView : () => {}}
+                        onClick={!amountRepay?.eq(BigNumber.from('0')) ? setView : () => {}}
                         primary
                     />
                     {!isSuccess && !error ? (
@@ -111,9 +112,13 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
                                     logo: `/coins/${data.asset?.toLowerCase()}.svg`,
                                     name: data.asset,
                                 }}
-                                balance={bigNumberToUnformattedString(amountBorrwable, data.asset)}
+                                balance={bigNumberToUnformattedString(
+                                    amountBorrwable.amountNative,
+                                    data.asset,
+                                )}
                                 type="collateral"
                                 setIsMax={setIsMax}
+                                loading={amountBorrwable.loading}
                             />
 
                             <h3 className="mt-6 text-neutral400">Health Factor</h3>
