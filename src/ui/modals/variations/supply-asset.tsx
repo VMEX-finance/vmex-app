@@ -6,7 +6,7 @@ import { Button } from '../../components/buttons';
 import { ActiveStatus, TransactionStatus } from '../../components/statuses';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
 import { useModal } from '../../../hooks/ui';
-import { supply, withdraw } from '@vmex/sdk';
+import { supply, withdraw } from '@vmexfinance/sdk';
 import { MAINNET_ASSET_MAPPINGS, NETWORK } from '../../../utils/sdk-helpers';
 import { HealthFactor } from '../../components/displays';
 import { useTrancheMarketsData } from '../../../api';

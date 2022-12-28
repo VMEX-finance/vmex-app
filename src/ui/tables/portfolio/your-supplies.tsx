@@ -6,7 +6,7 @@ import { BasicToggle } from '../../components/toggles';
 import { BigNumber } from 'ethers';
 import { bigNumberToNative } from '../../../utils/sdk-helpers';
 import { useModal } from '../../../hooks/ui';
-import { markReserveAsCollateral } from '@vmex/sdk';
+import { markReserveAsCollateral } from '@vmexfinance/sdk';
 import { useSigner } from 'wagmi';
 import { NETWORK, MAINNET_ASSET_MAPPINGS } from '../../../utils/sdk-helpers';
 
