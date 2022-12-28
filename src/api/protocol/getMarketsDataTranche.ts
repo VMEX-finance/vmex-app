@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { ITrancheMarketsDataProps } from './types';
-import { getTrancheMarketsData, MarketData } from '@vmex/sdk';
+import { getTrancheMarketsData, MarketData } from '@vmexfinance/sdk';
 import {
     bigNumberToUSD,
     SDK_PARAMS,

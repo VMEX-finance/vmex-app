@@ -5,7 +5,7 @@ import {
     getUserWalletData,
     UserWalletData,
     getAllTrancheData,
-} from '@vmex/sdk';
+} from '@vmexfinance/sdk';
 import { useQuery } from '@tanstack/react-query';
 import {
     bigNumberToUSD,

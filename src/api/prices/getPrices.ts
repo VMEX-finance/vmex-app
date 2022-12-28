@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getAssetPrices } from '@vmex/sdk';
+import { getAssetPrices } from '@vmexfinance/sdk';
 import {
     DECIMALS,
     MAINNET_ASSET_MAPPINGS,

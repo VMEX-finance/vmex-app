@@ -84,7 +84,7 @@ const MarketsCustomRow = (props: any) => {
                     </span>
                 </td>
                 <td className="flex justify-between">
-                    <span className="font-bold">Available</span>
+                    <span className="font-bold">Borrowing Power</span>
                     <span>{available}</span>
                 </td>
                 <td className="flex justify-between">

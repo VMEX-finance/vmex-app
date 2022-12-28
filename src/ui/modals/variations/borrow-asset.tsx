@@ -9,7 +9,7 @@ import { HealthFactor } from '../../components/displays';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
 import { ISupplyBorrowProps } from '../utils';
 import { useModal } from '../../../hooks/ui';
-import { borrow, repay } from '@vmex/sdk';
+import { borrow, repay } from '@vmexfinance/sdk';
 import { MAINNET_ASSET_MAPPINGS, NETWORK } from '../../../utils/sdk-helpers';
 import { useAccount, useSigner } from 'wagmi';
 import { useUserTrancheData, useTrancheMarketsData } from '../../../api';

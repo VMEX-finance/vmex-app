@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { IProtocolProps } from '../../ui/features';
 import { IProtocolDataProps } from './types';
-import { AssetBalance, getProtocolData } from '@vmex/sdk';
+import { AssetBalance, getProtocolData } from '@vmexfinance/sdk';
 import {
     bigNumberToUSD,
     flipAndLowerCase,

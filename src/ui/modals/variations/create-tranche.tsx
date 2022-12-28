@@ -14,7 +14,7 @@ import { useModal } from '../../../hooks/ui';
 import { MAINNET_ASSET_MAPPINGS, NETWORK } from '../../../utils/sdk-helpers';
 import { useAccount, useSigner } from 'wagmi';
 import { ethers } from 'ethers';
-import { initTranche } from '@vmex/sdk';
+import { initTranche } from '@vmexfinance/sdk';
 
 export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeDialog }) => {
     const { address } = useAccount();
