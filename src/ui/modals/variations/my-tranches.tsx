@@ -141,7 +141,7 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
                             items={_tokens}
                             selected={_pausedTokens}
                             setSelected={setPausedTokens}
-                            direction="right"
+                            direction="top"
                             size="lg"
                             full
                             multiselect

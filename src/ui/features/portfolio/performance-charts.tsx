@@ -45,7 +45,8 @@ export const UserPerformanceCard: React.FC<IUserPerformanceCardProps> = ({
             header={
                 <div className="flex justify-between items-center mb-3">
                     <h3 className="text-lg">Performance</h3>
-                    <DropdownButton primary items={tranchesDropdown} />
+                    {/* TODO: filter chart by tranche */}
+                    {/* <DropdownButton primary items={tranchesDropdown} /> */}
                 </div>
             }
         >
