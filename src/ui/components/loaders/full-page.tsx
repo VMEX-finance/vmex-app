@@ -7,13 +7,15 @@ type IFullPageLoader = {
     text?: string;
     onlyHome?: boolean;
     children: ReactNode;
+    animation?: boolean;
 };
 
 export const FullPageLoader = ({
     loading = true,
-    text = 'Loading VMEX Finance...',
+    text = 'VMEX Finance',
     onlyHome,
     children,
+    animation,
 }: IFullPageLoader) => {
     const { pathname } = useLocation();
 
@@ -29,12 +31,16 @@ export const FullPageLoader = ({
         <>
             <Transition
                 show={determineShow()}
-                leave="transition-opacity duration-500"
+                leave="transition-opacity duration-1000"
                 leaveFrom="opacity-100"
                 leaveTo="opacity-0"
             >
                 <div className="top-0 left-0 h-screen w-full bg-[#eee] dark:bg-neutral-900 z-[9999] fixed">
-                    <div className="flex flex-col gap-5 justify-center items-center h-full animate-pulse">
+                    <div
+                        className={`flex flex-col gap-5 justify-center items-center h-full ${
+                            animation ? 'animate-pulse' : ''
+                        }`}
+                    >
                         <img src="/VMEX-logo-only.png" alt="VMEX Logo" width="165" height="150" />
                         {text && (
                             <p className="text-center font-medium dark:text-neutral-100">{text}</p>
