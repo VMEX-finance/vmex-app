@@ -100,21 +100,24 @@ async function getTopSuppliedAssets(): Promise<AssetBalance[]> {
     });
     if (error) return [];
 
-    const returnObj: AssetBalance[] = [];
     const prices = await getAllAssetPrices();
+    const result = Object.values(
+        data.reserves.reduce((r: any, reserve: any) => {
+            const _asset = reserve.symbol.slice(0, -1);
+            const _assetUSDPrice = (prices as any)[_asset].usdPrice;
+            const _usdAmount = nativeAmountToUSD(
+                reserve.totalDeposits,
+                reserve.decimals,
+                _assetUSDPrice,
+            );
 
-    data.reserves.map((reserve: any) => {
-        const asset = reserve.symbol.slice(0, -1);
-        const assetUSDPrice = (prices as any)[asset].usdPrice;
-        const usdAmount = nativeAmountToUSD(reserve.totalDeposits, reserve.decimals, assetUSDPrice);
+            r[_asset] ??= { asset: _asset, amount: 0 };
+            r[_asset].amount += _usdAmount;
+            return r;
+        }, {}),
+    );
 
-        returnObj.push({
-            asset: reserve.symbol.slice(0, -1),
-            amount: usdFormatter(false).format(usdAmount),
-        });
-    });
-
-    return returnObj;
+    return result.map((el: any) => ({ ...el, amount: usdFormatter(false).format(el.amount) }));
 }
 
 async function getTopBorrowedAssets(): Promise<AssetBalance[]> {
@@ -131,28 +134,25 @@ async function getTopBorrowedAssets(): Promise<AssetBalance[]> {
     });
     if (error) return [];
 
-    const returnObj: AssetBalance[] = [];
     const prices = await getAllAssetPrices();
+    const result = Object.values(
+        data.reserves.reduce((r: any, reserve: any) => {
+            const _asset = reserve.symbol.slice(0, -1);
+            const _assetUSDPrice = (prices as any)[_asset].usdPrice;
+            const _usdAmount = nativeAmountToUSD(
+                reserve.totalCurrentVariableDebt,
+                reserve.decimals,
+                _assetUSDPrice,
+            );
+            r[_asset] ??= { asset: _asset, amount: 0 };
+            r[_asset].amount += _usdAmount;
+            return r;
+        }, {}),
+    );
 
-    data.reserves.map((reserve: any) => {
-        const asset = reserve.symbol.slice(0, -1);
-        const assetUSDPrice = (prices as any)[asset].usdPrice;
-        const usdAmount = nativeAmountToUSD(
-            reserve.totalCurrentVariableDebt,
-            reserve.decimals,
-            assetUSDPrice,
-        );
-
-        returnObj.push({
-            asset: reserve.symbol.slice(0, -1),
-            amount: usdFormatter(false).format(usdAmount),
-        });
-    });
-
-    return returnObj;
+    return result.map((el: any) => ({ ...el, amount: usdFormatter(false).format(el.amount) }));
 }
 
-// TODO
 export async function getSubgraphProtocolData(): Promise<IGraphProtocolDataProps> {
     const { data, error } = await client.query({
         query: gql`

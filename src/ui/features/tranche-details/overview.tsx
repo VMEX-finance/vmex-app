@@ -47,6 +47,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
     } = useUserTrancheData(address, tranche.id);
 
     const calculateNetAPY = () => {
+        console.log('OVERVIEW DATA:', data);
         if (!data) return `0%`;
         const supplyTotal = data?.supplies.reduce(
             (partial, next) => partial + parseFloat(next.amount.slice(1).replaceAll(',', '')),
