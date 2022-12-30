@@ -51,35 +51,32 @@ export const CreateTrancheAssetsTable = ({
                                 <AssetDisplay name={el} size="sm" />
                             </td>
                             <td>
-                                <button
-                                    onClick={() =>
-                                        isInList(el, lendAssets)
-                                            ? removeFromList(el, lendAssets)
-                                            : addToList(el, lendAssets)
-                                    }
-                                    className="cursor-pointer"
-                                >
+                                <>
                                     <Checkbox
                                         checked={isInList(el, lendAssets)}
                                         label={isInList(el, lendAssets) ? 'Enabled' : 'Disabled'}
+                                        onClick={() =>
+                                            isInList(el, lendAssets)
+                                                ? removeFromList(el, lendAssets)
+                                                : addToList(el, lendAssets)
+                                        }
                                     />
-                                </button>
+                                </>
                             </td>
                             <td>
-                                <button
-                                    onClick={() =>
-                                        isInList(el, collateralAssets)
-                                            ? removeFromList(el, collateralAssets)
-                                            : addToList(el, collateralAssets)
-                                    }
-                                >
+                                <>
                                     <Checkbox
                                         checked={isInList(el, collateralAssets)}
                                         label={
                                             isInList(el, collateralAssets) ? 'Enabled' : 'Disabled'
                                         }
+                                        onClick={() =>
+                                            isInList(el, collateralAssets)
+                                                ? removeFromList(el, collateralAssets)
+                                                : addToList(el, collateralAssets)
+                                        }
                                     />
-                                </button>
+                                </>
                             </td>
                         </tr>
                     ))}

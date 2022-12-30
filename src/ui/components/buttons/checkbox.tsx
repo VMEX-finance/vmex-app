@@ -12,16 +12,17 @@ export const Checkbox = ({ checked, disabled, label, onClick }: ICheckboxProps) 
     return (
         <button
             className="flex items-center gap-2 cursor-pointer"
-            onClick={() => (onClick ? onClick : () => {})}
+            onClick={onClick ? onClick : () => {}}
         >
             <input
+                name="checkbox"
                 type="checkbox"
                 className={['cursor-pointer', mode].join(' ')}
                 checked={checked}
                 disabled={disabled}
                 onChange={() => {}}
             />
-            <label htmlFor="button" className="cursor-pointer">
+            <label htmlFor="checkbox" className="cursor-pointer">
                 {label}
             </label>
         </button>

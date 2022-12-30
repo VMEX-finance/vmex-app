@@ -174,39 +174,35 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading }) => {
                     data={data || []}
                     options={{
                         ...options,
-                        customRowRender: (data: any) => {
-                            const [
-                                asset,
-                                tranche,
-                                supplyApy,
-                                borrowApy,
-                                yourAmount,
-                                available,
-                                supplyTotal,
-                                borrowTotal,
-                                rating,
-                                strategies,
-                                logo,
-                                trancheId,
-                            ] = data;
-
-                            return (
-                                <MarketsCustomRow
-                                    asset={asset}
-                                    tranche={tranche}
-                                    trancheId={trancheId}
-                                    supplyApy={percentFormatter.format(supplyApy)}
-                                    borrowApy={percentFormatter.format(borrowApy)}
-                                    yourAmount={renderYourAmount(asset)}
-                                    available={available}
-                                    borrowTotal={borrowTotal}
-                                    supplyTotal={supplyTotal}
-                                    rating={rating}
-                                    strategies={strategies}
-                                    logo={logo}
-                                />
-                            );
-                        },
+                        customRowRender: ([
+                            asset,
+                            tranche,
+                            supplyApy,
+                            borrowApy,
+                            yourAmount,
+                            available,
+                            supplyTotal,
+                            borrowTotal,
+                            rating,
+                            strategies,
+                            logo,
+                            trancheId,
+                        ]) => (
+                            <MarketsCustomRow
+                                asset={asset}
+                                tranche={tranche}
+                                trancheId={trancheId}
+                                supplyApy={percentFormatter.format(supplyApy)}
+                                borrowApy={percentFormatter.format(borrowApy)}
+                                yourAmount={renderYourAmount(asset)}
+                                available={available}
+                                borrowTotal={borrowTotal}
+                                supplyTotal={supplyTotal}
+                                rating={rating}
+                                strategies={strategies}
+                                logo={logo}
+                            />
+                        ),
                         textLabels: {
                             body: {
                                 noMatch: loading ? (
