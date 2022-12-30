@@ -14,10 +14,9 @@ export const TrancheInfoCard = ({ tranche, loading }: ITrancheInfoCard) => {
     const { tranche: _tranche } = useSelectedTrancheContext();
 
     return (
-        <Card loading={loading}>
+        <Card loading={loading} title="Info" titleClass="text-2xl mb-6">
             <div className="flex flex-col gap-8">
                 <div>
-                    <h2 className="text-2xl mb-6">Info</h2>
                     <p>Assets</p>
                     <MultipleAssetsDisplay assets={tranche?.assets || _tranche.assets} show="all" />
                 </div>

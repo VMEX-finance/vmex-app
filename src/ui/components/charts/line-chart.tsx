@@ -1,3 +1,4 @@
+import { Skeleton } from '@mui/material';
 import React from 'react';
 import { LineChart, Line, Tooltip, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 import { CustomTooltip } from './custom-tooltip';

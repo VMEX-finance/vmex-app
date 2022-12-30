@@ -13,6 +13,7 @@ import { useAccount } from 'wagmi';
 import { IYourBorrowsTableItemProps, IYourSuppliesTableItemProps } from '../../tables';
 import { useSelectedTrancheContext } from '../../../store/contexts';
 import { makeCompact, usdFormatter } from '../../../utils/helpers';
+import { Skeleton } from '@mui/material';
 
 export interface ITrancheOverviewProps {
     assets?: string[];
@@ -23,6 +24,7 @@ export interface ITrancheOverviewProps {
     borrowed?: number;
     borrowChange?: number;
     grade?: string;
+    loading?: boolean;
 }
 
 const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
@@ -34,6 +36,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
     borrowChange,
     borrowed,
     grade,
+    loading,
 }) => {
     const { width, breakpoint } = useWindowSize();
     const { openDialog } = useDialogController();
@@ -92,7 +95,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                             label="TVL"
                             value={`${makeCompact(tvl, true)}`}
                             change={tvlChange}
-                            loading={!tvl}
+                            loading={loading}
                         />
                         <NumberDisplay
                             center
@@ -100,7 +103,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                             label="Supplied"
                             value={`${makeCompact(supplied, true)}`}
                             change={supplyChange}
-                            loading={!supplied}
+                            loading={loading}
                         />
                         <NumberDisplay
                             center
@@ -108,14 +111,22 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                             label="Borrowed"
                             value={`${makeCompact(borrowed, true)}`}
                             change={borrowChange}
-                            loading={!borrowed}
+                            loading={loading}
                         />
                     </div>
                     <div className="order-2 lg:order-3 min-w-[162px] 2xl:min-w-[194px]">
                         <div className="flex flex-col justify-between">
                             <div className="flex flex-col items-end">
                                 <h2 className="text-2xl">Grade</h2>
-                                <p className="text-3xl">{grade || '-'}</p>
+                                {loading ? (
+                                    <Skeleton
+                                        variant="rectangular"
+                                        height={'36px'}
+                                        width={'60px'}
+                                    />
+                                ) : (
+                                    <p className="text-3xl">{grade || '-'}</p>
+                                )}
                             </div>
                         </div>
                     </div>

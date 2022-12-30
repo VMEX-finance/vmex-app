@@ -10,6 +10,7 @@ type INumberProps = {
     center?: boolean;
     change?: number;
     loading?: boolean;
+    labelClass?: string;
 };
 
 export const NumberDisplay = ({
@@ -20,8 +21,10 @@ export const NumberDisplay = ({
     center,
     change,
     loading,
+    labelClass,
 }: INumberProps) => {
     const labelSize = () => {
+        if (labelClass) return labelClass;
         switch (size) {
             case 'xl':
                 return '';

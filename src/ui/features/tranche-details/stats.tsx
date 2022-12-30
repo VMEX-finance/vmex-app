@@ -39,33 +39,38 @@ export const TrancheStatisticsCard = ({
 
     return (
         <>
-            <Card black loading={loading || !assetData || rerender}>
-                <div className="flex justify-between items-center">
-                    <div className="flex items-center gap-4">
-                        <h3 className="text-2xl">Asset Statistics</h3>
-                        {/* TODO: Make this dynamic based on if strategy */}
-                        {asset === 'triCrypto2' && (
-                            <div
-                                data-tip
-                                data-for="strategiesTip"
-                                className="bg-white text-neutral-700 text-sm rounded px-2 border-2 border-brand-purple cursor-default"
-                            >
-                                <span>Strategies Enabled</span>
-                            </div>
-                        )}
+            <Card
+                black
+                loading={loading || !assetData || rerender}
+                header={
+                    <div className="flex justify-between items-center">
+                        <div className="flex items-center gap-4">
+                            <h3 className="text-2xl">Asset Statistics</h3>
+                            {/* TODO: Make this dynamic based on if strategy */}
+                            {asset === 'triCrypto2' && (
+                                <div
+                                    data-tip
+                                    data-for="strategiesTip"
+                                    className="bg-white text-neutral-700 text-sm rounded px-2 border-2 border-brand-purple cursor-default"
+                                >
+                                    <span>Strategies Enabled</span>
+                                </div>
+                            )}
+                        </div>
+                        <DropdownButton
+                            primary
+                            size="lg"
+                            items={
+                                tranche && tranche.assets
+                                    ? tranche.assets.map((el: any) => ({ text: el }))
+                                    : []
+                            }
+                            selected={asset || 'Loading'}
+                            setSelected={setAsset}
+                        />
                     </div>
-                    <DropdownButton
-                        primary
-                        size="lg"
-                        items={
-                            tranche && tranche.assets
-                                ? tranche.assets.map((el: any) => ({ text: el }))
-                                : []
-                        }
-                        selected={asset}
-                        setSelected={setAsset}
-                    />
-                </div>
+                }
+            >
                 <div className="flex gap-6 mb-3 mt-1">
                     <NumberDisplay
                         label="Supply APY"

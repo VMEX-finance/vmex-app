@@ -41,10 +41,11 @@ const TrancheDetails: React.FC = () => {
 
     return (
         <AppTemplate
-            title={tranche?.name || 'Tranche Name'}
+            title={tranche?.name}
             description="Tranche"
             view={view}
             setView={setView}
+            titleLoading={queryTrancheData.isLoading}
         >
             <TrancheTVLDataCard
                 assets={queryTrancheData.data?.assets || tranche.assets}
@@ -55,6 +56,7 @@ const TrancheDetails: React.FC = () => {
                 supplyChange={tranche.supplyChange}
                 borrowed={queryTrancheData.data?.totalBorrowed || tranche.borrowTotal}
                 borrowChange={tranche.borrowChange}
+                loading={queryTrancheData.isLoading}
             />
             {view.includes('details') ? (
                 <>
@@ -77,8 +79,7 @@ const TrancheDetails: React.FC = () => {
                 </>
             ) : (
                 <GridView>
-                    <Card loading={queryTrancheData.isLoading}>
-                        <h3 className="text-2xl">Supply</h3>
+                    <Card loading={queryTrancheData.isLoading} title="Supply">
                         <TrancheTable
                             data={
                                 queryTrancheData.data && queryTrancheData.data.assetsData
@@ -102,8 +103,7 @@ const TrancheDetails: React.FC = () => {
                             type="supply"
                         />
                     </Card>
-                    <Card loading={queryTrancheData.isLoading}>
-                        <h3 className="text-2xl">Borrow</h3>
+                    <Card loading={queryTrancheData.isLoading} title="Borrow">
                         <TrancheTable
                             data={
                                 queryTrancheData.data && queryTrancheData.data.assetsData

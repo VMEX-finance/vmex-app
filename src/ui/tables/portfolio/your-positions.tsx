@@ -61,8 +61,7 @@ export const YourPositionsTable: React.FC<IYourPositionsProps> = ({
     };
 
     return (
-        <Card loading={isLoading}>
-            <h3 className="text-lg mb-8">Your {determineTitle()}</h3>
+        <Card loading={isLoading} title={`Your ${determineTitle()}`} titleClass="text-lg mb-8">
             {data && data.length !== 0 ? (
                 <div>{determineTable()}</div>
             ) : (
