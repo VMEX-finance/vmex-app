@@ -20,6 +20,7 @@ export const Checkbox = ({ checked, disabled, setChecked, label, onClick }: IChe
                 className={['cursor-pointer', mode].join(' ')}
                 checked={checked}
                 disabled={disabled}
+                onChange={() => {}}
             />
             <label htmlFor="button" className="cursor-pointer">
                 {label}
