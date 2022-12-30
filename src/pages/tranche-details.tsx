@@ -19,7 +19,7 @@ const TrancheDetails: React.FC = () => {
     const { address } = useAccount();
     const { data: signer } = useSigner();
     const { tranche, setTranche, asset } = useSelectedTrancheContext();
-    const { queryTrancheData } = useSubgraphTrancheData(tranche.id);
+    const { queryTrancheData } = useSubgraphTrancheData(tranche.id || location.state?.trancheId);
 
     const [view, setView] = useState('tranche-overview');
 
@@ -31,9 +31,13 @@ const TrancheDetails: React.FC = () => {
     }, [address, location]);
 
     useEffect(() => {
-        if (!tranche.id) navigate('/tranches');
-        if (queryTrancheData.data) setTranche(queryTrancheData.data);
-    }, [tranche, location, queryTrancheData]);
+        if (queryTrancheData.data && tranche !== queryTrancheData.data)
+            setTranche(queryTrancheData.data);
+    }, [queryTrancheData.data, setTranche, tranche]);
+
+    useEffect(() => {
+        if (!tranche?.id && !location.state?.trancheId) navigate('/tranches');
+    }, [navigate, tranche.id, location]);
 
     return (
         <AppTemplate

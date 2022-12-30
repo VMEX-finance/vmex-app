@@ -89,7 +89,7 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
 async function getTopSuppliedAssets(): Promise<AssetBalance[]> {
     const { data, error } = await client.query({
         query: gql`
-            query QueryProtocolData {
+            query QueryTopSuppliedAssets {
                 reserves(first: 5, orderBy: totalDeposits, orderDirection: desc) {
                     symbol
                     totalDeposits
@@ -120,7 +120,7 @@ async function getTopSuppliedAssets(): Promise<AssetBalance[]> {
 async function getTopBorrowedAssets(): Promise<AssetBalance[]> {
     const { data, error } = await client.query({
         query: gql`
-            query QueryProtocolData {
+            query QueryTopBorrowedAssets {
                 reserves(first: 5, orderBy: totalCurrentVariableDebt, orderDirection: desc) {
                     symbol
                     totalCurrentVariableDebt

@@ -79,7 +79,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                     className="flex flex-col flow md:flex-row justify-between font-basefont gap-4 xl:gap-8"
                     style={{ flexFlow: 'wrap' }}
                 >
-                    <div className="flex flex-col justify-between order-1">
+                    <div className="flex flex-col justify-between order-1 min-w-[162px]">
                         <div className="flex flex-col gap-1">
                             <h2 className="text-2xl">Assets</h2>
                             <MultipleAssetsDisplay assets={assets} />
@@ -92,6 +92,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                             label="TVL"
                             value={`${makeCompact(tvl, true)}`}
                             change={tvlChange}
+                            loading={!tvl}
                         />
                         <NumberDisplay
                             center
@@ -99,6 +100,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                             label="Supplied"
                             value={`${makeCompact(supplied, true)}`}
                             change={supplyChange}
+                            loading={!supplied}
                         />
                         <NumberDisplay
                             center
@@ -106,6 +108,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                             label="Borrowed"
                             value={`${makeCompact(borrowed, true)}`}
                             change={borrowChange}
+                            loading={!borrowed}
                         />
                     </div>
                     <div className="order-2 lg:order-3 min-w-[162px] 2xl:min-w-[194px]">

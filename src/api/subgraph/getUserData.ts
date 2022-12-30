@@ -27,7 +27,7 @@ export const getSubgraphUserChart = async (
     address = address.toLowerCase();
     const { data, error } = await client.query({
         query: gql`
-            query QueryTranche($address: String!) {
+            query QueryUserChart($address: String!) {
                 user(id: $address) {
                     reserves {
                         reserve {
@@ -114,7 +114,7 @@ export const getSubgraphUserData = async (address: string): Promise<IGraphUserDa
     address = address.toLowerCase();
     const { data, error } = await client.query({
         query: gql`
-            query QueryTranche($address: String!) {
+            query QueryUserData($address: String!) {
                 user(id: $address) {
                     unclaimedRewards
                     depositHistory {

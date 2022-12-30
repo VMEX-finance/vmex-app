@@ -169,25 +169,29 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading }) => {
         <CacheProvider value={muiCache}>
             <ThemeProvider theme={vmexTheme(isDark)}>
                 <MUIDataTable
-                    title={['All Available Assets']}
+                    title={'All Available Assets'}
                     columns={columns}
                     data={data || []}
                     options={{
                         ...options,
-                        customRowRender: ([
-                            asset,
-                            tranche,
-                            supplyApy,
-                            borrowApy,
-                            yourAmount,
-                            available,
-                            supplyTotal,
-                            borrowTotal,
-                            rating,
-                            strategies,
-                            logo,
-                            trancheId,
-                        ]) => (
+                        customRowRender: (
+                            [
+                                asset,
+                                tranche,
+                                supplyApy,
+                                borrowApy,
+                                yourAmount,
+                                available,
+                                supplyTotal,
+                                borrowTotal,
+                                rating,
+                                strategies,
+                                logo,
+                                trancheId,
+                            ],
+                            dataIndex,
+                            rowIndex,
+                        ) => (
                             <MarketsCustomRow
                                 asset={asset}
                                 tranche={tranche}
@@ -201,6 +205,9 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading }) => {
                                 rating={rating}
                                 strategies={strategies}
                                 logo={logo}
+                                key={`tranches-table-${
+                                    rowIndex || Math.floor(Math.random() * 10000)
+                                }`}
                             />
                         ),
                         textLabels: {

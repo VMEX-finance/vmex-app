@@ -6,7 +6,7 @@ import { TranchesCustomRow } from './custom-row';
 import MUIDataTable from 'mui-datatables';
 import { SpinnerLoader } from '../../components/loaders';
 import { useAccount } from 'wagmi';
-import { useUserData } from '../../../api';
+import { useUserData, useUserTrancheData } from '../../../api';
 import { ITrancheProps } from '../../../api/types';
 import { ThemeContext } from '../../../store/contexts';
 import { usdFormatter } from '../../../utils/helpers';
@@ -111,20 +111,24 @@ export const TranchesTable: React.FC<IDataTable> = ({ data, loading }) => {
         <CacheProvider value={muiCache}>
             <ThemeProvider theme={vmexTheme(isDark)}>
                 <MUIDataTable
-                    title={['All Available Tranches']}
+                    title={'All Available Tranches'}
                     columns={columns}
                     data={data || []}
                     options={{
                         ...options,
-                        customRowRender: ([
-                            name,
-                            assets,
-                            aggregateRating,
-                            yourActivity,
-                            supplyTotal,
-                            borrowTotal,
-                            id,
-                        ]) => (
+                        customRowRender: (
+                            [
+                                name,
+                                assets,
+                                aggregateRating,
+                                yourActivity,
+                                supplyTotal,
+                                borrowTotal,
+                                id,
+                            ],
+                            dataIndex,
+                            rowIndex,
+                        ) => (
                             <TranchesCustomRow
                                 name={name}
                                 assets={assets}
@@ -133,6 +137,9 @@ export const TranchesTable: React.FC<IDataTable> = ({ data, loading }) => {
                                 supplyTotal={usdFormatter().format(supplyTotal)}
                                 borrowTotal={usdFormatter().format(borrowTotal)}
                                 id={id}
+                                key={`tranches-table-${
+                                    rowIndex || Math.floor(Math.random() * 10000)
+                                }`}
                             />
                         ),
                         textLabels: {

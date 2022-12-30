@@ -33,7 +33,9 @@ const MarketsCustomRow = (props: any) => {
         e.stopPropagation();
         setAsset(market.asset);
         updateTranche('id', market.trancheId.toString());
-        navigate(`/tranches/${market.tranche.replace(/\s+/g, '-')}`, { state: { view } });
+        navigate(`/tranches/${market.tranche.replace(/\s+/g, '-')}`, {
+            state: { view, trancheId: market.trancheId.toString() },
+        });
     };
 
     const handleActionClick = (e: any) => {
@@ -55,7 +57,6 @@ const MarketsCustomRow = (props: any) => {
     if (width < 900) {
         return (
             <tr
-                key={`${asset}-${trancheId}`}
                 className="text-left transition duration-200 hover:bg-neutral-200 dark:hover:bg-neutral-900 hover:cursor-pointer flex flex-col px-4 py-1 border-y-[1px] dark:border-neutral-100"
                 onClick={(e: any) => route(e, props)}
             >
@@ -127,7 +128,6 @@ const MarketsCustomRow = (props: any) => {
     } else {
         return (
             <tr
-                key={`${asset}-${trancheId}`}
                 className="text-left transition duration-200 hover:bg-neutral-200 dark:hover:bg-neutral-900 hover:cursor-pointer border-y-[1px] dark:border-neutral-100"
                 onClick={(e: any) => route(e, props, 'details')}
             >

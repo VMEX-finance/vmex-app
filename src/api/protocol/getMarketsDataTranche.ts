@@ -61,7 +61,6 @@ export function useTrancheMarketsData(trancheId: number): ITrancheMarketsDataPro
 
     const getTrancheMarket = (asset: string) => {
         if (!AVAILABLE_ASSETS.includes(asset) || !queryTrancheMarkets.data) {
-            console.log(`Tranche market for ${asset} not found`);
             return {
                 asset: '',
                 tranche: '',

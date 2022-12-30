@@ -31,7 +31,7 @@ export const getSubgraphMarketsChart = async (
     const reserveId = getReserveId(_underlyingAsset, poolId, trancheId);
     const { data, error } = await client.query({
         query: gql`
-            query QueryTranche($reserveId: String!) {
+            query QueryMarket($reserveId: String!) {
                 reserve(id: $reserveId) {
                     paramsHistory(orderBy: timestamp, orderDirection: desc) {
                         variableBorrowRate
