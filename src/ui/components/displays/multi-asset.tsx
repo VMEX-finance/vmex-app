@@ -1,5 +1,5 @@
-import { Skeleton } from '@mui/material';
 import React from 'react';
+import { SkeletonLoader } from '../loaders';
 import { Tooltip } from '../tooltips';
 
 interface IMultipleAssetsProps {
@@ -31,7 +31,7 @@ export const MultipleAssetsDisplay = ({ assets, show = 4, size }: IMultipleAsset
                       />
                   ))
                 : [1, 2, 3, 4].map((el) => (
-                      <Skeleton key={el} variant="circular" height={'2rem'} width={'2rem'} />
+                      <SkeletonLoader key={el} variant="circular" height={'2rem'} width={'2rem'} />
                   ))}
             {show !== 'all' && assets && assets.length > (show ? show : 4) && (
                 <Tooltip

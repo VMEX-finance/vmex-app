@@ -1,5 +1,5 @@
-import { Skeleton } from '@mui/material';
 import React from 'react';
+import { SkeletonLoader } from '../loaders';
 import { PercentChangeDisplay } from './percent-change';
 
 type INumberProps = {
@@ -50,7 +50,11 @@ export const NumberDisplay = ({
         <div className={`flex flex-col ${center ? 'text-center items-center' : ''}`}>
             <p className={`${labelSize()}`}>{label}</p>
             {loading ? (
-                <Skeleton variant="rectangular" height={valueSize().skeleton} width={'60px'} />
+                <SkeletonLoader
+                    variant="rectangular"
+                    height={valueSize().skeleton}
+                    width={'60px'}
+                />
             ) : (
                 <p className={`${valueSize().css} ${color}`}>{value}</p>
             )}

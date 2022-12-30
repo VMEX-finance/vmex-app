@@ -7,7 +7,7 @@ import { useWindowSize } from '../../hooks/ui';
 import { makeCompact } from '../../utils/helpers';
 import { useSubgraphProtocolData } from '../../api';
 import { AssetBalance, TrancheData } from '@app/api/types';
-import { Skeleton } from '@mui/material';
+import { SkeletonLoader } from '../components/loaders';
 
 export interface IProtocolProps {
     isLoading?: boolean;
@@ -66,7 +66,11 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                             loading={isLoading}
                         />
                         {!queryProtocolTVLChart.data ? (
-                            <Skeleton variant="rectangular" animation="wave" className="min-w-full">
+                            <SkeletonLoader
+                                variant="rectangular"
+                                animtion="wave"
+                                className="min-w-full"
+                            >
                                 <div className="h-[100px] w-full">
                                     <ReLineChart
                                         data={queryProtocolTVLChart.data || []}
@@ -74,7 +78,7 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                                         type="usd"
                                     />
                                 </div>
-                            </Skeleton>
+                            </SkeletonLoader>
                         ) : (
                             <div className="h-[100px] w-full">
                                 <ReLineChart

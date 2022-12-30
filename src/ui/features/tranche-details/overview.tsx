@@ -13,7 +13,7 @@ import { useAccount } from 'wagmi';
 import { IYourBorrowsTableItemProps, IYourSuppliesTableItemProps } from '../../tables';
 import { useSelectedTrancheContext } from '../../../store/contexts';
 import { makeCompact, usdFormatter } from '../../../utils/helpers';
-import { Skeleton } from '@mui/material';
+import { SkeletonLoader } from '../../components/loaders';
 
 export interface ITrancheOverviewProps {
     assets?: string[];
@@ -119,7 +119,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                             <div className="flex flex-col items-end">
                                 <h2 className="text-2xl">Grade</h2>
                                 {loading ? (
-                                    <Skeleton
+                                    <SkeletonLoader
                                         variant="rectangular"
                                         height={'36px'}
                                         width={'60px'}
