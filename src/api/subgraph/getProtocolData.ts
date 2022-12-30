@@ -107,7 +107,7 @@ async function getTopSuppliedAssets(
     if (_prices) prices = _prices;
     else prices = await getAllAssetPrices();
 
-    const result = Object.values(
+    const result: { asset: string; amount: number }[] = Object.values(
         data.reserves.reduce((r: any, reserve: any) => {
             const _asset = reserve.symbol.slice(0, -1);
             const _assetUSDPrice = (prices as any)[_asset].usdPrice;
@@ -123,7 +123,9 @@ async function getTopSuppliedAssets(
         }, {}),
     );
 
-    return result.map((el: any) => ({ ...el, amount: usdFormatter(false).format(el.amount) }));
+    return result
+        .sort((a, b) => b.amount - a.amount)
+        .map((el: any) => ({ ...el, amount: usdFormatter(false).format(el.amount) }));
 }
 
 async function getTopBorrowedAssets(
@@ -146,7 +148,7 @@ async function getTopBorrowedAssets(
     if (_prices) prices = _prices;
     else prices = await getAllAssetPrices();
 
-    const result = Object.values(
+    const result: { asset: string; amount: number }[] = Object.values(
         data.reserves.reduce((r: any, reserve: any) => {
             const _asset = reserve.symbol.slice(0, -1);
             const _assetUSDPrice = (prices as any)[_asset].usdPrice;
@@ -161,7 +163,9 @@ async function getTopBorrowedAssets(
         }, {}),
     );
 
-    return result.map((el: any) => ({ ...el, amount: usdFormatter(false).format(el.amount) }));
+    return result
+        .sort((a, b) => b.amount - a.amount)
+        .map((el: any) => ({ ...el, amount: usdFormatter(false).format(el.amount) }));
 }
 
 export async function getSubgraphProtocolData(): Promise<IGraphProtocolDataProps> {
