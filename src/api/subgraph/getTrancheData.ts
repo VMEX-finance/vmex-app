@@ -140,6 +140,7 @@ export function useSubgraphTrancheData(trancheId: string | number): ISubgraphTra
     const queryTrancheData = useQuery({
         queryKey: ['subgraph-tranche-data'],
         queryFn: () => getSubgraphTrancheData(trancheId),
+        enabled: !!trancheId,
     });
 
     return {

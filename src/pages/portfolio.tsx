@@ -12,9 +12,8 @@ import { numberFormatter } from '../utils/helpers';
 const Portfolio: React.FC = () => {
     const { address } = useAccount();
     const { queryUserActivity } = useUserData(address);
-    const { queryUserPnlChart } = useSubgraphUserData(address || '');
+    const { queryUserPnlChart } = useSubgraphUserData(address);
 
-    // TODO: is this how we're calculating networth or is (all wallet holdings + supplies) - borrows
     const calculateNetworth = () => {
         let sum = 0;
         sum =

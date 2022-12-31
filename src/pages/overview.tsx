@@ -6,12 +6,13 @@ import { WalletButton } from '../ui/components/buttons';
 import { useAccount } from 'wagmi';
 import { numberFormatter } from '../utils/helpers';
 import { bigNumberToUnformattedString } from '../utils/sdk-helpers';
-import { useOverviewPageQuery } from '../api';
+import { useSubgraphProtocolData, useSubgraphUserData, useUserData } from '../api';
 
 const Overview: React.FC = () => {
     const { address, isConnected } = useAccount();
-    const { queryProtocolTVLChart, queryProtocolData, queryUserPnlChart, queryUserActivity } =
-        useOverviewPageQuery(address);
+    const { queryProtocolTVLChart, queryProtocolData } = useSubgraphProtocolData();
+    const { queryUserActivity } = useUserData(address);
+    const { queryUserPnlChart } = useSubgraphUserData(address);
 
     return (
         <AppTemplate title="overview">

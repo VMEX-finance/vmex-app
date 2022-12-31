@@ -161,16 +161,18 @@ export const getSubgraphUserData = async (address: string): Promise<IGraphUserDa
     }
 };
 
-export function useSubgraphUserData(address: string): ISubgraphUserData {
+export function useSubgraphUserData(address?: `0x${string}`): ISubgraphUserData {
     const queryUserPnlChart = useQuery({
         queryKey: ['subgraph-user-pnl-chart'],
-        queryFn: () => getSubgraphUserChart(address),
+        queryFn: () => getSubgraphUserChart(address || ''),
         refetchInterval: 1 * 60 * 1000, // Refetch every minute
+        enabled: !!address,
     });
 
     const queryUserData = useQuery({
         queryKey: ['subgraph-user-data'],
-        queryFn: () => getSubgraphUserData(address),
+        queryFn: () => getSubgraphUserData(address || ''),
+        enabled: !!address,
     });
 
     return {
