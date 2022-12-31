@@ -1,4 +1,3 @@
-import { useSubgraphTranchesOverviewData } from '../../../api';
 import { Transition } from '@headlessui/react';
 import React, { ReactNode } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -18,8 +17,6 @@ export const FullPageLoader = ({
     children,
     animation,
 }: IFullPageLoader) => {
-    useSubgraphTranchesOverviewData();
-
     const { pathname } = useLocation();
 
     const determineShow = () => {

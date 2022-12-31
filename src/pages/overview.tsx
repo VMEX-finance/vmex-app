@@ -3,21 +3,21 @@ import { AppTemplate, GridView } from '../ui/templates';
 import { UserPerformanceCard, ProtocolStatsCard } from '../ui/features';
 import { YourPositionsTable } from '../ui/tables';
 import { WalletButton } from '../ui/components/buttons';
-import { useUserData, useSubgraphProtocolData, useSubgraphUserData } from '../api';
 import { useAccount } from 'wagmi';
 import { numberFormatter } from '../utils/helpers';
 import { bigNumberToUnformattedString } from '../utils/sdk-helpers';
+import { useOverviewPageQuery } from '../api';
 
 const Overview: React.FC = () => {
     const { address, isConnected } = useAccount();
-    const { queryProtocolData } = useSubgraphProtocolData();
-    const { queryUserActivity } = useUserData(address);
-    const { queryUserPnlChart } = useSubgraphUserData(address || '');
+    const { queryProtocolTVLChart, queryProtocolData, queryUserPnlChart, queryUserActivity } =
+        useOverviewPageQuery(address);
 
     return (
         <AppTemplate title="overview">
             <ProtocolStatsCard
                 tvl={queryProtocolData.data?.tvl}
+                tvlChart={queryProtocolTVLChart}
                 reserve={queryProtocolData.data?.reserve}
                 lenders={queryProtocolData.data?.uniqueLenders.length}
                 borrowers={queryProtocolData.data?.uniqueBorrowers.length}
@@ -33,7 +33,7 @@ const Overview: React.FC = () => {
                 <GridView type="fixed">
                     <UserPerformanceCard
                         isLoading={queryUserActivity.isLoading || queryUserPnlChart.isLoading}
-                        loanedAssets={queryUserActivity.data?.supplies?.map((el) => ({
+                        loanedAssets={queryUserActivity.data?.supplies?.map((el: any) => ({
                             asset: el.asset,
                             amount: numberFormatter.format(
                                 parseFloat(bigNumberToUnformattedString(el.amountNative, el.asset)),

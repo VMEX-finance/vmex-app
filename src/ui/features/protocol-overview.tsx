@@ -2,9 +2,16 @@ import React from 'react';
 import { TopTranchesTable } from '../tables';
 import { useWindowSize } from '../../hooks/ui';
 import { makeCompact } from '../../utils/helpers';
-import { useSubgraphProtocolData } from '../../api';
 import { AssetBalance, TrancheData } from '@app/api/types';
-import { SkeletonLoader, ReLineChart, NumberDisplay, PillDisplay, Card } from '../components';
+import {
+    SkeletonLoader,
+    ReLineChart,
+    NumberDisplay,
+    PillDisplay,
+    Card,
+    ILineChartDataPointProps,
+} from '../components';
+import { UseQueryResult } from '@tanstack/react-query';
 
 export interface IProtocolProps {
     isLoading?: boolean;
@@ -18,6 +25,7 @@ export interface IProtocolProps {
     topBorrowedAssets?: AssetBalance[];
     topSuppliedAssets?: AssetBalance[];
     topTranches?: TrancheData[];
+    tvlChart?: UseQueryResult<ILineChartDataPointProps[], unknown>;
 }
 
 export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
@@ -32,8 +40,8 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
     topSuppliedAssets,
     topTranches,
     isLoading,
+    tvlChart,
 }) => {
-    const { queryProtocolTVLChart } = useSubgraphProtocolData();
     const { width } = useWindowSize();
 
     const renderTopAssetsList = (_arr: AssetBalance[] | undefined) => {
@@ -62,7 +70,7 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                             labelClass="text-2xl"
                             loading={isLoading}
                         />
-                        {!queryProtocolTVLChart.data ? (
+                        {tvlChart?.isLoading ? (
                             <SkeletonLoader
                                 variant="rectangular"
                                 animtion="wave"
@@ -70,7 +78,7 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                             >
                                 <div className="h-[100px] w-full">
                                     <ReLineChart
-                                        data={queryProtocolTVLChart.data || []}
+                                        data={tvlChart?.data || []}
                                         color="#3CB55E"
                                         type="usd"
                                     />
@@ -79,7 +87,7 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                         ) : (
                             <div className="h-[100px] w-full">
                                 <ReLineChart
-                                    data={queryProtocolTVLChart.data || []}
+                                    data={tvlChart?.data || []}
                                     color="#3CB55E"
                                     type="usd"
                                 />
