@@ -133,11 +133,13 @@ export function useUserData(userAddress: any): IUserDataProps {
     const queryUserActivity = useQuery({
         queryKey: ['user-activity'],
         queryFn: () => getUserActivityData(userAddress),
+        enabled: !!userAddress,
     });
 
     const queryUserWallet = useQuery({
         queryKey: ['user-wallet'],
         queryFn: () => _getUserWalletData(userAddress),
+        enabled: !!userAddress,
     });
 
     const getTokenBalance = (asset: string) => {

@@ -5,29 +5,28 @@ import { muiCache, options, vmexTheme } from '../utils';
 import { TranchesCustomRow } from './custom-row';
 import MUIDataTable from 'mui-datatables';
 import { SpinnerLoader } from '../../components/loaders';
-import { useAccount } from 'wagmi';
-import { useUserData } from '../../../api';
 import { ITrancheProps } from '../../../api/types';
 import { ThemeContext } from '../../../store/contexts';
 import { usdFormatter } from '../../../utils/helpers';
+import { UseQueryResult } from '@tanstack/react-query';
+import { IUserActivityDataProps } from '@app/api/user/types';
 
 interface IDataTable {
     data?: ITrancheProps[];
     loading?: boolean;
+    userActivity?: UseQueryResult<IUserActivityDataProps, unknown>;
 }
 
-export const TranchesTable: React.FC<IDataTable> = ({ data, loading }) => {
+export const TranchesTable: React.FC<IDataTable> = ({ data, loading, userActivity }) => {
     const { isDark } = useContext(ThemeContext);
-    const { address } = useAccount();
-    const { queryUserActivity } = useUserData(address);
 
     const renderActivity = (trancheId: string) => {
         let activity = '';
-        if (queryUserActivity.isLoading) activity = 'loading';
-        queryUserActivity?.data?.borrows.map((borrow) => {
+        if (userActivity?.isLoading) activity = 'loading';
+        userActivity?.data?.borrows.map((borrow) => {
             if (borrow.trancheId === Number(trancheId)) activity = 'borrowed';
         });
-        queryUserActivity?.data?.supplies.map((supply) => {
+        userActivity?.data?.supplies.map((supply) => {
             if (supply.trancheId === Number(trancheId) && activity === '') activity = 'supplied';
             else if (supply.trancheId === Number(trancheId) && activity !== '') activity = 'both';
         });

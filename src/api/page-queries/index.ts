@@ -2,6 +2,7 @@ import { useQueries } from '@tanstack/react-query';
 import {
     getSubgraphProtocolChart,
     getSubgraphProtocolData,
+    getSubgraphTranchesOverviewData,
     getSubgraphUserChart,
 } from '../subgraph';
 import { getUserActivityData } from '../user';
@@ -40,7 +41,25 @@ export const useOverviewPageQuery = (_address?: `0x${string}`) => {
     };
 };
 
-export const useTranchesPageQuery = () => {};
+export const useTranchesPageQuery = (_address?: `0x${string}`) => {
+    const result = useQueries({
+        queries: [
+            {
+                queryKey: ['subgraph-tranches-overview-data'],
+                queryFn: () => getSubgraphTranchesOverviewData(),
+            },
+            {
+                queryKey: ['user-activity'],
+                queryFn: () => getUserActivityData(_address || ''),
+            },
+        ],
+    });
+
+    return {
+        queryAllTranches: result[0],
+        queryUserActivity: result[1],
+    };
+};
 
 export const useTrancheDetailsPageQuery = () => {};
 
