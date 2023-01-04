@@ -3,7 +3,7 @@ import { useMediatedState } from 'react-use';
 import { HealthFactor, Button, CoinInput, TransactionStatus } from '../../components';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
 import { ISupplyBorrowProps } from '../utils';
-import { useModal } from '../../../hooks/ui';
+import { useModal } from '../../../hooks';
 import { borrow, repay } from '@vmexfinance/sdk';
 import {
     MAINNET_ASSET_MAPPINGS,

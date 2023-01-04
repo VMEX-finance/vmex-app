@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dialog } from '@headlessui/react';
-import { useDialogController } from '../../../hooks/dialogs';
+import { useDialogController } from '../../../hooks';
 import { IoIosClose } from 'react-icons/io';
 import { IDialogNames } from '../../../store/modals';
 

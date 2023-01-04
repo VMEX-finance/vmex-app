@@ -1,6 +1,6 @@
 import React from 'react';
 import { TopTranchesTable } from '../tables';
-import { useWindowSize } from '../../hooks/ui';
+import { useWindowSize } from '../../hooks';
 import { makeCompact } from '../../utils/helpers';
 import { AssetBalance, TrancheData } from '@app/api/types';
 import {

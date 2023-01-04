@@ -1,4 +1,4 @@
-import { useWindowSize } from '../../../hooks/ui';
+import { useWindowSize } from '../../../hooks';
 import React from 'react';
 
 type IAssetDisplayProps = {

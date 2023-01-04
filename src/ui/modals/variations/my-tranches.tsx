@@ -9,7 +9,7 @@ import {
 import { useMyTranchesContext } from '../../../store/contexts';
 import { IDialogProps } from '../utils';
 import { ModalFooter, ModalHeader } from '../subcomponents';
-import { useModal } from '../../../hooks/ui';
+import { useModal } from '../../../hooks';
 
 export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDialog }) => {
     const { isSuccess, error, submitTx, setError, isLoading } = useModal('my-tranches-dialog');

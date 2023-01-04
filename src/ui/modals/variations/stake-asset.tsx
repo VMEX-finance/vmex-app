@@ -4,7 +4,7 @@ import { useMediatedState } from 'react-use';
 import { inputMediator } from '../../../utils/helpers';
 import { IDialogProps } from '../utils';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
-import { useModal } from '../../../hooks/ui';
+import { useModal } from '../../../hooks';
 import {
     DefaultDropdown,
     Button,

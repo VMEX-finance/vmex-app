@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useMediatedState } from 'react-use';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
-import { useModal } from '../../../hooks/ui';
+import { useModal } from '../../../hooks';
 import { supply, withdraw } from '@vmexfinance/sdk';
 import {
     MAINNET_ASSET_MAPPINGS,
