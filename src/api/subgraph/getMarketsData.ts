@@ -154,7 +154,7 @@ export function useSubgraphMarketsData(
 ): ISubgraphMarketsChart {
     const underlyingAsset = MAINNET_ASSET_MAPPINGS.get(_underlyingAsset || '')?.toLowerCase();
     const queryMarketsChart = useQuery({
-        queryKey: [`subgraph-markets-chart-${_trancheId}-${underlyingAsset}`],
+        queryKey: [`subgraph-markets-chart-${_trancheId}-${underlyingAsset}`], // TODO: fix this to make the id and asset filters instead of a part of the key
         queryFn: () => getSubgraphMarketsChart(_trancheId, underlyingAsset),
     });
 

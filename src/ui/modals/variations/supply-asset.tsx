@@ -19,6 +19,7 @@ import { useSigner, useAccount } from 'wagmi';
 import { BigNumber } from 'ethers';
 import { IYourSuppliesTableItemProps } from '@ui/tables';
 import { ISupplyBorrowProps } from '../utils';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, data, tab }) => {
     const { submitTx, isSuccess, error, isLoading } = useModal('loan-asset-dialog');
@@ -26,9 +27,13 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
     const [isMax, setIsMax] = React.useState(false);
     const [amount, setAmount] = useMediatedState(inputMediator, '');
     const { getTrancheMarket } = useTrancheMarketsData(data?.trancheId || 0);
+    const { invalidateQueries } = useQueryClient();
     const { data: signer } = useSigner();
     const { address } = useAccount();
-    const { findAssetInUserSuppliesOrBorrows } = useUserTrancheData(address, data?.trancheId || 0);
+    const { findAssetInUserSuppliesOrBorrows, queryUserTrancheData } = useUserTrancheData(
+        address,
+        data?.trancheId || 0,
+    );
     const { getTokenBalance } = useUserData(address);
 
     const handleSubmit = async () => {
@@ -61,6 +66,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                           // collateral: boolean,
                           // test: boolean
                       });
+                invalidateQueries(['user-tranche']);
                 return res;
             });
         }
@@ -73,9 +79,6 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
     const collateral = (
         findAssetInUserSuppliesOrBorrows(data?.asset || '', 'supply') as IYourSuppliesTableItemProps
     )?.collateral;
-
-    console.log('DATA:', data);
-    console.log('AMOUNT REPAY:', amountWithdraw);
 
     useEffect(() => {
         if (data?.view) setView('Withdraw');

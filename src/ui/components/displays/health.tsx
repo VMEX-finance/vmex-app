@@ -180,7 +180,9 @@ export const HealthFactor = ({
             <div className={`flex items-center gap-2 ${center ? 'justify-center' : ''}`}>
                 {withChange && (
                     <>
-                        {determineHFInitial()}
+                        <div className={`${queryUserTrancheData.isLoading ? 'animate-pulse' : ''}`}>
+                            {determineHFInitial()}
+                        </div>
                         <BsArrowRight size={`${determineSize()[1]}`} />
                     </>
                 )}
