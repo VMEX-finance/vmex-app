@@ -1,7 +1,7 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import React, { useContext } from 'react';
 import { IButtonProps } from './default';
-import { useAccount } from 'wagmi';
+import { useAccount, useDisconnect } from 'wagmi';
 import { ThemeContext, useMyTranchesContext } from '../../../store/contexts';
 import { useWindowSize, useDialogController } from '../../../hooks';
 import { DefaultDropdown } from '../dropdowns';
@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 
 export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: IButtonProps) => {
     const navigate = useNavigate();
+    const { disconnect } = useDisconnect();
     const { theme, setTheme } = useContext(ThemeContext);
     const { openDialog } = useDialogController();
     const { width } = useWindowSize();
@@ -40,6 +41,13 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
             final.push({
                 text: 'My Tranches',
                 onClick: () => openDialog('my-tranches-dialog'),
+            });
+        }
+
+        if (address) {
+            final.push({
+                text: 'Disconnect',
+                onClick: () => disconnect(),
             });
         }
 
