@@ -37,6 +37,7 @@ export async function _getUserTrancheData(
         user: userAddress,
         network: SDK_PARAMS.network,
         test: SDK_PARAMS.test,
+        providerRpc: SDK_PARAMS.providerRpc,
     });
 
     const tmp = userTrancheData.assetBorrowingPower.map((marketData: AvailableBorrowData) => {

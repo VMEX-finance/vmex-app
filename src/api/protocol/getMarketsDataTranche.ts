@@ -15,6 +15,7 @@ export async function getTrancheMarkets(trancheId: number): Promise<IMarketsAsse
         tranche: trancheId,
         network: SDK_PARAMS.network,
         test: SDK_PARAMS.test,
+        providerRpc: SDK_PARAMS.providerRpc,
     });
 
     return allMarketsData.map((marketData: MarketData) => {

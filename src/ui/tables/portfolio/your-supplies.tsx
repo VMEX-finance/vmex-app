@@ -4,7 +4,7 @@ import { useDialogController } from '../../../hooks/dialogs';
 import { percentFormatter } from '../../../utils/helpers';
 import { BasicToggle } from '../../components/toggles';
 import { BigNumber } from 'ethers';
-import { bigNumberToNative } from '../../../utils/sdk-helpers';
+import { bigNumberToNative, SDK_PARAMS } from '../../../utils/sdk-helpers';
 import { useModal } from '../../../hooks/ui';
 import { markReserveAsCollateral } from '@vmexfinance/sdk';
 import { useSigner } from 'wagmi';
@@ -56,6 +56,8 @@ export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({ data, wit
                     asset: asset,
                     trancheId: trancheId,
                     useAsCollateral: newArr[index],
+                    test: SDK_PARAMS.test,
+                    providerRpc: SDK_PARAMS.providerRpc,
                 });
             });
         }

@@ -10,7 +10,7 @@ import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
 import { ISupplyBorrowProps } from '../utils';
 import { useModal } from '../../../hooks/ui';
 import { borrow, repay } from '@vmexfinance/sdk';
-import { MAINNET_ASSET_MAPPINGS, NETWORK } from '../../../utils/sdk-helpers';
+import { MAINNET_ASSET_MAPPINGS, NETWORK, SDK_PARAMS } from '../../../utils/sdk-helpers';
 import { useAccount, useSigner } from 'wagmi';
 import { useUserTrancheData, useTrancheMarketsData } from '../../../api';
 import { BigNumber } from 'ethers';
@@ -52,9 +52,10 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
                           //   interestRateMode: 2,
                           signer: signer,
                           network: NETWORK,
+                          test: SDK_PARAMS.test,
+                          providerRpc: SDK_PARAMS.providerRpc,
                           // referrer: number,
                           // collateral: boolean,
-                          // test: boolean
                       })
                     : await repay({
                           asset: MAINNET_ASSET_MAPPINGS.get(data.asset) || '',
@@ -64,9 +65,10 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
                           signer: signer,
                           network: NETWORK,
                           isMax: isMax,
+                          test: SDK_PARAMS.test,
+                          providerRpc: SDK_PARAMS.providerRpc,
                           // referrer: number,
                           // collateral: boolean,
-                          // test: boolean
                       });
                 queryClient.invalidateQueries(['user-tranche']);
                 return res;

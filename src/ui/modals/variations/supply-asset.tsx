@@ -7,7 +7,7 @@ import { ActiveStatus, TransactionStatus } from '../../components/statuses';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
 import { useModal } from '../../../hooks/ui';
 import { supply, withdraw } from '@vmexfinance/sdk';
-import { MAINNET_ASSET_MAPPINGS, NETWORK } from '../../../utils/sdk-helpers';
+import { MAINNET_ASSET_MAPPINGS, NETWORK, SDK_PARAMS } from '../../../utils/sdk-helpers';
 import { HealthFactor } from '../../components/displays';
 import { useTrancheMarketsData } from '../../../api';
 import { useSigner, useAccount } from 'wagmi';
@@ -42,10 +42,11 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                           amount: convertStringFormatToNumber(amount),
                           signer: signer,
                           network: NETWORK,
+                          test: SDK_PARAMS.test,
+                          providerRpc: SDK_PARAMS.providerRpc,
                           // collateral: asCollateral,
                           // referrer: number,
                           // collateral: boolean,
-                          // test: boolean
                       })
                     : await withdraw({
                           asset: MAINNET_ASSET_MAPPINGS.get(data.asset) || '',
@@ -55,6 +56,8 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                           network: NETWORK,
                           interestRateMode: 2,
                           isMax: isMax,
+                          test: SDK_PARAMS.test,
+                          providerRpc: SDK_PARAMS.providerRpc,
                           // referrer: number,
                           // collateral: boolean,
                           // test: boolean

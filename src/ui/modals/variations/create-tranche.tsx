@@ -11,7 +11,7 @@ import { ModalFooter, ModalHeader } from '../../modals/subcomponents';
 import { CreateTrancheAssetsTable } from '../../tables';
 import { InnerCard } from '../../components/cards';
 import { useModal } from '../../../hooks/ui';
-import { MAINNET_ASSET_MAPPINGS, NETWORK } from '../../../utils/sdk-helpers';
+import { MAINNET_ASSET_MAPPINGS, NETWORK, SDK_PARAMS } from '../../../utils/sdk-helpers';
 import { useAccount, useSigner } from 'wagmi';
 import { ethers } from 'ethers';
 import { initTranche } from '@vmexfinance/sdk';
@@ -81,6 +81,8 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
                 treasuryAddress: treasuryAddress,
                 incentivesController: '0x0000000000000000000000000000000000000000', //disabled for now
                 network: NETWORK,
+                test: SDK_PARAMS.test,
+                providerRpc: SDK_PARAMS.providerRpc,
             });
             return res;
         });

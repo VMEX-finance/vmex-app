@@ -35,6 +35,7 @@ export async function getUserActivityData(userAddress: string): Promise<IUserAct
         user: userAddress,
         network: SDK_PARAMS.network,
         test: SDK_PARAMS.test,
+        providerRpc: SDK_PARAMS.providerRpc,
     });
 
     const allTrancheData = await getAllTrancheData(SDK_PARAMS);
@@ -110,6 +111,7 @@ export async function _getUserWalletData(
         user: userAddress,
         network: SDK_PARAMS.network,
         test: SDK_PARAMS.test,
+        providerRpc: SDK_PARAMS.providerRpc,
     });
 
     return {
