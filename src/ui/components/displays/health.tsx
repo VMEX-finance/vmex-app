@@ -73,8 +73,12 @@ export const HealthFactor = ({
     };
 
     const renderHealth = (hf: number | string | undefined, isInf: boolean) => {
-        return isInf || !hf || Number(hf) > 100 ? (
+        return isInf || !hf ? (
             <TbInfinity color="#8CE58F" size={`${determineSize()[0]}`} />
+        ) : Number(hf) > 100 ? (
+            <span className={`${determineSize()[2]} ${determineColor(hf)} font-semibold`}>
+                {'>100'}
+            </span>
         ) : (
             <span className={`${determineSize()[2]} ${determineColor(hf)} font-semibold`}>
                 {HFFormatter.format(typeof hf === 'string' ? parseFloat(hf) : hf)}
@@ -122,10 +126,6 @@ export const HealthFactor = ({
             if (type === 'supply') {
                 collateralAfter = totalCollateralETH.add(ethAmount);
 
-                if (collateralAfter.gte(a.collateralCap)) {
-                    collateralAfter = a.collateralCap;
-                }
-
                 let amountIncrease = collateralAfter.sub(totalCollateralETH);
 
                 liquidationThresholdAfter = totalCollateralETH
@@ -134,19 +134,11 @@ export const HealthFactor = ({
             }
 
             if (type === 'withdraw') {
-                let amountCappedNotUsed = ethAmount.gt(a.collateralCap)
-                    ? ethAmount.sub(a.collateralCap)
-                    : BigNumber.from('0');
-                if (ethAmount.lte(amountCappedNotUsed)) {
-                    return determineHFInitial();
-                }
-                let amountDecrease = ethAmount.sub(amountCappedNotUsed);
-
-                collateralAfter = totalCollateralETH.sub(amountDecrease);
+                collateralAfter = totalCollateralETH.sub(ethAmount);
 
                 liquidationThresholdAfter = totalCollateralETH
                     .mul(currentLiquidationThreshold)
-                    .sub(amountDecrease.mul(a.liquidationThreshold));
+                    .sub(ethAmount.mul(a.liquidationThreshold));
             }
 
             if (type === 'borrow') {
