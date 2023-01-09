@@ -5,7 +5,7 @@ import { BsCheck } from 'react-icons/bs';
 import { IoIosClose } from 'react-icons/io';
 import { useDialogController } from '../../../hooks/dialogs';
 import { useSelectedTrancheContext } from '../../../store/contexts';
-import { NumberAndDollar } from '../../components/displays';
+import { AssetDisplay, NumberAndDollar } from '../../components/displays';
 import { useWindowSize } from '../../../hooks/ui';
 import { AvailableAsset } from '@app/api/types';
 import { BigNumber } from 'ethers';
@@ -113,12 +113,11 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                         ) : (
                                             <></>
                                         )}
-                                        <img
-                                            src={`/coins/${el.asset?.toLowerCase()}.svg`}
-                                            alt={el.asset}
-                                            className="h-8 w-8"
+                                        <AssetDisplay
+                                            name={width > 600 ? el.asset : ''}
+                                            logo={`/coins/${el.asset?.toLowerCase()}.svg`}
+                                            className="text-lg"
                                         />
-                                        <div className="text-lg">{el.asset}</div>
                                     </div>
                                 </td>
                                 <td

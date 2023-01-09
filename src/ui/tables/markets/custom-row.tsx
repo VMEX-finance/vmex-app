@@ -57,7 +57,7 @@ const MarketsCustomRow = (props: any) => {
     if (width < 900) {
         return (
             <tr
-                className="text-left transition duration-200 hover:bg-neutral-200 dark:hover:bg-neutral-900 hover:cursor-pointer flex flex-col px-4 py-1 border-y-[1px] dark:border-neutral-100"
+                className="text-left transition duration-200 hover:bg-neutral-200 dark:hover:bg-neutral-900 hover:cursor-pointer flex flex-col px-4 pt-2 pb-1 border-y-[1px] dark:border-neutral-100"
                 onClick={(e: any) => route(e, props)}
             >
                 <td className="flex justify-between">

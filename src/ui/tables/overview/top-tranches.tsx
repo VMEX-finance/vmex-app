@@ -18,7 +18,7 @@ export const TopTranchesTable: React.FC<ITableProps> = ({ data }) => {
                         <th
                             key={`table-header-${i}`}
                             scope="col"
-                            className={`py-3 text-left text-sm font-semibold`}
+                            className={`pb-3 text-left text-sm font-semibold`}
                         >
                             {el}
                         </th>

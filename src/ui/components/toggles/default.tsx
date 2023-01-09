@@ -28,7 +28,7 @@ export const BasicToggle = ({ checked, onChange, onClick, colors, disabled }: IT
                     : 'bg-neutral-700'
             } relative inline-flex h-6 w-11 items-center rounded-full`}
         >
-            <span className="sr-only">Enable notifications</span>
+            <span className="sr-only">Enable</span>
             <span
                 className={`${
                     checked || enabled ? 'translate-x-6' : 'translate-x-1'

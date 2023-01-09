@@ -136,18 +136,20 @@ export const ListInput = ({
                     }`}
                 >
                     <div className="flex flex-col justify-between gap-3">
-                        <div className="w-full flex gap-3 items-center">
-                            <AutoCompleteInput
-                                value={value}
-                                setValue={setValue}
-                                onChange={handleChange}
-                                onKeyDown={handleType}
-                                placeholder={placeholder}
-                                close={error.length !== 0}
-                                list={autocomplete}
-                            />
+                        <div className="w-full flex gap-3 items-center justify-between">
+                            <div className="max-w-[250px]">
+                                <AutoCompleteInput
+                                    value={value}
+                                    setValue={setValue}
+                                    onChange={handleChange}
+                                    onKeyDown={handleType}
+                                    placeholder={placeholder}
+                                    close={error.length !== 0}
+                                    list={autocomplete}
+                                />
+                            </div>
                             {value && value.length > 2 && (
-                                <span className="text-sm text-neutral400 whitespace-nowrap">
+                                <span className="text-sm text-neutral-400 whitespace-nowrap">
                                     Press Enter
                                 </span>
                             )}
