@@ -1,4 +1,4 @@
-import { useTranchesData } from '../../api';
+import { useSubgraphTrancheData } from '../../api';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 import { ITrancheProps } from '@app/api/types';
@@ -35,7 +35,7 @@ const TranchesContext = createContext<ITranchesStoreProps>({
 // Wrapper
 export function MyTranchesStore(props: { children: ReactNode }) {
     const { address } = useAccount();
-    const { queryAllTranches } = useTranchesData();
+    const { queryAllTranches } = useSubgraphTrancheData();
     const [myTranches, setMyTranches] = useState<Array<IMyTrancheProps>>([]);
     const [error, setError] = useState('');
 
