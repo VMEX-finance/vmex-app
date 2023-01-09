@@ -21,7 +21,9 @@ export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]
                     name
                     paused
                     reserves {
-                        symbol
+                        assetData {
+                            underlyingAssetName
+                        }
                         totalDeposits
                         availableLiquidity
                         totalCurrentVariableDebt
@@ -51,7 +53,8 @@ export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]
                 tranche.id,
                 assets.reduce(
                     (obj: any, item: any) => {
-                        const assetUSDPrice = (prices as any)[item.symbol.slice(0, -1)].usdPrice;
+                        const assetUSDPrice = (prices as any)[item.assetData.underlyingAssetName]
+                            .usdPrice;
                         return Object.assign(obj, {
                             tvl:
                                 obj.tvl +
@@ -87,7 +90,7 @@ export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]
             let trancheInfo = {
                 id: tranche.id,
                 name: tranche.name,
-                assets: tranche.reserves.map((el: any) => el.symbol.slice(0, -1)),
+                assets: tranche.reserves.map((el: any) => el.assetData.underlyingAssetName),
                 tvl: 0,
                 supplyTotal: 0,
                 borrowTotal: 0,

@@ -82,7 +82,9 @@ export const getSubgraphAllMarketsData = async (): Promise<IMarketsAsset[]> => {
         query: gql`
             query QueryAllMarkets {
                 reserves(orderBy: availableLiquidity, orderDirection: desc) {
-                    symbol
+                    assetData {
+                        underlyingAssetName
+                    }
                     decimals
                     tranche {
                         id

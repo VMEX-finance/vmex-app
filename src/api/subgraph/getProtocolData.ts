@@ -25,7 +25,9 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
                         timestamp
                         amount
                         reserve {
-                            symbol
+                            assetData {
+                                underlyingAssetName
+                            }
                             decimals
                         }
                     }
@@ -33,7 +35,9 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
                         timestamp
                         amount
                         reserve {
-                            symbol
+                            assetData {
+                                underlyingAssetName
+                            }
                             decimals
                         }
                     }
@@ -47,7 +51,7 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
         const prices = await getAllAssetPrices();
         data.tranches.map((tranche: IGraphTrancheProps) => {
             tranche.depositHistory.map((el) => {
-                const asset = el.reserve.symbol.slice(0, -1);
+                const asset = el.reserve.assetData.underlyingAssetName;
 
                 const assetUSDPrice = (prices as any)[asset].usdPrice;
                 const usdAmount = nativeAmountToUSD(el.amount, el.reserve.decimals, assetUSDPrice);
@@ -62,7 +66,7 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
             });
 
             tranche.borrowHistory.map((el) => {
-                const asset = el.reserve.symbol.slice(0, -1);
+                const asset = el.reserve.assetData.underlyingAssetName;
                 const assetUSDPrice = (prices as any)[asset].usdPrice;
                 const usdAmount = nativeAmountToUSD(el.amount, el.reserve.decimals, assetUSDPrice);
                 const date = new Date(el.timestamp * 1000).toLocaleString();
@@ -94,7 +98,9 @@ async function getTopSuppliedAssets(
         query: gql`
             query QueryTopSuppliedAssets {
                 reserves(first: 5, orderBy: totalDeposits, orderDirection: desc) {
-                    symbol
+                    assetData {
+                        underlyingAssetName
+                    }
                     totalDeposits
                     decimals
                 }
@@ -109,7 +115,7 @@ async function getTopSuppliedAssets(
 
     const result: { asset: string; amount: number }[] = Object.values(
         data.reserves.reduce((r: any, reserve: any) => {
-            const _asset = reserve.symbol.slice(0, -1);
+            const _asset = reserve.assetData.underlyingAssetName;
             const _assetUSDPrice = (prices as any)[_asset].usdPrice;
             const _usdAmount = nativeAmountToUSD(
                 reserve.totalDeposits,
@@ -135,7 +141,9 @@ async function getTopBorrowedAssets(
         query: gql`
             query QueryTopBorrowedAssets {
                 reserves(first: 5, orderBy: totalCurrentVariableDebt, orderDirection: desc) {
-                    symbol
+                    assetData {
+                        underlyingAssetName
+                    }
                     totalCurrentVariableDebt
                     decimals
                 }
@@ -150,7 +158,7 @@ async function getTopBorrowedAssets(
 
     const result: { asset: string; amount: number }[] = Object.values(
         data.reserves.reduce((r: any, reserve: any) => {
-            const _asset = reserve.symbol.slice(0, -1);
+            const _asset = reserve.assetData.underlyingAssetName;
             const _assetUSDPrice = (prices as any)[_asset].usdPrice;
             const _usdAmount = nativeAmountToUSD(
                 reserve.totalCurrentVariableDebt,

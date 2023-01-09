@@ -2,13 +2,17 @@ import { UseQueryResult } from '@tanstack/react-query';
 import { ILineChartDataPointProps } from '../../ui/components/charts';
 import { AssetBalance, IMarketsAsset, ITrancheProps, TrancheData } from '../types';
 
+export type IAssetData = {
+    underlyingAssetName: string;
+};
+
 export type IGraphHistoryProps = {
     action?: 'Borrow' | 'Deposit';
     amount: string;
     timestamp: number;
     reserve: {
         decimals: number;
-        symbol: string;
+        assetData: IAssetData;
         name?: string;
     };
 };

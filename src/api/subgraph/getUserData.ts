@@ -31,7 +31,9 @@ export const getSubgraphUserChart = async (
                 user(id: $address) {
                     reserves {
                         reserve {
-                            symbol
+                            assetData {
+                                underlyingAssetName
+                            }
                             decimals
                         }
                         pnlHistory(first: 100, orderBy: timestamp, orderDirection: asc) {
@@ -60,7 +62,7 @@ export const getSubgraphUserChart = async (
                     timestamp: pnlItem.timestamp,
                     aTokenBalance: pnlItem.currentATokenBalance,
                     debtTokenBalance: pnlItem.currentVariableDebt,
-                    reserveSymbol: reserve.reserve.symbol.slice(0, -1),
+                    reserveSymbol: reserve.reserve.assetData.underlyingAssetName,
                     reserveDecimals: reserve.reserve.decimals,
                 });
             });
@@ -123,7 +125,9 @@ export const getSubgraphUserData = async (address: string): Promise<IGraphUserDa
                         txHash
                         action
                         reserve {
-                            symbol
+                            assetData {
+                                underlyingAssetName
+                            }
                             decimals
                         }
                     }
@@ -133,7 +137,9 @@ export const getSubgraphUserData = async (address: string): Promise<IGraphUserDa
                         txHash
                         action
                         reserve {
-                            symbol
+                            assetData {
+                                underlyingAssetName
+                            }
                             decimals
                         }
                     }
@@ -143,7 +149,9 @@ export const getSubgraphUserData = async (address: string): Promise<IGraphUserDa
                         txHash
                         action
                         reserve {
-                            symbol
+                            assetData {
+                                underlyingAssetName
+                            }
                             decimals
                         }
                     }

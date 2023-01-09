@@ -25,7 +25,9 @@ export const getSubgraphTrancheData = async (
                     name
                     emergencyTrancheAdmin
                     reserves {
-                        symbol
+                        assetData {
+                            underlyingAssetName
+                        }
                         # baseLTVasCollateral
                         utilizationRate
                         reserveFactor
@@ -74,7 +76,7 @@ export const getSubgraphTrancheData = async (
                         liquidationPenalty: utils.formatUnits(item.assetData.liquidationBonus, 5),
                         collateral: item.usageAsCollateralEnabled,
                         canBeBorrowed: item.borrowingEnabled,
-                        oracle: 'Chainlink', // TODO: map to human readable name // (prices as any)[item.symbol.slice(0, -1)].oracle
+                        oracle: 'Chainlink', // TODO: map to human readable name // (prices as any)[item.assetData.underlyingAssetName].oracle
                         totalSupplied: utils.formatUnits(item.totalDeposits, item.decimals),
                         totalBorrowed: utils.formatUnits(
                             item.totalCurrentVariableDebt,
@@ -87,7 +89,7 @@ export const getSubgraphTrancheData = async (
 
         const summaryData = assets.reduce(
             (obj: any, item: any) => {
-                const asset = item.symbol.slice(0, -1);
+                const asset = item.assetData.underlyingAssetName;
                 const assetUSDPrice = (prices as any)[asset].usdPrice;
 
                 return Object.assign(obj, {
@@ -116,7 +118,7 @@ export const getSubgraphTrancheData = async (
         const returnObj = {
             assetsData: finalObj,
             utilityRate: '0',
-            assets: data.tranche.reserves.map((el: any) => el.symbol.slice(0, -1)),
+            assets: data.tranche.reserves.map((el: any) => el.assetData.underlyingAssetName),
             adminFee: 0.02, // TODO
             platformFee: 0.03, // TODO
             id: trancheId,
