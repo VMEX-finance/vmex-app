@@ -26,20 +26,26 @@ export const getSubgraphTrancheData = async (
                     emergencyTrancheAdmin
                     reserves {
                         symbol
-                        baseLTVasCollateral
+                        # baseLTVasCollateral
                         utilizationRate
                         reserveFactor
                         optimalUtilisationRate
                         decimals
                         variableBorrowRate
                         liquidityRate
-                        reserveLiquidationThreshold
-                        reserveLiquidationBonus
+                        # reserveLiquidationThreshold
+                        # reserveLiquidationBonus
                         totalDeposits
                         availableLiquidity
                         totalCurrentVariableDebt
                         usageAsCollateralEnabled
                         borrowingEnabled
+                        assetData {
+                            underlyingAssetName
+                            baseLTV
+                            liquidationThreshold
+                            liquidationBonus
+                        }
                     }
                 }
             }
@@ -54,18 +60,18 @@ export const getSubgraphTrancheData = async (
         const finalObj = assets.reduce(
             (obj: any, item: any) =>
                 Object.assign(obj, {
-                    [item.symbol.slice(0, -1)]: {
+                    [item.assetData.underlyingAssetName]: {
                         liquidity: utils.formatUnits(item.availableLiquidity, item.decimals),
-                        ltv: item.baseLTVasCollateral,
+                        ltv: item.assetData.baseLTV,
                         optimalUtilityRate: parseFloat(
                             utils.formatUnits(item.optimalUtilisationRate, 27),
                         ),
                         reserveFactor: item.reserveFactor,
-                        liquidationThreshold: item.reserveLiquidationThreshold,
+                        liquidationThreshold: item.assetData.liquidationThreshold,
                         utilityRate: `${item.utilizationRate}`,
                         borrowRate: utils.formatUnits(item.variableBorrowRate, 27),
                         supplyRate: utils.formatUnits(item.liquidityRate, 27),
-                        liquidationPenalty: utils.formatUnits(item.reserveLiquidationBonus, 5),
+                        liquidationPenalty: utils.formatUnits(item.assetData.liquidationBonus, 5),
                         collateral: item.usageAsCollateralEnabled,
                         canBeBorrowed: item.borrowingEnabled,
                         oracle: 'Chainlink', // TODO: map to human readable name // (prices as any)[item.symbol.slice(0, -1)].oracle

@@ -95,7 +95,11 @@ export const getSubgraphAllMarketsData = async (): Promise<IMarketsAsset[]> => {
                     totalCurrentVariableDebt
                     usageAsCollateralEnabled
                     borrowingEnabled
-                    reserveLiquidationThreshold
+                    # reserveLiquidationThreshold
+                    assetData {
+                        underlyingAssetName
+                        liquidationThreshold
+                    }
                 }
             }
         `,
@@ -107,7 +111,7 @@ export const getSubgraphAllMarketsData = async (): Promise<IMarketsAsset[]> => {
 
         const returnObj: IMarketsAsset[] = [];
         data.reserves.map((reserve: any) => {
-            const asset = reserve.symbol.slice(0, -1);
+            const asset = reserve.assetData.underlyingAssetName;
             const assetUSDPrice = (prices as any)[asset].usdPrice;
 
             returnObj.push({
@@ -136,7 +140,7 @@ export const getSubgraphAllMarketsData = async (): Promise<IMarketsAsset[]> => {
                 canBeBorrowed: reserve.borrowingEnabled,
                 currentPrice: BigNumber.from('0'), // TODO
                 collateralCap: BigNumber.from('0'), // TODO
-                liquidationThreshold: reserve.reserveLiquidationThreshold,
+                liquidationThreshold: reserve.assetData.liquidationThreshold,
             });
         });
 
