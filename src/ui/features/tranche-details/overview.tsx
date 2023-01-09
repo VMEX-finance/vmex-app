@@ -1,19 +1,18 @@
-import { Card } from '../../components/cards';
-import React from 'react';
 import {
+    Card,
+    SkeletonLoader,
     AssetDisplay,
     HealthFactor,
     MultipleAssetsDisplay,
     NumberDisplay,
-} from '../../components/displays';
-import { useWindowSize } from '../../../hooks/ui';
-import { useDialogController } from '../../../hooks/dialogs';
+} from '../../components';
+import React from 'react';
+import { useWindowSize, useDialogController } from '../../../hooks';
 import { useUserTrancheData } from '../../../api';
 import { useAccount } from 'wagmi';
 import { IYourBorrowsTableItemProps, IYourSuppliesTableItemProps } from '../../tables';
 import { useSelectedTrancheContext } from '../../../store/contexts';
 import { makeCompact, usdFormatter } from '../../../utils/helpers';
-import { SkeletonLoader } from '../../components/loaders';
 
 export interface ITrancheOverviewProps {
     assets?: string[];

@@ -1,6 +1,6 @@
 import { IAvailableCoins } from '../../../utils/helpers';
 import React from 'react';
-import { Checkbox } from '../../components/buttons';
+import { Checkbox } from '../../components/toggles';
 import { AssetDisplay } from '../../components/displays';
 
 // TODO: make a way to see which assets cannot be lent / collateralized / etc

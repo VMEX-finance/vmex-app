@@ -1,8 +1,6 @@
-import { Card } from '../../components/cards';
 import React from 'react';
-import { NumberDisplay, NumberAndDollar } from '../../components/displays';
+import { NumberDisplay, NumberAndDollar, Card, Button } from '../../components';
 import { useDialogController } from '../../../hooks/dialogs';
-import { Button } from '../../components/buttons';
 
 export type IStakingAsset = {
     asset: string;

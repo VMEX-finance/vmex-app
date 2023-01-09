@@ -1,24 +1,23 @@
 import React, { useEffect } from 'react';
-import { FaGasPump } from 'react-icons/fa';
 import { useMediatedState } from 'react-use';
-import { TransactionStatus } from '../../components/statuses';
-import { CoinInput } from '../../components/inputs';
-import { Button, DropdownButton } from '../../components/buttons';
-import { inputMediator, convertStringFormatToNumber } from '../../../utils/helpers';
-import { HealthFactor } from '../../components/displays';
+import { HealthFactor, Button, CoinInput, TransactionStatus } from '../../components';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
 import { ISupplyBorrowProps } from '../utils';
 import { useModal } from '../../../hooks/ui';
 import { borrow, repay } from '@vmexfinance/sdk';
-import { MAINNET_ASSET_MAPPINGS, NETWORK, SDK_PARAMS } from '../../../utils/sdk-helpers';
-import { useAccount, useSigner } from 'wagmi';
-import { useUserTrancheData, useTrancheMarketsData } from '../../../api';
-import { BigNumber } from 'ethers';
 import {
+    MAINNET_ASSET_MAPPINGS,
+    NETWORK,
+    inputMediator,
+    convertStringFormatToNumber,
     unformattedStringToBigNumber,
     bigNumberToNative,
     bigNumberToUnformattedString,
-} from '../../../utils/sdk-helpers';
+    SDK_PARAMS,
+} from '../../../utils';
+import { useAccount, useSigner } from 'wagmi';
+import { useUserTrancheData, useTrancheMarketsData } from '../../../api';
+import { BigNumber } from 'ethers';
 import { useQueryClient } from '@tanstack/react-query';
 
 export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({

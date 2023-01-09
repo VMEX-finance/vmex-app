@@ -3,11 +3,15 @@ import { TbInfinity } from 'react-icons/tb';
 import { BsArrowRight } from 'react-icons/bs';
 import { useUserTrancheData, useTrancheMarketsData } from '../../../api';
 import { useSelectedTrancheContext } from '../../../store/contexts';
-import { convertStringFormatToNumber, HFFormatter } from '../../../utils/helpers';
+import {
+    convertStringFormatToNumber,
+    HFFormatter,
+    DECIMALS,
+    calculateHealthFactorFromBalances,
+    HEALTH,
+} from '../../../utils';
 import { ethers, BigNumber } from 'ethers';
-import { calculateHealthFactorFromBalances, DECIMALS } from '../../../utils/sdk-helpers';
 import { useAccount } from 'wagmi';
-import { HEALTH } from '../../../utils/constants';
 
 interface IHealthFactorProps {
     asset?: string;

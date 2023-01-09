@@ -3,7 +3,7 @@ import { Menu, Transition } from '@headlessui/react';
 import { RiArrowDropDownLine } from 'react-icons/ri';
 import { CgSpinner } from 'react-icons/cg';
 import { IoMdCheckmarkCircle } from 'react-icons/io';
-import { MenuItemButton } from './menu-item';
+import { MenuItemButton } from '../buttons/menu-item';
 import { truncate as _truncate } from '../../../utils/helpers';
 
 interface IDropdownItemProps {
@@ -30,7 +30,7 @@ export interface IDropdownProps {
     truncate?: boolean;
 }
 
-export const DropdownButton = ({
+export const DefaultDropdown = ({
     items,
     primary,
     direction = 'left',

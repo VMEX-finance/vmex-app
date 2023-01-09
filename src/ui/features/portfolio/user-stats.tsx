@@ -1,6 +1,5 @@
 import React from 'react';
-import { Card } from '../../components/cards';
-import { NumberDisplay } from '../../components/displays';
+import { NumberDisplay, Card } from '../../components';
 
 export interface IPortfolioProps {
     networth?: string;

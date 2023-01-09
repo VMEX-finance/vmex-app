@@ -1,10 +1,7 @@
-import { ReLineChart } from '../../components/charts';
 import React, { useEffect, useState } from 'react';
-import { Card } from '../../components/cards';
-import { DropdownButton } from '../../components/buttons';
 import ReactTooltip from 'react-tooltip';
 import { useSelectedTrancheContext } from '../../../store/contexts';
-import { NumberDisplay } from '../../components/displays';
+import { NumberDisplay, DefaultDropdown, Card, ReLineChart } from '../../components';
 import { IGraphTrancheAssetProps, IGraphTrancheDataProps } from '../../../api/subgraph/types';
 import { numberFormatter, percentFormatter } from '../../../utils/helpers';
 import { useSubgraphMarketsData } from '../../../api/subgraph';
@@ -57,7 +54,7 @@ export const TrancheStatisticsCard = ({
                                 </div>
                             )}
                         </div>
-                        <DropdownButton
+                        <DefaultDropdown
                             primary
                             size="lg"
                             items={

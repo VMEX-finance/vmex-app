@@ -1,13 +1,10 @@
-import { Card } from '../components/cards';
 import React from 'react';
-import { ReLineChart } from '../components/charts';
-import { NumberDisplay, PillDisplay } from '../components/displays';
 import { TopTranchesTable } from '../tables';
 import { useWindowSize } from '../../hooks/ui';
 import { makeCompact } from '../../utils/helpers';
 import { useSubgraphProtocolData } from '../../api';
 import { AssetBalance, TrancheData } from '@app/api/types';
-import { SkeletonLoader } from '../components/loaders';
+import { SkeletonLoader, ReLineChart, NumberDisplay, PillDisplay, Card } from '../components';
 
 export interface IProtocolProps {
     isLoading?: boolean;

@@ -1,7 +1,6 @@
-import { makeCompact, percentFormatter, truncateAddress } from '../../../utils/helpers';
+import { truncateAddress } from '../../../utils/helpers';
 import React from 'react';
-import { Card } from '../../components/cards';
-import { MultipleAssetsDisplay, NumberDisplay } from '../../components/displays';
+import { Card, MultipleAssetsDisplay, NumberDisplay } from '../../components';
 import { useSelectedTrancheContext } from '../../../store/contexts';
 import { IGraphTrancheDataProps } from '../../../api/subgraph/types';
 

@@ -2,9 +2,8 @@ import React, { useEffect } from 'react';
 import { IoIosClose } from 'react-icons/io';
 import { AssetDisplay } from '../displays';
 import { BasicToggle } from '../toggles';
-import { truncateAddress } from '../../../utils/helpers';
 import { utils } from 'ethers';
-import { AVAILABLE_ASSETS } from '../../../utils/constants';
+import { AVAILABLE_ASSETS, truncateAddress } from '../../../utils';
 import { AutoCompleteInput } from '.';
 
 export interface IListInput {

@@ -5,7 +5,7 @@ import { useAccount } from 'wagmi';
 import { useDialogController } from '../../../hooks/dialogs';
 import { ThemeContext, useMyTranchesContext } from '../../../store/contexts';
 import { useWindowSize } from '../../../hooks/ui';
-import { DropdownButton } from './dropdown';
+import { DefaultDropdown } from '../dropdowns';
 import { truncateAddress, truncate } from '../../../utils/helpers';
 import { useNavigate } from 'react-router-dom';
 
@@ -49,7 +49,7 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
 
     if (address && width > 1024) {
         return (
-            <DropdownButton
+            <DefaultDropdown
                 className={['min-h-[36px] border-1 border border-black', mode, className].join(' ')}
                 selected={width > 1400 ? truncateAddress(address) : truncate(address, 3)}
                 items={renderDropdownItems()}
