@@ -14,7 +14,7 @@ import {
     SDK_PARAMS,
 } from '../../../utils';
 import { HealthFactor, ActiveStatus, TransactionStatus, Button, CoinInput } from '../../components';
-import { useTrancheMarketsData, useUserData, useUserTrancheData } from '../../../api';
+import { useSubgraphTrancheData, useUserData, useUserTrancheData } from '../../../api';
 import { useSigner, useAccount } from 'wagmi';
 import { BigNumber } from 'ethers';
 import { IYourSuppliesTableItemProps } from '@ui/tables';
@@ -26,8 +26,8 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
     const [view, setView] = React.useState('Supply');
     const [isMax, setIsMax] = React.useState(false);
     const [amount, setAmount] = useMediatedState(inputMediator, '');
-    const { getTrancheMarket } = useTrancheMarketsData(data?.trancheId || 0);
     const { invalidateQueries } = useQueryClient();
+    const { findAssetInMarketsData } = useSubgraphTrancheData(data?.trancheId || 0);
     const { data: signer } = useSigner();
     const { address } = useAccount();
     const { findAssetInUserSuppliesOrBorrows, queryUserTrancheData } = useUserTrancheData(
@@ -73,7 +73,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
     };
 
     const amountWalletNative = getTokenBalance(data?.asset || '');
-    const apy = getTrancheMarket(data?.asset || '').borrowApy;
+    const apy = findAssetInMarketsData(data?.asset || '').supplyRate;
     const amountWithdraw =
         findAssetInUserSuppliesOrBorrows(data?.asset, 'supply')?.amountNative || data?.amountNative;
     const collateral = (

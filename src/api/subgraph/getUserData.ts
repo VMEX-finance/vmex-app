@@ -1,11 +1,12 @@
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 import { useQuery } from '@tanstack/react-query';
 import { SUBGRAPH_ENDPOINT } from '../../utils/constants';
-import { IGraphUserDataProps, ISubgraphUserData } from './types';
+import { IGraphUserDataProps, ISubgraphUserData, IGraphTrancheDataProps } from './types';
 import { ILineChartDataPointProps } from '@ui/components/charts';
 import { BigNumber, utils } from 'ethers';
 import { getAllAssetPrices } from '../prices';
 import { nativeAmountToUSD } from '../../utils/sdk-helpers';
+import { processTrancheData } from './getTrancheData';
 
 const client = new ApolloClient({
     uri: SUBGRAPH_ENDPOINT,
@@ -18,6 +19,49 @@ type BalanceHistoryItem = {
     debtTokenBalance: string;
     reserveSymbol: string;
     reserveDecimals: number;
+};
+
+export const getUserAdminTrancheData = async (admin: string): Promise<IGraphTrancheDataProps[]> => {
+    const { data, error } = await client.query({
+        query: gql`
+            query QueryTrancheAdmin($admin: String!) {
+                tranches(where: { emergencyTrancheAdmin: $admin }) {
+                    name
+                    emergencyTrancheAdmin
+                    id
+                    reserves {
+                        utilizationRate
+                        reserveFactor
+                        optimalUtilisationRate
+                        decimals
+                        variableBorrowRate
+                        liquidityRate
+                        totalDeposits
+                        availableLiquidity
+                        totalCurrentVariableDebt
+                        usageAsCollateralEnabled
+                        borrowingEnabled
+                        assetData {
+                            underlyingAssetName
+                            baseLTV
+                            liquidationThreshold
+                            liquidationBonus
+                            borrowFactor
+                            borrowCap
+                            collateralCap
+                        }
+                    }
+                }
+            }
+        `,
+        variables: { admin },
+    });
+
+    if (error) return [];
+    else {
+        const dat = data.tranches;
+        return dat.map((el: any) => processTrancheData(el));
+    }
 };
 
 export const getSubgraphUserChart = async (
@@ -183,8 +227,14 @@ export function useSubgraphUserData(address?: `0x${string}`): ISubgraphUserData 
         enabled: !!address,
     });
 
+    const queryTrancheAdminData = useQuery({
+        queryKey: ['subgraph-tranche-admin-data'],
+        queryFn: () => getUserAdminTrancheData(address),
+    });
+
     return {
         queryUserPnlChart,
         queryUserData,
+        queryTrancheAdminData,
     };
 }

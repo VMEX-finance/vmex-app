@@ -23,24 +23,30 @@ export type IGraphTrancheProps = {
     depositHistory: IGraphHistoryProps[];
 };
 
-export type IGraphTrancheAssetProps =
-    | {
-          liquidity: string;
-          ltv: string;
-          optimalUtilityRate: number;
-          reserveFactor: string;
-          liquidationThreshold: string;
-          totalBorrowed: string;
-          utilityRate: string;
-          borrowRate: string;
-          supplyRate: string;
-          liquidationPenalty: string;
-          collateral: boolean;
-          canBeBorrowed: boolean;
-          oracle: string;
-          totalSupplied: string;
-      }
-    | Record<any, any>;
+export type IGraphAssetData = {
+    liquidity: string;
+    ltv: string;
+    optimalUtilityRate: number;
+    reserveFactor: string;
+    liquidationThreshold: string;
+    totalBorrowed: string;
+    utilityRate: string;
+    borrowRate: string;
+    supplyRate: string;
+    liquidationPenalty: string;
+    collateral: boolean;
+    canBeBorrowed: boolean;
+    oracle: string;
+    totalSupplied: string;
+    baseLTV: string;
+    liquidationBonus: string;
+    borrowFactor: string;
+    borrowCap: string;
+    collateralCap: string;
+    price: string;
+};
+
+export type IGraphTrancheAssetProps = IGraphAssetData | Record<any, any>;
 
 export type IGraphTrancheDataProps = {
     assetsData?: IGraphTrancheAssetProps;
@@ -82,6 +88,7 @@ export type IGraphUserDataProps = {} | Record<any, any>;
 
 export type ISubgraphTrancheData = {
     queryTrancheData: UseQueryResult<IGraphTrancheDataProps, unknown>;
+    findAssetInMarketsData: (asset: string) => IGraphAssetData;
 };
 
 export type ISubgraphMarketsChartsProps = {
@@ -99,6 +106,7 @@ export type ISubgraphAllMarketsData = {
 export type ISubgraphUserData = {
     queryUserPnlChart: UseQueryResult<ILineChartDataPointProps[], unknown>;
     queryUserData: UseQueryResult<any, unknown>;
+    queryTrancheAdminData: UseQueryResult<IGraphTrancheDataProps[], unknown>;
 };
 
 export type ISubgraphTranchesDataProps = {

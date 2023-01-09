@@ -14,7 +14,7 @@ import {
     bigNumberToUnformattedString,
 } from '../../utils/sdk-helpers';
 import { IUserTrancheDataProps, IUserTrancheData } from './types';
-import { BigNumber } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 
 export async function _getUserTrancheData(
     userAddress: string,
@@ -109,8 +109,8 @@ export function useUserTrancheData(userAddress: any, trancheId: number): IUserTr
 
     const findAmountBorrowable = (
         asset: string,
-        liquidity: string | undefined,
-        liquidityNative: BigNumber | undefined,
+        liquidityNative: string | undefined, //in native units
+        price: string | undefined, //asset price in USD
     ) => {
         if (queryUserTrancheData.isLoading)
             return {
@@ -123,12 +123,17 @@ export function useUserTrancheData(userAddress: any, trancheId: number): IUserTr
             const found = userWalletData?.find(
                 (el) => el.asset.toLowerCase() === asset.toLowerCase(),
             );
-            if (found && liquidity && liquidityNative) {
+            if (found && liquidityNative && price) {
+                const liquidity = BigNumber.from(liquidityNative)
+                    .mul(price)
+                    .div(ethers.utils.parseEther('1'));
                 return {
-                    amount: found?.amountNative.lt(liquidityNative) ? found?.amountUSD : liquidity,
+                    amount: found?.amountNative.lt(liquidityNative)
+                        ? found?.amountUSD
+                        : liquidity.toString(),
                     amountNative: found?.amountNative.lt(liquidityNative)
                         ? found?.amountNative
-                        : liquidityNative,
+                        : BigNumber.from(liquidityNative),
                     loading: false,
                 };
             } else

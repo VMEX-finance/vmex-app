@@ -1,7 +1,7 @@
 import React from 'react';
 import { TbInfinity } from 'react-icons/tb';
 import { BsArrowRight } from 'react-icons/bs';
-import { useUserTrancheData, useTrancheMarketsData } from '../../../api';
+import { useUserTrancheData, useSubgraphTrancheData } from '../../../api';
 import { useSelectedTrancheContext } from '../../../store/contexts';
 import {
     convertStringFormatToNumber,
@@ -35,7 +35,7 @@ export const HealthFactor = ({
     const { address } = useAccount();
     const { tranche } = useSelectedTrancheContext();
     const { queryUserTrancheData } = useUserTrancheData(address, tranche.id);
-    const { queryTrancheMarkets } = useTrancheMarketsData(tranche.id);
+    const { findAssetInMarketsData } = useSubgraphTrancheData(tranche.id);
 
     const determineSize = () => {
         switch (size) {
@@ -59,17 +59,6 @@ export const HealthFactor = ({
         else if (_health > HEALTH['OKAY']) return 'text-yellow-400';
         else if (_health > HEALTH['BAD']) return 'text-red-300';
         else return 'text-red-500';
-    };
-
-    const findAssetInMarketsData = (asset: string) => {
-        if (queryTrancheMarkets.isLoading) return undefined;
-        else {
-            const found = queryTrancheMarkets.data?.find(
-                (el) => el.asset.toLowerCase() === asset.toLowerCase(),
-            );
-            if (found) return found;
-            else return undefined;
-        }
     };
 
     const renderHealth = (hf: number | string | undefined, isInf: boolean) => {
@@ -108,8 +97,8 @@ export const HealthFactor = ({
         try {
             let ethAmount = ethers.utils
                 .parseUnits(convertStringFormatToNumber(amount), d)
-                .mul(a.currentPrice)
-                .div(ethers.utils.parseUnits('1', d)); //18 decimals
+                .mul(a.price)
+                .div(ethers.utils.parseUnits('1', d)); //18 decimals (even though USDC, still should be 18 decimals)
 
             let totalCollateralETH = queryUserTrancheData.data?.totalCollateralETH;
             let totalDebtInETH = queryUserTrancheData.data?.totalDebtETH;

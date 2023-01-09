@@ -16,7 +16,7 @@ import {
     SDK_PARAMS,
 } from '../../../utils';
 import { useAccount, useSigner } from 'wagmi';
-import { useUserTrancheData, useTrancheMarketsData } from '../../../api';
+import { useUserTrancheData, useSubgraphTrancheData } from '../../../api';
 import { BigNumber } from 'ethers';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -38,7 +38,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
         address,
         data?.trancheId || 0,
     );
-    const { getTrancheMarket } = useTrancheMarketsData(data?.trancheId || 0);
+    const { findAssetInMarketsData } = useSubgraphTrancheData(data?.trancheId || 0);
 
     const handleClick = async () => {
         if (data && signer) {
@@ -81,10 +81,10 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
 
     const amountBorrwable = findAmountBorrowable(
         data?.asset || '',
-        getTrancheMarket(data?.asset || '').available,
-        getTrancheMarket(data?.asset || '').availableNative,
+        findAssetInMarketsData(data?.asset || '').liquidity,
+        findAssetInMarketsData(data?.asset || '').price,
     );
-    const apy = getTrancheMarket(data?.asset || '').borrowApy;
+    const apy = findAssetInMarketsData(data?.asset || '').borrowRate;
     const amountRepay =
         findAssetInUserSuppliesOrBorrows(data?.asset, 'borrow')?.amountNative ||
         data?.amountNative ||

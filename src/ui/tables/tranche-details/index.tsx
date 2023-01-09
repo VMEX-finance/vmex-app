@@ -1,4 +1,4 @@
-import { useTrancheMarketsData, useUserData, useUserTrancheData } from '../../../api';
+import { useSubgraphTrancheData, useUserData, useUserTrancheData } from '../../../api';
 import { useAccount } from 'wagmi';
 import React from 'react';
 import { BsCheck } from 'react-icons/bs';
@@ -20,7 +20,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
     const { tranche } = useSelectedTrancheContext();
     const { queryUserWallet, getTokenBalance } = useUserData(address);
     const { queryUserTrancheData, findAmountBorrowable } = useUserTrancheData(address, tranche.id);
-    const { getTrancheMarket } = useTrancheMarketsData(tranche.id || 0);
+    const { findAssetInMarketsData } = useSubgraphTrancheData(tranche.id || 0);
     const { openDialog } = useDialogController();
 
     const mode1 =
@@ -55,8 +55,8 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
     const amountBorrwable = (asset: string) => {
         return findAmountBorrowable(
             asset,
-            getTrancheMarket(asset).available,
-            getTrancheMarket(asset).availableNative,
+            findAssetInMarketsData(asset).liquidity,
+            findAssetInMarketsData(asset).price,
         );
     };
 

@@ -48,8 +48,8 @@ export type IUserTrancheDataProps = {
     ) => IYourSuppliesTableItemProps | IYourBorrowsTableItemProps | undefined;
     findAmountBorrowable: (
         asset: string,
-        liquidity: string | undefined,
-        liquidityNative: BigNumber | undefined,
+        liquidityNative: string | undefined,
+        price: string | undefined,
     ) => ITokenBalanceProps;
 };
 
