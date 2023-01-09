@@ -1,8 +1,6 @@
 import createCache from '@emotion/cache';
 import { createTheme } from '@mui/material/styles';
-import { ThemeContext } from '../../store/contexts';
 import { MUIDataTableOptions } from 'mui-datatables';
-import { useContext } from 'react';
 
 export const muiCache = createCache({
     key: 'mui-datatables',

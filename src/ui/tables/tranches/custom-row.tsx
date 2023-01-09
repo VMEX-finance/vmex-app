@@ -1,12 +1,10 @@
-import { Button } from '../../components/buttons';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '../../../store/contexts';
-import { MultipleAssetsDisplay } from '../../components/displays';
 import { useWindowSize } from '../../../hooks/ui';
 import { determineRatingColor } from '../../../utils/helpers';
 import { BsArrowDownCircle, BsArrowUpCircle } from 'react-icons/bs';
-import { Tooltip } from '../../components/tooltips';
+import { Tooltip, MultipleAssetsDisplay, Button } from '../../components';
 
 type ITranchesCustomRowProps = {
     name: string[];
@@ -18,7 +16,6 @@ type ITranchesCustomRowProps = {
     id: string | number;
 };
 
-// TODO: implement interface
 const TranchesCustomRow = (props: ITranchesCustomRowProps) => {
     const { name, assets, aggregateRating, yourActivity, supplyTotal, borrowTotal, id } = props;
 

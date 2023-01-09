@@ -1,12 +1,11 @@
 import React from 'react';
-import { Card } from '../../components/cards';
+import { Card, Button } from '../../components';
 import {
     YourBorrowsTable,
     YourSuppliesTable,
     IYourBorrowsTableItemProps,
     IYourSuppliesTableItemProps,
 } from '.';
-import { Button } from '../../components/buttons';
 import { useNavigate } from 'react-router-dom';
 
 interface IYourPositionsProps {

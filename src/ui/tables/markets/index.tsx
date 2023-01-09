@@ -8,9 +8,8 @@ import { SpinnerLoader } from '../../components/loaders';
 import { IMarketsAsset } from '@app/api/types';
 import { useAccount } from 'wagmi';
 import { useUserData } from '../../../api';
-import { numberFormatter, percentFormatter } from '../../../utils/helpers';
 import { ThemeContext } from '../../../store/contexts';
-import { bigNumberToUnformattedString } from '../../../utils/sdk-helpers';
+import { bigNumberToUnformattedString, numberFormatter, percentFormatter } from '../../../utils';
 
 interface ITableProps {
     data?: IMarketsAsset[];

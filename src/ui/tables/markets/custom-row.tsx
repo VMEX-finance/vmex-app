@@ -1,14 +1,12 @@
-import { SplitButton } from '../../components/buttons';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '../../../store/contexts';
-import { useWindowSize } from '../../../hooks/ui';
 import { determineRatingColor } from '../../../utils/helpers';
 import { BsCheck } from 'react-icons/bs';
 import { IoIosClose } from 'react-icons/io';
-import { AssetDisplay } from '../../components/displays';
+import { AssetDisplay, SplitButton } from '../../components';
 import { IMarketsAsset } from '@app/api/types';
-import { useDialogController } from '../../../hooks/dialogs';
+import { useDialogController, useWindowSize } from '../../../hooks';
 
 const MarketsCustomRow = (props: any) => {
     const {

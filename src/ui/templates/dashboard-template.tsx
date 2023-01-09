@@ -1,11 +1,9 @@
 import React from 'react';
-import { Button, LinkButton } from '../components/buttons';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useWindowSize } from '../../hooks/ui';
+import { useWindowSize, useDialogController } from '../../hooks';
 import { BiChevronLeft, BiPlus } from 'react-icons/bi';
-import { useDialogController } from '../../hooks/dialogs';
 import { useMyTranchesContext } from '../../store/contexts';
-import { Tooltip } from '../components/tooltips';
+import { Tooltip, Button, LinkButton } from '../components';
 import { useAccount } from 'wagmi';
 import { Skeleton } from '@mui/material';
 

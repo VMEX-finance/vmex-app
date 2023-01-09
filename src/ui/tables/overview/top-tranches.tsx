@@ -1,4 +1,3 @@
-import { bigNumberToUSD } from '../../../utils/sdk-helpers';
 import React from 'react';
 import { makeCompact } from '../../../utils/helpers';
 import { TrancheData } from '../../../api/types';

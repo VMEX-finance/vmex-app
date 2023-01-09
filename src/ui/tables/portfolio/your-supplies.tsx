@@ -1,13 +1,10 @@
-import { AssetDisplay, NumberAndDollar } from '../../components/displays';
 import React, { useState, useEffect } from 'react';
-import { useDialogController } from '../../../hooks/dialogs';
-import { BasicToggle } from '../../components/toggles';
+import { BasicToggle, AssetDisplay, NumberAndDollar } from '../../components';
 import { BigNumber } from 'ethers';
-import { bigNumberToNative, SDK_PARAMS } from '../../../utils/sdk-helpers';
-import { useModal, useWindowSize } from '../../../hooks/ui';
+import { useModal, useWindowSize, useDialogController } from '../../../hooks';
 import { markReserveAsCollateral } from '@vmexfinance/sdk';
 import { useSigner } from 'wagmi';
-import { NETWORK, MAINNET_ASSET_MAPPINGS } from '../../../utils/sdk-helpers';
+import { NETWORK, MAINNET_ASSET_MAPPINGS, bigNumberToNative, SDK_PARAMS } from '../../../utils';
 
 export type IYourSuppliesTableItemProps = {
     asset: string;

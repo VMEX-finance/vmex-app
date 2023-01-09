@@ -3,14 +3,12 @@ import { useAccount } from 'wagmi';
 import React from 'react';
 import { BsCheck } from 'react-icons/bs';
 import { IoIosClose } from 'react-icons/io';
-import { useDialogController } from '../../../hooks/dialogs';
 import { useSelectedTrancheContext } from '../../../store/contexts';
 import { AssetDisplay, NumberAndDollar } from '../../components/displays';
-import { useWindowSize } from '../../../hooks/ui';
+import { useWindowSize, useDialogController } from '../../../hooks';
 import { AvailableAsset } from '@app/api/types';
 import { BigNumber } from 'ethers';
-import { bigNumberToNative } from '../../../utils/sdk-helpers';
-import { numberFormatter } from '../../../utils/helpers';
+import { numberFormatter, bigNumberToNative } from '../../../utils';
 
 interface ITableProps {
     data: AvailableAsset[];

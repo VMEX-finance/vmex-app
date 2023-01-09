@@ -6,7 +6,7 @@ import { TranchesCustomRow } from './custom-row';
 import MUIDataTable from 'mui-datatables';
 import { SpinnerLoader } from '../../components/loaders';
 import { useAccount } from 'wagmi';
-import { useUserData, useUserTrancheData } from '../../../api';
+import { useUserData } from '../../../api';
 import { ITrancheProps } from '../../../api/types';
 import { ThemeContext } from '../../../store/contexts';
 import { usdFormatter } from '../../../utils/helpers';

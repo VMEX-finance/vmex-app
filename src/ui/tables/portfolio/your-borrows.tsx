@@ -1,9 +1,8 @@
 import React from 'react';
-import { useDialogController } from '../../../hooks/dialogs';
 import { AssetDisplay, NumberAndDollar } from '../../components/displays';
 import { BigNumber } from 'ethers';
 import { bigNumberToNative } from '../../../utils/sdk-helpers';
-import { useWindowSize } from '../../../hooks/ui';
+import { useWindowSize, useDialogController } from '../../../hooks';
 
 export type IYourBorrowsTableItemProps = {
     asset: string;

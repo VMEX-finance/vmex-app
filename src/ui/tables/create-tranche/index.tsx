@@ -1,7 +1,6 @@
 import { IAvailableCoins } from '../../../utils/helpers';
 import React from 'react';
-import { Checkbox } from '../../components/toggles';
-import { AssetDisplay } from '../../components/displays';
+import { Checkbox, AssetDisplay } from '../../components';
 
 // TODO: make a way to see which assets cannot be lent / collateralized / etc
 type ICreateTrancheAssetsTableProps = {

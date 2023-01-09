@@ -1,22 +1,21 @@
 import React, { useEffect } from 'react';
 import { useMediatedState } from 'react-use';
-import { inputMediator, convertStringFormatToNumber } from '../../../utils/helpers';
-import { CoinInput } from '../../components/inputs';
-import { Button } from '../../components/buttons';
-import { ActiveStatus, TransactionStatus } from '../../components/statuses';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
 import { useModal } from '../../../hooks/ui';
 import { supply, withdraw } from '@vmexfinance/sdk';
-import { MAINNET_ASSET_MAPPINGS, NETWORK, SDK_PARAMS } from '../../../utils/sdk-helpers';
-import { HealthFactor } from '../../components/displays';
-import { useTrancheMarketsData } from '../../../api';
-import { useSigner, useAccount } from 'wagmi';
 import {
+    MAINNET_ASSET_MAPPINGS,
+    NETWORK,
+    inputMediator,
+    convertStringFormatToNumber,
     unformattedStringToBigNumber,
     bigNumberToNative,
     bigNumberToUnformattedString,
-} from '../../../utils/sdk-helpers';
-import { useUserData, useUserTrancheData } from '../../../api';
+    SDK_PARAMS,
+} from '../../../utils';
+import { HealthFactor, ActiveStatus, TransactionStatus, Button, CoinInput } from '../../components';
+import { useTrancheMarketsData, useUserData, useUserTrancheData } from '../../../api';
+import { useSigner, useAccount } from 'wagmi';
 import { BigNumber } from 'ethers';
 import { IYourSuppliesTableItemProps } from '@ui/tables';
 import { ISupplyBorrowProps } from '../utils';
