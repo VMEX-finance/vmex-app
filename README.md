@@ -26,6 +26,16 @@ yarn start:dev
 
 When adding new features, create a new branch based on `origin/develop`. Upon completing new features, create pull requests to `origin/develop`.
 
+## Testing using Hillfire deployment
+
+In this repo, run `yarn start:mainnetfork`
+
+In metamask, change the chain to:
+
+RPC url: https://hillfire.dns.army:8443/
+Chain id: 31337
+Currency: ETH
+
 ## Directory
 
 ```
