@@ -1,14 +1,14 @@
 import { UseQueryResult } from '@tanstack/react-query';
 import { ILineChartDataPointProps } from '../../ui/components/charts';
 import { AssetBalance, IMarketsAsset, ITrancheProps, TrancheData } from '../types';
-
+import { BigNumber } from 'ethers';
 export type IAssetData = {
     underlyingAssetName: string;
 };
 
 export type IGraphHistoryProps = {
     action?: 'Borrow' | 'Deposit';
-    amount: string;
+    amount: BigNumber;
     timestamp: number;
     reserve: {
         decimals: number;
@@ -24,7 +24,8 @@ export type IGraphTrancheProps = {
 };
 
 export type IGraphAssetData = {
-    liquidity: string;
+    liquidity: BigNumber;
+    decimals: string;
     ltv: string;
     optimalUtilityRate: number;
     reserveFactor: string;
@@ -33,7 +34,6 @@ export type IGraphAssetData = {
     utilityRate: string;
     borrowRate: string;
     supplyRate: string;
-    liquidationPenalty: string;
     collateral: boolean;
     canBeBorrowed: boolean;
     oracle: string;
@@ -42,8 +42,9 @@ export type IGraphAssetData = {
     liquidationBonus: string;
     borrowFactor: string;
     borrowCap: string;
-    collateralCap: string;
-    price: string;
+    supplyCap: string;
+    priceUSD: BigNumber;
+    priceETH: BigNumber;
 };
 
 export type IGraphTrancheAssetProps = IGraphAssetData | Record<any, any>;

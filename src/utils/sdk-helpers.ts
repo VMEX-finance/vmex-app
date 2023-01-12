@@ -106,12 +106,17 @@ export const bigNumberToUSD = (
 };
 
 export const nativeAmountToUSD = (
-    amount: string,
+    amount: BigNumber,
     decimals: number,
-    assetUSDPrice: number,
+    assetUSDPrice: BigNumber,
 ): number => {
     return parseFloat(
-        (Number(ethers.utils.formatUnits(amount, decimals)) * assetUSDPrice).toFixed(2),
+        Number(
+            ethers.utils.formatUnits(
+                BigNumber.from(amount).mul(assetUSDPrice).div(ethers.utils.parseEther('1')),
+                decimals,
+            ),
+        ).toFixed(2),
     );
 };
 
@@ -134,6 +139,11 @@ export const bigNumberToUnformattedString = (
     if (!number) {
         console.error('given invalid bignumber');
         return '0';
+    }
+
+    if (number.lt(10)) {
+        console.log('!!!!!!! Manually setting to zero since very close: ', number.toString());
+        number = BigNumber.from('0');
     }
 
     return ethers.utils.formatUnits(
@@ -179,15 +189,16 @@ export const addDollarAmounts = (list: Array<string> | undefined, dollarSign = t
 };
 
 export const calculateHealthFactorFromBalances = (
-    totalCollateralInETH: BigNumber,
-    totalDebtInETH: BigNumber,
-    liquidationThreshold: BigNumber,
+    borrowFactorTimesDebt: BigNumber,
+    liquidationThresholdTimesCollateral: BigNumber,
 ) => {
-    if (totalDebtInETH.lte(BigNumber.from('0'))) {
+    if (borrowFactorTimesDebt.lte(BigNumber.from('0'))) {
         return undefined;
     }
-    return liquidationThreshold
-        .mul(ethers.utils.parseEther('1'))
-        .div(BigNumber.from('10000'))
-        .div(totalDebtInETH);
+    return (
+        liquidationThresholdTimesCollateral
+            .mul(ethers.utils.parseEther('1'))
+            // .div(BigNumber.from('10000'))
+            .div(borrowFactorTimesDebt)
+    );
 };

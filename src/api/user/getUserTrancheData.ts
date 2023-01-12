@@ -26,6 +26,7 @@ export async function _getUserTrancheData(
             totalDebtETH: BigNumber.from('0'),
             currentLiquidationThreshold: BigNumber.from('0'),
             healthFactor: '0',
+            avgBorrowFactor: BigNumber.from('0'),
             supplies: [],
             borrows: [],
             assetBorrowingPower: [],
@@ -55,6 +56,7 @@ export async function _getUserTrancheData(
         totalDebtETH: userTrancheData.totalDebtETH,
         currentLiquidationThreshold: userTrancheData.currentLiquidationThreshold,
         healthFactor: bigNumberToUnformattedString(userTrancheData.healthFactor, 'ETH'), //health factor has 18 decimals.
+        avgBorrowFactor: userTrancheData.avgBorrowFactor,
         supplies: userTrancheData.suppliedAssetData.map((assetData: SuppliedAssetData) => {
             return {
                 asset:
@@ -109,8 +111,9 @@ export function useUserTrancheData(userAddress: any, trancheId: number): IUserTr
 
     const findAmountBorrowable = (
         asset: string,
-        liquidityNative: string | undefined, //in native units
-        price: string | undefined, //asset price in USD
+        liquidityNative: BigNumber | undefined, //in native units
+        decimals: string | undefined,
+        price: BigNumber | undefined, //asset price in USD
     ) => {
         if (queryUserTrancheData.isLoading)
             return {
@@ -123,14 +126,14 @@ export function useUserTrancheData(userAddress: any, trancheId: number): IUserTr
             const found = userWalletData?.find(
                 (el) => el.asset.toLowerCase() === asset.toLowerCase(),
             );
-            if (found && liquidityNative && price) {
+            if (found && liquidityNative && price && decimals) {
                 const liquidity = BigNumber.from(liquidityNative)
                     .mul(price)
                     .div(ethers.utils.parseEther('1'));
                 return {
                     amount: found?.amountNative.lt(liquidityNative)
                         ? found?.amountUSD
-                        : liquidity.toString(),
+                        : ethers.utils.formatUnits(liquidity.toString(), decimals),
                     amountNative: found?.amountNative.lt(liquidityNative)
                         ? found?.amountNative
                         : BigNumber.from(liquidityNative),

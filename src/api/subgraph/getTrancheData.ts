@@ -22,17 +22,21 @@ export const processTrancheData = async (
         (obj: any, item: any) =>
             Object.assign(obj, {
                 [item.assetData.underlyingAssetName]: {
-                    liquidity: utils.formatUnits(item.availableLiquidity, item.decimals),
+                    liquidity: item.availableLiquidity,
+                    decimals: item.decimals,
                     ltv: item.assetData.baseLTV,
-                    optimalUtilityRate: parseFloat(
-                        utils.formatUnits(item.optimalUtilisationRate, 27),
+                    optimalUtilityRate: percentFormatter.format(
+                        parseFloat(utils.formatUnits(item.optimalUtilisationRate, 27)),
                     ),
                     reserveFactor: item.reserveFactor,
                     liquidationThreshold: item.assetData.liquidationThreshold,
                     utilityRate: `${item.utilizationRate}`,
-                    borrowRate: utils.formatUnits(item.variableBorrowRate, 27),
-                    supplyRate: utils.formatUnits(item.liquidityRate, 27),
-                    liquidationPenalty: utils.formatUnits(item.assetData.liquidationBonus, 5),
+                    borrowRate: percentFormatter.format(
+                        Number(utils.formatUnits(item.variableBorrowRate, 27)),
+                    ),
+                    supplyRate: percentFormatter.format(
+                        Number(utils.formatUnits(item.liquidityRate, 27)),
+                    ),
                     collateral: item.usageAsCollateralEnabled,
                     canBeBorrowed: item.borrowingEnabled,
                     oracle: 'Chainlink', // TODO: map to human readable name // (prices as any)[item.assetData.underlyingAssetName].oracle
@@ -42,8 +46,9 @@ export const processTrancheData = async (
                     liquidationBonus: item.assetData.liquidationBonus,
                     borrowFactor: item.assetData.borrowFactor,
                     borrowCap: item.assetData.borrowCap,
-                    collateralCap: item.assetData.collateralCap,
-                    price: (prices as any)[item.assetData.underlyingAssetName].usdPrice,
+                    supplyCap: item.assetData.supplyCap,
+                    priceUSD: (prices as any)[item.assetData.underlyingAssetName].usdPrice,
+                    priceETH: (prices as any)[item.assetData.underlyingAssetName].ethPrice,
                 },
             }),
         {},
@@ -81,7 +86,7 @@ export const processTrancheData = async (
         platformFee: 0.03, // TODO
         id: trancheId ? trancheId : data.id,
         name: data.name,
-        admin: data.emergencyTrancheAdmin,
+        admin: data.trancheAdmin,
         availableLiquidity: usdFormatter().format(summaryData.tvl),
         totalSupplied: usdFormatter().format(summaryData.supplyTotal),
         totalBorrowed: usdFormatter().format(summaryData.borrowTotal),
@@ -106,7 +111,7 @@ export const getSubgraphTrancheData = async (
             query QueryTranche($trancheId: String!) {
                 tranche(id: $trancheId) {
                     name
-                    emergencyTrancheAdmin
+                    trancheAdmin
                     reserves {
                         utilizationRate
                         reserveFactor
@@ -126,7 +131,7 @@ export const getSubgraphTrancheData = async (
                             liquidationBonus
                             borrowFactor
                             borrowCap
-                            collateralCap
+                            supplyCap
                         }
                     }
                 }

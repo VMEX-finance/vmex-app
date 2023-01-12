@@ -39,6 +39,7 @@ export const StakeAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
                                 name: data.asset,
                             }}
                             balance={'0.23'}
+                            isMax={isMax}
                             setIsMax={setIsMax}
                         />
 

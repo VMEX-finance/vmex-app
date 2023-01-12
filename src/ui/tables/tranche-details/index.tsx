@@ -7,7 +7,7 @@ import { useSelectedTrancheContext } from '../../../store/contexts';
 import { AssetDisplay, NumberAndDollar } from '../../components/displays';
 import { useWindowSize, useDialogController } from '../../../hooks';
 import { AvailableAsset } from '@app/api/types';
-import { BigNumber } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { numberFormatter, bigNumberToNative } from '../../../utils';
 
 interface ITableProps {
@@ -56,7 +56,8 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
         return findAmountBorrowable(
             asset,
             findAssetInMarketsData(asset).liquidity,
-            findAssetInMarketsData(asset).price,
+            findAssetInMarketsData(asset).decimals,
+            findAssetInMarketsData(asset).priceUSD,
         );
     };
 
@@ -158,7 +159,12 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                         </div>
                                     ) : (
                                         `${numberFormatter.format(
-                                            parseFloat(el.liquidity || '') || 0,
+                                            parseFloat(
+                                                ethers.utils.formatUnits(
+                                                    el.liquidity || '',
+                                                    findAssetInMarketsData(el.asset).decimals,
+                                                ),
+                                            ) || 0,
                                         )} ${el.asset}`
                                     )}
                                 </td>

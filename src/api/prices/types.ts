@@ -1,8 +1,10 @@
 import { IAvailableCoins } from '../../utils/helpers';
+import { BigNumber } from 'ethers';
 
 export type IAssetPricesProps = {
     oracle: string;
-    usdPrice: number;
+    ethPrice: BigNumber;
+    usdPrice: BigNumber;
 };
 
 export type IPricesDataProps = {

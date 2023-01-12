@@ -33,7 +33,7 @@ export type IMarketsAsset = {
     canBeCollateral: boolean;
     canBeBorrowed: boolean;
     currentPrice: BigNumber;
-    collateralCap: BigNumber;
+    supplyCap: BigNumber;
     liquidationThreshold: BigNumber;
 };
 

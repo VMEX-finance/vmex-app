@@ -3,7 +3,7 @@ import ReactTooltip from 'react-tooltip';
 import { useSelectedTrancheContext } from '../../../store/contexts';
 import { NumberDisplay, DefaultDropdown, Card, ReLineChart } from '../../components';
 import { IGraphTrancheAssetProps, IGraphTrancheDataProps } from '../../../api/subgraph/types';
-import { numberFormatter, percentFormatter } from '../../../utils/helpers';
+import { numberFormatter, percentFormatter, convertContractsPercent } from '../../../utils/helpers';
 import { useSubgraphMarketsData } from '../../../api/subgraph';
 
 type ITrancheStatisticsCardProps = {
@@ -71,17 +71,17 @@ export const TrancheStatisticsCard = ({
                 <div className="flex gap-6 mb-3 mt-1">
                     <NumberDisplay
                         label="Supply APY"
-                        value={`${percentFormatter.format(assetData?.supplyRate)}`}
+                        value={`${assetData?.supplyRate}`}
                         color="text-brand-green"
                     />
                     <NumberDisplay
                         label="Borrow APY"
-                        value={percentFormatter.format(assetData?.borrowRate)}
+                        value={assetData?.borrowRate}
                         color="text-brand-purple"
                     />
                     <NumberDisplay
                         label="Optimal Utilization"
-                        value={percentFormatter.format(assetData?.optimalUtilityRate)}
+                        value={assetData?.optimalUtilityRate}
                         color="text-white"
                     />
                 </div>
@@ -115,19 +115,25 @@ export const TrancheStatisticsCard = ({
                     <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 justify-items-center gap-y-10">
                         <NumberDisplay
                             label="LTV"
-                            value={assetData?.ltv}
+                            value={percentFormatter.format(
+                                Number(convertContractsPercent(assetData?.ltv)),
+                            )}
                             color="text-white"
                             center
                         />
                         <NumberDisplay
                             label="Liq. Threshold"
-                            value={assetData?.liquidationThreshold}
+                            value={percentFormatter.format(
+                                Number(convertContractsPercent(assetData?.liquidationThreshold)),
+                            )}
                             color="text-white"
                             center
                         />
                         <NumberDisplay
-                            label="Liq. Penalty"
-                            value={`${percentFormatter.format(assetData?.liquidationPenalty)}`}
+                            label="Liq. Bonus"
+                            value={`${percentFormatter.format(
+                                Number(convertContractsPercent(assetData?.liquidationBonus)),
+                            )}`}
                             color="text-white"
                             center
                         />
@@ -169,7 +175,7 @@ export const TrancheStatisticsCard = ({
                         />
                         <NumberDisplay
                             label="Platform Fee"
-                            value={percentFormatter.format(tranche?.platformFee)}
+                            value={percentFormatter.format(Number(tranche?.platformFee))}
                             color="text-white"
                             center
                         />

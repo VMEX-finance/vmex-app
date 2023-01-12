@@ -89,7 +89,7 @@ export const HealthFactor = ({
             return undefined;
         }
         let a = findAssetInMarketsData(asset);
-        let d = DECIMALS.get(asset);
+        let d = a.decimals;
         if (!a || !d || amount == '' || !parseFloat(amount)) {
             return undefined;
         }
@@ -97,34 +97,37 @@ export const HealthFactor = ({
         try {
             let ethAmount = ethers.utils
                 .parseUnits(convertStringFormatToNumber(amount), d)
-                .mul(a.price)
-                .div(ethers.utils.parseUnits('1', d)); //18 decimals (even though USDC, still should be 18 decimals)
+                .mul(a.priceETH)
+                .div(ethers.utils.parseUnits('1', d)); //18 decimals
 
             let totalCollateralETH = queryUserTrancheData.data?.totalCollateralETH;
             let totalDebtInETH = queryUserTrancheData.data?.totalDebtETH;
             let currentLiquidationThreshold =
                 queryUserTrancheData.data?.currentLiquidationThreshold;
+            let currentAvgBorrowFactor = queryUserTrancheData.data?.avgBorrowFactor;
 
-            if (!totalCollateralETH || !currentLiquidationThreshold || !totalDebtInETH) {
+            if (
+                !totalCollateralETH ||
+                !currentLiquidationThreshold ||
+                !totalDebtInETH ||
+                !currentAvgBorrowFactor
+            ) {
                 return undefined;
             }
 
             let collateralAfter = totalCollateralETH;
             let debtAfter = totalDebtInETH;
             let liquidationThresholdAfter = currentLiquidationThreshold;
+            let borrowFactorAfter = currentAvgBorrowFactor;
             if (type === 'supply') {
                 collateralAfter = totalCollateralETH.add(ethAmount);
-
-                let amountIncrease = collateralAfter.sub(totalCollateralETH);
-
                 liquidationThresholdAfter = totalCollateralETH
                     .mul(currentLiquidationThreshold)
-                    .add(amountIncrease.mul(a.liquidationThreshold));
+                    .add(ethAmount.mul(a.liquidationThreshold));
             }
 
             if (type === 'withdraw') {
                 collateralAfter = totalCollateralETH.sub(ethAmount);
-
                 liquidationThresholdAfter = totalCollateralETH
                     .mul(currentLiquidationThreshold)
                     .sub(ethAmount.mul(a.liquidationThreshold));
@@ -133,16 +136,21 @@ export const HealthFactor = ({
             if (type === 'borrow') {
                 debtAfter = totalDebtInETH.add(ethAmount);
                 liquidationThresholdAfter = currentLiquidationThreshold.mul(totalCollateralETH);
+                borrowFactorAfter = totalDebtInETH
+                    .mul(currentAvgBorrowFactor)
+                    .add(ethAmount.mul(a.borrowFactor));
             }
 
             if (type === 'repay') {
                 debtAfter = totalDebtInETH.sub(ethAmount);
                 liquidationThresholdAfter = currentLiquidationThreshold.mul(totalCollateralETH);
+                borrowFactorAfter = totalDebtInETH
+                    .mul(currentAvgBorrowFactor)
+                    .sub(ethAmount.mul(a.borrowFactor));
             }
 
             let healthFactorAfterDecrease = calculateHealthFactorFromBalances(
-                collateralAfter,
-                debtAfter,
+                borrowFactorAfter,
                 liquidationThresholdAfter,
             );
 

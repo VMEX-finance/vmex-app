@@ -19,6 +19,7 @@ import { useAccount, useSigner } from 'wagmi';
 import { useUserTrancheData, useSubgraphTrancheData } from '../../../api';
 import { BigNumber } from 'ethers';
 import { useQueryClient } from '@tanstack/react-query';
+import { BasicToggle } from '../../components/toggles';
 
 export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
     name,
@@ -42,6 +43,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
 
     const handleClick = async () => {
         if (data && signer) {
+            console.log('isMax: ', isMax);
             await submitTx(async () => {
                 const res = view?.includes('Borrow')
                     ? await borrow({
@@ -51,6 +53,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
                           //   interestRateMode: 2,
                           signer: signer,
                           network: NETWORK,
+                          isMax: isMax,
                           test: SDK_PARAMS.test,
                           providerRpc: SDK_PARAMS.providerRpc,
                           // referrer: number,
@@ -81,10 +84,11 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
 
     const amountBorrwable = findAmountBorrowable(
         data?.asset || '',
-        findAssetInMarketsData(data?.asset || '').liquidity,
-        findAssetInMarketsData(data?.asset || '').price,
+        findAssetInMarketsData(data?.asset || '')?.liquidity,
+        findAssetInMarketsData(data?.asset || '')?.decimals,
+        findAssetInMarketsData(data?.asset || '')?.priceUSD,
     );
-    const apy = findAssetInMarketsData(data?.asset || '').borrowRate;
+    const apy = findAssetInMarketsData(data?.asset || '')?.borrowRate;
     const amountRepay =
         findAssetInUserSuppliesOrBorrows(data?.asset, 'borrow')?.amountNative ||
         data?.amountNative ||
@@ -118,9 +122,15 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
                                     data.asset,
                                 )}
                                 type="collateral"
+                                isMax={isMax}
                                 setIsMax={setIsMax}
                                 loading={amountBorrwable.loading}
                             />
+
+                            <h3 className="mt-6 text-neutral400">{view} Max</h3>
+                            <div className="mt-1">
+                                <BasicToggle checked={isMax} onChange={() => setIsMax(!isMax)} />
+                            </div>
 
                             <h3 className="mt-6 text-neutral400">Health Factor</h3>
                             <HealthFactor asset={data.asset} amount={amount} type={'borrow'} />
@@ -130,7 +140,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
                                 content={[
                                     {
                                         label: 'Borrow APR (%)',
-                                        value: `${apy}%`,
+                                        value: `${apy}`,
                                     },
                                 ]}
                             />
@@ -164,9 +174,15 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
                                 }}
                                 balance={bigNumberToUnformattedString(amountRepay, data.asset)}
                                 type="owed"
+                                isMax={isMax}
                                 setIsMax={setIsMax}
                                 loading={Number(bigNumberToNative(amountRepay, data.asset)) === 0}
                             />
+
+                            <h3 className="mt-6 text-neutral400">{view} Max</h3>
+                            <div className="mt-1">
+                                <BasicToggle checked={isMax} onChange={() => setIsMax(!isMax)} />
+                            </div>
 
                             <h3 className="mt-6 text-neutral400">Health Factor</h3>
                             <HealthFactor asset={data.asset} amount={amount} type={'repay'} />
@@ -220,7 +236,13 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
                 </div>
                 <Button
                     primary
-                    disabled={isSuccess || error.length !== 0 || !amount}
+                    disabled={
+                        isSuccess ||
+                        error.length !== 0 ||
+                        !amount ||
+                        (view?.includes('Borrow') && amountBorrwable.amountNative.lt(10)) ||
+                        (view?.includes('Repay') && amountRepay.lt(10))
+                    }
                     onClick={handleClick}
                     label="Submit Transaction"
                     loading={isLoading}

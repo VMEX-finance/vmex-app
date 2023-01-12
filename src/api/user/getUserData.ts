@@ -76,7 +76,7 @@ export async function getUserActivityData(userAddress: string): Promise<IUserAct
                 apy: rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0)),
                 tranche: findAssetInTranche(assetData.asset, assetData.tranche.toNumber()),
                 trancheId: assetData.tranche.toNumber(),
-                // collateralCap: assetData.collateralCap,
+                // supplyCap: assetData.supplyCap,
             };
         }),
         borrows: summary.borrowedAssetData.map((assetData: BorrowedAssetData) => {

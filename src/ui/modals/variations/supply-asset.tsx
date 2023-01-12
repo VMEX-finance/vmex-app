@@ -20,6 +20,7 @@ import { BigNumber } from 'ethers';
 import { IYourSuppliesTableItemProps } from '@ui/tables';
 import { ISupplyBorrowProps } from '../utils';
 import { useQueryClient } from '@tanstack/react-query';
+import { BasicToggle } from '../../components/toggles';
 
 export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, data, tab }) => {
     const { submitTx, isSuccess, error, isLoading } = useModal('loan-asset-dialog');
@@ -39,6 +40,9 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
     const handleSubmit = async () => {
         if (signer && data) {
             await submitTx(async () => {
+                console.log('underlying: ', MAINNET_ASSET_MAPPINGS.get(data.asset) || '');
+                console.log('trancheId: ', data.trancheId);
+                console.log('amount: ', convertStringFormatToNumber(amount));
                 const res = view?.includes('Supply')
                     ? await supply({
                           underlying: MAINNET_ASSET_MAPPINGS.get(data.asset) || '',
@@ -46,6 +50,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                           amount: convertStringFormatToNumber(amount),
                           signer: signer,
                           network: NETWORK,
+                          isMax: isMax,
                           test: SDK_PARAMS.test,
                           providerRpc: SDK_PARAMS.providerRpc,
                           // collateral: asCollateral,
@@ -73,7 +78,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
     };
 
     const amountWalletNative = getTokenBalance(data?.asset || '');
-    const apy = findAssetInMarketsData(data?.asset || '').supplyRate;
+    const apy = findAssetInMarketsData(data?.asset || '')?.supplyRate;
     const amountWithdraw =
         findAssetInUserSuppliesOrBorrows(data?.asset, 'supply')?.amountNative || data?.amountNative;
     const collateral = (
@@ -111,18 +116,15 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                                     amountWalletNative.amountNative,
                                     data.asset,
                                 )}
+                                isMax={isMax}
                                 setIsMax={setIsMax}
                                 loading={amountWalletNative.loading}
                             />
 
-                            {/* <h3 className="mt-6 text-neutral400">Collaterize</h3>
+                            <h3 className="mt-6 text-neutral400">{view} Max</h3>
                             <div className="mt-1">
-                                <BasicToggle
-                                    checked={asCollateral}
-                                    onChange={() => setAsCollateral(!asCollateral)}
-                                    disabled={!data.canBeCollat}
-                                />
-                            </div> */}
+                                <BasicToggle checked={isMax} onChange={() => setIsMax(!isMax)} />
+                            </div>
 
                             <h3 className="mt-6 text-neutral400">Health Factor</h3>
                             <HealthFactor asset={data.asset} amount={amount} type={'supply'} />
@@ -132,7 +134,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                                 content={[
                                     {
                                         label: 'Supply APR (%)',
-                                        value: `${apy}%`,
+                                        value: `${apy}`,
                                     },
                                     {
                                         label: 'Collateralization',
@@ -171,11 +173,17 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                                     amountWithdraw || BigNumber.from('0'),
                                     data.asset,
                                 )}
+                                isMax={isMax}
                                 setIsMax={setIsMax}
                                 loading={
                                     Number(bigNumberToNative(amountWithdraw, data.asset)) === 0
                                 }
                             />
+
+                            <h3 className="mt-6 text-neutral400">{view} Max</h3>
+                            <div className="mt-1">
+                                <BasicToggle checked={isMax} onChange={() => setIsMax(!isMax)} />
+                            </div>
                             <h3 className="mt-6 text-neutral400">Health Factor</h3>
                             <HealthFactor asset={data.asset} amount={amount} type={'withdraw'} />
 
@@ -214,7 +222,14 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
             <ModalFooter>
                 <Button
                     primary
-                    disabled={isSuccess || error.length !== 0 || !amount}
+                    disabled={
+                        isSuccess ||
+                        error.length !== 0 ||
+                        !amount ||
+                        (view?.includes('Supply') && amountWalletNative.amountNative.lt(10)) ||
+                        !amountWithdraw ||
+                        (view?.includes('Withdraw') && amountWithdraw.lt(10))
+                    }
                     onClick={handleSubmit}
                     label={'Submit Transaction'}
                     loading={isLoading}

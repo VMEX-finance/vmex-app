@@ -82,9 +82,6 @@ export const getSubgraphAllMarketsData = async (): Promise<IMarketsAsset[]> => {
         query: gql`
             query QueryAllMarkets {
                 reserves(orderBy: availableLiquidity, orderDirection: desc) {
-                    assetData {
-                        underlyingAssetName
-                    }
                     decimals
                     tranche {
                         id
@@ -141,7 +138,7 @@ export const getSubgraphAllMarketsData = async (): Promise<IMarketsAsset[]> => {
                 canBeCollateral: reserve.usageAsCollateralEnabled,
                 canBeBorrowed: reserve.borrowingEnabled,
                 currentPrice: BigNumber.from('0'), // TODO
-                collateralCap: BigNumber.from('0'), // TODO
+                supplyCap: BigNumber.from('0'), // TODO
                 liquidationThreshold: reserve.assetData.liquidationThreshold,
             });
         });

@@ -25,9 +25,14 @@ const TrancheDetails: React.FC = () => {
 
     useEffect(() => {
         if (!address) setView('tranche-details');
-        else if (location.state?.view === 'overview') setView('tranche-overview');
-        else if (location.state?.view === 'details') setView('tranche-details');
-        else setView('tranche-overview');
+        else if (location.state?.view === 'overview') {
+            console.log('location is overview, setting to tranche-overview');
+            setView('tranche-overview');
+        } else if (location.state?.view === 'details') setView('tranche-details');
+        else {
+            console.log('else statement, setting to tranche-overview');
+            setView('tranche-overview');
+        }
     }, [address, location]);
 
     useEffect(() => {
@@ -89,10 +94,8 @@ const TrancheDetails: React.FC = () => {
                                               canBeCollat: (
                                                   queryTrancheData.data.assetsData as any
                                               )[asset].collateral,
-                                              apy: percentFormatter.format(
-                                                  (queryTrancheData.data.assetsData as any)[asset]
-                                                      .supplyRate,
-                                              ),
+                                              apy: (queryTrancheData.data.assetsData as any)[asset]
+                                                  .supplyRate,
                                               tranche: queryTrancheData.data?.name,
                                               trancheId: tranche.id,
                                               signer: signer,
@@ -113,10 +116,8 @@ const TrancheDetails: React.FC = () => {
                                               liquidity: (queryTrancheData.data.assetsData as any)[
                                                   asset
                                               ].liquidity,
-                                              apy: percentFormatter.format(
-                                                  (queryTrancheData.data.assetsData as any)[asset]
-                                                      .borrowRate,
-                                              ),
+                                              apy: (queryTrancheData.data.assetsData as any)[asset]
+                                                  .borrowRate,
                                               tranche: queryTrancheData.data?.name,
                                               trancheId: tranche.id,
                                               signer: signer,

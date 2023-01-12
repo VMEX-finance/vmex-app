@@ -25,9 +25,9 @@ export const getUserAdminTrancheData = async (admin: string): Promise<IGraphTran
     const { data, error } = await client.query({
         query: gql`
             query QueryTrancheAdmin($admin: String!) {
-                tranches(where: { emergencyTrancheAdmin: $admin }) {
+                tranches(where: { trancheAdmin: $admin }) {
                     name
-                    emergencyTrancheAdmin
+                    trancheAdmin
                     id
                     reserves {
                         utilizationRate
@@ -48,7 +48,7 @@ export const getUserAdminTrancheData = async (admin: string): Promise<IGraphTran
                             liquidationBonus
                             borrowFactor
                             borrowCap
-                            collateralCap
+                            supplyCap
                         }
                     }
                 }
@@ -126,11 +126,7 @@ export const getSubgraphUserChart = async (
 
             const assetUSDPrice = (prices as any)[pnlItem.reserveSymbol].usdPrice;
 
-            const value = nativeAmountToUSD(
-                valueNative.toString(),
-                pnlItem.reserveDecimals,
-                assetUSDPrice,
-            );
+            const value = nativeAmountToUSD(valueNative, pnlItem.reserveDecimals, assetUSDPrice);
 
             if (idx === 0) {
                 graphData.push({
