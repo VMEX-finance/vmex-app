@@ -1,14 +1,22 @@
-import { Button } from '../../components/buttons';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '../../../store/contexts';
-import { MultipleAssetsDisplay } from '../../components/displays';
-import { useWindowSize } from '../../../hooks/ui';
+import { useWindowSize } from '../../../hooks';
 import { determineRatingColor } from '../../../utils/helpers';
 import { BsArrowDownCircle, BsArrowUpCircle } from 'react-icons/bs';
-import { Tooltip } from '../../components/tooltips';
+import { Tooltip, MultipleAssetsDisplay, Button } from '../../components';
 
-const TranchesCustomRow = (props: any) => {
+type ITranchesCustomRowProps = {
+    name: string[];
+    assets: string[];
+    aggregateRating: string;
+    yourActivity: string;
+    supplyTotal: string | number;
+    borrowTotal: string | number;
+    id: string | number;
+};
+
+const TranchesCustomRow = (props: ITranchesCustomRowProps) => {
     const { name, assets, aggregateRating, yourActivity, supplyTotal, borrowTotal, id } = props;
 
     const navigate = useNavigate();
@@ -18,7 +26,9 @@ const TranchesCustomRow = (props: any) => {
     const route = (e: Event, tranche: any, view = 'overview') => {
         e.stopPropagation();
         updateTranche('id', tranche.id);
-        navigate(`/tranches/${tranche.name.replace(/\s+/g, '-')}`, { state: { view } });
+        navigate(`/tranches/${tranche.name.replace(/\s+/g, '-')}`, {
+            state: { view, trancheId: tranche.id },
+        });
     };
 
     const renderActivity = (status: string) => {
@@ -48,12 +58,12 @@ const TranchesCustomRow = (props: any) => {
             }
         }
     };
+
     // Mobile
     if (width < 900) {
         return (
             <tr
-                key={name}
-                className="text-left transition duration-200 hover:bg-neutral-200 dark:hover:bg-neutral-900 hover:cursor-pointer flex flex-col px-4 py-1 border-y-[1px] dark:border-neutral-100"
+                className="text-left transition duration-200 hover:bg-neutral-200 dark:hover:bg-neutral-900 hover:cursor-pointer flex flex-col px-4 pb-1 pt-2 border-y-[1px] dark:border-neutral-100"
                 onClick={(e: any) => route(e, props)}
             >
                 <td className="flex justify-between">
@@ -88,7 +98,6 @@ const TranchesCustomRow = (props: any) => {
     } else {
         return (
             <tr
-                key={name}
                 className="text-left transition duration-200 hover:bg-neutral-200 dark:hover:bg-neutral-900 hover:cursor-pointer border-y-[1px] dark:border-neutral-100"
                 onClick={(e: any) => route(e, props)}
             >

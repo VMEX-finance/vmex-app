@@ -6,36 +6,34 @@ import { MarketsCustomRow } from './custom-row';
 import MUIDataTable from 'mui-datatables';
 import { SpinnerLoader } from '../../components/loaders';
 import { IMarketsAsset } from '@app/api/types';
-import { useAccount } from 'wagmi';
-import { useUserData } from '../../../api';
-import { numberFormatter, percentFormatter } from '../../../utils/helpers';
 import { ThemeContext } from '../../../store/contexts';
-import { bigNumberToUnformattedString } from '../../../utils/sdk-helpers';
+import { bigNumberToUnformattedString, numberFormatter, percentFormatter } from '../../../utils';
+import { UseQueryResult } from '@tanstack/react-query';
+import { IUserActivityDataProps } from '@app/api/user/types';
 
 interface ITableProps {
     data?: IMarketsAsset[];
     loading?: boolean;
+    userActivity?: UseQueryResult<IUserActivityDataProps, unknown>;
 }
 
-export const MarketsTable: React.FC<ITableProps> = ({ data, loading }) => {
+export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivity }) => {
     const { isDark } = useContext(ThemeContext);
-    const { address } = useAccount();
-    const { queryUserActivity } = useUserData(address);
 
     const renderYourAmount = (asset: string) => {
         let amount = 0;
-        if (queryUserActivity.isLoading)
+        if (userActivity?.isLoading)
             return {
                 amount,
                 loading: true,
             };
-        queryUserActivity?.data?.supplies.map((supply) => {
+        userActivity?.data?.supplies.map((supply) => {
             if (supply.asset === asset)
                 amount =
                     amount +
                     parseFloat(bigNumberToUnformattedString(supply.amountNative, supply.asset));
         });
-        queryUserActivity?.data?.borrows.map((borrow) => {
+        userActivity?.data?.borrows.map((borrow) => {
             if (borrow.asset === asset)
                 amount =
                     amount -
@@ -169,13 +167,13 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading }) => {
         <CacheProvider value={muiCache}>
             <ThemeProvider theme={vmexTheme(isDark)}>
                 <MUIDataTable
-                    title={['All Available Assets']}
+                    title={'All Available Assets'}
                     columns={columns}
                     data={data || []}
                     options={{
                         ...options,
-                        customRowRender: (data: any) => {
-                            const [
+                        customRowRender: (
+                            [
                                 asset,
                                 tranche,
                                 supplyApy,
@@ -188,25 +186,28 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading }) => {
                                 strategies,
                                 logo,
                                 trancheId,
-                            ] = data;
-
-                            return (
-                                <MarketsCustomRow
-                                    asset={asset}
-                                    tranche={tranche}
-                                    trancheId={trancheId}
-                                    supplyApy={percentFormatter.format(supplyApy)}
-                                    borrowApy={percentFormatter.format(borrowApy)}
-                                    yourAmount={renderYourAmount(asset)}
-                                    available={available}
-                                    borrowTotal={borrowTotal}
-                                    supplyTotal={supplyTotal}
-                                    rating={rating}
-                                    strategies={strategies}
-                                    logo={logo}
-                                />
-                            );
-                        },
+                            ],
+                            dataIndex,
+                            rowIndex,
+                        ) => (
+                            <MarketsCustomRow
+                                asset={asset}
+                                tranche={tranche}
+                                trancheId={trancheId}
+                                supplyApy={percentFormatter.format(supplyApy)}
+                                borrowApy={percentFormatter.format(borrowApy)}
+                                yourAmount={renderYourAmount(asset)}
+                                available={available}
+                                borrowTotal={borrowTotal}
+                                supplyTotal={supplyTotal}
+                                rating={rating}
+                                strategies={strategies}
+                                logo={logo}
+                                key={`tranches-table-${
+                                    rowIndex || Math.floor(Math.random() * 10000)
+                                }`}
+                            />
+                        ),
                         textLabels: {
                             body: {
                                 noMatch: loading ? (

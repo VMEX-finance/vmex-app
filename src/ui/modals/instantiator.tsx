@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDialogController } from '../../hooks/dialogs';
+import { useDialogController } from '../../hooks';
 import {
     BorrowAssetDialog,
     StakeAssetDialog,

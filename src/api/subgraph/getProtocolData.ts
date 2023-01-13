@@ -1,13 +1,14 @@
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 import { useQuery } from '@tanstack/react-query';
 import { ILineChartDataPointProps } from '@ui/components/charts';
-import { usdFormatter } from '../../utils/helpers';
+import { IAvailableCoins, usdFormatter } from '../../utils/helpers';
 import { SUBGRAPH_ENDPOINT } from '../../utils/constants';
 import { nativeAmountToUSD } from '../../utils/sdk-helpers';
 import { getAllAssetPrices } from '../prices';
 import { AssetBalance, TrancheData } from '../types';
 import { IGraphProtocolDataProps, IGraphTrancheProps, ISubgraphProtocolData } from './types';
 import { getSubgraphTranchesOverviewData } from './getTranchesOverviewData';
+import { IAssetPricesProps } from '../prices/types';
 
 const client = new ApolloClient({
     uri: SUBGRAPH_ENDPOINT,
@@ -24,7 +25,9 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
                         timestamp
                         amount
                         reserve {
-                            symbol
+                            assetData {
+                                underlyingAssetName
+                            }
                             decimals
                         }
                     }
@@ -32,7 +35,9 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
                         timestamp
                         amount
                         reserve {
-                            symbol
+                            assetData {
+                                underlyingAssetName
+                            }
                             decimals
                         }
                     }
@@ -46,7 +51,7 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
         const prices = await getAllAssetPrices();
         data.tranches.map((tranche: IGraphTrancheProps) => {
             tranche.depositHistory.map((el) => {
-                const asset = el.reserve.symbol.slice(0, -1);
+                const asset = el.reserve.assetData.underlyingAssetName;
 
                 const assetUSDPrice = (prices as any)[asset].usdPrice;
                 const usdAmount = nativeAmountToUSD(el.amount, el.reserve.decimals, assetUSDPrice);
@@ -61,7 +66,7 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
             });
 
             tranche.borrowHistory.map((el) => {
-                const asset = el.reserve.symbol.slice(0, -1);
+                const asset = el.reserve.assetData.underlyingAssetName;
                 const assetUSDPrice = (prices as any)[asset].usdPrice;
                 const usdAmount = nativeAmountToUSD(el.amount, el.reserve.decimals, assetUSDPrice);
                 const date = new Date(el.timestamp * 1000).toLocaleString();
@@ -86,12 +91,16 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
     }
 };
 
-async function getTopSuppliedAssets(): Promise<AssetBalance[]> {
+async function getTopSuppliedAssets(
+    _prices?: Record<IAvailableCoins, IAssetPricesProps>,
+): Promise<AssetBalance[]> {
     const { data, error } = await client.query({
         query: gql`
-            query QueryProtocolData {
+            query QueryTopSuppliedAssets {
                 reserves(first: 5, orderBy: totalDeposits, orderDirection: desc) {
-                    symbol
+                    assetData {
+                        underlyingAssetName
+                    }
                     totalDeposits
                     decimals
                 }
@@ -100,29 +109,41 @@ async function getTopSuppliedAssets(): Promise<AssetBalance[]> {
     });
     if (error) return [];
 
-    const returnObj: AssetBalance[] = [];
-    const prices = await getAllAssetPrices();
+    let prices: Record<IAvailableCoins, IAssetPricesProps>;
+    if (_prices) prices = _prices;
+    else prices = await getAllAssetPrices();
 
-    data.reserves.map((reserve: any) => {
-        const asset = reserve.symbol.slice(0, -1);
-        const assetUSDPrice = (prices as any)[asset].usdPrice;
-        const usdAmount = nativeAmountToUSD(reserve.totalDeposits, reserve.decimals, assetUSDPrice);
+    const result: { asset: string; amount: number }[] = Object.values(
+        data.reserves.reduce((r: any, reserve: any) => {
+            const _asset = reserve.assetData.underlyingAssetName;
+            const _assetUSDPrice = (prices as any)[_asset].usdPrice;
+            const _usdAmount = nativeAmountToUSD(
+                reserve.totalDeposits,
+                reserve.decimals,
+                _assetUSDPrice,
+            );
 
-        returnObj.push({
-            asset: reserve.symbol.slice(0, -1),
-            amount: usdFormatter(false).format(usdAmount),
-        });
-    });
+            r[_asset] ??= { asset: _asset, amount: 0 };
+            r[_asset].amount += _usdAmount;
+            return r;
+        }, {}),
+    );
 
-    return returnObj;
+    return result
+        .sort((a, b) => b.amount - a.amount)
+        .map((el: any) => ({ ...el, amount: usdFormatter(false).format(el.amount) }));
 }
 
-async function getTopBorrowedAssets(): Promise<AssetBalance[]> {
+async function getTopBorrowedAssets(
+    _prices?: Record<IAvailableCoins, IAssetPricesProps>,
+): Promise<AssetBalance[]> {
     const { data, error } = await client.query({
         query: gql`
-            query QueryProtocolData {
+            query QueryTopBorrowedAssets {
                 reserves(first: 5, orderBy: totalCurrentVariableDebt, orderDirection: desc) {
-                    symbol
+                    assetData {
+                        underlyingAssetName
+                    }
                     totalCurrentVariableDebt
                     decimals
                 }
@@ -131,28 +152,30 @@ async function getTopBorrowedAssets(): Promise<AssetBalance[]> {
     });
     if (error) return [];
 
-    const returnObj: AssetBalance[] = [];
-    const prices = await getAllAssetPrices();
+    let prices: Record<IAvailableCoins, IAssetPricesProps>;
+    if (_prices) prices = _prices;
+    else prices = await getAllAssetPrices();
 
-    data.reserves.map((reserve: any) => {
-        const asset = reserve.symbol.slice(0, -1);
-        const assetUSDPrice = (prices as any)[asset].usdPrice;
-        const usdAmount = nativeAmountToUSD(
-            reserve.totalCurrentVariableDebt,
-            reserve.decimals,
-            assetUSDPrice,
-        );
+    const result: { asset: string; amount: number }[] = Object.values(
+        data.reserves.reduce((r: any, reserve: any) => {
+            const _asset = reserve.assetData.underlyingAssetName;
+            const _assetUSDPrice = (prices as any)[_asset].usdPrice;
+            const _usdAmount = nativeAmountToUSD(
+                reserve.totalCurrentVariableDebt,
+                reserve.decimals,
+                _assetUSDPrice,
+            );
+            r[_asset] ??= { asset: _asset, amount: 0 };
+            r[_asset].amount += _usdAmount;
+            return r;
+        }, {}),
+    );
 
-        returnObj.push({
-            asset: reserve.symbol.slice(0, -1),
-            amount: usdFormatter(false).format(usdAmount),
-        });
-    });
-
-    return returnObj;
+    return result
+        .sort((a, b) => b.amount - a.amount)
+        .map((el: any) => ({ ...el, amount: usdFormatter(false).format(el.amount) }));
 }
 
-// TODO
 export async function getSubgraphProtocolData(): Promise<IGraphProtocolDataProps> {
     const { data, error } = await client.query({
         query: gql`
@@ -193,9 +216,9 @@ export async function getSubgraphProtocolData(): Promise<IGraphProtocolDataProps
         return c - d;
     });
 
-    let tvl: number = 0,
-        totalSupplied: number = 0,
-        totalBorrowed: number = 0;
+    let tvl = 0,
+        totalSupplied = 0,
+        totalBorrowed = 0;
     allTrancheData.map((el) => {
         if (topTranches.length < 5) {
             topTranches.push({
@@ -210,15 +233,15 @@ export async function getSubgraphProtocolData(): Promise<IGraphProtocolDataProps
         totalSupplied += Number(el.supplyTotal) || 0;
     });
 
-    topTranches.reverse();
+    const prices = await getAllAssetPrices();
 
     const returnObj = {
         uniqueBorrowers: uniqueBorrowers,
         uniqueLenders: uniqueLenders,
         markets: data.reserves.length,
-        topSuppliedAssets: await getTopSuppliedAssets(),
-        topBorrowedAssets: await getTopBorrowedAssets(),
-        topTranches: topTranches,
+        topSuppliedAssets: await getTopSuppliedAssets(prices),
+        topBorrowedAssets: await getTopBorrowedAssets(prices),
+        topTranches: topTranches.reverse(),
         tvl: usdFormatter(false).format(tvl),
         reserve: usdFormatter().format(tvl),
         totalBorrowed: usdFormatter(false).format(totalBorrowed),

@@ -1,4 +1,3 @@
-import { bigNumberToUSD } from '../../../utils/sdk-helpers';
 import React from 'react';
 import { makeCompact } from '../../../utils/helpers';
 import { TrancheData } from '../../../api/types';
@@ -18,7 +17,7 @@ export const TopTranchesTable: React.FC<ITableProps> = ({ data }) => {
                         <th
                             key={`table-header-${i}`}
                             scope="col"
-                            className={`py-3 text-left text-sm font-semibold`}
+                            className={`pb-3 text-left text-sm font-semibold`}
                         >
                             {el}
                         </th>

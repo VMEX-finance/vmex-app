@@ -1,4 +1,5 @@
 import React from 'react';
+import { SkeletonLoader } from '../loaders';
 import { PercentChangeDisplay } from './percent-change';
 
 type INumberProps = {
@@ -8,6 +9,8 @@ type INumberProps = {
     size?: 'lg' | 'xl' | 'md';
     center?: boolean;
     change?: number;
+    loading?: boolean;
+    labelClass?: string;
 };
 
 export const NumberDisplay = ({
@@ -17,8 +20,11 @@ export const NumberDisplay = ({
     color = 'text-black dark:text-neutral-100',
     center,
     change,
+    loading,
+    labelClass,
 }: INumberProps) => {
     const labelSize = () => {
+        if (labelClass) return labelClass;
         switch (size) {
             case 'xl':
                 return '';
@@ -32,18 +38,27 @@ export const NumberDisplay = ({
     const valueSize = () => {
         switch (size) {
             case 'xl':
-                return 'text-3xl';
+                return { css: 'text-3xl', skeleton: '36px' };
             case 'lg':
-                return 'text-2xl';
+                return { css: 'text-2xl', skeleton: '32px' };
             default:
-                return 'text-xl';
+                return { css: 'text-xl', skeleton: '28px' };
         }
     };
 
     return (
         <div className={`flex flex-col ${center ? 'text-center items-center' : ''}`}>
             <p className={`${labelSize()}`}>{label}</p>
-            <p className={`${valueSize()} ${color}`}>{value}</p>
+            {loading ? (
+                <SkeletonLoader
+                    variant="rectangular"
+                    height={valueSize().skeleton}
+                    width={'60px'}
+                />
+            ) : (
+                <p className={`${valueSize().css} ${color}`}>{value}</p>
+            )}
+            {/* TODO: calculate percentage changed */}
             {change && <PercentChangeDisplay value={change} />}
         </div>
     );

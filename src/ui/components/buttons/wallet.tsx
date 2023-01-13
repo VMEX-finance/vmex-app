@@ -1,16 +1,16 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import React, { useContext } from 'react';
 import { IButtonProps } from './default';
-import { useAccount } from 'wagmi';
-import { useDialogController } from '../../../hooks/dialogs';
+import { useAccount, useDisconnect } from 'wagmi';
 import { ThemeContext, useMyTranchesContext } from '../../../store/contexts';
-import { useWindowSize } from '../../../hooks/ui';
-import { DropdownButton } from './dropdown';
+import { useWindowSize, useDialogController } from '../../../hooks';
+import { DefaultDropdown } from '../dropdowns';
 import { truncateAddress, truncate } from '../../../utils/helpers';
 import { useNavigate } from 'react-router-dom';
 
 export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: IButtonProps) => {
     const navigate = useNavigate();
+    const { disconnect } = useDisconnect();
     const { theme, setTheme } = useContext(ThemeContext);
     const { openDialog } = useDialogController();
     const { width } = useWindowSize();
@@ -44,12 +44,19 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
             });
         }
 
+        if (address) {
+            final.push({
+                text: 'Disconnect',
+                onClick: () => disconnect(),
+            });
+        }
+
         return final;
     };
 
     if (address && width > 1024) {
         return (
-            <DropdownButton
+            <DefaultDropdown
                 className={['min-h-[36px] border-1 border border-black', mode, className].join(' ')}
                 selected={width > 1400 ? truncateAddress(address) : truncate(address, 3)}
                 items={renderDropdownItems()}

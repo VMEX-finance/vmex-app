@@ -1,9 +1,8 @@
 import React from 'react';
-import { useDialogController } from '../../../hooks/dialogs';
 import { AssetDisplay, NumberAndDollar } from '../../components/displays';
-import { percentFormatter } from '../../../utils/helpers';
 import { BigNumber } from 'ethers';
 import { bigNumberToNative } from '../../../utils/sdk-helpers';
+import { useWindowSize, useDialogController } from '../../../hooks';
 
 export type IYourBorrowsTableItemProps = {
     asset: string;
@@ -21,6 +20,7 @@ export type IYourBorrowsTableProps = {
 };
 
 export const YourBorrowsTable: React.FC<IYourBorrowsTableProps> = ({ data, withHealth }) => {
+    const { width } = useWindowSize();
     const { openDialog } = useDialogController();
     const headers = withHealth
         ? ['Asset', 'Amount', 'APY%', 'Tranche', 'Health']
@@ -56,12 +56,15 @@ export const YourBorrowsTable: React.FC<IYourBorrowsTableProps> = ({ data, withH
                                 }
                             >
                                 <td className="whitespace-nowrap p-4 text-sm sm:pl-6">
-                                    <AssetDisplay name={i.asset} />
+                                    <AssetDisplay
+                                        name={width > 600 ? i.asset : ''}
+                                        logo={`/coins/${i.asset?.toLowerCase()}.svg`}
+                                    />{' '}
                                 </td>
                                 <td>
                                     <NumberAndDollar
                                         value={`${bigNumberToNative(i.amountNative, i.asset)} ${
-                                            i.asset
+                                            width > 600 ? i.asset : ''
                                         }`}
                                         dollar={i.amount}
                                         size="xs"
@@ -71,17 +74,6 @@ export const YourBorrowsTable: React.FC<IYourBorrowsTableProps> = ({ data, withH
                                 <td>{i.apy}%</td>
                                 <td>{i.tranche}</td>
                                 {withHealth && <td>{i.healthFactor}</td>}
-                                {/* <td className="text-right hidden md:table-cell pr-3.5">
-                                    <Button
-                                        label={
-                                            (width > 1535 && width < 2000) || width < 500
-                                                ? 'View'
-                                                : 'View Details'
-                                        }
-                                        // TODO: Send from here to appropriate traunch details view
-                                        onClick={() => console.log('directing')}
-                                    />
-                                </td> */}
                             </tr>
                         );
                     })}

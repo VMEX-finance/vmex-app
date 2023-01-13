@@ -11,6 +11,7 @@ interface IAppTemplateProps {
     description?: string | React.ReactNode;
     view?: string;
     setView?: any;
+    titleLoading?: boolean;
 }
 
 const AppTemplate: React.FC<IAppTemplateProps> = ({
@@ -19,6 +20,7 @@ const AppTemplate: React.FC<IAppTemplateProps> = ({
     description,
     view,
     setView,
+    titleLoading,
 }) => {
     return (
         <div className="min-h-screen bg-[#eee] dark:bg-neutral-900">
@@ -28,6 +30,7 @@ const AppTemplate: React.FC<IAppTemplateProps> = ({
                 description={description}
                 view={view}
                 setView={setView}
+                titleLoading={titleLoading}
             >
                 {children}
             </DashboardTemplate>

@@ -1,14 +1,12 @@
-import { SplitButton } from '../../components/buttons';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '../../../store/contexts';
-import { useWindowSize } from '../../../hooks/ui';
 import { determineRatingColor } from '../../../utils/helpers';
 import { BsCheck } from 'react-icons/bs';
 import { IoIosClose } from 'react-icons/io';
-import { AssetDisplay } from '../../components/displays';
+import { AssetDisplay, SplitButton } from '../../components';
 import { IMarketsAsset } from '@app/api/types';
-import { useDialogController } from '../../../hooks/dialogs';
+import { useDialogController, useWindowSize } from '../../../hooks';
 
 const MarketsCustomRow = (props: any) => {
     const {
@@ -33,7 +31,9 @@ const MarketsCustomRow = (props: any) => {
         e.stopPropagation();
         setAsset(market.asset);
         updateTranche('id', market.trancheId.toString());
-        navigate(`/tranches/${market.tranche.replace(/\s+/g, '-')}`, { state: { view } });
+        navigate(`/tranches/${market.tranche.replace(/\s+/g, '-')}`, {
+            state: { view, trancheId: market.trancheId.toString() },
+        });
     };
 
     const handleActionClick = (e: any) => {
@@ -55,8 +55,7 @@ const MarketsCustomRow = (props: any) => {
     if (width < 900) {
         return (
             <tr
-                key={`${asset}-${trancheId}`}
-                className="text-left transition duration-200 hover:bg-neutral-200 dark:hover:bg-neutral-900 hover:cursor-pointer flex flex-col px-4 py-1 border-y-[1px] dark:border-neutral-100"
+                className="text-left transition duration-200 hover:bg-neutral-200 dark:hover:bg-neutral-900 hover:cursor-pointer flex flex-col px-4 pt-2 pb-1 border-y-[1px] dark:border-neutral-100"
                 onClick={(e: any) => route(e, props)}
             >
                 <td className="flex justify-between">
@@ -127,7 +126,6 @@ const MarketsCustomRow = (props: any) => {
     } else {
         return (
             <tr
-                key={`${asset}-${trancheId}`}
                 className="text-left transition duration-200 hover:bg-neutral-200 dark:hover:bg-neutral-900 hover:cursor-pointer border-y-[1px] dark:border-neutral-100"
                 onClick={(e: any) => route(e, props, 'details')}
             >

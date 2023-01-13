@@ -1,4 +1,4 @@
-import { useTranchesData } from '../../api';
+import { useSubgraphUserData } from '../../api';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 import { ITrancheProps } from '@app/api/types';
@@ -35,7 +35,8 @@ const TranchesContext = createContext<ITranchesStoreProps>({
 // Wrapper
 export function MyTranchesStore(props: { children: ReactNode }) {
     const { address } = useAccount();
-    const { queryAllTranches } = useTranchesData();
+    //TODO: fix this
+    const { queryTrancheAdminData } = useSubgraphUserData(address || '');
     const [myTranches, setMyTranches] = useState<Array<IMyTrancheProps>>([]);
     const [error, setError] = useState('');
 
@@ -48,7 +49,10 @@ export function MyTranchesStore(props: { children: ReactNode }) {
         lendAndBorrowTokens,
         collateralTokens,
     }: IMyTrancheProps) => {
-        const shallow = myTranches.length !== 0 ? [...myTranches] : [];
+        const shallow =
+            queryTrancheAdminData.data && queryTrancheAdminData.data.length !== 0
+                ? [...myTranches]
+                : [];
         if (myTranches.length !== 0 && myTranches.find((obj) => obj.name === name)) {
             setError('Name is taken.');
             return;
@@ -115,26 +119,6 @@ export function MyTranchesStore(props: { children: ReactNode }) {
             setMyTranches(shallow);
         }
     };
-
-    useEffect(() => {
-        if (queryAllTranches.data) {
-            const shallow: any[] = [];
-            queryAllTranches.data.map((el) => {
-                if (el.admin === address)
-                    shallow.push({
-                        id: Number(el.id),
-                        name: el.name,
-                        whitelisted: [], // TODO: fix this
-                        blacklisted: [], // TODO: fix this
-                        tokens: el.assets,
-                        adminFee: el.adminFee ? el.adminFee.toString() : '0',
-                        lendAndBorrowTokens: [], // TODO: fix this
-                        collateralTokens: [], // TODO: fix this
-                    });
-            });
-            setMyTranches(shallow);
-        }
-    }, [queryAllTranches.data]);
 
     return (
         <TranchesContext.Provider

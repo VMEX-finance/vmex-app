@@ -1,14 +1,10 @@
-import { AssetDisplay, NumberAndDollar } from '../../components/displays';
 import React, { useState, useEffect } from 'react';
-import { useDialogController } from '../../../hooks/dialogs';
-import { percentFormatter } from '../../../utils/helpers';
-import { BasicToggle } from '../../components/toggles';
+import { BasicToggle, AssetDisplay, NumberAndDollar } from '../../components';
 import { BigNumber } from 'ethers';
-import { bigNumberToNative, SDK_PARAMS } from '../../../utils/sdk-helpers';
-import { useModal } from '../../../hooks/ui';
+import { useModal, useWindowSize, useDialogController } from '../../../hooks';
 import { markReserveAsCollateral } from '@vmexfinance/sdk';
 import { useSigner } from 'wagmi';
-import { NETWORK, MAINNET_ASSET_MAPPINGS } from '../../../utils/sdk-helpers';
+import { NETWORK, MAINNET_ASSET_MAPPINGS, bigNumberToNative, SDK_PARAMS } from '../../../utils';
 
 export type IYourSuppliesTableItemProps = {
     asset: string;
@@ -27,21 +23,11 @@ export type IYourSuppliesTableProps = {
 };
 
 export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({ data, withHealth }) => {
-    const { submitTx, isSuccess, error, isLoading } = useModal('your-supplies-table');
+    const { width } = useWindowSize();
+    const { submitTx, isLoading } = useModal('your-supplies-table');
     const [checked, setChecked] = useState<boolean[]>([]);
-
-    useEffect(() => {
-        if (data.length > 0) {
-            const initialState = data.map((el) => el.collateral);
-            setChecked(initialState);
-        }
-    }, [data]);
     const { data: signer } = useSigner();
-
     const { openDialog } = useDialogController();
-    const headers = withHealth
-        ? ['Asset', 'Amount', 'Collateral', 'APY%', 'Tranche', 'Health']
-        : ['Asset', 'Amount', 'Collateral', 'APY%', 'Tranche'];
 
     const handleSubmit = async (asset: string, trancheId: number, index: number) => {
         if (signer) {
@@ -62,6 +48,17 @@ export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({ data, wit
             });
         }
     };
+
+    useEffect(() => {
+        if (data.length > 0) {
+            const initialState = data.map((el) => el.collateral);
+            setChecked(initialState);
+        }
+    }, [data]);
+
+    const headers = withHealth
+        ? ['Asset', 'Amount', 'Collateral', 'APY%', 'Tranche', 'Health']
+        : ['Asset', 'Amount', 'Collateral', 'APY%', 'Tranche'];
 
     return (
         <table className="min-w-full divide-y divide-gray-300 font-basefont">
@@ -92,19 +89,22 @@ export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({ data, wit
                             }
                         >
                             <td className="whitespace-nowrap p-4 text-sm sm:pl-6">
-                                <AssetDisplay name={i.asset} />
+                                <AssetDisplay
+                                    name={width > 600 ? i.asset : ''}
+                                    logo={`/coins/${i.asset?.toLowerCase()}.svg`}
+                                />
                             </td>
                             <td>
                                 <NumberAndDollar
                                     value={`${bigNumberToNative(i.amountNative, i.asset)} ${
-                                        i.asset
+                                        width > 600 ? i.asset : ''
                                     }`}
                                     dollar={i.amount}
                                     size="xs"
                                     color="text-black"
                                 />
                             </td>
-                            <td className="">
+                            <td>
                                 <BasicToggle
                                     checked={checked[index]}
                                     disabled={isLoading}
@@ -121,17 +121,6 @@ export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({ data, wit
                             <td>{i.apy}%</td>
                             <td>{i.tranche}</td>
                             {withHealth && <td>{i.healthFactor}</td>}
-                            {/* <td className="text-right pr-3.5 hidden md:table-cell">
-                                    <Button
-                                        label={
-                                            (width > 1535 && width < 2000) || width < 500
-                                                ? 'View'
-                                                : 'View Details'
-                                        }
-                                        // TODO: Send from here to appropriate traunch details view
-                                        onClick={() => console.log('directing')}
-                                    />
-                                </td> */}
                         </tr>
                     );
                 })}

@@ -1,12 +1,11 @@
 import React from 'react';
-import { Card } from '../../components/cards';
+import { Card, Button } from '../../components';
 import {
     YourBorrowsTable,
     YourSuppliesTable,
     IYourBorrowsTableItemProps,
     IYourSuppliesTableItemProps,
 } from '.';
-import { Button } from '../../components/buttons';
 import { useNavigate } from 'react-router-dom';
 
 interface IYourPositionsProps {
@@ -61,8 +60,7 @@ export const YourPositionsTable: React.FC<IYourPositionsProps> = ({
     };
 
     return (
-        <Card loading={isLoading}>
-            <h3 className="text-lg mb-8">Your {determineTitle()}</h3>
+        <Card loading={isLoading} title={`Your ${determineTitle()}`} titleClass="text-lg mb-8">
             {data && data.length !== 0 ? (
                 <div>{determineTable()}</div>
             ) : (

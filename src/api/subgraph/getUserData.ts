@@ -1,11 +1,12 @@
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 import { useQuery } from '@tanstack/react-query';
 import { SUBGRAPH_ENDPOINT } from '../../utils/constants';
-import { IGraphUserDataProps, ISubgraphUserData } from './types';
+import { IGraphUserDataProps, ISubgraphUserData, IGraphTrancheDataProps } from './types';
 import { ILineChartDataPointProps } from '@ui/components/charts';
 import { BigNumber, utils } from 'ethers';
 import { getAllAssetPrices } from '../prices';
 import { nativeAmountToUSD } from '../../utils/sdk-helpers';
+import { processTrancheData } from './getTrancheData';
 
 const client = new ApolloClient({
     uri: SUBGRAPH_ENDPOINT,
@@ -20,6 +21,49 @@ type BalanceHistoryItem = {
     reserveDecimals: number;
 };
 
+export const getUserAdminTrancheData = async (admin: string): Promise<IGraphTrancheDataProps[]> => {
+    const { data, error } = await client.query({
+        query: gql`
+            query QueryTrancheAdmin($admin: String!) {
+                tranches(where: { trancheAdmin: $admin }) {
+                    name
+                    trancheAdmin
+                    id
+                    reserves {
+                        utilizationRate
+                        reserveFactor
+                        optimalUtilisationRate
+                        decimals
+                        variableBorrowRate
+                        liquidityRate
+                        totalDeposits
+                        availableLiquidity
+                        totalCurrentVariableDebt
+                        usageAsCollateralEnabled
+                        borrowingEnabled
+                        assetData {
+                            underlyingAssetName
+                            baseLTV
+                            liquidationThreshold
+                            liquidationBonus
+                            borrowFactor
+                            borrowCap
+                            supplyCap
+                        }
+                    }
+                }
+            }
+        `,
+        variables: { admin },
+    });
+
+    if (error) return [];
+    else {
+        const dat = data.tranches;
+        return dat.map((el: any) => processTrancheData(el));
+    }
+};
+
 export const getSubgraphUserChart = async (
     address: string,
 ): Promise<ILineChartDataPointProps[]> => {
@@ -27,11 +71,13 @@ export const getSubgraphUserChart = async (
     address = address.toLowerCase();
     const { data, error } = await client.query({
         query: gql`
-            query QueryTranche($address: String!) {
+            query QueryUserChart($address: String!) {
                 user(id: $address) {
                     reserves {
                         reserve {
-                            symbol
+                            assetData {
+                                underlyingAssetName
+                            }
                             decimals
                         }
                         pnlHistory(first: 100, orderBy: timestamp, orderDirection: asc) {
@@ -60,7 +106,7 @@ export const getSubgraphUserChart = async (
                     timestamp: pnlItem.timestamp,
                     aTokenBalance: pnlItem.currentATokenBalance,
                     debtTokenBalance: pnlItem.currentVariableDebt,
-                    reserveSymbol: reserve.reserve.symbol.slice(0, -1),
+                    reserveSymbol: reserve.reserve.assetData.underlyingAssetName,
                     reserveDecimals: reserve.reserve.decimals,
                 });
             });
@@ -80,11 +126,7 @@ export const getSubgraphUserChart = async (
 
             const assetUSDPrice = (prices as any)[pnlItem.reserveSymbol].usdPrice;
 
-            const value = nativeAmountToUSD(
-                valueNative.toString(),
-                pnlItem.reserveDecimals,
-                assetUSDPrice,
-            );
+            const value = nativeAmountToUSD(valueNative, pnlItem.reserveDecimals, assetUSDPrice);
 
             if (idx === 0) {
                 graphData.push({
@@ -114,7 +156,7 @@ export const getSubgraphUserData = async (address: string): Promise<IGraphUserDa
     address = address.toLowerCase();
     const { data, error } = await client.query({
         query: gql`
-            query QueryTranche($address: String!) {
+            query QueryUserData($address: String!) {
                 user(id: $address) {
                     unclaimedRewards
                     depositHistory {
@@ -123,7 +165,9 @@ export const getSubgraphUserData = async (address: string): Promise<IGraphUserDa
                         txHash
                         action
                         reserve {
-                            symbol
+                            assetData {
+                                underlyingAssetName
+                            }
                             decimals
                         }
                     }
@@ -133,7 +177,9 @@ export const getSubgraphUserData = async (address: string): Promise<IGraphUserDa
                         txHash
                         action
                         reserve {
-                            symbol
+                            assetData {
+                                underlyingAssetName
+                            }
                             decimals
                         }
                     }
@@ -143,7 +189,9 @@ export const getSubgraphUserData = async (address: string): Promise<IGraphUserDa
                         txHash
                         action
                         reserve {
-                            symbol
+                            assetData {
+                                underlyingAssetName
+                            }
                             decimals
                         }
                     }
@@ -161,20 +209,28 @@ export const getSubgraphUserData = async (address: string): Promise<IGraphUserDa
     }
 };
 
-export function useSubgraphUserData(address: string): ISubgraphUserData {
+export function useSubgraphUserData(address?: string): ISubgraphUserData {
     const queryUserPnlChart = useQuery({
         queryKey: ['subgraph-user-pnl-chart'],
-        queryFn: () => getSubgraphUserChart(address),
+        queryFn: () => getSubgraphUserChart(address || ''),
         refetchInterval: 1 * 60 * 1000, // Refetch every minute
+        enabled: !!address,
     });
 
     const queryUserData = useQuery({
         queryKey: ['subgraph-user-data'],
-        queryFn: () => getSubgraphUserData(address),
+        queryFn: () => getSubgraphUserData(address || ''),
+        enabled: !!address,
+    });
+
+    const queryTrancheAdminData = useQuery({
+        queryKey: ['subgraph-tranche-admin-data'],
+        queryFn: () => getUserAdminTrancheData(address || ''),
     });
 
     return {
         queryUserPnlChart,
         queryUserData,
+        queryTrancheAdminData,
     };
 }

@@ -1,13 +1,13 @@
-import { Card } from '../../components/cards';
-import React from 'react';
 import {
+    Card,
+    SkeletonLoader,
     AssetDisplay,
     HealthFactor,
     MultipleAssetsDisplay,
     NumberDisplay,
-} from '../../components/displays';
-import { useWindowSize } from '../../../hooks/ui';
-import { useDialogController } from '../../../hooks/dialogs';
+} from '../../components';
+import React from 'react';
+import { useWindowSize, useDialogController } from '../../../hooks';
 import { useUserTrancheData } from '../../../api';
 import { useAccount } from 'wagmi';
 import { IYourBorrowsTableItemProps, IYourSuppliesTableItemProps } from '../../tables';
@@ -23,6 +23,7 @@ export interface ITrancheOverviewProps {
     borrowed?: number;
     borrowChange?: number;
     grade?: string;
+    loading?: boolean;
 }
 
 const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
@@ -34,6 +35,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
     borrowChange,
     borrowed,
     grade,
+    loading,
 }) => {
     const { width, breakpoint } = useWindowSize();
     const { openDialog } = useDialogController();
@@ -44,6 +46,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
     } = useUserTrancheData(address, tranche.id);
 
     const calculateNetAPY = () => {
+        console.log('OVERVIEW DATA:', data);
         if (!data) return `0%`;
         const supplyTotal = data?.supplies.reduce(
             (partial, next) => partial + parseFloat(next.amount.slice(1).replaceAll(',', '')),
@@ -79,7 +82,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                     className="flex flex-col flow md:flex-row justify-between font-basefont gap-4 xl:gap-8"
                     style={{ flexFlow: 'wrap' }}
                 >
-                    <div className="flex flex-col justify-between order-1">
+                    <div className="flex flex-col justify-between order-1 min-w-[162px]">
                         <div className="flex flex-col gap-1">
                             <h2 className="text-2xl">Assets</h2>
                             <MultipleAssetsDisplay assets={assets} />
@@ -92,6 +95,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                             label="TVL"
                             value={`${makeCompact(tvl, true)}`}
                             change={tvlChange}
+                            loading={loading}
                         />
                         <NumberDisplay
                             center
@@ -99,6 +103,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                             label="Supplied"
                             value={`${makeCompact(supplied, true)}`}
                             change={supplyChange}
+                            loading={loading}
                         />
                         <NumberDisplay
                             center
@@ -106,13 +111,22 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                             label="Borrowed"
                             value={`${makeCompact(borrowed, true)}`}
                             change={borrowChange}
+                            loading={loading}
                         />
                     </div>
                     <div className="order-2 lg:order-3 min-w-[162px] 2xl:min-w-[194px]">
                         <div className="flex flex-col justify-between">
                             <div className="flex flex-col items-end">
                                 <h2 className="text-2xl">Grade</h2>
-                                <p className="text-3xl">{grade || '-'}</p>
+                                {loading ? (
+                                    <SkeletonLoader
+                                        variant="rectangular"
+                                        height={'36px'}
+                                        width={'60px'}
+                                    />
+                                ) : (
+                                    <p className="text-3xl">{grade || '-'}</p>
+                                )}
                             </div>
                         </div>
                     </div>

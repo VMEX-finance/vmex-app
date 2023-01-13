@@ -1,3 +1,5 @@
+import { ethers } from 'ethers';
+
 export function truncateAddress(s: string) {
     return `${s.slice(0, 3)}...${s.slice(-4)}`;
 }
@@ -105,8 +107,9 @@ export const numberFormatter = new Intl.NumberFormat('en-US', {
 
 export const HFFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
-    minimumSignificantDigits: 5,
-    maximumSignificantDigits: 8,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+    maximumSignificantDigits: 4, //since percentages only have this many sig figs
 });
 
 export const nativeTokenFormatter = new Intl.NumberFormat('en-US', {
@@ -125,4 +128,10 @@ export const percentFormatter = new Intl.NumberFormat('en-US', {
 export const convertStringFormatToNumber = (amount: string | number) => {
     if (!amount) return 'N/A';
     return amount.toString().replaceAll(',', '');
+};
+
+export const convertContractsPercent = (amount: string) => {
+    if (!amount) return 'N/A';
+    console.log('Amount: ', amount);
+    return ethers.utils.formatUnits(amount.split('.')[0], 18);
 };

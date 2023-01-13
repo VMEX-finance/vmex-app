@@ -17,11 +17,12 @@ export async function getAllAssetPrices(): Promise<Record<IAvailableCoins, IAsse
     });
 
     const returnObj: Record<string, IAssetPricesProps> = {};
-    pricesMap.forEach(({ oracle, priceUSD }, key) => {
+    pricesMap.forEach(({ oracle, priceETH, priceUSD }, key) => {
         const asset = REVERSE_MAINNET_ASSET_MAPPINGS.get(key.toLowerCase()) || key;
         (returnObj as any)[asset] = {
             oracle,
-            usdPrice: parseFloat(utils.formatUnits(priceUSD, 18)),
+            ethPrice: priceETH,
+            usdPrice: priceUSD, //bignumber
         };
     });
 

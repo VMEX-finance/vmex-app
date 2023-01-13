@@ -1,18 +1,12 @@
 import { Menu, Transition } from '@headlessui/react';
-import { useWindowSize } from '../../hooks/ui';
 import React, { Fragment, useContext } from 'react';
 import { HiOutlineMenuAlt3 } from 'react-icons/hi';
 import { BiTransferAlt } from 'react-icons/bi';
 import { useLocation, useNavigate } from 'react-router-dom';
-import {
-    DropdownButton,
-    MenuItemButton,
-    WalletButton,
-    ToggleThemeButton,
-} from '../components/buttons';
+import { DefaultDropdown, MenuItemButton, WalletButton, ToggleThemeButton } from '../components';
 import { ThemeContext, useMyTranchesContext, useTransactionsContext } from '../../store/contexts';
 import { useAccount } from 'wagmi';
-import { useDialogController } from '../../hooks/dialogs/useDialogController';
+import { useDialogController, useWindowSize } from '../../hooks';
 import { IDialogNames } from '@store/modals';
 
 const navItems = ['Overview', 'Tranches', 'Markets', 'Staking', 'Governance', 'Develop'];
@@ -75,7 +69,7 @@ export const Navbar: React.FC = () => {
                     {width <= 1024 && <ToggleThemeButton />}
                     {/* Transactions Dropdown */}
                     {isConnected && transactions && transactions.length !== 0 && (
-                        <DropdownButton
+                        <DefaultDropdown
                             reverse
                             items={transactions}
                             baseLink={`https://etherscan.io/tx`}

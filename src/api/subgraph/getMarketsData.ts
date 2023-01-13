@@ -31,7 +31,7 @@ export const getSubgraphMarketsChart = async (
     const reserveId = getReserveId(_underlyingAsset, poolId, trancheId);
     const { data, error } = await client.query({
         query: gql`
-            query QueryTranche($reserveId: String!) {
+            query QueryMarket($reserveId: String!) {
                 reserve(id: $reserveId) {
                     paramsHistory(orderBy: timestamp, orderDirection: desc) {
                         variableBorrowRate
@@ -82,7 +82,6 @@ export const getSubgraphAllMarketsData = async (): Promise<IMarketsAsset[]> => {
         query: gql`
             query QueryAllMarkets {
                 reserves(orderBy: availableLiquidity, orderDirection: desc) {
-                    symbol
                     decimals
                     tranche {
                         id
@@ -139,7 +138,7 @@ export const getSubgraphAllMarketsData = async (): Promise<IMarketsAsset[]> => {
                 canBeCollateral: reserve.usageAsCollateralEnabled,
                 canBeBorrowed: reserve.borrowingEnabled,
                 currentPrice: BigNumber.from('0'), // TODO
-                collateralCap: BigNumber.from('0'), // TODO
+                supplyCap: BigNumber.from('0'), // TODO
                 liquidationThreshold: reserve.assetData.liquidationThreshold,
             });
         });
@@ -154,7 +153,7 @@ export function useSubgraphMarketsData(
 ): ISubgraphMarketsChart {
     const underlyingAsset = MAINNET_ASSET_MAPPINGS.get(_underlyingAsset || '')?.toLowerCase();
     const queryMarketsChart = useQuery({
-        queryKey: [`subgraph-markets-chart-${_trancheId}-${underlyingAsset}`],
+        queryKey: [`subgraph-markets-chart-${_trancheId}-${underlyingAsset}`], // TODO: fix this to make the id and asset filters instead of a part of the key
         queryFn: () => getSubgraphMarketsChart(_trancheId, underlyingAsset),
     });
 

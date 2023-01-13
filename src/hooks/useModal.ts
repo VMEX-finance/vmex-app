@@ -1,8 +1,8 @@
-import { useTransactionsContext } from '../../store/contexts';
+import { useTransactionsContext } from '../store/contexts';
 import { Dispatch, SetStateAction, useState } from 'react';
-import { IDialogNames } from '../../store/modals';
-import { TIMER_CLOSE_DELAY } from '../../utils/constants';
-import { useDialogController } from '../../hooks/dialogs';
+import { IDialogNames } from '../store/modals';
+import { TIMER_CLOSE_DELAY } from '../utils/constants';
+import { useDialogController } from '.';
 
 type IUseModalProps = {
     isSuccess: boolean;

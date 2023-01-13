@@ -1,6 +1,6 @@
 import React from 'react';
-import { useAppSelector, useAppDispatch } from '../redux';
-import { clearAndClose, setDataAndOpen, IDialogState, IDialogNames } from '../../store/modals';
+import { useAppSelector, useAppDispatch } from './redux';
+import { clearAndClose, setDataAndOpen, IDialogState, IDialogNames } from '../store/modals';
 
 export const useDialogController = () => {
     const { dialogs, isLoading, error }: IDialogState = useAppSelector<any>(

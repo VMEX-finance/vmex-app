@@ -1,12 +1,17 @@
-import { Card } from '../components/cards';
 import React from 'react';
-import { ReLineChart } from '../components/charts';
-import { NumberDisplay, PillDisplay } from '../components/displays';
 import { TopTranchesTable } from '../tables';
-import { useWindowSize } from '../../hooks/ui';
+import { useWindowSize } from '../../hooks';
 import { makeCompact } from '../../utils/helpers';
-import { useSubgraphProtocolData } from '../../api';
 import { AssetBalance, TrancheData } from '@app/api/types';
+import {
+    SkeletonLoader,
+    ReLineChart,
+    NumberDisplay,
+    PillDisplay,
+    Card,
+    ILineChartDataPointProps,
+} from '../components';
+import { UseQueryResult } from '@tanstack/react-query';
 
 export interface IProtocolProps {
     isLoading?: boolean;
@@ -20,6 +25,7 @@ export interface IProtocolProps {
     topBorrowedAssets?: AssetBalance[];
     topSuppliedAssets?: AssetBalance[];
     topTranches?: TrancheData[];
+    tvlChart?: UseQueryResult<ILineChartDataPointProps[], unknown>;
 }
 
 export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
@@ -34,8 +40,8 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
     topSuppliedAssets,
     topTranches,
     isLoading,
+    tvlChart,
 }) => {
-    const { queryProtocolTVLChart } = useSubgraphProtocolData();
     const { width } = useWindowSize();
 
     const renderTopAssetsList = (_arr: AssetBalance[] | undefined) => {
@@ -53,35 +59,60 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
     };
 
     return (
-        <Card loading={isLoading}>
+        <Card>
             <div className="flex flex-col xl:flex-row gap-2 md:gap-4 xl:gap-6 divide-y-2 xl:divide-y-0 xl:divide-x-2 divide-black">
                 <div className="flex flex-col md:flex-row font-basefont gap-8">
                     <div className="flex flex-col justify-between min-w-[90%] xl:min-w-[300px]">
-                        <div className="flex flex-col">
-                            <h2 className="text-2xl">Total Value Locked (TVL)</h2>
-                            <p className="text-3xl">{tvl ? makeCompact(tvl, true) : '-'}</p>
-                        </div>
-                        <div className="h-[100px] w-full">
-                            <ReLineChart
-                                data={queryProtocolTVLChart.data || []}
-                                color="#3CB55E"
-                                type="usd"
-                            />
-                        </div>
+                        <NumberDisplay
+                            size="xl"
+                            label="Total Value Locked (TVL)"
+                            value={tvl ? makeCompact(tvl, true) : '-'}
+                            labelClass="text-2xl"
+                            loading={isLoading}
+                        />
+                        {tvlChart?.isLoading ? (
+                            <SkeletonLoader
+                                variant="rectangular"
+                                animtion="wave"
+                                className="min-w-full"
+                            >
+                                <div className="h-[100px] w-full">
+                                    <ReLineChart
+                                        data={tvlChart?.data || []}
+                                        color="#3CB55E"
+                                        type="usd"
+                                    />
+                                </div>
+                            </SkeletonLoader>
+                        ) : (
+                            <div className="h-[100px] w-full">
+                                <ReLineChart
+                                    data={tvlChart?.data || []}
+                                    color="#3CB55E"
+                                    type="usd"
+                                />
+                            </div>
+                        )}
                     </div>
                     <div className="flex md:flex-col justify-between gap-1">
-                        <NumberDisplay label={'Reserves:'} value={reserve ? reserve : '-'} />
+                        <NumberDisplay
+                            label={'Reserves:'}
+                            value={reserve ? reserve : '-'}
+                            loading={isLoading}
+                        />
                         <NumberDisplay
                             color="text-brand-purple"
                             label={'Lenders:'}
                             value={lenders}
+                            loading={isLoading}
                         />
                         <NumberDisplay
                             color="text-brand-green"
                             label={'Borrowers:'}
                             value={borrowers}
+                            loading={isLoading}
                         />
-                        <NumberDisplay label={'Markets:'} value={markets} />
+                        <NumberDisplay label={'Markets:'} value={markets} loading={isLoading} />
                     </div>
                 </div>
 
@@ -91,6 +122,7 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                             size="xl"
                             label="Total Supplied"
                             value={totalSupplied ? totalSupplied : '-'}
+                            loading={isLoading}
                         />
                         <div className="flex flex-col gap-1">
                             <span>Top Supplied Assets</span>
@@ -112,6 +144,7 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                             size="xl"
                             label="Total Borrowed"
                             value={totalBorrowed ? totalBorrowed : '-'}
+                            loading={isLoading}
                         />
                         <div className="flex flex-col gap-1">
                             <span>Top Borrowed Assets</span>
@@ -128,7 +161,7 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                         </div>
                     </div>
 
-                    <div className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-1">
                         <span>Top Tranches</span>
                         <div className="flex flex-col">
                             <TopTranchesTable data={topTranches || []} />

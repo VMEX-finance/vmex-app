@@ -8,9 +8,22 @@ type ICardProps = {
     padding?: string;
     className?: string;
     loading?: boolean;
+    title?: string;
+    titleClass?: string;
+    header?: React.ReactNode;
 };
 
-export const Card = ({ children, color, black, padding, className, loading }: ICardProps) => (
+export const Card = ({
+    children,
+    color,
+    black,
+    padding,
+    className,
+    loading,
+    title,
+    titleClass,
+    header,
+}: ICardProps) => (
     <div
         className={`dark:bg-black dark:text-neutral-100 dark:shadow-xl
     w-full rounded-lg shadow-lg overflow-auto
@@ -19,6 +32,8 @@ export const Card = ({ children, color, black, padding, className, loading }: IC
     ${className ? className : ''}
   `}
     >
+        {header && header}
+        {title && <h3 className={titleClass ? titleClass : 'text-2xl'}>{title}</h3>}
         {loading ? <SpinnerLoader /> : <>{children}</>}
     </div>
 );

@@ -10,6 +10,7 @@ export interface ICoinInput {
     };
     balance?: string;
     type?: 'collateral' | 'owed' | 'default';
+    isMax: boolean;
     setIsMax: React.Dispatch<React.SetStateAction<boolean>>;
     loading?: boolean;
 }
@@ -20,6 +21,7 @@ export const CoinInput = ({
     coin,
     balance,
     type,
+    isMax,
     setIsMax,
     loading,
 }: ICoinInput) => {
@@ -43,6 +45,11 @@ export const CoinInput = ({
                     type="text"
                     value={amount}
                     onChange={onChange}
+                    disabled={isMax}
+                    style={{
+                        opacity: isMax ? 0.25 : 1,
+                        pointerEvents: isMax ? 'none' : 'initial',
+                    }}
                     className="text-2xl focus:outline-none max-w-[200px] dark:bg-black"
                     placeholder="0.00"
                 />

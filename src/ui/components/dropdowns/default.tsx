@@ -3,7 +3,7 @@ import { Menu, Transition } from '@headlessui/react';
 import { RiArrowDropDownLine } from 'react-icons/ri';
 import { CgSpinner } from 'react-icons/cg';
 import { IoMdCheckmarkCircle } from 'react-icons/io';
-import { MenuItemButton } from './menu-item';
+import { MenuItemButton } from '../buttons/menu-item';
 import { truncate as _truncate } from '../../../utils/helpers';
 
 interface IDropdownItemProps {
@@ -15,7 +15,7 @@ export interface IDropdownProps {
     items: Array<IDropdownItemProps | any>;
     primary?: boolean;
     border?: boolean;
-    direction?: 'left' | 'right';
+    direction?: 'left' | 'right' | 'top';
     size?: 'lg' | 'md';
     selected?: string | string[];
     setSelected?: any;
@@ -30,7 +30,7 @@ export interface IDropdownProps {
     truncate?: boolean;
 }
 
-export const DropdownButton = ({
+export const DefaultDropdown = ({
     items,
     primary,
     direction = 'left',
@@ -77,6 +77,16 @@ export const DropdownButton = ({
               typeof label === 'string' ? '!px-4 !py-[3px]' : '!p-2'
           } !text-lg`
         : '';
+    const determineDirection = () => {
+        switch (direction) {
+            case 'right':
+                return 'origin-top-right';
+            case 'top':
+                return '-translate-y-[350px] origin-bottom-right';
+            default:
+                return 'right-0 origin-top-right ';
+        }
+    };
 
     const route = (e: any, item: any) => {
         e.preventDefault();
@@ -153,11 +163,10 @@ export const DropdownButton = ({
                         leaveTo="transform opacity-0 scale-95"
                     >
                         <Menu.Items
-                            className={`origin-top-right absolute max-h-72 overflow-y-scroll ${
-                                direction === 'left' ? 'right-0' : ''
-                            } bg-white mt-2 ${
-                                full ? 'w-full' : 'min-w-[180px]'
-                            } rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-[999999]`}
+                            className={`absolute max-h-72 overflow-y-scroll bg-white mt-2 
+                            ${full ? 'w-full' : 'min-w-[180px]'} 
+                            ${determineDirection()}
+                            rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-[999999]`}
                         >
                             <div className={`p-2 flex flex-col gap-1${multiselect ? 'gap-1' : ''}`}>
                                 {list &&

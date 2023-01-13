@@ -1,8 +1,5 @@
-import { ILineChartDataPointProps, ReLineChart } from '../../components/charts';
 import React, { useEffect, useState } from 'react';
-import { Card } from '../../components/cards';
-import { PillDisplay } from '../../components/displays';
-import { DropdownButton } from '../../components/buttons';
+import { PillDisplay, Card, ILineChartDataPointProps, ReLineChart } from '../../components';
 import { ITrancheInteractedProps } from '../../../api/user/types';
 
 type ILoanedAssetProps = {
@@ -39,11 +36,17 @@ export const UserPerformanceCard: React.FC<IUserPerformanceCardProps> = ({
     }, [tranches]);
 
     return (
-        <Card black loading={isLoading}>
-            <div className="flex justify-between items-center mb-3">
-                <h3 className="text-lg">Performance</h3>
-                <DropdownButton primary items={tranchesDropdown} />
-            </div>
+        <Card
+            black
+            loading={isLoading}
+            header={
+                <div className="flex justify-between items-center mb-3">
+                    <h3 className="text-lg">Performance</h3>
+                    {/* TODO: filter chart by tranche */}
+                    {/* <DefaultDropdown primary items={tranchesDropdown} /> */}
+                </div>
+            }
+        >
             {/* <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-1 gap-3 w-full px-3"> */}
             <div className="grid grid-cols-1 gap-3 w-full px-3">
                 <div className="grid w-full h-[240px]">

@@ -1,17 +1,19 @@
 import React from 'react';
-import { TransactionStatus } from '../../components/statuses';
-import { Button } from '../../components/buttons';
-import { AVAILABLE_ASSETS } from '../../../utils/constants';
 import { useMyTranchesContext } from '../../../store/contexts';
-import { DefaultInput, ListInput } from '../../components/inputs';
+import {
+    DefaultInput,
+    ListInput,
+    TransactionStatus,
+    Stepper,
+    StepperChild,
+    InnerCard,
+    Button,
+} from '../../components';
 import { IDialogProps } from '../utils';
-import { Stepper, StepperChild } from '../../components/tabs';
-import { useStepper } from '../../../hooks/ui/useStepper';
+import { useStepper, useModal } from '../../../hooks';
 import { ModalFooter, ModalHeader } from '../../modals/subcomponents';
 import { CreateTrancheAssetsTable } from '../../tables';
-import { InnerCard } from '../../components/cards';
-import { useModal } from '../../../hooks/ui';
-import { MAINNET_ASSET_MAPPINGS, NETWORK, SDK_PARAMS } from '../../../utils/sdk-helpers';
+import { MAINNET_ASSET_MAPPINGS, NETWORK, AVAILABLE_ASSETS, SDK_PARAMS } from '../../../utils';
 import { useAccount, useSigner } from 'wagmi';
 import { ethers } from 'ethers';
 import { initTranche } from '@vmexfinance/sdk';

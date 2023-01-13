@@ -61,6 +61,7 @@ export const AutoCompleteInput: FC<IAutoCompleteInputProps> = ({
                                     key={`${item}-${i}`}
                                     className="transition duration-150 hover:bg-neutral-200 dark:hover:bg-neutral-800 py-2 rounded-lg"
                                     onClick={(e) => {
+                                        console.log(item);
                                         setValue(item);
                                         setTimeout(() => {}, 200);
                                         onKeyDown && onKeyDown({ key: 'Enter' }, item);

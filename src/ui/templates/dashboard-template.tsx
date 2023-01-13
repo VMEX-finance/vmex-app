@@ -1,12 +1,11 @@
 import React from 'react';
-import { Button, LinkButton } from '../components/buttons';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useWindowSize } from '../../hooks/ui';
+import { useWindowSize, useDialogController } from '../../hooks';
 import { BiChevronLeft, BiPlus } from 'react-icons/bi';
-import { useDialogController } from '../../hooks/dialogs';
 import { useMyTranchesContext } from '../../store/contexts';
-import { Tooltip } from '../components/tooltips';
+import { Tooltip, Button, LinkButton } from '../components';
 import { useAccount } from 'wagmi';
+import { Skeleton } from '@mui/material';
 
 interface IDashboardTemplateProps {
     title?: string;
@@ -14,6 +13,7 @@ interface IDashboardTemplateProps {
     description?: string | React.ReactNode;
     view?: string;
     setView?: any;
+    titleLoading?: boolean;
 }
 
 const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
@@ -22,6 +22,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
     description,
     view,
     setView,
+    titleLoading,
 }) => {
     const { myTranches } = useMyTranchesContext();
     const { openDialog } = useDialogController();
@@ -33,7 +34,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
 
     // TODO: cleanup / optimize
     return (
-        <div className="max-w-[125rem] mx-auto p-4 md:p-6 lg:p-10">
+        <div className="max-w-[125rem] mx-auto p-3 md:p-6 lg:p-10">
             <header
                 className={`${
                     view ? 'grid grid-flow-dense md:grid-cols-3' : 'flex flex-row'
@@ -58,10 +59,14 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                 </div>
                 {view && (
                     <>
-                        <div className="justify-center">
-                            <h1 className="text-3xl font-basefont capitalize leading-tight text-neutral-900 dark:text-neutral-100 text-center">
-                                {title}
-                            </h1>
+                        <div className="justify-center mx-auto">
+                            {titleLoading ? (
+                                <Skeleton variant="rectangular" height={'36px'} width={'180px'} />
+                            ) : (
+                                <h1 className="text-3xl font-basefont capitalize leading-tight text-neutral-900 dark:text-neutral-100 text-center">
+                                    {title}
+                                </h1>
+                            )}
                         </div>
                         <div className="flex gap-3 md:justify-end">
                             <LinkButton

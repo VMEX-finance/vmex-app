@@ -1,12 +1,9 @@
-import { ReLineChart } from '../../components/charts';
 import React, { useEffect, useState } from 'react';
-import { Card } from '../../components/cards';
-import { DropdownButton } from '../../components/buttons';
 import ReactTooltip from 'react-tooltip';
 import { useSelectedTrancheContext } from '../../../store/contexts';
-import { NumberDisplay } from '../../components/displays';
+import { NumberDisplay, DefaultDropdown, Card, ReLineChart } from '../../components';
 import { IGraphTrancheAssetProps, IGraphTrancheDataProps } from '../../../api/subgraph/types';
-import { numberFormatter, percentFormatter } from '../../../utils/helpers';
+import { numberFormatter, percentFormatter, convertContractsPercent } from '../../../utils/helpers';
 import { useSubgraphMarketsData } from '../../../api/subgraph';
 
 type ITrancheStatisticsCardProps = {
@@ -39,47 +36,52 @@ export const TrancheStatisticsCard = ({
 
     return (
         <>
-            <Card black loading={loading || !assetData || rerender}>
-                <div className="flex justify-between items-center">
-                    <div className="flex items-center gap-4">
-                        <h3 className="text-2xl">Asset Statistics</h3>
-                        {/* TODO: Make this dynamic based on if strategy */}
-                        {asset === 'triCrypto2' && (
-                            <div
-                                data-tip
-                                data-for="strategiesTip"
-                                className="bg-white text-neutral-700 text-sm rounded px-2 border-2 border-brand-purple cursor-default"
-                            >
-                                <span>Strategies Enabled</span>
-                            </div>
-                        )}
+            <Card
+                black
+                loading={loading || !assetData || rerender}
+                header={
+                    <div className="flex justify-between items-center">
+                        <div className="flex items-center gap-4">
+                            <h3 className="text-2xl">Asset Statistics</h3>
+                            {/* TODO: Make this dynamic based on if strategy */}
+                            {asset === 'triCrypto2' && (
+                                <div
+                                    data-tip
+                                    data-for="strategiesTip"
+                                    className="bg-white text-neutral-700 text-sm rounded px-2 border-2 border-brand-purple cursor-default"
+                                >
+                                    <span>Strategies Enabled</span>
+                                </div>
+                            )}
+                        </div>
+                        <DefaultDropdown
+                            primary
+                            size="lg"
+                            items={
+                                tranche && tranche.assets
+                                    ? tranche.assets.map((el: any) => ({ text: el }))
+                                    : []
+                            }
+                            selected={asset || 'Loading'}
+                            setSelected={setAsset}
+                        />
                     </div>
-                    <DropdownButton
-                        primary
-                        size="lg"
-                        items={
-                            tranche && tranche.assets
-                                ? tranche.assets.map((el: any) => ({ text: el }))
-                                : []
-                        }
-                        selected={asset}
-                        setSelected={setAsset}
-                    />
-                </div>
+                }
+            >
                 <div className="flex gap-6 mb-3 mt-1">
                     <NumberDisplay
                         label="Supply APY"
-                        value={`${percentFormatter.format(assetData?.supplyRate)}`}
+                        value={`${assetData?.supplyRate}`}
                         color="text-brand-green"
                     />
                     <NumberDisplay
                         label="Borrow APY"
-                        value={percentFormatter.format(assetData?.borrowRate)}
+                        value={assetData?.borrowRate}
                         color="text-brand-purple"
                     />
                     <NumberDisplay
                         label="Optimal Utilization"
-                        value={percentFormatter.format(assetData?.optimalUtilityRate)}
+                        value={assetData?.optimalUtilityRate}
                         color="text-white"
                     />
                 </div>
@@ -113,19 +115,25 @@ export const TrancheStatisticsCard = ({
                     <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 justify-items-center gap-y-10">
                         <NumberDisplay
                             label="LTV"
-                            value={assetData?.ltv}
+                            value={percentFormatter.format(
+                                Number(convertContractsPercent(assetData?.ltv)),
+                            )}
                             color="text-white"
                             center
                         />
                         <NumberDisplay
                             label="Liq. Threshold"
-                            value={assetData?.liquidationThreshold}
+                            value={percentFormatter.format(
+                                Number(convertContractsPercent(assetData?.liquidationThreshold)),
+                            )}
                             color="text-white"
                             center
                         />
                         <NumberDisplay
-                            label="Liq. Penalty"
-                            value={`${percentFormatter.format(assetData?.liquidationPenalty)}`}
+                            label="Liq. Bonus"
+                            value={`${percentFormatter.format(
+                                Number(convertContractsPercent(assetData?.liquidationBonus)),
+                            )}`}
                             color="text-white"
                             center
                         />
@@ -167,7 +175,7 @@ export const TrancheStatisticsCard = ({
                         />
                         <NumberDisplay
                             label="Platform Fee"
-                            value={percentFormatter.format(tranche?.platformFee)}
+                            value={percentFormatter.format(Number(tranche?.platformFee))}
                             color="text-white"
                             center
                         />

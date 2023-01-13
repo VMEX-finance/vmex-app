@@ -1,40 +1,48 @@
 import React, { useEffect } from 'react';
 import { useMediatedState } from 'react-use';
-import { inputMediator, convertStringFormatToNumber } from '../../../utils/helpers';
-import { CoinInput } from '../../components/inputs';
-import { Button } from '../../components/buttons';
-import { ActiveStatus, TransactionStatus } from '../../components/statuses';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
-import { useModal } from '../../../hooks/ui';
+import { useModal } from '../../../hooks';
 import { supply, withdraw } from '@vmexfinance/sdk';
-import { MAINNET_ASSET_MAPPINGS, NETWORK, SDK_PARAMS } from '../../../utils/sdk-helpers';
-import { HealthFactor } from '../../components/displays';
-import { useTrancheMarketsData } from '../../../api';
-import { useSigner, useAccount } from 'wagmi';
 import {
+    MAINNET_ASSET_MAPPINGS,
+    NETWORK,
+    inputMediator,
+    convertStringFormatToNumber,
     unformattedStringToBigNumber,
     bigNumberToNative,
     bigNumberToUnformattedString,
-} from '../../../utils/sdk-helpers';
-import { useUserData, useUserTrancheData } from '../../../api';
+    SDK_PARAMS,
+} from '../../../utils';
+import { HealthFactor, ActiveStatus, TransactionStatus, Button, CoinInput } from '../../components';
+import { useSubgraphTrancheData, useUserData, useUserTrancheData } from '../../../api';
+import { useSigner, useAccount } from 'wagmi';
 import { BigNumber } from 'ethers';
 import { IYourSuppliesTableItemProps } from '@ui/tables';
 import { ISupplyBorrowProps } from '../utils';
+import { useQueryClient } from '@tanstack/react-query';
+import { BasicToggle } from '../../components/toggles';
 
 export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, data, tab }) => {
     const { submitTx, isSuccess, error, isLoading } = useModal('loan-asset-dialog');
     const [view, setView] = React.useState('Supply');
     const [isMax, setIsMax] = React.useState(false);
     const [amount, setAmount] = useMediatedState(inputMediator, '');
-    const { getTrancheMarket } = useTrancheMarketsData(data?.trancheId || 0);
+    // const { invalidateQueries } = useQueryClient();
+    const { findAssetInMarketsData } = useSubgraphTrancheData(data?.trancheId || 0);
     const { data: signer } = useSigner();
     const { address } = useAccount();
-    const { findAssetInUserSuppliesOrBorrows } = useUserTrancheData(address, data?.trancheId || 0);
+    const { findAssetInUserSuppliesOrBorrows, queryUserTrancheData } = useUserTrancheData(
+        address,
+        data?.trancheId || 0,
+    );
     const { getTokenBalance } = useUserData(address);
 
     const handleSubmit = async () => {
         if (signer && data) {
             await submitTx(async () => {
+                console.log('underlying: ', MAINNET_ASSET_MAPPINGS.get(data.asset) || '');
+                console.log('trancheId: ', data.trancheId);
+                console.log('amount: ', convertStringFormatToNumber(amount));
                 const res = view?.includes('Supply')
                     ? await supply({
                           underlying: MAINNET_ASSET_MAPPINGS.get(data.asset) || '',
@@ -42,6 +50,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                           amount: convertStringFormatToNumber(amount),
                           signer: signer,
                           network: NETWORK,
+                          isMax: isMax,
                           test: SDK_PARAMS.test,
                           providerRpc: SDK_PARAMS.providerRpc,
                           // collateral: asCollateral,
@@ -62,21 +71,19 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                           // collateral: boolean,
                           // test: boolean
                       });
+                // invalidateQueries(['user-tranche', address, data.trancheId]);
                 return res;
             });
         }
     };
 
     const amountWalletNative = getTokenBalance(data?.asset || '');
-    const apy = getTrancheMarket(data?.asset || '').borrowApy;
+    const apy = findAssetInMarketsData(data?.asset || '')?.supplyRate;
     const amountWithdraw =
         findAssetInUserSuppliesOrBorrows(data?.asset, 'supply')?.amountNative || data?.amountNative;
     const collateral = (
         findAssetInUserSuppliesOrBorrows(data?.asset || '', 'supply') as IYourSuppliesTableItemProps
     )?.collateral;
-
-    console.log('DATA:', data);
-    console.log('AMOUNT REPAY:', amountWithdraw);
 
     useEffect(() => {
         if (data?.view) setView('Withdraw');
@@ -109,18 +116,15 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                                     amountWalletNative.amountNative,
                                     data.asset,
                                 )}
+                                isMax={isMax}
                                 setIsMax={setIsMax}
                                 loading={amountWalletNative.loading}
                             />
 
-                            {/* <h3 className="mt-6 text-neutral400">Collaterize</h3>
+                            <h3 className="mt-6 text-neutral400">{view} Max</h3>
                             <div className="mt-1">
-                                <BasicToggle
-                                    checked={asCollateral}
-                                    onChange={() => setAsCollateral(!asCollateral)}
-                                    disabled={!data.canBeCollat}
-                                />
-                            </div> */}
+                                <BasicToggle checked={isMax} onChange={() => setIsMax(!isMax)} />
+                            </div>
 
                             <h3 className="mt-6 text-neutral400">Health Factor</h3>
                             <HealthFactor asset={data.asset} amount={amount} type={'supply'} />
@@ -130,7 +134,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                                 content={[
                                     {
                                         label: 'Supply APR (%)',
-                                        value: `${apy}%`,
+                                        value: `${apy}`,
                                     },
                                     {
                                         label: 'Collateralization',
@@ -169,11 +173,17 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                                     amountWithdraw || BigNumber.from('0'),
                                     data.asset,
                                 )}
+                                isMax={isMax}
                                 setIsMax={setIsMax}
                                 loading={
                                     Number(bigNumberToNative(amountWithdraw, data.asset)) === 0
                                 }
                             />
+
+                            <h3 className="mt-6 text-neutral400">{view} Max</h3>
+                            <div className="mt-1">
+                                <BasicToggle checked={isMax} onChange={() => setIsMax(!isMax)} />
+                            </div>
                             <h3 className="mt-6 text-neutral400">Health Factor</h3>
                             <HealthFactor asset={data.asset} amount={amount} type={'withdraw'} />
 
@@ -212,7 +222,14 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
             <ModalFooter>
                 <Button
                     primary
-                    disabled={isSuccess || error.length !== 0 || !amount}
+                    disabled={
+                        isSuccess ||
+                        error.length !== 0 ||
+                        !amount ||
+                        (view?.includes('Supply') && amountWalletNative.amountNative.lt(10)) ||
+                        !amountWithdraw ||
+                        (view?.includes('Withdraw') && amountWithdraw.lt(10))
+                    }
                     onClick={handleSubmit}
                     label={'Submit Transaction'}
                     loading={isLoading}

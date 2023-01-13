@@ -9,8 +9,13 @@ export type IQueryKeys =
     | 'tranche-markets'
     | 'protocol-overview'
     | 'all-tranches'
+    | 'subgraph-all-markets-data'
     | 'subgraph-tranche-data'
     | 'subgraph-protocol-charts'
+    | 'subgraph-protocol-data'
+    | 'subgraph-tranches-overview-data'
+    | 'subgraph-user-data'
+    | 'subgraph-user-pnl-chart'
     | 'asset-prices';
 
 export type IMarketsAsset = {
@@ -28,7 +33,7 @@ export type IMarketsAsset = {
     canBeCollateral: boolean;
     canBeBorrowed: boolean;
     currentPrice: BigNumber;
-    collateralCap: BigNumber;
+    supplyCap: BigNumber;
     liquidationThreshold: BigNumber;
 };
 

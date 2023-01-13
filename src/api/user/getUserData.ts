@@ -4,7 +4,6 @@ import {
     SuppliedAssetData,
     getUserWalletData,
     UserWalletData,
-    getAllTrancheData,
 } from '@vmexfinance/sdk';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -17,7 +16,7 @@ import {
 import { IUserActivityDataProps, IUserDataProps, IUserWalletDataProps } from './types';
 import { BigNumber } from 'ethers';
 import { AVAILABLE_ASSETS } from '../../utils/constants';
-
+import { getSubgraphTranchesOverviewData } from '../subgraph';
 // Gets
 export async function getUserActivityData(userAddress: string): Promise<IUserActivityDataProps> {
     if (!userAddress) {
@@ -38,20 +37,22 @@ export async function getUserActivityData(userAddress: string): Promise<IUserAct
         providerRpc: SDK_PARAMS.providerRpc,
     });
 
-    const allTrancheData = await getAllTrancheData(SDK_PARAMS);
-    const findAssetInTranche = (searchAsset: string, trancheId: number): string => {
-        let trancheName = 'N/A';
-        allTrancheData.map((tranche: any) => {
-            if (tranche.id.toNumber() === trancheId) {
-                tranche.assets.map((asset: any) => {
-                    if (searchAsset === asset) {
-                        trancheName = tranche.name;
-                    }
-                });
-            }
-        });
-        return trancheName;
-    };
+    // const allTrancheData = await getAllTrancheData(SDK_PARAMS);
+    // const findAssetInTranche = (searchAsset: string, trancheId: number): string => {
+    //     let trancheName = 'N/A';
+    //     allTrancheData.map((tranche: any) => {
+    //         if (tranche.id.toNumber() === trancheId) {
+    //             tranche.assets.map((asset: any) => {
+    //                 if (searchAsset === asset) {
+    //                     trancheName = tranche.name;
+    //                 }
+    //             });
+    //         }
+    //     });
+    //     return trancheName;
+    // };
+
+    const tranchesDat = await getSubgraphTranchesOverviewData();
 
     const tranchesInteractedWith = [
         ...summary.borrowedAssetData,
@@ -74,9 +75,9 @@ export async function getUserActivityData(userAddress: string): Promise<IUserAct
                 amountNative: assetData.amountNative,
                 collateral: assetData.isCollateral,
                 apy: rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0)),
-                tranche: findAssetInTranche(assetData.asset, assetData.tranche.toNumber()),
+                tranche: tranchesDat[assetData.tranche.toNumber()].name || '',
                 trancheId: assetData.tranche.toNumber(),
-                // collateralCap: assetData.collateralCap,
+                // supplyCap: assetData.supplyCap,
             };
         }),
         borrows: summary.borrowedAssetData.map((assetData: BorrowedAssetData) => {
@@ -87,12 +88,12 @@ export async function getUserActivityData(userAddress: string): Promise<IUserAct
                 amount: bigNumberToUSD(assetData.amount, 18),
                 amountNative: assetData.amountNative,
                 apy: rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0)),
-                tranche: findAssetInTranche(assetData.asset, assetData.tranche.toNumber()),
+                tranche: tranchesDat[assetData.tranche.toNumber()].name || '',
                 trancheId: assetData.tranche.toNumber(),
             };
         }),
         tranchesInteractedWith: tranchesInteractedWith.map((assetData) => ({
-            tranche: findAssetInTranche(assetData.asset, assetData.tranche.toNumber()),
+            tranche: tranchesDat[assetData.tranche.toNumber()].name || '',
             id: assetData.tranche.toNumber(),
         })),
     };
@@ -133,11 +134,13 @@ export function useUserData(userAddress: any): IUserDataProps {
     const queryUserActivity = useQuery({
         queryKey: ['user-activity'],
         queryFn: () => getUserActivityData(userAddress),
+        enabled: !!userAddress,
     });
 
     const queryUserWallet = useQuery({
         queryKey: ['user-wallet'],
         queryFn: () => _getUserWalletData(userAddress),
+        enabled: !!userAddress,
     });
 
     const getTokenBalance = (asset: string) => {

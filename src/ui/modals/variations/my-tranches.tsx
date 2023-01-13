@@ -1,11 +1,15 @@
 import React, { useEffect } from 'react';
-import { TransactionStatus } from '../../components/statuses';
-import { Button, DropdownButton } from '../../components/buttons';
+import {
+    Button,
+    DefaultDropdown,
+    DefaultInput,
+    ListInput,
+    TransactionStatus,
+} from '../../components';
 import { useMyTranchesContext } from '../../../store/contexts';
-import { DefaultInput, ListInput } from '../../components/inputs';
 import { IDialogProps } from '../utils';
-import { ModalFooter, ModalHeader } from '../../modals/subcomponents';
-import { useModal } from '../../../hooks/ui';
+import { ModalFooter, ModalHeader } from '../subcomponents';
+import { useModal } from '../../../hooks';
 
 export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDialog }) => {
     const { isSuccess, error, submitTx, setError, isLoading } = useModal('my-tranches-dialog');
@@ -85,7 +89,7 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
                 // Default State
                 <>
                     <div className="w-full mt-6">
-                        <DropdownButton
+                        <DefaultDropdown
                             items={myTranches.map((obj) => ({ ...obj, text: obj.name }))}
                             selected={selectedTranche.name}
                             setSelected={(e: string) => findSelectedTranche(e)}
@@ -136,12 +140,12 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
                         noDelete
                     />
                     <div className="w-full mt-6">
-                        <DropdownButton
+                        <DefaultDropdown
                             title="Paused Tokens"
                             items={_tokens}
                             selected={_pausedTokens}
                             setSelected={setPausedTokens}
-                            direction="right"
+                            direction="top"
                             size="lg"
                             full
                             multiselect

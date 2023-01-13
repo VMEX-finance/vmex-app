@@ -19,28 +19,38 @@ const TrancheDetails: React.FC = () => {
     const { address } = useAccount();
     const { data: signer } = useSigner();
     const { tranche, setTranche, asset } = useSelectedTrancheContext();
-    const { queryTrancheData } = useSubgraphTrancheData(tranche.id);
+    const { queryTrancheData } = useSubgraphTrancheData(tranche.id || location.state?.trancheId);
 
     const [view, setView] = useState('tranche-overview');
 
     useEffect(() => {
         if (!address) setView('tranche-details');
-        else if (location.state?.view === 'overview') setView('tranche-overview');
-        else if (location.state?.view === 'details') setView('tranche-details');
-        else setView('tranche-overview');
+        else if (location.state?.view === 'overview') {
+            console.log('location is overview, setting to tranche-overview');
+            setView('tranche-overview');
+        } else if (location.state?.view === 'details') setView('tranche-details');
+        else {
+            console.log('else statement, setting to tranche-overview');
+            setView('tranche-overview');
+        }
     }, [address, location]);
 
     useEffect(() => {
-        if (!tranche.id) navigate('/tranches');
-        if (queryTrancheData.data) setTranche(queryTrancheData.data);
-    }, [tranche, location, queryTrancheData]);
+        if (queryTrancheData.data && tranche !== queryTrancheData.data)
+            setTranche(queryTrancheData.data);
+    }, [queryTrancheData.data, setTranche, tranche]);
+
+    useEffect(() => {
+        if (!tranche?.id && !location.state?.trancheId) navigate('/tranches');
+    }, [navigate, tranche.id, location]);
 
     return (
         <AppTemplate
-            title={tranche?.name || 'Tranche Name'}
+            title={tranche?.name}
             description="Tranche"
             view={view}
             setView={setView}
+            titleLoading={queryTrancheData.isLoading}
         >
             <TrancheTVLDataCard
                 assets={queryTrancheData.data?.assets || tranche.assets}
@@ -51,6 +61,7 @@ const TrancheDetails: React.FC = () => {
                 supplyChange={tranche.supplyChange}
                 borrowed={queryTrancheData.data?.totalBorrowed || tranche.borrowTotal}
                 borrowChange={tranche.borrowChange}
+                loading={queryTrancheData.isLoading}
             />
             {view.includes('details') ? (
                 <>
@@ -73,8 +84,7 @@ const TrancheDetails: React.FC = () => {
                 </>
             ) : (
                 <GridView>
-                    <Card loading={queryTrancheData.isLoading}>
-                        <h3 className="text-2xl">Supply</h3>
+                    <Card loading={queryTrancheData.isLoading} title="Supply">
                         <TrancheTable
                             data={
                                 queryTrancheData.data && queryTrancheData.data.assetsData
@@ -84,10 +94,8 @@ const TrancheDetails: React.FC = () => {
                                               canBeCollat: (
                                                   queryTrancheData.data.assetsData as any
                                               )[asset].collateral,
-                                              apy: percentFormatter.format(
-                                                  (queryTrancheData.data.assetsData as any)[asset]
-                                                      .supplyRate,
-                                              ),
+                                              apy: (queryTrancheData.data.assetsData as any)[asset]
+                                                  .supplyRate,
                                               tranche: queryTrancheData.data?.name,
                                               trancheId: tranche.id,
                                               signer: signer,
@@ -98,8 +106,7 @@ const TrancheDetails: React.FC = () => {
                             type="supply"
                         />
                     </Card>
-                    <Card loading={queryTrancheData.isLoading}>
-                        <h3 className="text-2xl">Borrow</h3>
+                    <Card loading={queryTrancheData.isLoading} title="Borrow">
                         <TrancheTable
                             data={
                                 queryTrancheData.data && queryTrancheData.data.assetsData
@@ -109,10 +116,8 @@ const TrancheDetails: React.FC = () => {
                                               liquidity: (queryTrancheData.data.assetsData as any)[
                                                   asset
                                               ].liquidity,
-                                              apy: percentFormatter.format(
-                                                  (queryTrancheData.data.assetsData as any)[asset]
-                                                      .borrowRate,
-                                              ),
+                                              apy: (queryTrancheData.data.assetsData as any)[asset]
+                                                  .borrowRate,
                                               tranche: queryTrancheData.data?.name,
                                               trancheId: tranche.id,
                                               signer: signer,

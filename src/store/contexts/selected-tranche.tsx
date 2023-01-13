@@ -1,4 +1,5 @@
-import React, { createContext, ReactNode, useContext, useState } from 'react';
+import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 // Types
 export type ISelectedTrancheStoreProps = {

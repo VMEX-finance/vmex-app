@@ -48,8 +48,9 @@ export type IUserTrancheDataProps = {
     ) => IYourSuppliesTableItemProps | IYourBorrowsTableItemProps | undefined;
     findAmountBorrowable: (
         asset: string,
-        liquidity: string | undefined,
         liquidityNative: BigNumber | undefined,
+        decimals: string | undefined,
+        price: BigNumber | undefined,
     ) => ITokenBalanceProps;
 };
 
@@ -60,6 +61,7 @@ export type IUserTrancheData = {
     currentLiquidationThreshold: BigNumber;
     // ltv: string;
     healthFactor: string;
+    avgBorrowFactor: BigNumber;
     supplies: IYourSuppliesTableItemProps[];
     borrows: IYourBorrowsTableItemProps[];
     assetBorrowingPower: IAvailableBorrowData[];

@@ -1,4 +1,3 @@
-import { percentFormatter } from '../../../utils/helpers';
 import React from 'react';
 
 type ICustomTooltipProps = {

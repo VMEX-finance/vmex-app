@@ -1,7 +1,6 @@
 import { IAvailableCoins } from '../../../utils/helpers';
 import React from 'react';
-import { Checkbox } from '../../components/buttons';
-import { AssetDisplay } from '../../components/displays';
+import { Checkbox, AssetDisplay } from '../../components';
 
 // TODO: make a way to see which assets cannot be lent / collateralized / etc
 type ICreateTrancheAssetsTableProps = {
@@ -51,35 +50,32 @@ export const CreateTrancheAssetsTable = ({
                                 <AssetDisplay name={el} size="sm" />
                             </td>
                             <td>
-                                <button
-                                    onClick={() =>
-                                        isInList(el, lendAssets)
-                                            ? removeFromList(el, lendAssets)
-                                            : addToList(el, lendAssets)
-                                    }
-                                    className="cursor-pointer"
-                                >
+                                <>
                                     <Checkbox
                                         checked={isInList(el, lendAssets)}
                                         label={isInList(el, lendAssets) ? 'Enabled' : 'Disabled'}
+                                        onClick={() =>
+                                            isInList(el, lendAssets)
+                                                ? removeFromList(el, lendAssets)
+                                                : addToList(el, lendAssets)
+                                        }
                                     />
-                                </button>
+                                </>
                             </td>
                             <td>
-                                <button
-                                    onClick={() =>
-                                        isInList(el, collateralAssets)
-                                            ? removeFromList(el, collateralAssets)
-                                            : addToList(el, collateralAssets)
-                                    }
-                                >
+                                <>
                                     <Checkbox
                                         checked={isInList(el, collateralAssets)}
                                         label={
                                             isInList(el, collateralAssets) ? 'Enabled' : 'Disabled'
                                         }
+                                        onClick={() =>
+                                            isInList(el, collateralAssets)
+                                                ? removeFromList(el, collateralAssets)
+                                                : addToList(el, collateralAssets)
+                                        }
                                     />
-                                </button>
+                                </>
                             </td>
                         </tr>
                     ))}
