@@ -13,10 +13,9 @@ const client = new ApolloClient({
 
 export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]> => {
     const { data, error } = await client.query({
-        // TODO: Handle pagination, for now it returns the first 10 tranches
         query: gql`
             query queryAllTranches {
-                tranches(first: 10) {
+                tranches(orderBy: id) {
                     id
                     name
                     paused

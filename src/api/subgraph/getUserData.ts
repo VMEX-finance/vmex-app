@@ -209,7 +209,7 @@ export const getSubgraphUserData = async (address: string): Promise<IGraphUserDa
     }
 };
 
-export function useSubgraphUserData(address?: `0x${string}`): ISubgraphUserData {
+export function useSubgraphUserData(address?: string): ISubgraphUserData {
     const queryUserPnlChart = useQuery({
         queryKey: ['subgraph-user-pnl-chart'],
         queryFn: () => getSubgraphUserChart(address || ''),
@@ -225,7 +225,7 @@ export function useSubgraphUserData(address?: `0x${string}`): ISubgraphUserData 
 
     const queryTrancheAdminData = useQuery({
         queryKey: ['subgraph-tranche-admin-data'],
-        queryFn: () => getUserAdminTrancheData(address),
+        queryFn: () => getUserAdminTrancheData(address || ''),
     });
 
     return {
