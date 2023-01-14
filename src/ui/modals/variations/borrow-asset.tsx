@@ -239,7 +239,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
                     disabled={
                         isSuccess ||
                         error.length !== 0 ||
-                        !amount ||
+                        (!amount && !isMax) ||
                         (view?.includes('Borrow') && amountBorrwable.amountNative.lt(10)) ||
                         (view?.includes('Repay') && amountRepay.lt(10))
                     }

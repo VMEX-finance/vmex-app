@@ -225,10 +225,9 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                     disabled={
                         isSuccess ||
                         error.length !== 0 ||
-                        !amount ||
+                        (!amount && !isMax) ||
                         (view?.includes('Supply') && amountWalletNative.amountNative.lt(10)) ||
-                        !amountWithdraw ||
-                        (view?.includes('Withdraw') && amountWithdraw.lt(10))
+                        (view?.includes('Withdraw') && (!amountWithdraw || amountWithdraw.lt(10)))
                     }
                     onClick={handleSubmit}
                     label={'Submit Transaction'}
