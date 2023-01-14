@@ -49,6 +49,7 @@ export const processTrancheData = async (
                     supplyCap: item.assetData.supplyCap,
                     priceUSD: (prices as any)[item.assetData.underlyingAssetName].usdPrice,
                     priceETH: (prices as any)[item.assetData.underlyingAssetName].ethPrice,
+                    yieldStrategy: item.yieldStrategy,
                 },
             }),
         {},
@@ -133,6 +134,7 @@ export const getSubgraphTrancheData = async (
                             borrowCap
                             supplyCap
                         }
+                        yieldStrategy
                     }
                 }
             }

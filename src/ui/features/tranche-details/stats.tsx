@@ -3,7 +3,12 @@ import ReactTooltip from 'react-tooltip';
 import { useSelectedTrancheContext } from '../../../store/contexts';
 import { NumberDisplay, DefaultDropdown, Card, ReLineChart } from '../../components';
 import { IGraphTrancheAssetProps, IGraphTrancheDataProps } from '../../../api/subgraph/types';
-import { numberFormatter, percentFormatter, convertContractsPercent } from '../../../utils/helpers';
+import {
+    numberFormatter,
+    percentFormatter,
+    convertContractsPercent,
+    ZERO_ADDRESS,
+} from '../../../utils';
 import { useSubgraphMarketsData } from '../../../api/subgraph';
 
 type ITrancheStatisticsCardProps = {
@@ -43,16 +48,16 @@ export const TrancheStatisticsCard = ({
                     <div className="flex justify-between items-center">
                         <div className="flex items-center gap-4">
                             <h3 className="text-2xl">Asset Statistics</h3>
-                            {/* TODO: Make this dynamic based on if strategy, also include link to the etherscan contract address */}
-                            {asset === 'Tricrypto2' && (
-                                <div
-                                    data-tip
-                                    data-for="strategiesTip"
-                                    className="bg-white text-neutral-700 text-sm rounded px-2 border-2 border-brand-purple cursor-default"
-                                >
-                                    <span>Strategies Enabled</span>
-                                </div>
-                            )}
+                            {queryMarketsChart.data?.yieldStrategy &&
+                                queryMarketsChart.data.yieldStrategy != ZERO_ADDRESS && (
+                                    <div
+                                        data-tip
+                                        data-for="strategiesTip"
+                                        className="bg-white text-neutral-700 text-sm rounded px-2 border-2 border-brand-purple cursor-default"
+                                    >
+                                        <span>Strategies Enabled</span>
+                                    </div>
+                                )}
                         </div>
                         <DefaultDropdown
                             primary
