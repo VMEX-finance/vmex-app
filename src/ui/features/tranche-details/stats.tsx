@@ -39,8 +39,6 @@ export const TrancheStatisticsCard = ({
         return () => clearTimeout(timeout);
     }, [asset]);
 
-    console.log('queryMarketsChart.data?.yieldStrategy: ', queryMarketsChart.data?.yieldStrategy);
-
     return (
         <>
             <Card
