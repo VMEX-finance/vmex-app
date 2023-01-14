@@ -43,8 +43,8 @@ export const TrancheStatisticsCard = ({
                     <div className="flex justify-between items-center">
                         <div className="flex items-center gap-4">
                             <h3 className="text-2xl">Asset Statistics</h3>
-                            {/* TODO: Make this dynamic based on if strategy */}
-                            {asset === 'triCrypto2' && (
+                            {/* TODO: Make this dynamic based on if strategy, also include link to the etherscan contract address */}
+                            {asset === 'Tricrypto2' && (
                                 <div
                                     data-tip
                                     data-for="strategiesTip"
