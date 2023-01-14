@@ -29,6 +29,7 @@ export const processTrancheData = async (
                         parseFloat(utils.formatUnits(item.optimalUtilisationRate, 27)),
                     ),
                     reserveFactor: item.reserveFactor,
+                    vmexReserveFactor: item.assetData.vmexReserveFactor,
                     liquidationThreshold: item.assetData.liquidationThreshold,
                     utilityRate: `${item.utilizationRate}`,
                     borrowRate: percentFormatter.format(
@@ -83,8 +84,6 @@ export const processTrancheData = async (
         assetsData: finalObj,
         utilityRate: '0',
         assets: assets.map((el: any) => el.assetData.underlyingAssetName),
-        adminFee: 0.02, // TODO
-        platformFee: 0.03, // TODO
         id: trancheId ? trancheId : data.id,
         name: data.name,
         admin: data.trancheAdmin,
@@ -133,6 +132,7 @@ export const getSubgraphTrancheData = async (
                             borrowFactor
                             borrowCap
                             supplyCap
+                            vmexReserveFactor
                         }
                         yieldStrategy
                     }
