@@ -45,6 +45,7 @@ export type IGraphAssetData = {
     supplyCap: string;
     priceUSD: BigNumber;
     priceETH: BigNumber;
+    yieldStrategy: string;
 };
 
 export type IGraphTrancheAssetProps = IGraphAssetData | Record<any, any>;
@@ -95,6 +96,7 @@ export type ISubgraphTrancheData = {
 export type ISubgraphMarketsChartsProps = {
     supplyBorrowRateChart: ILineChartDataPointProps[];
     utilizationChart: ILineChartDataPointProps[];
+    yieldStrategy: string;
 };
 export type ISubgraphMarketsChart = {
     queryMarketsChart: UseQueryResult<ISubgraphMarketsChartsProps, unknown>;

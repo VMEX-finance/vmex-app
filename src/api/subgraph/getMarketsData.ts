@@ -39,6 +39,7 @@ export const getSubgraphMarketsChart = async (
                         utilizationRate
                         timestamp
                     }
+                    yieldStrategy
                 }
             }
         `,
@@ -50,7 +51,7 @@ export const getSubgraphMarketsChart = async (
         let supplyBorrowRateChart: ILineChartDataPointProps[] = [];
         let utilizationChart: ILineChartDataPointProps[] = [];
 
-        const { paramsHistory } = data.reserve;
+        const { paramsHistory, yieldStrategy } = data.reserve;
 
         paramsHistory.map((histItem: any) => {
             const date = new Date(histItem.timestamp * 1000).toLocaleDateString();
@@ -72,6 +73,7 @@ export const getSubgraphMarketsChart = async (
         return {
             supplyBorrowRateChart,
             utilizationChart,
+            yieldStrategy,
         };
     }
 };
