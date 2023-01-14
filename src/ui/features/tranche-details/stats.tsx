@@ -127,6 +127,14 @@ export const TrancheStatisticsCard = ({
                             center
                         />
                         <NumberDisplay
+                            label="Borrow Factor"
+                            value={percentFormatter.format(
+                                Number(convertContractsPercent(assetData?.borrowFactor)),
+                            )}
+                            color="text-white"
+                            center
+                        />
+                        <NumberDisplay
                             label="Liq. Threshold"
                             value={percentFormatter.format(
                                 Number(convertContractsPercent(assetData?.liquidationThreshold)),
@@ -145,6 +153,18 @@ export const TrancheStatisticsCard = ({
                         <NumberDisplay
                             label="Collateral"
                             value={`${assetData?.collateral ? 'Yes' : 'No'}`}
+                            color="text-white"
+                            center
+                        />
+                        <NumberDisplay
+                            label="Supply Cap"
+                            value={`${numberFormatter.format(assetData?.supplyCap)} ${asset}`}
+                            color="text-white"
+                            center
+                        />
+                        <NumberDisplay
+                            label="Borrow Cap"
+                            value={`${numberFormatter.format(assetData?.borrowCap)} ${asset}`}
                             color="text-white"
                             center
                         />
