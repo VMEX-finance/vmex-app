@@ -29,6 +29,7 @@ export type IGraphAssetData = {
     ltv: string;
     optimalUtilityRate: number;
     reserveFactor: string;
+    vmexReserveFactor: string;
     liquidationThreshold: string;
     totalBorrowed: string;
     utilityRate: string;
@@ -59,8 +60,6 @@ export type IGraphTrancheDataProps = {
     assets?: string[];
     whitelist?: boolean;
     admin?: string;
-    adminFee?: number;
-    platformFee?: number;
     aggregateRating?: string;
     tvl?: string;
     tvlChange?: number;

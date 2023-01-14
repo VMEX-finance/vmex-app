@@ -173,14 +173,18 @@ export const TrancheStatisticsCard = ({
                             center
                         />
                         <NumberDisplay
-                            label="Admin Fee"
-                            value={percentFormatter.format(assetData?.reserveFactor)}
+                            label="Tranche Admin Fee"
+                            value={percentFormatter.format(
+                                Number(convertContractsPercent(assetData?.reserveFactor)),
+                            )}
                             color="text-white"
                             center
                         />
                         <NumberDisplay
                             label="Platform Fee"
-                            value={percentFormatter.format(Number(tranche?.platformFee))}
+                            value={percentFormatter.format(
+                                Number(convertContractsPercent(assetData?.vmexReserveFactor)),
+                            )}
                             color="text-white"
                             center
                         />

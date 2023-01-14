@@ -49,6 +49,7 @@ export const getUserAdminTrancheData = async (admin: string): Promise<IGraphTran
                             borrowFactor
                             borrowCap
                             supplyCap
+                            vmexReserveFactor
                         }
                         yieldStrategy
                     }
