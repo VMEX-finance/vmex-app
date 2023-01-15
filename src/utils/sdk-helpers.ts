@@ -142,7 +142,6 @@ export const bigNumberToUnformattedString = (
     }
 
     if (number.lt(10)) {
-        console.log('!!!!!!! Manually setting to zero since very close: ', number.toString());
         number = BigNumber.from('0');
     }
 

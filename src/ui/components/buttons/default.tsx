@@ -11,6 +11,7 @@ export interface IButtonProps {
     type?: 'delete';
     icon?: React.ReactNode;
     loading?: boolean;
+    loadingText?: string;
 }
 
 export const Button = ({
@@ -23,6 +24,7 @@ export const Button = ({
     type,
     icon,
     loading,
+    loadingText,
 }: IButtonProps) => {
     const mode = primary
         ? 'bg-black rounded-lg text-white hover:bg-neutral-800 border border-[1px] border-black'
@@ -39,7 +41,7 @@ export const Button = ({
                     primary
                         ? 'dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200'
                         : 'dark:bg-black dark:text-neutral-100 dark:hover:bg-neutral-900'
-                } ${disabled ? 'dark:border-transparent' : 'dark:border-neutral-100'}`,
+                } ${disabled || loading ? 'dark:border-transparent' : 'dark:border-neutral-100'}`,
                 'h-fit',
                 'box-border',
                 'font-basefont',
@@ -53,7 +55,7 @@ export const Button = ({
                 className,
                 mode,
                 `${
-                    disabled
+                    disabled || loading
                         ? `${
                               primary
                                   ? '!bg-neutral-700 dark:!bg-neutral-400 !text-neutral-300 dark:!text-neutral-800'
@@ -64,7 +66,7 @@ export const Button = ({
             ].join(' ')}
         >
             <span className="flex items-center gap-2">
-                {loading ? 'Loading' : label || 'Submit'}
+                {loading ? (loadingText ? loadingText : 'Loading') : label || 'Submit'}
                 {loading ? <CgSpinner className="animate-spin" /> : icon}
             </span>
         </button>

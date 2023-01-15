@@ -261,6 +261,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                     onClick={handleSubmit}
                     label={'Submit Transaction'}
                     loading={isLoading}
+                    loadingText="Submitting"
                 />
             </ModalFooter>
         </>
