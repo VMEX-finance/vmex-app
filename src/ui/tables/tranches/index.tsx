@@ -20,16 +20,26 @@ interface IDataTable {
 export const TranchesTable: React.FC<IDataTable> = ({ data, loading, userActivity }) => {
     const { isDark } = useContext(ThemeContext);
 
+    console.log(data);
+
     const renderActivity = (trancheId: string) => {
-        let activity = '';
-        if (userActivity?.isLoading) activity = 'loading';
-        userActivity?.data?.borrows.map((borrow) => {
-            if (borrow.trancheId === Number(trancheId)) activity = 'borrowed';
-        });
-        userActivity?.data?.supplies.map((supply) => {
-            if (supply.trancheId === Number(trancheId) && activity === '') activity = 'supplied';
-            else if (supply.trancheId === Number(trancheId) && activity !== '') activity = 'both';
-        });
+        let activity: string = '';
+        if (!trancheId || userActivity?.isLoading) activity = 'loading';
+        userActivity?.data?.borrows.length !== 0 &&
+            userActivity?.data?.borrows.map((borrow) => {
+                if (borrow.trancheId === Number(trancheId)) {
+                    activity = 'borrowed';
+                    console.log(activity);
+                }
+            });
+        userActivity?.data?.supplies.length !== 0 &&
+            userActivity?.data?.supplies.map((supply) => {
+                console.log(activity);
+                if (supply.trancheId === Number(trancheId) && activity === '')
+                    activity = 'supplied';
+                else if (supply.trancheId === Number(trancheId) && activity === 'borrowed')
+                    activity = 'both';
+            });
         return activity;
     };
 
@@ -128,18 +138,20 @@ export const TranchesTable: React.FC<IDataTable> = ({ data, loading, userActivit
                             dataIndex,
                             rowIndex,
                         ) => (
-                            <TranchesCustomRow
-                                name={name}
-                                assets={assets}
-                                aggregateRating={aggregateRating}
-                                yourActivity={renderActivity(id)}
-                                supplyTotal={usdFormatter().format(supplyTotal)}
-                                borrowTotal={usdFormatter().format(borrowTotal)}
-                                id={id}
-                                key={`tranches-table-${
-                                    rowIndex || Math.floor(Math.random() * 10000)
-                                }`}
-                            />
+                            <>
+                                <TranchesCustomRow
+                                    name={name}
+                                    assets={assets}
+                                    aggregateRating={aggregateRating}
+                                    yourActivity={renderActivity(id)}
+                                    supplyTotal={usdFormatter().format(supplyTotal)}
+                                    borrowTotal={usdFormatter().format(borrowTotal)}
+                                    id={id}
+                                    key={`tranches-table-${
+                                        rowIndex || Math.floor(Math.random() * 10000)
+                                    }`}
+                                />
+                            </>
                         ),
                         textLabels: {
                             body: {

@@ -64,7 +64,7 @@ export const Button = ({
             ].join(' ')}
         >
             <span className="flex items-center gap-2">
-                {label || 'Submit'}
+                {loading ? 'Loading' : label || 'Submit'}
                 {loading ? <CgSpinner className="animate-spin" /> : icon}
             </span>
         </button>

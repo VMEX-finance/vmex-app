@@ -38,8 +38,6 @@ const TrancheDetails: React.FC = () => {
         setTranche(queryTrancheData.data);
     }, [queryTrancheData.data, setTranche, tranche]);
 
-    console.log('loading', queryTrancheData.isLoading, location.state?.trancheId);
-
     useEffect(() => {
         if (!tranche?.id && !location.state?.trancheId) navigate('/tranches');
     }, [navigate, tranche, location]);

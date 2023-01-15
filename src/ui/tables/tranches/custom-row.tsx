@@ -25,7 +25,6 @@ const TranchesCustomRow = (props: ITranchesCustomRowProps) => {
 
     const route = (e: Event, tranche: any, view = 'overview') => {
         e.preventDefault();
-        console.log('bang', tranche.id);
         updateTranche('id', tranche.id);
         navigate(`/tranches/${tranche.name?.toLowerCase().replace(/\s+/g, '-')}`, {
             state: { view, trancheId: tranche.id },
@@ -35,6 +34,7 @@ const TranchesCustomRow = (props: ITranchesCustomRowProps) => {
     const renderActivity = (status: string) => {
         const size = '20px';
         if (status) {
+            console.log(status);
             switch (status.toLowerCase()) {
                 case 'loading':
                     return (
