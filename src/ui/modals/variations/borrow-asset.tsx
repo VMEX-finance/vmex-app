@@ -103,6 +103,21 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
         );
     };
 
+    const isViolatingBorrowCap = function () {
+        if (!amount || !view?.includes('Borrow')) return false;
+        const borrowCap = Number(findAssetInMarketsData(data?.asset || '')?.borrowCap);
+        const currentBorrowed = Number(findAssetInMarketsData(data?.asset || '')?.totalBorrowed); //already considers decimals
+        console.log('borrowCap: ', borrowCap);
+        console.log('currentBorrowed: ', currentBorrowed);
+        const newTotalBorrow = Number(amount) + currentBorrowed;
+
+        console.log('newTotalBorrow: ', newTotalBorrow);
+        if (newTotalBorrow > borrowCap) {
+            return true;
+        }
+        return false;
+    };
+
     return data && data.asset ? (
         <>
             {view?.includes('Borrow') ? (
@@ -140,6 +155,13 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
                             <div className="mt-1">
                                 <BasicToggle checked={isMax} onChange={maxToggleOnClick} />
                             </div>
+
+                            <h3
+                                className="mt-6 text-red-300"
+                                style={{ display: isViolatingBorrowCap() ? '' : 'none' }}
+                            >
+                                WARNING: attempting to borrow more than borrow cap
+                            </h3>
 
                             <h3 className="mt-6 text-neutral400">Health Factor</h3>
                             <HealthFactor asset={data.asset} amount={amount} type={'borrow'} />
@@ -250,7 +272,8 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
                         error.length !== 0 ||
                         (!amount && !isMax) ||
                         (view?.includes('Borrow') && amountBorrwable.amountNative.lt(10)) ||
-                        (view?.includes('Repay') && amountRepay.lt(10))
+                        (view?.includes('Repay') && amountRepay.lt(10)) ||
+                        isViolatingBorrowCap()
                     }
                     onClick={handleClick}
                     label="Submit Transaction"
