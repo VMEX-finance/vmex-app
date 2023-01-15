@@ -276,7 +276,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
                         isViolatingBorrowCap()
                     }
                     onClick={handleClick}
-                    label="Submit Transaction"
+                    label={'Submit Transaction'}
                     loading={isLoading}
                 />
             </ModalFooter>

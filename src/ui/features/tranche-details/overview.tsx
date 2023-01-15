@@ -13,6 +13,7 @@ import { useAccount } from 'wagmi';
 import { IYourBorrowsTableItemProps, IYourSuppliesTableItemProps } from '../../tables';
 import { useSelectedTrancheContext } from '../../../store/contexts';
 import { makeCompact, usdFormatter } from '../../../utils/helpers';
+import { useLocation } from 'react-router-dom';
 
 export interface ITrancheOverviewProps {
     assets?: string[];
@@ -37,16 +38,16 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
     grade,
     loading,
 }) => {
+    const location = useLocation();
     const { width, breakpoint } = useWindowSize();
     const { openDialog } = useDialogController();
     const { address } = useAccount();
     const { tranche } = useSelectedTrancheContext();
     const {
         queryUserTrancheData: { data },
-    } = useUserTrancheData(address, tranche.id);
+    } = useUserTrancheData(address, location.state?.trancheId);
 
     const calculateNetAPY = () => {
-        console.log('OVERVIEW DATA:', data);
         if (!data) return `0%`;
         const supplyTotal = data?.supplies.reduce(
             (partial, next) => partial + parseFloat(next.amount.slice(1).replaceAll(',', '')),
@@ -142,29 +143,33 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                                     {width > breakpoint && 'User '}Supplies
                                 </span>
                                 <div className="flex flex-wrap gap-2">
-                                    {renderUserInteractions('supplies').map((el) => (
-                                        <button
-                                            key={`${el.asset}`}
-                                            onClick={() =>
-                                                openDialog('loan-asset-dialog', {
-                                                    ...el,
-                                                    view: 'Withdraw',
-                                                })
-                                            }
-                                            className={buttonClass}
-                                        >
-                                            <AssetDisplay
-                                                className={assetDisplayClass}
-                                                name={el.asset}
-                                                size="sm"
-                                                value={usdFormatter().format(
-                                                    parseFloat(
-                                                        el.amount.slice(1).replaceAll(',', ''),
-                                                    ),
-                                                )}
-                                            />
-                                        </button>
-                                    ))}
+                                    {renderUserInteractions('supplies').length !== 0 ? (
+                                        renderUserInteractions('supplies').map((el) => (
+                                            <button
+                                                key={`${el.asset}`}
+                                                onClick={() =>
+                                                    openDialog('loan-asset-dialog', {
+                                                        ...el,
+                                                        view: 'Withdraw',
+                                                    })
+                                                }
+                                                className={buttonClass}
+                                            >
+                                                <AssetDisplay
+                                                    className={assetDisplayClass}
+                                                    name={el.asset}
+                                                    size="sm"
+                                                    value={usdFormatter().format(
+                                                        parseFloat(
+                                                            el.amount.slice(1).replaceAll(',', ''),
+                                                        ),
+                                                    )}
+                                                />
+                                            </button>
+                                        ))
+                                    ) : (
+                                        <span className="text-neutral-400">{`No Supplies`}</span>
+                                    )}
                                 </div>
                             </div>
                             <div className="text-center flex flex-col">
@@ -172,29 +177,33 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                                     {width > breakpoint && 'User '}Borrows
                                 </span>
                                 <div className="flex flex-wrap gap-2">
-                                    {renderUserInteractions('borrows').map((el) => (
-                                        <button
-                                            key={`${el.asset}`}
-                                            onClick={() =>
-                                                openDialog('borrow-asset-dialog', {
-                                                    ...el,
-                                                    view: 'Repay',
-                                                })
-                                            }
-                                            className={buttonClass}
-                                        >
-                                            <AssetDisplay
-                                                className={assetDisplayClass}
-                                                name={el.asset}
-                                                size="sm"
-                                                value={usdFormatter().format(
-                                                    parseFloat(
-                                                        el.amount.slice(1).replaceAll(',', ''),
-                                                    ),
-                                                )}
-                                            />
-                                        </button>
-                                    ))}
+                                    {renderUserInteractions('borrows').length !== 0 ? (
+                                        renderUserInteractions('borrows').map((el) => (
+                                            <button
+                                                key={`${el.asset}`}
+                                                onClick={() =>
+                                                    openDialog('borrow-asset-dialog', {
+                                                        ...el,
+                                                        view: 'Repay',
+                                                    })
+                                                }
+                                                className={buttonClass}
+                                            >
+                                                <AssetDisplay
+                                                    className={assetDisplayClass}
+                                                    name={el.asset}
+                                                    size="sm"
+                                                    value={usdFormatter().format(
+                                                        parseFloat(
+                                                            el.amount.slice(1).replaceAll(',', ''),
+                                                        ),
+                                                    )}
+                                                />
+                                            </button>
+                                        ))
+                                    ) : (
+                                        <span className="text-neutral-400">{`No Borrows`}</span>
+                                    )}
                                 </div>
                             </div>
                             <div className="text-center text-sm flex flex-col items-center">

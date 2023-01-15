@@ -11,7 +11,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '../store/contexts';
 import { useAccount, useSigner } from 'wagmi';
 import { useSubgraphTrancheData } from '../api';
-import { percentFormatter } from '../utils/helpers';
 
 const TrancheDetails: React.FC = () => {
     const navigate = useNavigate();
@@ -19,30 +18,29 @@ const TrancheDetails: React.FC = () => {
     const { address } = useAccount();
     const { data: signer } = useSigner();
     const { tranche, setTranche, asset } = useSelectedTrancheContext();
-    const { queryTrancheData } = useSubgraphTrancheData(tranche.id || location.state?.trancheId);
+    const { queryTrancheData } = useSubgraphTrancheData(location.state?.trancheId);
 
     const [view, setView] = useState('tranche-overview');
 
     useEffect(() => {
         if (!address) setView('tranche-details');
         else if (location.state?.view === 'overview') {
-            console.log('location is overview, setting to tranche-overview');
             setView('tranche-overview');
         } else if (location.state?.view === 'details') setView('tranche-details');
         else {
-            console.log('else statement, setting to tranche-overview');
             setView('tranche-overview');
         }
     }, [address, location]);
 
     useEffect(() => {
-        if (queryTrancheData.data && tranche !== queryTrancheData.data)
-            setTranche(queryTrancheData.data);
+        if (queryTrancheData.data) console.log('tranche data:', queryTrancheData.data);
+        console.log('tranche', tranche);
+        setTranche(queryTrancheData.data);
     }, [queryTrancheData.data, setTranche, tranche]);
 
     useEffect(() => {
         if (!tranche?.id && !location.state?.trancheId) navigate('/tranches');
-    }, [navigate, tranche.id, location]);
+    }, [navigate, tranche, location]);
 
     return (
         <AppTemplate
@@ -53,15 +51,15 @@ const TrancheDetails: React.FC = () => {
             titleLoading={queryTrancheData.isLoading}
         >
             <TrancheTVLDataCard
-                assets={queryTrancheData.data?.assets || tranche.assets}
-                grade={tranche.aggregateRating}
-                tvl={queryTrancheData.data?.tvl || tranche.tvl}
-                tvlChange={tranche.tvlChange}
-                supplied={queryTrancheData.data?.totalSupplied || tranche.supplyTotal}
-                supplyChange={tranche.supplyChange}
-                borrowed={queryTrancheData.data?.totalBorrowed || tranche.borrowTotal}
-                borrowChange={tranche.borrowChange}
-                loading={queryTrancheData.isLoading}
+                assets={queryTrancheData.data?.assets || tranche?.assets}
+                grade={tranche?.aggregateRating}
+                tvl={queryTrancheData.data?.tvl || tranche?.tvl}
+                tvlChange={tranche?.tvlChange}
+                supplied={queryTrancheData.data?.totalSupplied || tranche?.supplyTotal}
+                supplyChange={tranche?.supplyChange}
+                borrowed={queryTrancheData.data?.totalBorrowed || tranche?.borrowTotal}
+                borrowChange={tranche?.borrowChange}
+                loading={queryTrancheData.isLoading || queryTrancheData.isPreviousData}
             />
             {view.includes('details') ? (
                 <>
@@ -72,7 +70,7 @@ const TrancheDetails: React.FC = () => {
                         />
                         <TrancheStatisticsCard
                             tranche={queryTrancheData.data}
-                            trancheId={tranche.id}
+                            trancheId={tranche?.id}
                             loading={queryTrancheData.isLoading}
                             assetData={
                                 queryTrancheData.data && queryTrancheData.data.assetsData && asset
@@ -97,7 +95,7 @@ const TrancheDetails: React.FC = () => {
                                               apy: (queryTrancheData.data.assetsData as any)[asset]
                                                   .supplyRate,
                                               tranche: queryTrancheData.data?.name,
-                                              trancheId: tranche.id,
+                                              trancheId: tranche?.id,
                                               signer: signer,
                                           }),
                                       )
@@ -119,7 +117,7 @@ const TrancheDetails: React.FC = () => {
                                               apy: (queryTrancheData.data.assetsData as any)[asset]
                                                   .borrowRate,
                                               tranche: queryTrancheData.data?.name,
-                                              trancheId: tranche.id,
+                                              trancheId: tranche?.id,
                                               signer: signer,
                                           }),
                                       )

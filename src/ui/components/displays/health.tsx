@@ -12,6 +12,7 @@ import {
 } from '../../../utils';
 import { ethers, BigNumber } from 'ethers';
 import { useAccount } from 'wagmi';
+import { useLocation } from 'react-router-dom';
 
 interface IHealthFactorProps {
     asset?: string;
@@ -32,10 +33,11 @@ export const HealthFactor = ({
     withChange = true,
     center,
 }: IHealthFactorProps) => {
+    const location = useLocation();
     const { address } = useAccount();
     const { tranche } = useSelectedTrancheContext();
-    const { queryUserTrancheData } = useUserTrancheData(address, tranche.id);
-    const { findAssetInMarketsData } = useSubgraphTrancheData(tranche.id);
+    const { queryUserTrancheData } = useUserTrancheData(address, location.state?.trancheId);
+    const { findAssetInMarketsData } = useSubgraphTrancheData(location.state?.trancheId);
 
     const determineSize = () => {
         switch (size) {
