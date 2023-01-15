@@ -85,6 +85,15 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
         findAssetInUserSuppliesOrBorrows(data?.asset || '', 'supply') as IYourSuppliesTableItemProps
     )?.collateral;
 
+    const maxToggleOnClick = () => {
+        setIsMax(!isMax);
+        setAmount(
+            view?.includes('Supply')
+                ? bigNumberToUnformattedString(amountWalletNative.amountNative, data?.asset || '')
+                : bigNumberToUnformattedString(amountWithdraw, data?.asset || ''),
+        );
+    };
+
     useEffect(() => {
         if (data?.view) setView('Withdraw');
     }, [data?.view]);
@@ -123,7 +132,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
 
                             <h3 className="mt-6 text-neutral400">{view} Max</h3>
                             <div className="mt-1">
-                                <BasicToggle checked={isMax} onChange={() => setIsMax(!isMax)} />
+                                <BasicToggle checked={isMax} onChange={maxToggleOnClick} />
                             </div>
 
                             <h3 className="mt-6 text-neutral400">Health Factor</h3>
@@ -182,7 +191,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
 
                             <h3 className="mt-6 text-neutral400">{view} Max</h3>
                             <div className="mt-1">
-                                <BasicToggle checked={isMax} onChange={() => setIsMax(!isMax)} />
+                                <BasicToggle checked={isMax} onChange={maxToggleOnClick} />
                             </div>
                             <h3 className="mt-6 text-neutral400">Health Factor</h3>
                             <HealthFactor asset={data.asset} amount={amount} type={'withdraw'} />

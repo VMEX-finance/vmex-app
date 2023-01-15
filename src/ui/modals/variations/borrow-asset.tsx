@@ -94,6 +94,15 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
         data?.amountNative ||
         BigNumber.from('0');
 
+    const maxToggleOnClick = () => {
+        setIsMax(!isMax);
+        setAmount(
+            view?.includes('Borrow')
+                ? bigNumberToUnformattedString(amountBorrwable.amountNative, data?.asset || '')
+                : bigNumberToUnformattedString(amountRepay, data?.asset || ''),
+        );
+    };
+
     return data && data.asset ? (
         <>
             {view?.includes('Borrow') ? (
@@ -129,7 +138,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
 
                             <h3 className="mt-6 text-neutral400">{view} Max</h3>
                             <div className="mt-1">
-                                <BasicToggle checked={isMax} onChange={() => setIsMax(!isMax)} />
+                                <BasicToggle checked={isMax} onChange={maxToggleOnClick} />
                             </div>
 
                             <h3 className="mt-6 text-neutral400">Health Factor</h3>
@@ -181,7 +190,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
 
                             <h3 className="mt-6 text-neutral400">{view} Max</h3>
                             <div className="mt-1">
-                                <BasicToggle checked={isMax} onChange={() => setIsMax(!isMax)} />
+                                <BasicToggle checked={isMax} onChange={maxToggleOnClick} />
                             </div>
 
                             <h3 className="mt-6 text-neutral400">Health Factor</h3>
