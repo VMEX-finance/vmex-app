@@ -20,6 +20,7 @@ import {
     Button,
     CoinInput,
     MessageStatus,
+    Tooltip,
 } from '../../components';
 import { useSubgraphTrancheData, useUserData, useUserTrancheData } from '../../../api';
 import { useSigner, useAccount } from 'wagmi';
@@ -254,22 +255,29 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
             )}
 
             <ModalFooter>
-                <Button
-                    primary
-                    disabled={
-                        isSuccess ||
-                        error.length !== 0 ||
-                        (!amount && !isMax) ||
-                        (view?.includes('Supply') && amountWalletNative.amountNative.lt(10)) ||
-                        (view?.includes('Withdraw') &&
-                            (!amountWithdraw || amountWithdraw.lt(10))) ||
-                        isViolatingSupplyCap()
-                    }
-                    onClick={handleSubmit}
-                    label={'Submit Transaction'}
-                    loading={isLoading}
-                    loadingText="Submitting"
-                />
+                {Number(amount) === 0 ? (
+                    <Tooltip
+                        text="Please enter an amount"
+                        content={<Button primary label={'Submit Transaction'} disabled />}
+                    />
+                ) : (
+                    <Button
+                        primary
+                        disabled={
+                            isSuccess ||
+                            error.length !== 0 ||
+                            (!amount && !isMax) ||
+                            (view?.includes('Supply') && amountWalletNative.amountNative.lt(10)) ||
+                            (view?.includes('Withdraw') &&
+                                (!amountWithdraw || amountWithdraw.lt(10))) ||
+                            isViolatingSupplyCap()
+                        }
+                        onClick={handleSubmit}
+                        label={'Submit Transaction'}
+                        loading={isLoading}
+                        loadingText="Submitting"
+                    />
+                )}
             </ModalFooter>
         </>
     ) : (
