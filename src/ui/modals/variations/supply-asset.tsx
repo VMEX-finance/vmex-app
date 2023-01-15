@@ -95,7 +95,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
     };
 
     const isViolatingSupplyCap = function () {
-        if (!amount) return false;
+        if (!amount || !view?.includes('Supply')) return false;
         const supplyCap = Number(findAssetInMarketsData(data?.asset || '')?.supplyCap);
         const currentSupplied = Number(findAssetInMarketsData(data?.asset || '')?.totalSupplied); //already considers decimals
         console.log('supplyCap: ', supplyCap);
