@@ -13,7 +13,14 @@ import {
     bigNumberToUnformattedString,
     SDK_PARAMS,
 } from '../../../utils';
-import { HealthFactor, ActiveStatus, TransactionStatus, Button, CoinInput } from '../../components';
+import {
+    HealthFactor,
+    ActiveStatus,
+    TransactionStatus,
+    Button,
+    CoinInput,
+    MessageStatus,
+} from '../../components';
 import { useSubgraphTrancheData, useUserData, useUserTrancheData } from '../../../api';
 import { useSigner, useAccount } from 'wagmi';
 import { BigNumber } from 'ethers';
@@ -141,17 +148,16 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                                 loading={amountWalletNative.loading}
                             />
 
+                            <MessageStatus
+                                type="warning"
+                                show={isViolatingSupplyCap()}
+                                message="WARNING: Attempting to supply more than the supply cap"
+                            />
+
                             <h3 className="mt-6 text-neutral400">{view} Max</h3>
                             <div className="mt-1">
                                 <BasicToggle checked={isMax} onChange={maxToggleOnClick} />
                             </div>
-
-                            <h3
-                                className="mt-6 text-red-300"
-                                style={{ display: isViolatingSupplyCap() ? '' : 'none' }}
-                            >
-                                WARNING: attempting to supply more than supply cap
-                            </h3>
 
                             <h3 className="mt-6 text-neutral400">Health Factor</h3>
                             <HealthFactor asset={data.asset} amount={amount} type={'supply'} />
@@ -246,6 +252,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                     )}
                 </>
             )}
+
             <ModalFooter>
                 <Button
                     primary
