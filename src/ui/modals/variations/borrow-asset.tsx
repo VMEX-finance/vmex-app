@@ -6,6 +6,7 @@ import {
     CoinInput,
     TransactionStatus,
     MessageStatus,
+    Tooltip,
 } from '../../components';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
 import { ISupplyBorrowProps } from '../utils';
@@ -270,21 +271,28 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
                         </div>
                     </div> */}
                 </div>
-                <Button
-                    primary
-                    disabled={
-                        isSuccess ||
-                        error.length !== 0 ||
-                        (!amount && !isMax) ||
-                        (view?.includes('Borrow') && amountBorrwable.amountNative.lt(10)) ||
-                        (view?.includes('Repay') && amountRepay.lt(10)) ||
-                        isViolatingBorrowCap()
-                    }
-                    onClick={handleClick}
-                    label={'Submit Transaction'}
-                    loading={isLoading}
-                    loadingText="Submitting"
-                />
+                {Number(amount) === 0 ? (
+                    <Tooltip
+                        text="Please enter an amount"
+                        content={<Button primary label={'Submit Transaction'} disabled />}
+                    />
+                ) : (
+                    <Button
+                        primary
+                        disabled={
+                            isSuccess ||
+                            error.length !== 0 ||
+                            (!amount && !isMax) ||
+                            (view?.includes('Borrow') && amountBorrwable.amountNative.lt(10)) ||
+                            (view?.includes('Repay') && amountRepay.lt(10)) ||
+                            isViolatingBorrowCap()
+                        }
+                        onClick={handleClick}
+                        label={'Submit Transaction'}
+                        loading={isLoading}
+                        loadingText="Submitting"
+                    />
+                )}
             </ModalFooter>
         </>
     ) : (
