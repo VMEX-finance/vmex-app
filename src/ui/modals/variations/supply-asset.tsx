@@ -94,6 +94,21 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
         );
     };
 
+    const isViolatingSupplyCap = function () {
+        if (!amount) return false;
+        const supplyCap = Number(findAssetInMarketsData(data?.asset || '')?.supplyCap);
+        const currentSupplied = Number(findAssetInMarketsData(data?.asset || '')?.totalSupplied); //already considers decimals
+        console.log('supplyCap: ', supplyCap);
+        console.log('currentSupplied: ', currentSupplied);
+        const newTotalSupply = Number(amount) + currentSupplied;
+
+        console.log('newTotalSupply: ', newTotalSupply);
+        if (newTotalSupply > supplyCap) {
+            return true;
+        }
+        return false;
+    };
+
     useEffect(() => {
         if (data?.view) setView('Withdraw');
     }, [data?.view]);
@@ -134,6 +149,13 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                             <div className="mt-1">
                                 <BasicToggle checked={isMax} onChange={maxToggleOnClick} />
                             </div>
+
+                            <h3
+                                className="mt-6 text-red-300"
+                                style={{ display: isViolatingSupplyCap() ? '' : 'none' }}
+                            >
+                                WARNING: attempting to supply more than supply cap
+                            </h3>
 
                             <h3 className="mt-6 text-neutral400">Health Factor</h3>
                             <HealthFactor asset={data.asset} amount={amount} type={'supply'} />
@@ -236,7 +258,9 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                         error.length !== 0 ||
                         (!amount && !isMax) ||
                         (view?.includes('Supply') && amountWalletNative.amountNative.lt(10)) ||
-                        (view?.includes('Withdraw') && (!amountWithdraw || amountWithdraw.lt(10)))
+                        (view?.includes('Withdraw') &&
+                            (!amountWithdraw || amountWithdraw.lt(10))) ||
+                        isViolatingSupplyCap()
                     }
                     onClick={handleSubmit}
                     label={'Submit Transaction'}
