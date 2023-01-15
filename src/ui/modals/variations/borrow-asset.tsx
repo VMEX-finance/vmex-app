@@ -1,6 +1,13 @@
 import React, { useEffect } from 'react';
 import { useMediatedState } from 'react-use';
-import { HealthFactor, Button, CoinInput, TransactionStatus } from '../../components';
+import {
+    HealthFactor,
+    Button,
+    CoinInput,
+    TransactionStatus,
+    MessageStatus,
+    Tooltip,
+} from '../../components';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
 import { ISupplyBorrowProps } from '../utils';
 import { useModal } from '../../../hooks';
@@ -151,17 +158,16 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
                                 loading={amountBorrwable.loading}
                             />
 
+                            <MessageStatus
+                                type="warning"
+                                show={isViolatingBorrowCap()}
+                                message="WARNING: Attempting to borrow more than borrow cap"
+                            />
+
                             <h3 className="mt-6 text-neutral400">{view} Max</h3>
                             <div className="mt-1">
                                 <BasicToggle checked={isMax} onChange={maxToggleOnClick} />
                             </div>
-
-                            <h3
-                                className="mt-6 text-red-300"
-                                style={{ display: isViolatingBorrowCap() ? '' : 'none' }}
-                            >
-                                WARNING: attempting to borrow more than borrow cap
-                            </h3>
 
                             <h3 className="mt-6 text-neutral400">Health Factor</h3>
                             <HealthFactor asset={data.asset} amount={amount} type={'borrow'} />
@@ -265,20 +271,28 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
                         </div>
                     </div> */}
                 </div>
-                <Button
-                    primary
-                    disabled={
-                        isSuccess ||
-                        error.length !== 0 ||
-                        (!amount && !isMax) ||
-                        (view?.includes('Borrow') && amountBorrwable.amountNative.lt(10)) ||
-                        (view?.includes('Repay') && amountRepay.lt(10)) ||
-                        isViolatingBorrowCap()
-                    }
-                    onClick={handleClick}
-                    label={'Submit Transaction'}
-                    loading={isLoading}
-                />
+                {Number(amount) === 0 ? (
+                    <Tooltip
+                        text="Please enter an amount"
+                        content={<Button primary label={'Submit Transaction'} disabled />}
+                    />
+                ) : (
+                    <Button
+                        primary
+                        disabled={
+                            isSuccess ||
+                            error.length !== 0 ||
+                            (!amount && !isMax) ||
+                            (view?.includes('Borrow') && amountBorrwable.amountNative.lt(10)) ||
+                            (view?.includes('Repay') && amountRepay.lt(10)) ||
+                            isViolatingBorrowCap()
+                        }
+                        onClick={handleClick}
+                        label={'Submit Transaction'}
+                        loading={isLoading}
+                        loadingText="Submitting"
+                    />
+                )}
             </ModalFooter>
         </>
     ) : (

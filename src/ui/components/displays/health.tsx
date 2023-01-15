@@ -91,7 +91,7 @@ export const HealthFactor = ({
             return undefined;
         }
         let a = findAssetInMarketsData(asset);
-        let d = a.decimals;
+        let d = a?.decimals;
         if (!a || !d || amount == '' || !parseFloat(amount)) {
             return undefined;
         }
