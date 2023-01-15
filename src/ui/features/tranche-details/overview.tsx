@@ -13,6 +13,7 @@ import { useAccount } from 'wagmi';
 import { IYourBorrowsTableItemProps, IYourSuppliesTableItemProps } from '../../tables';
 import { useSelectedTrancheContext } from '../../../store/contexts';
 import { makeCompact, usdFormatter } from '../../../utils/helpers';
+import { useLocation } from 'react-router-dom';
 
 export interface ITrancheOverviewProps {
     assets?: string[];
@@ -37,16 +38,16 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
     grade,
     loading,
 }) => {
+    const location = useLocation();
     const { width, breakpoint } = useWindowSize();
     const { openDialog } = useDialogController();
     const { address } = useAccount();
     const { tranche } = useSelectedTrancheContext();
     const {
         queryUserTrancheData: { data },
-    } = useUserTrancheData(address, tranche.id);
+    } = useUserTrancheData(address, location.state?.trancheId);
 
     const calculateNetAPY = () => {
-        console.log('OVERVIEW DATA:', data);
         if (!data) return `0%`;
         const supplyTotal = data?.supplies.reduce(
             (partial, next) => partial + parseFloat(next.amount.slice(1).replaceAll(',', '')),

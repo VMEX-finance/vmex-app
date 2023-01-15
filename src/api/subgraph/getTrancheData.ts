@@ -150,8 +150,9 @@ export const getSubgraphTrancheData = async (
 };
 
 export function useSubgraphTrancheData(trancheId: string | number): ISubgraphTrancheData {
+    console.log('useSUBGRAPH', trancheId);
     const queryTrancheData = useQuery({
-        queryKey: ['subgraph-tranche-data'],
+        queryKey: ['subgraph-tranche-data', trancheId],
         queryFn: () => getSubgraphTrancheData(trancheId),
         enabled: !!trancheId,
     });

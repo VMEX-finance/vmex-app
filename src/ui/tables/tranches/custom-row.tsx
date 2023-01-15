@@ -24,9 +24,10 @@ const TranchesCustomRow = (props: ITranchesCustomRowProps) => {
     const { updateTranche } = useSelectedTrancheContext();
 
     const route = (e: Event, tranche: any, view = 'overview') => {
-        e.stopPropagation();
+        e.preventDefault();
+        console.log('bang', tranche.id);
         updateTranche('id', tranche.id);
-        navigate(`/tranches/${tranche.name.replace(/\s+/g, '-')}`, {
+        navigate(`/tranches/${tranche.name?.toLowerCase().replace(/\s+/g, '-')}`, {
             state: { view, trancheId: tranche.id },
         });
     };

@@ -9,18 +9,23 @@ import { useWindowSize, useDialogController } from '../../../hooks';
 import { AvailableAsset } from '@app/api/types';
 import { BigNumber, ethers } from 'ethers';
 import { numberFormatter, bigNumberToNative } from '../../../utils';
+import { useLocation } from 'react-router-dom';
 
 interface ITableProps {
     data: AvailableAsset[];
     type: 'supply' | 'borrow';
 }
 export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
+    const location = useLocation();
     const { width, breakpoint } = useWindowSize();
     const { address } = useAccount();
     const { tranche } = useSelectedTrancheContext();
     const { queryUserWallet, getTokenBalance } = useUserData(address);
-    const { queryUserTrancheData, findAmountBorrowable } = useUserTrancheData(address, tranche.id);
-    const { findAssetInMarketsData } = useSubgraphTrancheData(tranche.id || 0);
+    const { queryUserTrancheData, findAmountBorrowable } = useUserTrancheData(
+        address,
+        location.state?.trancheId,
+    );
+    const { findAssetInMarketsData } = useSubgraphTrancheData(location.state?.trancheId);
     const { openDialog } = useDialogController();
 
     const mode1 =
