@@ -3754,10 +3754,10 @@
     hardhat "^2.12.4"
     mocha "^10.2.0"
 
-"@vmexfinance/sdk@^1.0.6-alpha":
-  version "1.0.6-alpha"
-  resolved "https://registry.yarnpkg.com/@vmexfinance/sdk/-/sdk-1.0.6-alpha.tgz#2e778c93bf3b19b3c14fe50efd95310359262e4a"
-  integrity sha512-j8ZQjz5tjDiGOSCSt+WciEKbtiMBJQreCaxwywiKTUZBAH+FIEGytPlOcGJgtw9XUfU4Kk9xeQaxHpVGmMkGaQ==
+"@vmexfinance/sdk@^1.0.7-alpha":
+  version "1.0.7-alpha"
+  resolved "https://registry.yarnpkg.com/@vmexfinance/sdk/-/sdk-1.0.7-alpha.tgz#8d3890bb532b0ab77accb550e8f601391f5f7d0e"
+  integrity sha512-tROmjJzOd72PFFU4ML87aQQmFYoyHG4Tywb6BkVbBocOvIC4QvxC8jsl9i3lXQnvC/vDMQ3UPO+9Q8wfJDOa7g==
   dependencies:
     "@vmexfinance/contracts" "^1.0.3-alpha"
     chai "^4.3.6"
