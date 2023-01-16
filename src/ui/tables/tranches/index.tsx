@@ -20,8 +20,6 @@ interface IDataTable {
 export const TranchesTable: React.FC<IDataTable> = ({ data, loading, userActivity }) => {
     const { isDark } = useContext(ThemeContext);
 
-    console.log(data);
-
     const renderActivity = (trancheId: string) => {
         let activity: string = '';
         if (!trancheId || userActivity?.isLoading) activity = 'loading';
@@ -29,12 +27,10 @@ export const TranchesTable: React.FC<IDataTable> = ({ data, loading, userActivit
             userActivity?.data?.borrows.map((borrow) => {
                 if (borrow.trancheId === Number(trancheId)) {
                     activity = 'borrowed';
-                    console.log(activity);
                 }
             });
         userActivity?.data?.supplies.length !== 0 &&
             userActivity?.data?.supplies.map((supply) => {
-                console.log(activity);
                 if (supply.trancheId === Number(trancheId) && activity === '')
                     activity = 'supplied';
                 else if (supply.trancheId === Number(trancheId) && activity === 'borrowed')

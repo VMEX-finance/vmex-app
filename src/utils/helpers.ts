@@ -132,6 +132,5 @@ export const convertStringFormatToNumber = (amount: string | number) => {
 
 export const convertContractsPercent = (amount: string) => {
     if (!amount) return 'N/A';
-    console.log('Amount: ', amount);
     return ethers.utils.formatUnits(amount.split('.')[0], 18);
 };
