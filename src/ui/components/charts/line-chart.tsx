@@ -135,7 +135,12 @@ export const ReLineChart = (props: ILineChartProps) => {
                                 />
                             )}
                         {props.xaxis && <XAxis dataKey="xaxis" tickLine={false} />}
-                        {props.yaxis && <YAxis tickLine={false} domain={[2, 'auto']} />}
+                        {props.yaxis && (
+                            <YAxis
+                                tickLine={false}
+                                ticks={props.type === 'utilization' ? [0, 100] : []}
+                            />
+                        )}
                     </LineChart>
                 ) : (
                     <div className="flex items-center justify-center h-full">
