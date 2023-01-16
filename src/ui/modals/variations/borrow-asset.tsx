@@ -25,7 +25,6 @@ import {
 import { useAccount, useSigner } from 'wagmi';
 import { useUserTrancheData, useSubgraphTrancheData } from '../../../api';
 import { BigNumber } from 'ethers';
-import { useQueryClient } from '@tanstack/react-query';
 import { BasicToggle } from '../../components/toggles';
 
 export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
@@ -41,7 +40,6 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
     const [view, setView] = React.useState('Borrow');
     const { address } = useAccount();
     const { data: signer } = useSigner();
-    // const { invalidateQueries, refetchQueries } = useQueryClient();
     const { findAssetInUserSuppliesOrBorrows, findAmountBorrowable } = useUserTrancheData(
         address,
         data?.trancheId || 0,
@@ -50,7 +48,6 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
 
     const handleClick = async () => {
         if (data && signer) {
-            console.log('isMax: ', isMax);
             await submitTx(async () => {
                 const res = view?.includes('Borrow')
                     ? await borrow({
@@ -79,7 +76,6 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
                           // referrer: number,
                           // collateral: boolean,
                       });
-                // invalidateQueries(['user-tranche', address, data.trancheId]);
                 return res;
             });
         }
@@ -114,11 +110,8 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
         if (!amount || !view?.includes('Borrow')) return false;
         const borrowCap = Number(findAssetInMarketsData(data?.asset || '')?.borrowCap);
         const currentBorrowed = Number(findAssetInMarketsData(data?.asset || '')?.totalBorrowed); //already considers decimals
-        console.log('borrowCap: ', borrowCap);
-        console.log('currentBorrowed: ', currentBorrowed);
         const newTotalBorrow = Number(amount) + currentBorrowed;
 
-        console.log('newTotalBorrow: ', newTotalBorrow);
         if (newTotalBorrow > borrowCap) {
             return true;
         }

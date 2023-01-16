@@ -61,7 +61,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                     <>
                         <div className="justify-center mx-auto">
                             {titleLoading ? (
-                                <Skeleton variant="rectangular" height={'36px'} width={'180px'} />
+                                <Skeleton variant="rounded" height={'36px'} width={'180px'} />
                             ) : (
                                 <h1 className="text-3xl font-basefont capitalize leading-tight text-neutral-900 dark:text-neutral-100 text-center">
                                     {title}

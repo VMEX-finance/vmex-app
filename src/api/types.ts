@@ -9,13 +9,13 @@ export type IQueryKeys =
     | 'tranche-markets'
     | 'protocol-overview'
     | 'all-tranches'
-    | 'subgraph-all-markets-data'
-    | 'subgraph-tranche-data'
-    | 'subgraph-protocol-charts'
-    | 'subgraph-protocol-data'
-    | 'subgraph-tranches-overview-data'
-    | 'subgraph-user-data'
-    | 'subgraph-user-pnl-chart'
+    | 'all-markets-data'
+    | 'tranche-data'
+    | 'protocol-charts'
+    | 'protocol-data'
+    | 'tranches-overview-data'
+    | 'user-data'
+    | 'user-pnl-chart'
     | 'asset-prices';
 
 export type IMarketsAsset = {

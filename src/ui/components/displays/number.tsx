@@ -38,11 +38,11 @@ export const NumberDisplay = ({
     const valueSize = () => {
         switch (size) {
             case 'xl':
-                return { css: 'text-3xl', skeleton: '36px' };
+                return { css: 'text-3xl', skeletonHeight: '36px', skeletonWidth: '108px' };
             case 'lg':
-                return { css: 'text-2xl', skeleton: '32px' };
+                return { css: 'text-2xl', skeletonHeight: '32px', skeletonWidth: '64px' };
             default:
-                return { css: 'text-xl', skeleton: '28px' };
+                return { css: 'text-xl', skeletonHeight: '28px', skeletonWidth: '56px' };
         }
     };
 
@@ -51,9 +51,9 @@ export const NumberDisplay = ({
             <p className={`${labelSize()}`}>{label}</p>
             {loading ? (
                 <SkeletonLoader
-                    variant="rectangular"
-                    height={valueSize().skeleton}
-                    width={'60px'}
+                    variant="rounded"
+                    height={valueSize().skeletonHeight}
+                    width={valueSize().skeletonWidth}
                 />
             ) : (
                 <p className={`${valueSize().css} ${color}`}>{value}</p>

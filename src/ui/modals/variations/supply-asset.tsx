@@ -27,7 +27,6 @@ import { useSigner, useAccount } from 'wagmi';
 import { BigNumber } from 'ethers';
 import { IYourSuppliesTableItemProps } from '@ui/tables';
 import { ISupplyBorrowProps } from '../utils';
-import { useQueryClient } from '@tanstack/react-query';
 import { BasicToggle } from '../../components/toggles';
 
 export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, data, tab }) => {
@@ -35,7 +34,6 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
     const [view, setView] = React.useState('Supply');
     const [isMax, setIsMax] = React.useState(false);
     const [amount, setAmount] = useMediatedState(inputMediator, '');
-    // const { invalidateQueries } = useQueryClient();
     const { findAssetInMarketsData } = useSubgraphTrancheData(data?.trancheId || 0);
     const { data: signer } = useSigner();
     const { address } = useAccount();
@@ -76,7 +74,6 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                           // collateral: boolean,
                           // test: boolean
                       });
-                // invalidateQueries(['user-tranche', address, data.trancheId]);
                 return res;
             });
         }
