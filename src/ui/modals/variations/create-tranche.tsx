@@ -17,8 +17,10 @@ import { MAINNET_ASSET_MAPPINGS, NETWORK, AVAILABLE_ASSETS, SDK_PARAMS } from '.
 import { useAccount, useSigner } from 'wagmi';
 import { ethers } from 'ethers';
 import { initTranche } from '@vmexfinance/sdk';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeDialog }) => {
+    const queryClient = useQueryClient();
     const { address } = useAccount();
     const { data: signer } = useSigner();
     const { setError, isSuccess, error, submitTx, isLoading } = useModal('create-tranche-dialog');
@@ -86,6 +88,7 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
                 test: SDK_PARAMS.test,
                 providerRpc: SDK_PARAMS.providerRpc,
             });
+            queryClient.invalidateQueries();
             return res;
         });
     };

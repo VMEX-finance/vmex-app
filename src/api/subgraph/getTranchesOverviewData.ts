@@ -113,7 +113,7 @@ export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]
 
 export function useSubgraphTranchesOverviewData(): ISubgraphTranchesDataProps {
     const queryAllTranches = useQuery({
-        queryKey: ['subgraph-tranches-overview-data'],
+        queryKey: ['tranches-overview-data'],
         queryFn: () => getSubgraphTranchesOverviewData(),
     });
 

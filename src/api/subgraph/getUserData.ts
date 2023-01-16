@@ -213,20 +213,20 @@ export const getSubgraphUserData = async (address: string): Promise<IGraphUserDa
 
 export function useSubgraphUserData(address?: string): ISubgraphUserData {
     const queryUserPnlChart = useQuery({
-        queryKey: ['subgraph-user-pnl-chart'],
+        queryKey: ['user-pnl-chart'],
         queryFn: () => getSubgraphUserChart(address || ''),
         refetchInterval: 1 * 60 * 1000, // Refetch every minute
         enabled: !!address,
     });
 
     const queryUserData = useQuery({
-        queryKey: ['subgraph-user-data'],
+        queryKey: ['user-data'],
         queryFn: () => getSubgraphUserData(address || ''),
         enabled: !!address,
     });
 
     const queryTrancheAdminData = useQuery({
-        queryKey: ['subgraph-tranche-admin-data'],
+        queryKey: ['tranche-admin-data'],
         queryFn: () => getUserAdminTrancheData(address || ''),
     });
 

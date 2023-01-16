@@ -101,7 +101,7 @@ export const processTrancheData = async (
 };
 
 export const getSubgraphTrancheData = async (
-    _trancheId: string | number,
+    _trancheId: number,
 ): Promise<IGraphTrancheDataProps> => {
     if (!_trancheId) return {};
 
@@ -149,9 +149,9 @@ export const getSubgraphTrancheData = async (
     }
 };
 
-export function useSubgraphTrancheData(trancheId: string | number): ISubgraphTrancheData {
+export function useSubgraphTrancheData(trancheId: number): ISubgraphTrancheData {
     const queryTrancheData = useQuery({
-        queryKey: ['subgraph-tranche-data', trancheId],
+        queryKey: ['tranche-data', Number(trancheId)],
         queryFn: () => getSubgraphTrancheData(trancheId),
         enabled: !!trancheId,
     });

@@ -66,27 +66,6 @@ export function TransactionsStore(props: { children: ReactNode }) {
                 closeButton: true,
             });
         }
-        // toast.promise(
-        //     new Promise((res) => (tx as any).wait()),
-        //     {
-        //         pending: {
-        //             render() {
-        //                 return <ToastStatus status="pending" transaction={hash} />;
-        //             },
-        //         },
-        //         error: {
-        //             render({ data }) {
-        //                 return <ToastStatus status="error" transaction={hash} />;
-        //             },
-        //         },
-        //         success: {
-        //             render({ data }) {
-        //                 return <ToastStatus status="success" transaction={hash} />;
-        //             },
-        //         },
-        //     },
-        //     { delay: 200 },
-        // );
     };
 
     const updateTransaction = (hash: string, status = 'complete') => {

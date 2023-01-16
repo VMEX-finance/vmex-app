@@ -35,7 +35,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
     const [view, setView] = React.useState('Supply');
     const [isMax, setIsMax] = React.useState(false);
     const [amount, setAmount] = useMediatedState(inputMediator, '');
-    // const { invalidateQueries } = useQueryClient();
+    const queryClient = useQueryClient();
     const { findAssetInMarketsData } = useSubgraphTrancheData(data?.trancheId || 0);
     const { data: signer } = useSigner();
     const { address } = useAccount();
@@ -76,7 +76,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                           // collateral: boolean,
                           // test: boolean
                       });
-                // invalidateQueries(['user-tranche', address, data.trancheId]);
+                queryClient.invalidateQueries();
                 return res;
             });
         }

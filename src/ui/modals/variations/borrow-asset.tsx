@@ -41,7 +41,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
     const [view, setView] = React.useState('Borrow');
     const { address } = useAccount();
     const { data: signer } = useSigner();
-    // const { invalidateQueries, refetchQueries } = useQueryClient();
+    const queryClient = useQueryClient();
     const { findAssetInUserSuppliesOrBorrows, findAmountBorrowable } = useUserTrancheData(
         address,
         data?.trancheId || 0,
@@ -78,7 +78,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
                           // referrer: number,
                           // collateral: boolean,
                       });
-                // invalidateQueries(['user-tranche', address, data.trancheId]);
+                queryClient.invalidateQueries();
                 return res;
             });
         }
