@@ -27,8 +27,8 @@ export const useModal = (dialog: IDialogNames): IUseModalProps => {
             setIsLoading(true);
             try {
                 if (callback) {
-                    const txHash = await callback();
-                    newTransaction(txHash);
+                    const tx = await callback();
+                    newTransaction(tx);
                 }
 
                 setIsLoading(false);

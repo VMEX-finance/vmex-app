@@ -53,7 +53,8 @@ export const CoinInput = ({
                     className="text-2xl focus:outline-none max-w-[200px] dark:bg-black"
                     placeholder="0.00"
                 />
-                <div className="text-neutral400">USD</div>
+                {/* <div className="text-neutral400">USD</div> */}
+                {/* TODO: add usd value underneath */}
             </div>
             <div className="flex flex-col justify-between items-end gap-3">
                 <AssetDisplay logo={coin.logo} name={coin.name} />

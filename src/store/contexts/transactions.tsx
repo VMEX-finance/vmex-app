@@ -1,3 +1,4 @@
+import { Transaction } from 'ethers';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { ToastStatus } from '../../ui/components/statuses';
@@ -12,14 +13,14 @@ type ITransactionProps = {
 export type ITransactionsStoreProps = {
     transactions: Array<ITransactionProps>;
     setTransactions?: any;
-    newTransaction: (hash: string) => void;
+    newTransaction: (tx: Transaction) => void;
     updateTransaction: (hash: string, status: string) => void;
 };
 
 // Context
 const TransactionsContext = createContext<ITransactionsStoreProps>({
     transactions: [],
-    newTransaction(hash) {},
+    newTransaction(tx) {},
     updateTransaction(hash, status) {},
 });
 
@@ -38,14 +39,15 @@ export function TransactionsStore(props: { children: ReactNode }) {
         return () => clearInterval(interval);
     }, [transactions]);
 
-    const newTransaction = (hash: string) => {
-        if (!hash) return;
+    const newTransaction = async (tx: Transaction) => {
+        if (!tx.hash) return;
+        const { hash } = tx;
         const shallow = [...transactions];
         shallow.push({ text: hash, status: 'pending' });
         setTransactions(shallow);
 
         toast.promise(
-            new Promise((resolve) => setTimeout(resolve, 10000)), // TODO: make this reactive to ACTUALLY show when transaction in completed
+            (tx as any).wait(),
             {
                 pending: {
                     render() {
