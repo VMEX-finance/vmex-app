@@ -176,7 +176,7 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                     <div className="flex flex-col gap-1">
                         <span>Top Tranches</span>
                         <div className="flex flex-col">
-                            <TopTranchesTable data={topTranches || []} />
+                            <TopTranchesTable data={topTranches || []} loading={isLoading} />
                         </div>
                     </div>
                 </div>
