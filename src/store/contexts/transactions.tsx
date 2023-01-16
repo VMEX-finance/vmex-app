@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query';
 import { Transaction } from 'ethers';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -27,6 +28,7 @@ const TransactionsContext = createContext<ITransactionsStoreProps>({
 // Wrapper
 export function TransactionsStore(props: { children: ReactNode }) {
     const [transactions, setTransactions] = useState<Array<ITransactionProps>>([]);
+    const queryClient = useQueryClient();
 
     // For mocking data
     useEffect(() => {
@@ -57,6 +59,7 @@ export function TransactionsStore(props: { children: ReactNode }) {
                 autoClose: 6000,
                 closeButton: true,
             });
+            queryClient.invalidateQueries();
         } else {
             toast.update(toastId, {
                 render: <ToastStatus status="error" transaction={hash} />,

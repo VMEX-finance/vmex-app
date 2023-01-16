@@ -88,7 +88,6 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
                 test: SDK_PARAMS.test,
                 providerRpc: SDK_PARAMS.providerRpc,
             });
-            queryClient.invalidateQueries();
             return res;
         });
     };

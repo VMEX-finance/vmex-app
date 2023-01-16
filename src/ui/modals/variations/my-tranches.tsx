@@ -57,7 +57,6 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
                 adminFee: _adminFee,
                 pausedTokens: _pausedTokens,
             });
-            queryClient.invalidateQueries();
             return res;
         }, false);
     };

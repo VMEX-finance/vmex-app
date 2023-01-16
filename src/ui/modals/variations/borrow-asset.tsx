@@ -78,7 +78,6 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
                           // referrer: number,
                           // collateral: boolean,
                       });
-                queryClient.invalidateQueries();
                 return res;
             });
         }

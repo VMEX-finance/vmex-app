@@ -76,7 +76,6 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                           // collateral: boolean,
                           // test: boolean
                       });
-                queryClient.invalidateQueries();
                 return res;
             });
         }
