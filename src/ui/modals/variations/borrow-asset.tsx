@@ -50,7 +50,6 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
 
     const handleClick = async () => {
         if (data && signer) {
-            console.log('isMax: ', isMax);
             await submitTx(async () => {
                 const res = view?.includes('Borrow')
                     ? await borrow({
@@ -114,11 +113,8 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
         if (!amount || !view?.includes('Borrow')) return false;
         const borrowCap = Number(findAssetInMarketsData(data?.asset || '')?.borrowCap);
         const currentBorrowed = Number(findAssetInMarketsData(data?.asset || '')?.totalBorrowed); //already considers decimals
-        console.log('borrowCap: ', borrowCap);
-        console.log('currentBorrowed: ', currentBorrowed);
         const newTotalBorrow = Number(amount) + currentBorrowed;
 
-        console.log('newTotalBorrow: ', newTotalBorrow);
         if (newTotalBorrow > borrowCap) {
             return true;
         }

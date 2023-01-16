@@ -42,31 +42,51 @@ export function TransactionsStore(props: { children: ReactNode }) {
     const newTransaction = async (tx: Transaction) => {
         if (!tx.hash) return;
         const { hash } = tx;
+        const toastId = toast.loading(<ToastStatus status="pending" transaction={tx.hash} />);
+
         const shallow = [...transactions];
         shallow.push({ text: hash, status: 'pending' });
         setTransactions(shallow);
 
-        toast.promise(
-            (tx as any).wait(),
-            {
-                pending: {
-                    render() {
-                        return <ToastStatus status="pending" transaction={hash} />;
-                    },
-                },
-                error: {
-                    render({ data }) {
-                        return <ToastStatus status="error" transaction={hash} />;
-                    },
-                },
-                success: {
-                    render({ data }) {
-                        return <ToastStatus status="success" transaction={hash} />;
-                    },
-                },
-            },
-            { delay: 200 },
-        );
+        const receipt = await (tx as any).wait();
+        if (receipt?.confirmations === 1) {
+            toast.update(toastId, {
+                render: <ToastStatus status="success" transaction={hash} />,
+                type: 'success',
+                isLoading: false,
+                autoClose: 6000,
+                closeButton: true,
+            });
+        } else {
+            toast.update(toastId, {
+                render: <ToastStatus status="error" transaction={hash} />,
+                type: 'error',
+                isLoading: false,
+                autoClose: 6000,
+                closeButton: true,
+            });
+        }
+        // toast.promise(
+        //     new Promise((res) => (tx as any).wait()),
+        //     {
+        //         pending: {
+        //             render() {
+        //                 return <ToastStatus status="pending" transaction={hash} />;
+        //             },
+        //         },
+        //         error: {
+        //             render({ data }) {
+        //                 return <ToastStatus status="error" transaction={hash} />;
+        //             },
+        //         },
+        //         success: {
+        //             render({ data }) {
+        //                 return <ToastStatus status="success" transaction={hash} />;
+        //             },
+        //         },
+        //     },
+        //     { delay: 200 },
+        // );
     };
 
     const updateTransaction = (hash: string, status = 'complete') => {

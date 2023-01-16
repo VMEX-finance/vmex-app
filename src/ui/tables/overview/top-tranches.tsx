@@ -21,13 +21,7 @@ export const TopTranchesTable: React.FC<ITableProps> = ({ data, loading }) => {
                             scope="col"
                             className={`pb-3 text-left text-sm font-semibold`}
                         >
-                            {loading ? (
-                                <SkeletonLoader variant="rounded" className="!bg-transparent">
-                                    {el}
-                                </SkeletonLoader>
-                            ) : (
-                                el
-                            )}
+                            {el}
                         </th>
                     ))}
                 </tr>
@@ -44,7 +38,7 @@ export const TopTranchesTable: React.FC<ITableProps> = ({ data, loading }) => {
                           );
                       })
                     : [1, 2, 3].map((el) => (
-                          <tr key={`${el}`} className="text-left">
+                          <tr key={`table-skeleton-row-${el}`} className="text-left">
                               <td>
                                   <SkeletonLoader variant="rectangular" />
                               </td>
