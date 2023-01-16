@@ -51,7 +51,7 @@ export const NumberDisplay = ({
             <p className={`${labelSize()}`}>{label}</p>
             {loading ? (
                 <SkeletonLoader
-                    variant="rectangular"
+                    variant="rounded"
                     height={valueSize().skeletonHeight}
                     width={valueSize().skeletonWidth}
                 />

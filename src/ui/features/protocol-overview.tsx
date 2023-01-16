@@ -72,7 +72,7 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                         />
                         {tvlChart?.isLoading ? (
                             <SkeletonLoader
-                                variant="rectangular"
+                                variant="rounded"
                                 animtion="wave"
                                 className="min-w-full"
                             >
@@ -127,14 +127,20 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                         <div className="flex flex-col gap-1">
                             <span>Top Supplied Assets</span>
                             <div className="flex flex-wrap gap-1">
-                                {renderTopAssetsList(topSuppliedAssets).map((el, i) => (
-                                    <PillDisplay
-                                        key={`top-asset-${i}`}
-                                        type="asset"
-                                        asset={el.asset}
-                                        value={makeCompact(el.amount)}
-                                    />
-                                ))}
+                                {isLoading ? (
+                                    <SkeletonLoader variant="rounded" className="!rounded-3xl">
+                                        <PillDisplay type="asset" asset={'BTC'} value={0} />
+                                    </SkeletonLoader>
+                                ) : (
+                                    renderTopAssetsList(topSuppliedAssets).map((el, i) => (
+                                        <PillDisplay
+                                            key={`top-asset-${i}`}
+                                            type="asset"
+                                            asset={el.asset}
+                                            value={makeCompact(el.amount)}
+                                        />
+                                    ))
+                                )}
                             </div>
                         </div>
                     </div>
@@ -149,14 +155,20 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                         <div className="flex flex-col gap-1">
                             <span>Top Borrowed Assets</span>
                             <div className="flex flex-wrap gap-1">
-                                {renderTopAssetsList(topBorrowedAssets).map((el, i) => (
-                                    <PillDisplay
-                                        key={`top-asset-${i}`}
-                                        type="asset"
-                                        asset={el.asset}
-                                        value={makeCompact(el.amount)}
-                                    />
-                                ))}
+                                {isLoading ? (
+                                    <SkeletonLoader variant="rounded" className="!rounded-3xl">
+                                        <PillDisplay type="asset" asset={'BTC'} value={0} />
+                                    </SkeletonLoader>
+                                ) : (
+                                    renderTopAssetsList(topBorrowedAssets).map((el, i) => (
+                                        <PillDisplay
+                                            key={`top-asset-${i}`}
+                                            type="asset"
+                                            asset={el.asset}
+                                            value={makeCompact(el.amount)}
+                                        />
+                                    ))
+                                )}
                             </div>
                         </div>
                     </div>

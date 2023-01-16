@@ -121,7 +121,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                                 <h2 className="text-2xl">Grade</h2>
                                 {loading ? (
                                     <SkeletonLoader
-                                        variant="rectangular"
+                                        variant="rounded"
                                         height={'36px'}
                                         width={'60px'}
                                     />
