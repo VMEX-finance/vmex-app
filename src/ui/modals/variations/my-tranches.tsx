@@ -10,12 +10,10 @@ import { useMyTranchesContext } from '../../../store/contexts';
 import { IDialogProps } from '../utils';
 import { ModalFooter, ModalHeader } from '../subcomponents';
 import { useModal } from '../../../hooks';
-import { useQueryClient } from '@tanstack/react-query';
 
 export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDialog }) => {
     const { isSuccess, error, submitTx, setError, isLoading } = useModal('my-tranches-dialog');
     const { updateTranche, myTranches, deleteTranche, pauseTranche } = useMyTranchesContext();
-    const queryClient = useQueryClient();
 
     const [selectedTranche, setSelectedTranche] = React.useState(
         myTranches.length > 0

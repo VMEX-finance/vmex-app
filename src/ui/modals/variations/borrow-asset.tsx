@@ -25,7 +25,6 @@ import {
 import { useAccount, useSigner } from 'wagmi';
 import { useUserTrancheData, useSubgraphTrancheData } from '../../../api';
 import { BigNumber } from 'ethers';
-import { useQueryClient } from '@tanstack/react-query';
 import { BasicToggle } from '../../components/toggles';
 
 export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
@@ -41,7 +40,6 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
     const [view, setView] = React.useState('Borrow');
     const { address } = useAccount();
     const { data: signer } = useSigner();
-    const queryClient = useQueryClient();
     const { findAssetInUserSuppliesOrBorrows, findAmountBorrowable } = useUserTrancheData(
         address,
         data?.trancheId || 0,
