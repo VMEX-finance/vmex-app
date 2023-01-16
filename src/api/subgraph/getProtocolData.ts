@@ -86,7 +86,6 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
                 plot.value = plot.value + graphData[index - 1].value;
             }
         });
-        console.log('getSubgraphProtocolChart:', graphData);
         return graphData.sort((a, b) => new Date(a.xaxis).valueOf() - new Date(b.xaxis).valueOf());
     }
 };
@@ -248,7 +247,6 @@ export async function getSubgraphProtocolData(): Promise<IGraphProtocolDataProps
         totalSupplied: usdFormatter(false).format(totalSupplied),
     };
 
-    console.log('getSubgraphProtocolData:', returnObj);
     return returnObj;
 }
 

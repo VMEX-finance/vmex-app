@@ -105,8 +105,6 @@ export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]
 
             returnObj.push(trancheInfo);
         });
-
-        console.log('getSubgraphTranchesOverviewData:', returnObj);
         return returnObj;
     }
 };

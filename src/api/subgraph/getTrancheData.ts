@@ -95,8 +95,6 @@ export const processTrancheData = async (
             1 - (summaryData.supplyTotal - summaryData.borrowTotal) / summaryData.supplyTotal,
         ),
     };
-
-    console.log('getSubgraphTrancheData:', returnObj);
     return returnObj;
 };
 

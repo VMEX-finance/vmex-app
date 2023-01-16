@@ -147,8 +147,6 @@ export const getSubgraphUserChart = async (
                 reserveCurrentValues.set(pnlItem.reserveSymbol, value);
             }
         });
-
-        console.log('getSubgraphUserChart:', graphData);
         return graphData;
     }
 };
@@ -205,9 +203,7 @@ export const getSubgraphUserData = async (address: string): Promise<IGraphUserDa
 
     if (error) return {};
     else {
-        const returnObj = data;
-        console.log('getSubgraphUserData:', returnObj);
-        return returnObj;
+        return data;
     }
 };
 
