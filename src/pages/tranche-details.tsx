@@ -33,8 +33,6 @@ const TrancheDetails: React.FC = () => {
     }, [address, location]);
 
     useEffect(() => {
-        if (queryTrancheData.data) console.log('tranche data:', queryTrancheData.data);
-        console.log('tranche', tranche);
         setTranche(queryTrancheData.data);
     }, [queryTrancheData.data, setTranche, tranche]);
 
