@@ -48,9 +48,6 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
     const handleSubmit = async () => {
         if (signer && data) {
             await submitTx(async () => {
-                console.log('underlying: ', MAINNET_ASSET_MAPPINGS.get(data.asset) || '');
-                console.log('trancheId: ', data.trancheId);
-                console.log('amount: ', convertStringFormatToNumber(amount));
                 const res = view?.includes('Supply')
                     ? await supply({
                           underlying: MAINNET_ASSET_MAPPINGS.get(data.asset) || '',
