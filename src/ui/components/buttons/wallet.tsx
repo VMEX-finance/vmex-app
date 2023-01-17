@@ -4,7 +4,7 @@ import { IButtonProps } from './default';
 import { useAccount, useDisconnect } from 'wagmi';
 import { ThemeContext, useMyTranchesContext } from '../../../store';
 import { useWindowSize, useDialogController } from '../../../hooks';
-import { DefaultDropdown } from '../dropdowns';
+import { DefaultDropdown, IDropdownItemProps } from '../dropdowns';
 import { truncateAddress, truncate } from '../../../utils/helpers';
 import { useNavigate } from 'react-router-dom';
 
@@ -22,7 +22,7 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
     }`;
 
     const renderDropdownItems = () => {
-        let final = [
+        let final: IDropdownItemProps[] = [
             {
                 text: theme === 'light' ? 'Dark Mode' : 'Light Mode',
                 onClick: () => setTheme(theme === 'light' ? 'dark' : 'light'),
@@ -48,6 +48,7 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
             final.push({
                 text: 'Disconnect',
                 onClick: () => disconnect(),
+                className: 'text-red-600',
             });
         }
 
