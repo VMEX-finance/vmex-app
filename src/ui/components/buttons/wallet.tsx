@@ -2,7 +2,7 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import React, { useContext } from 'react';
 import { IButtonProps } from './default';
 import { useAccount, useDisconnect } from 'wagmi';
-import { ThemeContext, useMyTranchesContext } from '../../../store/contexts';
+import { ThemeContext, useMyTranchesContext } from '../../../store';
 import { useWindowSize, useDialogController } from '../../../hooks';
 import { DefaultDropdown } from '../dropdowns';
 import { truncateAddress, truncate } from '../../../utils/helpers';

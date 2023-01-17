@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSelectedTrancheContext } from '../../../store/contexts';
+import { useSelectedTrancheContext } from '../../../store';
 import { useWindowSize } from '../../../hooks';
 import { determineRatingColor } from '../../../utils/helpers';
 import { BsArrowDownCircle, BsArrowUpCircle } from 'react-icons/bs';

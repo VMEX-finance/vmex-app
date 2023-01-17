@@ -2,7 +2,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { Transaction } from 'ethers';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { ToastStatus } from '../../ui/components/statuses';
+import { ToastStatus } from '../ui/components/statuses';
 
 // Types
 type ITransactionProps = {

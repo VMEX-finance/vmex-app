@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ReactTooltip from 'react-tooltip';
-import { useSelectedTrancheContext } from '../../../store/contexts';
+import { useSelectedTrancheContext } from '../../../store';
 import { NumberDisplay, DefaultDropdown, Card, ReLineChart } from '../../components';
 import { IGraphTrancheAssetProps, IGraphTrancheDataProps } from '../../../api/subgraph/types';
 import {

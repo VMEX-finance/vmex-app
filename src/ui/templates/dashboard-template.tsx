@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useWindowSize, useDialogController } from '../../hooks';
 import { BiChevronLeft, BiPlus } from 'react-icons/bi';
-import { useMyTranchesContext } from '../../store/contexts';
+import { useMyTranchesContext } from '../../store';
 import { Tooltip, Button, LinkButton } from '../components';
 import { useAccount } from 'wagmi';
 import { Skeleton } from '@mui/material';

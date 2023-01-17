@@ -11,7 +11,7 @@ import { useWindowSize, useDialogController } from '../../../hooks';
 import { useUserTrancheData } from '../../../api';
 import { useAccount } from 'wagmi';
 import { IYourBorrowsTableItemProps, IYourSuppliesTableItemProps } from '../../tables';
-import { useSelectedTrancheContext } from '../../../store/contexts';
+import { useSelectedTrancheContext } from '../../../store';
 import { makeCompact, usdFormatter } from '../../../utils/helpers';
 import { useLocation } from 'react-router-dom';
 

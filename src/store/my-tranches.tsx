@@ -1,4 +1,4 @@
-import { useSubgraphUserData } from '../../api';
+import { useSubgraphUserData } from '../api';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 import { ITrancheProps } from '@app/api/types';

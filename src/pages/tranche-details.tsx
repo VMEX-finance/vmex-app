@@ -8,7 +8,7 @@ import {
 import { Card } from '../ui/components/cards';
 import { TrancheTable } from '../ui/tables';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useSelectedTrancheContext } from '../store/contexts';
+import { useSelectedTrancheContext } from '../store';
 import { useAccount, useSigner } from 'wagmi';
 import { useSubgraphTrancheData } from '../api';
 

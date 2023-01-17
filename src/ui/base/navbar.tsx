@@ -4,7 +4,7 @@ import { HiOutlineMenuAlt3 } from 'react-icons/hi';
 import { BiTransferAlt } from 'react-icons/bi';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { DefaultDropdown, MenuItemButton, WalletButton, ToggleThemeButton } from '../components';
-import { ThemeContext, useMyTranchesContext, useTransactionsContext } from '../../store/contexts';
+import { ThemeContext, useMyTranchesContext, useTransactionsContext } from '../../store';
 import { useAccount } from 'wagmi';
 import { useDialogController, useWindowSize } from '../../hooks';
 import { IDialogNames } from '@store/modals';

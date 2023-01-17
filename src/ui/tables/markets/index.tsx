@@ -6,7 +6,7 @@ import { MarketsCustomRow } from './custom-row';
 import MUIDataTable from 'mui-datatables';
 import { SpinnerLoader } from '../../components/loaders';
 import { IMarketsAsset } from '@app/api/types';
-import { ThemeContext } from '../../../store/contexts';
+import { ThemeContext } from '../../../store';
 import { bigNumberToUnformattedString, numberFormatter, percentFormatter } from '../../../utils';
 import { UseQueryResult } from '@tanstack/react-query';
 import { IUserActivityDataProps } from '@app/api/user/types';

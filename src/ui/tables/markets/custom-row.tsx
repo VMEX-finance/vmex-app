@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSelectedTrancheContext } from '../../../store/contexts';
+import { useSelectedTrancheContext } from '../../../store';
 import { determineRatingColor } from '../../../utils/helpers';
 import { BsCheck } from 'react-icons/bs';
 import { IoIosClose } from 'react-icons/io';

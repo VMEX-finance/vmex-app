@@ -6,7 +6,7 @@ import { TranchesCustomRow } from './custom-row';
 import MUIDataTable from 'mui-datatables';
 import { SpinnerLoader } from '../../components/loaders';
 import { ITrancheProps } from '../../../api/types';
-import { ThemeContext } from '../../../store/contexts';
+import { ThemeContext } from '../../../store';
 import { usdFormatter } from '../../../utils/helpers';
 import { UseQueryResult } from '@tanstack/react-query';
 import { IUserActivityDataProps } from '@app/api/user/types';

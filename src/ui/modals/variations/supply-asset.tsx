@@ -242,7 +242,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                         </>
                     ) : (
                         <div className="mt-10 mb-8">
-                            <TransactionStatus success={isSuccess} full />
+                            <TransactionStatus full success={isSuccess} />
                         </div>
                     )}
                 </>

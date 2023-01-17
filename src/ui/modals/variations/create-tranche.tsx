@@ -1,5 +1,5 @@
 import React from 'react';
-import { useMyTranchesContext } from '../../../store/contexts';
+import { useMyTranchesContext } from '../../../store';
 import {
     DefaultInput,
     ListInput,

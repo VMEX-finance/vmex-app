@@ -1,7 +1,7 @@
 import { truncateAddress } from '../../../utils/helpers';
 import React from 'react';
 import { Card, MultipleAssetsDisplay, NumberDisplay } from '../../components';
-import { useSelectedTrancheContext } from '../../../store/contexts';
+import { useSelectedTrancheContext } from '../../../store';
 import { IGraphTrancheDataProps } from '../../../api/subgraph/types';
 
 type ITrancheInfoCard = {
