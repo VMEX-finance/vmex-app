@@ -12,6 +12,7 @@ import {
     bigNumberToNative,
     bigNumberToUnformattedString,
     SDK_PARAMS,
+    DECIMALS,
 } from '../../../utils';
 import {
     HealthFactor,
@@ -24,10 +25,9 @@ import {
 } from '../../components';
 import { useSubgraphTrancheData, useUserData, useUserTrancheData } from '../../../api';
 import { useSigner, useAccount } from 'wagmi';
-import { BigNumber } from 'ethers';
+import { BigNumber, utils } from 'ethers';
 import { IYourSuppliesTableItemProps } from '@ui/tables';
 import { ISupplyBorrowProps } from '../utils';
-import { BasicToggle } from '../../components/toggles';
 import { useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '../../../store';
 
@@ -89,7 +89,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
         findAssetInUserSuppliesOrBorrows(data?.asset || '', 'supply') as IYourSuppliesTableItemProps
     )?.collateral;
 
-    const maxToggleOnClick = () => {
+    const maxOnClick = () => {
         setIsMax(!isMax);
         setAmount(
             view?.includes('Supply')
@@ -105,6 +105,25 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
         const newTotalSupply = Number(amount) + currentSupplied;
         if (newTotalSupply > supplyCap) {
             return true;
+        }
+        return false;
+    };
+
+    const isViolatingMax = () => {
+        if (data?.asset && amount) {
+            if (
+                amount.includes('.') &&
+                amount.split('.')[1].length > (DECIMALS.get(data.asset) || 18)
+            ) {
+                return true;
+            } else {
+                const inputAmount = utils.parseUnits(amount, DECIMALS.get(data.asset));
+                return inputAmount.gt(
+                    view?.includes('Supply')
+                        ? amountWalletNative.amountNative
+                        : amountWithdraw || BigNumber.from('0'),
+                );
+            }
         }
         return false;
     };
@@ -143,18 +162,18 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                                 isMax={isMax}
                                 setIsMax={setIsMax}
                                 loading={amountWalletNative.loading}
+                                customMaxClick={maxOnClick}
                             />
-
+                            <MessageStatus
+                                type="error"
+                                show={isViolatingMax()}
+                                message="Input amount is over the max"
+                            />
                             <MessageStatus
                                 type="warning"
                                 show={isViolatingSupplyCap()}
                                 message="WARNING: Attempting to supply more than the supply cap"
                             />
-
-                            <h3 className="mt-6 text-neutral400">{view} Max</h3>
-                            <div className="mt-1">
-                                <BasicToggle checked={isMax} onChange={maxToggleOnClick} />
-                            </div>
 
                             <h3 className="mt-6 text-neutral400">Health Factor</h3>
                             <HealthFactor asset={data.asset} amount={amount} type={'supply'} />
@@ -208,12 +227,14 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                                 loading={
                                     Number(bigNumberToNative(amountWithdraw, data.asset)) === 0
                                 }
+                                customMaxClick={maxOnClick}
+                            />
+                            <MessageStatus
+                                type="error"
+                                show={isViolatingMax()}
+                                message="Input amount is over the max"
                             />
 
-                            <h3 className="mt-6 text-neutral400">{view} Max</h3>
-                            <div className="mt-1">
-                                <BasicToggle checked={isMax} onChange={maxToggleOnClick} />
-                            </div>
                             <h3 className="mt-6 text-neutral400">Health Factor</h3>
                             <HealthFactor asset={data.asset} amount={amount} type={'withdraw'} />
 
@@ -282,7 +303,8 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                             (view?.includes('Supply') && amountWalletNative.amountNative.lt(10)) ||
                             (view?.includes('Withdraw') &&
                                 (!amountWithdraw || amountWithdraw.lt(10))) ||
-                            isViolatingSupplyCap()
+                            isViolatingSupplyCap() ||
+                            isViolatingMax()
                         }
                         onClick={handleSubmit}
                         label={'Submit Transaction'}

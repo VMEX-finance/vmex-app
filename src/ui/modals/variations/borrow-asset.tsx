@@ -21,11 +21,11 @@ import {
     bigNumberToNative,
     bigNumberToUnformattedString,
     SDK_PARAMS,
+    DECIMALS,
 } from '../../../utils';
 import { useAccount, useSigner } from 'wagmi';
 import { useUserTrancheData, useSubgraphTrancheData } from '../../../api';
-import { BigNumber } from 'ethers';
-import { BasicToggle } from '../../components/toggles';
+import { BigNumber, utils } from 'ethers';
 import { useSelectedTrancheContext } from '../../../store';
 import { useNavigate } from 'react-router-dom';
 
@@ -96,8 +96,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
         data?.amountNative ||
         BigNumber.from('0');
 
-    const maxToggleOnClick = () => {
-        setIsMax(!isMax);
+    const maxOnClick = () => {
         setAmount(
             view?.includes('Borrow')
                 ? bigNumberToUnformattedString(amountBorrwable.amountNative, data?.asset || '')
@@ -113,6 +112,23 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
 
         if (newTotalBorrow > borrowCap) {
             return true;
+        }
+        return false;
+    };
+
+    const isViolatingMax = () => {
+        if (data?.asset && amount) {
+            if (
+                amount.includes('.') &&
+                amount.split('.')[1].length > (DECIMALS.get(data.asset) || 18)
+            ) {
+                return true;
+            } else {
+                const inputAmount = utils.parseUnits(amount, DECIMALS.get(data.asset));
+                return inputAmount.gt(
+                    view?.includes('Borrow') ? amountBorrwable.amountNative : amountRepay,
+                );
+            }
         }
         return false;
     };
@@ -148,18 +164,18 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                                 isMax={isMax}
                                 setIsMax={setIsMax}
                                 loading={amountBorrwable.loading}
+                                customMaxClick={maxOnClick}
                             />
-
+                            <MessageStatus
+                                type="error"
+                                show={isViolatingMax()}
+                                message="Input amount is over the max"
+                            />
                             <MessageStatus
                                 type="warning"
                                 show={isViolatingBorrowCap()}
                                 message="WARNING: Attempting to borrow more than borrow cap"
                             />
-
-                            <h3 className="mt-6 text-neutral400">{view} Max</h3>
-                            <div className="mt-1">
-                                <BasicToggle checked={isMax} onChange={maxToggleOnClick} />
-                            </div>
 
                             <h3 className="mt-6 text-neutral400">Health Factor</h3>
                             <HealthFactor asset={data.asset} amount={amount} type={'borrow'} />
@@ -206,12 +222,13 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                                 isMax={isMax}
                                 setIsMax={setIsMax}
                                 loading={Number(bigNumberToNative(amountRepay, data.asset)) === 0}
+                                customMaxClick={maxOnClick}
                             />
-
-                            <h3 className="mt-6 text-neutral400">{view} Max</h3>
-                            <div className="mt-1">
-                                <BasicToggle checked={isMax} onChange={maxToggleOnClick} />
-                            </div>
+                            <MessageStatus
+                                type="error"
+                                show={isViolatingMax()}
+                                message="Input amount is over the max"
+                            />
 
                             <h3 className="mt-6 text-neutral400">Health Factor</h3>
                             <HealthFactor asset={data.asset} amount={amount} type={'repay'} />
@@ -279,7 +296,8 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                             (!amount && !isMax) ||
                             (view?.includes('Borrow') && amountBorrwable.amountNative.lt(10)) ||
                             (view?.includes('Repay') && amountRepay.lt(10)) ||
-                            isViolatingBorrowCap()
+                            isViolatingBorrowCap() ||
+                            isViolatingMax()
                         }
                         onClick={handleClick}
                         label={'Submit Transaction'}
