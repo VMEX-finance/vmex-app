@@ -7,6 +7,7 @@ export interface IPortfolioProps {
     borrowed?: string | number;
     isLoading?: boolean;
     avgHealth?: string;
+    avgApy?: string;
 }
 
 export const PortfolioStatsCard: React.FC<IPortfolioProps> = ({
@@ -15,6 +16,7 @@ export const PortfolioStatsCard: React.FC<IPortfolioProps> = ({
     borrowed,
     isLoading,
     avgHealth,
+    avgApy,
 }) => {
     return (
         <Card>
@@ -31,33 +33,34 @@ export const PortfolioStatsCard: React.FC<IPortfolioProps> = ({
                     </div>
                 </div>
 
-                <div className="py-2 md:py-4 xl:py-0 xl:px-6 grid grid-cols-1 lg:grid-cols-3 gap-4 w-full">
-                    <div className="flex flex-col gap-2">
-                        <NumberDisplay
-                            size="xl"
-                            label="Total Supplied"
-                            value={supplied || '-'}
-                            loading={isLoading}
-                        />
-                    </div>
+                <div className="py-2 md:py-4 xl:py-0 xl:px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
+                    <NumberDisplay
+                        size="xl"
+                        label="Total Supplied"
+                        value={supplied || '-'}
+                        loading={isLoading}
+                    />
 
-                    <div className="flex flex-col gap-2">
-                        <NumberDisplay
-                            size="xl"
-                            label="Total Borrowed"
-                            value={borrowed || '-'}
-                            loading={isLoading}
-                        />
-                    </div>
+                    <NumberDisplay
+                        size="xl"
+                        label="Total Borrowed"
+                        value={borrowed || '-'}
+                        loading={isLoading}
+                    />
 
-                    <div>
-                        <NumberDisplay
-                            size="xl"
-                            label="Average Health Factor"
-                            value={parseFloat(avgHealth || '0') < 100 ? avgHealth : '0'}
-                            loading={isLoading}
-                        />
-                    </div>
+                    <NumberDisplay
+                        size="xl"
+                        label="Average Health"
+                        value={parseFloat(avgHealth || '0') < 100 ? avgHealth : '0'}
+                        loading={isLoading}
+                    />
+
+                    <NumberDisplay
+                        size="xl"
+                        label="Average APY"
+                        value={parseFloat(avgHealth || '0') < 100 ? avgHealth : '0'}
+                        loading={isLoading}
+                    />
                 </div>
             </div>
         </Card>

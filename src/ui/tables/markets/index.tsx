@@ -93,7 +93,7 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
         },
         {
             name: 'available',
-            label: 'Borrowing Power',
+            label: 'Available Borrows',
             options: {
                 filter: false,
                 sort: true,

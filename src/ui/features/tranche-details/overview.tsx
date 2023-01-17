@@ -8,12 +8,8 @@ import {
 } from '../../components';
 import React from 'react';
 import { useWindowSize, useDialogController } from '../../../hooks';
-import { useUserTrancheData } from '../../../api';
-import { useAccount } from 'wagmi';
 import { IYourBorrowsTableItemProps, IYourSuppliesTableItemProps } from '../../tables';
-import { useSelectedTrancheContext } from '../../../store';
 import { makeCompact, usdFormatter } from '../../../utils/helpers';
-import { useLocation } from 'react-router-dom';
 
 export interface ITrancheOverviewProps {
     assets?: string[];
@@ -25,6 +21,7 @@ export interface ITrancheOverviewProps {
     borrowChange?: number;
     grade?: string;
     loading?: boolean;
+    userData?: any;
 }
 
 const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
@@ -37,29 +34,26 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
     borrowed,
     grade,
     loading,
+    userData,
 }) => {
-    const location = useLocation();
     const { width, breakpoint } = useWindowSize();
     const { openDialog } = useDialogController();
-    const { address } = useAccount();
-    const { tranche } = useSelectedTrancheContext();
-    const {
-        queryUserTrancheData: { data },
-    } = useUserTrancheData(address, location.state?.trancheId);
+    const { data } = userData;
 
     const calculateNetAPY = () => {
         if (!data) return `0%`;
         const supplyTotal = data?.supplies.reduce(
-            (partial, next) => partial + parseFloat(next.amount.slice(1).replaceAll(',', '')),
+            (partial: any, next: any) =>
+                partial + parseFloat(next.amount.slice(1).replaceAll(',', '')),
             0,
         );
         const supplySum = data?.supplies.reduce(
-            (partial, next) =>
+            (partial: any, next: any) =>
                 partial + next.apy * parseFloat(next.amount.slice(1).replaceAll(',', '')),
             0,
         );
         const borrowSum = data?.borrows.reduce(
-            (partial, next) =>
+            (partial: any, next: any) =>
                 partial + next.apy * parseFloat(next.amount.slice(1).replaceAll(',', '')),
             0,
         );

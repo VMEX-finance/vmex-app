@@ -43,6 +43,7 @@ const Portfolio: React.FC = () => {
                                 queryUserActivity.data?.borrows.map((el) => el.amount),
                             )}
                             avgHealth={'0'} // TODO: add average health factor
+                            avgApy={'0'} // TODO: add average apy
                         />
                         <div className="flex flex-col lg:flex-row lg:grow gap-4 xl:gap-8">
                             <YourPositionsTable
