@@ -44,7 +44,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                     {view ? (
                         <LinkButton onClick={routeChange}>
                             <BiChevronLeft size="22px" />
-                            <p className="text-lg">Back to all</p>
+                            <p className="text-lg">Back</p>
                         </LinkButton>
                     ) : (
                         <>

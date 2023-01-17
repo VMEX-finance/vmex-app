@@ -10,7 +10,7 @@ import {
 } from '../../components';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
 import { ISupplyBorrowProps } from '../utils';
-import { useModal } from '../../../hooks';
+import { useDialogController, useModal } from '../../../hooks';
 import { borrow, repay } from '@vmexfinance/sdk';
 import {
     MAINNET_ASSET_MAPPINGS,
@@ -26,14 +26,10 @@ import { useAccount, useSigner } from 'wagmi';
 import { useUserTrancheData, useSubgraphTrancheData } from '../../../api';
 import { BigNumber } from 'ethers';
 import { BasicToggle } from '../../components/toggles';
+import { useSelectedTrancheContext } from '../../../store';
+import { useNavigate } from 'react-router-dom';
 
-export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
-    name,
-    isOpen,
-    data,
-    closeDialog,
-    tab,
-}) => {
+export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, data, tab }) => {
     const { isSuccess, submitTx, isLoading, error } = useModal('borrow-asset-dialog');
     const [amount, setAmount] = useMediatedState(inputMediator, '');
     const [isMax, setIsMax] = React.useState(false);
@@ -45,6 +41,9 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
         data?.trancheId || 0,
     );
     const { findAssetInMarketsData } = useSubgraphTrancheData(data?.trancheId || 0);
+    const { setAsset } = useSelectedTrancheContext();
+    const navigate = useNavigate();
+    const { closeDialog } = useDialogController();
 
     const handleClick = async () => {
         if (data && signer) {
@@ -249,21 +248,23 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
                     )}
                 </>
             )}
-            <ModalFooter between>
-                <div className="mt-5 sm:mt-6 flex justify-between items-end">
-                    {/* <div className="flex flex-col">
-                        <div className="flex items-center gap-2">
-                            <FaGasPump />
-                            <span>Gas Limit</span>
-                        </div>
-                        <div>
-                            <DropdownButton
-                                items={[{ text: 'Normal' }, { text: 'Low' }, { text: 'High' }]}
-                                direction="right"
-                            />
-                        </div>
-                    </div> */}
-                </div>
+            <ModalFooter between={!location.hash.includes('tranches')}>
+                {!location.hash.includes('tranches') && (
+                    <Button
+                        label={`View Tranche`}
+                        onClick={() => {
+                            setAsset(data.asset);
+                            closeDialog('borrow-asset-dialog');
+                            window.scroll(0, 0);
+                            navigate(
+                                `/tranches/${data.tranche?.toLowerCase().replace(/\s+/g, '-')}`,
+                                {
+                                    state: { view: 'details', trancheId: data.trancheId },
+                                },
+                            );
+                        }}
+                    />
+                )}
                 {Number(amount) === 0 ? (
                     <Tooltip
                         text="Please enter an amount"

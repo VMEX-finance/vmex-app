@@ -7,6 +7,7 @@ export type AssetDetails = {
     amountNative?: BigNumber;
     amount?: string;
     apy?: number;
+    tranche?: string;
 };
 export type ISupplyBorrowProps = {
     name?: string;

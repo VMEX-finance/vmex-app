@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useMediatedState } from 'react-use';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
-import { useModal } from '../../../hooks';
+import { useDialogController, useModal } from '../../../hooks';
 import { supply, withdraw } from '@vmexfinance/sdk';
 import {
     MAINNET_ASSET_MAPPINGS,
@@ -28,6 +28,8 @@ import { BigNumber } from 'ethers';
 import { IYourSuppliesTableItemProps } from '@ui/tables';
 import { ISupplyBorrowProps } from '../utils';
 import { BasicToggle } from '../../components/toggles';
+import { useNavigate } from 'react-router-dom';
+import { useSelectedTrancheContext } from '../../../store';
 
 export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, data, tab }) => {
     const { submitTx, isSuccess, error, isLoading } = useModal('loan-asset-dialog');
@@ -37,11 +39,11 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
     const { findAssetInMarketsData } = useSubgraphTrancheData(data?.trancheId || 0);
     const { data: signer } = useSigner();
     const { address } = useAccount();
-    const { findAssetInUserSuppliesOrBorrows, queryUserTrancheData } = useUserTrancheData(
-        address,
-        data?.trancheId || 0,
-    );
+    const { findAssetInUserSuppliesOrBorrows } = useUserTrancheData(address, data?.trancheId || 0);
     const { getTokenBalance } = useUserData(address);
+    const navigate = useNavigate();
+    const { setAsset } = useSelectedTrancheContext();
+    const { closeDialog } = useDialogController();
 
     const handleSubmit = async () => {
         if (signer && data) {
@@ -248,7 +250,23 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                 </>
             )}
 
-            <ModalFooter>
+            <ModalFooter between={!location.hash.includes('tranches')}>
+                {!location.hash.includes('tranches') && (
+                    <Button
+                        label={`View Tranche`}
+                        onClick={() => {
+                            setAsset(data.asset);
+                            closeDialog('loan-asset-dialog');
+                            window.scroll(0, 0);
+                            navigate(
+                                `/tranches/${data.tranche?.toLowerCase().replace(/\s+/g, '-')}`,
+                                {
+                                    state: { view: 'details', trancheId: data.trancheId },
+                                },
+                            );
+                        }}
+                    />
+                )}
                 {Number(amount) === 0 ? (
                     <Tooltip
                         text="Please enter an amount"
