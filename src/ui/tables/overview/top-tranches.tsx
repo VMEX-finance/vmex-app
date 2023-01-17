@@ -39,15 +39,11 @@ export const TopTranchesTable: React.FC<ITableProps> = ({ data, loading }) => {
                       })
                     : [1, 2, 3].map((el) => (
                           <tr key={`table-skeleton-row-${el}`} className="text-left">
-                              <td>
-                                  <SkeletonLoader variant="rectangular" />
-                              </td>
-                              <td>
-                                  <SkeletonLoader variant="rectangular" />
-                              </td>
-                              <td>
-                                  <SkeletonLoader variant="rectangular" />
-                              </td>
+                              {[1, 2, 3].map((subEl) => (
+                                  <td key={`table-skeleton-cell-${el}-${subEl}`}>
+                                      <SkeletonLoader variant="rectangular" />
+                                  </td>
+                              ))}
                           </tr>
                       ))}
             </tbody>

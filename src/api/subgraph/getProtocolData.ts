@@ -1,22 +1,15 @@
-import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
+import { gql } from '@apollo/client';
 import { useQuery } from '@tanstack/react-query';
 import { ILineChartDataPointProps } from '@ui/components/charts';
-import { IAvailableCoins, usdFormatter } from '../../utils/helpers';
-import { SUBGRAPH_ENDPOINT } from '../../utils/constants';
-import { nativeAmountToUSD } from '../../utils/sdk-helpers';
+import { nativeAmountToUSD, IAvailableCoins, usdFormatter, apolloClient } from '../../utils';
 import { getAllAssetPrices } from '../prices';
 import { AssetBalance, TrancheData } from '../types';
 import { IGraphProtocolDataProps, IGraphTrancheProps, ISubgraphProtocolData } from './types';
 import { getSubgraphTranchesOverviewData } from './getTranchesOverviewData';
 import { IAssetPricesProps } from '../prices/types';
 
-const client = new ApolloClient({
-    uri: SUBGRAPH_ENDPOINT,
-    cache: new InMemoryCache(),
-});
-
 export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointProps[] | any> => {
-    const { data, error } = await client.query({
+    const { data, error } = await apolloClient.query({
         query: gql`
             query QueryProtocolTVL {
                 tranches {
@@ -93,7 +86,7 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
 async function getTopSuppliedAssets(
     _prices?: Record<IAvailableCoins, IAssetPricesProps>,
 ): Promise<AssetBalance[]> {
-    const { data, error } = await client.query({
+    const { data, error } = await apolloClient.query({
         query: gql`
             query QueryTopSuppliedAssets {
                 reserves(first: 5, orderBy: totalDeposits, orderDirection: desc) {
@@ -136,7 +129,7 @@ async function getTopSuppliedAssets(
 async function getTopBorrowedAssets(
     _prices?: Record<IAvailableCoins, IAssetPricesProps>,
 ): Promise<AssetBalance[]> {
-    const { data, error } = await client.query({
+    const { data, error } = await apolloClient.query({
         query: gql`
             query QueryTopBorrowedAssets {
                 reserves(first: 5, orderBy: totalCurrentVariableDebt, orderDirection: desc) {
@@ -176,7 +169,7 @@ async function getTopBorrowedAssets(
 }
 
 export async function getSubgraphProtocolData(): Promise<IGraphProtocolDataProps> {
-    const { data, error } = await client.query({
+    const { data, error } = await apolloClient.query({
         query: gql`
             query QueryProtocolData {
                 deposits {

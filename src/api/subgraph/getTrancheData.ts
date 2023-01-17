@@ -1,16 +1,9 @@
-import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
+import { gql } from '@apollo/client';
 import { useQuery } from '@tanstack/react-query';
-import { SUBGRAPH_ENDPOINT } from '../../utils/constants';
 import { IGraphTrancheDataProps, ISubgraphTrancheData } from './types';
 import { utils } from 'ethers';
 import { getAllAssetPrices } from '../prices';
-import { nativeAmountToUSD } from '../../utils/sdk-helpers';
-import { usdFormatter, percentFormatter } from '../../utils/helpers';
-
-const client = new ApolloClient({
-    uri: SUBGRAPH_ENDPOINT,
-    cache: new InMemoryCache(),
-});
+import { usdFormatter, percentFormatter, apolloClient, nativeAmountToUSD } from '../../utils';
 
 export const processTrancheData = async (
     data: any,
@@ -104,7 +97,7 @@ export const getSubgraphTrancheData = async (
     if (!_trancheId) return {};
 
     const trancheId = String(_trancheId);
-    const { data, error } = await client.query({
+    const { data, error } = await apolloClient.query({
         query: gql`
             query QueryTranche($trancheId: String!) {
                 tranche(id: $trancheId) {
