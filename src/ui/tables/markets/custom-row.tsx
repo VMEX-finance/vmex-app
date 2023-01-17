@@ -101,9 +101,9 @@ const MarketsCustomRow = (props: any) => {
                 <td className="flex justify-between">
                     <span className="font-bold">Strategy</span>
                     {strategies ? (
-                        <BsCheck className="w-6 h-6 text-[#00DD3E]" />
+                        <BsCheck className="w-6 h-6 text-green-500" />
                     ) : (
-                        <IoIosClose className="w-6 h-6 text-[#FF1F00]" />
+                        <IoIosClose className="w-6 h-6 text-red-500" />
                     )}
                 </td>
                 <td>
