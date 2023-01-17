@@ -9,6 +9,7 @@ import Markets from './pages/markets';
 import Construction from './pages/construction';
 import TrancheDetails from './pages/tranche-details';
 import Portfolio from './pages/portfolio';
+import MyTranches from './pages/my-tranches';
 
 function App() {
     const [showLoading, setShowLoading] = useState(true);
@@ -29,6 +30,7 @@ function App() {
                 <Route path="/governance" element={<Construction />} />
                 <Route path="/develop" element={<Construction />} />
                 <Route path="/portfolio" element={<Portfolio />} />
+                <Route path="/my-tranches" element={<MyTranches />} />
 
                 {/* Dynamic Tranche Routes */}
                 <Route path="/tranches/:name" element={<TrancheDetails />} />
