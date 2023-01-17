@@ -203,7 +203,7 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
                                 rating={rating}
                                 strategies={strategies}
                                 logo={logo}
-                                key={`tranches-table-${
+                                key={`markets-table-${
                                     rowIndex || Math.floor(Math.random() * 10000)
                                 }`}
                             />
