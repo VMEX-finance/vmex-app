@@ -2,7 +2,7 @@ import React from 'react';
 import { TbInfinity } from 'react-icons/tb';
 import { BsArrowRight } from 'react-icons/bs';
 import { useUserTrancheData, useSubgraphTrancheData } from '../../../api';
-import { useSelectedTrancheContext } from '../../../store/contexts';
+import { useSelectedTrancheContext } from '../../../store';
 import {
     convertStringFormatToNumber,
     HFFormatter,

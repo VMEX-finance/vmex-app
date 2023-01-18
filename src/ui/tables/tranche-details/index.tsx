@@ -3,7 +3,7 @@ import { useAccount } from 'wagmi';
 import React from 'react';
 import { BsCheck } from 'react-icons/bs';
 import { IoIosClose } from 'react-icons/io';
-import { useSelectedTrancheContext } from '../../../store/contexts';
+import { useSelectedTrancheContext } from '../../../store';
 import { AssetDisplay, NumberAndDollar } from '../../components/displays';
 import { useWindowSize, useDialogController } from '../../../hooks';
 import { AvailableAsset } from '@app/api/types';
@@ -155,11 +155,11 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                 <td>{el.apy}</td>
                                 <td>
                                     {type === 'supply' ? (
-                                        <div className="w-10 h-10">
+                                        <div className="w-8 h-8">
                                             {el.canBeCollat ? (
-                                                <BsCheck className="w-full h-full text-emerald-600" />
+                                                <BsCheck className="w-full h-full text-green-500" />
                                             ) : (
-                                                <IoIosClose className="w-full h-full text-red-600" />
+                                                <IoIosClose className="w-full h-full text-red-500" />
                                             )}
                                         </div>
                                     ) : (

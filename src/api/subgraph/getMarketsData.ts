@@ -1,18 +1,11 @@
-import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
+import { gql } from '@apollo/client';
 import { useQuery } from '@tanstack/react-query';
-import { SUBGRAPH_ENDPOINT } from '../../utils/constants';
 import { ISubgraphAllMarketsData, ISubgraphMarketsChart } from './types';
 import { ILineChartDataPointProps } from '@ui/components/charts';
 import { BigNumber, utils } from 'ethers';
-import { MAINNET_ASSET_MAPPINGS, nativeAmountToUSD } from '../../utils/sdk-helpers';
 import { IMarketsAsset } from '../types';
 import { getAllAssetPrices } from '../prices';
-import { usdFormatter } from '../../utils/helpers';
-
-const client = new ApolloClient({
-    uri: SUBGRAPH_ENDPOINT,
-    cache: new InMemoryCache(),
-});
+import { usdFormatter, apolloClient, MAINNET_ASSET_MAPPINGS, nativeAmountToUSD } from '../../utils';
 
 function getReserveId(underlyingAsset: string, poolId: string, trancheId: string): string {
     return `${underlyingAsset}${poolId}${trancheId}`;
@@ -29,7 +22,7 @@ export const getSubgraphMarketsChart = async (
     const trancheId = _trancheId.toString();
     const poolId = '0xd6c850aebfdc46d7f4c207e445cc0d6b0919bdbe'; // TODO: address of LendingPoolConfigurator
     const reserveId = getReserveId(_underlyingAsset, poolId, trancheId);
-    const { data, error } = await client.query({
+    const { data, error } = await apolloClient.query({
         query: gql`
             query QueryMarket($reserveId: String!) {
                 reserve(id: $reserveId) {
@@ -80,7 +73,7 @@ export const getSubgraphMarketsChart = async (
 
 export const getSubgraphAllMarketsData = async (): Promise<IMarketsAsset[]> => {
     // TODO: Scale this in case # markets > 1000
-    const { data, error } = await client.query({
+    const { data, error } = await apolloClient.query({
         query: gql`
             query QueryAllMarkets {
                 reserves(orderBy: availableLiquidity, orderDirection: desc) {

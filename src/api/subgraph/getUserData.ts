@@ -1,17 +1,11 @@
-import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
+import { gql } from '@apollo/client';
 import { useQuery } from '@tanstack/react-query';
-import { SUBGRAPH_ENDPOINT } from '../../utils/constants';
 import { IGraphUserDataProps, ISubgraphUserData, IGraphTrancheDataProps } from './types';
 import { ILineChartDataPointProps } from '@ui/components/charts';
-import { BigNumber, utils } from 'ethers';
+import { BigNumber } from 'ethers';
 import { getAllAssetPrices } from '../prices';
-import { nativeAmountToUSD } from '../../utils/sdk-helpers';
+import { nativeAmountToUSD, apolloClient } from '../../utils';
 import { processTrancheData } from './getTrancheData';
-
-const client = new ApolloClient({
-    uri: SUBGRAPH_ENDPOINT,
-    cache: new InMemoryCache(),
-});
 
 type BalanceHistoryItem = {
     timestamp: number;
@@ -22,7 +16,7 @@ type BalanceHistoryItem = {
 };
 
 export const getUserAdminTrancheData = async (admin: string): Promise<IGraphTrancheDataProps[]> => {
-    const { data, error } = await client.query({
+    const { data, error } = await apolloClient.query({
         query: gql`
             query QueryTrancheAdmin($admin: String!) {
                 tranches(where: { trancheAdmin: $admin }) {
@@ -71,7 +65,7 @@ export const getSubgraphUserChart = async (
 ): Promise<ILineChartDataPointProps[]> => {
     if (!address) return [];
     address = address.toLowerCase();
-    const { data, error } = await client.query({
+    const { data, error } = await apolloClient.query({
         query: gql`
             query QueryUserChart($address: String!) {
                 user(id: $address) {
@@ -147,8 +141,6 @@ export const getSubgraphUserChart = async (
                 reserveCurrentValues.set(pnlItem.reserveSymbol, value);
             }
         });
-
-        console.log('getSubgraphUserChart:', graphData);
         return graphData;
     }
 };
@@ -156,7 +148,7 @@ export const getSubgraphUserChart = async (
 export const getSubgraphUserData = async (address: string): Promise<IGraphUserDataProps> => {
     if (!address) return {};
     address = address.toLowerCase();
-    const { data, error } = await client.query({
+    const { data, error } = await apolloClient.query({
         query: gql`
             query QueryUserData($address: String!) {
                 user(id: $address) {
@@ -205,9 +197,7 @@ export const getSubgraphUserData = async (address: string): Promise<IGraphUserDa
 
     if (error) return {};
     else {
-        const returnObj = data;
-        console.log('getSubgraphUserData:', returnObj);
-        return returnObj;
+        return data;
     }
 };
 

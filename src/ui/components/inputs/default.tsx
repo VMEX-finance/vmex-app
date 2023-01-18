@@ -11,6 +11,7 @@ type IInputProps = {
     title?: string;
     tooltip?: string;
     required?: boolean;
+    className?: string;
 };
 
 export const DefaultInput = ({
@@ -23,6 +24,7 @@ export const DefaultInput = ({
     title,
     tooltip,
     required,
+    className,
 }: IInputProps) => {
     const saveTyping = (e: any): void => {
         e.preventDefault();
@@ -47,21 +49,21 @@ export const DefaultInput = ({
     };
 
     return (
-        <div className="flex flex-col">
+        <div className={`flex flex-col mt-6 ${className}`}>
             {title && (
                 <>
                     {tooltip ? (
                         <Tooltip
                             text={tooltip}
                             content={
-                                <h3 className="mt-6 mb-1 text-neutral400">
+                                <h3 className="mb-1">
                                     {title}
                                     {required && <span className="text-red-500 ml-1">*</span>}
                                 </h3>
                             }
                         />
                     ) : (
-                        <h3 className="mt-6 mb-1 text-neutral400">
+                        <h3 className="mb-1">
                             {title}
                             {required && <span className="text-red-500 ml-1">*</span>}
                         </h3>

@@ -6,7 +6,7 @@ import {
     ListInput,
     TransactionStatus,
 } from '../../components';
-import { useMyTranchesContext } from '../../../store/contexts';
+import { useMyTranchesContext } from '../../../store';
 import { IDialogProps } from '../utils';
 import { ModalFooter, ModalHeader } from '../subcomponents';
 import { useModal } from '../../../hooks';

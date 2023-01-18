@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSelectedTrancheContext } from '../../../store/contexts';
+import { useSelectedTrancheContext } from '../../../store';
 import { useWindowSize } from '../../../hooks';
 import { determineRatingColor } from '../../../utils/helpers';
 import { BsArrowDownCircle, BsArrowUpCircle } from 'react-icons/bs';
@@ -23,8 +23,8 @@ const TranchesCustomRow = (props: ITranchesCustomRowProps) => {
     const { width } = useWindowSize();
     const { updateTranche } = useSelectedTrancheContext();
 
-    const route = (e: Event, tranche: any, view = 'overview') => {
-        e.preventDefault();
+    const route = (e: Event, tranche: any, view: 'overview' | 'details' = 'overview') => {
+        e.stopPropagation();
         updateTranche('id', tranche.id);
         navigate(`/tranches/${tranche.name?.toLowerCase().replace(/\s+/g, '-')}`, {
             state: { view, trancheId: tranche.id },

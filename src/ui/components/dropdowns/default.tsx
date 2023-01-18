@@ -6,9 +6,10 @@ import { IoMdCheckmarkCircle } from 'react-icons/io';
 import { MenuItemButton } from '../buttons/menu-item';
 import { truncate as _truncate } from '../../../utils/helpers';
 
-interface IDropdownItemProps {
+export interface IDropdownItemProps {
     text: string;
     onClick?: React.MouseEventHandler<HTMLButtonElement>;
+    className?: string;
 }
 
 export interface IDropdownProps {
@@ -175,12 +176,16 @@ export const DefaultDropdown = ({
                                             {({ active }) =>
                                                 !multiselect ? (
                                                     <div
-                                                        className="flex items-center gap-2"
+                                                        className={`flex items-center gap-2`}
                                                         key={`dropdown-${i}`}
                                                     >
                                                         <MenuItemButton
                                                             label={
-                                                                <span className="flex justify-between">
+                                                                <span
+                                                                    className={`flex justify-between ${
+                                                                        item?.className || ''
+                                                                    }`}
+                                                                >
                                                                     {uppercase
                                                                         ? truncate
                                                                             ? _truncate(

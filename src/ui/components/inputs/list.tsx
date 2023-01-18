@@ -62,7 +62,10 @@ export const ListInput = ({
     const handleType = (e: any, val = '') => {
         const toBeSet = val ? val : value;
         if (e.key === 'Enter') {
-            if (coin && !AVAILABLE_ASSETS.includes(toBeSet.toUpperCase())) {
+            if (
+                coin &&
+                !AVAILABLE_ASSETS.map((coin) => coin.toUpperCase()).includes(toBeSet.toUpperCase())
+            ) {
                 setError('Please enter a valid token.');
                 setValue('');
                 return;

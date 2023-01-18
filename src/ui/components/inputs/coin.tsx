@@ -13,6 +13,7 @@ export interface ICoinInput {
     isMax: boolean;
     setIsMax: React.Dispatch<React.SetStateAction<boolean>>;
     loading?: boolean;
+    customMaxClick?: any;
 }
 
 export const CoinInput = ({
@@ -24,6 +25,7 @@ export const CoinInput = ({
     isMax,
     setIsMax,
     loading,
+    customMaxClick,
 }: ICoinInput) => {
     const onChange = (e: any) => {
         const myamount = e.target.value;
@@ -34,8 +36,13 @@ export const CoinInput = ({
     };
 
     const onMaxButtonClick = () => {
-        balance ? setAmount(balance) : {};
-        setIsMax(true);
+        if (customMaxClick) {
+            customMaxClick();
+            return;
+        } else {
+            balance ? setAmount(balance) : {};
+            setIsMax(true);
+        }
     };
 
     return (
@@ -45,12 +52,7 @@ export const CoinInput = ({
                     type="text"
                     value={amount}
                     onChange={onChange}
-                    disabled={isMax}
-                    style={{
-                        opacity: isMax ? 0.25 : 1,
-                        pointerEvents: isMax ? 'none' : 'initial',
-                    }}
-                    className="text-2xl focus:outline-none max-w-[200px] dark:bg-black"
+                    className="text-2xl focus:outline-none max-w-[200px] dark:bg-black overflow-auto"
                     placeholder="0.00"
                 />
                 {/* <div className="text-neutral400">USD</div> */}

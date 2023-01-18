@@ -1,4 +1,3 @@
-import React from 'react';
 import { useAppSelector, useAppDispatch } from './redux';
 import { clearAndClose, setDataAndOpen, IDialogState, IDialogNames } from '../store/modals';
 
@@ -12,7 +11,7 @@ export const useDialogController = () => {
         dispatch(setDataAndOpen({ data: data, id: e }));
     }
 
-    function closeDialog(e: string) {
+    function closeDialog(e: IDialogNames) {
         dispatch(clearAndClose({ id: e }));
     }
 

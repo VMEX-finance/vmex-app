@@ -2,14 +2,18 @@ import React from 'react';
 import { AppTemplate, GridView } from '../ui/templates';
 import { PortfolioStatsCard, UserPerformanceCard } from '../ui/features';
 import { YourPositionsTable } from '../ui/tables';
-import { WalletButton } from '../ui/components/buttons';
+import { Button, WalletButton } from '../ui/components/buttons';
 import { useUserData } from '../api/user';
 import { useAccount } from 'wagmi';
 import { addDollarAmounts, bigNumberToUnformattedString } from '../utils/sdk-helpers';
 import { useSubgraphUserData } from '../api/subgraph';
 import { numberFormatter } from '../utils/helpers';
+import { useNavigate } from 'react-router-dom';
+import { useMyTranchesContext } from '../store/my-tranches';
 
 const Portfolio: React.FC = () => {
+    const navigate = useNavigate();
+    const { myTranches } = useMyTranchesContext();
     const { address } = useAccount();
     const { queryUserActivity } = useUserData(address);
     const { queryUserPnlChart } = useSubgraphUserData(address);
@@ -29,7 +33,17 @@ const Portfolio: React.FC = () => {
     };
 
     return (
-        <AppTemplate title="Portfolio">
+        <AppTemplate
+            title="Portfolio"
+            right={
+                <Button
+                    primary
+                    label="My Tranches"
+                    disabled={myTranches.length === 0}
+                    onClick={() => navigate(`/my-tranches`)}
+                />
+            }
+        >
             {address ? (
                 <GridView type="fixed">
                     <div className="col-span-2 flex flex-col gap-4 xl:gap-8">
@@ -43,6 +57,7 @@ const Portfolio: React.FC = () => {
                                 queryUserActivity.data?.borrows.map((el) => el.amount),
                             )}
                             avgHealth={'0'} // TODO: add average health factor
+                            avgApy={'0'} // TODO: add average apy
                         />
                         <div className="flex flex-col lg:flex-row lg:grow gap-4 xl:gap-8">
                             <YourPositionsTable

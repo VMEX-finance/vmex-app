@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { BasicToggle, AssetDisplay, NumberAndDollar } from '../../components';
+import { AssetDisplay, NumberAndDollar } from '../../components';
 import { BigNumber } from 'ethers';
 import { useModal, useWindowSize, useDialogController } from '../../../hooks';
 import { markReserveAsCollateral } from '@vmexfinance/sdk';
 import { useSigner } from 'wagmi';
-import { NETWORK, MAINNET_ASSET_MAPPINGS, bigNumberToNative, SDK_PARAMS } from '../../../utils';
+import { NETWORK, bigNumberToNative, SDK_PARAMS } from '../../../utils';
+import { BsCheck } from 'react-icons/bs';
+import { IoIosClose } from 'react-icons/io';
 
 export type IYourSuppliesTableItemProps = {
     asset: string;
@@ -105,18 +107,11 @@ export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({ data, wit
                                 />
                             </td>
                             <td>
-                                <BasicToggle
-                                    checked={checked[index]}
-                                    disabled={isLoading}
-                                    onClick={(e: any) => e.stopPropagation()}
-                                    onChange={() =>
-                                        handleSubmit(
-                                            MAINNET_ASSET_MAPPINGS.get(i.asset) || '',
-                                            i.trancheId,
-                                            index,
-                                        )
-                                    }
-                                />
+                                {checked[index] ? (
+                                    <BsCheck className="w-8 h-8 text-green-500" />
+                                ) : (
+                                    <IoIosClose className="w-8 h-8 text-red-500" />
+                                )}
                             </td>
                             <td>{i.apy}%</td>
                             <td>{i.tranche}</td>

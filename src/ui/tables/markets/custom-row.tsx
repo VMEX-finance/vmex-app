@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSelectedTrancheContext } from '../../../store/contexts';
+import { useSelectedTrancheContext } from '../../../store';
 import { determineRatingColor } from '../../../utils/helpers';
 import { BsCheck } from 'react-icons/bs';
 import { IoIosClose } from 'react-icons/io';
@@ -101,9 +101,9 @@ const MarketsCustomRow = (props: any) => {
                 <td className="flex justify-between">
                     <span className="font-bold">Strategy</span>
                     {strategies ? (
-                        <BsCheck className="w-6 h-6 text-[#00DD3E]" />
+                        <BsCheck className="w-6 h-6 text-green-500" />
                     ) : (
-                        <IoIosClose className="w-6 h-6 text-[#FF1F00]" />
+                        <IoIosClose className="w-6 h-6 text-red-500" />
                     )}
                 </td>
                 <td>

@@ -6,7 +6,7 @@ import { MarketsCustomRow } from './custom-row';
 import MUIDataTable from 'mui-datatables';
 import { SpinnerLoader } from '../../components/loaders';
 import { IMarketsAsset } from '@app/api/types';
-import { ThemeContext } from '../../../store/contexts';
+import { ThemeContext } from '../../../store';
 import { bigNumberToUnformattedString, numberFormatter, percentFormatter } from '../../../utils';
 import { UseQueryResult } from '@tanstack/react-query';
 import { IUserActivityDataProps } from '@app/api/user/types';
@@ -93,7 +93,7 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
         },
         {
             name: 'available',
-            label: 'Borrowing Power',
+            label: 'Available Borrows',
             options: {
                 filter: false,
                 sort: true,
@@ -203,7 +203,7 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
                                 rating={rating}
                                 strategies={strategies}
                                 logo={logo}
-                                key={`tranches-table-${
+                                key={`markets-table-${
                                     rowIndex || Math.floor(Math.random() * 10000)
                                 }`}
                             />

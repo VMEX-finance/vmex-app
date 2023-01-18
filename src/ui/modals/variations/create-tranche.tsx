@@ -1,5 +1,5 @@
-import React from 'react';
-import { useMyTranchesContext } from '../../../store/contexts';
+import React, { useEffect } from 'react';
+import { useMyTranchesContext } from '../../../store';
 import {
     DefaultInput,
     ListInput,
@@ -43,7 +43,7 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
         if (!_name) setError('Please enter a tranche name.');
         if (_tokens?.length === 0) setError('Please enter tokens to be included in your tranche.');
         if (error) return;
-        if (!signer) return;
+        if (!signer) setError('Please refresh the page and make sure your wallet is connected.');
         let canBorrow: boolean[] = [];
         let canBeCollateral: boolean[] = [];
 
@@ -66,7 +66,7 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
             if (tmp) return tmp;
             else return '';
         });
-        if (!assets) return;
+        if (!assets || !signer) return;
 
         await submitTx(async () => {
             const res = await initTranche({
@@ -89,6 +89,13 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
             return res;
         });
     };
+
+    useEffect(() => {
+        if (error) {
+            const timeout = setTimeout(() => setError(''), 5000);
+            return () => clearInterval(timeout);
+        }
+    }, [error, setError]);
 
     return (
         <>

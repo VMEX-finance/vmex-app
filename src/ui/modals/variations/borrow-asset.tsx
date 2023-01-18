@@ -10,7 +10,7 @@ import {
 } from '../../components';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
 import { ISupplyBorrowProps } from '../utils';
-import { useModal } from '../../../hooks';
+import { useDialogController, useModal } from '../../../hooks';
 import { borrow, repay } from '@vmexfinance/sdk';
 import {
     MAINNET_ASSET_MAPPINGS,
@@ -21,19 +21,15 @@ import {
     bigNumberToNative,
     bigNumberToUnformattedString,
     SDK_PARAMS,
+    DECIMALS,
 } from '../../../utils';
 import { useAccount, useSigner } from 'wagmi';
 import { useUserTrancheData, useSubgraphTrancheData } from '../../../api';
-import { BigNumber } from 'ethers';
-import { BasicToggle } from '../../components/toggles';
+import { BigNumber, utils } from 'ethers';
+import { useSelectedTrancheContext } from '../../../store';
+import { useNavigate } from 'react-router-dom';
 
-export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
-    name,
-    isOpen,
-    data,
-    closeDialog,
-    tab,
-}) => {
+export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, data, tab }) => {
     const { isSuccess, submitTx, isLoading, error } = useModal('borrow-asset-dialog');
     const [amount, setAmount] = useMediatedState(inputMediator, '');
     const [isMax, setIsMax] = React.useState(false);
@@ -45,6 +41,9 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
         data?.trancheId || 0,
     );
     const { findAssetInMarketsData } = useSubgraphTrancheData(data?.trancheId || 0);
+    const { setAsset } = useSelectedTrancheContext();
+    const navigate = useNavigate();
+    const { closeDialog } = useDialogController();
 
     const handleClick = async () => {
         if (data && signer) {
@@ -97,8 +96,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
         data?.amountNative ||
         BigNumber.from('0');
 
-    const maxToggleOnClick = () => {
-        setIsMax(!isMax);
+    const maxOnClick = () => {
         setAmount(
             view?.includes('Borrow')
                 ? bigNumberToUnformattedString(amountBorrwable.amountNative, data?.asset || '')
@@ -114,6 +112,23 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
 
         if (newTotalBorrow > borrowCap) {
             return true;
+        }
+        return false;
+    };
+
+    const isViolatingMax = () => {
+        if (data?.asset && amount) {
+            if (
+                amount.includes('.') &&
+                amount.split('.')[1].length > (DECIMALS.get(data.asset) || 18)
+            ) {
+                return true;
+            } else {
+                const inputAmount = utils.parseUnits(amount, DECIMALS.get(data.asset));
+                return inputAmount.gt(
+                    view?.includes('Borrow') ? amountBorrwable.amountNative : amountRepay,
+                );
+            }
         }
         return false;
     };
@@ -149,18 +164,18 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
                                 isMax={isMax}
                                 setIsMax={setIsMax}
                                 loading={amountBorrwable.loading}
+                                customMaxClick={maxOnClick}
                             />
-
+                            <MessageStatus
+                                type="error"
+                                show={isViolatingMax()}
+                                message="Input amount is over the max"
+                            />
                             <MessageStatus
                                 type="warning"
                                 show={isViolatingBorrowCap()}
                                 message="WARNING: Attempting to borrow more than borrow cap"
                             />
-
-                            <h3 className="mt-6 text-neutral400">{view} Max</h3>
-                            <div className="mt-1">
-                                <BasicToggle checked={isMax} onChange={maxToggleOnClick} />
-                            </div>
 
                             <h3 className="mt-6 text-neutral400">Health Factor</h3>
                             <HealthFactor asset={data.asset} amount={amount} type={'borrow'} />
@@ -207,12 +222,13 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
                                 isMax={isMax}
                                 setIsMax={setIsMax}
                                 loading={Number(bigNumberToNative(amountRepay, data.asset)) === 0}
+                                customMaxClick={maxOnClick}
                             />
-
-                            <h3 className="mt-6 text-neutral400">{view} Max</h3>
-                            <div className="mt-1">
-                                <BasicToggle checked={isMax} onChange={maxToggleOnClick} />
-                            </div>
+                            <MessageStatus
+                                type="error"
+                                show={isViolatingMax()}
+                                message="Input amount is over the max"
+                            />
 
                             <h3 className="mt-6 text-neutral400">Health Factor</h3>
                             <HealthFactor asset={data.asset} amount={amount} type={'repay'} />
@@ -249,21 +265,23 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
                     )}
                 </>
             )}
-            <ModalFooter between>
-                <div className="mt-5 sm:mt-6 flex justify-between items-end">
-                    {/* <div className="flex flex-col">
-                        <div className="flex items-center gap-2">
-                            <FaGasPump />
-                            <span>Gas Limit</span>
-                        </div>
-                        <div>
-                            <DropdownButton
-                                items={[{ text: 'Normal' }, { text: 'Low' }, { text: 'High' }]}
-                                direction="right"
-                            />
-                        </div>
-                    </div> */}
-                </div>
+            <ModalFooter between={!location.hash.includes('tranches')}>
+                {!location.hash.includes('tranches') && (
+                    <Button
+                        label={`View Tranche`}
+                        onClick={() => {
+                            setAsset(data.asset);
+                            closeDialog('borrow-asset-dialog');
+                            window.scroll(0, 0);
+                            navigate(
+                                `/tranches/${data.tranche?.toLowerCase().replace(/\s+/g, '-')}`,
+                                {
+                                    state: { view: 'details', trancheId: data.trancheId },
+                                },
+                            );
+                        }}
+                    />
+                )}
                 {Number(amount) === 0 ? (
                     <Tooltip
                         text="Please enter an amount"
@@ -278,7 +296,8 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({
                             (!amount && !isMax) ||
                             (view?.includes('Borrow') && amountBorrwable.amountNative.lt(10)) ||
                             (view?.includes('Repay') && amountRepay.lt(10)) ||
-                            isViolatingBorrowCap()
+                            isViolatingBorrowCap() ||
+                            isViolatingMax()
                         }
                         onClick={handleClick}
                         label={'Submit Transaction'}

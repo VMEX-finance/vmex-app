@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useWindowSize, useDialogController } from '../../hooks';
 import { BiChevronLeft, BiPlus } from 'react-icons/bi';
-import { useMyTranchesContext } from '../../store/contexts';
+import { useMyTranchesContext } from '../../store';
 import { Tooltip, Button, LinkButton } from '../components';
 import { useAccount } from 'wagmi';
 import { Skeleton } from '@mui/material';
@@ -14,6 +14,7 @@ interface IDashboardTemplateProps {
     view?: string;
     setView?: any;
     titleLoading?: boolean;
+    right?: React.ReactNode;
 }
 
 const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
@@ -23,6 +24,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
     view,
     setView,
     titleLoading,
+    right,
 }) => {
     const { myTranches } = useMyTranchesContext();
     const { openDialog } = useDialogController();
@@ -36,15 +38,16 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
     return (
         <div className="max-w-[125rem] mx-auto p-3 md:p-6 lg:p-10">
             <header
-                className={`${
-                    view ? 'grid grid-flow-dense md:grid-cols-3' : 'flex flex-row'
-                } justify-between items-end`}
+                className={`
+                    ${right ? 'flex justify-between w-full' : ''}
+                    ${view && !right ? 'grid grid-flow-dense md:grid-cols-3' : 'flex flex-row'}
+                justify-between items-end`}
             >
                 <div className="max-w-[500px]">
                     {view ? (
                         <LinkButton onClick={routeChange}>
                             <BiChevronLeft size="22px" />
-                            <p className="text-lg">Back to all</p>
+                            <p className="text-lg">Back</p>
                         </LinkButton>
                     ) : (
                         <>
@@ -57,7 +60,8 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                         </>
                     )}
                 </div>
-                {view && (
+                {right && right}
+                {view && !right && (
                     <>
                         <div className="justify-center mx-auto">
                             {titleLoading ? (
