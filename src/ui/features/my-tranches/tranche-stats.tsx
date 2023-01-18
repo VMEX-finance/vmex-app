@@ -1,7 +1,7 @@
 import React from 'react';
-import { TopTranchesTable } from '../tables';
-import { useWindowSize } from '../../hooks';
-import { makeCompact } from '../../utils/helpers';
+import { TopTranchesTable } from '../../tables';
+import { useWindowSize } from '../../../hooks';
+import { makeCompact } from '../../../utils/helpers';
 import { AssetBalance, TrancheData } from '@app/api/types';
 import {
     SkeletonLoader,
@@ -10,30 +10,28 @@ import {
     PillDisplay,
     Card,
     ILineChartDataPointProps,
-} from '../components';
+} from '../../components';
 import { UseQueryResult } from '@tanstack/react-query';
 
-export interface IProtocolProps {
-    isLoading?: boolean;
+export interface ITrancheStatsCardProps {
     tvl?: string;
     reserve?: string;
     lenders?: number;
     borrowers?: number;
-    markets?: number;
     totalSupplied?: string;
     totalBorrowed?: string;
     topBorrowedAssets?: AssetBalance[];
     topSuppliedAssets?: AssetBalance[];
     topTranches?: TrancheData[];
     tvlChart?: UseQueryResult<ILineChartDataPointProps[], unknown>;
+    isLoading?: boolean;
 }
 
-export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
+export const TrancheStatsCard: React.FC<ITrancheStatsCardProps> = ({
     tvl,
     reserve,
     lenders,
     borrowers,
-    markets,
     totalBorrowed,
     totalSupplied,
     topBorrowedAssets,
@@ -112,15 +110,10 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                             value={borrowers ? borrowers : '-'}
                             loading={isLoading}
                         />
-                        <NumberDisplay
-                            label={'Markets:'}
-                            value={markets ? markets : '-'}
-                            loading={isLoading}
-                        />
                     </div>
                 </div>
 
-                <div className="py-2 md:py-4 xl:py-0 xl:px-6 grid grid-cols-1 lg:grid-cols-3 gap-4 w-full">
+                <div className="py-2 md:py-4 xl:py-0 xl:px-6 grid grid-cols-1 lg:grid-cols-2 gap-4 w-full">
                     <div className="flex flex-col gap-2">
                         <NumberDisplay
                             size="xl"
@@ -174,13 +167,6 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                                     ))
                                 )}
                             </div>
-                        </div>
-                    </div>
-
-                    <div className="flex flex-col gap-1">
-                        <span>Top Tranches</span>
-                        <div className="flex flex-col">
-                            <TopTranchesTable data={topTranches || []} loading={isLoading} />
                         </div>
                     </div>
                 </div>

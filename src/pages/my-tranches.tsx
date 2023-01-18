@@ -12,6 +12,7 @@ import {
 import { useAccount } from 'wagmi';
 import { useMyTranchesContext } from '../store';
 import { useModal, useWindowSize } from '../hooks';
+import { ProtocolStatsCard, TrancheStatsCard } from '../ui/features';
 
 const MyTranches: React.FC = () => {
     const breakpoint = 1024;
@@ -88,137 +89,144 @@ const MyTranches: React.FC = () => {
     }, [selectedTranche]);
 
     return (
-        <AppTemplate title="My Tranches">
+        <AppTemplate title="My Tranches" description={`${selectedTranche.name}`}>
             {address ? (
-                <GridView>
-                    <>
-                        {width >= breakpoint && (
-                            <Card className="flex flex-col min-w-[300px] max-h-[555px] overflow-y-auto">
-                                {myTranches.map((obj, i) => (
-                                    <button
-                                        className={`
+                <>
+                    <GridView>
+                        <>
+                            {width >= breakpoint && (
+                                <Card className="flex flex-col min-w-[300px] overflow-y-auto">
+                                    {myTranches.map((obj, i) => (
+                                        <button
+                                            className={`
                           text-left py-2 
                           ${selectedTranche.name === obj.name ? 'text-brand-purple' : ''}
                         `}
-                                        onClick={(e: any) =>
-                                            findSelectedTranche(e.target.innerHTML)
-                                        }
-                                        key={`my-tranches-${i}`}
-                                    >
-                                        {obj.name}
-                                    </button>
-                                ))}
-                            </Card>
-                        )}
-                        <Card>
-                            {!isSuccess ? (
-                                // Default State
-                                <>
-                                    {width < breakpoint && (
-                                        <div className="w-full mb-6">
-                                            <DefaultDropdown
-                                                items={myTranches.map((obj) => ({
-                                                    ...obj,
-                                                    text: obj.name,
-                                                }))}
-                                                selected={selectedTranche.name}
-                                                setSelected={(e: string) => findSelectedTranche(e)}
-                                                direction="right"
-                                                size="lg"
-                                                primary
-                                                full
+                                            onClick={(e: any) =>
+                                                findSelectedTranche(e.target.innerHTML)
+                                            }
+                                            key={`my-tranches-${i}`}
+                                        >
+                                            {obj.name}
+                                        </button>
+                                    ))}
+                                </Card>
+                            )}
+                            <div className="flex flex-col gap-4">
+                                <TrancheStatsCard />
+                                <Card>
+                                    {!isSuccess ? (
+                                        // Default State
+                                        <>
+                                            {width < breakpoint && (
+                                                <div className="w-full mb-6">
+                                                    <DefaultDropdown
+                                                        items={myTranches.map((obj) => ({
+                                                            ...obj,
+                                                            text: obj.name,
+                                                        }))}
+                                                        selected={selectedTranche.name}
+                                                        setSelected={(e: string) =>
+                                                            findSelectedTranche(e)
+                                                        }
+                                                        direction="right"
+                                                        size="lg"
+                                                        primary
+                                                        full
+                                                    />
+                                                </div>
+                                            )}
+                                            <div className="flex flex-col md:grid md:grid-cols-[2fr_1fr] lg:grid-cols-[3fr_1fr] md:gap-3">
+                                                <DefaultInput
+                                                    value={_name}
+                                                    onType={setName}
+                                                    size="2xl"
+                                                    placeholder="VMEX High Quality..."
+                                                    title="Name"
+                                                    className="!mt-0"
+                                                />
+                                                <DefaultInput
+                                                    type="percent"
+                                                    value={_adminFee}
+                                                    onType={setAdminFee}
+                                                    size="2xl"
+                                                    placeholder="0.00"
+                                                    title="Admin Fee (%)"
+                                                    tooltip="Admin fees will be distributed to the wallet address used to create the tranche. Admin fees set are additive to the base 5% fee taken by VMEX"
+                                                    className="!mt-0"
+                                                />
+                                            </div>
+                                            <ListInput
+                                                title="Whitelisted"
+                                                list={_whitelisted}
+                                                setList={setWhitelisted}
+                                                placeholder="0x..."
+                                                toggle
                                             />
+                                            <ListInput
+                                                title="Blacklisted"
+                                                list={_blackListed}
+                                                setList={setBlackListed}
+                                                placeholder="0x..."
+                                                toggle
+                                            />
+                                            <ListInput
+                                                title="Tokens"
+                                                list={_tokens}
+                                                setList={setTokens}
+                                                placeholder="USDC"
+                                                coin
+                                                noDelete
+                                            />
+                                            <div className="w-full mt-6">
+                                                <DefaultDropdown
+                                                    title="Paused Tokens"
+                                                    items={_tokens}
+                                                    selected={_pausedTokens}
+                                                    setSelected={setPausedTokens}
+                                                    direction="top"
+                                                    size="lg"
+                                                    full
+                                                    multiselect
+                                                    border
+                                                    uppercase
+                                                />
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <div className="mt-10 mb-8">
+                                            <TransactionStatus success={isSuccess} full />
                                         </div>
                                     )}
-                                    <div className="flex flex-col md:grid md:grid-cols-[2fr_1fr] lg:grid-cols-[3fr_1fr] md:gap-3">
-                                        <DefaultInput
-                                            value={_name}
-                                            onType={setName}
-                                            size="2xl"
-                                            placeholder="VMEX High Quality..."
-                                            title="Name"
-                                            className="!mt-0"
-                                        />
-                                        <DefaultInput
-                                            type="percent"
-                                            value={_adminFee}
-                                            onType={setAdminFee}
-                                            size="2xl"
-                                            placeholder="0.00"
-                                            title="Admin Fee (%)"
-                                            tooltip="Admin fees will be distributed to the wallet address used to create the tranche. Admin fees set are additive to the base 5% fee taken by VMEX"
-                                            className="!mt-0"
-                                        />
-                                    </div>
-                                    <ListInput
-                                        title="Whitelisted"
-                                        list={_whitelisted}
-                                        setList={setWhitelisted}
-                                        placeholder="0x..."
-                                        toggle
-                                    />
-                                    <ListInput
-                                        title="Blacklisted"
-                                        list={_blackListed}
-                                        setList={setBlackListed}
-                                        placeholder="0x..."
-                                        toggle
-                                    />
-                                    <ListInput
-                                        title="Tokens"
-                                        list={_tokens}
-                                        setList={setTokens}
-                                        placeholder="USDC"
-                                        coin
-                                        noDelete
-                                    />
-                                    <div className="w-full mt-6">
-                                        <DefaultDropdown
-                                            title="Paused Tokens"
-                                            items={_tokens}
-                                            selected={_pausedTokens}
-                                            setSelected={setPausedTokens}
-                                            direction="top"
-                                            size="lg"
-                                            full
-                                            multiselect
-                                            border
-                                            uppercase
-                                        />
-                                    </div>
-                                </>
-                            ) : (
-                                <div className="mt-10 mb-8">
-                                    <TransactionStatus success={isSuccess} full />
-                                </div>
-                            )}
 
-                            {error && !isSuccess && (
-                                <p className="text-red-500">{error || 'Invalid input'}</p>
-                            )}
-                            <div className="mt-6 flex justify-end gap-3">
-                                <Button
-                                    disabled={isSuccess}
-                                    onClick={handlePause}
-                                    label={
-                                        selectedTranche.isPaused
-                                            ? 'Unpause Tranche'
-                                            : 'Pause Tranche'
-                                    }
-                                    type="delete"
-                                    loading={isLoading}
-                                />
-                                <Button
-                                    disabled={isSuccess}
-                                    onClick={handleSave}
-                                    label="Save"
-                                    loading={isLoading}
-                                    primary
-                                />
+                                    {error && !isSuccess && (
+                                        <p className="text-red-500">{error || 'Invalid input'}</p>
+                                    )}
+                                    <div className="mt-6 flex justify-end gap-3">
+                                        <Button
+                                            disabled={isSuccess}
+                                            onClick={handlePause}
+                                            label={
+                                                selectedTranche.isPaused
+                                                    ? 'Unpause Tranche'
+                                                    : 'Pause Tranche'
+                                            }
+                                            type="delete"
+                                            loading={isLoading}
+                                        />
+                                        <Button
+                                            disabled={isSuccess}
+                                            onClick={handleSave}
+                                            label="Save"
+                                            loading={isLoading}
+                                            primary
+                                        />
+                                    </div>
+                                </Card>
                             </div>
-                        </Card>
-                    </>
-                </GridView>
+                        </>
+                    </GridView>
+                </>
             ) : (
                 <div className="pt-10 lg:pt-20 text-center flex-col">
                     <div className="mb-4">
