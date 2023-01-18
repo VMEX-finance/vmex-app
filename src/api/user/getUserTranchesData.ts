@@ -4,6 +4,7 @@ import {
     AvailableBorrowData,
     BorrowedAssetData,
     SuppliedAssetData,
+    getUserSummaryData,
 } from '@vmexfinance/sdk';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -20,12 +21,31 @@ export async function _getUserTranchesData(
     userAddress: string,
     trancheIds: number[],
 ): Promise<IUserTrancheData[]> {
-    if (!userAddress || trancheIds?.length === 0) {
-        return [];
+    if (!userAddress) return [];
+    let _trancheIds;
+    if (trancheIds?.length === 0) {
+        const summary = await getUserSummaryData({
+            user: userAddress,
+            network: SDK_PARAMS.network,
+            test: SDK_PARAMS.test,
+            providerRpc: SDK_PARAMS.providerRpc,
+        });
+
+        const tranchesInteractedWith = [...summary.borrowedAssetData, ...summary.suppliedAssetData]
+            .filter(
+                (value, index, self) =>
+                    index ===
+                    self.findIndex((t) => t.tranche.toNumber() === value.tranche.toNumber()),
+            )
+            .map((assetData) => assetData.tranche.toNumber());
+
+        _trancheIds = tranchesInteractedWith;
+    } else {
+        _trancheIds = trancheIds;
     }
 
     const allTranchesData = await Promise.all(
-        trancheIds.map(async (id) => {
+        _trancheIds.map(async (id) => {
             const userTrancheData: UserTrancheData = await getUserTrancheData({
                 tranche: String(id),
                 user: userAddress,
@@ -35,6 +55,7 @@ export async function _getUserTranchesData(
             });
 
             const returnObj = {
+                trancheId: id,
                 totalCollateralETH: userTrancheData.totalCollateralETH,
                 totalDebtETH: userTrancheData.totalDebtETH,
                 currentLiquidationThreshold: userTrancheData.currentLiquidationThreshold,
@@ -87,11 +108,11 @@ export async function _getUserTranchesData(
 
 export function useUserTranchesData(
     userAddress: any,
-    trancheIds: number[],
+    trancheIds?: number[],
 ): IUserTranchesDataProps {
     const queryUserTranchesData = useQuery({
         queryKey: ['user-tranches'],
-        queryFn: () => _getUserTranchesData(userAddress, trancheIds),
+        queryFn: () => _getUserTranchesData(userAddress, trancheIds || []),
         refetchOnMount: true,
     });
 

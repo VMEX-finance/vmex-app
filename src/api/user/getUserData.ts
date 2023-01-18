@@ -32,7 +32,6 @@ export async function getUserActivityData(userAddress: string): Promise<IUserAct
             totalDebtETH: '0',
             tranchesInteractedWith: [],
             avgApy: 0,
-            avgHealth: 0,
         };
     }
 
@@ -95,7 +94,6 @@ export async function getUserActivityData(userAddress: string): Promise<IUserAct
         borrows,
         tranchesInteractedWith,
         avgApy: averageOfArr(apys),
-        avgHealth: 0, // TODO: get average health factor across all tranches
     };
 }
 

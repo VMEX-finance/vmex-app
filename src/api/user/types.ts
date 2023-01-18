@@ -27,7 +27,6 @@ export type IUserActivityDataProps = {
     totalDebtETH: string;
     availableBorrowsETH: string;
     tranchesInteractedWith: ITrancheInteractedProps[];
-    avgHealth: number;
     avgApy: number;
 };
 
@@ -71,6 +70,7 @@ export type IUserTrancheData = {
     supplies: IYourSuppliesTableItemProps[];
     borrows: IYourBorrowsTableItemProps[];
     assetBorrowingPower: IAvailableBorrowData[];
+    trancheId: number;
 };
 
 export type IAvailableBorrowData = {

@@ -30,6 +30,7 @@ export async function _getUserTrancheData(
             supplies: [],
             borrows: [],
             assetBorrowingPower: [],
+            trancheId: 0,
         };
     }
 
@@ -42,6 +43,7 @@ export async function _getUserTrancheData(
     });
 
     const returnObj = {
+        trancheId,
         totalCollateralETH: userTrancheData.totalCollateralETH,
         totalDebtETH: userTrancheData.totalDebtETH,
         currentLiquidationThreshold: userTrancheData.currentLiquidationThreshold,
