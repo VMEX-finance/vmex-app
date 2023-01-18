@@ -9,6 +9,7 @@ import {
     apolloClient,
     nativeAmountToUSD,
     averageOfArr,
+    weightedAverageofArr,
 } from '../../utils';
 
 export const processTrancheData = async (
@@ -80,10 +81,13 @@ export const processTrancheData = async (
     );
 
     const calculateAvgApy = () => {
-        const onlySupplyApys = assets.map((el: any) =>
-            Number(utils.formatUnits(el.liquidityRate, 27)),
-        );
-        return averageOfArr(onlySupplyApys);
+        const supplyApys: number[] = [];
+        const liquidities: number[] = [];
+        assets.map((el: any) => {
+            supplyApys.push(Number(utils.formatUnits(el.liquidityRate, 27)));
+            liquidities.push(Number(utils.formatUnits(el.availableLiquidity, el.decimals)));
+        });
+        return weightedAverageofArr(supplyApys, liquidities);
     };
 
     const returnObj = {
