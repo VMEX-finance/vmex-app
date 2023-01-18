@@ -1,7 +1,7 @@
 import React from 'react';
 import { AssetDisplay, NumberAndDollar } from '../../components/displays';
 import { BigNumber } from 'ethers';
-import { bigNumberToNative } from '../../../utils/sdk-helpers';
+import { bigNumberToNative, determineHealthColor } from '../../../utils';
 import { useWindowSize, useDialogController } from '../../../hooks';
 
 export type IYourBorrowsTableItemProps = {
@@ -11,15 +11,20 @@ export type IYourBorrowsTableItemProps = {
     apy: number;
     tranche: string;
     trancheId: number;
-    healthFactor?: string | number;
+    healthFactor?: number;
 };
 
 export type IYourBorrowsTableProps = {
     data: IYourBorrowsTableItemProps[];
     withHealth?: boolean;
+    healthLoading?: boolean;
 };
 
-export const YourBorrowsTable: React.FC<IYourBorrowsTableProps> = ({ data, withHealth }) => {
+export const YourBorrowsTable: React.FC<IYourBorrowsTableProps> = ({
+    data,
+    withHealth,
+    healthLoading,
+}) => {
     const { width } = useWindowSize();
     const { openDialog } = useDialogController();
     const headers = withHealth
@@ -73,7 +78,15 @@ export const YourBorrowsTable: React.FC<IYourBorrowsTableProps> = ({ data, withH
                                 </td>
                                 <td>{i.apy}%</td>
                                 <td>{i.tranche}</td>
-                                {withHealth && <td>{i.healthFactor}</td>}
+                                {withHealth && (
+                                    <td
+                                        className={`${
+                                            healthLoading ? 'animate-pulse' : ''
+                                        } ${determineHealthColor(i.healthFactor)}`}
+                                    >
+                                        {(i.healthFactor || 0).toFixed(1)}
+                                    </td>
+                                )}
                             </tr>
                         );
                     })}

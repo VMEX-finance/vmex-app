@@ -4,6 +4,8 @@ import {
     SuppliedAssetData,
     getUserWalletData,
     UserWalletData,
+    UserTrancheData,
+    getUserTrancheData,
 } from '@vmexfinance/sdk';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -30,7 +32,6 @@ export async function getUserActivityData(userAddress: string): Promise<IUserAct
             totalDebtETH: '0',
             tranchesInteractedWith: [],
             avgApy: 0,
-            avgHealth: 0,
         };
     }
 
@@ -42,31 +43,16 @@ export async function getUserActivityData(userAddress: string): Promise<IUserAct
         providerRpc: SDK_PARAMS.providerRpc,
     });
 
-    // const allTrancheData = await getAllTrancheData(SDK_PARAMS);
-    // const findAssetInTranche = (searchAsset: string, trancheId: number): string => {
-    //     let trancheName = 'N/A';
-    //     allTrancheData.map((tranche: any) => {
-    //         if (tranche.id.toNumber() === trancheId) {
-    //             tranche.assets.map((asset: any) => {
-    //                 if (searchAsset === asset) {
-    //                     trancheName = tranche.name;
-    //                 }
-    //             });
-    //         }
-    //     });
-    //     return trancheName;
-    // };
-
-    const tranchesInteractedWith = [
-        ...summary.borrowedAssetData,
-        ...summary.suppliedAssetData,
-    ].filter(
-        (value, index, self) =>
-            index === self.findIndex((t) => t.tranche.toNumber() === value.tranche.toNumber()),
-    );
-
-    const healths: number[] = [];
     const apys: number[] = [];
+    const tranchesInteractedWith = [...summary.borrowedAssetData, ...summary.suppliedAssetData]
+        .filter(
+            (value, index, self) =>
+                index === self.findIndex((t) => t.tranche.toNumber() === value.tranche.toNumber()),
+        )
+        .map((assetData) => ({
+            tranche: tranchesDat[assetData.tranche.toNumber()].name || '',
+            id: assetData.tranche.toNumber(),
+        }));
 
     const supplies = summary.suppliedAssetData.map((assetData: SuppliedAssetData) => {
         const apy = rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0));
@@ -106,12 +92,8 @@ export async function getUserActivityData(userAddress: string): Promise<IUserAct
         totalDebtETH: bigNumberToNative(summary.totalDebtETH, 'ETH'),
         supplies,
         borrows,
-        tranchesInteractedWith: tranchesInteractedWith.map((assetData) => ({
-            tranche: tranchesDat[assetData.tranche.toNumber()].name || '',
-            id: assetData.tranche.toNumber(),
-        })),
+        tranchesInteractedWith,
         avgApy: averageOfArr(apys),
-        avgHealth: 0, // TODO: get average health factor across all tranches
     };
 }
 

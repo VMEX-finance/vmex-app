@@ -30,6 +30,7 @@ export async function _getUserTrancheData(
             supplies: [],
             borrows: [],
             assetBorrowingPower: [],
+            trancheId: 0,
         };
     }
 
@@ -41,17 +42,8 @@ export async function _getUserTrancheData(
         providerRpc: SDK_PARAMS.providerRpc,
     });
 
-    const tmp = userTrancheData.assetBorrowingPower.map((marketData: AvailableBorrowData) => {
-        let asset =
-            REVERSE_MAINNET_ASSET_MAPPINGS.get(marketData.asset.toLowerCase()) || marketData.asset;
-        return {
-            asset: asset,
-            amountUSD: bigNumberToUSD(marketData.amountUSD, 18),
-            amountNative: marketData.amountNative,
-        };
-    });
-
     const returnObj = {
+        trancheId,
         totalCollateralETH: userTrancheData.totalCollateralETH,
         totalDebtETH: userTrancheData.totalDebtETH,
         currentLiquidationThreshold: userTrancheData.currentLiquidationThreshold,
@@ -82,9 +74,19 @@ export async function _getUserTrancheData(
                 trancheId: assetData.tranche.toNumber(),
             };
         }),
-        assetBorrowingPower: tmp,
+        assetBorrowingPower: userTrancheData.assetBorrowingPower.map(
+            (marketData: AvailableBorrowData) => {
+                let asset =
+                    REVERSE_MAINNET_ASSET_MAPPINGS.get(marketData.asset.toLowerCase()) ||
+                    marketData.asset;
+                return {
+                    asset: asset,
+                    amountUSD: bigNumberToUSD(marketData.amountUSD, 18),
+                    amountNative: marketData.amountNative,
+                };
+            },
+        ),
     };
-    console.log('_getUserTrancheData:', returnObj);
     return returnObj;
 }
 

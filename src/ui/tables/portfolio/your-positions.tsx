@@ -13,6 +13,7 @@ interface IYourPositionsProps {
     data?: IYourBorrowsTableItemProps[] | IYourSuppliesTableItemProps[];
     isLoading?: boolean;
     withHealth?: boolean;
+    healthLoading?: boolean;
 }
 
 export const YourPositionsTable: React.FC<IYourPositionsProps> = ({
@@ -20,6 +21,7 @@ export const YourPositionsTable: React.FC<IYourPositionsProps> = ({
     data,
     isLoading,
     withHealth,
+    healthLoading,
 }) => {
     const navigate = useNavigate();
     const determineTitle = () => {
@@ -46,6 +48,7 @@ export const YourPositionsTable: React.FC<IYourPositionsProps> = ({
                 return (
                     <YourSuppliesTable
                         withHealth={withHealth}
+                        healthLoading={healthLoading}
                         data={(data as IYourSuppliesTableItemProps[]) || []}
                     />
                 );
@@ -53,6 +56,7 @@ export const YourPositionsTable: React.FC<IYourPositionsProps> = ({
                 return (
                     <YourBorrowsTable
                         withHealth={withHealth}
+                        healthLoading={healthLoading}
                         data={(data as IYourBorrowsTableItemProps[]) || []}
                     />
                 );
