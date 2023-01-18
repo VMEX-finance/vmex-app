@@ -12,7 +12,7 @@ import {
 import { useAccount } from 'wagmi';
 import { useMyTranchesContext } from '../store';
 import { useModal, useWindowSize } from '../hooks';
-import { ProtocolStatsCard, TrancheStatsCard } from '../ui/features';
+import { TrancheStatsCard } from '../ui/features';
 
 const MyTranches: React.FC = () => {
     const breakpoint = 1024;
