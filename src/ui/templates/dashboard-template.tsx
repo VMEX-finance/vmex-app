@@ -14,6 +14,7 @@ interface IDashboardTemplateProps {
     view?: string;
     setView?: any;
     titleLoading?: boolean;
+    right?: React.ReactNode;
 }
 
 const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
@@ -23,6 +24,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
     view,
     setView,
     titleLoading,
+    right,
 }) => {
     const { myTranches } = useMyTranchesContext();
     const { openDialog } = useDialogController();
@@ -36,9 +38,10 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
     return (
         <div className="max-w-[125rem] mx-auto p-3 md:p-6 lg:p-10">
             <header
-                className={`${
-                    view ? 'grid grid-flow-dense md:grid-cols-3' : 'flex flex-row'
-                } justify-between items-end`}
+                className={`
+                    ${right ? 'flex justify-between w-full' : ''}
+                    ${view && !right ? 'grid grid-flow-dense md:grid-cols-3' : 'flex flex-row'}
+                justify-between items-end`}
             >
                 <div className="max-w-[500px]">
                     {view ? (
@@ -57,7 +60,8 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                         </>
                     )}
                 </div>
-                {view && (
+                {right && right}
+                {view && !right && (
                     <>
                         <div className="justify-center mx-auto">
                             {titleLoading ? (

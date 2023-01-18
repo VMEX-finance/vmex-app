@@ -92,6 +92,23 @@ const MyTranches: React.FC = () => {
         <AppTemplate title="My Tranches" description={`${selectedTranche.name}`}>
             {address ? (
                 <>
+                    {' '}
+                    {width < breakpoint && (
+                        <div className="w-full">
+                            <DefaultDropdown
+                                items={myTranches.map((obj) => ({
+                                    ...obj,
+                                    text: obj.name,
+                                }))}
+                                selected={selectedTranche.name}
+                                setSelected={(e: string) => findSelectedTranche(e)}
+                                direction="right"
+                                size="lg"
+                                primary
+                                full
+                            />
+                        </div>
+                    )}
                     <GridView>
                         <>
                             {width >= breakpoint && (
@@ -118,24 +135,6 @@ const MyTranches: React.FC = () => {
                                     {!isSuccess ? (
                                         // Default State
                                         <>
-                                            {width < breakpoint && (
-                                                <div className="w-full mb-6">
-                                                    <DefaultDropdown
-                                                        items={myTranches.map((obj) => ({
-                                                            ...obj,
-                                                            text: obj.name,
-                                                        }))}
-                                                        selected={selectedTranche.name}
-                                                        setSelected={(e: string) =>
-                                                            findSelectedTranche(e)
-                                                        }
-                                                        direction="right"
-                                                        size="lg"
-                                                        primary
-                                                        full
-                                                    />
-                                                </div>
-                                            )}
                                             <div className="flex flex-col md:grid md:grid-cols-[2fr_1fr] lg:grid-cols-[3fr_1fr] md:gap-3">
                                                 <DefaultInput
                                                     value={_name}

@@ -40,7 +40,7 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
         if (myTranches.length !== 0) {
             final.push({
                 text: 'My Tranches',
-                onClick: () => openDialog('my-tranches-dialog'),
+                onClick: () => navigate('/my-tranches'),
             });
         }
 
