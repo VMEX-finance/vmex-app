@@ -45,6 +45,8 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
     const { setAsset } = useSelectedTrancheContext();
     const { closeDialog } = useDialogController();
 
+    console.log('DATA', data);
+
     const handleSubmit = async () => {
         if (signer && data) {
             await submitTx(async () => {
