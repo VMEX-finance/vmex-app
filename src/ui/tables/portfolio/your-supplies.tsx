@@ -16,7 +16,7 @@ export type IYourSuppliesTableItemProps = {
     apy: number;
     tranche: string;
     trancheId: number;
-    healthFactor?: number | string;
+    healthFactor?: number;
 };
 
 export type IYourSuppliesTableProps = {
@@ -115,7 +115,7 @@ export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({ data, wit
                             </td>
                             <td>{i.apy}%</td>
                             <td>{i.tranche}</td>
-                            {withHealth && <td>{i.healthFactor}</td>}
+                            {withHealth && <td>{i.healthFactor?.toFixed(1)}</td>}
                         </tr>
                     );
                 })}

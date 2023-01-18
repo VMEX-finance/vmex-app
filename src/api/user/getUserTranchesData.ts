@@ -102,7 +102,6 @@ export async function _getUserTranchesData(
             return returnObj;
         }),
     );
-
     return allTranchesData;
 }
 

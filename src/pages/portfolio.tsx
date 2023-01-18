@@ -49,13 +49,13 @@ const Portfolio: React.FC = () => {
             if (!queryUserTranchesData.data) {
                 return queryUserActivity.data?.supplies;
             } else {
-                queryUserActivity.data?.supplies.map((supply) => {
+                return queryUserActivity.data?.supplies.map((supply) => {
                     const foundHealth = queryUserTranchesData.data.find(
                         ({ trancheId }) => trancheId === supply.trancheId,
                     );
                     return {
                         ...supply,
-                        healthFactor: foundHealth ? foundHealth.healthFactor : '0',
+                        healthFactor: foundHealth ? parseFloat(foundHealth.healthFactor) : 0,
                     };
                 });
             }
@@ -68,13 +68,13 @@ const Portfolio: React.FC = () => {
             if (!queryUserTranchesData.data) {
                 return queryUserActivity.data?.borrows;
             } else {
-                queryUserActivity.data?.borrows.map((borrow) => {
+                return queryUserActivity.data?.borrows.map((borrow) => {
                     const foundHealth = queryUserTranchesData.data.find(
                         ({ trancheId }) => trancheId === borrow.trancheId,
                     );
                     return {
                         ...borrow,
-                        healthFactor: foundHealth ? foundHealth.healthFactor : '0',
+                        healthFactor: foundHealth ? parseFloat(foundHealth.healthFactor) : 0,
                     };
                 });
             }

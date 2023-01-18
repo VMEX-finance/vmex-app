@@ -11,7 +11,7 @@ export type IYourBorrowsTableItemProps = {
     apy: number;
     tranche: string;
     trancheId: number;
-    healthFactor?: string | number;
+    healthFactor?: number;
 };
 
 export type IYourBorrowsTableProps = {
@@ -73,7 +73,7 @@ export const YourBorrowsTable: React.FC<IYourBorrowsTableProps> = ({ data, withH
                                 </td>
                                 <td>{i.apy}%</td>
                                 <td>{i.tranche}</td>
-                                {withHealth && <td>{i.healthFactor}</td>}
+                                {withHealth && <td>{i.healthFactor?.toFixed(1)}</td>}
                             </tr>
                         );
                     })}
