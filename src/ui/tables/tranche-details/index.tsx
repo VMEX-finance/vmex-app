@@ -106,6 +106,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                         {
                                             asset: el.asset,
                                             trancheId: tranche.id,
+                                            collateral: el.canBeCollat,
                                         },
                                     )
                                 }

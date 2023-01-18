@@ -18,7 +18,7 @@ export const BasicToggle = ({ checked, onChange, onClick, colors, disabled }: IT
             checked={checked || enabled}
             onChange={onChange || setEnabled}
             onClick={onClick}
-            className={`${
+            className={`${disabled ? 'opacity-70' : ''} ${
                 colors
                     ? checked || enabled
                         ? colors[0]
