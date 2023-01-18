@@ -134,3 +134,5 @@ export const convertContractsPercent = (amount: string) => {
     if (!amount) return 'N/A';
     return ethers.utils.formatUnits(amount.split('.')[0], 18);
 };
+
+export const averageOfArr = (array: number[]) => array.reduce((a, b) => a + b) / array.length;

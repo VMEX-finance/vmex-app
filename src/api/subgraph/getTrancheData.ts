@@ -3,7 +3,13 @@ import { useQuery } from '@tanstack/react-query';
 import { IGraphTrancheDataProps, ISubgraphTrancheData } from './types';
 import { utils } from 'ethers';
 import { getAllAssetPrices } from '../prices';
-import { usdFormatter, percentFormatter, apolloClient, nativeAmountToUSD } from '../../utils';
+import {
+    usdFormatter,
+    percentFormatter,
+    apolloClient,
+    nativeAmountToUSD,
+    averageOfArr,
+} from '../../utils';
 
 export const processTrancheData = async (
     data: any,
@@ -73,6 +79,13 @@ export const processTrancheData = async (
         },
     );
 
+    const calculateAvgApy = () => {
+        const onlySupplyApys = assets.map((el: any) =>
+            Number(utils.formatUnits(el.liquidityRate, 27)),
+        );
+        return averageOfArr(onlySupplyApys);
+    };
+
     const returnObj = {
         assetsData: finalObj,
         utilityRate: '0',
@@ -87,6 +100,7 @@ export const processTrancheData = async (
         poolUtilization: percentFormatter.format(
             1 - (summaryData.supplyTotal - summaryData.borrowTotal) / summaryData.supplyTotal,
         ),
+        avgApy: calculateAvgApy(),
     };
     return returnObj;
 };
@@ -134,10 +148,7 @@ export const getSubgraphTrancheData = async (
     });
 
     if (error) return {};
-    else {
-        const dat = data.tranche;
-        return processTrancheData(dat, trancheId);
-    }
+    else return processTrancheData(data.tranche, trancheId);
 };
 
 export function useSubgraphTrancheData(trancheId: number): ISubgraphTrancheData {

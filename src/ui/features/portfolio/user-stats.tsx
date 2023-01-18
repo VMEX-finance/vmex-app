@@ -22,7 +22,7 @@ export const PortfolioStatsCard: React.FC<IPortfolioProps> = ({
         <Card>
             <div className="flex flex-col xl:flex-row gap-2 md:gap-4 xl:gap-6 divide-y-2 xl:divide-y-0 xl:divide-x-2 divide-black dark:divide-white">
                 <div className="flex flex-col md:flex-row font-basefont gap-8">
-                    <div className="flex flex-col justify-between min-w-[90%] xl:min-w-[300px]">
+                    <div className="flex flex-col justify-between min-w-[90%] xl:min-w-[200px]">
                         <NumberDisplay
                             label="Total Net Worth"
                             value={networth || '-'}
@@ -51,14 +51,14 @@ export const PortfolioStatsCard: React.FC<IPortfolioProps> = ({
                     <NumberDisplay
                         size="xl"
                         label="Average Health"
-                        value={parseFloat(avgHealth || '0') < 100 ? avgHealth : '0'}
+                        value={`${parseFloat(avgHealth || '0').toFixed(3)}`}
                         loading={isLoading}
                     />
 
                     <NumberDisplay
                         size="xl"
                         label="Average APY"
-                        value={parseFloat(avgHealth || '0') < 100 ? avgHealth : '0'}
+                        value={`${parseFloat(avgApy || '0').toFixed(3)}%`}
                         loading={isLoading}
                     />
                 </div>

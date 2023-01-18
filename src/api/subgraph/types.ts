@@ -68,6 +68,7 @@ export type IGraphTrancheDataProps = {
     name?: string;
     id?: string;
     poolUtilization?: string;
+    avgApy?: number;
 };
 
 export type IGraphProtocolDataProps =
