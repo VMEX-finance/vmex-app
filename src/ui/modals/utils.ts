@@ -8,6 +8,7 @@ export type AssetDetails = {
     amount?: string;
     apy?: number;
     tranche?: string;
+    collateral?: boolean;
 };
 export type ISupplyBorrowProps = {
     name?: string;

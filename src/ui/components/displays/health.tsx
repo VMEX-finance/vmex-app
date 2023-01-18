@@ -6,11 +6,10 @@ import { useSelectedTrancheContext } from '../../../store';
 import {
     convertStringFormatToNumber,
     HFFormatter,
-    DECIMALS,
     calculateHealthFactorFromBalances,
     HEALTH,
 } from '../../../utils';
-import { ethers, BigNumber } from 'ethers';
+import { ethers } from 'ethers';
 import { useAccount } from 'wagmi';
 import { useLocation } from 'react-router-dom';
 
@@ -36,8 +35,13 @@ export const HealthFactor = ({
     const location = useLocation();
     const { address } = useAccount();
     const { tranche } = useSelectedTrancheContext();
-    const { queryUserTrancheData } = useUserTrancheData(address, location.state?.trancheId);
-    const { findAssetInMarketsData } = useSubgraphTrancheData(location.state?.trancheId);
+    const { queryUserTrancheData } = useUserTrancheData(
+        address,
+        location.state?.trancheId || tranche?.id,
+    );
+    const { findAssetInMarketsData } = useSubgraphTrancheData(
+        location.state?.trancheId || tranche?.id,
+    );
 
     const determineSize = () => {
         switch (size) {

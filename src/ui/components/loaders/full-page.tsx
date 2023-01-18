@@ -36,16 +36,20 @@ export const FullPageLoader = ({
                 leaveTo="opacity-0"
             >
                 <div className="top-0 left-0 h-screen w-full bg-[#eee] dark:bg-neutral-900 z-[9999] fixed">
-                    <div
+                    <Transition
                         className={`flex flex-col gap-5 justify-center items-center h-full ${
                             animation ? 'animate-pulse' : ''
                         }`}
+                        show={determineShow()}
+                        leave="transition-opacity duration-800"
+                        leaveFrom="opacity-100"
+                        leaveTo="opacity-0"
                     >
                         <img src="/VMEX-logo-only.png" alt="VMEX Logo" width="165" height="150" />
                         {text && (
                             <p className="text-center font-medium dark:text-neutral-100">{text}</p>
                         )}
-                    </div>
+                    </Transition>
                 </div>
             </Transition>
             {children}

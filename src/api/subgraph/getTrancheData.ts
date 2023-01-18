@@ -3,7 +3,14 @@ import { useQuery } from '@tanstack/react-query';
 import { IGraphTrancheDataProps, ISubgraphTrancheData } from './types';
 import { utils } from 'ethers';
 import { getAllAssetPrices } from '../prices';
-import { usdFormatter, percentFormatter, apolloClient, nativeAmountToUSD } from '../../utils';
+import {
+    usdFormatter,
+    percentFormatter,
+    apolloClient,
+    nativeAmountToUSD,
+    averageOfArr,
+    weightedAverageofArr,
+} from '../../utils';
 
 export const processTrancheData = async (
     data: any,
@@ -73,6 +80,16 @@ export const processTrancheData = async (
         },
     );
 
+    const calculateAvgApy = () => {
+        const supplyApys: number[] = [];
+        const liquidities: number[] = [];
+        assets.map((el: any) => {
+            supplyApys.push(Number(utils.formatUnits(el.liquidityRate, 27)));
+            liquidities.push(Number(utils.formatUnits(el.availableLiquidity, el.decimals)));
+        });
+        return weightedAverageofArr(supplyApys, liquidities);
+    };
+
     const returnObj = {
         assetsData: finalObj,
         utilityRate: '0',
@@ -87,6 +104,7 @@ export const processTrancheData = async (
         poolUtilization: percentFormatter.format(
             1 - (summaryData.supplyTotal - summaryData.borrowTotal) / summaryData.supplyTotal,
         ),
+        avgApy: calculateAvgApy(),
     };
     return returnObj;
 };
@@ -134,10 +152,7 @@ export const getSubgraphTrancheData = async (
     });
 
     if (error) return {};
-    else {
-        const dat = data.tranche;
-        return processTrancheData(dat, trancheId);
-    }
+    else return processTrancheData(data.tranche, trancheId);
 };
 
 export function useSubgraphTrancheData(trancheId: number): ISubgraphTrancheData {

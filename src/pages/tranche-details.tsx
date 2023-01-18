@@ -59,6 +59,7 @@ const TrancheDetails: React.FC = () => {
                 borrowChange={tranche?.borrowChange}
                 loading={queryTrancheData.isLoading}
                 userData={queryUserTrancheData}
+                avgApy={queryTrancheData.data?.avgApy || 0}
             />
             {view.includes('details') ? (
                 <>

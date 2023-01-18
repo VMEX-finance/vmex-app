@@ -17,6 +17,8 @@ import { IUserActivityDataProps, IUserDataProps, IUserWalletDataProps } from './
 import { BigNumber } from 'ethers';
 import { AVAILABLE_ASSETS } from '../../utils/constants';
 import { getSubgraphTranchesOverviewData } from '../subgraph';
+import { averageOfArr } from '../../utils/helpers';
+
 // Gets
 export async function getUserActivityData(userAddress: string): Promise<IUserActivityDataProps> {
     if (!userAddress) {
@@ -27,9 +29,12 @@ export async function getUserActivityData(userAddress: string): Promise<IUserAct
             totalCollateralETH: '0',
             totalDebtETH: '0',
             tranchesInteractedWith: [],
+            avgApy: 0,
+            avgHealth: 0,
         };
     }
 
+    const tranchesDat = await getSubgraphTranchesOverviewData();
     const summary = await getUserSummaryData({
         user: userAddress,
         network: SDK_PARAMS.network,
@@ -52,8 +57,6 @@ export async function getUserActivityData(userAddress: string): Promise<IUserAct
     //     return trancheName;
     // };
 
-    const tranchesDat = await getSubgraphTranchesOverviewData();
-
     const tranchesInteractedWith = [
         ...summary.borrowedAssetData,
         ...summary.suppliedAssetData,
@@ -62,40 +65,53 @@ export async function getUserActivityData(userAddress: string): Promise<IUserAct
             index === self.findIndex((t) => t.tranche.toNumber() === value.tranche.toNumber()),
     );
 
+    const healths: number[] = [];
+    const apys: number[] = [];
+
+    const supplies = summary.suppliedAssetData.map((assetData: SuppliedAssetData) => {
+        const apy = rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0));
+        apys.push(apy);
+        return {
+            asset:
+                REVERSE_MAINNET_ASSET_MAPPINGS.get(assetData.asset.toLowerCase()) ||
+                assetData.asset,
+            amount: bigNumberToUSD(assetData.amount, 18),
+            amountNative: assetData.amountNative,
+            collateral: assetData.isCollateral,
+            apy,
+            tranche: tranchesDat[assetData.tranche.toNumber()].name || '',
+            trancheId: assetData.tranche.toNumber(),
+            // supplyCap: assetData.supplyCap,
+        };
+    });
+
+    const borrows = summary.borrowedAssetData.map((assetData: BorrowedAssetData) => {
+        const apy = rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0));
+        apys.push(apy);
+        return {
+            asset:
+                REVERSE_MAINNET_ASSET_MAPPINGS.get(assetData.asset.toLowerCase()) ||
+                assetData.asset,
+            amount: bigNumberToUSD(assetData.amount, 18),
+            amountNative: assetData.amountNative,
+            apy,
+            tranche: tranchesDat[assetData.tranche.toNumber()].name || '',
+            trancheId: assetData.tranche.toNumber(),
+        };
+    });
+
     return {
         availableBorrowsETH: bigNumberToNative(summary.availableBorrowsETH, 'ETH'),
         totalCollateralETH: bigNumberToNative(summary.totalCollateralETH, 'ETH'),
         totalDebtETH: bigNumberToNative(summary.totalDebtETH, 'ETH'),
-        supplies: summary.suppliedAssetData.map((assetData: SuppliedAssetData) => {
-            return {
-                asset:
-                    REVERSE_MAINNET_ASSET_MAPPINGS.get(assetData.asset.toLowerCase()) ||
-                    assetData.asset,
-                amount: bigNumberToUSD(assetData.amount, 18),
-                amountNative: assetData.amountNative,
-                collateral: assetData.isCollateral,
-                apy: rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0)),
-                tranche: tranchesDat[assetData.tranche.toNumber()].name || '',
-                trancheId: assetData.tranche.toNumber(),
-                // supplyCap: assetData.supplyCap,
-            };
-        }),
-        borrows: summary.borrowedAssetData.map((assetData: BorrowedAssetData) => {
-            return {
-                asset:
-                    REVERSE_MAINNET_ASSET_MAPPINGS.get(assetData.asset.toLowerCase()) ||
-                    assetData.asset,
-                amount: bigNumberToUSD(assetData.amount, 18),
-                amountNative: assetData.amountNative,
-                apy: rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0)),
-                tranche: tranchesDat[assetData.tranche.toNumber()].name || '',
-                trancheId: assetData.tranche.toNumber(),
-            };
-        }),
+        supplies,
+        borrows,
         tranchesInteractedWith: tranchesInteractedWith.map((assetData) => ({
             tranche: tranchesDat[assetData.tranche.toNumber()].name || '',
             id: assetData.tranche.toNumber(),
         })),
+        avgApy: averageOfArr(apys),
+        avgHealth: 0, // TODO: get average health factor across all tranches
     };
 }
 

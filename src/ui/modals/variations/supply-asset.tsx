@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useMediatedState } from 'react-use';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
 import { useDialogController, useModal } from '../../../hooks';
@@ -22,6 +22,7 @@ import {
     CoinInput,
     MessageStatus,
     Tooltip,
+    BasicToggle,
 } from '../../components';
 import { useSubgraphTrancheData, useUserData, useUserTrancheData } from '../../../api';
 import { useSigner, useAccount } from 'wagmi';
@@ -44,6 +45,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
     const navigate = useNavigate();
     const { setAsset } = useSelectedTrancheContext();
     const { closeDialog } = useDialogController();
+    const [asCollateral, setAsCollateral] = useState<any>(data?.collateral);
 
     const handleSubmit = async () => {
         if (signer && data) {
@@ -58,7 +60,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                           isMax: isMax,
                           test: SDK_PARAMS.test,
                           providerRpc: SDK_PARAMS.providerRpc,
-                          // collateral: asCollateral,
+                          collateral: asCollateral,
                           // referrer: number,
                           // collateral: boolean,
                       })
@@ -73,7 +75,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                           test: SDK_PARAMS.test,
                           providerRpc: SDK_PARAMS.providerRpc,
                           // referrer: number,
-                          // collateral: boolean,
+                          //   collateral: boolean,
                           // test: boolean
                       });
                 return res;
@@ -174,6 +176,15 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                                 show={isViolatingSupplyCap()}
                                 message="WARNING: Attempting to supply more than the supply cap"
                             />
+
+                            <h3 className="mt-6">Collaterize</h3>
+                            <div className="mt-1">
+                                <BasicToggle
+                                    checked={asCollateral}
+                                    onChange={() => setAsCollateral(!asCollateral)}
+                                    disabled={!data?.collateral}
+                                />
+                            </div>
 
                             <h3 className="mt-6 text-neutral400">Health Factor</h3>
                             <HealthFactor asset={data.asset} amount={amount} type={'supply'} />

@@ -22,6 +22,7 @@ export interface ITrancheOverviewProps {
     grade?: string;
     loading?: boolean;
     userData?: any;
+    avgApy?: number;
 }
 
 const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
@@ -35,12 +36,13 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
     grade,
     loading,
     userData,
+    avgApy,
 }) => {
     const { width, breakpoint } = useWindowSize();
     const { openDialog } = useDialogController();
     const { data } = userData;
 
-    const calculateNetAPY = () => {
+    const calculateUserNetAPY = () => {
         if (!data) return `0%`;
         const supplyTotal = data?.supplies.reduce(
             (partial: any, next: any) =>
@@ -89,6 +91,14 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                             size="xl"
                             label="TVL"
                             value={`${makeCompact(tvl, true)}`}
+                            change={tvlChange}
+                            loading={loading}
+                        />
+                        <NumberDisplay
+                            center
+                            size="xl"
+                            label="Avg. APY"
+                            value={`${(avgApy ? avgApy : 0).toFixed(2)}%`}
                             change={tvlChange}
                             loading={loading}
                         />
@@ -217,7 +227,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                             </div>
                             <div className="text-center text-sm flex flex-col items-center">
                                 <span>{width > breakpoint && 'User '}Net APY</span>
-                                <NumberDisplay value={calculateNetAPY()} />
+                                <NumberDisplay value={calculateUserNetAPY()} />
                             </div>
                         </div>
                     </>
