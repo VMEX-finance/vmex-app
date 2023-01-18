@@ -8,6 +8,7 @@ export interface IPortfolioProps {
     isLoading?: boolean;
     avgHealth?: string;
     avgApy?: string;
+    healthLoading?: boolean;
 }
 
 export const PortfolioStatsCard: React.FC<IPortfolioProps> = ({
@@ -17,6 +18,7 @@ export const PortfolioStatsCard: React.FC<IPortfolioProps> = ({
     isLoading,
     avgHealth,
     avgApy,
+    healthLoading,
 }) => {
     return (
         <Card>
@@ -51,8 +53,8 @@ export const PortfolioStatsCard: React.FC<IPortfolioProps> = ({
                     <NumberDisplay
                         size="xl"
                         label="Average Health"
-                        value={`${parseFloat(avgHealth || '0').toFixed(3)}`}
-                        loading={isLoading}
+                        value={`${parseFloat(avgHealth || '0').toFixed(1)}`}
+                        loading={healthLoading || isLoading}
                     />
 
                     <NumberDisplay

@@ -22,9 +22,14 @@ export type IYourSuppliesTableItemProps = {
 export type IYourSuppliesTableProps = {
     data: IYourSuppliesTableItemProps[];
     withHealth?: boolean;
+    healthLoading?: boolean;
 };
 
-export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({ data, withHealth }) => {
+export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({
+    data,
+    withHealth,
+    healthLoading,
+}) => {
     const { width } = useWindowSize();
     const { submitTx, isLoading } = useModal('your-supplies-table');
     const [checked, setChecked] = useState<boolean[]>([]);
@@ -115,7 +120,11 @@ export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({ data, wit
                             </td>
                             <td>{i.apy}%</td>
                             <td>{i.tranche}</td>
-                            {withHealth && <td>{i.healthFactor?.toFixed(1)}</td>}
+                            {withHealth && (
+                                <td className={`${healthLoading ? 'animate-pulse' : ''}`}>
+                                    {(i.healthFactor || 0).toFixed(1)}
+                                </td>
+                            )}
                         </tr>
                     );
                 })}

@@ -106,6 +106,7 @@ const Portfolio: React.FC = () => {
                                 queryUserActivity.data?.borrows.map((el) => el.amount),
                             )}
                             avgHealth={caculateAvgHealth()}
+                            healthLoading={queryUserTranchesData.isLoading}
                             avgApy={queryUserActivity.data?.avgApy.toString()}
                         />
                         <div className="flex flex-col lg:flex-row lg:grow gap-4 xl:gap-8">
@@ -114,12 +115,14 @@ const Portfolio: React.FC = () => {
                                 data={suppliesWithHealth()}
                                 isLoading={queryUserActivity.isLoading}
                                 withHealth
+                                healthLoading={queryUserTranchesData.isLoading}
                             />
                             <YourPositionsTable
                                 type="borrows"
                                 data={borrowsWithHealth()}
                                 isLoading={queryUserActivity.isLoading}
                                 withHealth
+                                healthLoading={queryUserTranchesData.isLoading}
                             />
                         </div>
                     </div>
