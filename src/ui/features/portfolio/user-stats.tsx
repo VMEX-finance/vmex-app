@@ -1,3 +1,4 @@
+import { determineHealthColor } from '../../../utils/helpers';
 import React from 'react';
 import { NumberDisplay, Card } from '../../components';
 
@@ -55,6 +56,7 @@ export const PortfolioStatsCard: React.FC<IPortfolioProps> = ({
                         label="Average Health"
                         value={`${parseFloat(avgHealth || '0').toFixed(1)}`}
                         loading={healthLoading || isLoading}
+                        color={determineHealthColor(avgHealth)}
                     />
 
                     <NumberDisplay

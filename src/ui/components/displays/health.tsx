@@ -7,7 +7,7 @@ import {
     convertStringFormatToNumber,
     HFFormatter,
     calculateHealthFactorFromBalances,
-    HEALTH,
+    determineHealthColor,
 } from '../../../utils';
 import { ethers } from 'ethers';
 import { useAccount } from 'wagmi';
@@ -54,28 +54,15 @@ export const HealthFactor = ({
         }
     };
 
-    const determineColor = (health: number | string | undefined) => {
-        if (!health) return 'text-black';
-        let _health;
-        if (typeof health === 'string') _health = parseFloat(health);
-        else _health = health;
-
-        if (_health > HEALTH['GREAT']) return 'text-brand-green';
-        else if (_health > HEALTH['GOOD']) return 'text-green-300';
-        else if (_health > HEALTH['OKAY']) return 'text-yellow-400';
-        else if (_health > HEALTH['BAD']) return 'text-red-300';
-        else return 'text-red-500';
-    };
-
     const renderHealth = (hf: number | string | undefined, isInf: boolean) => {
         return isInf || !hf ? (
             <TbInfinity color="#8CE58F" size={`${determineSize()[0]}`} />
         ) : Number(hf) > 100 ? (
-            <span className={`${determineSize()[2]} ${determineColor(hf)} font-semibold`}>
+            <span className={`${determineSize()[2]} ${determineHealthColor(hf)} font-semibold`}>
                 {'>100'}
             </span>
         ) : (
-            <span className={`${determineSize()[2]} ${determineColor(hf)} font-semibold`}>
+            <span className={`${determineSize()[2]} ${determineHealthColor(hf)} font-semibold`}>
                 {HFFormatter.format(typeof hf === 'string' ? parseFloat(hf) : hf)}
             </span>
         );

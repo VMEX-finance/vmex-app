@@ -1,7 +1,7 @@
 import React from 'react';
 import { AssetDisplay, NumberAndDollar } from '../../components/displays';
 import { BigNumber } from 'ethers';
-import { bigNumberToNative } from '../../../utils/sdk-helpers';
+import { bigNumberToNative, determineHealthColor } from '../../../utils';
 import { useWindowSize, useDialogController } from '../../../hooks';
 
 export type IYourBorrowsTableItemProps = {
@@ -79,7 +79,11 @@ export const YourBorrowsTable: React.FC<IYourBorrowsTableProps> = ({
                                 <td>{i.apy}%</td>
                                 <td>{i.tranche}</td>
                                 {withHealth && (
-                                    <td className={`${healthLoading ? 'animate-pulse' : ''}`}>
+                                    <td
+                                        className={`${
+                                            healthLoading ? 'animate-pulse' : ''
+                                        } ${determineHealthColor(i.healthFactor)}`}
+                                    >
                                         {(i.healthFactor || 0).toFixed(1)}
                                     </td>
                                 )}

@@ -1,4 +1,5 @@
 import { ethers } from 'ethers';
+import { HEALTH } from './constants';
 
 export function truncateAddress(s: string) {
     return `${s.slice(0, 3)}...${s.slice(-4)}`;
@@ -35,6 +36,19 @@ export const determineRatingColor = (s: string) => {
                 return '';
         }
     }
+};
+
+export const determineHealthColor = (health: number | string | undefined) => {
+    if (!health) return 'text-black';
+    let _health;
+    if (typeof health === 'string') _health = parseFloat(health);
+    else _health = health;
+
+    if (_health > HEALTH['GREAT']) return 'text-brand-green';
+    else if (_health > HEALTH['GOOD']) return 'text-green-300';
+    else if (_health > HEALTH['OKAY']) return 'text-yellow-400';
+    else if (_health > HEALTH['BAD']) return 'text-red-300';
+    else return 'text-red-500';
 };
 
 export type IAvailableCoins =

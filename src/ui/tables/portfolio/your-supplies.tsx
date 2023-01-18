@@ -4,7 +4,7 @@ import { BigNumber } from 'ethers';
 import { useModal, useWindowSize, useDialogController } from '../../../hooks';
 import { markReserveAsCollateral } from '@vmexfinance/sdk';
 import { useSigner } from 'wagmi';
-import { NETWORK, bigNumberToNative, SDK_PARAMS } from '../../../utils';
+import { NETWORK, bigNumberToNative, SDK_PARAMS, determineHealthColor } from '../../../utils';
 import { BsCheck } from 'react-icons/bs';
 import { IoIosClose } from 'react-icons/io';
 
@@ -121,7 +121,11 @@ export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({
                             <td>{i.apy}%</td>
                             <td>{i.tranche}</td>
                             {withHealth && (
-                                <td className={`${healthLoading ? 'animate-pulse' : ''}`}>
+                                <td
+                                    className={`${
+                                        healthLoading ? 'animate-pulse' : ''
+                                    } ${determineHealthColor(i.healthFactor)}`}
+                                >
                                     {(i.healthFactor || 0).toFixed(1)}
                                 </td>
                             )}
