@@ -56,6 +56,10 @@ export type IUserTrancheDataProps = {
     ) => ITokenBalanceProps;
 };
 
+export type IUserTranchesDataProps = {
+    queryUserTranchesData: UseQueryResult<IUserTrancheData[], unknown>;
+};
+
 export type IUserTrancheData = {
     totalCollateralETH: BigNumber;
     totalDebtETH: BigNumber;
