@@ -10,6 +10,7 @@ import {
     nativeAmountToUSD,
     averageOfArr,
     weightedAverageofArr,
+    MAX_UINT_AMOUNT,
 } from '../../utils';
 
 export const processTrancheData = async (
@@ -46,8 +47,14 @@ export const processTrancheData = async (
                     baseLTV: item.assetData.baseLTV,
                     liquidationBonus: item.assetData.liquidationBonus,
                     borrowFactor: item.assetData.borrowFactor,
-                    borrowCap: item.assetData.borrowCap,
-                    supplyCap: item.assetData.supplyCap,
+                    borrowCap:
+                        item.assetData.borrowCap == '0'
+                            ? MAX_UINT_AMOUNT
+                            : item.assetData.borrowCap,
+                    supplyCap:
+                        item.assetData.supplyCap == '0'
+                            ? MAX_UINT_AMOUNT
+                            : item.assetData.borrowCap,
                     priceUSD: (prices as any)[item.assetData.underlyingAssetName].usdPrice,
                     priceETH: (prices as any)[item.assetData.underlyingAssetName].ethPrice,
                     yieldStrategy: item.yieldStrategy,
