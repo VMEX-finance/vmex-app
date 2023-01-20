@@ -8,8 +8,10 @@ import {
     percentFormatter,
     convertContractsPercent,
     ZERO_ADDRESS,
+    MAX_UINT_AMOUNT,
 } from '../../../utils';
 import { useSubgraphMarketsData } from '../../../api/subgraph';
+import { TbInfinity } from 'react-icons/tb';
 
 type ITrancheStatisticsCardProps = {
     tranche?: IGraphTrancheDataProps | any;
@@ -158,13 +160,25 @@ export const TrancheStatisticsCard = ({
                         />
                         <NumberDisplay
                             label="Supply Cap"
-                            value={`${numberFormatter.format(assetData?.supplyCap)} ${asset}`}
+                            value={
+                                assetData?.supplyCap == MAX_UINT_AMOUNT ? (
+                                    <TbInfinity color="text-white" />
+                                ) : (
+                                    `${numberFormatter.format(assetData?.supplyCap)} ${asset}`
+                                )
+                            }
                             color="text-white"
                             center
                         />
                         <NumberDisplay
                             label="Borrow Cap"
-                            value={`${numberFormatter.format(assetData?.borrowCap)} ${asset}`}
+                            value={
+                                assetData?.borrowCap == MAX_UINT_AMOUNT ? (
+                                    <TbInfinity color="text-white" />
+                                ) : (
+                                    `${numberFormatter.format(assetData?.borrowCap)} ${asset}`
+                                )
+                            }
                             color="text-white"
                             center
                         />
