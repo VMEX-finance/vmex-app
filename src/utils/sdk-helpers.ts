@@ -2,7 +2,9 @@ import { JsonRpcProvider } from '@ethersproject/providers';
 import { BigNumber, BigNumberish, ethers } from 'ethers';
 import { usdFormatter, nativeTokenFormatter } from './helpers';
 
-export const NETWORK = process.env.REACT_APP_TEST ? 'localhost' : 'mainnet';
+export const NETWORK = process.env.REACT_APP_NETWORK ? process.env.REACT_APP_NETWORK : 'mainnet';
+
+console.log('network is', NETWORK);
 
 export const SDK_PARAMS = {
     network: NETWORK,

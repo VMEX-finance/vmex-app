@@ -150,7 +150,7 @@ export const getSubgraphTrancheData = async (
                             supplyCap
                             vmexReserveFactor
                         }
-                        yieldStrategy
+                        # yieldStrategy
                     }
                 }
             }
