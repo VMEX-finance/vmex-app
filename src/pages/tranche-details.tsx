@@ -108,8 +108,17 @@ const TrancheDetails: React.FC = () => {
                         <TrancheTable
                             data={
                                 queryTrancheData.data && queryTrancheData.data.assetsData
-                                    ? Object.keys(queryTrancheData.data.assetsData).map(
-                                          (asset) => ({
+                                    ? Object.keys(queryTrancheData.data.assetsData)
+                                          .filter((asset) => {
+                                              if (
+                                                  (queryTrancheData.data.assetsData as any)[asset]
+                                                      .canBeBorrowed
+                                              ) {
+                                                  return true;
+                                              }
+                                              return false;
+                                          })
+                                          .map((asset) => ({
                                               asset: asset,
                                               liquidity: (queryTrancheData.data.assetsData as any)[
                                                   asset
@@ -119,8 +128,7 @@ const TrancheDetails: React.FC = () => {
                                               tranche: queryTrancheData.data?.name,
                                               trancheId: tranche?.id,
                                               signer: signer,
-                                          }),
-                                      )
+                                          }))
                                     : []
                             }
                             type="borrow"
