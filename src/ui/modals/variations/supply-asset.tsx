@@ -52,7 +52,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
             await submitTx(async () => {
                 const res = view?.includes('Supply')
                     ? await supply({
-                          underlying: MAINNET_ASSET_MAPPINGS.get(data.asset) || '',
+                          underlying: data.asset,
                           trancheId: data.trancheId,
                           amount: convertStringFormatToNumber(amount),
                           signer: signer,
@@ -65,7 +65,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                           // collateral: boolean,
                       })
                     : await withdraw({
-                          asset: MAINNET_ASSET_MAPPINGS.get(data.asset) || '',
+                          asset: data.asset,
                           trancheId: data.trancheId,
                           amount: convertStringFormatToNumber(amount),
                           signer: signer,

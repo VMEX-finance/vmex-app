@@ -36,12 +36,16 @@ export async function getUserActivityData(userAddress: string): Promise<IUserAct
     }
 
     const tranchesDat = await getSubgraphTranchesOverviewData();
+
+    console.log('Attempting to get user summary data');
     const summary = await getUserSummaryData({
         user: userAddress,
         network: SDK_PARAMS.network,
         test: SDK_PARAMS.test,
         providerRpc: SDK_PARAMS.providerRpc,
     });
+
+    console.log('Got summary data: ', summary);
 
     const apys: number[] = [];
     const tranchesInteractedWith = [...summary.borrowedAssetData, ...summary.suppliedAssetData]
