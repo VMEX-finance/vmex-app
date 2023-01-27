@@ -26,8 +26,6 @@ export async function getAllAssetPrices(): Promise<Record<IAvailableCoins, IAsse
         };
     });
 
-    console.log('returnObj: ', returnObj);
-
     return returnObj;
 }
 

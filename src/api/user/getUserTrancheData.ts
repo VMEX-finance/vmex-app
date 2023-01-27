@@ -4,13 +4,13 @@ import {
     AvailableBorrowData,
     BorrowedAssetData,
     SuppliedAssetData,
+    convertAddressToSymbol,
 } from '@vmexfinance/sdk';
 import { useQuery } from '@tanstack/react-query';
 import {
     bigNumberToUSD,
     rayToPercent,
     SDK_PARAMS,
-    REVERSE_MAINNET_ASSET_MAPPINGS,
     bigNumberToUnformattedString,
 } from '../../utils/sdk-helpers';
 import { IUserTrancheDataProps, IUserTrancheData } from './types';
@@ -51,9 +51,7 @@ export async function _getUserTrancheData(
         avgBorrowFactor: userTrancheData.avgBorrowFactor,
         supplies: userTrancheData.suppliedAssetData.map((assetData: SuppliedAssetData) => {
             return {
-                asset:
-                    REVERSE_MAINNET_ASSET_MAPPINGS.get(assetData.asset.toLowerCase()) ||
-                    assetData.asset,
+                asset: convertAddressToSymbol(assetData.asset, SDK_PARAMS.network),
                 amount: bigNumberToUSD(assetData.amount, 18),
                 amountNative: assetData.amountNative,
                 collateral: assetData.isCollateral,
@@ -64,9 +62,7 @@ export async function _getUserTrancheData(
         }),
         borrows: userTrancheData.borrowedAssetData.map((assetData: BorrowedAssetData) => {
             return {
-                asset:
-                    REVERSE_MAINNET_ASSET_MAPPINGS.get(assetData.asset.toLowerCase()) ||
-                    assetData.asset,
+                asset: convertAddressToSymbol(assetData.asset, SDK_PARAMS.network),
                 amount: bigNumberToUSD(assetData.amount, 18),
                 amountNative: assetData.amountNative,
                 apy: rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0)),
@@ -76,9 +72,7 @@ export async function _getUserTrancheData(
         }),
         assetBorrowingPower: userTrancheData.assetBorrowingPower.map(
             (marketData: AvailableBorrowData) => {
-                let asset =
-                    REVERSE_MAINNET_ASSET_MAPPINGS.get(marketData.asset.toLowerCase()) ||
-                    marketData.asset;
+                let asset = convertAddressToSymbol(marketData.asset, SDK_PARAMS.network);
                 return {
                     asset: asset,
                     amountUSD: bigNumberToUSD(marketData.amountUSD, 18),

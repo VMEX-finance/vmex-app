@@ -13,7 +13,6 @@ import { ISupplyBorrowProps } from '../utils';
 import { useDialogController, useModal } from '../../../hooks';
 import { borrow, repay } from '@vmexfinance/sdk';
 import {
-    MAINNET_ASSET_MAPPINGS,
     NETWORK,
     inputMediator,
     convertStringFormatToNumber,
@@ -102,6 +101,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                 ? bigNumberToUnformattedString(amountBorrwable.amountNative, data?.asset || '')
                 : bigNumberToUnformattedString(amountRepay, data?.asset || ''),
         );
+        setIsMax(true);
     };
 
     const isViolatingBorrowCap = function () {

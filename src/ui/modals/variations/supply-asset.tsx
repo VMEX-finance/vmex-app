@@ -4,7 +4,6 @@ import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
 import { useDialogController, useModal } from '../../../hooks';
 import { supply, withdraw } from '@vmexfinance/sdk';
 import {
-    MAINNET_ASSET_MAPPINGS,
     NETWORK,
     inputMediator,
     convertStringFormatToNumber,
@@ -92,12 +91,12 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
     )?.collateral;
 
     const maxOnClick = () => {
-        setIsMax(!isMax);
         setAmount(
             view?.includes('Supply')
                 ? bigNumberToUnformattedString(amountWalletNative.amountNative, data?.asset || '')
                 : bigNumberToUnformattedString(amountWithdraw, data?.asset || ''),
         );
+        setIsMax(true);
     };
 
     const isViolatingSupplyCap = function () {

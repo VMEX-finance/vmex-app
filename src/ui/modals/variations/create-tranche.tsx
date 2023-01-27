@@ -13,10 +13,10 @@ import { IDialogProps } from '../utils';
 import { useStepper, useModal } from '../../../hooks';
 import { ModalFooter, ModalHeader } from '../../modals/subcomponents';
 import { CreateTrancheAssetsTable } from '../../tables';
-import { MAINNET_ASSET_MAPPINGS, NETWORK, AVAILABLE_ASSETS, SDK_PARAMS } from '../../../utils';
+import { NETWORK, AVAILABLE_ASSETS, SDK_PARAMS } from '../../../utils';
 import { useAccount, useSigner } from 'wagmi';
 import { ethers } from 'ethers';
-import { initTranche } from '@vmexfinance/sdk';
+import { convertSymbolToAddress, initTranche } from '@vmexfinance/sdk';
 
 export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeDialog }) => {
     const { address } = useAccount();
@@ -48,7 +48,7 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
         let canBeCollateral: boolean[] = [];
 
         let assets = _tokens.map((el: string) => {
-            let tmp = MAINNET_ASSET_MAPPINGS.get(el);
+            let tmp = convertSymbolToAddress(el, SDK_PARAMS.network);
             const findBorrow = _borrowLendTokens.find((el1) => el1 == el);
             if (findBorrow) {
                 canBorrow.push(true);

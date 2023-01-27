@@ -6,6 +6,7 @@ import {
     UserWalletData,
     UserTrancheData,
     getUserTrancheData,
+    convertAddressToSymbol,
 } from '@vmexfinance/sdk';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -13,7 +14,6 @@ import {
     rayToPercent,
     SDK_PARAMS,
     bigNumberToNative,
-    REVERSE_MAINNET_ASSET_MAPPINGS,
 } from '../../utils/sdk-helpers';
 import { IUserActivityDataProps, IUserDataProps, IUserWalletDataProps } from './types';
 import { BigNumber } from 'ethers';
@@ -36,16 +36,12 @@ export async function getUserActivityData(userAddress: string): Promise<IUserAct
     }
 
     const tranchesDat = await getSubgraphTranchesOverviewData();
-
-    console.log('Attempting to get user summary data');
     const summary = await getUserSummaryData({
         user: userAddress,
         network: SDK_PARAMS.network,
         test: SDK_PARAMS.test,
         providerRpc: SDK_PARAMS.providerRpc,
     });
-
-    console.log('Got summary data: ', summary);
 
     const apys: number[] = [];
     const tranchesInteractedWith = [...summary.borrowedAssetData, ...summary.suppliedAssetData]
@@ -62,9 +58,7 @@ export async function getUserActivityData(userAddress: string): Promise<IUserAct
         const apy = rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0));
         apys.push(apy);
         return {
-            asset:
-                REVERSE_MAINNET_ASSET_MAPPINGS.get(assetData.asset.toLowerCase()) ||
-                assetData.asset,
+            asset: convertAddressToSymbol(assetData.asset, SDK_PARAMS.network),
             amount: bigNumberToUSD(assetData.amount, 18),
             amountNative: assetData.amountNative,
             collateral: assetData.isCollateral,
@@ -79,9 +73,7 @@ export async function getUserActivityData(userAddress: string): Promise<IUserAct
         const apy = rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0));
         apys.push(apy);
         return {
-            asset:
-                REVERSE_MAINNET_ASSET_MAPPINGS.get(assetData.asset.toLowerCase()) ||
-                assetData.asset,
+            asset: convertAddressToSymbol(assetData.asset, SDK_PARAMS.network),
             amount: bigNumberToUSD(assetData.amount, 18),
             amountNative: assetData.amountNative,
             apy,
@@ -120,9 +112,7 @@ export async function _getUserWalletData(
     return {
         assets: res.map((assetData: UserWalletData) => {
             return {
-                asset:
-                    REVERSE_MAINNET_ASSET_MAPPINGS.get(assetData.asset.toLowerCase()) ||
-                    assetData.asset,
+                asset: convertAddressToSymbol(assetData.asset, SDK_PARAMS.network),
                 amount: bigNumberToUSD(assetData.amount, 18),
                 amountNative: assetData.amountNative,
                 currentPrice: assetData.currentPrice,
