@@ -57,7 +57,7 @@ export const processTrancheData = async (
                             : item.assetData.borrowCap,
                     priceUSD: (prices as any)[item.assetData.underlyingAssetName].usdPrice,
                     priceETH: (prices as any)[item.assetData.underlyingAssetName].ethPrice,
-                    yieldStrategy: item.yieldStrategy,
+                    // yieldStrategy: item.yieldStrategy,
                 },
             }),
         {},
@@ -150,7 +150,7 @@ export const getSubgraphTrancheData = async (
                             supplyCap
                             vmexReserveFactor
                         }
-                        yieldStrategy
+                        # yieldStrategy
                     }
                 }
             }

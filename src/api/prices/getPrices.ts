@@ -12,7 +12,7 @@ import { IAvailableCoins } from '../../utils/helpers';
 
 export async function getAllAssetPrices(): Promise<Record<IAvailableCoins, IAssetPricesProps>> {
     const pricesMap = await getAssetPrices({
-        assets: Array.from(MAINNET_ASSET_MAPPINGS.values()),
+        assets: Array.from(MAINNET_ASSET_MAPPINGS.keys()),
         ...SDK_PARAMS,
     });
 

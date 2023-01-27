@@ -9,7 +9,7 @@ import { Signer } from '@ethersproject/abstract-signer';
 import { Provider } from '@wagmi/core';
 
 export const { chains, provider } = configureChains(
-    [process.env.REACT_APP_TEST ? chain.hardhat : chain.mainnet],
+    [process.env.REACT_APP_TEST ? chain.goerli : chain.mainnet],
     [publicProvider()],
 );
 

@@ -13,7 +13,6 @@ import { ISupplyBorrowProps } from '../utils';
 import { useDialogController, useModal } from '../../../hooks';
 import { borrow, repay } from '@vmexfinance/sdk';
 import {
-    MAINNET_ASSET_MAPPINGS,
     NETWORK,
     inputMediator,
     convertStringFormatToNumber,
@@ -50,7 +49,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
             await submitTx(async () => {
                 const res = view?.includes('Borrow')
                     ? await borrow({
-                          underlying: MAINNET_ASSET_MAPPINGS.get(data.asset) || '',
+                          underlying: data.asset,
                           trancheId: data.trancheId,
                           amount: convertStringFormatToNumber(amount),
                           //   interestRateMode: 2,
@@ -63,7 +62,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                           // collateral: boolean,
                       })
                     : await repay({
-                          asset: MAINNET_ASSET_MAPPINGS.get(data.asset) || '',
+                          asset: data.asset,
                           trancheId: data.trancheId,
                           amount: convertStringFormatToNumber(amount),
                           //   rateMode: 2,
@@ -102,6 +101,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                 ? bigNumberToUnformattedString(amountBorrwable.amountNative, data?.asset || '')
                 : bigNumberToUnformattedString(amountRepay, data?.asset || ''),
         );
+        setIsMax(true);
     };
 
     const isViolatingBorrowCap = function () {

@@ -4,7 +4,6 @@ import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
 import { useDialogController, useModal } from '../../../hooks';
 import { supply, withdraw } from '@vmexfinance/sdk';
 import {
-    MAINNET_ASSET_MAPPINGS,
     NETWORK,
     inputMediator,
     convertStringFormatToNumber,
@@ -52,7 +51,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
             await submitTx(async () => {
                 const res = view?.includes('Supply')
                     ? await supply({
-                          underlying: MAINNET_ASSET_MAPPINGS.get(data.asset) || '',
+                          underlying: data.asset,
                           trancheId: data.trancheId,
                           amount: convertStringFormatToNumber(amount),
                           signer: signer,
@@ -65,7 +64,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                           // collateral: boolean,
                       })
                     : await withdraw({
-                          asset: MAINNET_ASSET_MAPPINGS.get(data.asset) || '',
+                          asset: data.asset,
                           trancheId: data.trancheId,
                           amount: convertStringFormatToNumber(amount),
                           signer: signer,
@@ -92,12 +91,12 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
     )?.collateral;
 
     const maxOnClick = () => {
-        setIsMax(!isMax);
         setAmount(
             view?.includes('Supply')
                 ? bigNumberToUnformattedString(amountWalletNative.amountNative, data?.asset || '')
                 : bigNumberToUnformattedString(amountWithdraw, data?.asset || ''),
         );
+        setIsMax(true);
     };
 
     const isViolatingSupplyCap = function () {

@@ -2,7 +2,9 @@ import { JsonRpcProvider } from '@ethersproject/providers';
 import { BigNumber, BigNumberish, ethers } from 'ethers';
 import { usdFormatter, nativeTokenFormatter } from './helpers';
 
-export const NETWORK = process.env.REACT_APP_TEST ? 'localhost' : 'mainnet';
+export const NETWORK = process.env.REACT_APP_NETWORK ? process.env.REACT_APP_NETWORK : 'mainnet';
+
+console.log('network is', NETWORK);
 
 export const SDK_PARAMS = {
     network: NETWORK,
@@ -46,6 +48,11 @@ export const MAINNET_ASSET_MAPPINGS = new Map<string, string>([
     ['LDO', '0x5A98FcBEA516Cf06857215779Fd812CA3beF1B32'],
     ['ALCX', '0xdBdb4d16EdA451D0503b854CF79D55697F90c8DF'],
     ['Oneinch', '0x111111111117dC0aa78b770fA6A738034120C302'],
+    ['yvTricrypto2', '0x8078198Fc424986ae89Ce4a910Fc109587b6aBF3'],
+    ['yvThreePool', '0x84E13785B5a27879921D6F685f041421C7F482dA'],
+    ['yvStethEth', '0x5B8C556B8b2a78696F0B9B830B3d67623122E270'],
+    ['yvFraxUSDC', '0x1A5ebfF0E881Aec34837845e4D0EB430a1B4b737'],
+    ['yvFrax3Crv', '0xb37094c1B5614Bd6EcE40AFb295C26F4377069d3'],
 ]);
 
 export const flipAndLowerCase = (data: Map<string, string>): Map<string, string> =>
@@ -88,6 +95,11 @@ export const DECIMALS = new Map<string, number>([
     ['LDO', 18],
     ['ALCX', 18],
     ['Oneinch', 18],
+    ['yvTricrypto2', 18],
+    ['yvThreePool', 18],
+    ['yvStethEth', 18],
+    ['yvFraxUSDC', 18],
+    ['yvFrax3Crv', 18],
 ]);
 
 export const bigNumberToUSD = (
