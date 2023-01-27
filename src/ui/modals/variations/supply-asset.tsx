@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useMediatedState } from 'react-use';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
 import { useDialogController, useModal } from '../../../hooks';
-import { supply, withdraw } from '@vmexfinance/sdk';
+import { supply, withdraw, mintTokens } from '@vmexfinance/sdk';
 import {
     NETWORK,
     inputMediator,
@@ -77,6 +77,21 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                           //   collateral: boolean,
                           // test: boolean
                       });
+                return res;
+            });
+        }
+    };
+
+    const mint = async () => {
+        if (signer && data) {
+            await submitTx(async () => {
+                const res = await mintTokens({
+                    token: data.asset,
+                    signer: signer,
+                    network: NETWORK,
+                    test: SDK_PARAMS.test,
+                    providerRpc: SDK_PARAMS.providerRpc,
+                });
                 return res;
             });
         }
@@ -322,6 +337,14 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                         loadingText="Submitting"
                     />
                 )}
+                <Button
+                    primary
+                    disabled={!process.env.REACT_APP_TEST}
+                    onClick={mint}
+                    label={'*Dev only* Mint'}
+                    loading={isLoading}
+                    loadingText="Submitting"
+                />
             </ModalFooter>
         </>
     ) : (
