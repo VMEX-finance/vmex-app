@@ -5,10 +5,14 @@ import { ILineChartDataPointProps } from '@ui/components/charts';
 import { BigNumber, utils } from 'ethers';
 import { IMarketsAsset } from '../types';
 import { getAllAssetPrices } from '../prices';
-import { usdFormatter, apolloClient, MAINNET_ASSET_MAPPINGS, nativeAmountToUSD } from '../../utils';
+import { usdFormatter, apolloClient, nativeAmountToUSD, NETWORK } from '../../utils';
+import { convertSymbolToAddress, getContractAddress } from '@vmexfinance/sdk';
 
-function getReserveId(underlyingAsset: string, poolId: string, trancheId: string): string {
-    return `${underlyingAsset}${poolId}${trancheId}`;
+function getReserveId(underlyingAsset: string, trancheId: string): string {
+    return `${underlyingAsset}${getContractAddress(
+        'LendingPoolAddressesProvider',
+        NETWORK,
+    ).toLowerCase()}${trancheId}`;
 }
 
 export const getSubgraphMarketsChart = async (
@@ -20,8 +24,7 @@ export const getSubgraphMarketsChart = async (
     }
 
     const trancheId = _trancheId.toString();
-    const poolId = '0xd6c850aebfdc46d7f4c207e445cc0d6b0919bdbe'; // TODO: address of LendingPoolConfigurator
-    const reserveId = getReserveId(_underlyingAsset, poolId, trancheId);
+    const reserveId = getReserveId(_underlyingAsset, trancheId);
     const { data, error } = await apolloClient.query({
         query: gql`
             query QueryMarket($reserveId: String!) {
@@ -145,7 +148,10 @@ export function useSubgraphMarketsData(
     _trancheId: string | number,
     _underlyingAsset: string | undefined,
 ): ISubgraphMarketsChart {
-    const underlyingAsset = MAINNET_ASSET_MAPPINGS.get(_underlyingAsset || '')?.toLowerCase();
+    let underlyingAsset: string = '';
+    if (_underlyingAsset) {
+        underlyingAsset = convertSymbolToAddress(_underlyingAsset || '', NETWORK).toLowerCase();
+    }
     const queryMarketsChart = useQuery({
         queryKey: [`subgraph-markets-chart-${_trancheId}-${underlyingAsset}`], // TODO: fix this to make the id and asset filters instead of a part of the key
         queryFn: () => getSubgraphMarketsChart(_trancheId, underlyingAsset),
