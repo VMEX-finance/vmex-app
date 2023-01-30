@@ -32,7 +32,7 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
     const [treasuryAddress, setTreasuryAddress] = React.useState(address ? address : '');
     const [_whitelisted, setWhitelisted] = React.useState([]);
     const [_blackListed, setBlackListed] = React.useState([]);
-    const [_tokens, setTokens] = React.useState([]);
+    const [_tokens, setTokens] = React.useState<any[]>([]);
     const [_adminFee, setAdminFee] = React.useState('20');
     const [_collateralTokens, setCollateralTokens] = React.useState([]);
     const [_borrowLendTokens, setBorrowLendTokens] = React.useState([]);
@@ -152,7 +152,7 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
                         <ListInput
                             title="Tokens"
                             list={_tokens}
-                            autocomplete={AVAILABLE_ASSETS}
+                            autocomplete={AVAILABLE_ASSETS.filter((val) => !_tokens.includes(val))}
                             setList={setTokens}
                             placeholder="USDC"
                             coin
