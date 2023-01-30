@@ -21,6 +21,7 @@ const MarketsCustomRow = (props: any) => {
         supplyTotal,
         rating,
         strategies,
+        collateral,
     } = props;
     const navigate = useNavigate();
     const { width } = useWindowSize();
@@ -42,11 +43,13 @@ const MarketsCustomRow = (props: any) => {
             openDialog('loan-asset-dialog', {
                 asset: asset,
                 trancheId: trancheId,
+                collateral,
             });
         } else {
             openDialog('borrow-asset-dialog', {
                 asset: asset,
                 trancheId: trancheId,
+                collateral,
             });
         }
     };

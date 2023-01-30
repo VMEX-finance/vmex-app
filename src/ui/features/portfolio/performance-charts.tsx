@@ -15,7 +15,6 @@ export type IUserPerformanceCardProps = {
     isLoading?: boolean;
 };
 
-// TODO: implement type and change name
 export const UserPerformanceCard: React.FC<IUserPerformanceCardProps> = ({
     tranches,
     profitLossChart,
@@ -49,7 +48,7 @@ export const UserPerformanceCard: React.FC<IUserPerformanceCardProps> = ({
         >
             {/* <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-1 gap-3 w-full px-3"> */}
             <div className="grid grid-cols-1 gap-3 w-full px-3">
-                <div className="grid w-full h-[240px]">
+                <div className="w-full h-[240px] overflow-y-hidden">
                     <h4>Profit / Loss (P&L)</h4>
                     <ReLineChart
                         data={profitLossChart || []}
@@ -58,7 +57,7 @@ export const UserPerformanceCard: React.FC<IUserPerformanceCardProps> = ({
                         timeseries
                     />
                 </div>
-                {/* <div className="grid w-full h-[240px]">
+                {/* <div className="w-full h-[240px]">
                     <h4>Insurance Utilization</h4>
                     <ReLineChart data={insuranceChart || []} color="#fff" timeseries />
                 </div> */}

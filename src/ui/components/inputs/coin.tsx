@@ -1,5 +1,9 @@
 import { AssetDisplay } from '../displays/asset';
 import React from 'react';
+import { NETWORK, SDK_PARAMS } from '../../../utils/sdk-helpers';
+import { useSigner } from 'wagmi';
+import { mintTokens } from '@vmexfinance/sdk';
+import { Button } from '../buttons';
 
 export interface ICoinInput {
     amount: string;
@@ -27,6 +31,8 @@ export const CoinInput = ({
     loading,
     customMaxClick,
 }: ICoinInput) => {
+    const { data: signer } = useSigner();
+
     const onChange = (e: any) => {
         const myamount = e.target.value;
         if (!myamount || myamount.match(/^\d{1,}(\.\d{0,})?$/)) {
@@ -45,6 +51,21 @@ export const CoinInput = ({
         }
     };
 
+    const mint = async () => {
+        if (!process.env.REACT_APP_TEST) return;
+        if (signer && coin) {
+            const res = await mintTokens({
+                token: coin.name,
+                signer: signer,
+                network: NETWORK,
+                test: SDK_PARAMS.test,
+                providerRpc: SDK_PARAMS.providerRpc,
+            });
+            console.log(`Minted ${coin.name} to wallet`);
+            return res;
+        }
+    };
+
     return (
         <div className="w-full flex flex-row justify-between mt-1 rounded-xl border border-gray-300 p-2">
             <div className="flex flex-col justify-between gap-3">
@@ -57,6 +78,14 @@ export const CoinInput = ({
                 />
                 {/* <div className="text-neutral400">USD</div> */}
                 {/* TODO: add usd value underneath */}
+                {process.env.REACT_APP_TEST && (
+                    <Button
+                        primary
+                        onClick={mint}
+                        label={`DEV: Mint ${coin.name}`}
+                        className="w-fit"
+                    />
+                )}
             </div>
             <div className="flex flex-col justify-between items-end gap-3">
                 <AssetDisplay logo={coin.logo} name={coin.name} />

@@ -1,4 +1,3 @@
-import { useWindowSize } from '../../../hooks';
 import React from 'react';
 
 type IAssetDisplayProps = {
@@ -11,7 +10,6 @@ type IAssetDisplayProps = {
 };
 
 export const AssetDisplay = (props: IAssetDisplayProps) => {
-    const { width } = useWindowSize();
     const iconSize = () => {
         switch (props.size) {
             case 'lg':

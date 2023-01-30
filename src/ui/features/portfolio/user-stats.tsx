@@ -36,7 +36,7 @@ export const PortfolioStatsCard: React.FC<IPortfolioProps> = ({
                     </div>
                 </div>
 
-                <div className="py-2 md:py-4 xl:py-0 xl:px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
+                <div className="py-2 md:py-4 xl:py-0 xl:pl-6 grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
                     <NumberDisplay
                         size="xl"
                         label="Total Supplied"
@@ -51,13 +51,13 @@ export const PortfolioStatsCard: React.FC<IPortfolioProps> = ({
                         loading={isLoading}
                     />
 
-                    <NumberDisplay
+                    {/* <NumberDisplay
                         size="xl"
                         label="Average Health"
                         value={`${parseFloat(avgHealth || '0').toFixed(1)}`}
                         loading={healthLoading || isLoading}
                         color={determineHealthColor(avgHealth)}
-                    />
+                    /> */}
 
                     <NumberDisplay
                         size="xl"

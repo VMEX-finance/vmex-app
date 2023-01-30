@@ -7,6 +7,9 @@ module.exports = {
             fontFamily: {
                 basefont: ['SFNSRounded'],
             },
+            screens: {
+                '3xl': '1920px',
+            },
             colors: {
                 brand: {
                     purple: {
