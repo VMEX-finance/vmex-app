@@ -92,7 +92,7 @@ export const ReLineChart = (props: ILineChartProps) => {
                 </div>
             )}
             <ResponsiveContainer width="100%" height="100%">
-                {props.data?.length > 0 ? (
+                {props.data?.length > 1 ? (
                     <LineChart
                         width={500}
                         height={300}

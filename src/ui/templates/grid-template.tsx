@@ -11,7 +11,8 @@ interface IGridViewProps {
         | 'lg:grid-cols-3'
         | 'lg:grid-cols-4'
         | 'xl:grid-cols-3'
-        | 'xl:grid-cols-4';
+        | 'xl:grid-cols-4'
+        | '3xl:grid-cols-3';
 }
 
 const GridView: React.FC<IGridViewProps> = ({

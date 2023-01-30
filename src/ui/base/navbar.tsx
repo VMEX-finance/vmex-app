@@ -9,7 +9,7 @@ import { useAccount } from 'wagmi';
 import { useDialogController, useWindowSize } from '../../hooks';
 import { IDialogNames } from '@store/modals';
 
-const navItems = ['Overview', 'Tranches', 'Markets', 'Staking', 'Governance', 'Develop'];
+const navItems = ['Overview', 'Tranches', 'Markets', 'Governance', 'Develop'];
 
 export const Navbar: React.FC = () => {
     const { isDark } = useContext(ThemeContext);

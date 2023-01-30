@@ -137,8 +137,8 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
             },
         },
         {
-            name: 'logo',
-            label: 'Logo',
+            name: 'canBeCollateral',
+            label: 'Collateral',
             options: {
                 filter: false,
                 sort: false,
@@ -184,7 +184,7 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
                                 borrowTotal,
                                 rating,
                                 strategies,
-                                logo,
+                                canBeCollateral,
                                 trancheId,
                             ],
                             dataIndex,
@@ -202,7 +202,7 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
                                 supplyTotal={supplyTotal}
                                 rating={rating}
                                 strategies={strategies}
-                                logo={logo}
+                                collateral={canBeCollateral}
                                 key={`markets-table-${
                                     rowIndex || Math.floor(Math.random() * 10000)
                                 }`}

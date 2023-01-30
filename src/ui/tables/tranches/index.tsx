@@ -134,20 +134,18 @@ export const TranchesTable: React.FC<IDataTable> = ({ data, loading, userActivit
                             dataIndex,
                             rowIndex,
                         ) => (
-                            <>
-                                <TranchesCustomRow
-                                    name={name}
-                                    assets={assets}
-                                    aggregateRating={aggregateRating}
-                                    yourActivity={renderActivity(id)}
-                                    supplyTotal={usdFormatter().format(supplyTotal)}
-                                    borrowTotal={usdFormatter().format(borrowTotal)}
-                                    id={id}
-                                    key={`tranches-table-${
-                                        rowIndex || Math.floor(Math.random() * 10000)
-                                    }`}
-                                />
-                            </>
+                            <TranchesCustomRow
+                                name={name}
+                                assets={assets}
+                                aggregateRating={aggregateRating}
+                                yourActivity={renderActivity(id)}
+                                supplyTotal={usdFormatter().format(supplyTotal)}
+                                borrowTotal={usdFormatter().format(borrowTotal)}
+                                id={id}
+                                key={`tranches-table-${
+                                    rowIndex || Math.floor(Math.random() * 10000)
+                                }`}
+                            />
                         ),
                         textLabels: {
                             body: {
