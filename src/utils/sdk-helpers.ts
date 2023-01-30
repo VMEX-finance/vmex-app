@@ -4,8 +4,6 @@ import { usdFormatter, nativeTokenFormatter } from './helpers';
 
 export const NETWORK = process.env.REACT_APP_NETWORK ? process.env.REACT_APP_NETWORK : 'mainnet';
 
-console.log('network is', NETWORK);
-
 export const SDK_PARAMS = {
     network: NETWORK,
     test: process.env.REACT_APP_TEST ? true : false,

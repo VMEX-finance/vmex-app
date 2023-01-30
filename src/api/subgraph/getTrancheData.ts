@@ -8,7 +8,6 @@ import {
     percentFormatter,
     apolloClient,
     nativeAmountToUSD,
-    averageOfArr,
     weightedAverageofArr,
     MAX_UINT_AMOUNT,
 } from '../../utils';

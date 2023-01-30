@@ -143,7 +143,7 @@ export const ReLineChart = (props: ILineChartProps) => {
                         )}
                     </LineChart>
                 ) : (
-                    <div className="flex items-center justify-center h-full">
+                    <div className="flex items-center justify-center h-full min-h-[200px]">
                         <p>No Data Available</p>
                     </div>
                 )}
