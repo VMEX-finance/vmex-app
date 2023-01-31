@@ -17,7 +17,6 @@ export const TransactionStatus = ({
     errorText,
     successText,
 }: ISuccessStatus) => {
-    console.log('Error text:', errorText);
     const determineSize = () => {
         if (full) {
             return '60px';
@@ -47,6 +46,7 @@ export const TransactionStatus = ({
     };
 
     const determineSuccessText = () => {
+        if (successText) return successText;
         return 'Success';
     };
 

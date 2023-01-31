@@ -30,6 +30,6 @@
         "jsx": "react",
         "noFallthroughCasesInSwitch": true
     },
-    "include": ["src"],
+    "include": ["src", "declarations.d.ts"],
     "exclude": ["node_modules", "lib"]
 }
