@@ -10,9 +10,11 @@ import Construction from './pages/construction';
 import TrancheDetails from './pages/tranche-details';
 import Portfolio from './pages/portfolio';
 import MyTranches from './pages/my-tranches';
+import { useDialogController } from './hooks';
 
 function App() {
     const [showLoading, setShowLoading] = useState(true);
+    const { openDialog } = useDialogController();
 
     useEffect(() => {
         const timeout = setTimeout(() => setShowLoading(false), 2000);
@@ -35,6 +37,13 @@ function App() {
                 {/* Dynamic Tranche Routes */}
                 <Route path="/tranches/:name" element={<TrancheDetails />} />
             </Routes>
+
+            <button
+                onClick={() => openDialog('feedback-dialog')}
+                className="fixed bottom-2 right-3 bg-brand-purple text-neutral-100 hover:opacity-95 transition duration-150 rounded-lg py-2 px-4 shadow-lg"
+            >
+                Send Feedback
+            </button>
         </FullPageLoader>
     );
 }
