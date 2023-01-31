@@ -12,6 +12,7 @@ type IUseModalProps = {
     error: string;
     setError: Dispatch<SetStateAction<string>>;
     submitTx: (callback?: any, close?: boolean) => Promise<void>;
+    dialog: IDialogNames;
 };
 
 export const useModal = (dialog: IDialogNames): IUseModalProps => {
@@ -56,5 +57,6 @@ export const useModal = (dialog: IDialogNames): IUseModalProps => {
         error,
         setError,
         submitTx,
+        dialog,
     };
 };

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { AssetDisplay, NumberAndDollar } from '../../components';
+import { AssetDisplay, BasicToggle, NumberAndDollar } from '../../components';
 import { BigNumber } from 'ethers';
 import { useModal, useWindowSize, useDialogController } from '../../../hooks';
 import { markReserveAsCollateral } from '@vmexfinance/sdk';
@@ -31,7 +31,7 @@ export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({
     healthLoading,
 }) => {
     const { width } = useWindowSize();
-    const { submitTx, isLoading } = useModal('your-supplies-table');
+    const { submitTx, isLoading, isSuccess } = useModal('your-supplies-table');
     const [checked, setChecked] = useState<boolean[]>([]);
     const { data: signer } = useSigner();
     const { openDialog } = useDialogController();
@@ -41,9 +41,8 @@ export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({
             let newArr = [...checked]; // copying the old datas array
             newArr[index] = !newArr[index];
             setChecked(newArr);
-            console.log('checked: ', checked);
             await submitTx(async () => {
-                markReserveAsCollateral({
+                const res = await markReserveAsCollateral({
                     signer: signer,
                     network: NETWORK,
                     asset: asset,
@@ -52,6 +51,7 @@ export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({
                     test: SDK_PARAMS.test,
                     providerRpc: SDK_PARAMS.providerRpc,
                 });
+                return res;
             });
         }
     };
@@ -88,12 +88,13 @@ export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({
                         <tr
                             key={`${i.trancheId}-${i.asset}`}
                             className="text-left transition duration-200 hover:bg-neutral-200 dark:hover:bg-neutral-900 hover:cursor-pointer"
-                            onClick={() =>
+                            onClick={(e) => {
+                                e.preventDefault();
                                 openDialog('loan-asset-dialog', {
                                     ...i,
                                     view: 'Withdraw',
-                                })
-                            }
+                                });
+                            }}
                         >
                             <td className="whitespace-nowrap p-4 text-sm sm:pl-6">
                                 <AssetDisplay
@@ -113,10 +114,23 @@ export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({
                             </td>
                             <td>
                                 {checked[index] ? (
-                                    <BsCheck className="w-8 h-8 text-green-500" />
+                                    <BsCheck className="w-full h-full text-[#00DD3E]" />
                                 ) : (
-                                    <IoIosClose className="w-8 h-8 text-red-500" />
+                                    <IoIosClose className="w-full h-full text-[#FF1F00]" />
                                 )}
+                                {/* TODO */}
+                                {/* <BasicToggle 
+                                    checked={checked[index]}
+                                    onClick={(e: any) => {
+                                        e.preventDefault();
+                                        openDialog('confirmation-dialog', {
+                                            ...i,
+                                            message: `Are you sure you want to ${checked[index] ? 'disable' : 'enable'} collateral for this asset? This will affect your health score.`,
+                                            action: () => handleSubmit(i.asset, i.trancheId, index),
+                                        })
+                                        e.stopPropagation();
+                                    }}
+                                /> */}
                             </td>
                             <td>{i.apy}%</td>
                             <td>{i.tranche}</td>
