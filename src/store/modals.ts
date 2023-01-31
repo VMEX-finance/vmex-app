@@ -22,7 +22,8 @@ export type IDialogNames =
     | 'my-tranches-dialog'
     | 'create-tranche-dialog'
     | 'your-supplies-table'
-    | 'confirmation-dialog';
+    | 'confirmation-dialog'
+    | 'feedback-dialog';
 
 const DialogControllerState: IDialogState = {
     dialogs: new Map<string, DialogType>([
@@ -82,6 +83,16 @@ const DialogControllerState: IDialogState = {
             'confirmation-dialog',
             {
                 name: 'Confirmation',
+                isOpen: false,
+                data: {},
+                isSuccess: false,
+                isError: false,
+            },
+        ],
+        [
+            'feedback-dialog',
+            {
+                name: 'Feedback',
                 isOpen: false,
                 data: {},
                 isSuccess: false,
