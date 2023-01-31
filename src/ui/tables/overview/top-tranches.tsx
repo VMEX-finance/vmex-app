@@ -12,21 +12,21 @@ export const TopTranchesTable: React.FC<ITableProps> = ({ data, loading }) => {
     const headers = ['Tranche', 'Supplied', 'Borrowed'];
 
     return (
-        <table className="min-w-full divide-y divide-gray-300 font-basefont">
+        <table className="min-w-full divide-y-2 divide-neutral-300 dark:divide-neutral-800 font-basefont mt-1">
             <thead className="">
                 <tr>
                     {headers.map((el, i) => (
                         <th
                             key={`table-header-${i}`}
                             scope="col"
-                            className={`pb-3 text-left text-sm font-semibold`}
+                            className={`pb-1 text-left text-sm font-semibold`}
                         >
                             {el}
                         </th>
                     ))}
                 </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody className="divide-y divide-neutral-300 dark:divide-neutral-800">
                 {data && !loading
                     ? data.slice(0, 5).map((i, index: number) => {
                           return (

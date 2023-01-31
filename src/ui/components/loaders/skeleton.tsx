@@ -28,7 +28,7 @@ export const SkeletonLoader = ({
             width={width}
             animation={animtion}
             className={className}
-            sx={{ bgcolor: isDark ? 'grey.900' : 'grey.200' }}
+            sx={{ bgcolor: isDark ? 'grey.900' : 'grey.300' }}
         >
             {children}
         </Skeleton>

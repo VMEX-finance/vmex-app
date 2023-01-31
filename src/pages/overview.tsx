@@ -7,6 +7,7 @@ import { useAccount } from 'wagmi';
 import { numberFormatter } from '../utils/helpers';
 import { bigNumberToUnformattedString } from '../utils/sdk-helpers';
 import { useSubgraphProtocolData, useSubgraphUserData, useUserData } from '../api';
+import { BigNumber } from 'ethers';
 
 const Overview: React.FC = () => {
     const { address, isConnected } = useAccount();
