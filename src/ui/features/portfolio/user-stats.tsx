@@ -27,7 +27,7 @@ export const PortfolioStatsCard: React.FC<IPortfolioProps> = ({
                 <div className="flex flex-col md:flex-row font-basefont gap-8">
                     <div className="flex flex-col justify-between min-w-[90%] xl:min-w-[200px]">
                         <NumberDisplay
-                            label="Total Net Worth"
+                            label="Protocol Net Worth"
                             value={networth || '-'}
                             loading={isLoading}
                             labelClass="text-2xl"

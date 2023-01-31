@@ -1,10 +1,12 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
+import React, { useContext, useEffect, useLayoutEffect, useState } from 'react';
 import { IDialogProps } from '../utils';
 import { ModalFooter, ModalHeader } from '../subcomponents';
-import { Button, DefaultInput, TransactionStatus } from '../../components';
+import { Button, DefaultDropdown, DefaultInput, TransactionStatus } from '../../components';
 import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from 'react-simple-captcha';
+import { ThemeContext } from '../../../store/theme';
 
 export const FeedbackDialog: React.FC<IDialogProps> = ({ name, isOpen, data, closeDialog }) => {
+    const { isDark } = useContext(ThemeContext);
     const [isSending, setIsSending] = useState(false);
     const [error, setError] = useState('');
     const [isSuccess, setIsSuccess] = useState(false);
@@ -110,7 +112,7 @@ export const FeedbackDialog: React.FC<IDialogProps> = ({ name, isOpen, data, clo
                         />
                     </div>
                     <div className="flex w-full justify-between items-end gap-4">
-                        <LoadCanvasTemplate reloadColor="lightgreen" />
+                        <LoadCanvasTemplate reloadColor={isDark ? '#6098e8' : '#7667db'} />
                         <DefaultInput
                             title="Captcha"
                             value={captcha}

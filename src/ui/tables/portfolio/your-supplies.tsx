@@ -31,16 +31,15 @@ export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({
     healthLoading,
 }) => {
     const { width } = useWindowSize();
-    const { submitTx, isLoading, isSuccess } = useModal('your-supplies-table');
+    const { submitTx, isLoading, isSuccess, dialog } = useModal('confirmation-dialog');
     const [checked, setChecked] = useState<boolean[]>([]);
     const { data: signer } = useSigner();
     const { openDialog } = useDialogController();
 
-    const handleSubmit = async (asset: string, trancheId: number, index: number) => {
+    const handleCollateral = async (asset: string, trancheId: number, index: number) => {
         if (signer) {
             let newArr = [...checked]; // copying the old datas array
             newArr[index] = !newArr[index];
-            setChecked(newArr);
             await submitTx(async () => {
                 const res = await markReserveAsCollateral({
                     signer: signer,
@@ -51,6 +50,7 @@ export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({
                     test: SDK_PARAMS.test,
                     providerRpc: SDK_PARAMS.providerRpc,
                 });
+                setChecked(newArr);
                 return res;
             });
         }
@@ -113,24 +113,21 @@ export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({
                                 />
                             </td>
                             <td>
-                                {checked[index] ? (
-                                    <BsCheck className="w-full h-8 text-[#00DD3E]" />
-                                ) : (
-                                    <IoIosClose className="w-full h-8 text-[#FF1F00]" />
-                                )}
-                                {/* TODO */}
-                                {/* <BasicToggle 
+                                <BasicToggle
                                     checked={checked[index]}
                                     onClick={(e: any) => {
                                         e.preventDefault();
-                                        openDialog('confirmation-dialog', {
+                                        openDialog(dialog, {
                                             ...i,
-                                            message: `Are you sure you want to ${checked[index] ? 'disable' : 'enable'} collateral for this asset? This will affect your health score.`,
-                                            action: () => handleSubmit(i.asset, i.trancheId, index),
-                                        })
+                                            message: `Are you sure you want to ${
+                                                checked[index] ? 'disable' : 'enable'
+                                            } collateral for this asset? This will affect your health score.`,
+                                            action: () =>
+                                                handleCollateral(i.asset, i.trancheId, index),
+                                        });
                                         e.stopPropagation();
                                     }}
-                                /> */}
+                                />
                             </td>
                             <td>{i.apy}%</td>
                             <td>{i.tranche}</td>
