@@ -114,9 +114,9 @@ export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({
                             </td>
                             <td>
                                 {checked[index] ? (
-                                    <BsCheck className="w-full h-full text-[#00DD3E]" />
+                                    <BsCheck className="w-full h-8 text-[#00DD3E]" />
                                 ) : (
-                                    <IoIosClose className="w-full h-full text-[#FF1F00]" />
+                                    <IoIosClose className="w-full h-8 text-[#FF1F00]" />
                                 )}
                                 {/* TODO */}
                                 {/* <BasicToggle 
