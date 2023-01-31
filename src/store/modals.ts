@@ -21,9 +21,9 @@ export type IDialogNames =
     | 'stake-asset-dialog'
     | 'my-tranches-dialog'
     | 'create-tranche-dialog'
-    | 'your-supplies-table'
     | 'confirmation-dialog'
-    | 'feedback-dialog';
+    | 'feedback-dialog'
+    | 'disclaimer-dialog';
 
 const DialogControllerState: IDialogState = {
     dialogs: new Map<string, DialogType>([
@@ -93,6 +93,16 @@ const DialogControllerState: IDialogState = {
             'feedback-dialog',
             {
                 name: 'Feedback',
+                isOpen: false,
+                data: {},
+                isSuccess: false,
+                isError: false,
+            },
+        ],
+        [
+            'disclaimer-dialog',
+            {
+                name: 'Disclaimer',
                 isOpen: false,
                 data: {},
                 isSuccess: false,
