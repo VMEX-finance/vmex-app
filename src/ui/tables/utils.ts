@@ -8,7 +8,7 @@ export const muiCache = createCache({
 });
 
 export function vmexTheme(isDark = false) {
-    return createTheme({
+    return (createTheme as any)({
         palette: {
             mode: isDark ? 'dark' : 'light',
             background: {
@@ -24,6 +24,13 @@ export function vmexTheme(isDark = false) {
                     root: {
                         borderRadius: '0.5rem',
                         backgroundImage: 'none',
+                    },
+                },
+            },
+            MUIDataTablePagination: {
+                styleOverrides: {
+                    tableCellContainer: {
+                        border: '0',
                     },
                 },
             },

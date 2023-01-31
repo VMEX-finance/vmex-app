@@ -19,7 +19,7 @@ export const MessageStatus = ({ message, type, className, size, show = true }: I
             case 'success':
                 return 'text-green-500';
             default:
-                return 'text-neutral-900 dark:text-neutral-100';
+                return 'text-neutral-900 dark:text-neutral-300';
         }
     };
 

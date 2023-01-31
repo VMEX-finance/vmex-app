@@ -47,7 +47,7 @@ export const FullPageLoader = ({
                     >
                         <img src="/VMEX-logo-only.png" alt="VMEX Logo" width="165" height="150" />
                         {text && (
-                            <p className="text-center font-medium dark:text-neutral-100">{text}</p>
+                            <p className="text-center font-medium dark:text-neutral-300">{text}</p>
                         )}
                     </Transition>
                 </div>

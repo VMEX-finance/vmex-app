@@ -67,13 +67,13 @@ export const CoinInput = ({
     };
 
     return (
-        <div className="w-full flex flex-row justify-between mt-1 rounded-xl border border-gray-300 p-2">
+        <div className="w-full flex flex-row justify-between mt-1 rounded-xl border border-neutral-300 dark:border-neutral-700 p-2">
             <div className="flex flex-col justify-between gap-3">
                 <input
                     type="text"
                     value={amount}
                     onChange={onChange}
-                    className="text-2xl focus:outline-none max-w-[200px] dark:bg-black overflow-auto"
+                    className="text-2xl focus:outline-none max-w-[200px] dark:bg-black overflow-auto dark:placeholder:text-neutral-700"
                     placeholder="0.00"
                 />
                 {/* <div className="text-neutral400">USD</div> */}
@@ -90,7 +90,7 @@ export const CoinInput = ({
             <div className="flex flex-col justify-between items-end gap-3">
                 <AssetDisplay logo={coin.logo} name={coin.name} />
                 <button
-                    className={`text-xs text-right text-blue-700 hover:text-brand-purple transition duration-150 ${
+                    className={`text-xs text-right text-blue-700 dark:text-brand-blue dark:hover:text-blue-500 hover:text-brand-purple transition duration-150 ${
                         loading ? 'animate-pulse' : ''
                     }`}
                     onClick={onMaxButtonClick}

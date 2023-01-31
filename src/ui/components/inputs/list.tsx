@@ -133,7 +133,7 @@ export const ListInput = ({
             </div>
             {determineOpen() && (
                 <div
-                    className={`w-full flex flex-col justify-between mt-1 rounded-xl border border-gray-300 p-2 ${
+                    className={`w-full flex flex-col justify-between mt-1 rounded-xl border border-neutral-300 dark:border-neutral-700 p-2 ${
                         error ? 'border-red-500' : 'border-gray-300'
                     }`}
                 >

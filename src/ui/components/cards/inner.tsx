@@ -12,7 +12,7 @@ export const InnerCard = ({ children, color, black, padding, className }: ICardP
     <div
         className={`
           w-full rounded-lg shadow-inner bg-gray-100 overflow-auto dark:bg-neutral-900
-          ${color ? color : black ? 'bg-neutral-900 text-neutral-100' : 'bg-white'}
+          ${color ? color : black ? 'bg-neutral-900 text-neutral-100' : 'bg-neutral-100'}
           ${padding ? padding : 'p-3 lg:p-6'}
           ${className ? className : ''}
         `}

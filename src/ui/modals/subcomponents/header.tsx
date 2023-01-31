@@ -41,7 +41,7 @@ export const ModalHeader = ({ title, dialog, asset, tab, primary, onClick }: IMo
                                     )}
                                 </div>
                                 <button
-                                    className="self-baseline h-fit w-fit cursor-pointer text-neutral-900 dark:text-neutral-100 hover:text-neutral-600 dark:hover:text-neutral-300 transition duration-200 p-[0.5px]"
+                                    className="self-baseline h-fit w-fit cursor-pointer text-neutral-900 dark:text-neutral-300 hover:text-neutral-600 dark:hover:text-neutral-300 transition duration-200 p-[0.5px]"
                                     onClick={() => closeDialog(dialog)}
                                 >
                                     <IoIosClose className="w-7 h-7" />
@@ -69,7 +69,7 @@ export const ModalHeader = ({ title, dialog, asset, tab, primary, onClick }: IMo
                                     </Dialog.Title>
                                 </div>
                                 <button
-                                    className="self-baseline h-fit w-fit cursor-pointer text-neutral-900 dark:text-neutral-100 hover:text-neutral-600 dark:hover:text-neutral-300 transition duration-200 p-[0.5px]"
+                                    className="self-baseline h-fit w-fit cursor-pointer text-neutral-900 dark:text-neutral-300 hover:text-neutral-600 dark:hover:text-neutral-300 transition duration-200 p-[0.5px]"
                                     onClick={() => closeDialog(dialog)}
                                 >
                                     <IoIosClose className="w-7 h-7" />
@@ -84,13 +84,13 @@ export const ModalHeader = ({ title, dialog, asset, tab, primary, onClick }: IMo
                         <div className="text-left">
                             <Dialog.Title
                                 as="h3"
-                                className="text-xl leading-6 font-medium text-neutral-900 dark:text-neutral-100"
+                                className="text-xl leading-6 font-medium text-neutral-900 dark:text-neutral-300"
                             >
                                 {title} {asset ? asset : ''}
                             </Dialog.Title>
                         </div>
                         <button
-                            className="self-baseline h-fit w-fit cursor-pointer text-neutral-900 dark:text-neutral-100 hover:text-neutral-600 dark:hover:text-neutral-300 transition duration-200 p-[0.5px]"
+                            className="self-baseline h-fit w-fit cursor-pointer text-neutral-900 dark:text-neutral-300 hover:text-neutral-600 dark:hover:text-neutral-300 transition duration-200 p-[0.5px]"
                             onClick={() => closeDialog(dialog)}
                         >
                             <IoIosClose className="w-7 h-7" />
