@@ -43,12 +43,14 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
         if (!_name) setError('Please enter a tranche name.');
         if (_tokens?.length === 0) setError('Please enter tokens to be included in your tranche.');
         if (error) return;
-        if (!signer) setError('Please refresh the page and make sure your wallet is connected.');
+        if (!signer) {
+            setError('Please refresh the page and make sure your wallet is connected.');
+            return;
+        }
         let canBorrow: boolean[] = [];
         let canBeCollateral: boolean[] = [];
 
-        let assets = _tokens.map((el: string) => {
-            let tmp = convertSymbolToAddress(el, SDK_PARAMS.network);
+        _tokens.map((el: string) => {
             const findBorrow = _borrowLendTokens.find((el1) => el1 == el);
             if (findBorrow) {
                 canBorrow.push(true);
@@ -62,18 +64,14 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
             } else {
                 canBeCollateral.push(false);
             }
-
-            if (tmp) return tmp;
-            else return '';
         });
-        if (!assets || !signer) return;
 
         await submitTx(async () => {
             const res = await initTranche({
                 name: _name,
                 whitelisted: _whitelisted,
                 blacklisted: _blackListed,
-                assetAddresses: assets,
+                assetAddresses: _tokens,
                 reserveFactors: new Array(_tokens.length).fill(
                     ethers.utils.parseUnits(_adminFee, 2),
                 ),
