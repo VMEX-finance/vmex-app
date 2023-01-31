@@ -37,7 +37,7 @@ export const FullPageLoader = ({
             >
                 <div className="top-0 left-0 h-screen w-full bg-[#eee] dark:bg-neutral-900 z-[9999] fixed">
                     <Transition
-                        className={`flex flex-col gap-5 justify-center items-center h-full ${
+                        className={`flex flex-col justify-center items-center h-full ${
                             animation ? 'animate-pulse' : ''
                         }`}
                         show={determineShow()}
@@ -46,9 +46,8 @@ export const FullPageLoader = ({
                         leaveTo="opacity-0"
                     >
                         <img src="/VMEX-logo-only.png" alt="VMEX Logo" width="165" height="150" />
-                        {text && (
-                            <p className="text-center font-medium dark:text-neutral-300">{text}</p>
-                        )}
+                        <p className="text-center font-medium dark:text-neutral-300 mt-6">{text}</p>
+                        <p className="text-sm font-light">Goerli Testnet</p>
                     </Transition>
                 </div>
             </Transition>

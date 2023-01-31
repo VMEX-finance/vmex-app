@@ -1,15 +1,16 @@
 import { useSubgraphTrancheData, useUserData, useUserTrancheData } from '../../../api';
-import { useAccount } from 'wagmi';
+import { useAccount, useSigner } from 'wagmi';
 import React from 'react';
 import { BsCheck } from 'react-icons/bs';
 import { IoIosClose } from 'react-icons/io';
 import { useSelectedTrancheContext } from '../../../store';
-import { AssetDisplay, NumberAndDollar } from '../../components/displays';
-import { useWindowSize, useDialogController } from '../../../hooks';
+import { AssetDisplay, NumberAndDollar, BasicToggle } from '../../components';
+import { useWindowSize, useDialogController, useModal } from '../../../hooks';
 import { AvailableAsset } from '@app/api/types';
 import { BigNumber, ethers } from 'ethers';
-import { numberFormatter, bigNumberToNative } from '../../../utils';
+import { numberFormatter, bigNumberToNative, NETWORK, SDK_PARAMS } from '../../../utils';
 import { useLocation } from 'react-router-dom';
+import { markReserveAsCollateral } from '@vmexfinance/sdk';
 
 interface ITableProps {
     data: AvailableAsset[];
@@ -27,6 +28,9 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
     );
     const { findAssetInMarketsData } = useSubgraphTrancheData(location.state?.trancheId);
     const { openDialog } = useDialogController();
+    const { submitTx, isLoading, isSuccess, dialog } = useModal('confirmation-dialog');
+    const { data: signer } = useSigner();
+    const [checked, setChecked] = React.useState<boolean[]>([]);
 
     const mode1 =
         type === 'supply'
@@ -71,6 +75,35 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
         if (isInList(b.asset)) return 1;
         return 0;
     };
+
+    // Uncomment if want to enable collateral toggle from the table
+    // const handleCollateral = async (el: AvailableAsset, index: number) => {
+    //     const { asset, canBeCollat } = el;
+    //     if (signer && location.state?.trancheId) {
+    //         let newArr = [...checked]; // copying the old datas array
+    //         newArr[index] = !newArr[index];
+    //         await submitTx(async () => {
+    //             const res = await markReserveAsCollateral({
+    //                 signer: signer,
+    //                 network: NETWORK,
+    //                 asset: asset,
+    //                 trancheId: location.state?.trancheId,
+    //                 useAsCollateral: newArr[index],
+    //                 test: SDK_PARAMS.test,
+    //                 providerRpc: SDK_PARAMS.providerRpc,
+    //             });
+    //             setChecked(newArr);
+    //             return res;
+    //         });
+    //     }
+    // };
+
+    // React.useEffect(() => {
+    //     if (data.length > 0) {
+    //         const initialState = data.map((el) => el.canBeCollat ? el.canBeCollat : false);
+    //         setChecked(initialState);
+    //     }
+    // }, [data]);
 
     return (
         <table
@@ -164,6 +197,18 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                             ) : (
                                                 <IoIosClose className="w-full h-full text-red-500" />
                                             )}
+                                            {/* <BasicToggle 
+                                                checked={el.canBeCollat}
+                                                onClick={(e: any) => {
+                                                    e.preventDefault();
+                                                    openDialog('confirmation-dialog', {
+                                                        ...el,
+                                                        message: `Are you sure you want to ${el.canBeCollat ? 'disable' : 'enable'} collateral for this asset? This will affect your health score.`,
+                                                        action: () => handleCollateral(el, i),
+                                                    })
+                                                    e.stopPropagation();
+                                                }}
+                                            /> */}
                                         </div>
                                     ) : (
                                         `${numberFormatter.format(

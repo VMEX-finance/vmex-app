@@ -9,7 +9,7 @@ interface ITableProps {
 }
 
 export const TopTranchesTable: React.FC<ITableProps> = ({ data, loading }) => {
-    const headers = ['Tranche', 'Supplied', 'Borrowed'];
+    const headers = ['Tranche', 'Supply', 'Borrow'];
 
     return (
         <table className="min-w-full divide-y-2 divide-neutral-300 dark:divide-neutral-800 font-basefont mt-1">
