@@ -17,7 +17,7 @@ export const NumberDisplay = ({
     value,
     label,
     size,
-    color = 'text-black dark:text-neutral-100',
+    color = 'text-black dark:text-neutral-300',
     center,
     change,
     loading,

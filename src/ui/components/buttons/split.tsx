@@ -26,7 +26,9 @@ export const SplitButton = ({ colors, content, full, className, onClick }: ISpli
         >
             <button
                 className={`${
-                    colors ? colors.left : 'bg-neutral-800 text-neutral-100'
+                    colors
+                        ? colors.left
+                        : 'bg-neutral-900 text-neutral-200 dark:bg-neutral-200 dark:text-neutral-900'
                 } rounded-l-md py-1 px-3 transition duration-150 hover:opacity-90`}
                 onClick={onClick.left}
             >
@@ -34,7 +36,9 @@ export const SplitButton = ({ colors, content, full, className, onClick }: ISpli
             </button>
             <button
                 className={`${
-                    colors ? colors.right : 'bg-neutral-800 text-neutral-100'
+                    colors
+                        ? colors.right
+                        : 'bg-neutral-900 text-neutral-200 dark:bg-neutral-200 dark:text-neutral-900'
                 } rounded-r-md py-1 px-3 transition duration-150 hover:opacity-90`}
                 onClick={onClick.right}
             >

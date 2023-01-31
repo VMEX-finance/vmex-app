@@ -4,7 +4,7 @@ import { AppTemplate } from '../ui/templates';
 const Construction: React.FC = () => {
     return (
         <AppTemplate title="Under Construction">
-            <span className="dark:text-neutral-100">{"We're working on it!"}</span>
+            <span className="dark:text-neutral-300">{"We're working on it!"}</span>
         </AppTemplate>
     );
 };

@@ -19,13 +19,19 @@ export const MultipleAssetsDisplay = ({ assets, show = 4, size }: IMultipleAsset
         }
     };
 
+    const determineImg = (coin: string) => {
+        let url = '/coins/';
+        if (coin?.startsWith('yv')) return `${url}generic.svg`;
+        else return `${url}${coin.toLowerCase()}.svg`;
+    };
+
     return (
         <div className={`flex flex-wrap items-center ${show === 'all' ? 'gap-3' : 'xl:gap-2'}`}>
             {mapAssets().length !== 0
                 ? mapAssets().map((el, i) => (
                       <img
                           key={`tranches-asset-${i}`}
-                          src={`/coins/${el.toLowerCase()}.svg`}
+                          src={determineImg(el)}
                           alt={el}
                           className={`${size ? size : 'h-8 w-8'}`}
                       />

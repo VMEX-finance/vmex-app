@@ -73,7 +73,9 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
     };
 
     return (
-        <table className={`min-w-full divide-y divide-gray-300 font-basefont`}>
+        <table
+            className={`min-w-full divide-y-2 divide-neutral-200 dark:divide-neutral-800 font-basefont`}
+        >
             <thead className="">
                 <tr className="text-neutral900 text-sm font-semibold text-left">
                     <th scope="col" className="py-3.5 pl-4 sm:pl-6">
@@ -91,7 +93,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                     <th scope="col" className="py-3.5"></th>
                 </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody className="divide-y divide-neutral-200 dark:divide-neutral-800">
                 {data &&
                     data.sort(compareListsSorter).map((el, i) => {
                         return (

@@ -24,10 +24,10 @@ export const LinkButton = ({
         ${underline ? 'underline' : ''} 
         ${
             highlight
-                ? 'text-brand-purple hover:!text-brand-purple dark:text-brand-blue dark:hover:!text-brand-blue'
+                ? 'text-brand-purple hover:!text-brand-purple dark:!text-brand-blue dark:hover:!text-blue-400'
                 : ''
         }
-        flex items-center hover:cursor-pointer hover:text-neutral-700 dark:text-neutral-100 dark:hover:text-neutral-300 transition duration-150
+        flex items-center hover:cursor-pointer hover:text-neutral-700 dark:text-neutral-200 dark:hover:text-neutral-300 transition duration-150
       `}
             onClick={onClick}
             disabled={disabled}
