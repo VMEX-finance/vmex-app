@@ -32,7 +32,7 @@ export const BasicToggle = ({ checked, onChange, onClick, colors, disabled }: IT
             <span
                 className={`${
                     checked || enabled ? 'translate-x-6' : 'translate-x-1'
-                } inline-block h-4 w-4 transform rounded-full bg-neutral-200 transition`}
+                } inline-block h-4 w-4 transform rounded-full bg-neutral-100 transition`}
             />
         </Switch>
     );
