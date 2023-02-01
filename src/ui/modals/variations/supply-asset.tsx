@@ -90,6 +90,8 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
         findAssetInUserSuppliesOrBorrows(data?.asset || '', 'supply') as IYourSuppliesTableItemProps
     )?.collateral;
 
+    console.log('Collateral', collateral);
+
     const maxOnClick = () => {
         setAmount(
             view?.includes('Supply')
@@ -178,11 +180,22 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
 
                             <h3 className="mt-6">Collaterize</h3>
                             <div className="mt-1">
-                                <BasicToggle
-                                    checked={asCollateral}
-                                    onChange={() => setAsCollateral(!asCollateral)}
-                                    disabled={!data?.collateral}
-                                />
+                                {typeof collateral === 'boolean' ? (
+                                    <Tooltip
+                                        text={`Your previous supply is ${
+                                            collateral === false ? 'not' : ''
+                                        } collateralized`}
+                                        content={
+                                            <BasicToggle checked={collateral} disabled={true} />
+                                        }
+                                    />
+                                ) : (
+                                    <BasicToggle
+                                        checked={asCollateral}
+                                        onChange={() => setAsCollateral(!asCollateral)}
+                                        disabled={!data?.collateral}
+                                    />
+                                )}
                             </div>
 
                             <h3 className="mt-6 text-neutral400">Health Factor</h3>
