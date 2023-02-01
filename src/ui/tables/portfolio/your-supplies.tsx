@@ -96,6 +96,7 @@ export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({
                                             checked,
                                             setChecked,
                                             index,
+                                            trancheId: i.trancheId,
                                         });
                                         e.stopPropagation();
                                     }}
