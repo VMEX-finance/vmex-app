@@ -182,7 +182,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                                     <Tooltip
                                         text={`Your previous supply is ${
                                             collateral === false ? 'not' : ''
-                                        } collateralized`}
+                                        } collateralized. If you want to change this, go to the Overview or Portfolio page.`}
                                         content={
                                             <BasicToggle checked={collateral} disabled={true} />
                                         }

@@ -1,16 +1,15 @@
 import { useSubgraphTrancheData, useUserData, useUserTrancheData } from '../../../api';
-import { useAccount, useSigner } from 'wagmi';
+import { useAccount } from 'wagmi';
 import React from 'react';
 import { BsCheck } from 'react-icons/bs';
 import { IoIosClose } from 'react-icons/io';
 import { useSelectedTrancheContext } from '../../../store';
-import { AssetDisplay, NumberAndDollar, BasicToggle } from '../../components';
-import { useWindowSize, useDialogController, useModal } from '../../../hooks';
+import { AssetDisplay, NumberAndDollar } from '../../components';
+import { useWindowSize, useDialogController } from '../../../hooks';
 import { AvailableAsset } from '@app/api/types';
 import { BigNumber, ethers } from 'ethers';
-import { numberFormatter, bigNumberToNative, NETWORK, SDK_PARAMS } from '../../../utils';
+import { numberFormatter, bigNumberToNative } from '../../../utils';
 import { useLocation } from 'react-router-dom';
-import { markReserveAsCollateral } from '@vmexfinance/sdk';
 
 interface ITableProps {
     data: AvailableAsset[];
@@ -28,9 +27,6 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
     );
     const { findAssetInMarketsData } = useSubgraphTrancheData(location.state?.trancheId);
     const { openDialog } = useDialogController();
-    const { submitTx, isLoading, isSuccess, dialog } = useModal('confirmation-dialog');
-    const { data: signer } = useSigner();
-    const [checked, setChecked] = React.useState<boolean[]>([]);
 
     const mode1 =
         type === 'supply'

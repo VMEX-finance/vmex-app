@@ -1,7 +1,7 @@
 import React from 'react';
 import { IDialogProps } from '../utils';
 import { ModalFooter, ModalHeader } from '../subcomponents';
-import { Button, TransactionStatus } from '../../components';
+import { Button, HealthFactor, TransactionStatus } from '../../components';
 import { useSigner } from 'wagmi';
 import { useModal } from '../../../hooks/useModal';
 import { markReserveAsCollateral } from '@vmexfinance/sdk';
@@ -18,19 +18,19 @@ export const ToggleCollateralDialog: React.FC<IDialogProps> = ({
 
     const handleCollateral = async (asset: string, trancheId: number, index: number) => {
         if (signer) {
-            let newArr = [...data.checked]; // copying the old datas array
-            newArr[index] = !newArr[index];
+            let newArr = data.checked ? [...data.checked] : []; // copying the old datas array
+            if (data.index) newArr[index] = !newArr[index];
             await submitTx(async () => {
                 const res = await markReserveAsCollateral({
                     signer: signer,
                     network: NETWORK,
                     asset: asset,
                     trancheId: trancheId,
-                    useAsCollateral: newArr[index],
+                    useAsCollateral: !data.collateral,
                     test: SDK_PARAMS.test,
                     providerRpc: SDK_PARAMS.providerRpc,
                 });
-                data.setChecked(newArr);
+                if (data.setChecked) data.setChecked(newArr);
                 closeDialog('toggle-collateral-dialog');
                 return res;
             });
@@ -51,8 +51,21 @@ export const ToggleCollateralDialog: React.FC<IDialogProps> = ({
                     <div className="py-8">
                         <p>
                             Are you sure you want to {data.collateral ? 'disable ' : 'enable '}
-                            collateral for this asset? This will affect your health score.
+                            collateral for this asset? This will{' '}
+                            {data.collateral ? 'lower' : 'raise'} your health score.
                         </p>
+
+                        <div className="text-center text-sm flex flex-col items-center mt-4">
+                            <span>Current Health Factor</span>
+                            <HealthFactor
+                                asset={data.asset}
+                                trancheId={data?.trancheId}
+                                type={'no collateral'}
+                                withChange={false}
+                                center
+                                size="lg"
+                            />
+                        </div>
                     </div>
                 ) : (
                     <div className="mt-10 mb-8">

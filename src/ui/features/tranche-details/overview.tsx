@@ -215,15 +215,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                                     {width > breakpoint && 'User '}Health
                                     {width > breakpoint && ' Factor'}
                                 </span>
-                                <HealthFactor
-                                    value={
-                                        parseFloat(data?.healthFactor || '0') < 100
-                                            ? data?.healthFactor
-                                            : '0'
-                                    }
-                                    withChange={false}
-                                    center
-                                />
+                                <HealthFactor withChange={false} center />
                             </div>
                             <div className="text-center text-sm flex flex-col items-center">
                                 <span>{width > breakpoint && 'User '}Net APY</span>
