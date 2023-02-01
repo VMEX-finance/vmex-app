@@ -12,6 +12,7 @@ import {
 import { ethers } from 'ethers';
 import { useAccount } from 'wagmi';
 import { useLocation } from 'react-router-dom';
+import { SpinnerLoader } from '../loaders';
 
 interface IHealthFactorProps {
     asset?: string;
@@ -56,7 +57,11 @@ export const HealthFactor = ({
 
     const renderHealth = (hf: number | string | undefined, isInf: boolean) => {
         return isInf || !hf ? (
-            <TbInfinity color="#8CE58F" size={`${determineSize()[0]}`} />
+            queryUserTrancheData.isLoading ? (
+                <SpinnerLoader size="sm" height="min-h-none" width="w-fit mt-1" />
+            ) : (
+                <TbInfinity color="#8CE58F" size={`${determineSize()[0]}`} />
+            )
         ) : Number(hf) > 100 ? (
             <span className={`${determineSize()[2]} ${determineHealthColor(hf)} font-semibold`}>
                 {'>100'}
@@ -158,12 +163,8 @@ export const HealthFactor = ({
     };
 
     return (
-        <div>
-            <div
-                className={`flex items-center gap-2 ${center ? 'justify-center' : ''} ${
-                    queryUserTrancheData.isLoading ? 'animate-pulse' : ''
-                }`}
-            >
+        <>
+            <div className={`flex items-center gap-2 ${center ? 'justify-center' : ''}`}>
                 {withChange && (
                     <>
                         {determineHFInitial()}
@@ -177,6 +178,6 @@ export const HealthFactor = ({
                     <span className="text-xs text-neutral-500 leading-0">{`Liquidation at <1.0`}</span>
                 </div>
             }
-        </div>
+        </>
     );
 };
