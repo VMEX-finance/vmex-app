@@ -42,7 +42,7 @@ export const HealthFactor = ({
     const { findAssetInMarketsData } = useSubgraphTrancheData(
         String(trancheId || location.state?.trancheId || tranche?.id) as any,
     );
-
+    console.log(queryUserTrancheData.data?.healthFactor);
     const determineSize = () => {
         switch (size) {
             case 'sm':
@@ -161,7 +161,7 @@ export const HealthFactor = ({
         <div>
             <div
                 className={`flex items-center gap-2 ${center ? 'justify-center' : ''} ${
-                    queryUserTrancheData.isLoading ? 'animate-pulse' : ''
+                    queryUserTrancheData.isLoading ? '!animate-pulse' : ''
                 }`}
             >
                 {withChange && (
