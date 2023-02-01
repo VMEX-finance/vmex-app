@@ -87,7 +87,7 @@ export async function _getUserTrancheData(
 export function useUserTrancheData(userAddress: any, trancheId: number): IUserTrancheDataProps {
     const queryUserTrancheData = useQuery({
         queryKey: ['user-tranche', Number(trancheId)],
-        queryFn: () => _getUserTrancheData(userAddress, trancheId),
+        queryFn: () => _getUserTrancheData(userAddress, trancheId), // TODO: make sure this wants a number and not a string
         refetchOnMount: true,
     });
 

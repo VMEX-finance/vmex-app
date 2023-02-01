@@ -37,7 +37,7 @@ export const TrancheStatisticsCard = ({
     // Re-render for charts
     useEffect(() => {
         setRerender(true);
-        const timeout = setTimeout(() => setRerender(false), 500);
+        const timeout = setTimeout(() => setRerender(false), 600);
         return () => clearTimeout(timeout);
     }, [asset]);
 

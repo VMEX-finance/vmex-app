@@ -17,30 +17,30 @@ interface IHealthFactorProps {
     asset?: string;
     amount?: string;
     type?: 'supply' | 'withdraw' | 'borrow' | 'repay' | 'no collateral';
-    value?: string;
     size?: 'sm' | 'md' | 'lg';
     withChange?: boolean;
     center?: boolean;
+    trancheId?: string;
 }
 
 export const HealthFactor = ({
     asset,
     amount,
     type,
-    value,
     size = 'md',
     withChange = true,
     center,
+    trancheId,
 }: IHealthFactorProps) => {
     const location = useLocation();
     const { address } = useAccount();
     const { tranche } = useSelectedTrancheContext();
     const { queryUserTrancheData } = useUserTrancheData(
         address,
-        location.state?.trancheId || tranche?.id,
+        String(trancheId || location.state?.trancheId || tranche?.id) as any,
     );
     const { findAssetInMarketsData } = useSubgraphTrancheData(
-        location.state?.trancheId || tranche?.id,
+        String(trancheId || location.state?.trancheId || tranche?.id) as any,
     );
 
     const determineSize = () => {
@@ -159,12 +159,14 @@ export const HealthFactor = ({
 
     return (
         <div>
-            <div className={`flex items-center gap-2 ${center ? 'justify-center' : ''}`}>
+            <div
+                className={`flex items-center gap-2 ${center ? 'justify-center' : ''} ${
+                    queryUserTrancheData.isLoading ? 'animate-pulse' : ''
+                }`}
+            >
                 {withChange && (
                     <>
-                        <div className={`${queryUserTrancheData.isLoading ? 'animate-pulse' : ''}`}>
-                            {determineHFInitial()}
-                        </div>
+                        {determineHFInitial()}
                         <BsArrowRight size={`${determineSize()[1]}`} />
                     </>
                 )}
