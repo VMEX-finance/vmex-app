@@ -90,8 +90,6 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
         findAssetInUserSuppliesOrBorrows(data?.asset || '', 'supply') as IYourSuppliesTableItemProps
     )?.collateral;
 
-    console.log('Collateral', collateral);
-
     const maxOnClick = () => {
         setAmount(
             view?.includes('Supply')

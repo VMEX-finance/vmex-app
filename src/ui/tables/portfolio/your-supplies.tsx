@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { AssetDisplay, BasicToggle, NumberAndDollar } from '../../components';
 import { BigNumber } from 'ethers';
-import { useModal, useWindowSize, useDialogController } from '../../../hooks';
-import { markReserveAsCollateral } from '@vmexfinance/sdk';
-import { useSigner } from 'wagmi';
-import { NETWORK, bigNumberToNative, SDK_PARAMS, determineHealthColor } from '../../../utils';
-import { BsCheck } from 'react-icons/bs';
-import { IoIosClose } from 'react-icons/io';
+import { useWindowSize, useDialogController } from '../../../hooks';
+import { bigNumberToNative, determineHealthColor } from '../../../utils';
 
 export type IYourSuppliesTableItemProps = {
     asset: string;
@@ -31,30 +27,8 @@ export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({
     healthLoading,
 }) => {
     const { width } = useWindowSize();
-    const { submitTx, isLoading, isSuccess, dialog } = useModal('confirmation-dialog');
     const [checked, setChecked] = useState<boolean[]>([]);
-    const { data: signer } = useSigner();
     const { openDialog } = useDialogController();
-
-    const handleCollateral = async (asset: string, trancheId: number, index: number) => {
-        if (signer) {
-            let newArr = [...checked]; // copying the old datas array
-            newArr[index] = !newArr[index];
-            await submitTx(async () => {
-                const res = await markReserveAsCollateral({
-                    signer: signer,
-                    network: NETWORK,
-                    asset: asset,
-                    trancheId: trancheId,
-                    useAsCollateral: newArr[index],
-                    test: SDK_PARAMS.test,
-                    providerRpc: SDK_PARAMS.providerRpc,
-                });
-                setChecked(newArr);
-                return res;
-            });
-        }
-    };
 
     useEffect(() => {
         if (data.length > 0) {
@@ -117,13 +91,11 @@ export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({
                                     checked={checked[index]}
                                     onClick={(e: any) => {
                                         e.preventDefault();
-                                        openDialog(dialog, {
+                                        openDialog('toggle-collateral-dialog', {
                                             ...i,
-                                            message: `Are you sure you want to ${
-                                                checked[index] ? 'disable' : 'enable'
-                                            } collateral for this asset? This will affect your health score.`,
-                                            action: () =>
-                                                handleCollateral(i.asset, i.trancheId, index),
+                                            checked,
+                                            setChecked,
+                                            index,
                                         });
                                         e.stopPropagation();
                                     }}
