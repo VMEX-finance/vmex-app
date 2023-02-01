@@ -1,9 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { IDialogProps } from '../utils';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
 import { Button, TransactionStatus } from '../../components';
 
 export const ConfirmationDialog: React.FC<IDialogProps> = ({ name, isOpen, data, closeDialog }) => {
+    const [isLoading, setIsLoading] = useState(false);
+    const handleSubmit = async () => {
+        setIsLoading(true);
+        await data.action();
+        setIsLoading(false);
+    };
     return (
         data &&
         data.asset && (
@@ -23,10 +29,11 @@ export const ConfirmationDialog: React.FC<IDialogProps> = ({ name, isOpen, data,
                 <ModalFooter>
                     <Button
                         primary
-                        disabled={data.success}
-                        onClick={data.action}
+                        disabled={data.success || isLoading}
+                        onClick={handleSubmit}
                         label="Submit Transaction"
-                        loading={data.loading}
+                        loading={data.loading || isLoading}
+                        loadingText="Submitting"
                     />
                 </ModalFooter>
             </>
