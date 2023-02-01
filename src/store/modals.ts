@@ -23,7 +23,8 @@ export type IDialogNames =
     | 'create-tranche-dialog'
     | 'confirmation-dialog'
     | 'feedback-dialog'
-    | 'disclaimer-dialog';
+    | 'disclaimer-dialog'
+    | 'toggle-collateral-dialog';
 
 const DialogControllerState: IDialogState = {
     dialogs: new Map<string, DialogType>([
@@ -103,6 +104,16 @@ const DialogControllerState: IDialogState = {
             'disclaimer-dialog',
             {
                 name: 'Disclaimer',
+                isOpen: false,
+                data: {},
+                isSuccess: false,
+                isError: false,
+            },
+        ],
+        [
+            'toggle-collateral-dialog',
+            {
+                name: 'Collateral',
                 isOpen: false,
                 data: {},
                 isSuccess: false,
