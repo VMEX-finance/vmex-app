@@ -4,9 +4,10 @@ import { CgSpinner } from 'react-icons/cg';
 type ISpinnerLoaderProps = {
     size?: 'lg' | 'md' | 'sm';
     height?: string;
+    width?: string;
 };
 
-export const SpinnerLoader = ({ size, height }: ISpinnerLoaderProps) => {
+export const SpinnerLoader = ({ size, height, width }: ISpinnerLoaderProps) => {
     const determineSize = () => {
         switch (size) {
             case 'lg':
@@ -19,7 +20,11 @@ export const SpinnerLoader = ({ size, height }: ISpinnerLoaderProps) => {
     };
 
     return (
-        <div className={`flex justify-center items-center ${height ? height : 'min-h-[200px]'}`}>
+        <div
+            className={`flex justify-center items-center ${height ? height : 'min-h-[200px]'} ${
+                width ? width : ''
+            }`}
+        >
             <CgSpinner className="animate-spin" size={determineSize()} />
         </div>
     );
