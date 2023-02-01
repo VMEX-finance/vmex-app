@@ -197,7 +197,12 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                             </div>
 
                             <h3 className="mt-6 text-neutral400">Health Factor</h3>
-                            <HealthFactor asset={data.asset} amount={amount} type={'supply'} />
+                            <HealthFactor
+                                asset={data.asset}
+                                amount={amount}
+                                type={'supply'}
+                                trancheId={String(data?.trancheId)}
+                            />
 
                             <ModalTableDisplay
                                 title="Transaction Overview"
@@ -257,7 +262,12 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                             />
 
                             <h3 className="mt-6 text-neutral400">Health Factor</h3>
-                            <HealthFactor asset={data.asset} amount={amount} type={'withdraw'} />
+                            <HealthFactor
+                                asset={data.asset}
+                                amount={amount}
+                                type={'withdraw'}
+                                trancheId={String(data?.trancheId)}
+                            />
 
                             <ModalTableDisplay
                                 title="Transaction Overview"
