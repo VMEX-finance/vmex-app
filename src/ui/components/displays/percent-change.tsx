@@ -26,10 +26,10 @@ export const PercentChangeDisplay = ({
     };
 
     return (
-        <div className={`flex items-center gap-2 ${fontSize} ${determineColor()}`}>
+        <div className={`flex items-center gap-1 md:gap-2 ${fontSize} ${determineColor()}`}>
             {determineIcon()}
             <p>{`${Math.abs(Number(value)).toFixed(2)}%`}</p>
-            <p>{`(${range})`}</p>
+            <p className="hidden md:block">{`(${range})`}</p>
         </div>
     );
 };

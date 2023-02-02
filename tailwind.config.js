@@ -1,10 +1,14 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+    darkMode: 'class',
     content: ['./src/**/*.{js,jsx,ts,tsx}', 'node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}'],
     theme: {
         extend: {
             fontFamily: {
                 basefont: ['SFNSRounded'],
+            },
+            screens: {
+                '3xl': '1920px',
             },
             colors: {
                 brand: {
@@ -20,6 +24,9 @@ module.exports = {
                     green: {
                         DEFAULT: '#3CB55E',
                         neon: '#59db51',
+                    },
+                    black: {
+                        DEFAULT: '#0f0f0f',
                     },
                 },
             },

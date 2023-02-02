@@ -8,9 +8,8 @@
   src: url('../public/fonts/SFNSRounded.ttf');
 }
 
-/* General */
-body {
-  background-color: #eeeeee;
+a {
+  @apply text-brand-blue hover:text-brand-purple transition duration-150 underline;
 }
 
 /* Checkbox */

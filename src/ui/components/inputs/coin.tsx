@@ -1,5 +1,9 @@
 import { AssetDisplay } from '../displays/asset';
 import React from 'react';
+import { NETWORK, SDK_PARAMS } from '../../../utils/sdk-helpers';
+import { useSigner } from 'wagmi';
+import { mintTokens } from '@vmexfinance/sdk';
+import { Button } from '../buttons';
 
 export interface ICoinInput {
     amount: string;
@@ -10,41 +14,99 @@ export interface ICoinInput {
     };
     balance?: string;
     type?: 'collateral' | 'owed' | 'default';
+    isMax: boolean;
+    setIsMax: React.Dispatch<React.SetStateAction<boolean>>;
+    loading?: boolean;
+    customMaxClick?: any;
 }
 
-export const CoinInput = ({ amount, setAmount, coin, balance, type }: ICoinInput) => {
+export const CoinInput = ({
+    amount,
+    setAmount,
+    coin,
+    balance,
+    type,
+    isMax,
+    setIsMax,
+    loading,
+    customMaxClick,
+}: ICoinInput) => {
+    const { data: signer } = useSigner();
+
+    const onChange = (e: any) => {
+        const myamount = e.target.value;
+        if (!myamount || myamount.match(/^\d{1,}(\.\d{0,})?$/)) {
+            setAmount(myamount);
+            setIsMax(false);
+        }
+    };
+
+    const onMaxButtonClick = () => {
+        if (customMaxClick) {
+            customMaxClick();
+            return;
+        } else {
+            balance ? setAmount(balance) : {};
+            setIsMax(true);
+        }
+    };
+
+    const mint = async () => {
+        if (!process.env.REACT_APP_TEST) return;
+        if (signer && coin) {
+            const res = await mintTokens({
+                token: coin.name,
+                signer: signer,
+                network: NETWORK,
+                test: SDK_PARAMS.test,
+                providerRpc: SDK_PARAMS.providerRpc,
+            });
+            console.log(`Minted ${coin.name} to wallet`);
+            return res;
+        }
+    };
+
     return (
-        <div className="w-full flex flex-row justify-between mt-1 rounded-xl border border-gray-300 p-2">
+        <div className="w-full flex flex-row justify-between mt-1 rounded-xl border border-neutral-300 dark:border-neutral-700 p-2">
             <div className="flex flex-col justify-between gap-3">
                 <input
                     type="text"
                     value={amount}
-                    onChange={(e: any) => setAmount(e.target.value)}
-                    className="text-2xl focus:outline-none max-w-[200px]"
+                    onChange={onChange}
+                    className="text-2xl focus:outline-none max-w-[200px] dark:bg-brand-black overflow-auto dark:placeholder:text-neutral-700"
                     placeholder="0.00"
                 />
-                <div className="text-gray-400">USD</div>
+                {/* <div className="text-neutral400">USD</div> */}
+                {/* TODO: add usd value underneath */}
+                {process.env.REACT_APP_TEST && (
+                    <Button
+                        primary
+                        onClick={mint}
+                        label={`DEV: Mint ${coin.name}`}
+                        className="w-fit"
+                    />
+                )}
             </div>
             <div className="flex flex-col justify-between items-end gap-3">
                 <AssetDisplay logo={coin.logo} name={coin.name} />
-                <div className="text-xs text-right text-blue-700">
-                    <span
-                        className="hover:text-brand-purple cursor-pointer transition duration-200"
-                        onClick={() => (balance ? setAmount(balance) : {})}
-                    >
-                        MAX
-                    </span>
+                <button
+                    className={`text-xs text-right text-blue-700 dark:text-brand-blue dark:hover:text-blue-500 hover:text-brand-purple transition duration-150 ${
+                        loading ? 'animate-pulse' : ''
+                    }`}
+                    onClick={onMaxButtonClick}
+                >
+                    <span>MAX</span>
                     <p>
                         {`${
                             type === 'collateral'
-                                ? 'Amount Collateralized'
+                                ? 'Amount Borrowable'
                                 : type === 'owed'
                                 ? 'Amount Owed'
                                 : 'Balance'
                         }:`}{' '}
-                        {balance || 0.3213}
+                        {balance || 0}
                     </p>
-                </div>
+                </button>
             </div>
         </div>
     );

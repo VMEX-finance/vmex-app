@@ -6,9 +6,17 @@ interface ISuccessStatus {
     success: boolean;
     size?: 'sm' | 'md' | 'lg';
     full?: boolean;
+    errorText?: string;
+    successText?: string;
 }
 
-export const TransactionStatus = ({ success, size, full }: ISuccessStatus) => {
+export const TransactionStatus = ({
+    success,
+    size,
+    full,
+    errorText,
+    successText,
+}: ISuccessStatus) => {
     const determineSize = () => {
         if (full) {
             return '60px';
@@ -29,6 +37,19 @@ export const TransactionStatus = ({ success, size, full }: ISuccessStatus) => {
         return 'text-red-600';
     };
 
+    const determineErrorText = () => {
+        if (errorText?.includes('user rejected transaction')) {
+            return 'User rejected transaction';
+        } else {
+            return 'Error';
+        }
+    };
+
+    const determineSuccessText = () => {
+        if (successText) return successText;
+        return 'Success';
+    };
+
     return (
         <div
             className={`${determineColor()} flex items-center ${
@@ -42,7 +63,9 @@ export const TransactionStatus = ({ success, size, full }: ISuccessStatus) => {
                     <IoIosClose size={determineSize()} />
                 )}
             </div>
-            <span className={`${full ? 'text-lg' : ''}`}>{success ? 'Success' : 'Error'}</span>
+            <span className={`${full ? 'text-lg' : ''}`}>
+                {success ? determineSuccessText() : determineErrorText()}
+            </span>
         </div>
     );
 };

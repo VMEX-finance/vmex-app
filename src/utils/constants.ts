@@ -1,11 +1,19 @@
+export const SUBGRAPH_ENDPOINT = process.env.REACT_APP_SUBGRAPH_ENDPOINT;
+
+export const HEALTH = {
+    GREAT: 5,
+    GOOD: 3,
+    OKAY: 2,
+    BAD: 1.5,
+    DEAD: 1,
+};
+
 export const TIMER_CLOSE_DELAY = 1500;
 
 export const AVAILABLE_ASSETS = [
     'AAVE',
     'BAT',
-    'BTC',
     'BUSD',
-    'CRV',
     'DAI',
     'ENJ',
     'KNC',
@@ -21,8 +29,25 @@ export const AVAILABLE_ASSETS = [
     'USDT',
     'WBTC',
     'WETH',
-    'XRP',
-    'XSUSHI',
     'YFI',
     'ZRX',
+    'Tricrypto2',
+    'ThreePool',
+    'StethEth',
+    'Steth',
+    'FraxUSDC',
+    'Frax3Crv',
+    'Frax',
+    'BAL',
+    'CRV',
+    'CVX',
+    'BADGER',
+    'LDO',
+    'ALCX',
+    'Oneinch',
 ];
+
+export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
+
+export const MAX_UINT_AMOUNT =
+    '115792089237316195423570985008687907853269984665640564039457584007913129639935';

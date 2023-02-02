@@ -1,13 +1,12 @@
-import { Button } from '../../components/buttons';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSelectedTrancheContext } from '../../../store/contexts';
-import { useWindowSize } from '../../../hooks/ui';
+import { useSelectedTrancheContext } from '../../../store';
 import { determineRatingColor } from '../../../utils/helpers';
 import { BsCheck } from 'react-icons/bs';
 import { IoIosClose } from 'react-icons/io';
-import type { IMarketsAsset } from '../../../models/markets';
-import { AssetDisplay } from '../../components/displays';
+import { AssetDisplay, SplitButton } from '../../components';
+import { IMarketsAsset } from '@app/api/types';
+import { useDialogController, useWindowSize } from '../../../hooks';
 
 const MarketsCustomRow = (props: any) => {
     const {
@@ -22,24 +21,44 @@ const MarketsCustomRow = (props: any) => {
         supplyTotal,
         rating,
         strategies,
+        collateral,
     } = props;
     const navigate = useNavigate();
     const { width } = useWindowSize();
     const { updateTranche, setAsset } = useSelectedTrancheContext();
+    const { openDialog } = useDialogController();
 
     const route = (e: Event, market: IMarketsAsset, view = 'overview') => {
         e.stopPropagation();
         setAsset(market.asset);
-        updateTranche('id', market.trancheId);
-        navigate(`/tranches/${market.tranche.replace(/\s+/g, '-')}`, { state: { view } });
+        updateTranche('id', market.trancheId.toString());
+        navigate(`/tranches/${market.tranche.replace(/\s+/g, '-')}`, {
+            state: { view, trancheId: market.trancheId.toString() },
+        });
+    };
+
+    const handleActionClick = (e: any) => {
+        e.stopPropagation();
+        if (e.target.innerHTML === 'Supply') {
+            openDialog('loan-asset-dialog', {
+                asset: asset,
+                trancheId: trancheId,
+                collateral,
+            });
+        } else {
+            openDialog('borrow-asset-dialog', {
+                asset: asset,
+                trancheId: trancheId,
+                collateral,
+            });
+        }
     };
 
     // Mobile
     if (width < 900) {
         return (
             <tr
-                key={`${asset}-${trancheId}`}
-                className="text-left transition duration-200 hover:bg-neutral-200 hover:cursor-pointer flex flex-col px-4 py-1 border border-y-[1px] first-of-type:!border-t-[3px]"
+                className="text-left transition duration-200 hover:bg-neutral-200 dark:hover:bg-neutral-900 hover:cursor-pointer flex flex-col px-4 pt-2 pb-1 border-y-[1px] dark:border-neutral-800"
                 onClick={(e: any) => route(e, props)}
             >
                 <td className="flex justify-between">
@@ -54,27 +73,29 @@ const MarketsCustomRow = (props: any) => {
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Supply APY</span>
-                    <span>{supplyApy}%</span>
+                    <span>{supplyApy}</span>
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Borrow APY</span>
-                    <span>{borrowApy}%</span>
+                    <span>{borrowApy}</span>
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Your Amount</span>
-                    <span>{yourAmount}</span>
+                    <span className={`${yourAmount.loading ? 'animate-pulse' : ''}`}>
+                        {yourAmount.amount}
+                    </span>
                 </td>
                 <td className="flex justify-between">
-                    <span className="font-bold">Available</span>
+                    <span className="font-bold">Borrowing Power</span>
                     <span>{available}</span>
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Supply</span>
-                    <span>${supplyTotal}M</span>
+                    <span>{supplyTotal}</span>
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Borrow</span>
-                    <span>${borrowTotal}M</span>
+                    <span>{borrowTotal}</span>
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Rating</span>
@@ -83,10 +104,24 @@ const MarketsCustomRow = (props: any) => {
                 <td className="flex justify-between">
                     <span className="font-bold">Strategy</span>
                     {strategies ? (
-                        <BsCheck className="w-6 h-6 text-[#00DD3E]" />
+                        <BsCheck className="w-6 h-6 text-green-500" />
                     ) : (
-                        <IoIosClose className="w-6 h-6 text-[#FF1F00]" />
+                        <IoIosClose className="w-6 h-6 text-red-500" />
                     )}
+                </td>
+                <td>
+                    <SplitButton
+                        full
+                        className="mt-1 mb-2"
+                        content={{
+                            left: 'Supply',
+                            right: 'Borrow',
+                        }}
+                        onClick={{
+                            left: handleActionClick,
+                            right: handleActionClick,
+                        }}
+                    />
                 </td>
             </tr>
         );
@@ -94,26 +129,25 @@ const MarketsCustomRow = (props: any) => {
     } else {
         return (
             <tr
-                key={`${asset}-${trancheId}`}
-                className="text-left transition duration-200 hover:bg-neutral-200 hover:cursor-pointer border border-y-[1px]"
-                onClick={(e: any) => route(e, props)}
+                className="text-left transition duration-200 hover:bg-neutral-200 dark:hover:bg-neutral-900 hover:cursor-pointer border-y-[1px] dark:border-neutral-800"
+                onClick={(e: any) => route(e, props, 'details')}
             >
                 <td className="whitespace-nowrap py-4 pl-2 md:pl-4 pr-2 text-sm">
                     <AssetDisplay name={asset} />
                 </td>
-                <td className="min-w-[150px]">{tranche}</td>
-                <td>{supplyApy}%</td>
-                <td>{borrowApy}%</td>
-                <td>
-                    {yourAmount} {asset}
+                <td className="min-w-[150px] pl-4">{tranche}</td>
+                <td className="pl-4">{supplyApy}</td>
+                <td className="pl-4">{borrowApy}</td>
+                <td className={`pl-4 ${yourAmount.loading ? 'animate-pulse' : ''}`}>
+                    {yourAmount.amount} {asset}
                 </td>
-                <td>{available}</td>
-                <td>${supplyTotal}M</td>
-                <td>${borrowTotal}M</td>
-                <td className="text-lg" style={{ color: determineRatingColor(rating) }}>
+                <td className="pl-4">{available}</td>
+                <td className="pl-4">{supplyTotal}</td>
+                <td className="pl-4">{borrowTotal}</td>
+                <td className="text-lg pl-4" style={{ color: determineRatingColor(rating) }}>
                     {rating}
                 </td>
-                <td className="">
+                <td className="pl-4">
                     <div className="w-8 h-8">
                         {strategies ? (
                             <BsCheck className="w-full h-full text-[#00DD3E]" />
@@ -123,9 +157,15 @@ const MarketsCustomRow = (props: any) => {
                     </div>
                 </td>
                 <td className="text-right pr-3.5">
-                    <Button
-                        label={width > 1536 ? 'View Details' : 'Details'}
-                        onClick={(e: any) => route(e, props, 'details')}
+                    <SplitButton
+                        content={{
+                            left: 'Supply',
+                            right: 'Borrow',
+                        }}
+                        onClick={{
+                            left: handleActionClick,
+                            right: handleActionClick,
+                        }}
                     />
                 </td>
             </tr>

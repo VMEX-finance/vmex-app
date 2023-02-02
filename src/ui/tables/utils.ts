@@ -7,11 +7,15 @@ export const muiCache = createCache({
     prepend: true,
 });
 
-export function vmexTheme() {
-    return createTheme({
+export function vmexTheme(isDark = false) {
+    return (createTheme as any)({
         palette: {
+            mode: isDark ? 'dark' : 'light',
+            background: {
+                paper: isDark ? '#0f0f0f' : '#fff',
+            },
             primary: {
-                main: '#000',
+                main: isDark ? '#fff' : '#0f0f0f',
             },
         },
         components: {
@@ -19,6 +23,14 @@ export function vmexTheme() {
                 styleOverrides: {
                     root: {
                         borderRadius: '0.5rem',
+                        backgroundImage: 'none',
+                    },
+                },
+            },
+            MUIDataTablePagination: {
+                styleOverrides: {
+                    tableCellContainer: {
+                        border: '0',
                     },
                 },
             },

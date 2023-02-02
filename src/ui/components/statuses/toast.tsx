@@ -1,3 +1,4 @@
+import { truncate } from '../../../utils/helpers';
 import React from 'react';
 
 type IToastStatusProps = {
@@ -26,7 +27,7 @@ export const ToastStatus = ({ status, transaction }: IToastStatusProps) => {
                     rel="noreferrer"
                     className="underline text-brand-blue hover:text-brand-purple transition duration-150"
                 >
-                    {transaction}
+                    {truncate(transaction, 3)}
                 </a>
             )}
         </div>

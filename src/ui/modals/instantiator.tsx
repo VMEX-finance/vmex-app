@@ -1,15 +1,16 @@
 import React from 'react';
-import { useDialogController } from '../../hooks/dialogs';
+import { useDialogController } from '../../hooks';
 import {
     BorrowAssetDialog,
-    BorrowedAssetDetailsDialog,
-    SuppliedAssetDetailsDialog,
     StakeAssetDialog,
     SupplyAssetDialog,
     CreateTrancheDialog,
     MyTranchesDialog,
+    ConfirmationDialog,
+    FeedbackDialog,
 } from '../modals';
 import { ModalWrapper } from './subcomponents';
+import { ToggleCollateralDialog } from './variations/toggle-collateral';
 
 export const AllModalsInstance: React.FC = () => {
     const { getDialogProps } = useDialogController();
@@ -19,14 +20,6 @@ export const AllModalsInstance: React.FC = () => {
             <React.Fragment>
                 <ModalWrapper {...getDialogProps('loan-asset-dialog')}>
                     <SupplyAssetDialog {...getDialogProps('loan-asset-dialog')} />
-                </ModalWrapper>
-            </React.Fragment>
-
-            <React.Fragment>
-                <ModalWrapper {...getDialogProps('borrowed-asset-details-dialog')}>
-                    <BorrowedAssetDetailsDialog
-                        {...getDialogProps('borrowed-asset-details-dialog')}
-                    />
                 </ModalWrapper>
             </React.Fragment>
 
@@ -43,14 +36,6 @@ export const AllModalsInstance: React.FC = () => {
             </React.Fragment>
 
             <React.Fragment>
-                <ModalWrapper {...getDialogProps('supplied-asset-details-dialog')}>
-                    <SuppliedAssetDetailsDialog
-                        {...getDialogProps('supplied-asset-details-dialog')}
-                    />
-                </ModalWrapper>
-            </React.Fragment>
-
-            <React.Fragment>
                 <ModalWrapper {...getDialogProps('create-tranche-dialog')}>
                     <CreateTrancheDialog {...getDialogProps('create-tranche-dialog')} />
                 </ModalWrapper>
@@ -59,6 +44,24 @@ export const AllModalsInstance: React.FC = () => {
             <React.Fragment>
                 <ModalWrapper {...getDialogProps('my-tranches-dialog')}>
                     <MyTranchesDialog {...getDialogProps('my-tranches-dialog')} />
+                </ModalWrapper>
+            </React.Fragment>
+
+            <React.Fragment>
+                <ModalWrapper {...getDialogProps('confirmation-dialog')}>
+                    <ConfirmationDialog {...getDialogProps('confirmation-dialog')} />
+                </ModalWrapper>
+            </React.Fragment>
+
+            <React.Fragment>
+                <ModalWrapper {...getDialogProps('feedback-dialog')}>
+                    <FeedbackDialog {...getDialogProps('feedback-dialog')} />
+                </ModalWrapper>
+            </React.Fragment>
+
+            <React.Fragment>
+                <ModalWrapper {...getDialogProps('toggle-collateral-dialog')}>
+                    <ToggleCollateralDialog {...getDialogProps('toggle-collateral-dialog')} />
                 </ModalWrapper>
             </React.Fragment>
         </>

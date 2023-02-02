@@ -2,9 +2,8 @@ import React, { useEffect } from 'react';
 import { IoIosClose } from 'react-icons/io';
 import { AssetDisplay } from '../displays';
 import { BasicToggle } from '../toggles';
-import { truncateAddress } from '../../../utils/helpers';
 import { utils } from 'ethers';
-import { AVAILABLE_ASSETS } from '../../../utils/constants';
+import { AVAILABLE_ASSETS, truncateAddress } from '../../../utils';
 import { AutoCompleteInput } from '.';
 
 export interface IListInput {
@@ -32,7 +31,7 @@ export const ListInputItem = ({
 }) => (
     <button
         onClick={(e) => (noDelete ? {} : remove(value))}
-        className={`border border-black ${
+        className={`border border-brand-black dark:bg-neutral-800 ${
             noDelete ? 'pl-3 pr-4 cursor-default' : 'pl-3 pr-2 cursor-pointer'
         } rounded-md flex items-center gap-2`}
     >
@@ -63,7 +62,10 @@ export const ListInput = ({
     const handleType = (e: any, val = '') => {
         const toBeSet = val ? val : value;
         if (e.key === 'Enter') {
-            if (coin && !AVAILABLE_ASSETS.includes(toBeSet.toUpperCase())) {
+            if (
+                coin &&
+                !AVAILABLE_ASSETS.map((coin) => coin.toUpperCase()).includes(toBeSet.toUpperCase())
+            ) {
                 setError('Please enter a valid token.');
                 setValue('');
                 return;
@@ -123,7 +125,7 @@ export const ListInput = ({
     return (
         <>
             <div className="flex justify-between items-end">
-                <h3 className="mt-6 mb-1 text-gray-400">
+                <h3 className="mt-6 mb-1 text-neutral400">
                     {title}
                     {required && <span className="text-red-500 ml-1">*</span>}
                 </h3>
@@ -131,23 +133,25 @@ export const ListInput = ({
             </div>
             {determineOpen() && (
                 <div
-                    className={`w-full flex flex-col justify-between mt-1 rounded-xl border border-gray-300 p-2 ${
+                    className={`w-full flex flex-col justify-between mt-1 rounded-xl border border-neutral-300 dark:border-neutral-700 p-2 ${
                         error ? 'border-red-500' : 'border-gray-300'
                     }`}
                 >
                     <div className="flex flex-col justify-between gap-3">
-                        <div className="w-full flex gap-3 items-center">
-                            <AutoCompleteInput
-                                value={value}
-                                setValue={setValue}
-                                onChange={handleChange}
-                                onKeyDown={handleType}
-                                placeholder={placeholder}
-                                close={error.length !== 0}
-                                list={autocomplete}
-                            />
+                        <div className="w-full flex gap-3 items-center justify-between">
+                            <div className="max-w-[250px]">
+                                <AutoCompleteInput
+                                    value={value}
+                                    setValue={setValue}
+                                    onChange={handleChange}
+                                    onKeyDown={handleType}
+                                    placeholder={placeholder}
+                                    close={error.length !== 0}
+                                    list={autocomplete}
+                                />
+                            </div>
                             {value && value.length > 2 && (
-                                <span className="text-sm text-gray-400 whitespace-nowrap">
+                                <span className="text-sm text-neutral-400 whitespace-nowrap">
                                     Press Enter
                                 </span>
                             )}

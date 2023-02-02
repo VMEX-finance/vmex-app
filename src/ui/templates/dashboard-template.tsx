@@ -1,11 +1,11 @@
 import React from 'react';
-import { Button } from '../components/buttons';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useWalletState } from '../../hooks/wallet';
-import { useWindowSize } from '../../hooks/ui';
-import { BiPlus } from 'react-icons/bi';
-import { useDialogController } from '../../hooks/dialogs';
-import { useMyTranchesContext } from '../../store/contexts';
+import { useWindowSize, useDialogController } from '../../hooks';
+import { BiChevronLeft, BiPlus } from 'react-icons/bi';
+import { useMyTranchesContext } from '../../store';
+import { Tooltip, Button, LinkButton } from '../components';
+import { useAccount } from 'wagmi';
+import { Skeleton } from '@mui/material';
 
 interface IDashboardTemplateProps {
     title?: string;
@@ -13,6 +13,8 @@ interface IDashboardTemplateProps {
     description?: string | React.ReactNode;
     view?: string;
     setView?: any;
+    titleLoading?: boolean;
+    right?: React.ReactNode;
 }
 
 const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
@@ -21,72 +23,97 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
     description,
     view,
     setView,
+    titleLoading,
+    right,
 }) => {
     const { myTranches } = useMyTranchesContext();
     const { openDialog } = useDialogController();
     const location = useLocation();
     const navigate = useNavigate();
     const routeChange = () => navigate(-1);
-    const { address } = useWalletState();
+    const isConnected = useAccount();
     const { width } = useWindowSize();
 
     // TODO: cleanup / optimize
     return (
-        <div className="max-w-[125rem] mx-auto p-4 md:p-6 lg:p-10">
+        <div className="max-w-[125rem] mx-auto p-3 md:p-6 lg:p-10">
             <header
-                className={`${
-                    view ? 'grid grid-flow-dense md:grid-cols-3' : 'flex flex-row'
-                } justify-between items-end`}
+                className={`
+                    ${right ? 'flex justify-between w-full' : ''}
+                    ${view && !right ? 'grid grid-flow-dense md:grid-cols-3' : 'flex flex-row'}
+                justify-between items-end`}
             >
                 <div className="max-w-[500px]">
                     {view ? (
-                        <button
-                            className="flex gap-2 items-baseline hover:cursor-pointer hover:text-neutral-800 transition duration-150"
-                            onClick={routeChange}
-                        >
-                            <img src="/elements/Vector.svg" alt="vector" className="w-3 h-3" />
-                            <p className="text-lg">Back to all</p>
-                        </button>
+                        <LinkButton onClick={routeChange}>
+                            <BiChevronLeft size="22px" />
+                            <p className="text-lg">Back</p>
+                        </LinkButton>
                     ) : (
                         <>
-                            <h1 className="text-3xl font-basefont capitalize leading-tight text-gray-900">
+                            <h1 className="text-3xl font-basefont capitalize leading-tight text-neutral-900 dark:text-neutral-300">
                                 {title}
                             </h1>
-                            {description && <p className="mt-1">{description}</p>}
+                            {description && (
+                                <p className="mt-1 dark:text-neutral-300">{description}</p>
+                            )}
                         </>
                     )}
                 </div>
-                {view && (
+                {right && right}
+                {view && !right && (
                     <>
-                        <div className="justify-center">
-                            <h1 className="text-3xl font-basefont capitalize leading-tight text-gray-900 text-center">
-                                {title}
-                            </h1>
+                        <div className="justify-center mx-auto">
+                            {titleLoading ? (
+                                <Skeleton variant="rounded" height={'36px'} width={'180px'} />
+                            ) : (
+                                <h1 className="text-3xl font-basefont capitalize leading-tight text-neutral-900 dark:text-neutral-300 text-center">
+                                    {title}
+                                </h1>
+                            )}
                         </div>
-                        <div className="flex gap-3 md:justify-end mt-2">
-                            <Button
-                                label="Overview"
+                        <div className="flex gap-3 md:justify-end">
+                            <LinkButton
                                 onClick={() => setView('tranche-overview')}
-                                primary={view.includes('overview')}
-                                disabled={!address}
-                            />
-                            <Button
-                                label="Details"
+                                disabled={!isConnected}
+                                className="text-lg px-1"
+                                highlight={view.includes('tranche-overview')}
+                            >
+                                Supply/Borrow
+                            </LinkButton>
+                            <LinkButton
                                 onClick={() => setView('tranche-details')}
-                                primary={view.includes('details')}
-                            />
+                                disabled={!isConnected}
+                                className="text-lg px-1"
+                                highlight={view.includes('tranche-details')}
+                            >
+                                Details
+                            </LinkButton>
                         </div>
                     </>
                 )}
-                {location.pathname === `/tranches` && address && (
+                {location.pathname === `/tranches` && isConnected && (
                     <div className="flex gap-3 md:justify-end mt-2">
-                        <Button
-                            label={'My Tranches'}
-                            onClick={() => openDialog('my-tranches-dialog')}
-                            primary
-                            disabled={myTranches?.length === 0}
-                            className="!text-lg"
-                        />
+                        {myTranches?.length > 0 ? (
+                            <Button
+                                label={'My Tranches'}
+                                onClick={() => openDialog('my-tranches-dialog')}
+                                primary
+                                className="!text-lg"
+                            />
+                        ) : (
+                            <Tooltip
+                                text="Create a tranche first"
+                                content={
+                                    <Button
+                                        label={'My Tranches'}
+                                        primary
+                                        disabled={myTranches?.length === 0}
+                                        className="!text-lg"
+                                    />
+                                }
+                            />
+                        )}
                         <Button
                             label={width > 768 ? 'Create Tranche' : <BiPlus size="28px" />}
                             onClick={() => openDialog('create-tranche-dialog')}
@@ -97,7 +124,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                 )}
             </header>
             <main>
-                <div className="py-8 flex flex-col gap-8">
+                <div className="py-8 flex flex-col gap-4 xl:gap-8">
                     {children ? (
                         children
                     ) : (

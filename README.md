@@ -14,15 +14,17 @@ To start local development, first clone the [VMEX SDK/contracts repo](https://gi
 
 Then, inside the VMEX monorepo, run:
 
-1. `yarn compile`
-2. `yarn build`
-3. `yarn start:dev`
+1. `yarn contracts compile`
+2. `yarn sdk build`
+3. `yarn contracts start:dev`
 
 Then, in the VMEX App repo, run:
 
 ```bash
 yarn start:dev
 ```
+
+*Note: Make sure your Metamask network is set to localhost:8545 with a chain ID 31337 and reset your MetaMask account if needed*
 
 When adding new features, create a new branch based on `origin/develop`. Upon completing new features, create pull requests to `origin/develop`.
 
@@ -41,20 +43,20 @@ Currency: ETH
 ```
 src
 ├── api                     # sdk imports and exports as well as formatting
-│   ├── protocol            # Pulling protocol data including tranches, markets, and overview
-│   └── index.ts            
+│   ├── protocol            # Querying protocol data including tranches, markets, and overview
+│   ├── user                # Querying user data
+│   ├── models.ts           # Api data models/interfaces
+│   └── index.ts
 ├── hooks                   # Hooks for ui, stores, and more
 │   ├── dialogs             # Managing dialog state
 │   ├── ui                  # Strictly hooks for UI components
-│   ├── user                # Pulling user data including user activity, tokens, etc.
-│   ├── wallet              # Managing web3 wallet state
 │   └── redux.ts
-├── models                  # Api data models/interfaces
 ├── pages                   # Page Components that are passed to React DOM
 ├── store                   # Redux and context stores
-│   ├── contexts            # Managing dialog state
-│   ├── ...
-│   └── wallet.ts           # Redux state management for web3 wallet
+│   ├── contexts            # Global contexts
+│   ├── modals.ts           # Managing dialog state
+│   ├── rainbow.ts          # Managing rainbow wallet
+│   └── redux.ts            # Redux state management
 ├── ui                      # All user interface components
 │   ├── base                # Includes navbar, footer, and base layout
 │   ├── components          # Includes subcomponents to be used in larger UI components

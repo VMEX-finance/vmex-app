@@ -4,6 +4,7 @@ type IModalTableItemProps = {
     label: string;
     value: string | number | ReactNode;
     baseLink?: string;
+    loading?: boolean;
 };
 
 type IModalTableDisplayProps = {
@@ -14,9 +15,9 @@ type IModalTableDisplayProps = {
 export const ModalTableDisplay = ({ title, content }: IModalTableDisplayProps) => {
     return (
         <>
-            {title && <h3 className="mt-6 text-gray-400">{title}</h3>}
+            {title && <h3 className="mt-6 text-neutral400">{title}</h3>}
             <div
-                className={`mt-2 flex justify-between rounded-lg border border-neutral-900 p-4 lg:py-6`}
+                className={`mt-2 flex justify-between rounded-lg border border-neutral-300 dark:border-neutral-700 p-4 lg:py-6`}
             >
                 <div className="flex flex-col gap-2">
                     {content.map((el, i) => (
@@ -28,7 +29,7 @@ export const ModalTableDisplay = ({ title, content }: IModalTableDisplayProps) =
                     {content.map((el, i) => (
                         <span
                             key={i}
-                            className={`${
+                            className={`${el.loading ? 'animate-pulse' : ''} ${
                                 el.baseLink
                                     ? 'underline text-brand-purple hover:text-opacity-80 duration-200 transition cursor-pointer'
                                     : ''

@@ -1,3 +1,7 @@
+import { IMarketsAsset, ITrancheProps } from '@app/api/types';
+import { ethers } from 'ethers';
+import { HEALTH } from './constants';
+
 export function truncateAddress(s: string) {
     return `${s.slice(0, 3)}...${s.slice(-4)}`;
 }
@@ -35,27 +39,63 @@ export const determineRatingColor = (s: string) => {
     }
 };
 
-export type AvailableChains =
-    | 'bitcoin'
-    | 'ethereum'
-    | 'bitcoin'
-    | 'avalanche'
-    | 'polygon'
-    | 'arbitrum'
-    | 'optimism'
-    | 'zcash';
+export const determineCoinImg = (asset: string, custom?: string) => {
+    if (custom) return custom;
+    else {
+        let url = '/coins/';
+        if (asset?.startsWith('yv')) return `${url}generic.svg`;
+        else return `${url}${asset.toLowerCase()}.svg`;
+    }
+};
 
-export type AvailableCoins =
-    | 'usdc'
-    | 'renbtc'
-    | 'btc'
-    | 'wbtc'
-    | 'usdt'
-    | 'eth'
-    | 'matic'
-    | 'avax'
-    | 'zec'
-    | 'ibbtc';
+export const determineHealthColor = (health: number | string | undefined) => {
+    if (!health) return 'text-black';
+    let _health;
+    if (typeof health === 'string') _health = parseFloat(health);
+    else _health = health;
+
+    if (_health > HEALTH['GREAT']) return 'text-brand-green';
+    else if (_health > HEALTH['GOOD']) return 'text-green-300';
+    else if (_health > HEALTH['OKAY']) return 'text-yellow-400';
+    else if (_health > HEALTH['BAD']) return 'text-red-300';
+    else return 'text-red-500';
+};
+
+export type IAvailableCoins =
+    | 'AAVE'
+    | 'BAT'
+    | 'BUSD'
+    | 'DAI'
+    | 'ENJ'
+    | 'KNC'
+    | 'LINK'
+    | 'MANA'
+    | 'MKR'
+    | 'REN'
+    | 'SNX'
+    | 'SUSD'
+    | 'TUSD'
+    | 'UNI'
+    | 'USDC'
+    | 'USDT'
+    | 'WBTC'
+    | 'WETH'
+    | 'YFI'
+    | 'ZRX'
+    | 'Tricrypto2'
+    | 'ThreePool'
+    | 'StethEth'
+    | 'Steth'
+    | 'FraxUSDC'
+    | 'Frax3Crv'
+    | 'Frax'
+    | 'BAL'
+    | 'CRV'
+    | 'CVX'
+    | 'BADGER'
+    | 'LDO'
+    | 'ALCX'
+    | 'Oneinch';
 
 export const truncate = (str: string, show = 6) => {
     if (str && str.length > 20) {
@@ -66,96 +106,40 @@ export const truncate = (str: string, show = 6) => {
     return str || '';
 };
 
-export const calculateTimeDiff = (date: Date) => {
-    const now = new Date().valueOf();
-    let timeDiffMs = now - date.valueOf(); // MS
-    timeDiffMs /= 1000; // Strip the MS
+export const usdFormatter = (isCompact = true) =>
+    new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        notation: isCompact ? 'compact' : 'standard',
+    });
 
-    const timeDiffSec = Math.round(timeDiffMs); // Seconds
-    const timeDiffMin = Math.round(timeDiffSec / 60); // Minutes
-    const timeDiffH = timeDiffMin / 60; // Hours
-
-    return {
-        seconds: timeDiffSec,
-        minutes: timeDiffMin,
-        hours: timeDiffH,
-    };
+export const makeCompact = (amount: string | number | undefined, decimalsOnly = false) => {
+    if (!amount) return '$0';
+    let _amount: string;
+    if (typeof amount === 'number') _amount = String(amount);
+    else _amount = amount;
+    if (decimalsOnly)
+        return _amount.length > 5 && _amount.includes('.') ? _amount.split('.')[0] : _amount;
+    if (_amount.includes('$')) _amount = _amount.slice(1);
+    if (_amount.includes(',')) _amount = _amount.replaceAll(',', '');
+    return usdFormatter().format(parseFloat(_amount));
 };
-
-export const renderAsset = (asset: AvailableChains | AvailableCoins | string) => {
-    let formatted;
-
-    if (asset?.length > 4 && asset?.toLowerCase() !== 'renbtc') {
-        switch (asset.toLowerCase()) {
-            case 'polygon':
-                formatted = 'matic';
-                break;
-            case 'avalanche':
-                formatted = 'avax';
-                break;
-            case 'bitcoin':
-                formatted = 'btc';
-                break;
-            case 'arbitrum':
-                formatted = 'arb';
-                break;
-            case 'zcash':
-            case 'renzec':
-                formatted = 'zec';
-                break;
-            default:
-                formatted = 'eth';
-                break;
-        }
-    } else {
-        formatted = asset?.toLowerCase();
-    }
-
-    return `/assets/svg-coins/${formatted}.svg`;
-};
-
-export const redirectChainExplorer = (
-    chain: AvailableChains | 'renvm',
-    hash: string | any,
-    type: 'address' | 'tx' = 'tx',
-) => {
-    let explorerUrl = '';
-    switch (chain.toLowerCase()) {
-        case 'bitcoin':
-            explorerUrl = 'https://blockchair.com/search?q=';
-            break;
-        case 'avalanche':
-            explorerUrl = `https://snowtrace.io/${type}/`;
-            break;
-        case 'arbitrum':
-            explorerUrl = `https://arbiscan.io/${type}/`;
-            break;
-        case 'polygon':
-            explorerUrl = `https://polygonscan.com/${type}/`;
-            break;
-        case 'renvm':
-            explorerUrl = `https://explorer.renproject.io/${type}/`;
-            break;
-        default:
-            explorerUrl = `https://etherscan.io/${type}/`;
-            break;
-    }
-    return explorerUrl + (hash || '');
-};
-
-export const capFirst = (string: string | undefined) => {
-    if (!string) return '';
-    return string.charAt(0).toUpperCase() + string.slice(1);
-};
-
-export const usdFormatter = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    notation: 'compact',
-});
 
 export const numberFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
+});
+
+export const HFFormatter = new Intl.NumberFormat('en-US', {
+    notation: 'compact',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+    maximumSignificantDigits: 4, //since percentages only have this many sig figs
+});
+
+export const nativeTokenFormatter = new Intl.NumberFormat('en-US', {
+    notation: 'standard',
+    minimumSignificantDigits: 5,
+    maximumSignificantDigits: 8,
 });
 
 export const percentFormatter = new Intl.NumberFormat('en-US', {
@@ -164,3 +148,44 @@ export const percentFormatter = new Intl.NumberFormat('en-US', {
     maximumFractionDigits: 2,
     notation: 'compact',
 });
+
+export const convertStringFormatToNumber = (amount: string | number) => {
+    if (!amount) return 'N/A';
+    return amount.toString().replaceAll(',', '');
+};
+
+export const convertContractsPercent = (amount: string) => {
+    if (!amount) return 'N/A';
+    return ethers.utils.formatUnits(amount.split('.')[0], 18);
+};
+
+export const averageOfArr = (array: number[]) =>
+    array && array.length > 0 ? array.reduce((a, b) => a + b) / array.length : 0;
+
+export const weightedAverageofArr = (nums: number[], weights: number[]) => {
+    const [sum, weightSum] = weights.reduce(
+        (acc, w, i) => {
+            acc[0] = acc[0] + nums[i] * w;
+            acc[1] = acc[1] + w;
+            return acc;
+        },
+        [0, 0],
+    );
+    return sum / weightSum;
+};
+
+export const addFeaturedTranches = (
+    data: ITrancheProps[] | IMarketsAsset[] | undefined,
+    type: 'tranches' | 'markets',
+) => {
+    if (!data) return [];
+    else {
+        const featuredTrancheIds = ['0', '1'];
+        const determinePropName = (row: any) => (type === 'tranches' ? row.id : row.trancheId);
+        return data.map((el) =>
+            featuredTrancheIds.includes(determinePropName(el))
+                ? { ...el, featured: 'VMEX' }
+                : { ...el },
+        );
+    }
+};
