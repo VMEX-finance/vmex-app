@@ -47,7 +47,7 @@ export const FullPageLoader = ({
                     >
                         <img src="/VMEX-logo-only.png" alt="VMEX Logo" width="165" height="150" />
                         <p className="text-center font-medium dark:text-neutral-300 mt-6">{text}</p>
-                        <p className="text-sm font-light">Goerli Testnet</p>
+                        <p className="text-sm font-light dark:text-neutral-300">Goerli Testnet</p>
                     </Transition>
                 </div>
             </Transition>
