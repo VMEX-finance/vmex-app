@@ -32,7 +32,7 @@ export const YourBorrowsTable: React.FC<IYourBorrowsTableProps> = ({
         : ['Asset', 'Amount', 'APY%', 'Tranche'];
 
     return (
-        <table className="min-w-full divide-y divide-gray-300 font-basefont">
+        <table className="min-w-full divide-y-2 divide-gray-300 dark:divide-neutral-800 font-basefont">
             <thead className="">
                 <tr>
                     {headers.map((el, i) => (
@@ -46,7 +46,7 @@ export const YourBorrowsTable: React.FC<IYourBorrowsTableProps> = ({
                     ))}
                 </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody className="divide-y divide-gray-200 dark:divide-neutral-800">
                 {data &&
                     data.map((i) => {
                         return (
@@ -73,7 +73,7 @@ export const YourBorrowsTable: React.FC<IYourBorrowsTableProps> = ({
                                         }`}
                                         dollar={i.amount}
                                         size="xs"
-                                        color="text-black"
+                                        color="text-brand-black"
                                     />
                                 </td>
                                 <td>{i.apy}%</td>

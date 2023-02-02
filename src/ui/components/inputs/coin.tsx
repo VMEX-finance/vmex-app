@@ -73,7 +73,7 @@ export const CoinInput = ({
                     type="text"
                     value={amount}
                     onChange={onChange}
-                    className="text-2xl focus:outline-none max-w-[200px] dark:bg-black overflow-auto dark:placeholder:text-neutral-700"
+                    className="text-2xl focus:outline-none max-w-[200px] dark:bg-brand-black overflow-auto dark:placeholder:text-neutral-700"
                     placeholder="0.00"
                 />
                 {/* <div className="text-neutral400">USD</div> */}

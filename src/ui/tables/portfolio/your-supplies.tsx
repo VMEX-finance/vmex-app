@@ -42,7 +42,7 @@ export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({
         : ['Asset', 'Amount', 'Collateral', 'APY%', 'Tranche'];
 
     return (
-        <table className="min-w-full divide-y divide-gray-300 font-basefont">
+        <table className="min-w-full divide-y-2 divide-gray-300 dark:divide-neutral-800 font-basefont">
             <thead className="">
                 <tr>
                     {headers.map((el, i) => (
@@ -56,7 +56,7 @@ export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({
                     ))}
                 </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody className="divide-y divide-gray-200 dark:divide-neutral-800">
                 {data.map((i, index) => {
                     return (
                         <tr
@@ -83,7 +83,7 @@ export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({
                                     }`}
                                     dollar={i.amount}
                                     size="xs"
-                                    color="text-black"
+                                    color="text-brand-black"
                                 />
                             </td>
                             <td>

@@ -181,7 +181,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                                 : `${amountBorrwable(el.asset).amount}`
                                         }`}
                                         size="xs"
-                                        color="text-black"
+                                        color="text-brand-black"
                                     />
                                 </td>
                                 <td>{el.apy}</td>

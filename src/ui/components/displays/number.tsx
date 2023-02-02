@@ -5,7 +5,7 @@ import { PercentChangeDisplay } from './percent-change';
 type INumberProps = {
     label?: string;
     value?: number | string | React.ReactNode;
-    color?: 'text-brand-purple' | 'text-brand-green' | 'text-black' | 'text-white' | string;
+    color?: 'text-brand-purple' | 'text-brand-green' | 'text-brand-black' | 'text-white' | string;
     size?: 'lg' | 'xl' | 'md';
     center?: boolean;
     change?: number;
@@ -17,7 +17,7 @@ export const NumberDisplay = ({
     value,
     label,
     size,
-    color = 'text-black dark:text-neutral-300',
+    color = 'text-brand-black dark:text-neutral-300',
     center,
     change,
     loading,

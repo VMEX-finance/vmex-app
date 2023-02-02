@@ -27,9 +27,9 @@ export const Button = ({
     loadingText,
 }: IButtonProps) => {
     const mode = primary
-        ? 'bg-black rounded-lg text-neutral-200 hover:bg-neutral-800 border border-[1px] border-black'
+        ? 'bg-brand-black rounded-lg text-neutral-200 hover:bg-neutral-800 border border-[1px] border-brand-black'
         : border
-        ? `bg-white text-neutral-900 border-[1px] border-black border-solid rounded-lg hover:bg-neutral-100`
+        ? `bg-white text-neutral-900 border-[1px] border-brand-black border-solid rounded-lg hover:bg-neutral-100`
         : 'bg-white text-neutral-900 rounded-lg hover:bg-neutral-200';
 
     return (
@@ -40,7 +40,7 @@ export const Button = ({
                 `${
                     primary
                         ? 'dark:bg-neutral-200 dark:text-neutral-900 dark:hover:bg-neutral-300'
-                        : 'dark:bg-black dark:text-neutral-200 dark:hover:bg-neutral-900'
+                        : 'dark:bg-brand-black dark:text-neutral-200 dark:hover:bg-neutral-900'
                 } ${disabled || loading ? 'dark:border-transparent' : 'dark:border-neutral-200'}`,
                 'h-fit',
                 'box-border',
