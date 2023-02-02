@@ -1,5 +1,5 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { IButtonProps } from './default';
 import { useAccount, useDisconnect } from 'wagmi';
 import { ThemeContext, useMyTranchesContext } from '../../../store';
@@ -124,7 +124,7 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
                                             'min-h-[36px] !py-2',
                                             mode,
                                             className,
-                                            'bg-brand-black rounded-lg text-white hover:bg-neutral-800 border border-brand-black',
+                                            'bg-brand-black dark:bg-neutral-200 dark:text-neutral-900 dark:hover:bg-neutral-300 rounded-lg text-white hover:bg-neutral-800 border border-brand-black',
                                         ].join(' ')}
                                     >
                                         {determineConnection().render}
