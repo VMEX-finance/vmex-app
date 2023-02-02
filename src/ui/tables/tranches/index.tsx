@@ -69,7 +69,7 @@ export const TranchesTable: React.FC<IDataTable> = ({ data, loading, userActivit
         },
         {
             name: 'aggregateRating',
-            label: 'Aggregate Rating',
+            label: 'Rating',
             options: {
                 filter: true,
                 sort: true,

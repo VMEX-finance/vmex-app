@@ -108,19 +108,22 @@ const TranchesCustomRow = (props: ITranchesCustomRowProps) => {
                 <td className="whitespace-nowrap py-4 pl-2 md:pl-4 pr-3">
                     <span>{id}</span>
                 </td>
-                <td className="whitespace-nowrap">
+                <td className="whitespace-nowrap pl-4">
                     <span>{name}</span>
                 </td>
 
-                <td className="min-w-[120px]">
+                <td className="min-w-[120px] pl-4">
                     <MultipleAssetsDisplay assets={assets} show={width > 1100 ? 4 : 2} />
                 </td>
-                <td className="text-lg" style={{ color: determineRatingColor(aggregateRating) }}>
+                <td
+                    className="text-lg pl-4"
+                    style={{ color: determineRatingColor(aggregateRating) }}
+                >
                     {aggregateRating}
                 </td>
-                <td>{renderActivity(yourActivity)}</td>
-                <td>{supplyTotal}</td>
-                <td>{borrowTotal}</td>
+                <td className="pl-4">{renderActivity(yourActivity)}</td>
+                <td className="pl-4">{supplyTotal}</td>
+                <td className="pl-4">{borrowTotal}</td>
                 <td className="text-right pr-3.5">
                     <Button
                         primary
