@@ -140,7 +140,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                 {(renderUserInteractions('borrows').length !== 0 ||
                     renderUserInteractions('supplies').length !== 0) && (
                     <>
-                        <div className="border-t-2 border-black md:border-0 mt-4" />
+                        <div className="border-t-2 border-brand-black md:border-0 mt-4" />
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
                             <div className="text-center flex flex-col">
                                 <span className="text-sm">

@@ -20,7 +20,7 @@ export const MenuItemButton = ({
             ? 'bg-neutral-100 text-neutral-900'
             : mobile
             ? 'hover:bg-neutral-200 text-neutral-900'
-            : 'bg-black dark:bg-neutral-900 text-white hover:bg-neutral-800 dark:hover:bg-neutral-800';
+            : 'bg-brand-black dark:bg-neutral-900 text-white hover:bg-neutral-800 dark:hover:bg-neutral-800';
 
     const highlight = highlighted
         ? '!bg-neutral-900 !text-white hover:!bg-neutral-800 dark:hover:!bg-neutral-800'

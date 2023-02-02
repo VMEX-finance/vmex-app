@@ -25,6 +25,9 @@ module.exports = {
                         DEFAULT: '#3CB55E',
                         neon: '#59db51',
                     },
+                    black: {
+                        DEFAULT: '#0c0c0c',
+                    },
                 },
             },
             keyframes: {

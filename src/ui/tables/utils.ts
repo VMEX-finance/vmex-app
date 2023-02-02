@@ -12,10 +12,10 @@ export function vmexTheme(isDark = false) {
         palette: {
             mode: isDark ? 'dark' : 'light',
             background: {
-                paper: isDark ? '#000' : '#fff',
+                paper: isDark ? '#0f0f0f' : '#fff',
             },
             primary: {
-                main: isDark ? '#fff' : '#000',
+                main: isDark ? '#fff' : '#0f0f0f',
             },
         },
         components: {

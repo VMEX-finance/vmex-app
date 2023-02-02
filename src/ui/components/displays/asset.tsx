@@ -34,7 +34,7 @@ export const AssetDisplay = (props: IAssetDisplayProps) => {
         <div
             className={`flex items-center gap-1 rounded-lg ${
                 props.className ? props.className : ''
-            } ${props.border ? 'border border-1 border-black w-fit px-2' : ''}`}
+            } ${props.border ? 'border border-1 border-brand-black w-fit px-2' : ''}`}
         >
             <img src={determineImg()} alt={props.name} height={iconSize()} width={iconSize()} />
             <span>{props.name?.toUpperCase()}</span>
