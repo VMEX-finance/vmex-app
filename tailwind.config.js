@@ -26,7 +26,7 @@ module.exports = {
                         neon: '#59db51',
                     },
                     black: {
-                        DEFAULT: '#0c0c0c',
+                        DEFAULT: '#0f0f0f',
                     },
                 },
             },
