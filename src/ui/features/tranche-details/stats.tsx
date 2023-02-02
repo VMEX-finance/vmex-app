@@ -14,7 +14,7 @@ import { useSubgraphMarketsData } from '../../../api/subgraph';
 import { TbInfinity } from 'react-icons/tb';
 
 type ITrancheStatisticsCardProps = {
-    tranche?: IGraphTrancheDataProps | any;
+    tranche?: IGraphTrancheDataProps;
     trancheId: string;
     assetData?: IGraphTrancheAssetProps;
     loading?: boolean;
@@ -30,6 +30,17 @@ export const TrancheStatisticsCard = ({
     const [rerender, setRerender] = useState(false);
     const { queryMarketsChart } = useSubgraphMarketsData(trancheId, asset);
 
+    const renderDropdown = (hasUtility = true) => {
+        if (!tranche?.assetsData || !asset) return [];
+        const mappedObj = Object.entries(tranche.assetsData);
+        if (hasUtility) {
+            return mappedObj.map((el) => ({ text: el[0] }));
+        } else {
+            const filtered = mappedObj.filter((el) => el[1].utilityRate !== '0');
+            return filtered.map((el) => ({ text: el[0] }));
+        }
+    };
+
     useEffect(() => {
         if (!asset && tranche?.assets) setAsset(tranche.assets[0]);
     }, [tranche]);
@@ -37,7 +48,7 @@ export const TrancheStatisticsCard = ({
     // Re-render for charts
     useEffect(() => {
         setRerender(true);
-        const timeout = setTimeout(() => setRerender(false), 600);
+        const timeout = setTimeout(() => setRerender(false), 750);
         return () => clearTimeout(timeout);
     }, [asset]);
 
@@ -45,7 +56,7 @@ export const TrancheStatisticsCard = ({
         <>
             <Card
                 black
-                loading={loading || !assetData || rerender}
+                loading={(loading || !assetData || rerender) && !queryMarketsChart.isError}
                 header={
                     <div className="flex justify-between items-center">
                         <div className="flex items-center gap-4">
@@ -63,11 +74,7 @@ export const TrancheStatisticsCard = ({
                         <DefaultDropdown
                             primary
                             size="lg"
-                            items={
-                                tranche && tranche.assets
-                                    ? tranche.assets.map((el: any) => ({ text: el }))
-                                    : []
-                            }
+                            items={renderDropdown()}
                             selected={asset || 'Loading'}
                             setSelected={setAsset}
                         />
@@ -77,17 +84,17 @@ export const TrancheStatisticsCard = ({
                 <div className="flex gap-6 mb-3 mt-1">
                     <NumberDisplay
                         label="Supply APY"
-                        value={`${assetData?.supplyRate}`}
+                        value={assetData?.supplyRate || '0%'}
                         color="text-brand-green"
                     />
                     <NumberDisplay
                         label="Borrow APY"
-                        value={assetData?.borrowRate}
+                        value={assetData?.borrowRate || '0%'}
                         color="text-brand-purple"
                     />
                     <NumberDisplay
                         label="Optimal Utilization"
-                        value={assetData?.optimalUtilityRate}
+                        value={assetData?.optimalUtilityRate || 'N/A'}
                         color="text-white"
                     />
                 </div>
@@ -103,6 +110,7 @@ export const TrancheStatisticsCard = ({
                                 timeseries
                                 xaxis
                                 yaxis
+                                error={queryMarketsChart.isError}
                             />
                         </div>
                         <div className="flex flex-col gap-2">
@@ -114,114 +122,123 @@ export const TrancheStatisticsCard = ({
                                     type="utilization"
                                     yaxis
                                     xaxis
+                                    error={queryMarketsChart.isError}
                                 />
                             </div>
                         </div>
                     </div>
-                    <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 justify-items-center gap-y-10">
-                        <NumberDisplay
-                            label="LTV"
-                            value={percentFormatter.format(
-                                Number(convertContractsPercent(assetData?.ltv)),
-                            )}
-                            color="text-white"
-                            center
-                        />
-                        <NumberDisplay
-                            label="Borrow Factor"
-                            value={percentFormatter.format(
-                                Number(convertContractsPercent(assetData?.borrowFactor)),
-                            )}
-                            color="text-white"
-                            center
-                        />
-                        <NumberDisplay
-                            label="Liq. Threshold"
-                            value={percentFormatter.format(
-                                Number(convertContractsPercent(assetData?.liquidationThreshold)),
-                            )}
-                            color="text-white"
-                            center
-                        />
-                        <NumberDisplay
-                            label="Liq. Bonus"
-                            value={`${percentFormatter.format(
-                                Number(convertContractsPercent(assetData?.liquidationBonus)),
-                            )}`}
-                            color="text-white"
-                            center
-                        />
-                        <NumberDisplay
-                            label="Collateral"
-                            value={`${assetData?.collateral ? 'Yes' : 'No'}`}
-                            color="text-white"
-                            center
-                        />
-                        <NumberDisplay
-                            label="Supply Cap"
-                            value={
-                                assetData?.supplyCap == MAX_UINT_AMOUNT ? (
-                                    <TbInfinity color="text-white" />
-                                ) : (
-                                    `${numberFormatter.format(assetData?.supplyCap)} ${asset}`
-                                )
-                            }
-                            color="text-white"
-                            center
-                        />
-                        <NumberDisplay
-                            label="Borrow Cap"
-                            value={
-                                assetData?.borrowCap == MAX_UINT_AMOUNT ? (
-                                    <TbInfinity color="text-white" />
-                                ) : (
-                                    `${numberFormatter.format(assetData?.borrowCap)} ${asset}`
-                                )
-                            }
-                            color="text-white"
-                            center
-                        />
-                        <NumberDisplay
-                            label="Oracle"
-                            value={assetData?.oracle}
-                            color="text-white"
-                            center
-                        />
-                        <NumberDisplay
-                            label="Total Supplied"
-                            value={`${numberFormatter.format(assetData?.totalSupplied)} ${asset}`}
-                            color="text-white"
-                            center
-                        />
-                        <NumberDisplay
-                            label="Utilization"
-                            value={percentFormatter.format(assetData?.utilityRate)}
-                            color="text-white"
-                            center
-                        />
-                        <NumberDisplay
-                            label="Total Borrowed"
-                            value={`${numberFormatter.format(assetData?.totalBorrowed)} ${asset}`}
-                            color="text-white"
-                            center
-                        />
-                        <NumberDisplay
-                            label="Tranche Admin Fee"
-                            value={percentFormatter.format(
-                                Number(convertContractsPercent(assetData?.reserveFactor)),
-                            )}
-                            color="text-white"
-                            center
-                        />
-                        <NumberDisplay
-                            label="Platform Fee"
-                            value={percentFormatter.format(
-                                Number(convertContractsPercent(assetData?.vmexReserveFactor)),
-                            )}
-                            color="text-white"
-                            center
-                        />
-                    </div>
+                    {!queryMarketsChart.isError && (
+                        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 justify-items-center gap-y-10">
+                            <NumberDisplay
+                                label="LTV"
+                                value={percentFormatter.format(
+                                    Number(convertContractsPercent(assetData?.ltv)),
+                                )}
+                                color="text-white"
+                                center
+                            />
+                            <NumberDisplay
+                                label="Borrow Factor"
+                                value={percentFormatter.format(
+                                    Number(convertContractsPercent(assetData?.borrowFactor)),
+                                )}
+                                color="text-white"
+                                center
+                            />
+                            <NumberDisplay
+                                label="Liq. Threshold"
+                                value={percentFormatter.format(
+                                    Number(
+                                        convertContractsPercent(assetData?.liquidationThreshold),
+                                    ),
+                                )}
+                                color="text-white"
+                                center
+                            />
+                            <NumberDisplay
+                                label="Liq. Bonus"
+                                value={`${percentFormatter.format(
+                                    Number(convertContractsPercent(assetData?.liquidationBonus)),
+                                )}`}
+                                color="text-white"
+                                center
+                            />
+                            <NumberDisplay
+                                label="Collateral"
+                                value={`${assetData?.collateral ? 'Yes' : 'No'}`}
+                                color="text-white"
+                                center
+                            />
+                            <NumberDisplay
+                                label="Supply Cap"
+                                value={
+                                    assetData?.supplyCap == MAX_UINT_AMOUNT ? (
+                                        <TbInfinity color="text-white" />
+                                    ) : (
+                                        `${numberFormatter.format(assetData?.supplyCap)} ${asset}`
+                                    )
+                                }
+                                color="text-white"
+                                center
+                            />
+                            <NumberDisplay
+                                label="Borrow Cap"
+                                value={
+                                    assetData?.borrowCap == MAX_UINT_AMOUNT ? (
+                                        <TbInfinity color="text-white" />
+                                    ) : (
+                                        `${numberFormatter.format(assetData?.borrowCap)} ${asset}`
+                                    )
+                                }
+                                color="text-white"
+                                center
+                            />
+                            <NumberDisplay
+                                label="Oracle"
+                                value={assetData?.oracle}
+                                color="text-white"
+                                center
+                            />
+                            <NumberDisplay
+                                label="Total Supplied"
+                                value={`${numberFormatter.format(
+                                    assetData?.totalSupplied,
+                                )} ${asset}`}
+                                color="text-white"
+                                center
+                            />
+                            <NumberDisplay
+                                label="Utilization"
+                                value={percentFormatter.format(assetData?.utilityRate)}
+                                color="text-white"
+                                center
+                            />
+                            <NumberDisplay
+                                label="Total Borrowed"
+                                value={`${numberFormatter.format(
+                                    assetData?.totalBorrowed,
+                                )} ${asset}`}
+                                color="text-white"
+                                center
+                            />
+                            <NumberDisplay
+                                label="Tranche Admin Fee"
+                                value={percentFormatter.format(
+                                    Number(convertContractsPercent(assetData?.reserveFactor)),
+                                )}
+                                color="text-white"
+                                center
+                            />
+                            <NumberDisplay
+                                label="Platform Fee"
+                                value={percentFormatter.format(
+                                    Number(convertContractsPercent(assetData?.vmexReserveFactor)),
+                                )}
+                                color="text-white"
+                                center
+                            />
+                        </div>
+                    )}
                 </div>
             </Card>
 

@@ -60,7 +60,9 @@ const Overview: React.FC = () => {
             ) : (
                 <div className="pt-10 lg:pt-20 text-center flex-col">
                     <div className="mb-4">
-                        <span className="text-lg lg:text-2xl">Please connect your wallet.</span>
+                        <span className="text-lg dark:text-neutral-200">
+                            Please connect your wallet.
+                        </span>
                     </div>
                     <WalletButton primary className="w-fit" />
                 </div>

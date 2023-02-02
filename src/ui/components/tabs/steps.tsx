@@ -46,7 +46,7 @@ export const Stepper = ({ steps, previous, next, noSkip }: IStepperProps) => {
                                 <span className="text-sm font-medium text-neutral500 hover:text-neutral700">{`Step ${
                                     i + 1
                                 }`}</span>
-                                <span className="text-sm font-medium text-neutral-900 hover:text-brand-black dark:hover:text-neutral-300">
+                                <span className="text-sm font-medium text-neutral-900 hover:text-brand-black dark:text-neutral-400 dark:hover:text-neutral-300">
                                     {step.name}
                                 </span>
                             </button>
