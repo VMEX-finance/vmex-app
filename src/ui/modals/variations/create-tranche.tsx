@@ -182,6 +182,12 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
                 <p className="text-red-500 break-words">{error || 'Invalid input'}</p>
             )}
 
+            {isLoading && (
+                <span className="italic text-sm">
+                    Please be patient. There are multiple transactions to be signed.
+                </span>
+            )}
+
             <ModalFooter>
                 <Button
                     disabled={isSuccess || activeStep === 0}

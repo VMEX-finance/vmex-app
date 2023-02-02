@@ -100,6 +100,7 @@ export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({
                                         });
                                         e.stopPropagation();
                                     }}
+                                    size="small"
                                 />
                             </td>
                             <td>{i.apy}%</td>
