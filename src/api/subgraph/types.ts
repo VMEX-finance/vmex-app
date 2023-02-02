@@ -1,6 +1,6 @@
 import { UseQueryResult } from '@tanstack/react-query';
 import { ILineChartDataPointProps } from '../../ui/components/charts';
-import { AssetBalance, IMarketsAsset, ITrancheProps, TrancheData } from '../types';
+import { AssetBalance, IAssetMappings, IMarketsAsset, ITrancheProps, TrancheData } from '../types';
 import { BigNumber } from 'ethers';
 export type IAssetData = {
     underlyingAssetName: string;
@@ -104,6 +104,10 @@ export type ISubgraphMarketsChart = {
 
 export type ISubgraphAllMarketsData = {
     queryAllMarketsData: UseQueryResult<IMarketsAsset[], unknown>;
+};
+
+export type ISubgraphAllAssetMappingsData = {
+    queryAllAssetMappingsData: UseQueryResult<Map<string, IAssetMappings>, unknown>;
 };
 
 export type ISubgraphUserData = {

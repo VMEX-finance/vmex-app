@@ -18,6 +18,22 @@ export type IQueryKeys =
     | 'user-pnl-chart'
     | 'asset-prices';
 
+export type IAssetMappings = {
+    asset: string;
+    decimals: number;
+    borrowFactor: BigNumber;
+    borrowCap: BigNumber;
+    baseLTV: BigNumber; // if == 0, then can not be collateral
+    supplyCap: BigNumber;
+    vmexReserveFactor: BigNumber;
+
+    interestRateStrategyAddresses: string[];
+
+    liquidationBonus: BigNumber;
+    liqudiationThreshold: BigNumber;
+    canBeBorrowed: boolean;
+};
+
 export type IMarketsAsset = {
     asset: string;
     tranche: string;
