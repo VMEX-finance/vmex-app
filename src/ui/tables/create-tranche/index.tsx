@@ -1,6 +1,7 @@
 import { IAvailableCoins } from '../../../utils/helpers';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Checkbox, AssetDisplay } from '../../components';
+import { useSubgraphAllAssetMappingsData } from '../../../api/subgraph/getAssetMappingsData';
 
 // TODO: make a way to see which assets cannot be lent / collateralized / etc
 type ICreateTrancheAssetsTableProps = {
@@ -18,6 +19,13 @@ export const CreateTrancheAssetsTable = ({
     lendClick,
     collateralClick,
 }: ICreateTrancheAssetsTableProps) => {
+    const { queryAllAssetMappingsData } = useSubgraphAllAssetMappingsData();
+
+    useEffect(() => {
+        lendClick?.(assets);
+        collateralClick?.(assets);
+    }, [assets]);
+
     const isInList = (asset: IAvailableCoins, list?: IAvailableCoins[]) =>
         list && list.includes(asset) ? true : false;
 
@@ -31,6 +39,14 @@ export const CreateTrancheAssetsTable = ({
         const shallow = list.length > 0 ? [...list] : [];
         const removed = (shallow as any).filter((e: string) => e !== asset);
         (list == lendAssets ? lendClick : collateralClick)?.(removed as any);
+    };
+
+    const canBeCollateral = (asset: IAvailableCoins) => {
+        return queryAllAssetMappingsData.data?.get(asset.toUpperCase())?.baseLTV.toString() != '0';
+    };
+
+    const canBeBorrowed = (asset: IAvailableCoins) => {
+        return queryAllAssetMappingsData.data?.get(asset.toUpperCase())?.canBeBorrowed;
     };
 
     return (
@@ -52,8 +68,13 @@ export const CreateTrancheAssetsTable = ({
                             <td>
                                 <>
                                     <Checkbox
+                                        disabled={!canBeBorrowed(el)}
                                         checked={isInList(el, lendAssets)}
-                                        label={isInList(el, lendAssets) ? 'Enabled' : 'Disabled'}
+                                        label={
+                                            canBeBorrowed(el) && isInList(el, lendAssets)
+                                                ? 'Enabled'
+                                                : 'Disabled'
+                                        }
                                         onClick={() =>
                                             isInList(el, lendAssets)
                                                 ? removeFromList(el, lendAssets)
@@ -65,9 +86,12 @@ export const CreateTrancheAssetsTable = ({
                             <td>
                                 <>
                                     <Checkbox
+                                        disabled={!canBeCollateral(el)}
                                         checked={isInList(el, collateralAssets)}
                                         label={
-                                            isInList(el, collateralAssets) ? 'Enabled' : 'Disabled'
+                                            canBeCollateral(el) && isInList(el, collateralAssets)
+                                                ? 'Enabled'
+                                                : 'Disabled'
                                         }
                                         onClick={() =>
                                             isInList(el, collateralAssets)
