@@ -7,7 +7,7 @@ import MUIDataTable from 'mui-datatables';
 import { SpinnerLoader } from '../../components/loaders';
 import { ITrancheProps } from '../../../api/types';
 import { ThemeContext } from '../../../store';
-import { usdFormatter } from '../../../utils/helpers';
+import { addFeaturedTranches, usdFormatter } from '../../../utils/helpers';
 import { UseQueryResult } from '@tanstack/react-query';
 import { IUserActivityDataProps } from '@app/api/user/types';
 
@@ -104,6 +104,17 @@ export const TranchesTable: React.FC<IDataTable> = ({ data, loading, userActivit
             },
         },
         {
+            name: 'featured',
+            label: 'Featured',
+            options: {
+                filter: true,
+                sort: true,
+                sortThirdClickReset: true,
+                display: false,
+                filterType: 'dropdown',
+            },
+        },
+        {
             name: '',
             label: '',
             options: {
@@ -117,8 +128,8 @@ export const TranchesTable: React.FC<IDataTable> = ({ data, loading, userActivit
             <ThemeProvider theme={vmexTheme(isDark)}>
                 <MUIDataTable
                     title={'All Available Tranches'}
-                    columns={columns}
-                    data={data || []}
+                    columns={columns as any}
+                    data={addFeaturedTranches(data, 'tranches')}
                     options={{
                         ...options,
                         customRowRender: (

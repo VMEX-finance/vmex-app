@@ -7,7 +7,12 @@ import MUIDataTable from 'mui-datatables';
 import { SpinnerLoader } from '../../components/loaders';
 import { IMarketsAsset } from '@app/api/types';
 import { ThemeContext } from '../../../store';
-import { bigNumberToUnformattedString, numberFormatter, percentFormatter } from '../../../utils';
+import {
+    addFeaturedTranches,
+    bigNumberToUnformattedString,
+    numberFormatter,
+    percentFormatter,
+} from '../../../utils';
 import { UseQueryResult } from '@tanstack/react-query';
 import { IUserActivityDataProps } from '@app/api/user/types';
 
@@ -155,6 +160,17 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
             },
         },
         {
+            name: 'featured',
+            label: 'Featured',
+            options: {
+                filter: true,
+                sort: true,
+                sortThirdClickReset: true,
+                display: false,
+                filterType: 'dropdown',
+            },
+        },
+        {
             name: '',
             label: '',
             options: {
@@ -168,8 +184,8 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
             <ThemeProvider theme={vmexTheme(isDark)}>
                 <MUIDataTable
                     title={'All Available Assets'}
-                    columns={columns}
-                    data={data || []}
+                    columns={columns as any}
+                    data={addFeaturedTranches(data, 'markets')}
                     options={{
                         ...options,
                         customRowRender: (
