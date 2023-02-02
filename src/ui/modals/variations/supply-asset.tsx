@@ -213,7 +213,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                                     },
                                     {
                                         label: 'Collateralization',
-                                        value: <ActiveStatus active={collateral} size="sm" />,
+                                        value: <ActiveStatus active={asCollateral} size="sm" />,
                                     },
                                 ]}
                             />
