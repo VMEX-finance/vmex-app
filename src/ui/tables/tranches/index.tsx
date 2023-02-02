@@ -7,7 +7,7 @@ import MUIDataTable from 'mui-datatables';
 import { SpinnerLoader } from '../../components/loaders';
 import { ITrancheProps } from '../../../api/types';
 import { ThemeContext } from '../../../store';
-import { usdFormatter } from '../../../utils/helpers';
+import { addFeaturedTranches, usdFormatter } from '../../../utils/helpers';
 import { UseQueryResult } from '@tanstack/react-query';
 import { IUserActivityDataProps } from '@app/api/user/types';
 
@@ -41,6 +41,15 @@ export const TranchesTable: React.FC<IDataTable> = ({ data, loading, userActivit
 
     const columns = [
         {
+            name: 'id',
+            label: 'ID',
+            options: {
+                filter: false,
+                sort: true,
+                sortThirdClickReset: true,
+            },
+        },
+        {
             name: 'name',
             label: 'Tranche',
             options: {
@@ -60,7 +69,7 @@ export const TranchesTable: React.FC<IDataTable> = ({ data, loading, userActivit
         },
         {
             name: 'aggregateRating',
-            label: 'Aggregate Rating',
+            label: 'Rating',
             options: {
                 filter: true,
                 sort: true,
@@ -95,12 +104,14 @@ export const TranchesTable: React.FC<IDataTable> = ({ data, loading, userActivit
             },
         },
         {
-            name: 'id',
-            label: 'ID',
+            name: 'featured',
+            label: 'Featured',
             options: {
-                filter: false,
-                sort: false,
+                filter: true,
+                sort: true,
+                sortThirdClickReset: true,
                 display: false,
+                filterType: 'dropdown',
             },
         },
         {
@@ -117,19 +128,19 @@ export const TranchesTable: React.FC<IDataTable> = ({ data, loading, userActivit
             <ThemeProvider theme={vmexTheme(isDark)}>
                 <MUIDataTable
                     title={'All Available Tranches'}
-                    columns={columns}
-                    data={data || []}
+                    columns={columns as any}
+                    data={addFeaturedTranches(data, 'tranches')}
                     options={{
                         ...options,
                         customRowRender: (
                             [
+                                id,
                                 name,
                                 assets,
                                 aggregateRating,
                                 yourActivity,
                                 supplyTotal,
                                 borrowTotal,
-                                id,
                             ],
                             dataIndex,
                             rowIndex,

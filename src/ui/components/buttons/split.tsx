@@ -20,15 +20,15 @@ type ISplitButtonProps = {
 export const SplitButton = ({ colors, content, full, className, onClick }: ISplitButtonProps) => {
     return (
         <div
-            className={`${
+            className={`font-basefont ${
                 full ? 'grid grid-cols-2' : 'flex items-center'
-            } divide-x dark:divide-black ${className ? className : ''}`}
+            } divide-x-2 dark:divide-brand-black ${className ? className : ''}`}
         >
             <button
                 className={`${
                     colors
                         ? colors.left
-                        : 'bg-neutral-900 text-neutral-200 dark:bg-neutral-200 dark:text-neutral-900'
+                        : 'bg-brand-black text-neutral-200 dark:bg-neutral-200 dark:text-neutral-900'
                 } rounded-l-md py-1 px-3 transition duration-150 hover:opacity-90`}
                 onClick={onClick.left}
             >

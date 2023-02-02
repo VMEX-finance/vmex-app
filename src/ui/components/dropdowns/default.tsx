@@ -71,10 +71,10 @@ export const DefaultDropdown = ({
     const textSize = size === 'lg' ? 'text-lg' : 'text-sm';
     const iconSize = size === 'lg' ? '30px' : '24px';
     const paddingSize = size === 'lg' ? 'py-1 pl-4 pr-2' : 'pl-2';
-    const withBorder = border ? 'border border-black' : '';
+    const withBorder = border ? 'border border-brand-black' : '';
     const roundedSize = size === 'lg' ? 'rounded-lg' : 'rounded-md';
     const displayOnly = label
-        ? `lg:border lg:border-black bg-white ${
+        ? `lg:border lg:border-brand-black bg-white ${
               typeof label === 'string' ? '!px-4 !py-[3px]' : '!p-2'
           } !text-lg`
         : '';

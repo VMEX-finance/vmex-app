@@ -1,3 +1,4 @@
+import { IMarketsAsset, ITrancheProps } from '@app/api/types';
 import { ethers } from 'ethers';
 import { HEALTH } from './constants';
 
@@ -35,6 +36,15 @@ export const determineRatingColor = (s: string) => {
             default:
                 return '';
         }
+    }
+};
+
+export const determineCoinImg = (asset: string, custom?: string) => {
+    if (custom) return custom;
+    else {
+        let url = '/coins/';
+        if (asset?.startsWith('yv')) return `${url}generic.svg`;
+        else return `${url}${asset.toLowerCase()}.svg`;
     }
 };
 
@@ -162,4 +172,20 @@ export const weightedAverageofArr = (nums: number[], weights: number[]) => {
         [0, 0],
     );
     return sum / weightSum;
+};
+
+export const addFeaturedTranches = (
+    data: ITrancheProps[] | IMarketsAsset[] | undefined,
+    type: 'tranches' | 'markets',
+) => {
+    if (!data) return [];
+    else {
+        const featuredTrancheIds = ['0', '1'];
+        const determinePropName = (row: any) => (type === 'tranches' ? row.id : row.trancheId);
+        return data.map((el) =>
+            featuredTrancheIds.includes(determinePropName(el))
+                ? { ...el, featured: 'VMEX' }
+                : { ...el },
+        );
+    }
 };
