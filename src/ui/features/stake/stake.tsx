@@ -69,10 +69,7 @@ export const StakingAsset = (props: IStakingAsset) => {
                                 dollar={0.0}
                             />
                             <div className="w-fit">
-                                <Button
-                                    label="Claim VMEX"
-                                    className="!bg-black !border-white border !text-white hover:!bg-neutral-800"
-                                />
+                                <Button label="Claim VMEX" primary />
                             </div>
                         </div>
 
@@ -84,10 +81,7 @@ export const StakingAsset = (props: IStakingAsset) => {
                                 dollar={0.0}
                             />
                             <div className="w-fit">
-                                <Button
-                                    label="Unstake VMEX"
-                                    className="!bg-black !border-white border !text-white hover:!bg-neutral-800"
-                                />
+                                <Button label="Unstake VMEX" primary />
                             </div>
                         </div>
                     </div>

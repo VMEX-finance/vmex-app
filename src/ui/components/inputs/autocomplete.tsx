@@ -33,7 +33,7 @@ export const AutoCompleteInput: FC<IAutoCompleteInputProps> = ({
             <input
                 type="text"
                 value={value}
-                className="text-2xl focus:outline-none flex-grow dark:bg-black"
+                className="text-2xl focus:outline-none flex-grow dark:bg-brand-black"
                 placeholder={placeholder}
                 onKeyDown={onKeyDown}
                 onChange={onChange}
@@ -52,8 +52,8 @@ export const AutoCompleteInput: FC<IAutoCompleteInputProps> = ({
                     show={isFocused && !close}
                 >
                     <div
-                        className={`origin-top-right absolute bg-white dark:bg-black mt-10 min-w-[180px]
-        rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-[999999]`}
+                        className={`origin-top-right absolute bg-white dark:bg-brand-black mt-10 min-w-[180px]
+        rounded-md shadow-lg ring-1 ring-brand-black ring-opacity-5 focus:outline-none z-[999999]`}
                     >
                         <div className={`p-2 flex flex-col max-h-[200px] overflow-y-scroll`}>
                             {renderList().map((item: any, i) => (

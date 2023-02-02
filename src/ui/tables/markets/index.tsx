@@ -7,7 +7,12 @@ import MUIDataTable from 'mui-datatables';
 import { SpinnerLoader } from '../../components/loaders';
 import { IMarketsAsset } from '@app/api/types';
 import { ThemeContext } from '../../../store';
-import { bigNumberToUnformattedString, numberFormatter, percentFormatter } from '../../../utils';
+import {
+    addFeaturedTranches,
+    bigNumberToUnformattedString,
+    numberFormatter,
+    percentFormatter,
+} from '../../../utils';
 import { UseQueryResult } from '@tanstack/react-query';
 import { IUserActivityDataProps } from '@app/api/user/types';
 
@@ -155,6 +160,17 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
             },
         },
         {
+            name: 'featured',
+            label: 'Featured',
+            options: {
+                filter: true,
+                sort: true,
+                sortThirdClickReset: true,
+                display: false,
+                filterType: 'dropdown',
+            },
+        },
+        {
             name: '',
             label: '',
             options: {
@@ -168,8 +184,8 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
             <ThemeProvider theme={vmexTheme(isDark)}>
                 <MUIDataTable
                     title={'All Available Assets'}
-                    columns={columns}
-                    data={data || []}
+                    columns={columns as any}
+                    data={addFeaturedTranches(data, 'markets')}
                     options={{
                         ...options,
                         customRowRender: (
@@ -190,23 +206,25 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
                             dataIndex,
                             rowIndex,
                         ) => (
-                            <MarketsCustomRow
-                                asset={asset}
-                                tranche={tranche}
-                                trancheId={trancheId}
-                                supplyApy={percentFormatter.format(supplyApy)}
-                                borrowApy={percentFormatter.format(borrowApy)}
-                                yourAmount={renderYourAmount(asset)}
-                                available={available}
-                                borrowTotal={borrowTotal}
-                                supplyTotal={supplyTotal}
-                                rating={rating}
-                                strategies={strategies}
-                                collateral={canBeCollateral}
-                                key={`markets-table-${
-                                    rowIndex || Math.floor(Math.random() * 10000)
-                                }`}
-                            />
+                            <>
+                                <MarketsCustomRow
+                                    asset={asset}
+                                    tranche={tranche}
+                                    trancheId={trancheId}
+                                    supplyApy={percentFormatter.format(supplyApy)}
+                                    borrowApy={percentFormatter.format(borrowApy)}
+                                    yourAmount={renderYourAmount(asset)}
+                                    available={available}
+                                    borrowTotal={borrowTotal}
+                                    supplyTotal={supplyTotal}
+                                    rating={rating}
+                                    strategies={asset.toLowerCase().startsWith('yv')}
+                                    collateral={canBeCollateral}
+                                    key={`markets-table-${
+                                        rowIndex || Math.floor(Math.random() * 10000)
+                                    }`}
+                                />
+                            </>
                         ),
                         textLabels: {
                             body: {

@@ -1,3 +1,4 @@
+import { determineCoinImg } from '../../../utils/helpers';
 import React from 'react';
 
 type IAssetDisplayProps = {
@@ -21,22 +22,18 @@ export const AssetDisplay = (props: IAssetDisplayProps) => {
         }
     };
 
-    const determineImg = () => {
-        if (props.logo) return props.logo;
-        else {
-            let url = '/coins/';
-            if (props.name?.startsWith('yv')) return `${url}generic.svg`;
-            else return `${url}${props.name.toLowerCase()}.svg`;
-        }
-    };
-
     return (
         <div
             className={`flex items-center gap-1 rounded-lg ${
                 props.className ? props.className : ''
-            } ${props.border ? 'border border-1 border-black w-fit px-2' : ''}`}
+            } ${props.border ? 'border border-1 border-brand-black w-fit px-2' : ''}`}
         >
-            <img src={determineImg()} alt={props.name} height={iconSize()} width={iconSize()} />
+            <img
+                src={determineCoinImg(props.name, props.logo)}
+                alt={props.name}
+                height={iconSize()}
+                width={iconSize()}
+            />
             <span>{props.name?.toUpperCase()}</span>
             {props.value && <span>{props.value}</span>}
         </div>

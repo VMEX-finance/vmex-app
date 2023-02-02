@@ -78,7 +78,7 @@ export const DefaultInput = ({
                     type={type !== 'string' ? 'number' : 'text'}
                     step={type === 'percent' ? '0.1' : '1'}
                     onKeyDown={entering}
-                    className={`w-full ${textSize()} outline-none border-b-[3px] focus:border-black dark:focus:border-white border-neutral-600 dark:bg-black`}
+                    className={`w-full ${textSize()} outline-none border-b-[3px] focus:border-brand-black dark:focus:border-white border-neutral-600 dark:bg-brand-black`}
                 />
                 {onEnter && <button onClick={onEnter}>Save</button>}
             </div>

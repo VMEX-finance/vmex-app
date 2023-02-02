@@ -18,7 +18,7 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
     const { address } = useAccount();
     const title = address ? truncateAddress(address) : label;
     const mode = `transition duration-150 ${
-        primary && !address ? '' : 'bg-white text-black hover:bg-neutral-100'
+        primary && !address ? '' : 'bg-white text-brand-black hover:bg-neutral-100'
     }`;
 
     const renderDropdownItems = () => {
@@ -58,7 +58,11 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
     if (address && width > 1024) {
         return (
             <DefaultDropdown
-                className={['min-h-[36px] border-1 border border-black', mode, className].join(' ')}
+                className={[
+                    'min-h-[36px] border-1 border border-brand-black',
+                    mode,
+                    className,
+                ].join(' ')}
                 selected={width > 1400 ? truncateAddress(address) : truncate(address, 3)}
                 items={renderDropdownItems()}
                 size="lg"
@@ -120,7 +124,7 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
                                             'min-h-[36px] !py-2',
                                             mode,
                                             className,
-                                            'bg-black rounded-lg text-white hover:bg-neutral-800 border border-black',
+                                            'bg-brand-black rounded-lg text-white hover:bg-neutral-800 border border-brand-black',
                                         ].join(' ')}
                                     >
                                         {determineConnection().render}
