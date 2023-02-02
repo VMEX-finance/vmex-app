@@ -8,7 +8,7 @@ import { AssetDisplay, NumberAndDollar } from '../../components';
 import { useWindowSize, useDialogController } from '../../../hooks';
 import { AvailableAsset } from '@app/api/types';
 import { BigNumber, ethers } from 'ethers';
-import { numberFormatter, bigNumberToNative } from '../../../utils';
+import { numberFormatter, bigNumberToNative, determineCoinImg } from '../../../utils';
 import { useLocation } from 'react-router-dom';
 
 interface ITableProps {
@@ -151,7 +151,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                         )}
                                         <AssetDisplay
                                             name={width > 600 ? el.asset : ''}
-                                            logo={`/coins/${el.asset?.toLowerCase()}.svg`}
+                                            logo={determineCoinImg(el.asset)}
                                             className="text-lg"
                                         />
                                     </div>

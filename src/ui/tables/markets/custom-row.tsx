@@ -135,19 +135,19 @@ const MarketsCustomRow = (props: any) => {
                 <td className="whitespace-nowrap py-4 pl-2 md:pl-4 pr-2 text-sm">
                     <AssetDisplay name={asset} />
                 </td>
-                <td className="min-w-[150px]">{tranche}</td>
-                <td>{supplyApy}</td>
-                <td>{borrowApy}</td>
-                <td className={`${yourAmount.loading ? 'animate-pulse' : ''}`}>
+                <td className="min-w-[150px] pl-2">{tranche}</td>
+                <td className="pl-2">{supplyApy}</td>
+                <td className="pl-2">{borrowApy}</td>
+                <td className={`pl-2 ${yourAmount.loading ? 'animate-pulse' : ''}`}>
                     {yourAmount.amount} {asset}
                 </td>
-                <td>{available}</td>
-                <td>{supplyTotal}</td>
-                <td>{borrowTotal}</td>
-                <td className="text-lg" style={{ color: determineRatingColor(rating) }}>
+                <td className="pl-2">{available}</td>
+                <td className="pl-2">{supplyTotal}</td>
+                <td className="pl-2">{borrowTotal}</td>
+                <td className="text-lg pl-2" style={{ color: determineRatingColor(rating) }}>
                     {rating}
                 </td>
-                <td className="">
+                <td className="pl-2">
                     <div className="w-8 h-8">
                         {strategies ? (
                             <BsCheck className="w-full h-full text-[#00DD3E]" />

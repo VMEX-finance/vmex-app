@@ -38,6 +38,15 @@ export const determineRatingColor = (s: string) => {
     }
 };
 
+export const determineCoinImg = (asset: string, custom?: string) => {
+    if (custom) return custom;
+    else {
+        let url = '/coins/';
+        if (asset?.startsWith('yv')) return `${url}generic.svg`;
+        else return `${url}${asset.toLowerCase()}.svg`;
+    }
+};
+
 export const determineHealthColor = (health: number | string | undefined) => {
     if (!health) return 'text-black';
     let _health;
