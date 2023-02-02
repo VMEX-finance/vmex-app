@@ -205,7 +205,7 @@ export async function getSubgraphProtocolData(): Promise<IGraphProtocolDataProps
     allTrancheData.sort((a, b) => {
         let c = a.tvl ? Number(a.tvl) : 0;
         let d = b.tvl ? Number(b.tvl) : 0;
-        return c - d;
+        return d - c;
     });
 
     let tvl = 0,
@@ -233,7 +233,7 @@ export async function getSubgraphProtocolData(): Promise<IGraphProtocolDataProps
         markets: data.reserves.length,
         topSuppliedAssets: await getTopSuppliedAssets(prices),
         topBorrowedAssets: await getTopBorrowedAssets(prices),
-        topTranches: topTranches.reverse(),
+        topTranches: topTranches,
         tvl: usdFormatter(false).format(tvl),
         reserve: usdFormatter().format(tvl),
         totalBorrowed: usdFormatter(false).format(totalBorrowed),
