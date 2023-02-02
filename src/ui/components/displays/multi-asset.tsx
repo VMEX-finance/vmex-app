@@ -1,10 +1,13 @@
+import { determineCoinImg } from '../../../utils/helpers';
 import React from 'react';
+import { SkeletonLoader } from '../loaders';
 import { Tooltip } from '../tooltips';
 
 interface IMultipleAssetsProps {
     assets?: string[];
     show?: number | 'all';
     size?: string;
+    loading?: boolean;
 }
 
 export const MultipleAssetsDisplay = ({ assets, show = 4, size }: IMultipleAssetsProps) => {
@@ -17,21 +20,20 @@ export const MultipleAssetsDisplay = ({ assets, show = 4, size }: IMultipleAsset
         }
     };
 
-    const fallbackImg = (asset: string) => {
-        if (asset === 'triCrypto2') return 'CRV';
-        else return asset;
-    };
-
     return (
         <div className={`flex flex-wrap items-center ${show === 'all' ? 'gap-3' : 'xl:gap-2'}`}>
-            {mapAssets().map((el, i) => (
-                <img
-                    key={`tranches-asset-${i}`}
-                    src={`/tokens/token-${fallbackImg(el)}.svg`}
-                    alt={el}
-                    className={`${size ? size : 'h-8 w-8'}`}
-                />
-            ))}
+            {mapAssets().length !== 0
+                ? mapAssets().map((el, i) => (
+                      <img
+                          key={`tranches-asset-${i}`}
+                          src={determineCoinImg(el)}
+                          alt={el}
+                          className={`${size ? size : 'h-8 w-8'}`}
+                      />
+                  ))
+                : [1, 2, 3, 4].map((el) => (
+                      <SkeletonLoader key={el} variant="circular" height={'2rem'} width={'2rem'} />
+                  ))}
             {show !== 'all' && assets && assets.length > (show ? show : 4) && (
                 <Tooltip
                     text={assets.slice(show ? show : 4).join(', ')}

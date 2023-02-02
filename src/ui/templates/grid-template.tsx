@@ -11,7 +11,8 @@ interface IGridViewProps {
         | 'lg:grid-cols-3'
         | 'lg:grid-cols-4'
         | 'xl:grid-cols-3'
-        | 'xl:grid-cols-4';
+        | 'xl:grid-cols-4'
+        | '3xl:grid-cols-3';
 }
 
 const GridView: React.FC<IGridViewProps> = ({
@@ -21,14 +22,12 @@ const GridView: React.FC<IGridViewProps> = ({
     className = '',
 }) => {
     if (type === 'fixed') {
-        return (
-            <div className={`w-full grid gap-4 md:gap-6 lg:gap-8 ${cols} ${className}`}>
-                {children}
-            </div>
-        );
+        return <div className={`w-full grid gap-4 xl:gap-8 ${cols} ${className}`}>{children}</div>;
     } else {
         return (
-            <div className={`w-full grid grid-col lg:grid-flow-col-dense gap-8 ${className}`}>
+            <div
+                className={`w-full grid grid-col lg:grid-flow-col-dense gap-4 xl:gap-8 ${className}`}
+            >
                 {children}
             </div>
         );

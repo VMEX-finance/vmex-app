@@ -17,12 +17,14 @@ export const MenuItemButton = ({
 }: IMenuItemButtonProps) => {
     const mode =
         selected && !mobile
-            ? 'bg-white text-black'
+            ? 'bg-neutral-100 text-neutral-900'
             : mobile
-            ? 'hover:!bg-neutral-200 text-neutral-900'
-            : 'bg-black text-white hover:bg-neutral-800';
+            ? 'hover:bg-neutral-200 text-neutral-900'
+            : 'bg-brand-black dark:bg-neutral-900 text-white hover:bg-neutral-800 dark:hover:bg-neutral-800';
 
-    const highlight = highlighted ? '!bg-neutral-900 !text-white hover:!bg-neutral-800' : '';
+    const highlight = highlighted
+        ? '!bg-neutral-900 !text-white hover:!bg-neutral-800 dark:hover:!bg-neutral-800'
+        : '';
 
     return (
         <button

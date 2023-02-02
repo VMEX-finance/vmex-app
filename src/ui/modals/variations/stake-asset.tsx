@@ -1,17 +1,22 @@
 import React from 'react';
 import { FaGasPump } from 'react-icons/fa';
 import { useMediatedState } from 'react-use';
-import { CoinInput } from '../../components/inputs';
-import { ActiveStatus, TransactionStatus } from '../../components/statuses';
-import { Button, DropdownButton } from '../../components/buttons';
 import { inputMediator } from '../../../utils/helpers';
 import { IDialogProps } from '../utils';
-import { ModalFooter, ModalHeader, ModalTableDisplay } from '../../modals/subcomponents';
-import { useModal } from '../../../hooks/ui';
+import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
+import { useModal } from '../../../hooks';
+import {
+    DefaultDropdown,
+    Button,
+    ActiveStatus,
+    TransactionStatus,
+    CoinInput,
+} from '../../components';
 
 export const StakeAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, closeDialog }) => {
     const { submitTx, isSuccess, isLoading } = useModal('stake-asset-dialog');
     const [amount, setAmount] = useMediatedState(inputMediator, '');
+    const [isMax, setIsMax] = React.useState(false);
 
     const handleSubmit = async () => {
         await submitTx();
@@ -25,7 +30,7 @@ export const StakeAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
                 {!isSuccess ? (
                     // Default State
                     <>
-                        <h3 className="mt-5 text-gray-400">Amount</h3>
+                        <h3 className="mt-5 text-neutral400">Amount</h3>
                         <CoinInput
                             amount={amount}
                             setAmount={setAmount}
@@ -34,6 +39,8 @@ export const StakeAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
                                 name: data.asset,
                             }}
                             balance={'0.23'}
+                            isMax={isMax}
+                            setIsMax={setIsMax}
                         />
 
                         <ModalTableDisplay
@@ -67,7 +74,7 @@ export const StakeAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
                             <span>Gas Limit</span>
                         </div>
                         <div>
-                            <DropdownButton
+                            <DefaultDropdown
                                 items={[{ text: 'Normal' }, { text: 'Low' }, { text: 'High' }]}
                             />
                         </div>

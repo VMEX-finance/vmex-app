@@ -1,87 +1,134 @@
 import React, { useEffect, useState } from 'react';
 import { AppTemplate, GridView } from '../ui/templates';
-import { TrancheTVLDataCard, TrancheInfoCard, TrancheStatisticsCard } from '../ui/features/tranche';
+import {
+    TrancheTVLDataCard,
+    TrancheInfoCard,
+    TrancheStatisticsCard,
+} from '../ui/features/tranche-details';
 import { Card } from '../ui/components/cards';
 import { TrancheTable } from '../ui/tables';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useSelectedTrancheContext } from '../store/contexts';
-import { MOCK_TRANCHES_DATA } from '../utils/mock-data';
-import { useWalletState } from '../hooks/wallet';
+import { useSelectedTrancheContext } from '../store';
+import { useAccount, useSigner } from 'wagmi';
+import { useSubgraphTrancheData, useUserTrancheData } from '../api';
 
 const TrancheDetails: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { address } = useWalletState();
-    const { tranche, setTranche } = useSelectedTrancheContext();
+    const { address } = useAccount();
+    const { data: signer } = useSigner();
+    const { tranche, setTranche, asset } = useSelectedTrancheContext();
+    const { queryTrancheData } = useSubgraphTrancheData(location.state?.trancheId);
+    const { queryUserTrancheData } = useUserTrancheData(address, location.state?.trancheId);
     const [view, setView] = useState('tranche-overview');
 
     useEffect(() => {
         if (!address) setView('tranche-details');
-        else if (location.state?.view === 'overview') setView('tranche-overview');
-        else if (location.state?.view === 'details') setView('tranche-details');
-        else setView('tranche-overview');
-    }, [location]);
+        else if (location.state?.view === 'overview') {
+            setView('tranche-overview');
+        } else if (location.state?.view === 'details') setView('tranche-details');
+        else {
+            setView('tranche-overview');
+        }
+    }, [address, location]);
 
     useEffect(() => {
-        if (!tranche.id) navigate('/tranches');
-        const found = MOCK_TRANCHES_DATA.find((el) => el.id === tranche.id);
-        setTranche(found);
-    }, [tranche, location]);
+        setTranche(queryTrancheData.data);
+    }, [queryTrancheData.data, setTranche, tranche]);
+
+    useEffect(() => {
+        if (!tranche?.id && !location.state?.trancheId) navigate('/tranches');
+    }, [navigate, tranche, location]);
 
     return (
         <AppTemplate
-            title={tranche?.name || 'Tranche Name'}
+            title={tranche?.name}
             description="Tranche"
             view={view}
             setView={setView}
+            titleLoading={queryTrancheData.isLoading}
         >
             <TrancheTVLDataCard
-                assets={tranche.assets}
-                grade={tranche.aggregateRating}
-                tvl={tranche.tvl}
-                tvlChange={tranche.tvlChange}
-                supplied={tranche.supplyTotal}
-                supplyChange={tranche.supplyChange}
-                borrowed={tranche.borrowTotal}
-                borrowChange={tranche.borrowChange}
+                assets={queryTrancheData.data?.assets || tranche?.assets}
+                grade={tranche?.aggregateRating}
+                tvl={queryTrancheData.data?.tvl || tranche?.tvl}
+                tvlChange={tranche?.tvlChange}
+                supplied={queryTrancheData.data?.totalSupplied || tranche?.supplyTotal}
+                supplyChange={tranche?.supplyChange}
+                borrowed={queryTrancheData.data?.totalBorrowed || tranche?.borrowTotal}
+                borrowChange={tranche?.borrowChange}
+                loading={queryTrancheData.isLoading}
+                userData={queryUserTrancheData}
+                avgApy={queryTrancheData.data?.avgApy || 0}
             />
             {view.includes('details') ? (
                 <>
                     <GridView className="lg:grid-cols-[1fr_2fr]">
-                        <TrancheInfoCard tranche={tranche} />
-                        <TrancheStatisticsCard tranche={tranche} />
+                        <TrancheInfoCard
+                            tranche={queryTrancheData.data}
+                            loading={queryTrancheData.isLoading}
+                        />
+                        <TrancheStatisticsCard
+                            tranche={queryTrancheData.data}
+                            trancheId={tranche?.id}
+                            loading={queryTrancheData.isLoading}
+                            assetData={
+                                queryTrancheData.data && queryTrancheData.data.assetsData && asset
+                                    ? (queryTrancheData.data.assetsData as any)[asset]
+                                    : {}
+                            }
+                        />
                     </GridView>
                 </>
             ) : (
                 <GridView>
-                    <Card>
-                        <h3 className="text-2xl">Supply</h3>
-                        {/* TODO: Replace tables "data" prop with tranche table data prop */}
+                    <Card loading={queryTrancheData.isLoading} title="Supply">
                         <TrancheTable
                             data={
-                                tranche.assets
-                                    ? tranche.assets.map((el: string) => ({
-                                          asset: el,
-                                          canBeCollat: false,
-                                          apy_perc: (Math.random() * 10).toFixed(2),
-                                          amount: 0,
-                                      }))
+                                queryTrancheData.data && queryTrancheData.data.assetsData
+                                    ? Object.keys(queryTrancheData.data.assetsData).map(
+                                          (asset) => ({
+                                              asset: asset,
+                                              canBeCollat: (
+                                                  queryTrancheData.data.assetsData as any
+                                              )[asset].collateral,
+                                              apy: (queryTrancheData.data.assetsData as any)[asset]
+                                                  .supplyRate,
+                                              tranche: queryTrancheData.data?.name,
+                                              trancheId: tranche?.id,
+                                              signer: signer,
+                                          }),
+                                      )
                                     : []
                             }
                             type="supply"
                         />
                     </Card>
-                    <Card>
-                        <h3 className="text-2xl">Borrow</h3>
+                    <Card loading={queryTrancheData.isLoading} title="Borrow">
                         <TrancheTable
                             data={
-                                tranche.assets
-                                    ? tranche.assets.map((el: string) => ({
-                                          asset: el,
-                                          liquidity: (Math.random() * 30).toFixed(1),
-                                          apy_perc: (Math.random() * 10).toFixed(2),
-                                          amount: 0,
-                                      }))
+                                queryTrancheData.data && queryTrancheData.data.assetsData
+                                    ? Object.keys(queryTrancheData.data.assetsData)
+                                          .filter((asset) => {
+                                              if (
+                                                  (queryTrancheData.data.assetsData as any)[asset]
+                                                      .canBeBorrowed
+                                              ) {
+                                                  return true;
+                                              }
+                                              return false;
+                                          })
+                                          .map((asset) => ({
+                                              asset: asset,
+                                              liquidity: (queryTrancheData.data.assetsData as any)[
+                                                  asset
+                                              ].liquidity,
+                                              apy: (queryTrancheData.data.assetsData as any)[asset]
+                                                  .borrowRate,
+                                              tranche: queryTrancheData.data?.name,
+                                              trancheId: tranche?.id,
+                                              signer: signer,
+                                          }))
                                     : []
                             }
                             type="borrow"

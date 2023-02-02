@@ -11,6 +11,7 @@ export interface IButtonProps {
     type?: 'delete';
     icon?: React.ReactNode;
     loading?: boolean;
+    loadingText?: string;
 }
 
 export const Button = ({
@@ -23,18 +24,24 @@ export const Button = ({
     type,
     icon,
     loading,
+    loadingText,
 }: IButtonProps) => {
     const mode = primary
-        ? 'bg-black rounded-lg text-white hover:bg-neutral-800 border border-[1px] border-black'
+        ? 'bg-brand-black rounded-lg text-neutral-200 hover:bg-neutral-800 border border-[1px] border-brand-black'
         : border
-        ? `bg-white text-neutral-900 border-[1px] border-black border-solid rounded-lg hover:bg-neutral-800 hover:text-white`
+        ? `bg-white text-neutral-900 border-[1px] border-brand-black border-solid rounded-lg hover:bg-neutral-100`
         : 'bg-white text-neutral-900 rounded-lg hover:bg-neutral-200';
 
     return (
         <button
-            disabled={disabled}
+            disabled={disabled || loading}
             onClick={onClick}
             className={[
+                `${
+                    primary
+                        ? 'dark:bg-neutral-200 dark:text-neutral-900 dark:hover:bg-neutral-300'
+                        : 'dark:bg-brand-black dark:text-neutral-200 dark:hover:bg-neutral-900'
+                } ${disabled || loading ? 'dark:border-transparent' : 'dark:border-neutral-200'}`,
                 'h-fit',
                 'box-border',
                 'font-basefont',
@@ -48,10 +55,10 @@ export const Button = ({
                 className,
                 mode,
                 `${
-                    disabled
+                    disabled || loading
                         ? `${
                               primary
-                                  ? '!bg-neutral-700 !text-neutral-300'
+                                  ? '!bg-neutral-700 dark:!bg-neutral-400 !text-neutral-300 dark:!text-neutral-800'
                                   : 'hover:!bg-inherit hover:!text-inherit'
                           } !cursor-not-allowed`
                         : ''
@@ -59,7 +66,7 @@ export const Button = ({
             ].join(' ')}
         >
             <span className="flex items-center gap-2">
-                {label || 'Submit'}
+                {loading ? (loadingText ? loadingText : 'Loading') : label || 'Submit'}
                 {loading ? <CgSpinner className="animate-spin" /> : icon}
             </span>
         </button>

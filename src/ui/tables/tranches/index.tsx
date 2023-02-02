@@ -1,17 +1,54 @@
-import React from 'react';
-import type { ITrancheProps } from '../../../models/tranches';
+import React, { useContext } from 'react';
 import { CacheProvider } from '@emotion/react';
 import { ThemeProvider } from '@mui/material/styles';
 import { muiCache, options, vmexTheme } from '../utils';
 import { TranchesCustomRow } from './custom-row';
 import MUIDataTable from 'mui-datatables';
+import { SpinnerLoader } from '../../components/loaders';
+import { ITrancheProps } from '../../../api/types';
+import { ThemeContext } from '../../../store';
+import { addFeaturedTranches, usdFormatter } from '../../../utils/helpers';
+import { UseQueryResult } from '@tanstack/react-query';
+import { IUserActivityDataProps } from '@app/api/user/types';
 
 interface IDataTable {
     data?: ITrancheProps[];
+    loading?: boolean;
+    userActivity?: UseQueryResult<IUserActivityDataProps, unknown>;
 }
 
-export const TranchesTable: React.FC<IDataTable> = ({ data }) => {
+export const TranchesTable: React.FC<IDataTable> = ({ data, loading, userActivity }) => {
+    const { isDark } = useContext(ThemeContext);
+
+    const renderActivity = (trancheId: string) => {
+        let activity: string = '';
+        if (!trancheId || userActivity?.isLoading) activity = 'loading';
+        userActivity?.data?.borrows.length !== 0 &&
+            userActivity?.data?.borrows.map((borrow) => {
+                if (borrow.trancheId === Number(trancheId)) {
+                    activity = 'borrowed';
+                }
+            });
+        userActivity?.data?.supplies.length !== 0 &&
+            userActivity?.data?.supplies.map((supply) => {
+                if (supply.trancheId === Number(trancheId) && activity === '')
+                    activity = 'supplied';
+                else if (supply.trancheId === Number(trancheId) && activity === 'borrowed')
+                    activity = 'both';
+            });
+        return activity;
+    };
+
     const columns = [
+        {
+            name: 'id',
+            label: 'ID',
+            options: {
+                filter: false,
+                sort: true,
+                sortThirdClickReset: true,
+            },
+        },
         {
             name: 'name',
             label: 'Tranche',
@@ -32,7 +69,7 @@ export const TranchesTable: React.FC<IDataTable> = ({ data }) => {
         },
         {
             name: 'aggregateRating',
-            label: 'Aggregate Rating',
+            label: 'Rating',
             options: {
                 filter: true,
                 sort: true,
@@ -67,12 +104,14 @@ export const TranchesTable: React.FC<IDataTable> = ({ data }) => {
             },
         },
         {
-            name: 'id',
-            label: 'ID',
+            name: 'featured',
+            label: 'Featured',
             options: {
-                filter: false,
-                sort: false,
+                filter: true,
+                sort: true,
+                sortThirdClickReset: true,
                 display: false,
+                filterType: 'dropdown',
             },
         },
         {
@@ -86,34 +125,47 @@ export const TranchesTable: React.FC<IDataTable> = ({ data }) => {
 
     return (
         <CacheProvider value={muiCache}>
-            <ThemeProvider theme={vmexTheme()}>
+            <ThemeProvider theme={vmexTheme(isDark)}>
                 <MUIDataTable
-                    title={['All Available Tranches']}
-                    columns={columns}
-                    data={data || []}
+                    title={'All Available Tranches'}
+                    columns={columns as any}
+                    data={addFeaturedTranches(data, 'tranches')}
                     options={{
                         ...options,
-                        customRowRender: (data: any) => {
-                            const [
+                        customRowRender: (
+                            [
+                                id,
                                 name,
                                 assets,
                                 aggregateRating,
                                 yourActivity,
                                 supplyTotal,
                                 borrowTotal,
-                                id,
-                            ] = data;
-                            return (
-                                <TranchesCustomRow
-                                    name={name}
-                                    assets={assets}
-                                    aggregateRating={aggregateRating}
-                                    yourActivity={yourActivity}
-                                    supplyTotal={supplyTotal}
-                                    borrowTotal={borrowTotal}
-                                    id={id}
-                                />
-                            );
+                            ],
+                            dataIndex,
+                            rowIndex,
+                        ) => (
+                            <TranchesCustomRow
+                                name={name}
+                                assets={assets}
+                                aggregateRating={aggregateRating}
+                                yourActivity={renderActivity(id)}
+                                supplyTotal={usdFormatter().format(supplyTotal)}
+                                borrowTotal={usdFormatter().format(borrowTotal)}
+                                id={id}
+                                key={`tranches-table-${
+                                    rowIndex || Math.floor(Math.random() * 10000)
+                                }`}
+                            />
+                        ),
+                        textLabels: {
+                            body: {
+                                noMatch: loading ? (
+                                    <SpinnerLoader />
+                                ) : (
+                                    'An error has occured while fetching tranches. Please refresh the page.'
+                                ),
+                            },
                         },
                     }}
                 />

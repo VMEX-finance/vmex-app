@@ -1,14 +1,22 @@
 import React from 'react';
 import { AppTemplate } from '../ui/templates';
 import { MarketsTable } from '../ui/tables';
-import { useMarketsData } from '../api/protocol';
+import { useSubgraphAllMarketsData } from '../api/subgraph';
+import { useAccount } from 'wagmi';
+import { useUserData } from '../api';
 
 const Markets: React.FC = () => {
-    const { queryAllMarkets } = useMarketsData();
+    const { address } = useAccount();
+    const { queryUserActivity } = useUserData(address);
+    const { queryAllMarketsData } = useSubgraphAllMarketsData();
 
     return (
         <AppTemplate title="markets">
-            <MarketsTable data={queryAllMarkets.data} />
+            <MarketsTable
+                data={queryAllMarketsData.data}
+                loading={queryAllMarketsData.isLoading}
+                userActivity={queryUserActivity}
+            />
         </AppTemplate>
     );
 };

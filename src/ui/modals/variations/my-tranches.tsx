@@ -1,11 +1,15 @@
 import React, { useEffect } from 'react';
-import { TransactionStatus } from '../../components/statuses';
-import { Button, DropdownButton } from '../../components/buttons';
-import { useMyTranchesContext } from '../../../store/contexts';
-import { DefaultInput, ListInput } from '../../components/inputs';
+import {
+    Button,
+    DefaultDropdown,
+    DefaultInput,
+    ListInput,
+    TransactionStatus,
+} from '../../components';
+import { useMyTranchesContext } from '../../../store';
 import { IDialogProps } from '../utils';
-import { ModalFooter, ModalHeader } from '../../modals/subcomponents';
-import { useModal } from '../../../hooks/ui';
+import { ModalFooter, ModalHeader } from '../subcomponents';
+import { useModal } from '../../../hooks';
 
 export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDialog }) => {
     const { isSuccess, error, submitTx, setError, isLoading } = useModal('my-tranches-dialog');
@@ -41,8 +45,8 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
         if (!_name) setError('Please enter a tranche name.');
         if (_tokens?.length === 0) setError('Please enter tokens to be included in your tranche.');
 
-        await submitTx(() => {
-            updateTranche({
+        await submitTx(async () => {
+            const res = await updateTranche({
                 id: selectedTranche.id,
                 name: _name,
                 whitelisted: _whitelisted,
@@ -51,18 +55,21 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
                 adminFee: _adminFee,
                 pausedTokens: _pausedTokens,
             });
+            return res;
         }, false);
     };
 
     const handleDelete = async () => {
-        await submitTx(() => {
-            deleteTranche(selectedTranche.id);
+        await submitTx(async () => {
+            const res = await deleteTranche(selectedTranche.id);
+            return res;
         });
     };
 
     const handlePause = async () => {
-        await submitTx(() => {
-            pauseTranche(selectedTranche.id);
+        await submitTx(async () => {
+            const res = await pauseTranche(selectedTranche.id);
+            return res;
         }, false);
     };
 
@@ -82,7 +89,7 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
                 // Default State
                 <>
                     <div className="w-full mt-6">
-                        <DropdownButton
+                        <DefaultDropdown
                             items={myTranches.map((obj) => ({ ...obj, text: obj.name }))}
                             selected={selectedTranche.name}
                             setSelected={(e: string) => findSelectedTranche(e)}
@@ -133,12 +140,12 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
                         noDelete
                     />
                     <div className="w-full mt-6">
-                        <DropdownButton
+                        <DefaultDropdown
                             title="Paused Tokens"
                             items={_tokens}
                             selected={_pausedTokens}
                             setSelected={setPausedTokens}
-                            direction="right"
+                            direction="top"
                             size="lg"
                             full
                             multiselect

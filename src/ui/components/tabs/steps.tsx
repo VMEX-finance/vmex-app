@@ -43,10 +43,10 @@ export const Stepper = ({ steps, previous, next, noSkip }: IStepperProps) => {
                                 className="w-full group flex flex-col border-l-4 border-gray-200 py-2 pl-4 md:border-l-0 md:border-t-4 md:pl-0 md:pb-0 transition duration-150 hover:border-gray-300"
                                 onClick={noSkip ? () => {} : next}
                             >
-                                <span className="text-sm font-medium text-gray-500 hover:text-gray-700">{`Step ${
+                                <span className="text-sm font-medium text-neutral500 hover:text-neutral700">{`Step ${
                                     i + 1
                                 }`}</span>
-                                <span className="text-sm font-medium text-gray-900 hover:text-black">
+                                <span className="text-sm font-medium text-neutral-900 hover:text-brand-black dark:hover:text-neutral-300">
                                     {step.name}
                                 </span>
                             </button>

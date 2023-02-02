@@ -17,12 +17,14 @@ export interface IDialogState {
 
 export type IDialogNames =
     | 'loan-asset-dialog'
-    | 'borrowed-asset-details-dialog'
     | 'borrow-asset-dialog'
     | 'stake-asset-dialog'
-    | 'supplied-asset-details-dialog'
     | 'my-tranches-dialog'
-    | 'create-tranche-dialog';
+    | 'create-tranche-dialog'
+    | 'confirmation-dialog'
+    | 'feedback-dialog'
+    | 'disclaimer-dialog'
+    | 'toggle-collateral-dialog';
 
 const DialogControllerState: IDialogState = {
     dialogs: new Map<string, DialogType>([
@@ -31,26 +33,6 @@ const DialogControllerState: IDialogState = {
             {
                 name: 'Supply',
                 tab: 'Withdraw',
-                isOpen: false,
-                data: {},
-                isSuccess: false,
-                isError: false,
-            },
-        ],
-        [
-            'borrowed-asset-details-dialog',
-            {
-                name: 'Borrowed Asset Details',
-                isOpen: false,
-                data: {},
-                isSuccess: false,
-                isError: false,
-            },
-        ],
-        [
-            'supplied-asset-details-dialog',
-            {
-                name: 'Supplied Asset Details',
                 isOpen: false,
                 data: {},
                 isSuccess: false,
@@ -92,6 +74,46 @@ const DialogControllerState: IDialogState = {
             'create-tranche-dialog',
             {
                 name: 'Create Tranche',
+                isOpen: false,
+                data: {},
+                isSuccess: false,
+                isError: false,
+            },
+        ],
+        [
+            'confirmation-dialog',
+            {
+                name: 'Confirmation',
+                isOpen: false,
+                data: {},
+                isSuccess: false,
+                isError: false,
+            },
+        ],
+        [
+            'feedback-dialog',
+            {
+                name: 'Feedback',
+                isOpen: false,
+                data: {},
+                isSuccess: false,
+                isError: false,
+            },
+        ],
+        [
+            'disclaimer-dialog',
+            {
+                name: 'Disclaimer',
+                isOpen: false,
+                data: {},
+                isSuccess: false,
+                isError: false,
+            },
+        ],
+        [
+            'toggle-collateral-dialog',
+            {
+                name: 'Collateral',
                 isOpen: false,
                 data: {},
                 isSuccess: false,

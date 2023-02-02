@@ -1,8 +1,6 @@
-import { Card } from '../../components/cards';
 import React from 'react';
-import { NumberDisplay, NumberAndDollar } from '../../components/displays';
-import { useDialogController } from '../../../hooks/dialogs';
-import { Button } from '../../components/buttons';
+import { NumberDisplay, NumberAndDollar, Card, Button } from '../../components';
+import { useDialogController } from '../../../hooks';
 
 export type IStakingAsset = {
     asset: string;
@@ -71,10 +69,7 @@ export const StakingAsset = (props: IStakingAsset) => {
                                 dollar={0.0}
                             />
                             <div className="w-fit">
-                                <Button
-                                    label="Claim VMEX"
-                                    className="!bg-black !border-white border !text-white hover:!bg-neutral-800"
-                                />
+                                <Button label="Claim VMEX" primary />
                             </div>
                         </div>
 
@@ -86,10 +81,7 @@ export const StakingAsset = (props: IStakingAsset) => {
                                 dollar={0.0}
                             />
                             <div className="w-fit">
-                                <Button
-                                    label="Unstake VMEX"
-                                    className="!bg-black !border-white border !text-white hover:!bg-neutral-800"
-                                />
+                                <Button label="Unstake VMEX" primary />
                             </div>
                         </div>
                     </div>

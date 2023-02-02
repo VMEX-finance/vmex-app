@@ -1,16 +1,55 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { CacheProvider } from '@emotion/react';
 import { ThemeProvider } from '@mui/material/styles';
 import { muiCache, options, vmexTheme } from '../utils';
-import type { IMarketsAsset } from '../../../models/markets';
 import { MarketsCustomRow } from './custom-row';
 import MUIDataTable from 'mui-datatables';
+import { SpinnerLoader } from '../../components/loaders';
+import { IMarketsAsset } from '@app/api/types';
+import { ThemeContext } from '../../../store';
+import {
+    addFeaturedTranches,
+    bigNumberToUnformattedString,
+    numberFormatter,
+    percentFormatter,
+} from '../../../utils';
+import { UseQueryResult } from '@tanstack/react-query';
+import { IUserActivityDataProps } from '@app/api/user/types';
 
 interface ITableProps {
     data?: IMarketsAsset[];
+    loading?: boolean;
+    userActivity?: UseQueryResult<IUserActivityDataProps, unknown>;
 }
 
-export const MarketsTable: React.FC<ITableProps> = ({ data }) => {
+export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivity }) => {
+    const { isDark } = useContext(ThemeContext);
+
+    const renderYourAmount = (asset: string) => {
+        let amount = 0;
+        if (userActivity?.isLoading)
+            return {
+                amount,
+                loading: true,
+            };
+        userActivity?.data?.supplies.map((supply) => {
+            if (supply.asset === asset)
+                amount =
+                    amount +
+                    parseFloat(bigNumberToUnformattedString(supply.amountNative, supply.asset));
+        });
+        userActivity?.data?.borrows.map((borrow) => {
+            if (borrow.asset === asset)
+                amount =
+                    amount -
+                    parseFloat(bigNumberToUnformattedString(borrow.amountNative, borrow.asset));
+        });
+        return {
+            amount: numberFormatter.format(amount),
+            loading: false,
+        };
+    };
+
     const columns = [
         {
             name: 'asset',
@@ -59,7 +98,7 @@ export const MarketsTable: React.FC<ITableProps> = ({ data }) => {
         },
         {
             name: 'available',
-            label: 'Available',
+            label: 'Available Borrows',
             options: {
                 filter: false,
                 sort: true,
@@ -103,8 +142,8 @@ export const MarketsTable: React.FC<ITableProps> = ({ data }) => {
             },
         },
         {
-            name: 'logo',
-            label: 'Logo',
+            name: 'canBeCollateral',
+            label: 'Collateral',
             options: {
                 filter: false,
                 sort: false,
@@ -121,6 +160,17 @@ export const MarketsTable: React.FC<ITableProps> = ({ data }) => {
             },
         },
         {
+            name: 'featured',
+            label: 'Featured',
+            options: {
+                filter: true,
+                sort: true,
+                sortThirdClickReset: true,
+                display: false,
+                filterType: 'dropdown',
+            },
+        },
+        {
             name: '',
             label: '',
             options: {
@@ -131,15 +181,15 @@ export const MarketsTable: React.FC<ITableProps> = ({ data }) => {
 
     return (
         <CacheProvider value={muiCache}>
-            <ThemeProvider theme={vmexTheme()}>
+            <ThemeProvider theme={vmexTheme(isDark)}>
                 <MUIDataTable
-                    title={['All Available Assets']}
-                    columns={columns}
-                    data={data || []}
+                    title={'All Available Assets'}
+                    columns={columns as any}
+                    data={addFeaturedTranches(data, 'markets')}
                     options={{
                         ...options,
-                        customRowRender: (data: any) => {
-                            const [
+                        customRowRender: (
+                            [
                                 asset,
                                 tranche,
                                 supplyApy,
@@ -150,26 +200,40 @@ export const MarketsTable: React.FC<ITableProps> = ({ data }) => {
                                 borrowTotal,
                                 rating,
                                 strategies,
-                                logo,
+                                canBeCollateral,
                                 trancheId,
-                            ] = data;
-
-                            return (
+                            ],
+                            dataIndex,
+                            rowIndex,
+                        ) => (
+                            <>
                                 <MarketsCustomRow
                                     asset={asset}
                                     tranche={tranche}
                                     trancheId={trancheId}
-                                    supplyApy={supplyApy}
-                                    borrowApy={borrowApy}
-                                    yourAmount={yourAmount}
+                                    supplyApy={percentFormatter.format(supplyApy)}
+                                    borrowApy={percentFormatter.format(borrowApy)}
+                                    yourAmount={renderYourAmount(asset)}
                                     available={available}
                                     borrowTotal={borrowTotal}
                                     supplyTotal={supplyTotal}
                                     rating={rating}
-                                    strategies={strategies}
-                                    logo={logo}
+                                    strategies={asset.toLowerCase().startsWith('yv')}
+                                    collateral={canBeCollateral}
+                                    key={`markets-table-${
+                                        rowIndex || Math.floor(Math.random() * 10000)
+                                    }`}
                                 />
-                            );
+                            </>
+                        ),
+                        textLabels: {
+                            body: {
+                                noMatch: loading ? (
+                                    <SpinnerLoader />
+                                ) : (
+                                    'An error has occured while fetching tranches. Please refresh the page.'
+                                ),
+                            },
                         },
                     }}
                 />

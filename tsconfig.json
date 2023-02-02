@@ -10,7 +10,7 @@
             "@ui/*": ["ui/*"],
             "@app/*": ["./*"]
         },
-        "baseUrl": "src",
+        "baseUrl": "src/",
         "target": "es5",
         "outDir": "lib",
         "lib": ["dom", "dom.iterable", "esnext"],
@@ -30,6 +30,6 @@
         "jsx": "react",
         "noFallthroughCasesInSwitch": true
     },
-    "include": ["src"],
+    "include": ["src", "declarations.d.ts"],
     "exclude": ["node_modules", "lib"]
 }

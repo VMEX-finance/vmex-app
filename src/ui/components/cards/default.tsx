@@ -1,5 +1,5 @@
 import React from 'react';
-import { CgSpinner } from 'react-icons/cg';
+import { SpinnerLoader } from '../loaders';
 
 type ICardProps = {
     children: React.ReactNode | React.ReactNode[];
@@ -8,23 +8,32 @@ type ICardProps = {
     padding?: string;
     className?: string;
     loading?: boolean;
+    title?: string;
+    titleClass?: string;
+    header?: React.ReactNode;
 };
 
-export const Card = ({ children, color, black, padding, className, loading }: ICardProps) => (
+export const Card = ({
+    children,
+    color,
+    black,
+    padding,
+    className,
+    loading,
+    title,
+    titleClass,
+    header,
+}: ICardProps) => (
     <div
-        className={`
+        className={`dark:bg-brand-black dark:text-neutral-300 dark:shadow-xl
     w-full rounded-lg shadow-lg overflow-auto
-    ${color ? color : black ? 'bg-neutral-900 text-neutral-100' : 'bg-white'}
+    ${color ? color : black ? 'bg-neutral-900 text-neutral-100' : 'bg-neutral-100'}
     ${padding ? padding : 'p-4 lg:p-8'}
     ${className ? className : ''}
   `}
     >
-        {loading ? (
-            <div className="flex justify-center items-center min-h-[200px]">
-                <CgSpinner className="animate-spin" size="36px" />
-            </div>
-        ) : (
-            <>{children}</>
-        )}
+        {header && header}
+        {title && <h3 className={titleClass ? titleClass : 'text-2xl'}>{title}</h3>}
+        {loading ? <SpinnerLoader /> : <>{children}</>}
     </div>
 );
