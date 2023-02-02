@@ -24,14 +24,14 @@ export const BasicToggle = ({
             case 'medium':
                 return [
                     'h-6 w-11',
-                    'h-4 h-4',
+                    'h-4 w-4',
                     checked || enabled ? 'translate-x-6' : 'translate-x-1',
                 ];
             case 'small':
                 return [
-                    'h-4 w-8',
+                    'h-[18px] w-8',
                     'h-3 w-3',
-                    checked || enabled ? 'translate-x-[1.1rem]' : 'translate-x-[0.2rem]',
+                    checked || enabled ? 'translate-x-[1.1rem]' : 'translate-x-[0.15rem]',
                 ];
         }
     };
@@ -55,7 +55,7 @@ export const BasicToggle = ({
             <span
                 className={`${determineSize()[2]} inline-block ${
                     determineSize()[1]
-                } transform rounded-full bg-neutral-100 transition`}
+                } transform rounded-full bg-neutral-100 dark:bg-neutral-100 transition`}
             />
         </Switch>
     );
