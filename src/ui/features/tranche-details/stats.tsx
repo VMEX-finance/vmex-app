@@ -50,16 +50,15 @@ export const TrancheStatisticsCard = ({
                     <div className="flex justify-between items-center">
                         <div className="flex items-center gap-4">
                             <h3 className="text-2xl">Asset Statistics</h3>
-                            {queryMarketsChart.data?.yieldStrategy &&
-                                queryMarketsChart.data.yieldStrategy != ZERO_ADDRESS && (
-                                    <div
-                                        data-tip
-                                        data-for="strategiesTip"
-                                        className="bg-white text-neutral-700 text-sm rounded px-2 border-2 border-brand-purple cursor-default"
-                                    >
-                                        <span>Strategies Enabled</span>
-                                    </div>
-                                )}
+                            {asset?.toLowerCase().startsWith('yv') && (
+                                <div
+                                    data-tip
+                                    data-for="strategiesTip"
+                                    className="bg-neutral-200 text-neutral-700 text-sm rounded px-2 border-2 border-brand-purple cursor-default"
+                                >
+                                    <span>Strategies Enabled</span>
+                                </div>
+                            )}
                         </div>
                         <DefaultDropdown
                             primary

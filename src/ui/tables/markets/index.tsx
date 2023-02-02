@@ -190,23 +190,25 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
                             dataIndex,
                             rowIndex,
                         ) => (
-                            <MarketsCustomRow
-                                asset={asset}
-                                tranche={tranche}
-                                trancheId={trancheId}
-                                supplyApy={percentFormatter.format(supplyApy)}
-                                borrowApy={percentFormatter.format(borrowApy)}
-                                yourAmount={renderYourAmount(asset)}
-                                available={available}
-                                borrowTotal={borrowTotal}
-                                supplyTotal={supplyTotal}
-                                rating={rating}
-                                strategies={strategies}
-                                collateral={canBeCollateral}
-                                key={`markets-table-${
-                                    rowIndex || Math.floor(Math.random() * 10000)
-                                }`}
-                            />
+                            <>
+                                <MarketsCustomRow
+                                    asset={asset}
+                                    tranche={tranche}
+                                    trancheId={trancheId}
+                                    supplyApy={percentFormatter.format(supplyApy)}
+                                    borrowApy={percentFormatter.format(borrowApy)}
+                                    yourAmount={renderYourAmount(asset)}
+                                    available={available}
+                                    borrowTotal={borrowTotal}
+                                    supplyTotal={supplyTotal}
+                                    rating={rating}
+                                    strategies={asset.toLowerCase().startsWith('yv')}
+                                    collateral={canBeCollateral}
+                                    key={`markets-table-${
+                                        rowIndex || Math.floor(Math.random() * 10000)
+                                    }`}
+                                />
+                            </>
                         ),
                         textLabels: {
                             body: {
