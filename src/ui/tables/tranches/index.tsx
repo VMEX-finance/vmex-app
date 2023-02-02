@@ -41,6 +41,15 @@ export const TranchesTable: React.FC<IDataTable> = ({ data, loading, userActivit
 
     const columns = [
         {
+            name: 'id',
+            label: 'ID',
+            options: {
+                filter: false,
+                sort: true,
+                sortThirdClickReset: true,
+            },
+        },
+        {
             name: 'name',
             label: 'Tranche',
             options: {
@@ -95,15 +104,6 @@ export const TranchesTable: React.FC<IDataTable> = ({ data, loading, userActivit
             },
         },
         {
-            name: 'id',
-            label: 'ID',
-            options: {
-                filter: false,
-                sort: false,
-                display: false,
-            },
-        },
-        {
             name: '',
             label: '',
             options: {
@@ -123,13 +123,13 @@ export const TranchesTable: React.FC<IDataTable> = ({ data, loading, userActivit
                         ...options,
                         customRowRender: (
                             [
+                                id,
                                 name,
                                 assets,
                                 aggregateRating,
                                 yourActivity,
                                 supplyTotal,
                                 borrowTotal,
-                                id,
                             ],
                             dataIndex,
                             rowIndex,

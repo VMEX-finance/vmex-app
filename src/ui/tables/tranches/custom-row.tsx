@@ -67,6 +67,10 @@ const TranchesCustomRow = (props: ITranchesCustomRowProps) => {
                 onClick={(e: any) => route(e, props)}
             >
                 <td className="flex justify-between">
+                    <span className="font-bold">ID</span>
+                    <span>{id}</span>
+                </td>
+                <td className="flex justify-between">
                     <span className="font-bold">Name</span>
                     <span>{name}</span>
                 </td>
@@ -102,6 +106,9 @@ const TranchesCustomRow = (props: ITranchesCustomRowProps) => {
                 onClick={(e: any) => route(e, props)}
             >
                 <td className="whitespace-nowrap py-4 pl-2 md:pl-4 pr-3">
+                    <span>{id}</span>
+                </td>
+                <td className="whitespace-nowrap">
                     <span>{name}</span>
                 </td>
 
