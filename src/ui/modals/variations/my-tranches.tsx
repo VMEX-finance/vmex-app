@@ -85,7 +85,7 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
     return (
         <>
             <ModalHeader dialog="my-tranches-dialog" title={name} />
-            {!isSuccess ? (
+            {!isSuccess && !error ? (
                 // Default State
                 <>
                     <div className="w-full mt-6">
@@ -156,7 +156,7 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
                 </>
             ) : (
                 <div className="mt-10 mb-8">
-                    <TransactionStatus success={isSuccess} full />
+                    <TransactionStatus success={isSuccess} errorText={error} full />
                 </div>
             )}
 

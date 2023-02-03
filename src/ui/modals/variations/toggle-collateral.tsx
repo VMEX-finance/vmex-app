@@ -13,7 +13,7 @@ export const ToggleCollateralDialog: React.FC<IDialogProps> = ({
     data,
     closeDialog,
 }) => {
-    const { submitTx, isLoading, isSuccess } = useModal('confirmation-dialog');
+    const { submitTx, isLoading, isSuccess, error } = useModal('confirmation-dialog');
     const { data: signer } = useSigner();
 
     const handleCollateral = async () => {
@@ -70,7 +70,7 @@ export const ToggleCollateralDialog: React.FC<IDialogProps> = ({
                     </div>
                 ) : (
                     <div className="mt-10 mb-8">
-                        <TransactionStatus success={isSuccess} full />
+                        <TransactionStatus success={isSuccess} errorText={error} full />
                     </div>
                 )}
 
