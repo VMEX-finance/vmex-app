@@ -58,7 +58,7 @@ const Overview: React.FC = () => {
                     </div>
                 </GridView>
             ) : (
-                <div className="pt-10 lg:pt-20 text-center flex-col">
+                <div className="mt-10 text-center flex-col">
                     <div className="mb-4">
                         <span className="text-lg dark:text-neutral-200">
                             Please connect your wallet.

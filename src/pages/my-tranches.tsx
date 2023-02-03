@@ -132,7 +132,7 @@ const MyTranches: React.FC = () => {
                             <div className="flex flex-col gap-4">
                                 <TrancheStatsCard />
                                 <Card>
-                                    {!isSuccess ? (
+                                    {!isSuccess && !error ? (
                                         // Default State
                                         <>
                                             <div className="flex flex-col md:grid md:grid-cols-[2fr_1fr] lg:grid-cols-[3fr_1fr] md:gap-3">
@@ -194,7 +194,11 @@ const MyTranches: React.FC = () => {
                                         </>
                                     ) : (
                                         <div className="mt-10 mb-8">
-                                            <TransactionStatus success={isSuccess} full />
+                                            <TransactionStatus
+                                                success={isSuccess}
+                                                errorText={error}
+                                                full
+                                            />
                                         </div>
                                     )}
 
