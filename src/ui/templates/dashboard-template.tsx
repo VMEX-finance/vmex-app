@@ -99,7 +99,6 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                                 label={'My Tranches'}
                                 onClick={() => openDialog('my-tranches-dialog')}
                                 primary
-                                className="!text-lg"
                             />
                         ) : (
                             <Tooltip
@@ -109,7 +108,6 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                                         label={'My Tranches'}
                                         primary
                                         disabled={myTranches?.length === 0}
-                                        className="!text-lg"
                                     />
                                 }
                             />
@@ -118,7 +116,6 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                             label={width > 768 ? 'Create Tranche' : <BiPlus size="28px" />}
                             onClick={() => openDialog('create-tranche-dialog')}
                             primary
-                            className="!text-lg"
                         />
                     </div>
                 )}

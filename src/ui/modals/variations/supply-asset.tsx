@@ -29,7 +29,7 @@ import { BigNumber, utils } from 'ethers';
 import { IYourSuppliesTableItemProps } from '@ui/tables';
 import { ISupplyBorrowProps } from '../utils';
 import { useNavigate } from 'react-router-dom';
-import { useSelectedTrancheContext } from '../../../store';
+import { useSelectedTrancheContext, useTransactionsContext } from '../../../store';
 
 export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, data, tab }) => {
     const { submitTx, isSuccess, error, isLoading } = useModal('loan-asset-dialog');
@@ -43,8 +43,18 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
     const { getTokenBalance } = useUserData(address);
     const navigate = useNavigate();
     const { setAsset } = useSelectedTrancheContext();
-    const { closeDialog } = useDialogController();
+    const { closeDialog, openDialog } = useDialogController();
     const [asCollateral, setAsCollateral] = useState<any>(data?.collateral);
+    const [existingSupplyCollateral, setExistingSupplyCollateral] = useState(false);
+    const { isAnyTransactionLoading } = useTransactionsContext();
+
+    const amountWalletNative = getTokenBalance(data?.asset || '');
+    const apy = findAssetInMarketsData(data?.asset || '')?.supplyRate;
+    const amountWithdraw =
+        findAssetInUserSuppliesOrBorrows(data?.asset, 'supply')?.amountNative || data?.amountNative;
+    const collateral = (
+        findAssetInUserSuppliesOrBorrows(data?.asset || '', 'supply') as IYourSuppliesTableItemProps
+    )?.collateral;
 
     const handleSubmit = async () => {
         if (signer && data) {
@@ -59,7 +69,10 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                           isMax: isMax,
                           test: SDK_PARAMS.test,
                           providerRpc: SDK_PARAMS.providerRpc,
-                          collateral: asCollateral,
+                          collateral:
+                              typeof collateral === 'boolean'
+                                  ? existingSupplyCollateral
+                                  : asCollateral,
                           // referrer: number,
                           // collateral: boolean,
                       })
@@ -81,14 +94,6 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
             });
         }
     };
-
-    const amountWalletNative = getTokenBalance(data?.asset || '');
-    const apy = findAssetInMarketsData(data?.asset || '')?.supplyRate;
-    const amountWithdraw =
-        findAssetInUserSuppliesOrBorrows(data?.asset, 'supply')?.amountNative || data?.amountNative;
-    const collateral = (
-        findAssetInUserSuppliesOrBorrows(data?.asset || '', 'supply') as IYourSuppliesTableItemProps
-    )?.collateral;
 
     const maxOnClick = () => {
         setAmount(
@@ -132,6 +137,12 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
     useEffect(() => {
         if (data?.view) setView('Withdraw');
     }, [data?.view]);
+
+    useEffect(() => {
+        if (typeof collateral === 'boolean') setExistingSupplyCollateral(collateral);
+    }, [collateral]);
+
+    console.log(isSuccess, error);
 
     return data && data.asset ? (
         <>
@@ -182,9 +193,21 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                                     <Tooltip
                                         text={`Your previous supply is ${
                                             collateral === false ? 'not' : ''
-                                        } collateralized. If you want to change this, go to the Overview or Portfolio page.`}
+                                        } collateralized.`}
                                         content={
-                                            <BasicToggle checked={collateral} disabled={true} />
+                                            <BasicToggle
+                                                checked={existingSupplyCollateral}
+                                                disabled={!data?.collateral}
+                                                onClick={(e: any) => {
+                                                    e.preventDefault();
+                                                    openDialog('toggle-collateral-dialog', {
+                                                        ...data,
+                                                        collateral: collateral,
+                                                        setCollateral: setExistingSupplyCollateral,
+                                                    });
+                                                    e.stopPropagation();
+                                                }}
+                                            />
                                         }
                                     />
                                 ) : (
@@ -220,7 +243,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                         </>
                     ) : (
                         <div className="mt-10 mb-8">
-                            <TransactionStatus success={isSuccess} full />
+                            <TransactionStatus success={isSuccess} errorText={error} full />
                         </div>
                     )}
                 </>
@@ -296,7 +319,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                         </>
                     ) : (
                         <div className="mt-10 mb-8">
-                            <TransactionStatus full success={isSuccess} />
+                            <TransactionStatus full success={isSuccess} errorText={error} />
                         </div>
                     )}
                 </>

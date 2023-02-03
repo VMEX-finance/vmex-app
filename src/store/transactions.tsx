@@ -14,6 +14,7 @@ type ITransactionProps = {
 export type ITransactionsStoreProps = {
     transactions: Array<ITransactionProps>;
     setTransactions?: any;
+    isAnyTransactionLoading: boolean;
     newTransaction: (tx: Transaction) => void;
     updateTransaction: (hash: string, status: string) => void;
 };
@@ -23,12 +24,14 @@ const TransactionsContext = createContext<ITransactionsStoreProps>({
     transactions: [],
     newTransaction(tx) {},
     updateTransaction(hash, status) {},
+    isAnyTransactionLoading: false,
 });
 
 // Wrapper
 export function TransactionsStore(props: { children: ReactNode }) {
     const [transactions, setTransactions] = useState<Array<ITransactionProps>>([]);
     const queryClient = useQueryClient();
+    const [isAnyTransactionLoading, setIsAnyTransactionLoading] = useState(false);
 
     // For mocking data
     useEffect(() => {
@@ -44,6 +47,7 @@ export function TransactionsStore(props: { children: ReactNode }) {
     const newTransaction = async (tx: Transaction) => {
         if (!tx.hash) return;
         const { hash } = tx;
+        setIsAnyTransactionLoading(true);
         const toastId = toast.loading(<ToastStatus status="pending" transaction={tx.hash} />);
 
         const shallow = [...transactions];
@@ -51,7 +55,8 @@ export function TransactionsStore(props: { children: ReactNode }) {
         setTransactions(shallow);
 
         const receipt = await (tx as any).wait();
-        if (receipt?.confirmations === 1) {
+        console.log('Receipt:', receipt);
+        if (receipt?.blockHash) {
             toast.update(toastId, {
                 render: <ToastStatus status="success" transaction={hash} />,
                 type: 'success',
@@ -69,6 +74,7 @@ export function TransactionsStore(props: { children: ReactNode }) {
                 closeButton: true,
             });
         }
+        setIsAnyTransactionLoading(false);
     };
 
     const updateTransaction = (hash: string, status = 'complete') => {
@@ -87,6 +93,7 @@ export function TransactionsStore(props: { children: ReactNode }) {
                 setTransactions,
                 newTransaction,
                 updateTransaction,
+                isAnyTransactionLoading,
             }}
         >
             {props.children}
