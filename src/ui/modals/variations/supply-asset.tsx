@@ -43,8 +43,9 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
     const { getTokenBalance } = useUserData(address);
     const navigate = useNavigate();
     const { setAsset } = useSelectedTrancheContext();
-    const { closeDialog } = useDialogController();
+    const { closeDialog, openDialog } = useDialogController();
     const [asCollateral, setAsCollateral] = useState<any>(data?.collateral);
+    const [existingSupplyCollateral, setExistingSupplyCollateral] = useState(false);
 
     const handleSubmit = async () => {
         if (signer && data) {
@@ -133,6 +134,10 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
         if (data?.view) setView('Withdraw');
     }, [data?.view]);
 
+    useEffect(() => {
+        if (typeof collateral === 'boolean') setExistingSupplyCollateral(collateral);
+    }, [collateral]);
+
     return data && data.asset ? (
         <>
             {view?.includes('Supply') ? (
@@ -182,9 +187,21 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                                     <Tooltip
                                         text={`Your previous supply is ${
                                             collateral === false ? 'not' : ''
-                                        } collateralized. If you want to change this, go to the Overview or Portfolio page.`}
+                                        } collateralized.`}
                                         content={
-                                            <BasicToggle checked={collateral} disabled={true} />
+                                            <BasicToggle
+                                                checked={existingSupplyCollateral}
+                                                disabled={!data?.collateral}
+                                                onClick={(e: any) => {
+                                                    e.preventDefault();
+                                                    openDialog('toggle-collateral-dialog', {
+                                                        ...data,
+                                                        collateral: collateral,
+                                                        setCollateral: setExistingSupplyCollateral,
+                                                    });
+                                                    e.stopPropagation();
+                                                }}
+                                            />
                                         }
                                     />
                                 ) : (

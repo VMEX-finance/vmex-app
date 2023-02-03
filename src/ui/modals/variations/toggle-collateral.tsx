@@ -16,21 +16,22 @@ export const ToggleCollateralDialog: React.FC<IDialogProps> = ({
     const { submitTx, isLoading, isSuccess } = useModal('confirmation-dialog');
     const { data: signer } = useSigner();
 
-    const handleCollateral = async (asset: string, trancheId: number, index: number) => {
+    const handleCollateral = async () => {
         if (signer) {
             let newArr = data.checked ? [...data.checked] : []; // copying the old datas array
-            if (data.index) newArr[index] = !newArr[index];
+            newArr[data.index] = !newArr[data.index];
             await submitTx(async () => {
                 const res = await markReserveAsCollateral({
                     signer: signer,
                     network: NETWORK,
-                    asset: asset,
-                    trancheId: trancheId,
+                    asset: data.asset,
+                    trancheId: data.trancheId,
                     useAsCollateral: !data.collateral,
                     test: SDK_PARAMS.test,
                     providerRpc: SDK_PARAMS.providerRpc,
                 });
                 if (data.setChecked) data.setChecked(newArr);
+                if (data.setCollateral && !data.setChecked) data.setCollateral(!data.collateral);
                 closeDialog('toggle-collateral-dialog');
                 return res;
             });
@@ -77,7 +78,7 @@ export const ToggleCollateralDialog: React.FC<IDialogProps> = ({
                     <Button
                         primary
                         disabled={isSuccess || isLoading}
-                        onClick={() => handleCollateral(data.asset, data.trancheId, data.index)}
+                        onClick={() => handleCollateral()}
                         label="Submit Transaction"
                         loading={isLoading}
                         loadingText="Submitting"

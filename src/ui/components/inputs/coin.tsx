@@ -35,7 +35,6 @@ export const CoinInput = ({
 
     const onChange = (e: any) => {
         const myamount = e.target.value;
-        console.log(amount.length);
         const isFirstDecimal = amount.length === 0 && myamount === '.';
         if (!myamount || myamount.match(/^\d{1,}(\.\d{0,})?$/) || isFirstDecimal) {
             if (isFirstDecimal) {
