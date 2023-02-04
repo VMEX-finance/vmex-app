@@ -8,12 +8,13 @@ import {
     StepperChild,
     InnerCard,
     Button,
+    MessageStatus,
 } from '../../components';
 import { IDialogProps } from '../utils';
 import { useStepper, useModal } from '../../../hooks';
 import { ModalFooter, ModalHeader } from '../../modals/subcomponents';
 import { CreateTrancheAssetsTable } from '../../tables';
-import { NETWORK, AVAILABLE_ASSETS, SDK_PARAMS } from '../../../utils';
+import { NETWORK, AVAILABLE_ASSETS, SDK_PARAMS, checkProfanity } from '../../../utils';
 import { useAccount, useSigner } from 'wagmi';
 import { ethers } from 'ethers';
 import { convertSymbolToAddress, initTranche } from '@vmexfinance/sdk';
@@ -125,6 +126,11 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
                                 required
                             />
                         </div>
+                        <MessageStatus
+                            type="error"
+                            show={checkProfanity(_name)}
+                            message="Please keep your degen to a minimum"
+                        />
                         <DefaultInput
                             value={treasuryAddress}
                             onType={setTreasuryAddress}
@@ -197,7 +203,7 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
                 />
 
                 <Button
-                    disabled={isSuccess || error !== ''}
+                    disabled={isSuccess || error !== '' || checkProfanity(_name)}
                     onClick={activeStep === steps.length - 1 ? handleSubmit : nextStep}
                     label={activeStep === steps.length - 1 ? 'Save' : 'Next'}
                     primary
