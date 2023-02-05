@@ -25,6 +25,7 @@
         "@types/react": "^18.0.21",
         "@types/react-dom": "^18.0.6",
         "@vmexfinance/sdk": "^1.0.12-alpha",
+        "bad-words": "^3.0.4",
         "ethers": "^5.6.9",
         "flowbite": "^1.5.1",
         "flowbite-react": "^0.1.3",
@@ -58,7 +59,7 @@
     "scripts": {
         "start:dev": "REACT_APP_NETWORK='localhost' REACT_APP_RPC='http://127.0.0.1:8545' REACT_APP_SUBGRAPH_ENDPOINT='http://127.0.0.1:8000/subgraphs/name/vmex-finance' REACT_APP_TEST=true react-scripts start",
         "start:mainnetfork": "REACT_APP_NETWORK='localhost' REACT_APP_RPC='https://dev.volatilelabs.ltd:8443' REACT_APP_SUBGRAPH_ENDPOINT='https://dev.volatilelabs.ltd:443/subgraphs/name/vmex-finance' REACT_APP_TEST=true react-scripts start",
-        "start:goerli": "REACT_APP_NETWORK='goerli' REACT_APP_RPC='https://eth-goerli.public.blastapi.io' REACT_APP_SUBGRAPH_ENDPOINT='https://api.studio.thegraph.com/query/40387/vmex-finance-goerli/v0.0.4' REACT_APP_TEST=true react-scripts start",
+        "start:goerli": "REACT_APP_NETWORK='goerli' REACT_APP_RPC='https://eth-goerli.public.blastapi.io' REACT_APP_SUBGRAPH_ENDPOINT='https://api.studio.thegraph.com/query/40387/vmex-finance-goerli/v0.0.8' REACT_APP_TEST=true react-scripts start",
         "start": "react-app-rewired start",
         "build": "react-app-rewired build",
         "test": "react-scripts test",

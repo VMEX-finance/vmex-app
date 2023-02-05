@@ -1,6 +1,12 @@
 import { IMarketsAsset, ITrancheProps } from '@app/api/types';
 import { ethers } from 'ethers';
 import { HEALTH } from './constants';
+const Filter = require('bad-words'),
+    filter = new Filter();
+
+export function checkProfanity(s: string) {
+    return filter.isProfane(s);
+}
 
 export function truncateAddress(s: string) {
     return `${s.slice(0, 3)}...${s.slice(-4)}`;

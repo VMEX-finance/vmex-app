@@ -115,42 +115,46 @@ export const HealthFactor = ({
 
             let collateralAfter = totalCollateralETH;
             let debtAfter = totalDebtInETH;
-            let liquidationThresholdAfter = currentLiquidationThreshold;
-            let borrowFactorAfter = currentAvgBorrowFactor;
+            let liquidationThresholdTimesCollateralAfter =
+                currentLiquidationThreshold.mul(totalCollateralETH);
+            let borrowFactorTimesDebtAfter = currentAvgBorrowFactor.mul(totalDebtInETH);
             if (type === 'supply') {
                 collateralAfter = totalCollateralETH.add(ethAmount);
-                liquidationThresholdAfter = totalCollateralETH
-                    .mul(currentLiquidationThreshold)
-                    .add(ethAmount.mul(a.liquidationThreshold));
+                liquidationThresholdTimesCollateralAfter =
+                    liquidationThresholdTimesCollateralAfter.add(
+                        ethAmount.mul(a.liquidationThreshold),
+                    );
             }
 
             if (type === 'withdraw') {
                 collateralAfter = totalCollateralETH.sub(ethAmount);
-                liquidationThresholdAfter = totalCollateralETH
-                    .mul(currentLiquidationThreshold)
-                    .sub(ethAmount.mul(a.liquidationThreshold));
+                liquidationThresholdTimesCollateralAfter =
+                    liquidationThresholdTimesCollateralAfter.sub(
+                        ethAmount.mul(a.liquidationThreshold),
+                    );
             }
 
             if (type === 'borrow') {
                 debtAfter = totalDebtInETH.add(ethAmount);
-                liquidationThresholdAfter = currentLiquidationThreshold.mul(totalCollateralETH);
-                borrowFactorAfter = totalDebtInETH
-                    .mul(currentAvgBorrowFactor)
-                    .add(ethAmount.mul(a.borrowFactor));
+                borrowFactorTimesDebtAfter = borrowFactorTimesDebtAfter.add(
+                    ethAmount.mul(a.borrowFactor),
+                );
             }
 
             if (type === 'repay') {
                 debtAfter = totalDebtInETH.sub(ethAmount);
-                liquidationThresholdAfter = currentLiquidationThreshold.mul(totalCollateralETH);
-                borrowFactorAfter = totalDebtInETH
-                    .mul(currentAvgBorrowFactor)
-                    .sub(ethAmount.mul(a.borrowFactor));
+                borrowFactorTimesDebtAfter = borrowFactorTimesDebtAfter.sub(
+                    ethAmount.mul(a.borrowFactor),
+                );
             }
 
             let healthFactorAfterDecrease = calculateHealthFactorFromBalances(
-                borrowFactorAfter,
-                liquidationThresholdAfter,
+                borrowFactorTimesDebtAfter,
+                liquidationThresholdTimesCollateralAfter,
             );
+
+            console.log('user data', queryUserTrancheData);
+            console.log('health factor after decrease', healthFactorAfterDecrease);
 
             return renderHealth(
                 healthFactorAfterDecrease &&

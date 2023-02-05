@@ -8,12 +8,13 @@ import {
     StepperChild,
     InnerCard,
     Button,
+    MessageStatus,
 } from '../../components';
 import { IDialogProps } from '../utils';
 import { useStepper, useModal } from '../../../hooks';
 import { ModalFooter, ModalHeader } from '../../modals/subcomponents';
 import { CreateTrancheAssetsTable } from '../../tables';
-import { NETWORK, AVAILABLE_ASSETS, SDK_PARAMS } from '../../../utils';
+import { NETWORK, AVAILABLE_ASSETS, SDK_PARAMS, checkProfanity } from '../../../utils';
 import { useAccount, useSigner } from 'wagmi';
 import { ethers } from 'ethers';
 import { convertSymbolToAddress, initTranche } from '@vmexfinance/sdk';
@@ -33,7 +34,7 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
     const [_whitelisted, setWhitelisted] = React.useState([]);
     const [_blackListed, setBlackListed] = React.useState([]);
     const [_tokens, setTokens] = React.useState<any[]>([]);
-    const [_adminFee, setAdminFee] = React.useState('20');
+    const [_adminFee, setAdminFee] = React.useState([]);
     const [_collateralTokens, setCollateralTokens] = React.useState([]);
     const [_borrowLendTokens, setBorrowLendTokens] = React.useState([]);
 
@@ -72,9 +73,7 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
                 whitelisted: _whitelisted,
                 blacklisted: _blackListed,
                 assetAddresses: _tokens,
-                reserveFactors: new Array(_tokens.length).fill(
-                    ethers.utils.parseUnits(_adminFee, 2),
-                ),
+                reserveFactors: _adminFee.map((el: string) => (Number(el) * 100).toFixed(0)),
                 canBorrow: canBorrow,
                 canBeCollateral: canBeCollateral,
                 admin: signer,
@@ -101,7 +100,7 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
             <div className="mt-2">
                 <Stepper steps={steps} previous={prevStep} next={nextStep} />
             </div>
-            {!isSuccess ? (
+            {!isSuccess && !error ? (
                 // Default State
                 <>
                     <StepperChild active={activeStep === 0}>
@@ -113,18 +112,14 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
                                 placeholder="VMEX High Quality..."
                                 title="Tranche Name"
                                 required
-                            />
-                            <DefaultInput
-                                type="percent"
-                                value={_adminFee}
-                                onType={setAdminFee}
-                                size="2xl"
-                                placeholder="0.00"
-                                title="Admin Fee (%)"
-                                tooltip="Admin fees will be distributed to the wallet address used to create the tranche. Admin fees set are additive to the base 5% fee taken by VMEX"
-                                required
+                                className="flex w-full flex-col mt-6"
                             />
                         </div>
+                        <MessageStatus
+                            type="error"
+                            show={checkProfanity(_name)}
+                            message="Please keep your degen to a minimum"
+                        />
                         <DefaultInput
                             value={treasuryAddress}
                             onType={setTreasuryAddress}
@@ -132,6 +127,7 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
                             placeholder=""
                             title="Treasury Address"
                             required
+                            className="flex w-full flex-col mt-6"
                         />
                         <ListInput
                             title="Whitelisted"
@@ -155,6 +151,8 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
                             placeholder="USDC"
                             coin
                             required
+                            _adminFee={_adminFee}
+                            setAdminFee={setAdminFee}
                         />
                     </StepperChild>
 
@@ -167,14 +165,22 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
                                     lendAssets={_borrowLendTokens}
                                     lendClick={setBorrowLendTokens}
                                     collateralClick={setCollateralTokens}
+                                    _adminFee={_adminFee}
+                                    setAdminFee={setAdminFee}
                                 />
                             </InnerCard>
                         </div>
+
+                        <MessageStatus
+                            type="error"
+                            show={_adminFee.some((el) => Number(el) > 100)}
+                            message="Admin fees must be less than 100"
+                        />
                     </StepperChild>
                 </>
             ) : (
                 <div className="mt-10 mb-8">
-                    <TransactionStatus success={isSuccess} full />
+                    <TransactionStatus success={isSuccess} errorText={error} full />
                 </div>
             )}
 
@@ -197,7 +203,14 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
                 />
 
                 <Button
-                    disabled={isSuccess || error !== ''}
+                    disabled={
+                        isSuccess ||
+                        error !== '' ||
+                        checkProfanity(_name) ||
+                        _adminFee.some((el) => Number(el) > 100) ||
+                        !_name ||
+                        !treasuryAddress
+                    }
                     onClick={activeStep === steps.length - 1 ? handleSubmit : nextStep}
                     label={activeStep === steps.length - 1 ? 'Save' : 'Next'}
                     primary
