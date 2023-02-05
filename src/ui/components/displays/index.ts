@@ -5,3 +5,4 @@ export * from './number-and-dollar';
 export * from './pill';
 export * from './multi-asset';
 export * from './health';
+export * from './legend';
