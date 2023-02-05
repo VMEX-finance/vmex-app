@@ -1,5 +1,5 @@
 import { useTransactionsContext } from '../store';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { IDialogNames } from '../store/modals';
 import { TIMER_CLOSE_DELAY } from '../utils/constants';
 import { useDialogController } from '.';
@@ -44,6 +44,7 @@ export const useModal = (dialog: IDialogNames): IUseModalProps => {
                 console.error('Error in submitting tx:', err);
                 setError(String(err));
                 setIsSuccess(false);
+                if (String(err)?.includes('user rejected')) setTimeout(() => setError(''), 2000);
             }
             setIsLoading(false);
         }

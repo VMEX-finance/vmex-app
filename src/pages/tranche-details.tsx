@@ -5,7 +5,7 @@ import {
     TrancheInfoCard,
     TrancheStatisticsCard,
 } from '../ui/features/tranche-details';
-import { Card } from '../ui/components/cards';
+import { Card, Legend } from '../ui/components';
 import { TrancheTable } from '../ui/tables';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '../store';
@@ -82,7 +82,26 @@ const TrancheDetails: React.FC = () => {
                 </>
             ) : (
                 <GridView>
-                    <Card loading={queryTrancheData.isLoading} title="Supply">
+                    <Card
+                        loading={queryTrancheData.isLoading}
+                        header={
+                            <div className="flex justify-between items-center">
+                                <h3 className={'text-2xl'}>Supply</h3>
+                                <Legend
+                                    items={[
+                                        {
+                                            name: 'Supplied',
+                                            color: 'bg-brand-green-neon',
+                                        },
+                                        {
+                                            name: 'Collateralized',
+                                            color: 'bg-brand-blue',
+                                        },
+                                    ]}
+                                />
+                            </div>
+                        }
+                    >
                         <TrancheTable
                             data={
                                 queryTrancheData.data && queryTrancheData.data.assetsData
@@ -104,7 +123,22 @@ const TrancheDetails: React.FC = () => {
                             type="supply"
                         />
                     </Card>
-                    <Card loading={queryTrancheData.isLoading} title="Borrow">
+                    <Card
+                        loading={queryTrancheData.isLoading}
+                        header={
+                            <div className="flex justify-between items-center">
+                                <h3 className={'text-2xl'}>Supply</h3>
+                                <Legend
+                                    items={[
+                                        {
+                                            name: 'Borrowed',
+                                            color: 'bg-brand-green-neon',
+                                        },
+                                    ]}
+                                />
+                            </div>
+                        }
+                    >
                         <TrancheTable
                             data={
                                 queryTrancheData.data && queryTrancheData.data.assetsData

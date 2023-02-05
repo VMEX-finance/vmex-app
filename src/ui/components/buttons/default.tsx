@@ -12,6 +12,7 @@ export interface IButtonProps {
     icon?: React.ReactNode;
     loading?: boolean;
     loadingText?: string;
+    size?: 'sm' | 'lg';
 }
 
 export const Button = ({
@@ -25,12 +26,24 @@ export const Button = ({
     icon,
     loading,
     loadingText,
+    size,
 }: IButtonProps) => {
     const mode = primary
         ? 'bg-brand-black rounded-lg text-neutral-200 hover:bg-neutral-800 border border-[1px] border-brand-black'
         : border
         ? `bg-white text-neutral-900 border-[1px] border-brand-black border-solid rounded-lg hover:bg-neutral-100`
         : 'bg-white text-neutral-900 rounded-lg hover:bg-neutral-200';
+
+    const determineSize = () => {
+        switch (size) {
+            case 'sm':
+                return 'text-sm';
+            case 'lg':
+                return 'text-lg';
+            default:
+                return 'text-md';
+        }
+    };
 
     return (
         <button
@@ -43,6 +56,7 @@ export const Button = ({
                         : 'dark:bg-brand-black dark:text-neutral-200 dark:hover:bg-neutral-900'
                 } ${disabled || loading ? 'dark:border-transparent' : 'dark:border-neutral-200'}`,
                 'h-fit',
+                determineSize(),
                 'box-border',
                 'font-basefont',
                 `${typeof label === 'string' ? 'px-4' : 'px-2'} py-1`,

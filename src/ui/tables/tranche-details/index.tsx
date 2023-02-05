@@ -10,6 +10,7 @@ import { AvailableAsset } from '@app/api/types';
 import { BigNumber, ethers } from 'ethers';
 import { numberFormatter, bigNumberToNative, determineCoinImg } from '../../../utils';
 import { useLocation } from 'react-router-dom';
+import { IYourSuppliesTableItemProps } from '../portfolio';
 
 interface ITableProps {
     data: AvailableAsset[];
@@ -21,10 +22,8 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
     const { address } = useAccount();
     const { tranche } = useSelectedTrancheContext();
     const { queryUserWallet, getTokenBalance } = useUserData(address);
-    const { queryUserTrancheData, findAmountBorrowable } = useUserTrancheData(
-        address,
-        location.state?.trancheId,
-    );
+    const { queryUserTrancheData, findAmountBorrowable, findAssetInUserSuppliesOrBorrows } =
+        useUserTrancheData(address, location.state?.trancheId);
     const { findAssetInMarketsData } = useSubgraphTrancheData(location.state?.trancheId);
     const { openDialog } = useDialogController();
 
@@ -46,7 +45,12 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
             ? 'Total liquidity'
             : 'Liquidity';
 
-    const isInList = (asset: string) => {
+    const isCollateralized = (asset: string) =>
+        type === 'supply' &&
+        (findAssetInUserSuppliesOrBorrows(asset || '', 'supply') as IYourSuppliesTableItemProps)
+            ?.collateral;
+
+    const isSuppliedOrBorrowed = (asset: string) => {
         if (!queryUserTrancheData.data) return false;
         const list = (
             type === 'borrow'
@@ -67,8 +71,8 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
     };
 
     const compareListsSorter = (a: any, b: any) => {
-        if (isInList(a.asset)) return -1;
-        if (isInList(b.asset)) return 1;
+        if (isSuppliedOrBorrowed(a.asset)) return -1;
+        if (isSuppliedOrBorrowed(b.asset)) return 1;
         return 0;
     };
 
@@ -143,12 +147,21 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                 }
                             >
                                 <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
-                                    <div className="flex items-center gap-2">
-                                        {isInList(el.asset) ? (
-                                            <span className="absolute -translate-x-4 w-2 h-2 bg-brand-green-neon rounded-full" />
-                                        ) : (
-                                            <></>
-                                        )}
+                                    <div className="flex items-center">
+                                        <div className="flex flex-col justify-center">
+                                            {isSuppliedOrBorrowed(el.asset) && (
+                                                <span
+                                                    className={`absolute -translate-x-4 ${
+                                                        isCollateralized(el.asset)
+                                                            ? 'translate-y-2'
+                                                            : ''
+                                                    } w-2 h-2 bg-brand-green-neon rounded-full`}
+                                                />
+                                            )}
+                                            {isCollateralized(el.asset) && (
+                                                <span className="absolute -translate-x-4 -translate-y-2 w-2 h-2 bg-brand-blue rounded-full" />
+                                            )}
+                                        </div>
                                         <AssetDisplay
                                             name={width > 600 ? el.asset : ''}
                                             logo={determineCoinImg(el.asset)}

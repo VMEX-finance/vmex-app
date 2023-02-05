@@ -197,7 +197,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                         </>
                     ) : (
                         <div className="mt-10 mb-8">
-                            <TransactionStatus success={isSuccess} full />
+                            <TransactionStatus success={isSuccess} errorText={error} full />
                         </div>
                     )}
                 </>
@@ -270,7 +270,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                         </>
                     ) : (
                         <div className="mt-10 mb-8">
-                            <TransactionStatus success={isSuccess} full />
+                            <TransactionStatus success={isSuccess} errorText={error} full />
                         </div>
                     )}
                 </>

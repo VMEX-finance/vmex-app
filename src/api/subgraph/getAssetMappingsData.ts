@@ -54,7 +54,15 @@ export function useSubgraphAllAssetMappingsData(): ISubgraphAllAssetMappingsData
         queryFn: () => getSubgraphAllAssetMappingsData(),
     });
 
+    const findAssetInMappings = (asset: string) => {
+        if (queryAllAssetMappingsData.isLoading) return undefined;
+        else {
+            return queryAllAssetMappingsData.data?.get(asset.toUpperCase());
+        }
+    };
+
     return {
         queryAllAssetMappingsData,
+        findAssetInMappings,
     };
 }

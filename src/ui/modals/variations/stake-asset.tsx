@@ -14,7 +14,7 @@ import {
 } from '../../components';
 
 export const StakeAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, closeDialog }) => {
-    const { submitTx, isSuccess, isLoading } = useModal('stake-asset-dialog');
+    const { submitTx, isSuccess, isLoading, error } = useModal('stake-asset-dialog');
     const [amount, setAmount] = useMediatedState(inputMediator, '');
     const [isMax, setIsMax] = React.useState(false);
 
@@ -27,7 +27,7 @@ export const StakeAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
         data.asset && (
             <>
                 <ModalHeader dialog="stake-asset-dialog" title={name} asset={data.asset} />
-                {!isSuccess ? (
+                {!isSuccess && !error ? (
                     // Default State
                     <>
                         <h3 className="mt-5 text-neutral400">Amount</h3>
@@ -63,7 +63,7 @@ export const StakeAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
                     </>
                 ) : (
                     <div className="mt-10 mb-8">
-                        <TransactionStatus success={isSuccess} full />
+                        <TransactionStatus success={isSuccess} errorText={error} full />
                     </div>
                 )}
 

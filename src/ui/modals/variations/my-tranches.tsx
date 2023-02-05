@@ -85,7 +85,7 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
     return (
         <>
             <ModalHeader dialog="my-tranches-dialog" title={name} />
-            {!isSuccess ? (
+            {!isSuccess && !error ? (
                 // Default State
                 <>
                     <div className="w-full mt-6">
@@ -106,9 +106,11 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
                             size="2xl"
                             placeholder="VMEX High Quality..."
                             title="Name"
+                            className="flex w-full flex-col mt-6"
                         />
                         <DefaultInput
                             type="percent"
+                            className="flex w-full flex-col mt-6"
                             value={_adminFee}
                             onType={setAdminFee}
                             size="2xl"
@@ -156,7 +158,7 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
                 </>
             ) : (
                 <div className="mt-10 mb-8">
-                    <TransactionStatus success={isSuccess} full />
+                    <TransactionStatus success={isSuccess} errorText={error} full />
                 </div>
             )}
 
