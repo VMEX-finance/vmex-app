@@ -49,7 +49,7 @@ export const DefaultInput = ({
     };
 
     return (
-        <div className={`flex w-full flex-col mt-6 ${className}`}>
+        <div className={`${className}`}>
             {title && (
                 <>
                     {tooltip ? (

@@ -108,6 +108,7 @@ export type ISubgraphAllMarketsData = {
 
 export type ISubgraphAllAssetMappingsData = {
     queryAllAssetMappingsData: UseQueryResult<Map<string, IAssetMappings>, unknown>;
+    findAssetInMappings: (asset: string) => IAssetMappings | undefined;
 };
 
 export type ISubgraphUserData = {
