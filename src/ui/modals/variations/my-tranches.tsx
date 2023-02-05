@@ -106,9 +106,11 @@ export const MyTranchesDialog: React.FC<IDialogProps> = ({ name, data, closeDial
                             size="2xl"
                             placeholder="VMEX High Quality..."
                             title="Name"
+                            className="flex w-full flex-col mt-6"
                         />
                         <DefaultInput
                             type="percent"
+                            className="flex w-full flex-col mt-6"
                             value={_adminFee}
                             onType={setAdminFee}
                             size="2xl"

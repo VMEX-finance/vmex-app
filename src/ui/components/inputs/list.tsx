@@ -2,9 +2,10 @@ import React, { useEffect } from 'react';
 import { IoIosClose } from 'react-icons/io';
 import { AssetDisplay } from '../displays';
 import { BasicToggle } from '../toggles';
-import { utils } from 'ethers';
-import { AVAILABLE_ASSETS, truncateAddress } from '../../../utils';
+import { ethers, utils } from 'ethers';
+import { AVAILABLE_ASSETS, bigNumberToUnformattedString, truncateAddress } from '../../../utils';
 import { AutoCompleteInput } from '.';
+import { useSubgraphAllAssetMappingsData } from '../../../api';
 
 export interface IListInput {
     coin?: boolean;
@@ -16,6 +17,8 @@ export interface IListInput {
     noDelete?: boolean;
     required?: boolean;
     autocomplete?: string[];
+    _adminFee?: string[];
+    setAdminFee?: any;
 }
 
 export const ListInputItem = ({
@@ -54,7 +57,10 @@ export const ListInput = ({
     noDelete,
     required,
     autocomplete,
+    _adminFee,
+    setAdminFee,
 }: IListInput) => {
+    const { findAssetInMappings } = useSubgraphAllAssetMappingsData();
     const [value, setValue] = React.useState('');
     const [isOpen, setIsOpen] = React.useState(false);
     const [error, setError] = React.useState('');
@@ -83,6 +89,18 @@ export const ListInput = ({
             const shallow = list && list.length !== 0 ? [...list] : [];
             shallow.push(toBeSet);
             setList(shallow);
+            if (_adminFee) {
+                const shallow2 = _adminFee.length !== 0 ? [..._adminFee] : [];
+                shallow2.push(
+                    findAssetInMappings(toBeSet)?.vmexReserveFactor
+                        ? ethers.utils.formatUnits(
+                              findAssetInMappings(toBeSet)?.vmexReserveFactor || '0',
+                              '16',
+                          )
+                        : '20',
+                ); //default reserve factor of that asset
+                setAdminFee(shallow2);
+            }
             setValue('');
         }
     };
@@ -94,12 +112,17 @@ export const ListInput = ({
     const removeFromList = (itemToRemove: any) => {
         if (list && list.length > 0) {
             const shallow = [...list];
+            const shallow2 = _adminFee && _adminFee.length !== 0 ? [..._adminFee] : [];
             shallow.map((el, i) => {
                 if (el === itemToRemove) {
                     shallow.splice(i, 1);
+                    if (shallow2) shallow2.splice(i, 1);
                 }
             });
             setList(shallow);
+            if (shallow2) {
+                setAdminFee(shallow2);
+            }
         }
     };
 

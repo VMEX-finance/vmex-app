@@ -142,7 +142,7 @@ const MyTranches: React.FC = () => {
                                                     size="2xl"
                                                     placeholder="VMEX High Quality..."
                                                     title="Name"
-                                                    className="!mt-0"
+                                                    className="flex w-full flex-col mt-6 !mt-0"
                                                 />
                                                 <DefaultInput
                                                     type="percent"
@@ -152,7 +152,7 @@ const MyTranches: React.FC = () => {
                                                     placeholder="0.00"
                                                     title="Admin Fee (%)"
                                                     tooltip="Admin fees will be distributed to the wallet address used to create the tranche. Admin fees set are additive to the base 5% fee taken by VMEX"
-                                                    className="!mt-0"
+                                                    className="flex w-full flex-col mt-6 !mt-0"
                                                 />
                                             </div>
                                             <ListInput

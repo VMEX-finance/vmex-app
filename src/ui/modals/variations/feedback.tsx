@@ -93,6 +93,7 @@ export const FeedbackDialog: React.FC<IDialogProps> = ({ name, isOpen, data, clo
                                 size="lg"
                                 placeholder="Markets Page"
                                 required
+                                className="flex w-full flex-col mt-6"
                             />
                             <DefaultInput
                                 title="Discord Username"
@@ -100,6 +101,7 @@ export const FeedbackDialog: React.FC<IDialogProps> = ({ name, isOpen, data, clo
                                 onType={(e: any) => updateForm('username', e)}
                                 size="lg"
                                 placeholder="@vmexfinance#1234"
+                                className="flex w-full flex-col mt-6"
                             />
                         </div>
                         <DefaultInput
@@ -109,6 +111,7 @@ export const FeedbackDialog: React.FC<IDialogProps> = ({ name, isOpen, data, clo
                             size="lg"
                             placeholder="Start typing here..."
                             required
+                            className="flex w-full flex-col mt-6"
                         />
                     </div>
                     <div className="flex w-full justify-between items-end gap-4">
@@ -120,6 +123,7 @@ export const FeedbackDialog: React.FC<IDialogProps> = ({ name, isOpen, data, clo
                             size="lg"
                             placeholder="Enter letters here..."
                             required
+                            className="flex w-full flex-col mt-6"
                         />
                     </div>
                     {error && (

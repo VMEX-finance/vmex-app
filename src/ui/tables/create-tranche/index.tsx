@@ -1,6 +1,6 @@
 import { IAvailableCoins } from '../../../utils/helpers';
 import React, { useEffect } from 'react';
-import { Checkbox, AssetDisplay } from '../../components';
+import { Checkbox, AssetDisplay, DefaultInput, MessageStatus } from '../../components';
 import { useSubgraphAllAssetMappingsData } from '../../../api/subgraph/getAssetMappingsData';
 
 // TODO: make a way to see which assets cannot be lent / collateralized / etc
@@ -10,6 +10,8 @@ type ICreateTrancheAssetsTableProps = {
     collateralAssets: IAvailableCoins[];
     lendClick?: React.Dispatch<React.SetStateAction<any>>;
     collateralClick?: React.Dispatch<React.SetStateAction<any>>;
+    _adminFee: string[];
+    setAdminFee: React.Dispatch<React.SetStateAction<any>>;
 };
 
 export const CreateTrancheAssetsTable = ({
@@ -18,6 +20,8 @@ export const CreateTrancheAssetsTable = ({
     collateralAssets,
     lendClick,
     collateralClick,
+    _adminFee,
+    setAdminFee,
 }: ICreateTrancheAssetsTableProps) => {
     const { queryAllAssetMappingsData } = useSubgraphAllAssetMappingsData();
 
@@ -49,6 +53,13 @@ export const CreateTrancheAssetsTable = ({
         return queryAllAssetMappingsData.data?.get(asset.toUpperCase())?.canBeBorrowed;
     };
 
+    function handleSetAdminFee(e: any, i: number) {
+        const newVal = e;
+        const shallow = _adminFee.length > 0 ? [..._adminFee] : [];
+        shallow[i] = newVal;
+        setAdminFee(shallow);
+    }
+
     return (
         <>
             <table className="w-full table-auto">
@@ -57,6 +68,7 @@ export const CreateTrancheAssetsTable = ({
                         <th>Asset</th>
                         <th>Borrow / Lend</th>
                         <th>Collateral</th>
+                        <th>Admin Fee (%)</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -98,6 +110,19 @@ export const CreateTrancheAssetsTable = ({
                                                 ? removeFromList(el, collateralAssets)
                                                 : addToList(el, collateralAssets)
                                         }
+                                    />
+                                </>
+                            </td>
+                            <td>
+                                <>
+                                    <DefaultInput
+                                        type="percent"
+                                        className="flex items-center gap-2 cursor-pointer"
+                                        value={_adminFee[i]}
+                                        onType={(e: any) => handleSetAdminFee(e, i)}
+                                        placeholder="0.00"
+                                        tooltip="Admin fees will be distributed to the wallet address used to create the tranche. Admin fees set are additive to the base 5% fee taken by VMEX"
+                                        required
                                     />
                                 </>
                             </td>
