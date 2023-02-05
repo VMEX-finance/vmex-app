@@ -29,7 +29,7 @@ import { BigNumber, utils } from 'ethers';
 import { IYourSuppliesTableItemProps } from '@ui/tables';
 import { ISupplyBorrowProps } from '../utils';
 import { useNavigate } from 'react-router-dom';
-import { useSelectedTrancheContext, useTransactionsContext } from '../../../store';
+import { useSelectedTrancheContext } from '../../../store';
 
 export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, data, tab }) => {
     const { submitTx, isSuccess, error, isLoading } = useModal('loan-asset-dialog');
@@ -46,7 +46,6 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
     const { closeDialog, openDialog } = useDialogController();
     const [asCollateral, setAsCollateral] = useState<any>(data?.collateral);
     const [existingSupplyCollateral, setExistingSupplyCollateral] = useState(false);
-    const { isAnyTransactionLoading } = useTransactionsContext();
 
     const amountWalletNative = getTokenBalance(data?.asset || '');
     const apy = findAssetInMarketsData(data?.asset || '')?.supplyRate;
@@ -141,8 +140,6 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
     useEffect(() => {
         if (typeof collateral === 'boolean') setExistingSupplyCollateral(collateral);
     }, [collateral]);
-
-    console.log(isSuccess, error);
 
     return data && data.asset ? (
         <>
