@@ -64,7 +64,7 @@ const Overview: React.FC = () => {
                             Please connect your wallet.
                         </span>
                     </div>
-                    <WalletButton primary className="w-fit" />
+                    <WalletButton primary className="!w-fit" />
                 </div>
             )}
         </AppTemplate>
