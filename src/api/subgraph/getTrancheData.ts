@@ -113,6 +113,7 @@ export const processTrancheData = async (
         ),
         avgApy: calculateAvgApy(),
         adminFee: 'TODO',
+        whitelist: data.isUsingWhitelist,
         whitelistedUsers: data.whitelistedUsers.map((obj: any) => {
             return obj.id;
         }),
@@ -135,6 +136,7 @@ export const getSubgraphTrancheData = async (
             query QueryTranche($trancheId: String!) {
                 tranche(id: $trancheId) {
                     name
+                    isUsingWhitelist
                     trancheAdmin {
                         id
                     }
