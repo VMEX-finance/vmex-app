@@ -6,16 +6,9 @@ import ReduxProvider from './store/redux';
 import { HashRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import {
-    MyTranchesStore,
-    SelectedTrancheStore,
-    TransactionsStore,
-    ThemeProvider,
-    wagmiClient,
-    chains,
-    WagmiConfig,
-    RainbowKitProvider,
-} from './store';
+import { MyTranchesStore, SelectedTrancheStore, TransactionsStore, ThemeProvider } from './store';
+import { WagmiConfig } from 'wagmi';
+import { chains, RainbowKitProvider, wagmiClient } from './utils';
 
 const queryClient = new QueryClient();
 

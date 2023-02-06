@@ -4,7 +4,7 @@ import { PortfolioStatsCard, UserPerformanceCard } from '../ui/features';
 import { YourPositionsTable } from '../ui/tables';
 import { Button, WalletButton } from '../ui/components/buttons';
 import { useUserData, useUserTranchesData } from '../api/user';
-import { useAccount } from 'wagmi';
+import { useAccount, useNetwork } from 'wagmi';
 import { addDollarAmounts, bigNumberToUnformattedString } from '../utils/sdk-helpers';
 import { useSubgraphUserData } from '../api/subgraph';
 import { averageOfArr, numberFormatter } from '../utils/helpers';
@@ -15,6 +15,7 @@ const Portfolio: React.FC = () => {
     const navigate = useNavigate();
     const { myTranches } = useMyTranchesContext();
     const { address } = useAccount();
+    const { chain } = useNetwork();
     const { queryUserActivity } = useUserData(address);
     const { queryUserPnlChart } = useSubgraphUserData(address);
     const { queryUserTranchesData } = useUserTranchesData(address);
@@ -93,7 +94,7 @@ const Portfolio: React.FC = () => {
                 />
             }
         >
-            {address ? (
+            {address && !chain?.unsupported ? (
                 <GridView type="fixed">
                     <div className="col-span-2 flex flex-col gap-4 xl:gap-8">
                         <PortfolioStatsCard

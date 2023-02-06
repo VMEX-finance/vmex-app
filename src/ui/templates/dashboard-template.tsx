@@ -4,7 +4,7 @@ import { useWindowSize, useDialogController } from '../../hooks';
 import { BiChevronLeft, BiPlus } from 'react-icons/bi';
 import { useMyTranchesContext } from '../../store';
 import { Tooltip, Button, LinkButton } from '../components';
-import { useAccount } from 'wagmi';
+import { chain, useAccount, useNetwork } from 'wagmi';
 import { Skeleton } from '@mui/material';
 
 interface IDashboardTemplateProps {
@@ -26,6 +26,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
     titleLoading,
     right,
 }) => {
+    const { chain } = useNetwork();
     const { myTranches } = useMyTranchesContext();
     const { openDialog } = useDialogController();
     const location = useLocation();
@@ -92,7 +93,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                         </div>
                     </>
                 )}
-                {location.pathname === `/tranches` && isConnected && (
+                {location.pathname === `/tranches` && isConnected && !chain?.unsupported && (
                     <div className="flex gap-3 md:justify-end mt-2">
                         {myTranches?.length > 0 ? (
                             <Button
