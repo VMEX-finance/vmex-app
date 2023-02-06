@@ -16,36 +16,48 @@ type BalanceHistoryItem = {
 };
 
 export const getUserAdminTrancheData = async (admin: string): Promise<IGraphTrancheDataProps[]> => {
+    admin = admin.toLowerCase();
     const { data, error } = await apolloClient.query({
         query: gql`
             query QueryTrancheAdmin($admin: String!) {
-                tranches(where: { trancheAdmin: $admin }) {
-                    name
-                    trancheAdmin
-                    id
-                    reserves {
-                        utilizationRate
-                        reserveFactor
-                        optimalUtilisationRate
-                        decimals
-                        variableBorrowRate
-                        liquidityRate
-                        totalDeposits
-                        availableLiquidity
-                        totalCurrentVariableDebt
-                        usageAsCollateralEnabled
-                        borrowingEnabled
-                        assetData {
-                            underlyingAssetName
-                            baseLTV
-                            liquidationThreshold
-                            liquidationBonus
-                            borrowFactor
-                            borrowCap
-                            supplyCap
-                            vmexReserveFactor
+                user(id: $admin) {
+                    myTranches {
+                        id
+                        name
+                        trancheAdmin {
+                            id
                         }
-                        # yieldStrategy
+                        whitelistedUsers {
+                            id
+                        }
+                        blacklistedUsers {
+                            id
+                        }
+                        reserves {
+                            utilizationRate
+                            reserveFactor
+                            optimalUtilisationRate
+                            decimals
+                            isActive
+                            variableBorrowRate
+                            liquidityRate
+                            totalDeposits
+                            availableLiquidity
+                            totalCurrentVariableDebt
+                            usageAsCollateralEnabled
+                            borrowingEnabled
+                            assetData {
+                                underlyingAssetName
+                                baseLTV
+                                liquidationThreshold
+                                liquidationBonus
+                                borrowFactor
+                                borrowCap
+                                supplyCap
+                                vmexReserveFactor
+                            }
+                            # yieldStrategy
+                        }
                     }
                 }
             }
@@ -55,8 +67,10 @@ export const getUserAdminTrancheData = async (admin: string): Promise<IGraphTran
 
     if (error) return [];
     else {
-        const dat = data.tranches;
-        return dat.map((el: any) => processTrancheData(el));
+        const dat = data.user.myTranches;
+
+        const ret = dat.map((el: any) => processTrancheData(el));
+        return await Promise.all(ret);
     }
 };
 
