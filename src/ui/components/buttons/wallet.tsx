@@ -1,7 +1,7 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import React, { useContext, useEffect } from 'react';
 import { IButtonProps } from './default';
-import { useAccount, useDisconnect } from 'wagmi';
+import { useAccount, useDisconnect, useNetwork, useSwitchNetwork } from 'wagmi';
 import { ThemeContext, useMyTranchesContext } from '../../../store';
 import { useWindowSize, useDialogController } from '../../../hooks';
 import { DefaultDropdown, IDropdownItemProps } from '../dropdowns';
@@ -9,6 +9,8 @@ import { truncateAddress, truncate } from '../../../utils/helpers';
 import { useNavigate } from 'react-router-dom';
 
 export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: IButtonProps) => {
+    const { chain } = useNetwork();
+    const { switchNetwork } = useSwitchNetwork();
     const navigate = useNavigate();
     const { disconnect } = useDisconnect();
     const { theme, setTheme } = useContext(ThemeContext);
@@ -55,7 +57,7 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
         return final;
     };
 
-    if (address && width > 1024) {
+    if (address && width > 1024 && !chain?.unsupported) {
         return (
             <DefaultDropdown
                 className={[
@@ -75,7 +77,6 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
                     account,
                     chain,
                     openAccountModal,
-                    openChainModal,
                     openConnectModal,
                     authenticationStatus,
                     mounted,
@@ -93,7 +94,7 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
                         if (!connected) {
                             return { onClick: openConnectModal, render: title };
                         } else if (chain.unsupported) {
-                            return { onClick: openChainModal, render: 'Wrong Network' };
+                            return { onClick: () => switchNetwork?.(5), render: 'Wrong Network' };
                         } else {
                             return { onClick: openAccountModal, render: account.displayName };
                         }
