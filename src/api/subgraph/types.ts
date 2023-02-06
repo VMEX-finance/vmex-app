@@ -47,6 +47,7 @@ export type IGraphAssetData = {
     priceUSD: BigNumber;
     priceETH: BigNumber;
     yieldStrategy: string;
+    isPaused?: boolean;
 };
 
 export type IGraphTrancheAssetProps = IGraphAssetData | Record<any, any>;
@@ -69,6 +70,10 @@ export type IGraphTrancheDataProps = {
     id?: string;
     poolUtilization?: string;
     avgApy?: number;
+    adminFee?: string;
+    whitelistedUsers?: string[];
+    blacklistedUsers?: string[];
+    isPaused?: boolean;
 };
 
 export type IGraphProtocolDataProps =
