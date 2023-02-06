@@ -3,14 +3,14 @@ import { AppTemplate, GridView } from '../ui/templates';
 import { UserPerformanceCard, ProtocolStatsCard } from '../ui/features';
 import { YourPositionsTable } from '../ui/tables';
 import { WalletButton } from '../ui/components/buttons';
-import { useAccount } from 'wagmi';
+import { useAccount, useNetwork } from 'wagmi';
 import { numberFormatter } from '../utils/helpers';
 import { bigNumberToUnformattedString } from '../utils/sdk-helpers';
 import { useSubgraphProtocolData, useSubgraphUserData, useUserData } from '../api';
-import { BigNumber } from 'ethers';
 
 const Overview: React.FC = () => {
     const { address, isConnected } = useAccount();
+    const { chain } = useNetwork();
     const { queryProtocolTVLChart, queryProtocolData } = useSubgraphProtocolData();
     const { queryUserActivity } = useUserData(address);
     const { queryUserPnlChart } = useSubgraphUserData(address);
@@ -31,7 +31,7 @@ const Overview: React.FC = () => {
                 topTranches={queryProtocolData.data?.topTranches}
                 isLoading={queryProtocolData.isLoading}
             />
-            {isConnected ? (
+            {isConnected && !chain?.unsupported ? (
                 <GridView type="fixed">
                     <UserPerformanceCard
                         isLoading={queryUserActivity.isLoading || queryUserPnlChart.isLoading}
