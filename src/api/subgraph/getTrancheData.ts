@@ -56,6 +56,7 @@ export const processTrancheData = async (
                             : item.assetData.borrowCap,
                     priceUSD: (prices as any)[item.assetData.underlyingAssetName].usdPrice,
                     priceETH: (prices as any)[item.assetData.underlyingAssetName].ethPrice,
+                    isPaused: !item.isActive,
                     // yieldStrategy: item.yieldStrategy,
                 },
             }),
@@ -102,7 +103,7 @@ export const processTrancheData = async (
         assets: assets.map((el: any) => el.assetData.underlyingAssetName),
         id: trancheId ? trancheId : data.id,
         name: data.name,
-        admin: data.trancheAdmin,
+        admin: data.trancheAdmin.id,
         availableLiquidity: usdFormatter().format(summaryData.tvl),
         totalSupplied: usdFormatter().format(summaryData.supplyTotal),
         totalBorrowed: usdFormatter().format(summaryData.borrowTotal),
@@ -111,6 +112,14 @@ export const processTrancheData = async (
             1 - (summaryData.supplyTotal - summaryData.borrowTotal) / summaryData.supplyTotal,
         ),
         avgApy: calculateAvgApy(),
+        adminFee: 'TODO',
+        whitelistedUsers: data.whitelistedUsers.map((obj: any) => {
+            return obj.id;
+        }),
+        blacklistedUsers: data.blacklistedUsers.map((obj: any) => {
+            return obj.id;
+        }),
+        isPaused: false, //TODO
     };
     return returnObj;
 };
@@ -126,12 +135,21 @@ export const getSubgraphTrancheData = async (
             query QueryTranche($trancheId: String!) {
                 tranche(id: $trancheId) {
                     name
-                    trancheAdmin
+                    trancheAdmin {
+                        id
+                    }
+                    whitelistedUsers {
+                        id
+                    }
+                    blacklistedUsers {
+                        id
+                    }
                     reserves {
                         utilizationRate
                         reserveFactor
                         optimalUtilisationRate
                         decimals
+                        isActive
                         variableBorrowRate
                         liquidityRate
                         totalDeposits
