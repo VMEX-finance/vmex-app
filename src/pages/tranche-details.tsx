@@ -37,7 +37,10 @@ const TrancheDetails: React.FC = () => {
     }, [queryTrancheData.data, setTranche, tranche]);
 
     useEffect(() => {
-        if (!tranche?.id && !location.state?.trancheId) navigate('/tranches');
+        if (!tranche?.id && !location.state?.trancheId) {
+            console.log('Not set tranche and location');
+            navigate('/tranches');
+        }
     }, [navigate, tranche, location]);
 
     return (
