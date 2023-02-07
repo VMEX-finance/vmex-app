@@ -82,6 +82,8 @@ export async function getUserActivityData(userAddress: string): Promise<IUserAct
         };
     });
 
+    console.log('supplies: ', supplies);
+
     return {
         availableBorrowsETH: bigNumberToNative(summary.availableBorrowsETH, 'ETH'),
         totalCollateralETH: bigNumberToNative(summary.totalCollateralETH, 'ETH'),
