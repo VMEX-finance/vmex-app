@@ -81,7 +81,7 @@ export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]
 
         tranches.map((tranche: any) => {
             let trancheInfo = {
-                id: tranche.id,
+                id: Number(tranche.id),
                 name: tranche.name,
                 assets: tranche.reserves.map((el: any) => el.assetData.underlyingAssetName),
                 tvl: 0,
@@ -98,6 +98,15 @@ export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]
             }
 
             returnObj.push(trancheInfo);
+        });
+        //subgraph actually stores the ids as int so when querying it, it sorts via string method. This ensures that our array is indeed sorted based on number
+        //can deprecate later when subgraph stores them as ints
+        returnObj.sort((a, b) => {
+            if (!a.id || !b.id) {
+                return 0;
+            }
+            if (a.id < b.id) return -1;
+            else return 1;
         });
         return returnObj;
     }
