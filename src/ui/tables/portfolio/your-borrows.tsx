@@ -1,5 +1,5 @@
 import React from 'react';
-import { AssetDisplay, NumberAndDollar } from '../../components/displays';
+import { AssetDisplay, HealthFactor, NumberAndDollar } from '../../components/displays';
 import { BigNumber } from 'ethers';
 import { bigNumberToNative, determineHealthColor } from '../../../utils';
 import { useWindowSize, useDialogController } from '../../../hooks';
@@ -78,15 +78,13 @@ export const YourBorrowsTable: React.FC<IYourBorrowsTableProps> = ({
                                 </td>
                                 <td>{i.apy}%</td>
                                 <td>{i.tranche}</td>
-                                {withHealth && (
-                                    <td
-                                        className={`${
-                                            healthLoading ? 'animate-pulse' : ''
-                                        } ${determineHealthColor(i.healthFactor)}`}
-                                    >
-                                        {(i.healthFactor || 0).toFixed(1)}
-                                    </td>
-                                )}
+                                <td>
+                                    <HealthFactor
+                                        withChange={false}
+                                        trancheId={i.trancheId.toString()}
+                                        showInfo={false}
+                                    />
+                                </td>
                             </tr>
                         );
                     })}

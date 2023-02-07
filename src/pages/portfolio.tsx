@@ -46,44 +46,6 @@ const Portfolio: React.FC = () => {
         }
     };
 
-    const suppliesWithHealth = () => {
-        if (queryUserActivity.isLoading || !queryUserActivity.data) return [];
-        else {
-            if (!queryUserTranchesData.data) {
-                return queryUserActivity.data?.supplies;
-            } else {
-                return queryUserActivity.data?.supplies.map((supply) => {
-                    const foundHealth = queryUserTranchesData.data.find(
-                        ({ trancheId }) => trancheId === supply.trancheId,
-                    );
-                    return {
-                        ...supply,
-                        healthFactor: foundHealth ? parseFloat(foundHealth.healthFactor) : 0,
-                    };
-                });
-            }
-        }
-    };
-
-    const borrowsWithHealth = () => {
-        if (queryUserActivity.isLoading || !queryUserActivity.data) return [];
-        else {
-            if (!queryUserTranchesData.data) {
-                return queryUserActivity.data?.borrows;
-            } else {
-                return queryUserActivity.data?.borrows.map((borrow) => {
-                    const foundHealth = queryUserTranchesData.data.find(
-                        ({ trancheId }) => trancheId === borrow.trancheId,
-                    );
-                    return {
-                        ...borrow,
-                        healthFactor: foundHealth ? parseFloat(foundHealth.healthFactor) : 0,
-                    };
-                });
-            }
-        }
-    };
-
     return (
         <AppTemplate
             title="Portfolio"
@@ -115,14 +77,14 @@ const Portfolio: React.FC = () => {
                         <div className="flex flex-col lg:flex-row lg:grow gap-4 xl:gap-8">
                             <YourPositionsTable
                                 type="supplies"
-                                data={suppliesWithHealth()}
+                                data={queryUserActivity.data?.supplies}
                                 isLoading={queryUserActivity.isLoading}
                                 withHealth
                                 healthLoading={queryUserTranchesData.isLoading}
                             />
                             <YourPositionsTable
                                 type="borrows"
-                                data={borrowsWithHealth()}
+                                data={queryUserActivity.data?.borrows}
                                 isLoading={queryUserActivity.isLoading}
                                 withHealth
                                 healthLoading={queryUserTranchesData.isLoading}
