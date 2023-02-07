@@ -81,7 +81,7 @@ export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]
 
         tranches.map((tranche: any) => {
             let trancheInfo = {
-                id: Number(tranche.id),
+                id: tranche.id,
                 name: tranche.name,
                 assets: tranche.reserves.map((el: any) => el.assetData.underlyingAssetName),
                 tvl: 0,
@@ -105,7 +105,7 @@ export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]
             if (!a.id || !b.id) {
                 return 0;
             }
-            if (a.id < b.id) return -1;
+            if (Number(a.id) < Number(b.id)) return -1;
             else return 1;
         });
         return returnObj;
