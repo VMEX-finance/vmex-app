@@ -22,6 +22,7 @@ interface IHealthFactorProps {
     withChange?: boolean;
     center?: boolean;
     trancheId?: string;
+    showInfo?: boolean;
 }
 
 export const HealthFactor = ({
@@ -32,6 +33,7 @@ export const HealthFactor = ({
     withChange = true,
     center,
     trancheId,
+    showInfo = true,
 }: IHealthFactorProps) => {
     const location = useLocation();
     const { address } = useAccount();
@@ -177,11 +179,11 @@ export const HealthFactor = ({
                 )}
                 {withChange ? determineHFFinal() : determineHFInitial()}
             </div>
-            {
+            {showInfo && (
                 <div>
                     <span className="text-xs text-neutral-500 leading-0">{`Liquidation at <1.0`}</span>
                 </div>
-            }
+            )}
         </>
     );
 };
