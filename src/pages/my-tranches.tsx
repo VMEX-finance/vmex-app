@@ -11,6 +11,7 @@ import {
 } from '../ui/components';
 import { useAccount } from 'wagmi';
 import { useMyTranchesContext } from '../store';
+import { useSubgraphUserData, IGraphTrancheDataProps, IGraphAssetData } from '../api/subgraph';
 import { useModal, useWindowSize } from '../hooks';
 import { TrancheStatsCard } from '../ui/features';
 
@@ -19,70 +20,94 @@ const MyTranches: React.FC = () => {
     const { width } = useWindowSize();
     const { address } = useAccount();
     const { isSuccess, error, submitTx, setError, isLoading } = useModal('my-tranches-dialog');
-    const { updateTranche, myTranches, deleteTranche, pauseTranche } = useMyTranchesContext();
+    // const { updateTranche, myTranches, deleteTranche, pauseTranche } = useMyTranchesContext();
+
+    const { queryTrancheAdminData } = useSubgraphUserData(address || '');
+
+    const parseSelectedTranche = (trancheAdminData: IGraphTrancheDataProps) => {
+        if (!trancheAdminData) {
+            return {
+                id: '0',
+                name: '',
+                whitelistedUsers: [],
+                blacklistedUsers: [],
+                tokens: [],
+                adminFee: '0.2',
+                pausedTokens: [],
+                isPaused: false,
+            };
+        }
+        return {
+            id: trancheAdminData.id || '',
+            name: trancheAdminData.name || '',
+            whitelistedUsers: trancheAdminData.whitelistedUsers || [],
+            blacklistedUsers: trancheAdminData.blacklistedUsers || [],
+            tokens: Object.keys(trancheAdminData.assetsData || {}),
+            adminFee: 'TODO',
+            pausedTokens:
+                Object.values(trancheAdminData.assetsData || {}).map((asset: IGraphAssetData) => {
+                    return asset.isPaused !== undefined ? asset.isPaused.toString() : 'Unknown';
+                }) || [],
+            isPaused: false,
+        };
+    };
 
     const [selectedTranche, setSelectedTranche] = React.useState(
-        myTranches.length > 0
-            ? myTranches[0]
-            : {
-                  id: 0,
-                  name: '',
-                  whitelisted: [],
-                  blacklisted: [],
-                  tokens: [],
-                  adminFee: '0.2',
-                  pausedTokens: [],
-              },
+        parseSelectedTranche(
+            queryTrancheAdminData.data && queryTrancheAdminData.data.length > 0
+                ? queryTrancheAdminData.data[0]
+                : {},
+        ),
     );
 
     const [_name, setName] = React.useState(selectedTranche.name);
-    const [_whitelisted, setWhitelisted] = React.useState(selectedTranche.whitelisted);
-    const [_blackListed, setBlackListed] = React.useState(selectedTranche.blacklisted);
+    const [_whitelisted, setWhitelisted] = React.useState(selectedTranche.whitelistedUsers);
+    const [_blackListed, setBlackListed] = React.useState(selectedTranche.blacklistedUsers);
     const [_tokens, setTokens] = React.useState(selectedTranche.tokens);
     const [_adminFee, setAdminFee] = React.useState(selectedTranche.adminFee);
     const [_pausedTokens, setPausedTokens] = React.useState(selectedTranche.pausedTokens);
 
     const findSelectedTranche = (name: string) => {
-        const found = myTranches.find((el) => el.name === name);
-        setSelectedTranche(found as any);
+        const found = queryTrancheAdminData.data?.find((el) => el.name === name);
+        setSelectedTranche(parseSelectedTranche(found || {}));
     };
 
     const handleSave = async () => {
         if (!_name) setError('Please enter a tranche name.');
         if (_tokens?.length === 0) setError('Please enter tokens to be included in your tranche.');
 
-        await submitTx(async () => {
-            const res = await updateTranche({
-                id: selectedTranche.id,
-                name: _name,
-                whitelisted: _whitelisted,
-                blacklisted: _blackListed,
-                tokens: _tokens,
-                adminFee: _adminFee,
-                pausedTokens: _pausedTokens,
-            });
-            return res;
-        }, false);
+        // await submitTx(async () => {
+        //     const res = await updateTranche({
+        //         id: selectedTranche.id,
+        //         name: _name,
+        //         whitelisted: _whitelisted,
+        //         blacklisted: _blackListed,
+        //         tokens: _tokens,
+        //         adminFee: _adminFee,
+        //         pausedTokens: _pausedTokens,
+        //     });
+        //     return res;
+        // }, false);
     };
 
     const handleDelete = async () => {
-        await submitTx(async () => {
-            const res = await deleteTranche(selectedTranche.id);
-            return res;
-        });
+        // await submitTx(async () => {
+        //     const res = await deleteTranche(selectedTranche.id);
+        //     return res;
+        // });
     };
 
     const handlePause = async () => {
-        await submitTx(async () => {
-            const res = await pauseTranche(selectedTranche.id);
-            return res;
-        }, false);
+        // await submitTx(async () => {
+        //     const res = await pauseTranche(selectedTranche.id);
+        //     return res;
+        // }, false);
     };
 
     useEffect(() => {
         setName(selectedTranche.name);
-        setWhitelisted(selectedTranche.whitelisted);
-        setBlackListed(selectedTranche.blacklisted);
+        setWhitelisted(selectedTranche.whitelistedUsers);
+        setBlackListed(selectedTranche.blacklistedUsers);
         setTokens(selectedTranche.tokens);
         setAdminFee(selectedTranche.adminFee);
         setPausedTokens(selectedTranche.pausedTokens);
@@ -96,10 +121,12 @@ const MyTranches: React.FC = () => {
                     {width < breakpoint && (
                         <div className="w-full">
                             <DefaultDropdown
-                                items={myTranches.map((obj) => ({
-                                    ...obj,
-                                    text: obj.name,
-                                }))}
+                                items={
+                                    queryTrancheAdminData.data?.map((obj) => ({
+                                        ...obj,
+                                        text: obj.name,
+                                    })) || []
+                                }
                                 selected={selectedTranche.name}
                                 setSelected={(e: string) => findSelectedTranche(e)}
                                 direction="right"
@@ -113,10 +140,10 @@ const MyTranches: React.FC = () => {
                         <>
                             {width >= breakpoint && (
                                 <Card className="flex flex-col min-w-[300px] overflow-y-auto">
-                                    {myTranches.map((obj, i) => (
+                                    {queryTrancheAdminData.data?.map((obj, i) => (
                                         <button
                                             className={`
-                          text-left py-2 
+                          text-left py-2
                           ${selectedTranche.name === obj.name ? 'text-brand-purple' : ''}
                         `}
                                             onClick={(e: any) =>

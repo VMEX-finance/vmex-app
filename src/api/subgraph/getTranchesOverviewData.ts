@@ -99,6 +99,15 @@ export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]
 
             returnObj.push(trancheInfo);
         });
+        //subgraph actually stores the ids as int so when querying it, it sorts via string method. This ensures that our array is indeed sorted based on number
+        //can deprecate later when subgraph stores them as ints
+        returnObj.sort((a, b) => {
+            if (!a.id || !b.id) {
+                return 0;
+            }
+            if (Number(a.id) < Number(b.id)) return -1;
+            else return 1;
+        });
         return returnObj;
     }
 };
