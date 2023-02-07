@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { AssetDisplay, BasicToggle, NumberAndDollar } from '../../components';
+import { AssetDisplay, BasicToggle, NumberAndDollar, HealthFactor } from '../../components';
 import { BigNumber } from 'ethers';
 import { useWindowSize, useDialogController } from '../../../hooks';
 import { bigNumberToNative, determineHealthColor } from '../../../utils';
@@ -105,15 +105,13 @@ export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({
                             </td>
                             <td>{i.apy}%</td>
                             <td>{i.tranche}</td>
-                            {withHealth && (
-                                <td
-                                    className={`${
-                                        healthLoading ? 'animate-pulse' : ''
-                                    } ${determineHealthColor(i.healthFactor)}`}
-                                >
-                                    {(i.healthFactor || 0).toFixed(1)}
-                                </td>
-                            )}
+                            <td>
+                                <HealthFactor
+                                    withChange={false}
+                                    trancheId={i.trancheId.toString()}
+                                    showInfo={false}
+                                />
+                            </td>
                         </tr>
                     );
                 })}

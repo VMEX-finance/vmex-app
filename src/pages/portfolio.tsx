@@ -13,9 +13,11 @@ import { useMyTranchesContext } from '../store/my-tranches';
 
 const Portfolio: React.FC = () => {
     const navigate = useNavigate();
-    const { myTranches } = useMyTranchesContext();
+
     const { address } = useAccount();
     const { chain } = useNetwork();
+    const { queryTrancheAdminData } = useSubgraphUserData(address || '');
+    // const { myTranches } = useMyTranchesContext();
     const { queryUserActivity } = useUserData(address);
     const { queryUserPnlChart } = useSubgraphUserData(address);
     const { queryUserTranchesData } = useUserTranchesData(address);
@@ -89,7 +91,7 @@ const Portfolio: React.FC = () => {
                 <Button
                     primary
                     label="My Tranches"
-                    disabled={myTranches.length === 0}
+                    disabled={queryTrancheAdminData.data?.length === 0}
                     onClick={() => navigate(`/my-tranches`)}
                 />
             }

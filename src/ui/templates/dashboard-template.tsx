@@ -6,6 +6,7 @@ import { useMyTranchesContext } from '../../store';
 import { Tooltip, Button, LinkButton } from '../components';
 import { chain, useAccount, useNetwork } from 'wagmi';
 import { Skeleton } from '@mui/material';
+import { useSubgraphUserData } from '../../api';
 
 interface IDashboardTemplateProps {
     title?: string;
@@ -34,6 +35,9 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
     const routeChange = () => navigate(-1);
     const isConnected = useAccount();
     const { width } = useWindowSize();
+    const { address } = useAccount();
+
+    const { queryTrancheAdminData } = useSubgraphUserData(address || '');
 
     // TODO: cleanup / optimize
     return (
@@ -95,10 +99,11 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                 )}
                 {location.pathname === `/tranches` && isConnected && !chain?.unsupported && (
                     <div className="flex gap-3 md:justify-end mt-2">
-                        {myTranches?.length > 0 ? (
+                        {queryTrancheAdminData.data?.length &&
+                        queryTrancheAdminData.data?.length > 0 ? (
                             <Button
                                 label={'My Tranches'}
-                                onClick={() => openDialog('my-tranches-dialog')}
+                                onClick={() => navigate(`/my-tranches`)}
                                 primary
                             />
                         ) : (

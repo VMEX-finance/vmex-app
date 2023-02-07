@@ -47,6 +47,13 @@ export const TranchesTable: React.FC<IDataTable> = ({ data, loading, userActivit
                 filter: false,
                 sort: true,
                 sortThirdClickReset: true,
+                sortCompare: (order: 'asc' | 'desc' | 'none') => {
+                    return (obj1: any, obj2: any) => {
+                        const val1 = parseInt(obj1.data, 10);
+                        const val2 = parseInt(obj2.data, 10);
+                        return (val1 - val2) * (order === 'asc' ? 1 : -1);
+                    };
+                },
             },
         },
         {
