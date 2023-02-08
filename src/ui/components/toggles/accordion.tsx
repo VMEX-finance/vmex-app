@@ -16,7 +16,6 @@ type IAccordionProps = {
 const Accordion = styled((props: AccordionProps) => (
     <MuiAccordion disableGutters elevation={0} square {...props} />
 ))(({ theme }) => ({
-    borderTop: `1px solid ${theme.palette.divider}`,
     '&:before': {
         display: 'none',
     },
@@ -58,11 +57,19 @@ export function DefaultAccordion({ title, summary, details }: IAccordionProps) {
     };
 
     return (
-        <Accordion expanded={expanded === title} onChange={handleChange(title)}>
+        <Accordion
+            expanded={expanded === title}
+            onChange={handleChange(title)}
+            className={`border-t ${isDark ? 'border-neutral-800' : 'border-neutral-300'}`}
+        >
             <AccordionSummary
                 aria-controls={`${title}-content`}
                 id={`${title}-header`}
-                className={isDark ? '!bg-brand-black !text-neutral-200' : '!bg-neutral-100'}
+                className={`${
+                    isDark
+                        ? '!bg-brand-black !text-neutral-200 hover:!bg-neutral-900'
+                        : '!bg-neutral-100 hover:!bg-neutral-200'
+                }`}
             >
                 {summary}
             </AccordionSummary>
