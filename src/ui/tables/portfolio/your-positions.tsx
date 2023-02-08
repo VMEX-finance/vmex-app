@@ -38,7 +38,7 @@ export const YourPositionsTable: React.FC<IYourPositionsProps> = ({ type, data, 
         | IYourSuppliesTableItemProps[]
         | IYourBorrowsTableItemProps[]
         | any[] = data
-        ? (data as any).reduce((acc: any, each: any) => {
+        ? (data as any[]).reduce((acc: any, each: any) => {
               let index = acc.length - 1;
               if (acc.length && acc[index][0].trancheId == each.trancheId) {
                   acc[index].push(each);
@@ -104,7 +104,7 @@ export const YourPositionsTable: React.FC<IYourPositionsProps> = ({ type, data, 
         <Card loading={isLoading} title={`Your ${determineTitle()}`} titleClass="text-lg mb-8">
             {data && data.length !== 0 ? (
                 <div>
-                    <div className="grid items-center grid-cols-3 w-full text-sm font-semibold pr-4 pl-10">
+                    <div className="grid items-center grid-cols-3 w-full text-sm font-semibold pr-4 pl-[52px] border-b">
                         <span className="">ID</span>
                         <span className="">Tranche</span>
                         <span className="justify-self-end">Health</span>
