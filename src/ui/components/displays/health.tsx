@@ -12,7 +12,7 @@ import {
 import { ethers } from 'ethers';
 import { useAccount } from 'wagmi';
 import { useLocation } from 'react-router-dom';
-import { SpinnerLoader } from '../loaders';
+import { SkeletonLoader, SpinnerLoader } from '../loaders';
 import { UseQueryResult } from '@tanstack/react-query';
 import { IUserTrancheData } from '@app/api/user/types';
 
@@ -25,6 +25,7 @@ interface IHealthFactorProps {
     center?: boolean;
     trancheId?: string;
     showInfo?: boolean;
+    loader?: 'skeleton' | 'default';
 }
 
 export const determineSize = (size: 'sm' | 'md' | 'lg') => {
@@ -46,7 +47,11 @@ export const renderHealth = (
     const isInf = Number(hf) > 1.15e59;
     return !hf ? (
         isLoading ? (
-            <SpinnerLoader size="sm" height="min-h-none" width="w-fit mt-1" />
+            <SkeletonLoader
+                variant="rounded"
+                width={size === 'sm' ? '50px' : '60px'}
+                height={size === 'sm' ? '28px' : '30px'}
+            />
         ) : (
             <TbInfinity color="#8CE58F" size={`${determineSize(size)[0]}`} />
         )
@@ -72,6 +77,7 @@ export const HealthFactor = ({
     center,
     trancheId,
     showInfo = true,
+    loader = 'default',
 }: IHealthFactorProps) => {
     const location = useLocation();
     const { address } = useAccount();
@@ -162,9 +168,6 @@ export const HealthFactor = ({
                 borrowFactorTimesDebtAfter,
                 liquidationThresholdTimesCollateralAfter,
             );
-
-            console.log('user data', queryUserTrancheData);
-            console.log('health factor after decrease', healthFactorAfterDecrease);
 
             return renderHealth(
                 healthFactorAfterDecrease &&
