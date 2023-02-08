@@ -115,17 +115,13 @@ const Portfolio: React.FC = () => {
                         <div className="flex flex-col lg:flex-row lg:grow gap-4 xl:gap-8">
                             <YourPositionsTable
                                 type="supplies"
-                                data={suppliesWithHealth()}
+                                data={queryUserActivity.data?.supplies || []}
                                 isLoading={queryUserActivity.isLoading}
-                                withHealth
-                                healthLoading={queryUserTranchesData.isLoading}
                             />
                             <YourPositionsTable
                                 type="borrows"
-                                data={borrowsWithHealth()}
+                                data={queryUserActivity.data?.borrows || []}
                                 isLoading={queryUserActivity.isLoading}
-                                withHealth
-                                healthLoading={queryUserTranchesData.isLoading}
                             />
                         </div>
                     </div>
