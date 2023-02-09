@@ -8,9 +8,10 @@ interface IMultipleAssetsProps {
     show?: number | 'all';
     size?: string;
     loading?: boolean;
+    gap?: string;
 }
 
-export const MultipleAssetsDisplay = ({ assets, show = 4, size }: IMultipleAssetsProps) => {
+export const MultipleAssetsDisplay = ({ assets, show = 4, size, gap }: IMultipleAssetsProps) => {
     const mapAssets = () => {
         if (assets) {
             if (show === 'all') return assets;
@@ -21,7 +22,11 @@ export const MultipleAssetsDisplay = ({ assets, show = 4, size }: IMultipleAsset
     };
 
     return (
-        <div className={`flex flex-wrap items-center ${show === 'all' ? 'gap-3' : 'xl:gap-2'}`}>
+        <div
+            className={`flex flex-wrap items-center ${
+                gap ? gap : `${show === 'all' ? 'gap-3' : 'xl:gap-2'}`
+            }`}
+        >
             {mapAssets().length !== 0
                 ? mapAssets().map((el, i) => (
                       <img

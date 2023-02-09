@@ -12,7 +12,9 @@ import {
 import { ethers } from 'ethers';
 import { useAccount } from 'wagmi';
 import { useLocation } from 'react-router-dom';
-import { SpinnerLoader } from '../loaders';
+import { SkeletonLoader, SpinnerLoader } from '../loaders';
+import { UseQueryResult } from '@tanstack/react-query';
+import { IUserTrancheData } from '@app/api/user/types';
 
 interface IHealthFactorProps {
     asset?: string;
@@ -23,7 +25,48 @@ interface IHealthFactorProps {
     center?: boolean;
     trancheId?: string;
     showInfo?: boolean;
+    loader?: 'skeleton' | 'default';
 }
+
+export const determineSize = (size: 'sm' | 'md' | 'lg') => {
+    switch (size) {
+        case 'sm':
+            return ['24px', '18px', 'text-lg'];
+        case 'md':
+            return ['30px', '24px', 'text-xl'];
+        case 'lg':
+            return ['36px', '30px', 'text-2xl'];
+    }
+};
+
+export const renderHealth = (
+    hf: number | string | undefined,
+    size: 'sm' | 'md' | 'lg',
+    isLoading: boolean,
+) => {
+    const isInf = Number(hf) > 1.15e59;
+    return !hf ? (
+        isLoading ? (
+            <SkeletonLoader
+                variant="rounded"
+                width={size === 'sm' ? '50px' : '60px'}
+                height={size === 'sm' ? '28px' : '30px'}
+            />
+        ) : (
+            <TbInfinity color="#8CE58F" size={`${determineSize(size)[0]}`} />
+        )
+    ) : isInf ? (
+        <TbInfinity color="#8CE58F" size={`${determineSize(size)[0]}`} />
+    ) : Number(hf) > 100 ? (
+        <span className={`${determineSize(size)[2]} ${determineHealthColor(hf)} font-semibold`}>
+            {'>100'}
+        </span>
+    ) : (
+        <span className={`${determineSize(size)[2]} ${determineHealthColor(hf)} font-semibold`}>
+            {HFFormatter.format(typeof hf === 'string' ? parseFloat(hf) : hf)}
+        </span>
+    );
+};
 
 export const HealthFactor = ({
     asset,
@@ -34,6 +77,7 @@ export const HealthFactor = ({
     center,
     trancheId,
     showInfo = true,
+    loader = 'default',
 }: IHealthFactorProps) => {
     const location = useLocation();
     const { address } = useAccount();
@@ -46,41 +90,11 @@ export const HealthFactor = ({
         String(trancheId || location.state?.trancheId || tranche?.id) as any,
     );
 
-    const determineSize = () => {
-        switch (size) {
-            case 'sm':
-                return ['24px', '18px', 'text-lg'];
-            case 'md':
-                return ['30px', '24px', 'text-xl'];
-            case 'lg':
-                return ['36px', '30px', 'text-2xl'];
-        }
-    };
-
-    const renderHealth = (hf: number | string | undefined, isInf: boolean) => {
-        return isInf || !hf ? (
-            queryUserTrancheData.isLoading ? (
-                <SpinnerLoader size="sm" height="min-h-none" width="w-fit mt-1" />
-            ) : (
-                <TbInfinity color="#8CE58F" size={`${determineSize()[0]}`} />
-            )
-        ) : Number(hf) > 100 ? (
-            <span className={`${determineSize()[2]} ${determineHealthColor(hf)} font-semibold`}>
-                {'>100'}
-            </span>
-        ) : (
-            <span className={`${determineSize()[2]} ${determineHealthColor(hf)} font-semibold`}>
-                {HFFormatter.format(typeof hf === 'string' ? parseFloat(hf) : hf)}
-            </span>
-        );
-    };
-
     const determineHFInitial = () => {
         return renderHealth(
             queryUserTrancheData.data?.healthFactor || 0,
-            queryUserTrancheData.data?.borrows && queryUserTrancheData.data?.borrows.length != 0
-                ? false
-                : true,
+            size,
+            queryUserTrancheData.isLoading,
         );
     };
 
@@ -155,13 +169,11 @@ export const HealthFactor = ({
                 liquidationThresholdTimesCollateralAfter,
             );
 
-            console.log('user data', queryUserTrancheData);
-            console.log('health factor after decrease', healthFactorAfterDecrease);
-
             return renderHealth(
                 healthFactorAfterDecrease &&
                     ethers.utils.formatUnits(healthFactorAfterDecrease, 18), //HF always has 18 decimals
-                false,
+                size,
+                queryUserTrancheData.isLoading,
             );
         } catch {
             return undefined;
@@ -174,7 +186,7 @@ export const HealthFactor = ({
                 {withChange && (
                     <>
                         {determineHFInitial()}
-                        <BsArrowRight size={`${determineSize()[1]}`} />
+                        <BsArrowRight size={`${determineSize(size)[1]}`} />
                     </>
                 )}
                 {withChange ? determineHFFinal() : determineHFInitial()}
