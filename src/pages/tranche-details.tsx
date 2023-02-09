@@ -84,7 +84,7 @@ const TrancheDetails: React.FC = () => {
                     </GridView>
                 </>
             ) : (
-                <GridView>
+                <GridView type="fixed" cols="grid-cols-1 lg:grid-cols-2">
                     <Card
                         loading={queryTrancheData.isLoading}
                         header={
@@ -130,7 +130,7 @@ const TrancheDetails: React.FC = () => {
                         loading={queryTrancheData.isLoading}
                         header={
                             <div className="flex justify-between items-center">
-                                <h3 className={'text-2xl'}>Supply</h3>
+                                <h3 className={'text-2xl'}>Borrow</h3>
                                 <Legend
                                     items={[
                                         {
