@@ -1,5 +1,6 @@
 import React, { FC, Fragment, useState } from 'react';
 import { Transition } from '@headlessui/react';
+import { AssetDisplay } from '../displays';
 
 type IAutoCompleteInputProps = {
     value: string;
@@ -9,6 +10,8 @@ type IAutoCompleteInputProps = {
     list?: string[];
     close?: boolean;
     setValue: (e: any) => void;
+    direction?: 'top' | 'bottom';
+    stayOpen?: boolean;
 };
 
 export const AutoCompleteInput: FC<IAutoCompleteInputProps> = ({
@@ -19,6 +22,8 @@ export const AutoCompleteInput: FC<IAutoCompleteInputProps> = ({
     list,
     close,
     setValue,
+    direction = 'bottom',
+    stayOpen,
 }) => {
     const [isFocused, setIsFocused] = useState(false);
 
@@ -38,7 +43,7 @@ export const AutoCompleteInput: FC<IAutoCompleteInputProps> = ({
                 onKeyDown={onKeyDown}
                 onChange={onChange}
                 onFocus={() => setIsFocused(true)}
-                onBlur={() => setIsFocused(false)}
+                onBlur={() => (stayOpen ? {} : setIsFocused(false))}
             />
             {list && list.length !== 0 && (
                 <Transition
@@ -52,8 +57,17 @@ export const AutoCompleteInput: FC<IAutoCompleteInputProps> = ({
                     show={isFocused && !close}
                 >
                     <div
-                        className={`origin-top-right absolute bg-white dark:bg-brand-black mt-10 min-w-[180px]
-        rounded-md shadow-lg ring-1 ring-brand-black ring-opacity-5 focus:outline-none z-[999999]`}
+                        className={`
+                            ${
+                                direction === 'bottom'
+                                    ? 'origin-top-right mt-10'
+                                    : stayOpen
+                                    ? '-translate-y-64'
+                                    : '-translate-y-56'
+                            }
+                            absolute bg-white dark:bg-brand-black min-w-[180px]
+                            rounded-md shadow-lg ring-1 ring-brand-black ring-opacity-5 focus:outline-none z-[999999]
+                        `}
                     >
                         <div className={`p-2 flex flex-col max-h-[200px] overflow-y-scroll`}>
                             {renderList().map((item: any, i) => (
@@ -66,10 +80,18 @@ export const AutoCompleteInput: FC<IAutoCompleteInputProps> = ({
                                         onKeyDown && onKeyDown({ key: 'Enter' }, item);
                                     }}
                                 >
-                                    {item}
+                                    <AssetDisplay name={item} className="pl-2" />
                                 </button>
                             ))}
                         </div>
+                        {stayOpen && (
+                            <button
+                                className="w-full py-1 bg-red-600 text-white border-red-600 hover:bg-red-500 hover:border-red-500 rounded-b-lg shadow-md"
+                                onClick={() => setIsFocused(false)}
+                            >
+                                Close
+                            </button>
+                        )}
                     </div>
                 </Transition>
             )}

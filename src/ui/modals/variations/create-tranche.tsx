@@ -153,6 +153,8 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
                             required
                             _adminFee={_adminFee}
                             setAdminFee={setAdminFee}
+                            direction="top"
+                            listStayOpen={true}
                         />
                     </StepperChild>
 
