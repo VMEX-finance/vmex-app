@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { AssetDisplay, BasicToggle, NumberAndDollar, HealthFactor } from '../../components';
+import {
+    AssetDisplay,
+    BasicToggle,
+    NumberAndDollar,
+    HealthFactor,
+    DefaultAccordion,
+} from '../../components';
 import { BigNumber } from 'ethers';
 import { useWindowSize, useDialogController } from '../../../hooks';
 import { bigNumberToNative, determineHealthColor } from '../../../utils';
+import { Accordion, AccordionDetails, AccordionSummary } from '@material-ui/core';
 
 export type IYourSuppliesTableItemProps = {
     asset: string;
@@ -38,8 +45,8 @@ export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({
     }, [data]);
 
     const headers = withHealth
-        ? ['Asset', 'Amount', 'Collateral', 'APY%', 'Tranche', 'Health']
-        : ['Asset', 'Amount', 'Collateral', 'APY%', 'Tranche'];
+        ? ['Asset', 'Amount', 'Collateral', 'APY%', 'Health']
+        : ['Asset', 'Amount', 'Collateral', 'APY%'];
 
     return (
         <table className="min-w-full divide-y-2 divide-gray-300 dark:divide-neutral-800 font-basefont">
@@ -104,14 +111,15 @@ export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({
                                 />
                             </td>
                             <td>{i.apy}%</td>
-                            <td>{i.tranche}</td>
-                            <td>
-                                <HealthFactor
-                                    withChange={false}
-                                    trancheId={i.trancheId.toString()}
-                                    showInfo={false}
-                                />
-                            </td>
+                            {withHealth && (
+                                <td>
+                                    <HealthFactor
+                                        withChange={false}
+                                        trancheId={i.trancheId.toString()}
+                                        showInfo={false}
+                                    />
+                                </td>
+                            )}
                         </tr>
                     );
                 })}
