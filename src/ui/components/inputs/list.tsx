@@ -21,6 +21,9 @@ export interface IListInput {
     setAdminFee?: any;
     direction?: 'top' | 'bottom';
     listStayOpen?: boolean;
+    noShow?: boolean;
+    originalList?: string[];
+    setWhitelisting?: any;
 }
 
 export const ListInputItem = ({
@@ -63,6 +66,9 @@ export const ListInput = ({
     setAdminFee,
     direction,
     listStayOpen,
+    noShow = false,
+    originalList = [],
+    setWhitelisting,
 }: IListInput) => {
     const { findAssetInMappings } = useSubgraphAllAssetMappingsData();
     const [value, setValue] = React.useState('');
@@ -93,7 +99,7 @@ export const ListInput = ({
             const shallow = list && list.length !== 0 ? [...list] : [];
             shallow.push(toBeSet);
             setList(shallow);
-            if (_adminFee) {
+            if (_adminFee && setAdminFee) {
                 const shallow2 = _adminFee.length !== 0 ? [..._adminFee] : [];
                 shallow2.push(
                     findAssetInMappings(toBeSet)?.vmexReserveFactor
@@ -124,7 +130,7 @@ export const ListInput = ({
                 }
             });
             setList(shallow);
-            if (shallow2) {
+            if (shallow2 && setAdminFee) {
                 setAdminFee(shallow2);
             }
         }
@@ -148,6 +154,10 @@ export const ListInput = ({
     useEffect(() => {
         if (list && list?.length > 0) setIsOpen(true);
     }, [list]);
+
+    useEffect(() => {
+        if (setWhitelisting) setWhitelisting(isOpen);
+    }, [isOpen]);
 
     return (
         <>
@@ -185,17 +195,28 @@ export const ListInput = ({
                                 </span>
                             )}
                         </div>
-                        <div className="flex gap-2 flex-wrap min-h-[26.3px]">
-                            {list?.map((el, i: number) => (
-                                <ListInputItem
-                                    key={i}
-                                    value={el}
-                                    remove={removeFromList}
-                                    noDelete={noDelete}
-                                    coin={coin}
-                                />
-                            ))}
-                        </div>
+                        {noShow === false && (
+                            <div className="flex gap-2 flex-wrap min-h-[26.3px]">
+                                {originalList?.map((el, i: number) => (
+                                    <ListInputItem
+                                        key={i}
+                                        value={el}
+                                        remove={removeFromList}
+                                        noDelete={noDelete}
+                                        coin={coin}
+                                    />
+                                ))}
+                                {list?.map((el, i: number) => (
+                                    <ListInputItem
+                                        key={i}
+                                        value={el}
+                                        remove={removeFromList}
+                                        noDelete={false}
+                                        coin={coin}
+                                    />
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </div>
             )}
