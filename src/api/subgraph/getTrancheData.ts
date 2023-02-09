@@ -43,6 +43,10 @@ export const processTrancheData = async (
                     oracle: 'Chainlink', // TODO: map to human readable name // (prices as any)[item.assetData.underlyingAssetName].oracle
                     totalSupplied: utils.formatUnits(item.totalDeposits, item.decimals),
                     totalBorrowed: utils.formatUnits(item.totalCurrentVariableDebt, item.decimals),
+                    totalCollateral: utils.formatUnits(
+                        item.totalLiquidityAsCollateral,
+                        item.decimals,
+                    ),
                     baseLTV: item.assetData.baseLTV,
                     liquidationBonus: item.assetData.liquidationBonus,
                     borrowFactor: item.assetData.borrowFactor,
@@ -78,12 +82,20 @@ export const processTrancheData = async (
                 borrowTotal:
                     obj.borrowTotal +
                     nativeAmountToUSD(item.totalCurrentVariableDebt, item.decimals, assetUSDPrice),
+                collateralTotal:
+                    obj.collateralTotal +
+                    nativeAmountToUSD(
+                        item.totalLiquidityAsCollateral,
+                        item.decimals,
+                        assetUSDPrice,
+                    ),
             });
         },
         {
             tvl: 0,
             supplyTotal: 0,
             borrowTotal: 0,
+            collateralTotal: 0,
         },
     );
 
@@ -107,6 +119,7 @@ export const processTrancheData = async (
         availableLiquidity: usdFormatter().format(summaryData.tvl),
         totalSupplied: usdFormatter().format(summaryData.supplyTotal),
         totalBorrowed: usdFormatter().format(summaryData.borrowTotal),
+        totalCollateral: usdFormatter().format(summaryData.collateralTotal),
         tvl: usdFormatter().format(summaryData.tvl),
         poolUtilization: percentFormatter.format(
             1 - (summaryData.supplyTotal - summaryData.borrowTotal) / summaryData.supplyTotal,
@@ -147,6 +160,7 @@ export const getSubgraphTrancheData = async (
                         id
                     }
                     reserves {
+                        totalLiquidityAsCollateral
                         utilizationRate
                         reserveFactor
                         optimalUtilisationRate

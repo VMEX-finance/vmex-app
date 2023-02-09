@@ -35,14 +35,18 @@ export const Navbar: React.FC = () => {
             `}
             >
                 {/* Desktop/Mobile Left Nav */}
-                <a id="nav-logo" href="/">
-                    <img
-                        src={isDark && width >= 1024 ? '/VMEX-logo-white.svg' : '/VMEX-logo.svg'}
-                        alt="VMEX Finance Logo"
-                        width="100"
-                        className="invert lg:invert-0"
-                    />
-                </a>
+                <div className="flex items-center gap-4">
+                    <a id="nav-logo" href="/">
+                        <img
+                            src={
+                                isDark && width >= 1024 ? '/VMEX-logo-white.svg' : '/VMEX-logo.svg'
+                            }
+                            alt="VMEX Finance Logo"
+                            width="100"
+                            className="invert lg:invert-0"
+                        />
+                    </a>
+                </div>
 
                 {/* Desktop Center Nav */}
                 {width >= 1024 && (
