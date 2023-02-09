@@ -163,7 +163,11 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                             )}
                                         </div>
                                         <AssetDisplay
-                                            name={width > 600 ? el.asset : ''}
+                                            name={
+                                                width < 600 || (width >= 1024 && width < 1280)
+                                                    ? ''
+                                                    : el.asset
+                                            }
                                             logo={determineCoinImg(el.asset)}
                                             className="text-lg"
                                         />
