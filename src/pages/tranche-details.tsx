@@ -63,6 +63,7 @@ const TrancheDetails: React.FC = () => {
                 loading={queryTrancheData.isLoading}
                 userData={queryUserTrancheData}
                 avgApy={queryTrancheData.data?.avgApy || 0}
+                collateral={queryTrancheData.data?.totalCollateral || tranche?.collateralTotal}
             />
             {view.includes('details') ? (
                 <>
