@@ -35,6 +35,7 @@ export const getUserAdminTrancheData = async (admin: string): Promise<IGraphTran
                             id
                         }
                         reserves {
+                            totalLiquidityAsCollateral
                             utilizationRate
                             reserveFactor
                             optimalUtilisationRate
