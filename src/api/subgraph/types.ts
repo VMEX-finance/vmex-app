@@ -58,6 +58,7 @@ export type IGraphTrancheDataProps = {
     availableLiquidity?: string;
     totalSupplied?: string;
     totalBorrowed?: string;
+    totalCollateral?: string;
     assets?: string[];
     whitelist?: boolean;
     admin?: string;

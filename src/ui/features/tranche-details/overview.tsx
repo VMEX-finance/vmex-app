@@ -23,6 +23,8 @@ export interface ITrancheOverviewProps {
     loading?: boolean;
     userData?: any;
     avgApy?: number;
+    collateral?: number;
+    collateralChange?: number;
 }
 
 const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
@@ -37,6 +39,8 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
     loading,
     userData,
     avgApy,
+    collateral,
+    collateralChange,
 }) => {
     const { width, breakpoint } = useWindowSize();
     const { openDialog } = useDialogController();
@@ -71,6 +75,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
 
     const buttonClass = `transition duration-150 hover:bg-neutral-100 rounded-lg dark:bg-neutral-800 dark:hover:bg-neutral-700`;
     const assetDisplayClass = `transition duration-150 py-1 px-2 bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700`;
+    const customBreakpoint = 1071;
 
     return (
         <>
@@ -85,7 +90,13 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                             <MultipleAssetsDisplay assets={assets} />
                         </div>
                     </div>
-                    <div className="flex flex-wrap justify-around lg:justify-between items-center gap-5 lg:gap-10 xl:gap-16 2xl:gap-20 order-3 lg:order-2 w-full lg:w-auto">
+                    <div
+                        className={`flex flex-wrap items-center gap-4 lg:gap-8 xl:gap-12 2xl:gap-20 ${
+                            width > customBreakpoint
+                                ? 'order-2 justify-between w-auto'
+                                : 'order-3 justify-around w-full'
+                        } sm:px-4`}
+                    >
                         <NumberDisplay
                             center
                             size="xl"
@@ -105,6 +116,14 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                         <NumberDisplay
                             center
                             size="xl"
+                            label="Collateral"
+                            value={`${makeCompact(collateral, true)}`}
+                            change={collateralChange}
+                            loading={loading}
+                        />
+                        <NumberDisplay
+                            center
+                            size="xl"
                             label="Supplied"
                             value={`${makeCompact(supplied, true)}`}
                             change={supplyChange}
@@ -119,7 +138,11 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                             loading={loading}
                         />
                     </div>
-                    <div className="order-2 lg:order-3 min-w-[162px] 2xl:min-w-[194px]">
+                    <div
+                        className={`${
+                            width > customBreakpoint ? 'order-3' : 'order-2'
+                        } sm:min-w-[162px] 2xl:min-w-[194px]`}
+                    >
                         <div className="flex flex-col justify-between">
                             <div className="flex flex-col items-end">
                                 <h2 className="text-2xl">Grade</h2>

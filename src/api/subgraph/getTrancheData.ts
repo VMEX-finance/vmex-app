@@ -119,7 +119,9 @@ export const processTrancheData = async (
         availableLiquidity: usdFormatter().format(summaryData.tvl),
         totalSupplied: usdFormatter().format(summaryData.supplyTotal),
         totalBorrowed: usdFormatter().format(summaryData.borrowTotal),
-        totalCollateral: usdFormatter().format(summaryData.collateralTotal),
+        totalCollateral: usdFormatter().format(
+            summaryData.supplyTotal - summaryData.collateralTotal,
+        ), // TODO: is this right for total collateral since subgraph only provides collateral liquidity?
         tvl: usdFormatter().format(summaryData.tvl),
         poolUtilization: percentFormatter.format(
             1 - (summaryData.supplyTotal - summaryData.borrowTotal) / summaryData.supplyTotal,
@@ -135,6 +137,7 @@ export const processTrancheData = async (
         }),
         isPaused: false, //TODO
     };
+    console.log('RETURNOBJ:', returnObj);
     return returnObj;
 };
 
