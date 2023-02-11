@@ -78,53 +78,47 @@ export const CreateTrancheAssetsTable = ({
                                 <AssetDisplay name={el} size="sm" />
                             </td>
                             <td>
-                                <>
-                                    <Checkbox
-                                        disabled={!canBeBorrowed(el)}
-                                        checked={isInList(el, lendAssets)}
-                                        label={
-                                            canBeBorrowed(el) && isInList(el, lendAssets)
-                                                ? 'Enabled'
-                                                : 'Disabled'
-                                        }
-                                        onClick={() =>
-                                            isInList(el, lendAssets)
-                                                ? removeFromList(el, lendAssets)
-                                                : addToList(el, lendAssets)
-                                        }
-                                    />
-                                </>
+                                <Checkbox
+                                    disabled={!canBeBorrowed(el)}
+                                    checked={isInList(el, lendAssets)}
+                                    label={
+                                        canBeBorrowed(el) && isInList(el, lendAssets)
+                                            ? 'Enabled'
+                                            : 'Disabled'
+                                    }
+                                    onClick={(e: any) => {
+                                        isInList(el, lendAssets)
+                                            ? removeFromList(el, lendAssets)
+                                            : addToList(el, lendAssets);
+                                    }}
+                                />
                             </td>
                             <td>
-                                <>
-                                    <Checkbox
-                                        disabled={!canBeCollateral(el)}
-                                        checked={isInList(el, collateralAssets)}
-                                        label={
-                                            canBeCollateral(el) && isInList(el, collateralAssets)
-                                                ? 'Enabled'
-                                                : 'Disabled'
-                                        }
-                                        onClick={() =>
-                                            isInList(el, collateralAssets)
-                                                ? removeFromList(el, collateralAssets)
-                                                : addToList(el, collateralAssets)
-                                        }
-                                    />
-                                </>
+                                <Checkbox
+                                    disabled={!canBeCollateral(el)}
+                                    checked={isInList(el, collateralAssets)}
+                                    label={
+                                        canBeCollateral(el) && isInList(el, collateralAssets)
+                                            ? 'Enabled'
+                                            : 'Disabled'
+                                    }
+                                    onClick={() => {
+                                        isInList(el, collateralAssets)
+                                            ? removeFromList(el, collateralAssets)
+                                            : addToList(el, collateralAssets);
+                                    }}
+                                />
                             </td>
                             <td>
-                                <>
-                                    <DefaultInput
-                                        type="percent"
-                                        className="flex items-center gap-2 cursor-pointer"
-                                        value={_adminFee[i]}
-                                        onType={(e: any) => handleSetAdminFee(e, i)}
-                                        placeholder="0.00"
-                                        tooltip="Admin fees will be distributed to the wallet address used to create the tranche. Admin fees set are additive to the base 5% fee taken by VMEX"
-                                        required
-                                    />
-                                </>
+                                <DefaultInput
+                                    type="percent"
+                                    className="flex items-center gap-2 cursor-pointer max-w-[80px]"
+                                    value={_adminFee[i]}
+                                    onType={(e: any) => handleSetAdminFee(e, i)}
+                                    placeholder="0.00"
+                                    tooltip="Admin fees will be distributed to the wallet address used to create the tranche. Admin fees set are additive to the base 5% fee taken by VMEX"
+                                    required
+                                />
                             </td>
                         </tr>
                     ))}

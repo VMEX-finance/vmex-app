@@ -19,6 +19,8 @@ export interface IListInput {
     autocomplete?: string[];
     _adminFee?: string[];
     setAdminFee?: any;
+    direction?: 'top' | 'bottom';
+    listStayOpen?: boolean;
 }
 
 export const ListInputItem = ({
@@ -59,6 +61,8 @@ export const ListInput = ({
     autocomplete,
     _adminFee,
     setAdminFee,
+    direction,
+    listStayOpen,
 }: IListInput) => {
     const { findAssetInMappings } = useSubgraphAllAssetMappingsData();
     const [value, setValue] = React.useState('');
@@ -171,6 +175,8 @@ export const ListInput = ({
                                     placeholder={placeholder}
                                     close={error.length !== 0}
                                     list={autocomplete}
+                                    direction={direction}
+                                    stayOpen={listStayOpen}
                                 />
                             </div>
                             {value && value.length > 2 && (

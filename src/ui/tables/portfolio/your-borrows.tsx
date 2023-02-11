@@ -28,8 +28,8 @@ export const YourBorrowsTable: React.FC<IYourBorrowsTableProps> = ({
     const { width } = useWindowSize();
     const { openDialog } = useDialogController();
     const headers = withHealth
-        ? ['Asset', 'Amount', 'APY%', 'Tranche', 'Health']
-        : ['Asset', 'Amount', 'APY%', 'Tranche'];
+        ? ['Asset', 'Amount', 'APY%', 'Health']
+        : ['Asset', 'Amount', 'APY%'];
 
     return (
         <table className="min-w-full divide-y-2 divide-gray-300 dark:divide-neutral-800 font-basefont">
@@ -77,7 +77,6 @@ export const YourBorrowsTable: React.FC<IYourBorrowsTableProps> = ({
                                     />
                                 </td>
                                 <td>{i.apy}%</td>
-                                <td>{i.tranche}</td>
                                 {withHealth && (
                                     <td
                                         className={`${

@@ -132,7 +132,7 @@ const MarketsCustomRow = (props: any) => {
                 className="text-left transition duration-200 hover:bg-neutral-200 dark:hover:bg-neutral-900 hover:cursor-pointer border-y-[1px] dark:border-neutral-800"
                 onClick={(e: any) => route(e, props, 'details')}
             >
-                <td className="whitespace-nowrap pl-2 md:pl-4 pr-2 text-sm">
+                <td className="whitespace-nowrap pl-2 md:pl-4 pr-2 md:pr-4 text-sm">
                     <AssetDisplay name={asset} />
                 </td>
                 <td className="min-w-[150px] pl-4 py-4">{tranche}</td>

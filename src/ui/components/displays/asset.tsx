@@ -24,7 +24,7 @@ export const AssetDisplay = (props: IAssetDisplayProps) => {
 
     return (
         <div
-            className={`flex items-center gap-1 rounded-lg ${
+            className={`flex items-center gap-1 rounded-lg w-max ${
                 props.className ? props.className : ''
             } ${props.border ? 'border border-1 border-brand-black w-fit px-2' : ''}`}
         >
