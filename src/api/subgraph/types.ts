@@ -2,6 +2,7 @@ import { UseQueryResult } from '@tanstack/react-query';
 import { ILineChartDataPointProps } from '../../ui/components/charts';
 import { AssetBalance, IAssetMappings, IMarketsAsset, ITrancheProps, TrancheData } from '../types';
 import { BigNumber } from 'ethers';
+import { IAvailableCoins } from '@utils/helpers';
 export type IAssetData = {
     underlyingAssetName: string;
 };
@@ -47,10 +48,10 @@ export type IGraphAssetData = {
     priceUSD: BigNumber;
     priceETH: BigNumber;
     yieldStrategy: string;
-    isPaused?: boolean;
+    isFrozen?: boolean;
 };
 
-export type IGraphTrancheAssetProps = IGraphAssetData | Record<any, any>;
+export type IGraphTrancheAssetProps = IGraphAssetData | Record<string, IGraphAssetData>;
 
 export type IGraphTrancheDataProps = {
     assetsData?: IGraphTrancheAssetProps;
@@ -59,7 +60,7 @@ export type IGraphTrancheDataProps = {
     totalSupplied?: string;
     totalBorrowed?: string;
     totalCollateral?: string;
-    assets?: string[];
+    assets?: IAvailableCoins[];
     whitelist?: boolean;
     admin?: string;
     aggregateRating?: string;
@@ -71,7 +72,6 @@ export type IGraphTrancheDataProps = {
     id?: string;
     poolUtilization?: string;
     avgApy?: number;
-    adminFee?: string;
     whitelistedUsers?: string[];
     blacklistedUsers?: string[];
     isPaused?: boolean;
