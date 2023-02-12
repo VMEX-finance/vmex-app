@@ -84,17 +84,17 @@ export const TrancheStatisticsCard = ({
                 <div className="flex gap-6 mb-3 mt-1">
                     <NumberDisplay
                         label="Supply APY"
-                        value={assetData?.supplyRate || '0%'}
+                        value={(assetData?.supplyRate as string) || '0%'}
                         color="text-brand-green"
                     />
                     <NumberDisplay
                         label="Borrow APY"
-                        value={assetData?.borrowRate || '0%'}
+                        value={(assetData?.borrowRate as string) || '0%'}
                         color="text-brand-purple"
                     />
                     <NumberDisplay
                         label="Optimal Utilization"
-                        value={assetData?.optimalUtilityRate || 'N/A'}
+                        value={(assetData?.optimalUtilityRate as any) || 'N/A'}
                         color="text-white"
                     />
                 </div>
@@ -132,7 +132,7 @@ export const TrancheStatisticsCard = ({
                             <NumberDisplay
                                 label="LTV"
                                 value={percentFormatter.format(
-                                    Number(convertContractsPercent(assetData?.ltv)),
+                                    Number(convertContractsPercent(assetData?.ltv as string)),
                                 )}
                                 color="text-white"
                                 center
@@ -140,7 +140,9 @@ export const TrancheStatisticsCard = ({
                             <NumberDisplay
                                 label="Borrow Factor"
                                 value={percentFormatter.format(
-                                    Number(convertContractsPercent(assetData?.borrowFactor)),
+                                    Number(
+                                        convertContractsPercent(assetData?.borrowFactor as string),
+                                    ),
                                 )}
                                 color="text-white"
                                 center
@@ -149,7 +151,9 @@ export const TrancheStatisticsCard = ({
                                 label="Liq. Threshold"
                                 value={percentFormatter.format(
                                     Number(
-                                        convertContractsPercent(assetData?.liquidationThreshold),
+                                        convertContractsPercent(
+                                            assetData?.liquidationThreshold as string,
+                                        ),
                                     ),
                                 )}
                                 color="text-white"
@@ -158,7 +162,11 @@ export const TrancheStatisticsCard = ({
                             <NumberDisplay
                                 label="Liq. Bonus"
                                 value={`${percentFormatter.format(
-                                    Number(convertContractsPercent(assetData?.liquidationBonus)),
+                                    Number(
+                                        convertContractsPercent(
+                                            assetData?.liquidationBonus as string,
+                                        ),
+                                    ),
                                 )}`}
                                 color="text-white"
                                 center
@@ -175,7 +183,9 @@ export const TrancheStatisticsCard = ({
                                     assetData?.supplyCap == MAX_UINT_AMOUNT ? (
                                         <TbInfinity color="text-white" />
                                     ) : (
-                                        `${numberFormatter.format(assetData?.supplyCap)} ${asset}`
+                                        `${numberFormatter.format(
+                                            assetData?.supplyCap as any,
+                                        )} ${asset}`
                                     )
                                 }
                                 color="text-white"
@@ -187,7 +197,9 @@ export const TrancheStatisticsCard = ({
                                     assetData?.borrowCap == MAX_UINT_AMOUNT ? (
                                         <TbInfinity color="text-white" />
                                     ) : (
-                                        `${numberFormatter.format(assetData?.borrowCap)} ${asset}`
+                                        `${numberFormatter.format(
+                                            assetData?.borrowCap as any,
+                                        )} ${asset}`
                                     )
                                 }
                                 color="text-white"
@@ -195,28 +207,28 @@ export const TrancheStatisticsCard = ({
                             />
                             <NumberDisplay
                                 label="Oracle"
-                                value={assetData?.oracle}
+                                value={assetData?.oracle as any}
                                 color="text-white"
                                 center
                             />
                             <NumberDisplay
                                 label="Total Supplied"
                                 value={`${numberFormatter.format(
-                                    assetData?.totalSupplied,
+                                    assetData?.totalSupplied as any,
                                 )} ${asset}`}
                                 color="text-white"
                                 center
                             />
                             <NumberDisplay
                                 label="Utilization"
-                                value={percentFormatter.format(assetData?.utilityRate)}
+                                value={percentFormatter.format(assetData?.utilityRate as any)}
                                 color="text-white"
                                 center
                             />
                             <NumberDisplay
                                 label="Total Borrowed"
                                 value={`${numberFormatter.format(
-                                    assetData?.totalBorrowed,
+                                    assetData?.totalBorrowed as any,
                                 )} ${asset}`}
                                 color="text-white"
                                 center
@@ -224,7 +236,9 @@ export const TrancheStatisticsCard = ({
                             <NumberDisplay
                                 label="Tranche Admin Fee"
                                 value={percentFormatter.format(
-                                    Number(convertContractsPercent(assetData?.reserveFactor)),
+                                    Number(
+                                        convertContractsPercent(assetData?.reserveFactor as any),
+                                    ),
                                 )}
                                 color="text-white"
                                 center
@@ -232,7 +246,11 @@ export const TrancheStatisticsCard = ({
                             <NumberDisplay
                                 label="Platform Fee"
                                 value={percentFormatter.format(
-                                    Number(convertContractsPercent(assetData?.vmexReserveFactor)),
+                                    Number(
+                                        convertContractsPercent(
+                                            assetData?.vmexReserveFactor as any,
+                                        ),
+                                    ),
                                 )}
                                 color="text-white"
                                 center

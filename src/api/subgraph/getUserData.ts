@@ -35,6 +35,7 @@ export const getUserAdminTrancheData = async (admin: string): Promise<IGraphTran
                             id
                         }
                         reserves {
+                            totalLiquidityAsCollateral
                             utilizationRate
                             reserveFactor
                             optimalUtilisationRate
@@ -57,6 +58,7 @@ export const getUserAdminTrancheData = async (admin: string): Promise<IGraphTran
                                 supplyCap
                                 vmexReserveFactor
                             }
+                            isFrozen
                             # yieldStrategy
                         }
                     }
