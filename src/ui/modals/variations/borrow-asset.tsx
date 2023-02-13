@@ -11,7 +11,7 @@ import {
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
 import { ISupplyBorrowProps } from '../utils';
 import { useDialogController, useModal } from '../../../hooks';
-import { borrow, repay } from '@vmexfinance/sdk';
+import { borrow, estimateGas, repay } from '@vmexfinance/sdk';
 import {
     NETWORK,
     inputMediator,
@@ -21,6 +21,7 @@ import {
     bigNumberToUnformattedString,
     SDK_PARAMS,
     DECIMALS,
+    bigNumberToUSD,
 } from '../../../utils';
 import { useAccount, useSigner } from 'wagmi';
 import { useUserTrancheData, useSubgraphTrancheData } from '../../../api';
@@ -43,6 +44,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
     const { setAsset } = useSelectedTrancheContext();
     const navigate = useNavigate();
     const { closeDialog } = useDialogController();
+    const [estimatedGasCost, setEstimatedGasCost] = React.useState('0');
 
     const handleClick = async () => {
         if (data && signer) {
@@ -78,10 +80,6 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
             });
         }
     };
-
-    useEffect(() => {
-        if (data?.view) setView('Repay');
-    }, [data?.view]);
 
     const amountBorrwable = findAmountBorrowable(
         data?.asset || '',
@@ -132,6 +130,42 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
         }
         return false;
     };
+
+    useEffect(() => {
+        if (data?.view) setView('Repay');
+    }, [data?.view]);
+
+    useEffect(() => {
+        const getter = async () => {
+            if (signer && data) {
+                const res = view?.includes('Borrow')
+                    ? await estimateGas({
+                          function: 'borrow',
+                          underlying: data.asset,
+                          trancheId: data.trancheId,
+                          amount: convertStringFormatToNumber(amount),
+                          signer: signer,
+                          network: NETWORK,
+                          isMax: isMax,
+                          test: SDK_PARAMS.test,
+                          providerRpc: SDK_PARAMS.providerRpc,
+                      })
+                    : await estimateGas({
+                          function: 'repay',
+                          asset: data.asset,
+                          trancheId: data.trancheId,
+                          amount: convertStringFormatToNumber(amount),
+                          signer: signer,
+                          network: NETWORK,
+                          isMax: isMax,
+                          test: SDK_PARAMS.test,
+                          providerRpc: SDK_PARAMS.providerRpc,
+                      });
+                setEstimatedGasCost(bigNumberToUSD(res, 18));
+            }
+        };
+        getter();
+    }, [view, data, isMax, amount, signer]);
 
     return data && data.asset ? (
         <>
@@ -191,6 +225,10 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                                     {
                                         label: 'Borrow APR (%)',
                                         value: `${apy}`,
+                                    },
+                                    {
+                                        label: 'Estimated Gas',
+                                        value: `${estimatedGasCost}`,
                                     },
                                 ]}
                             />
@@ -264,6 +302,10 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                                         loading:
                                             Number(bigNumberToNative(amountRepay, data.asset)) ===
                                             0,
+                                    },
+                                    {
+                                        label: 'Estimated Gas',
+                                        value: `${estimatedGasCost}`,
                                     },
                                 ]}
                             />
