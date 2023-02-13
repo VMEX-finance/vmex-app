@@ -137,7 +137,6 @@ export const processTrancheData = async (
         }),
         isPaused: false, //TODO
     };
-    console.log('RETURNOBJ:', returnObj);
     return returnObj;
 };
 
