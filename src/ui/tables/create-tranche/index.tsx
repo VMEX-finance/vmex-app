@@ -17,8 +17,8 @@ type ICreateTrancheAssetsTableProps = {
     setAssets?: React.Dispatch<React.SetStateAction<any>>;
     lendAssets: IAvailableCoins[];
     collateralAssets: IAvailableCoins[];
-    lendClick?: React.Dispatch<React.SetStateAction<any>>;
-    collateralClick?: React.Dispatch<React.SetStateAction<any>>;
+    lendClick: React.Dispatch<React.SetStateAction<any>>;
+    collateralClick: React.Dispatch<React.SetStateAction<any>>;
     _adminFee: string[];
     setAdminFee: React.Dispatch<React.SetStateAction<any>>;
     title?: string;
@@ -46,8 +46,8 @@ export const CreateTrancheAssetsTable = ({
     const { queryAllAssetMappingsData } = useSubgraphAllAssetMappingsData();
 
     useEffect(() => {
-        lendClick?.(assets);
-        collateralClick?.(assets);
+        lendClick(assets);
+        collateralClick(assets);
     }, [assets]);
 
     const isInList = (asset: IAvailableCoins, list?: IAvailableCoins[]) =>
@@ -64,7 +64,7 @@ export const CreateTrancheAssetsTable = ({
             setter(shallow);
             return;
         }
-        (list == lendAssets ? lendClick : collateralClick)?.(shallow as any);
+        (list === lendAssets ? lendClick : collateralClick)?.(shallow as any);
     };
 
     const removeFromList = (
@@ -72,13 +72,13 @@ export const CreateTrancheAssetsTable = ({
         list: IAvailableCoins[],
         setter?: React.Dispatch<React.SetStateAction<any>>,
     ) => {
+        console.log(list == lendAssets);
         const shallow = list.length > 0 ? [...list] : [];
         const removed = (shallow as any).filter((e: string) => e !== asset);
         if (setter) {
             setter(removed);
             return;
         }
-        (list == lendAssets ? lendClick : collateralClick)?.(removed as any);
     };
 
     const canBeCollateral = (asset: IAvailableCoins) => {
@@ -129,9 +129,8 @@ export const CreateTrancheAssetsTable = ({
                                                     : 'Disabled'
                                             }
                                             onClick={(e: any) => {
-                                                // e.preventDefault();
                                                 isInList(el, lendAssets)
-                                                    ? removeFromList(el, lendAssets)
+                                                    ? removeFromList(el, lendAssets, lendClick)
                                                     : addToList(el, lendAssets);
                                             }}
                                         />
@@ -149,9 +148,12 @@ export const CreateTrancheAssetsTable = ({
                                                     : 'Disabled'
                                             }
                                             onClick={(e: any) => {
-                                                // e.preventDefault();
                                                 isInList(el, collateralAssets)
-                                                    ? removeFromList(el, collateralAssets)
+                                                    ? removeFromList(
+                                                          el,
+                                                          collateralAssets,
+                                                          collateralClick,
+                                                      )
                                                     : addToList(el, collateralAssets);
                                             }}
                                         />
