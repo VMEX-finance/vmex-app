@@ -5,23 +5,23 @@ import {
     Card,
     DefaultDropdown,
     DefaultInput,
-    InnerCard,
     ListInput,
     MessageStatus,
     TransactionStatus,
     WalletButton,
 } from '../ui/components';
 import { useAccount, useSigner } from 'wagmi';
-import { useMyTranchesContext } from '../store';
-import { useSubgraphUserData, IGraphTrancheDataProps, IGraphAssetData } from '../api/subgraph';
+import { useSubgraphUserData, IGraphAssetData } from '../api/subgraph';
 import { useModal, useWindowSize } from '../hooks';
 import { TrancheStatsCard } from '../ui/features';
 import { CreateTrancheAssetsTable } from '../ui/tables';
 import { ethers } from 'ethers';
 import { configureExistingTranche, SetAddress } from '@vmexfinance/sdk';
 import { NETWORK, AVAILABLE_ASSETS, SDK_PARAMS, checkProfanity } from '../utils';
+import useAnalyticsEventTracker from '../utils/google-analytics';
 
 const MyTranches: React.FC = () => {
+    const gaEventTracker = useAnalyticsEventTracker('My Tranches');
     const breakpoint = 1024;
     const { width } = useWindowSize();
     const { address } = useAccount();

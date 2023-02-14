@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useMediatedState } from 'react-use';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
 import { useDialogController, useModal } from '../../../hooks';
-import { supply, withdraw } from '@vmexfinance/sdk';
+import { supply, withdraw, estimateGas } from '@vmexfinance/sdk';
 import {
     NETWORK,
     inputMediator,
@@ -12,6 +12,7 @@ import {
     bigNumberToUnformattedString,
     SDK_PARAMS,
     DECIMALS,
+    bigNumberToUSD,
 } from '../../../utils';
 import {
     HealthFactor,
@@ -46,6 +47,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
     const { closeDialog, openDialog } = useDialogController();
     const [asCollateral, setAsCollateral] = useState<any>(data?.collateral);
     const [existingSupplyCollateral, setExistingSupplyCollateral] = useState(false);
+    const [estimatedGasCost, setEstimatedGasCost] = useState('0');
 
     const amountWalletNative = getTokenBalance(data?.asset || '');
     const apy = findAssetInMarketsData(data?.asset || '')?.supplyRate;
@@ -141,6 +143,38 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
         if (typeof collateral === 'boolean') setExistingSupplyCollateral(collateral);
     }, [collateral]);
 
+    useEffect(() => {
+        const getter = async () => {
+            if (signer && data) {
+                const res = view?.includes('Supply')
+                    ? await estimateGas({
+                          function: 'supply',
+                          underlying: data.asset,
+                          trancheId: data.trancheId,
+                          amount: convertStringFormatToNumber(amount),
+                          signer: signer,
+                          network: NETWORK,
+                          isMax: isMax,
+                          test: SDK_PARAMS.test,
+                          providerRpc: SDK_PARAMS.providerRpc,
+                      })
+                    : await estimateGas({
+                          function: 'withdraw',
+                          asset: data.asset,
+                          trancheId: data.trancheId,
+                          amount: convertStringFormatToNumber(amount),
+                          signer: signer,
+                          network: NETWORK,
+                          isMax: isMax,
+                          test: SDK_PARAMS.test,
+                          providerRpc: SDK_PARAMS.providerRpc,
+                      });
+                setEstimatedGasCost(bigNumberToUSD(res, 18));
+            }
+        };
+        getter();
+    }, [view, data, isMax, amount, signer]);
+
     return data && data.asset ? (
         <>
             {view?.includes('Supply') ? (
@@ -235,6 +269,10 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                                         label: 'Collateralization',
                                         value: <ActiveStatus active={asCollateral} size="sm" />,
                                     },
+                                    {
+                                        label: 'Estimated Gas',
+                                        value: `${estimatedGasCost}`,
+                                    },
                                 ]}
                             />
                         </>
@@ -310,6 +348,10 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                                             Number(
                                                 bigNumberToNative(amountWithdraw, data.asset),
                                             ) === 0,
+                                    },
+                                    {
+                                        label: 'Estimated Gas',
+                                        value: `${estimatedGasCost}`,
                                     },
                                 ]}
                             />
