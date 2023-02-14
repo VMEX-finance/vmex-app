@@ -4,8 +4,10 @@ import { TranchesTable } from '../ui/tables';
 import { useAccount } from 'wagmi';
 import { useSubgraphTranchesOverviewData, useUserData } from '../api';
 import { ITrancheProps } from '@app/api/types';
+import useAnalyticsEventTracker from '../utils/google-analytics';
 
 const Tranches: React.FC = () => {
+    const gaEventTracker = useAnalyticsEventTracker(`Tranches`);
     const { address } = useAccount();
     const { queryAllTranches } = useSubgraphTranchesOverviewData();
     const { queryUserActivity } = useUserData(address);

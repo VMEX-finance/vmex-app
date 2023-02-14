@@ -11,6 +11,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '../store';
 import { useAccount, useSigner } from 'wagmi';
 import { useSubgraphTrancheData, useUserTrancheData } from '../api';
+import useAnalyticsEventTracker from '../utils/google-analytics';
 
 const TrancheDetails: React.FC = () => {
     const navigate = useNavigate();
@@ -21,6 +22,9 @@ const TrancheDetails: React.FC = () => {
     const { queryTrancheData } = useSubgraphTrancheData(location.state?.trancheId);
     const { queryUserTrancheData } = useUserTrancheData(address, location.state?.trancheId);
     const [view, setView] = useState('tranche-overview');
+    const gaEventTracker = useAnalyticsEventTracker(
+        `Tranche Details - ${tranche?.id || location.state?.trancheId}`,
+    );
 
     useEffect(() => {
         if (!address) setView('tranche-details');

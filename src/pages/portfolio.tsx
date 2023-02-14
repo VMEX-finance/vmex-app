@@ -9,15 +9,14 @@ import { addDollarAmounts, bigNumberToUnformattedString } from '../utils/sdk-hel
 import { useSubgraphUserData } from '../api/subgraph';
 import { averageOfArr, numberFormatter } from '../utils/helpers';
 import { useNavigate } from 'react-router-dom';
-import { useMyTranchesContext } from '../store/my-tranches';
+import useAnalyticsEventTracker from '../utils/google-analytics';
 
 const Portfolio: React.FC = () => {
+    const gaEventTracker = useAnalyticsEventTracker('Portfolio');
     const navigate = useNavigate();
-
     const { address } = useAccount();
     const { chain } = useNetwork();
     const { queryTrancheAdminData } = useSubgraphUserData(address || '');
-    // const { myTranches } = useMyTranchesContext();
     const { queryUserActivity } = useUserData(address);
     const { queryUserPnlChart } = useSubgraphUserData(address);
     const { queryUserTranchesData } = useUserTranchesData(address);

@@ -4,8 +4,10 @@ import { MarketsTable } from '../ui/tables';
 import { useSubgraphAllMarketsData } from '../api/subgraph';
 import { useAccount } from 'wagmi';
 import { useUserData } from '../api';
+import useAnalyticsEventTracker from '../utils/google-analytics';
 
 const Markets: React.FC = () => {
+    const gaEventTracker = useAnalyticsEventTracker('Markets');
     const { address } = useAccount();
     const { queryUserActivity } = useUserData(address);
     const { queryAllMarketsData } = useSubgraphAllMarketsData();
