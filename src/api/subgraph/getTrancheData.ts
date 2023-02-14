@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 import { useQuery } from '@tanstack/react-query';
-import { IGraphTrancheDataProps, ISubgraphTrancheData } from './types';
+import { IGraphAssetData, IGraphTrancheDataProps, ISubgraphTrancheData } from './types';
 import { utils } from 'ethers';
 import { getAllAssetPrices } from '../prices';
 import {
@@ -10,6 +10,7 @@ import {
     nativeAmountToUSD,
     weightedAverageofArr,
     MAX_UINT_AMOUNT,
+    IAvailableCoins,
 } from '../../utils';
 
 export const processTrancheData = async (
@@ -60,7 +61,7 @@ export const processTrancheData = async (
                             : item.assetData.borrowCap,
                     priceUSD: (prices as any)[item.assetData.underlyingAssetName].usdPrice,
                     priceETH: (prices as any)[item.assetData.underlyingAssetName].ethPrice,
-                    isPaused: !item.isActive,
+                    isFrozen: item.isFrozen,
                     // yieldStrategy: item.yieldStrategy,
                 },
             }),
@@ -112,7 +113,7 @@ export const processTrancheData = async (
     const returnObj = {
         assetsData: finalObj,
         utilityRate: '0',
-        assets: assets.map((el: any) => el.assetData.underlyingAssetName),
+        assets: assets.map((el: any) => el.assetData.underlyingAssetName as IAvailableCoins),
         id: trancheId ? trancheId : data.id,
         name: data.name,
         admin: data.trancheAdmin.id,
@@ -127,7 +128,6 @@ export const processTrancheData = async (
             1 - (summaryData.supplyTotal - summaryData.borrowTotal) / summaryData.supplyTotal,
         ),
         avgApy: calculateAvgApy(),
-        adminFee: 'TODO',
         whitelist: data.isUsingWhitelist,
         whitelistedUsers: data.whitelistedUsers.map((obj: any) => {
             return obj.id;
@@ -137,7 +137,6 @@ export const processTrancheData = async (
         }),
         isPaused: false, //TODO
     };
-    console.log('RETURNOBJ:', returnObj);
     return returnObj;
 };
 
@@ -186,6 +185,7 @@ export const getSubgraphTrancheData = async (
                             supplyCap
                             vmexReserveFactor
                         }
+                        isFrozen
                         # yieldStrategy
                     }
                 }

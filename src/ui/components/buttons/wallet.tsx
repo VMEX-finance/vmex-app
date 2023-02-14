@@ -7,6 +7,7 @@ import { useWindowSize, useDialogController } from '../../../hooks';
 import { DefaultDropdown, IDropdownItemProps } from '../dropdowns';
 import { truncateAddress, truncate } from '../../../utils/helpers';
 import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: IButtonProps) => {
     const { chain } = useNetwork();
@@ -22,6 +23,7 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
     const mode = `transition duration-150 ${
         primary && !address ? '' : 'bg-white text-brand-black hover:bg-neutral-100'
     }`;
+    const queryClient = useQueryClient();
 
     const renderDropdownItems = () => {
         let final: IDropdownItemProps[] = [
@@ -56,6 +58,15 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
 
         return final;
     };
+
+    // Refetch queries on account switch
+    useEffect(() => {
+        if (window.ethereum) {
+            (window.ethereum as any).on('accountsChanged', (accounts: Array<string>) => {
+                queryClient.invalidateQueries();
+            });
+        }
+    }, [address, queryClient]);
 
     if (address && width > 1024 && !chain?.unsupported) {
         return (
