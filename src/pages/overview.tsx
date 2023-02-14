@@ -7,8 +7,10 @@ import { useAccount, useNetwork } from 'wagmi';
 import { numberFormatter } from '../utils/helpers';
 import { bigNumberToUnformattedString } from '../utils/sdk-helpers';
 import { useSubgraphProtocolData, useSubgraphUserData, useUserData } from '../api';
+import useAnalyticsEventTracker from '../utils/google-analytics';
 
 const Overview: React.FC = () => {
+    const gaEventTracker = useAnalyticsEventTracker('Overview');
     const { address, isConnected } = useAccount();
     const { chain } = useNetwork();
     const { queryProtocolTVLChart, queryProtocolData } = useSubgraphProtocolData();

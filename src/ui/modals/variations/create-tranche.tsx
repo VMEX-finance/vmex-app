@@ -160,17 +160,16 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
 
                     <StepperChild active={activeStep === 1}>
                         <div className="mt-6">
-                            <InnerCard className="max-h-60 overflow-y-auto">
-                                <CreateTrancheAssetsTable
-                                    assets={_tokens}
-                                    collateralAssets={_collateralTokens}
-                                    lendAssets={_borrowLendTokens}
-                                    lendClick={setBorrowLendTokens}
-                                    collateralClick={setCollateralTokens}
-                                    _adminFee={_adminFee}
-                                    setAdminFee={setAdminFee}
-                                />
-                            </InnerCard>
+                            <CreateTrancheAssetsTable
+                                assets={_tokens}
+                                setAssets={setTokens}
+                                collateralAssets={_collateralTokens}
+                                lendAssets={_borrowLendTokens}
+                                lendClick={setBorrowLendTokens}
+                                collateralClick={setCollateralTokens}
+                                _adminFee={_adminFee}
+                                setAdminFee={setAdminFee}
+                            />
                         </div>
 
                         <MessageStatus
@@ -184,6 +183,14 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
                 <div className="mt-10 mb-8">
                     <TransactionStatus success={isSuccess} errorText={error} full />
                 </div>
+            )}
+
+            {!error && isSuccess && (
+                <p className="text-emerald-600 break-words text-center px-12">
+                    {
+                        'Tranche successfully created! Please wait or refresh the page to see your new tranche.'
+                    }
+                </p>
             )}
 
             {error && !isSuccess && (
