@@ -109,7 +109,7 @@ export const CreateTrancheAssetsTable = ({
                             <th>Borrow / Lend</th>
                             <th>Collateral</th>
                             {showFrozen && <th>Frozen</th>}
-                            <th>Admin Fee (%)</th>
+                            <th className="flex justify-end">Admin Fee (%)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -187,18 +187,16 @@ export const CreateTrancheAssetsTable = ({
                                         </>
                                     </td>
                                 )}
-                                <td>
-                                    <>
-                                        <DefaultInput
-                                            type="percent"
-                                            className="flex items-center gap-2 cursor-pointer"
-                                            value={_adminFee[i]}
-                                            onType={(e: any) => handleSetAdminFee(e, i)}
-                                            placeholder="0.00"
-                                            tooltip="Admin fees will be distributed to the wallet address used to create the tranche. Admin fees set are additive to the base 5% fee taken by VMEX"
-                                            required
-                                        />
-                                    </>
+                                <td className="flex justify-end">
+                                    <DefaultInput
+                                        type="percent"
+                                        className="flex items-center gap-2 cursor-pointer max-w-[72px]"
+                                        value={_adminFee[i]}
+                                        onType={(e: any) => handleSetAdminFee(e, i)}
+                                        placeholder="0.00"
+                                        tooltip="Admin fees will be distributed to the wallet address used to create the tranche. Admin fees set are additive to the base 5% fee taken by VMEX"
+                                        required
+                                    />
                                 </td>
                             </tr>
                         ))}
