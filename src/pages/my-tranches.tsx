@@ -264,7 +264,7 @@ const MyTranches: React.FC = () => {
                                             onClick={(e: any) => findSelectedTranche(obj.id)}
                                             key={`my-tranches-${i}`}
                                         >
-                                            {obj.name}, id: {obj.id}
+                                            {obj.name} | ID: {obj.id}
                                         </button>
                                     ))}
                                 </Card>
