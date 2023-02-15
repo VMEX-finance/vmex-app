@@ -136,6 +136,7 @@ export const processTrancheData = async (
             return obj.id;
         }),
         isPaused: false, //TODO
+        treasury: data.treasury,
     };
     return returnObj;
 };
@@ -152,6 +153,7 @@ export const getSubgraphTrancheData = async (
                 tranche(id: $trancheId) {
                     name
                     isUsingWhitelist
+                    treasury
                     trancheAdmin {
                         id
                     }
