@@ -38,6 +38,8 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
     const [_collateralTokens, setCollateralTokens] = React.useState([]);
     const [_borrowLendTokens, setBorrowLendTokens] = React.useState([]);
 
+    const chunkMaxSize = 10;
+
     const handleSubmit = async () => {
         if (myTranches?.length > 0 && myTranches.map((obj) => obj.name).includes(_name))
             setError('Tranche name already in use.');
@@ -82,6 +84,7 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
                 network: NETWORK,
                 test: SDK_PARAMS.test,
                 providerRpc: SDK_PARAMS.providerRpc,
+                chunks: chunkMaxSize,
             });
             return res;
         });
@@ -199,7 +202,20 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
 
             {isLoading && (
                 <span className="italic text-sm">
-                    Please be patient. There are multiple transactions to be signed.
+                    There are{' '}
+                    {Math.ceil(_tokens.length / chunkMaxSize) +
+                        2 +
+                        Number(_blackListed.length !== 0) +
+                        Number(_whitelisted.length !== 0)}{' '}
+                    transactions to be signed. The transaction order is as follows: <br />
+                    1) claim the tranche id
+                    <br />
+                    2) set treasury address
+                    <br />
+                    3) set blacklist/whitelist if specified
+                    <br />
+                    4) initialize the reserves in batches of 10
+                    <br />
                 </span>
             )}
 
