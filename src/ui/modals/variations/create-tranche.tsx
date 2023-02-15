@@ -185,6 +185,14 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
                 </div>
             )}
 
+            {!error && isSuccess && (
+                <p className="text-emerald-600 break-words text-center px-12">
+                    {
+                        'Tranche successfully created! Please wait or refresh the page to see your new tranche.'
+                    }
+                </p>
+            )}
+
             {error && !isSuccess && (
                 <p className="text-red-500 break-words">{error || 'Invalid input'}</p>
             )}
