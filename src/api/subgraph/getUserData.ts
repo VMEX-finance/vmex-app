@@ -24,6 +24,7 @@ export const getUserAdminTrancheData = async (admin: string): Promise<IGraphTran
                     myTranches {
                         id
                         name
+                        treasury
                         isUsingWhitelist
                         trancheAdmin {
                             id

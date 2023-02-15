@@ -22,7 +22,6 @@ export interface ITrancheStatsCardProps {
     totalBorrowed?: string;
     topBorrowedAssets?: AssetBalance[];
     topSuppliedAssets?: AssetBalance[];
-    topTranches?: TrancheData[];
     tvlChart?: UseQueryResult<ILineChartDataPointProps[], unknown>;
     isLoading?: boolean;
 }
@@ -36,7 +35,6 @@ export const TrancheStatsCard: React.FC<ITrancheStatsCardProps> = ({
     totalSupplied,
     topBorrowedAssets,
     topSuppliedAssets,
-    topTranches,
     isLoading,
     tvlChart,
 }) => {

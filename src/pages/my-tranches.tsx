@@ -83,7 +83,7 @@ const MyTranches: React.FC = () => {
     }
 
     const [_name, setName] = React.useState(selectedTranche.name);
-    // const [treasuryAddress, setTreasuryAddress] = React.useState(selectedTranche.);
+    const [treasuryAddress, setTreasuryAddress] = React.useState(selectedTranche.treasury);
     const [_isUsingWhitelist, setIsUsingWhitelist] = React.useState(selectedTranche.whitelist);
     const [_whitelisted, setWhitelisted] = React.useState(selectedTranche.whitelistedUsers);
     const [_blackListed, setBlackListed] = React.useState(selectedTranche.blacklistedUsers);
@@ -152,6 +152,8 @@ const MyTranches: React.FC = () => {
                 const res = await configureExistingTranche({
                     trancheId: selectedTranche.id as any,
                     newName: _name === selectedTranche.name ? undefined : _name,
+                    newTreasuryAddress:
+                        treasuryAddress === selectedTranche.treasury ? undefined : treasuryAddress,
                     isTrancheWhitelisted:
                         _isUsingWhitelist === selectedTranche.whitelist
                             ? undefined
@@ -214,6 +216,7 @@ const MyTranches: React.FC = () => {
         setFrozenTokens(getFrozenTokens());
         setCollateralTokens(getCollateralTokens());
         setBorrowableTokens(getBorrowableTokens());
+        setTreasuryAddress(selectedTranche.treasury);
         setIsUsingWhitelist(selectedTranche.whitelist);
     }, [selectedTranche, selectedTranche.assets, selectedTranche.assetsData]);
 
@@ -270,7 +273,21 @@ const MyTranches: React.FC = () => {
                                 </Card>
                             )}
                             <div className="flex flex-col gap-4">
-                                <TrancheStatsCard tvl={selectedTranche.tvl} />
+                                <TrancheStatsCard
+                                    tvl={selectedTranche.tvl}
+                                    reserve={
+                                        selectedTranche.assets
+                                            ? selectedTranche.assets.length.toString()
+                                            : '0'
+                                    }
+                                    lenders={4} //TODO
+                                    borrowers={2} //TODO
+                                    totalSupplied={selectedTranche.totalSupplied}
+                                    totalBorrowed={selectedTranche.totalBorrowed}
+                                    topBorrowedAssets={[]} //TODO
+                                    topSuppliedAssets={[]} //TODO
+                                    // tvlChart={queryProtocolTVLChart} //TODO
+                                />
                                 {selectedTranche.name && (
                                     <Card>
                                         {!isSuccess && !error ? (
@@ -291,15 +308,15 @@ const MyTranches: React.FC = () => {
                                                     show={checkProfanity(_name || '')}
                                                     message="Please keep your degen to a minimum"
                                                 />
-                                                {/* <DefaultInput
-                                                    value={treasuryAddress}
+                                                <DefaultInput
+                                                    value={treasuryAddress || ''}
                                                     onType={setTreasuryAddress}
                                                     size="2xl"
                                                     placeholder=""
                                                     title="Treasury Address"
                                                     required
                                                     className="flex w-full flex-col mt-6"
-                                                /> */}
+                                                />
                                                 <ListInput
                                                     title="Whitelisted"
                                                     list={_whitelisted}

@@ -75,6 +75,7 @@ export type IGraphTrancheDataProps = {
     whitelistedUsers?: string[];
     blacklistedUsers?: string[];
     isPaused?: boolean;
+    treasury?: string;
 };
 
 export type IGraphProtocolDataProps =
