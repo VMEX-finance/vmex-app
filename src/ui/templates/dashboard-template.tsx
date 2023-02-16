@@ -2,9 +2,8 @@ import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useWindowSize, useDialogController } from '../../hooks';
 import { BiChevronLeft, BiPlus } from 'react-icons/bi';
-import { useMyTranchesContext } from '../../store';
 import { Tooltip, Button, LinkButton, SkeletonLoader } from '../components';
-import { chain, useAccount, useNetwork } from 'wagmi';
+import { useAccount, useNetwork } from 'wagmi';
 import { Skeleton } from '@mui/material';
 import { useSubgraphUserData } from '../../api';
 
@@ -30,7 +29,6 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
     descriptionLoading,
 }) => {
     const { chain } = useNetwork();
-    const { myTranches } = useMyTranchesContext();
     const { openDialog } = useDialogController();
     const location = useLocation();
     const navigate = useNavigate();
@@ -38,7 +36,6 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
     const isConnected = useAccount();
     const { width } = useWindowSize();
     const { address } = useAccount();
-
     const { queryTrancheAdminData } = useSubgraphUserData(address || '');
 
     // TODO: cleanup / optimize
@@ -121,7 +118,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                                     <Button
                                         label={'My Tranches'}
                                         primary
-                                        disabled={myTranches?.length === 0}
+                                        disabled={queryTrancheAdminData?.data?.length === 0}
                                     />
                                 }
                             />

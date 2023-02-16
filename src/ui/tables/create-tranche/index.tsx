@@ -65,7 +65,6 @@ export const CreateTrancheAssetsTable = ({
         list: IAvailableCoins[],
         setter?: React.Dispatch<React.SetStateAction<any>>,
     ) => {
-        console.log(list == lendAssets);
         const shallow = list.length > 0 ? [...list] : [];
         const removed = (shallow as any).filter((e: string) => e !== asset);
         if (setter) {

@@ -4,10 +4,11 @@ import { HiOutlineMenuAlt3 } from 'react-icons/hi';
 import { BiTransferAlt } from 'react-icons/bi';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { DefaultDropdown, MenuItemButton, WalletButton, ToggleThemeButton } from '../components';
-import { ThemeContext, useMyTranchesContext, useTransactionsContext } from '../../store';
+import { ThemeContext, useTransactionsContext } from '../../store';
 import { useAccount } from 'wagmi';
 import { useDialogController, useWindowSize } from '../../hooks';
 import { IDialogNames } from '@store/modals';
+import { useSubgraphUserData } from '../../api';
 
 const navItems = ['Overview', 'Tranches', 'Markets', 'Governance', 'Develop'];
 
@@ -18,13 +19,17 @@ export const Navbar: React.FC = () => {
     const { width } = useWindowSize();
     const { isConnected } = useAccount();
     const { transactions } = useTransactionsContext();
-    const { myTranches } = useMyTranchesContext();
     const { openDialog } = useDialogController();
+    const { address } = useAccount();
+    const { queryTrancheAdminData } = useSubgraphUserData(address || '');
 
     function navigateTo(e: any) {
-        e.preventDefault();
-        let value = e.target.innerText.toLowerCase();
-        navigate(`../${value}`, { replace: false });
+        if (typeof e === 'string') navigate(`../${e}`, { replace: false });
+        else {
+            e.preventDefault();
+            let value = e.target.innerText.toLowerCase();
+            navigate(`../${value}`, { replace: false });
+        }
     }
 
     return (
@@ -104,7 +109,7 @@ export const Navbar: React.FC = () => {
                             onClick={openDialog}
                             navigate={navigateTo}
                             isConnected={isConnected}
-                            tranches={myTranches}
+                            tranches={queryTrancheAdminData?.data}
                         />
                     )}
                 </div>
@@ -122,7 +127,7 @@ const MobileDropdownMenu = ({
     onClick: (e: IDialogNames, data?: any) => void;
     navigate: any;
     isConnected: boolean;
-    tranches: any[];
+    tranches?: any[];
 }) => (
     <Menu as="div" className="relative inline-block">
         <div>
@@ -165,7 +170,7 @@ const MobileDropdownMenu = ({
                                 {tranches?.length !== 0 && (
                                     <MenuItemButton
                                         label={`My Tranches`}
-                                        onClick={() => onClick('my-tranches-dialog')}
+                                        onClick={() => navigate('my-tranches')}
                                         mobile
                                     />
                                 )}
