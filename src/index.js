@@ -7,7 +7,7 @@ import ReduxProvider from './store/redux';
 import { HashRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { MyTranchesStore, SelectedTrancheStore, TransactionsStore, ThemeProvider } from './store';
+import { SelectedTrancheStore, TransactionsStore, ThemeProvider } from './store';
 import { WagmiConfig } from 'wagmi';
 import { chains, RainbowKitProvider, wagmiClient } from './utils';
 
@@ -20,21 +20,19 @@ root.render(
         <ThemeProvider>
             <QueryClientProvider client={queryClient}>
                 <ReactQueryDevtools />
-                <MyTranchesStore>
-                    <TransactionsStore>
-                        <SelectedTrancheStore>
-                            <ReduxProvider>
-                                <WagmiConfig client={wagmiClient}>
-                                    <RainbowKitProvider chains={chains}>
-                                        <HashRouter>
-                                            <App />
-                                        </HashRouter>
-                                    </RainbowKitProvider>
-                                </WagmiConfig>
-                            </ReduxProvider>
-                        </SelectedTrancheStore>
-                    </TransactionsStore>
-                </MyTranchesStore>
+                <TransactionsStore>
+                    <SelectedTrancheStore>
+                        <ReduxProvider>
+                            <WagmiConfig client={wagmiClient}>
+                                <RainbowKitProvider chains={chains}>
+                                    <HashRouter>
+                                        <App />
+                                    </HashRouter>
+                                </RainbowKitProvider>
+                            </WagmiConfig>
+                        </ReduxProvider>
+                    </SelectedTrancheStore>
+                </TransactionsStore>
             </QueryClientProvider>
         </ThemeProvider>
     </React.StrictMode>,

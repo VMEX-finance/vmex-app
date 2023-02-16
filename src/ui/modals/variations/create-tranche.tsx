@@ -1,12 +1,10 @@
 import React, { useEffect } from 'react';
-import { useMyTranchesContext } from '../../../store';
 import {
     DefaultInput,
     ListInput,
     TransactionStatus,
     Stepper,
     StepperChild,
-    InnerCard,
     Button,
     MessageStatus,
 } from '../../components';
@@ -16,14 +14,14 @@ import { ModalFooter, ModalHeader } from '../../modals/subcomponents';
 import { CreateTrancheAssetsTable } from '../../tables';
 import { NETWORK, AVAILABLE_ASSETS, SDK_PARAMS, checkProfanity } from '../../../utils';
 import { useAccount, useSigner } from 'wagmi';
-import { ethers } from 'ethers';
-import { convertSymbolToAddress, initTranche } from '@vmexfinance/sdk';
+import { initTranche } from '@vmexfinance/sdk';
+import { useSubgraphUserData } from '../../../api';
 
 export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeDialog }) => {
     const { address } = useAccount();
     const { data: signer } = useSigner();
     const { setError, isSuccess, error, submitTx, isLoading } = useModal('create-tranche-dialog');
-    const { myTranches } = useMyTranchesContext();
+    const { queryTrancheAdminData } = useSubgraphUserData(address || '');
     const { steps, nextStep, prevStep, activeStep } = useStepper([
         { name: 'Create Tranche', status: 'current' },
         { name: 'Manage Assets', status: 'upcoming' },
@@ -39,7 +37,12 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
     const [_borrowLendTokens, setBorrowLendTokens] = React.useState([]);
 
     const handleSubmit = async () => {
-        if (myTranches?.length > 0 && myTranches.map((obj) => obj.name).includes(_name))
+        // TODO: change to check all tranches
+        if (
+            queryTrancheAdminData.data &&
+            queryTrancheAdminData?.data?.length > 0 &&
+            queryTrancheAdminData.data?.map((obj) => obj.name).includes(_name)
+        )
             setError('Tranche name already in use.');
         if (!_name) setError('Please enter a tranche name.');
         if (_tokens?.length === 0) setError('Please enter tokens to be included in your tranche.');

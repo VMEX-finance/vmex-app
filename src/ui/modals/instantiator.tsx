@@ -5,7 +5,6 @@ import {
     StakeAssetDialog,
     SupplyAssetDialog,
     CreateTrancheDialog,
-    MyTranchesDialog,
     ConfirmationDialog,
     FeedbackDialog,
 } from '../modals';
@@ -38,12 +37,6 @@ export const AllModalsInstance: React.FC = () => {
             <React.Fragment>
                 <ModalWrapper {...getDialogProps('create-tranche-dialog')}>
                     <CreateTrancheDialog {...getDialogProps('create-tranche-dialog')} />
-                </ModalWrapper>
-            </React.Fragment>
-
-            <React.Fragment>
-                <ModalWrapper {...getDialogProps('my-tranches-dialog')}>
-                    <MyTranchesDialog {...getDialogProps('my-tranches-dialog')} />
                 </ModalWrapper>
             </React.Fragment>
 

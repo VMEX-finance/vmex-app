@@ -1,17 +1,8 @@
 import { IAvailableCoins } from '../../../utils/helpers';
 import React, { useEffect } from 'react';
-import {
-    Checkbox,
-    AssetDisplay,
-    DefaultInput,
-    MessageStatus,
-    InnerCard,
-    ListInput,
-} from '../../components';
+import { Checkbox, AssetDisplay, DefaultInput, InnerCard } from '../../components';
 import { useSubgraphAllAssetMappingsData } from '../../../api/subgraph/getAssetMappingsData';
-import { AVAILABLE_ASSETS } from '../../../utils/constants';
 
-// TODO: make a way to see which assets cannot be lent / collateralized / etc
 type ICreateTrancheAssetsTableProps = {
     assets: IAvailableCoins[];
     setAssets?: React.Dispatch<React.SetStateAction<any>>;
@@ -26,6 +17,7 @@ type ICreateTrancheAssetsTableProps = {
     showFrozen?: boolean;
     _frozenTokens?: IAvailableCoins[];
     setFrozenTokens?: React.Dispatch<React.SetStateAction<any>>;
+    wrapperClass?: string;
 };
 
 export const CreateTrancheAssetsTable = ({
@@ -42,6 +34,7 @@ export const CreateTrancheAssetsTable = ({
     showFrozen = false,
     _frozenTokens,
     setFrozenTokens,
+    wrapperClass,
 }: ICreateTrancheAssetsTableProps) => {
     const { queryAllAssetMappingsData } = useSubgraphAllAssetMappingsData();
 
@@ -72,7 +65,6 @@ export const CreateTrancheAssetsTable = ({
         list: IAvailableCoins[],
         setter?: React.Dispatch<React.SetStateAction<any>>,
     ) => {
-        console.log(list == lendAssets);
         const shallow = list.length > 0 ? [...list] : [];
         const removed = (shallow as any).filter((e: string) => e !== asset);
         if (setter) {
@@ -99,16 +91,16 @@ export const CreateTrancheAssetsTable = ({
     return (
         <>
             <div className="flex justify-between items-end">
-                <h3 className="mt-6 mb-1 text-neutral400">{title}</h3>
+                <h3 className="mt-6 mb-1">{title}</h3>
             </div>
-            <InnerCard className="max-h-60 overflow-y-auto">
+            <InnerCard className={`${wrapperClass ? wrapperClass : ''} max-h-60 overflow-y-auto`}>
                 <table className="w-full table-auto">
                     <thead>
                         <tr>
-                            <th>Asset</th>
-                            <th>Borrow / Lend</th>
-                            <th>Collateral</th>
-                            {showFrozen && <th>Frozen</th>}
+                            <th className="text-left">Asset</th>
+                            <th className="text-left">Borrow / Lend</th>
+                            <th className="text-left">Collateral</th>
+                            {showFrozen && <th className="text-left">Frozen</th>}
                             <th className="flex justify-end">Admin Fee (%)</th>
                         </tr>
                     </thead>
