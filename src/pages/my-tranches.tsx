@@ -35,7 +35,7 @@ const MyTranches: React.FC = () => {
             ? queryTrancheAdminData.data[0]
             : {},
     );
-    const { queryTrancheData } = useSubgraphTrancheData(selectedTranche?.id as any);
+    const { queryTrancheChart } = useSubgraphTrancheData(selectedTranche?.id as any);
 
     function getTopItems(metric: string, n: number) {
         if (!selectedTranche.assetsData) return [];
@@ -273,7 +273,7 @@ const MyTranches: React.FC = () => {
                             {width >= breakpoint && (
                                 <Card
                                     title="Select a tranche"
-                                    className="flex flex-col min-w-[320px] w-[320px] overflow-y-auto"
+                                    className="flex flex-col min-w-[320px] w-[320px] max-w-[320px] overflow-y-auto"
                                 >
                                     <div className="flex justify-between border-b-2 border-neutral-300 dark:border-neutral-800 text-sm text-neutral-500 my-2">
                                         <span>Name</span>
@@ -316,7 +316,7 @@ const MyTranches: React.FC = () => {
                                     totalBorrowed={selectedTranche.totalBorrowed}
                                     topBorrowedAssets={getTopItems('totalBorrowed', 3)}
                                     topSuppliedAssets={getTopItems('totalSupplied', 3)}
-                                    // tvlChart={queryProtocolTVLChart} //TODO
+                                    tvlChart={queryTrancheChart}
                                     isLoading={queryTrancheAdminData.isLoading}
                                 />
                                 {selectedTranche.name && (
