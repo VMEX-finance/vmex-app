@@ -1,12 +1,10 @@
 import React, { useEffect } from 'react';
-import { useMyTranchesContext } from '../../../store';
 import {
     DefaultInput,
     ListInput,
     TransactionStatus,
     Stepper,
     StepperChild,
-    InnerCard,
     Button,
     MessageStatus,
 } from '../../components';
@@ -16,14 +14,14 @@ import { ModalFooter, ModalHeader } from '../../modals/subcomponents';
 import { CreateTrancheAssetsTable } from '../../tables';
 import { NETWORK, AVAILABLE_ASSETS, SDK_PARAMS, checkProfanity } from '../../../utils';
 import { useAccount, useSigner } from 'wagmi';
-import { ethers } from 'ethers';
-import { convertSymbolToAddress, initTranche } from '@vmexfinance/sdk';
+import { initTranche } from '@vmexfinance/sdk';
+import { useSubgraphTranchesOverviewData } from '../../../api';
 
 export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeDialog }) => {
     const { address } = useAccount();
     const { data: signer } = useSigner();
     const { setError, isSuccess, error, submitTx, isLoading } = useModal('create-tranche-dialog');
-    const { myTranches } = useMyTranchesContext();
+    const { queryAllTranches } = useSubgraphTranchesOverviewData();
     const { steps, nextStep, prevStep, activeStep } = useStepper([
         { name: 'Create Tranche', status: 'current' },
         { name: 'Manage Assets', status: 'upcoming' },
@@ -38,8 +36,14 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
     const [_collateralTokens, setCollateralTokens] = React.useState([]);
     const [_borrowLendTokens, setBorrowLendTokens] = React.useState([]);
 
+    const chunkMaxSize = 10;
+
     const handleSubmit = async () => {
-        if (myTranches?.length > 0 && myTranches.map((obj) => obj.name).includes(_name))
+        if (
+            queryAllTranches.data &&
+            queryAllTranches.data?.length > 0 &&
+            queryAllTranches.data?.map((obj) => obj.name).includes(_name)
+        )
             setError('Tranche name already in use.');
         if (!_name) setError('Please enter a tranche name.');
         if (_tokens?.length === 0) setError('Please enter tokens to be included in your tranche.');
@@ -82,6 +86,7 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
                 network: NETWORK,
                 test: SDK_PARAMS.test,
                 providerRpc: SDK_PARAMS.providerRpc,
+                chunks: chunkMaxSize,
             });
             return res;
         });
@@ -199,7 +204,20 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
 
             {isLoading && (
                 <span className="italic text-sm">
-                    Please be patient. There are multiple transactions to be signed.
+                    There are{' '}
+                    {Math.ceil(_tokens.length / chunkMaxSize) +
+                        2 +
+                        Number(_blackListed.length !== 0) +
+                        Number(_whitelisted.length !== 0)}{' '}
+                    transactions to be signed. The transaction order is as follows: <br />
+                    1) claim the tranche id
+                    <br />
+                    2) set treasury address
+                    <br />
+                    3) set blacklist/whitelist if specified
+                    <br />
+                    4) initialize the reserves in batches of 10
+                    <br />
                 </span>
             )}
 

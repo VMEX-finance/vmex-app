@@ -22,7 +22,6 @@ export interface ITrancheStatsCardProps {
     totalBorrowed?: string;
     topBorrowedAssets?: AssetBalance[];
     topSuppliedAssets?: AssetBalance[];
-    topTranches?: TrancheData[];
     tvlChart?: UseQueryResult<ILineChartDataPointProps[], unknown>;
     isLoading?: boolean;
 }
@@ -36,7 +35,6 @@ export const TrancheStatsCard: React.FC<ITrancheStatsCardProps> = ({
     totalSupplied,
     topBorrowedAssets,
     topSuppliedAssets,
-    topTranches,
     isLoading,
     tvlChart,
 }) => {
@@ -58,7 +56,7 @@ export const TrancheStatsCard: React.FC<ITrancheStatsCardProps> = ({
 
     return (
         <Card>
-            <div className="flex flex-col xl:flex-row gap-2 md:gap-4 xl:gap-6 divide-y-2 xl:divide-y-0 xl:divide-x-2 divide-brand-black">
+            <div className="flex flex-col xl:flex-row gap-2 md:gap-4 xl:gap-6 divide-y-2 xl:divide-y-0 xl:divide-x-2 divide-neutral-300 dark:divide-neutral-800">
                 <div className="flex flex-col md:flex-row font-basefont gap-8">
                     <div className="flex flex-col justify-between min-w-[90%] xl:min-w-[300px]">
                         <NumberDisplay
@@ -95,19 +93,19 @@ export const TrancheStatsCard: React.FC<ITrancheStatsCardProps> = ({
                     <div className="flex md:flex-col justify-between gap-1">
                         <NumberDisplay
                             label={'Reserves:'}
-                            value={reserve ? reserve : '-'}
+                            value={reserve || reserve === '0' ? reserve : '-'}
                             loading={isLoading}
                         />
                         <NumberDisplay
                             color="text-brand-purple"
                             label={'Lenders:'}
-                            value={lenders ? lenders : '-'}
+                            value={lenders || lenders === 0 ? lenders : '-'}
                             loading={isLoading}
                         />
                         <NumberDisplay
                             color="text-brand-green"
                             label={'Borrowers:'}
-                            value={borrowers ? borrowers : '-'}
+                            value={borrowers || borrowers === 0 ? borrowers : '-'}
                             loading={isLoading}
                         />
                     </div>

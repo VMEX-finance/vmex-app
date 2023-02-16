@@ -2,9 +2,8 @@ import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useWindowSize, useDialogController } from '../../hooks';
 import { BiChevronLeft, BiPlus } from 'react-icons/bi';
-import { useMyTranchesContext } from '../../store';
-import { Tooltip, Button, LinkButton } from '../components';
-import { chain, useAccount, useNetwork } from 'wagmi';
+import { Tooltip, Button, LinkButton, SkeletonLoader } from '../components';
+import { useAccount, useNetwork } from 'wagmi';
 import { Skeleton } from '@mui/material';
 import { useSubgraphUserData } from '../../api';
 
@@ -16,6 +15,7 @@ interface IDashboardTemplateProps {
     setView?: any;
     titleLoading?: boolean;
     right?: React.ReactNode;
+    descriptionLoading?: boolean;
 }
 
 const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
@@ -26,9 +26,9 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
     setView,
     titleLoading,
     right,
+    descriptionLoading,
 }) => {
     const { chain } = useNetwork();
-    const { myTranches } = useMyTranchesContext();
     const { openDialog } = useDialogController();
     const location = useLocation();
     const navigate = useNavigate();
@@ -36,7 +36,6 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
     const isConnected = useAccount();
     const { width } = useWindowSize();
     const { address } = useAccount();
-
     const { queryTrancheAdminData } = useSubgraphUserData(address || '');
 
     // TODO: cleanup / optimize
@@ -59,8 +58,14 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                             <h1 className="text-3xl font-basefont capitalize leading-tight text-neutral-900 dark:text-neutral-300">
                                 {title}
                             </h1>
-                            {description && (
-                                <p className="mt-1 dark:text-neutral-300">{description}</p>
+                            {(description || descriptionLoading) && (
+                                <div className="mt-1">
+                                    {descriptionLoading ? (
+                                        <SkeletonLoader height="24px" />
+                                    ) : (
+                                        <p className="dark:text-neutral-300">{description}</p>
+                                    )}
+                                </div>
                             )}
                         </>
                     )}
@@ -113,7 +118,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                                     <Button
                                         label={'My Tranches'}
                                         primary
-                                        disabled={myTranches?.length === 0}
+                                        disabled={queryTrancheAdminData?.data?.length === 0}
                                     />
                                 }
                             />
@@ -127,7 +132,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                 )}
             </header>
             <main>
-                <div className="py-8 flex flex-col gap-4 xl:gap-8">
+                <div className="py-4 md:py-8 flex flex-col gap-4 xl:gap-8">
                     {children ? (
                         children
                     ) : (

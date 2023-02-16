@@ -45,11 +45,11 @@ export type IMarketsAsset = {
     supplyTotal: number | string;
     borrowTotal: number | string;
     rating: string;
-    strategies: boolean;
+    strategies?: boolean;
     canBeCollateral: boolean;
     canBeBorrowed: boolean;
-    currentPrice: BigNumber;
-    supplyCap: BigNumber;
+    currentPrice?: BigNumber;
+    supplyCap?: BigNumber;
     liquidationThreshold: BigNumber;
 };
 

@@ -46,22 +46,21 @@ export const getSubgraphMarketsChart = async (
         let supplyBorrowRateChart: ILineChartDataPointProps[] = [];
         let utilizationChart: ILineChartDataPointProps[] = [];
 
-        const { paramsHistory } = data.reserve;
+        data.reserve?.paramsHistory &&
+            data.reserve.paramsHistory.map((histItem: any) => {
+                const date = new Date(histItem.timestamp * 1000).toLocaleDateString();
 
-        paramsHistory.map((histItem: any) => {
-            const date = new Date(histItem.timestamp * 1000).toLocaleDateString();
+                supplyBorrowRateChart.push({
+                    xaxis: date,
+                    value: parseFloat(utils.formatUnits(histItem.liquidityRate, 27)) * 100,
+                    value2: parseFloat(utils.formatUnits(histItem.variableBorrowRate, 27)) * 100,
+                });
 
-            supplyBorrowRateChart.push({
-                xaxis: date,
-                value: parseFloat(utils.formatUnits(histItem.liquidityRate, 27)) * 100,
-                value2: parseFloat(utils.formatUnits(histItem.variableBorrowRate, 27)) * 100,
+                utilizationChart.push({
+                    xaxis: date,
+                    value: histItem.utilizationRate * 100,
+                });
             });
-
-            utilizationChart.push({
-                xaxis: date,
-                value: histItem.utilizationRate * 100,
-            });
-        });
         supplyBorrowRateChart.reverse();
         utilizationChart.reverse();
 
@@ -131,11 +130,8 @@ export const getSubgraphAllMarketsData = async (): Promise<IMarketsAsset[]> => {
                     ),
                 ),
                 rating: '-',
-                strategies: false, //TODO
                 canBeCollateral: reserve.usageAsCollateralEnabled,
                 canBeBorrowed: reserve.borrowingEnabled,
-                currentPrice: BigNumber.from('0'), // TODO
-                supplyCap: BigNumber.from('0'), // TODO
                 liquidationThreshold: reserve.assetData.liquidationThreshold,
             });
         });
@@ -153,7 +149,7 @@ export function useSubgraphMarketsData(
         underlyingAsset = convertSymbolToAddress(_underlyingAsset || '', NETWORK).toLowerCase();
     }
     const queryMarketsChart = useQuery({
-        queryKey: [`subgraph-markets-chart-${_trancheId}-${underlyingAsset}`], // TODO: fix this to make the id and asset filters instead of a part of the key
+        queryKey: [`markets-chart`, Number(_trancheId), _underlyingAsset],
         queryFn: () => getSubgraphMarketsChart(_trancheId, underlyingAsset),
     });
 
@@ -164,7 +160,7 @@ export function useSubgraphMarketsData(
 
 export function useSubgraphAllMarketsData(): ISubgraphAllMarketsData {
     const queryAllMarketsData = useQuery({
-        queryKey: [`subgraph-all-markets-data`],
+        queryKey: [`all-markets-data`],
         queryFn: () => getSubgraphAllMarketsData(),
     });
 

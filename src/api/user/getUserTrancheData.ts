@@ -18,8 +18,9 @@ import { BigNumber, ethers } from 'ethers';
 
 export async function _getUserTrancheData(
     userAddress: string,
-    trancheId: number,
+    _trancheId: number | string,
 ): Promise<IUserTrancheData> {
+    const trancheId = String(_trancheId);
     if (!userAddress || !trancheId) {
         return {
             totalCollateralETH: BigNumber.from('0'),
@@ -35,7 +36,7 @@ export async function _getUserTrancheData(
     }
 
     const userTrancheData: UserTrancheData = await getUserTrancheData({
-        tranche: String(trancheId),
+        tranche: trancheId,
         user: userAddress,
         network: SDK_PARAMS.network,
         test: SDK_PARAMS.test,
@@ -43,7 +44,7 @@ export async function _getUserTrancheData(
     });
 
     const returnObj = {
-        trancheId,
+        trancheId: Number(trancheId),
         totalCollateralETH: userTrancheData.totalCollateralETH,
         totalDebtETH: userTrancheData.totalDebtETH,
         currentLiquidationThreshold: userTrancheData.currentLiquidationThreshold,
@@ -84,10 +85,13 @@ export async function _getUserTrancheData(
     return returnObj;
 }
 
-export function useUserTrancheData(userAddress: any, trancheId: number): IUserTrancheDataProps {
+export function useUserTrancheData(
+    userAddress: any,
+    trancheId: number | string,
+): IUserTrancheDataProps {
     const queryUserTrancheData = useQuery({
         queryKey: ['user-tranche', Number(trancheId)],
-        queryFn: () => _getUserTrancheData(userAddress, trancheId), // TODO: make sure this wants a number and not a string
+        queryFn: () => _getUserTrancheData(userAddress, trancheId),
         refetchOnMount: true,
     });
 

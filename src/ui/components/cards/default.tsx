@@ -11,6 +11,7 @@ type ICardProps = {
     title?: string;
     titleClass?: string;
     header?: React.ReactNode;
+    loadingHeight?: string;
 };
 
 export const Card = ({
@@ -23,6 +24,7 @@ export const Card = ({
     title,
     titleClass,
     header,
+    loadingHeight,
 }: ICardProps) => (
     <div
         className={`dark:bg-brand-black dark:text-neutral-300 dark:shadow-xl
@@ -34,6 +36,6 @@ export const Card = ({
     >
         {header && header}
         {title && <h3 className={titleClass ? titleClass : 'text-2xl'}>{title}</h3>}
-        {loading ? <SpinnerLoader /> : <>{children}</>}
+        {loading ? <SpinnerLoader height={loadingHeight} /> : <>{children}</>}
     </div>
 );

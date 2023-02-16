@@ -12,6 +12,7 @@ import {
     MAX_UINT_AMOUNT,
     IAvailableCoins,
 } from '../../utils';
+import { ILineChartDataPointProps } from '../../ui/components';
 
 export const processTrancheData = async (
     data: any,
@@ -19,7 +20,7 @@ export const processTrancheData = async (
 ): Promise<IGraphTrancheDataProps> => {
     const assets = data.reserves;
     const prices = await getAllAssetPrices();
-    const finalObj = assets.reduce(
+    const assetsData = assets.reduce(
         (obj: any, item: any) =>
             Object.assign(obj, {
                 [item.assetData.underlyingAssetName]: {
@@ -110,9 +111,18 @@ export const processTrancheData = async (
         return weightedAverageofArr(supplyApys, liquidities);
     };
 
+    const uniqueBorrowers = new Set<string>();
+    const uniqueLenders = new Set<string>();
+
+    data.depositHistory.forEach((el: any) => {
+        uniqueLenders.add(el.user.id);
+    });
+    data.borrowHistory.forEach((el: any) => {
+        uniqueBorrowers.add(el.user.id);
+    });
+
     const returnObj = {
-        assetsData: finalObj,
-        utilityRate: '0',
+        assetsData,
         assets: assets.map((el: any) => el.assetData.underlyingAssetName as IAvailableCoins),
         id: trancheId ? trancheId : data.id,
         name: data.name,
@@ -135,7 +145,10 @@ export const processTrancheData = async (
         blacklistedUsers: data.blacklistedUsers.map((obj: any) => {
             return obj.id;
         }),
-        isPaused: false, //TODO
+        isPaused: false, // TODO
+        treasury: data.treasury,
+        uniqueBorrowers: uniqueBorrowers.size,
+        uniqueLenders: uniqueLenders.size,
     };
     return returnObj;
 };
@@ -152,6 +165,7 @@ export const getSubgraphTrancheData = async (
                 tranche(id: $trancheId) {
                     name
                     isUsingWhitelist
+                    treasury
                     trancheAdmin {
                         id
                     }
@@ -188,6 +202,16 @@ export const getSubgraphTrancheData = async (
                         isFrozen
                         # yieldStrategy
                     }
+                    depositHistory {
+                        user {
+                            id
+                        }
+                    }
+                    borrowHistory {
+                        user {
+                            id
+                        }
+                    }
                 }
             }
         `,
@@ -198,10 +222,95 @@ export const getSubgraphTrancheData = async (
     else return processTrancheData(data.tranche, trancheId);
 };
 
+export const getSubgraphTrancheChart = async (
+    _trancheId: number,
+): Promise<ILineChartDataPointProps[] | any> => {
+    if (!_trancheId) return {};
+
+    const trancheId = String(_trancheId);
+    const { data, error } = await apolloClient.query({
+        query: gql`
+            query QueryTrancheChart($trancheId: String!) {
+                tranche(id: $trancheId) {
+                    borrowHistory(orderBy: timestamp, orderDirection: asc) {
+                        timestamp
+                        amount
+                        reserve {
+                            assetData {
+                                underlyingAssetName
+                            }
+                            decimals
+                        }
+                    }
+                    depositHistory(orderBy: timestamp, orderDirection: asc) {
+                        timestamp
+                        amount
+                        reserve {
+                            assetData {
+                                underlyingAssetName
+                            }
+                            decimals
+                        }
+                    }
+                }
+            }
+        `,
+        variables: { trancheId },
+    });
+
+    if (error) return [];
+    else {
+        let graphData: ILineChartDataPointProps[] = [];
+        const prices = await getAllAssetPrices();
+        data.tranche.depositHistory.map((el: any) => {
+            const asset = el.reserve.assetData.underlyingAssetName;
+
+            const assetUSDPrice = (prices as any)[asset].usdPrice;
+            const usdAmount = nativeAmountToUSD(el.amount, el.reserve.decimals, assetUSDPrice);
+            const date = new Date(el.timestamp * 1000).toLocaleString();
+
+            const found = graphData.find((element) => element.xaxis === date);
+            if (found) {
+                found.value = found.value + usdAmount;
+            } else {
+                graphData.push({ value: usdAmount, xaxis: date });
+            }
+        });
+
+        data.tranche.borrowHistory.map((el: any) => {
+            const asset = el.reserve.assetData.underlyingAssetName;
+            const assetUSDPrice = (prices as any)[asset].usdPrice;
+            const usdAmount = nativeAmountToUSD(el.amount, el.reserve.decimals, assetUSDPrice);
+            const date = new Date(el.timestamp * 1000).toLocaleString();
+
+            const found = graphData.find((element) => element.xaxis === date);
+            if (found) {
+                found.value = found.value + usdAmount;
+            } else {
+                graphData.push({ value: usdAmount, xaxis: date });
+            }
+        });
+
+        // Loop through and add previous day TVL to current day TVL
+        graphData.forEach(function (plot, index) {
+            if (index > 0) {
+                plot.value = plot.value + graphData[index - 1].value;
+            }
+        });
+        return graphData.sort((a, b) => new Date(a.xaxis).valueOf() - new Date(b.xaxis).valueOf());
+    }
+};
+
 export function useSubgraphTrancheData(trancheId: number): ISubgraphTrancheData {
     const queryTrancheData = useQuery({
         queryKey: ['tranche-data', Number(trancheId)],
         queryFn: () => getSubgraphTrancheData(trancheId),
+        enabled: !!trancheId,
+    });
+
+    const queryTrancheChart = useQuery({
+        queryKey: ['tranche-chart', Number(trancheId)],
+        queryFn: () => getSubgraphTrancheChart(trancheId),
         enabled: !!trancheId,
     });
 
@@ -215,5 +324,6 @@ export function useSubgraphTrancheData(trancheId: number): ISubgraphTrancheData 
     return {
         queryTrancheData,
         findAssetInMarketsData,
+        queryTrancheChart,
     };
 }
