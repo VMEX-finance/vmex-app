@@ -23,8 +23,8 @@ const Overview: React.FC = () => {
                 tvl={queryProtocolData.data?.tvl}
                 tvlChart={queryProtocolTVLChart}
                 reserve={queryProtocolData.data?.reserve}
-                lenders={queryProtocolData.data?.uniqueLenders.length}
-                borrowers={queryProtocolData.data?.uniqueBorrowers.length}
+                lenders={queryProtocolData.data?.uniqueLenders}
+                borrowers={queryProtocolData.data?.uniqueBorrowers}
                 markets={queryProtocolData.data?.markets}
                 totalBorrowed={queryProtocolData.data?.totalBorrowed}
                 totalSupplied={queryProtocolData.data?.totalSupplied}

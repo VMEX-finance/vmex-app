@@ -16,10 +16,11 @@ import { useSubgraphUserData, IGraphAssetData, useSubgraphTrancheData } from '..
 import { useModal, useWindowSize } from '../hooks';
 import { TrancheStatsCard } from '../ui/features';
 import { CreateTrancheAssetsTable } from '../ui/tables';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { configureExistingTranche, SetAddress } from '@vmexfinance/sdk';
-import { NETWORK, AVAILABLE_ASSETS, SDK_PARAMS, checkProfanity } from '../utils';
+import { NETWORK, AVAILABLE_ASSETS, SDK_PARAMS, checkProfanity, nativeAmountToUSD } from '../utils';
 import useAnalyticsEventTracker from '../utils/google-analytics';
+import { AssetBalance } from '@app/api/types';
 
 const MyTranches: React.FC = () => {
     const gaEventTracker = useAnalyticsEventTracker('My Tranches');
@@ -35,6 +36,29 @@ const MyTranches: React.FC = () => {
             : {},
     );
     const { queryTrancheData } = useSubgraphTrancheData(selectedTranche?.id as any);
+
+    function getTopItems(metric: string, n: number) {
+        if (!selectedTranche.assetsData) return [];
+
+        let top: AssetBalance[] = [];
+        Object.keys(selectedTranche.assetsData || {}).map((asset) => {
+            const assetData = (selectedTranche.assetsData as any)[asset];
+            top.push({
+                asset: asset,
+                amount: nativeAmountToUSD(
+                    ethers.utils.parseUnits(assetData[metric], assetData.decimals),
+                    assetData.decimals,
+                    assetData.priceUSD,
+                ).toString(),
+            });
+        });
+
+        top.sort((a, b) => {
+            return Number(b.amount) - Number(a.amount);
+        });
+
+        return top.slice(0, n);
+    }
 
     function getFrozenTokens() {
         return selectedTranche.assets
@@ -286,12 +310,12 @@ const MyTranches: React.FC = () => {
                                             ? selectedTranche.assets.length.toString()
                                             : '0'
                                     }
-                                    lenders={queryTrancheData.data?.uniqueLenders?.length || 0}
-                                    borrowers={queryTrancheData.data?.uniqueBorrowers?.length || 0}
+                                    lenders={selectedTranche.uniqueLenders}
+                                    borrowers={selectedTranche.uniqueBorrowers}
                                     totalSupplied={selectedTranche.totalSupplied}
                                     totalBorrowed={selectedTranche.totalBorrowed}
-                                    topBorrowedAssets={[]} //TODO
-                                    topSuppliedAssets={[]} //TODO
+                                    topBorrowedAssets={getTopItems('totalBorrowed', 3)}
+                                    topSuppliedAssets={getTopItems('totalSupplied', 3)}
                                     // tvlChart={queryProtocolTVLChart} //TODO
                                     isLoading={queryTrancheAdminData.isLoading}
                                 />
