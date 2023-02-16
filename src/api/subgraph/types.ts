@@ -75,6 +75,10 @@ export type IGraphTrancheDataProps = {
     whitelistedUsers?: string[];
     blacklistedUsers?: string[];
     isPaused?: boolean;
+    treasury?: string;
+    uniqueLenders?: number;
+    uniqueBorrowers?: number;
+    tvlChart?: ILineChartDataPointProps[];
 };
 
 export type IGraphProtocolDataProps =
@@ -83,8 +87,8 @@ export type IGraphProtocolDataProps =
           reserve: string;
           totalSupplied: string;
           totalBorrowed: string;
-          uniqueLenders: string[];
-          uniqueBorrowers: string[];
+          uniqueLenders: number;
+          uniqueBorrowers: number;
           markets: number;
           topBorrowedAssets: AssetBalance[];
           topSuppliedAssets: AssetBalance[];
@@ -96,6 +100,7 @@ export type IGraphUserDataProps = {} | Record<any, any>;
 
 export type ISubgraphTrancheData = {
     queryTrancheData: UseQueryResult<IGraphTrancheDataProps, unknown>;
+    queryTrancheChart: UseQueryResult<ILineChartDataPointProps[], unknown>;
     findAssetInMarketsData: (asset: string) => IGraphAssetData;
 };
 

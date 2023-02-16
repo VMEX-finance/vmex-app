@@ -7,18 +7,20 @@ import {
     DefaultInput,
     ListInput,
     MessageStatus,
+    SkeletonLoader,
     TransactionStatus,
     WalletButton,
 } from '../ui/components';
 import { useAccount, useSigner } from 'wagmi';
-import { useSubgraphUserData, IGraphAssetData } from '../api/subgraph';
+import { useSubgraphUserData, IGraphAssetData, useSubgraphTrancheData } from '../api/subgraph';
 import { useModal, useWindowSize } from '../hooks';
 import { TrancheStatsCard } from '../ui/features';
 import { CreateTrancheAssetsTable } from '../ui/tables';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { configureExistingTranche, SetAddress } from '@vmexfinance/sdk';
-import { NETWORK, AVAILABLE_ASSETS, SDK_PARAMS, checkProfanity } from '../utils';
+import { NETWORK, AVAILABLE_ASSETS, SDK_PARAMS, checkProfanity, nativeAmountToUSD } from '../utils';
 import useAnalyticsEventTracker from '../utils/google-analytics';
+import { AssetBalance } from '@app/api/types';
 
 const MyTranches: React.FC = () => {
     const gaEventTracker = useAnalyticsEventTracker('My Tranches');
@@ -27,15 +29,36 @@ const MyTranches: React.FC = () => {
     const { address } = useAccount();
     const { data: signer } = useSigner();
     const { isSuccess, error, submitTx, setError, isLoading } = useModal('my-tranches-dialog');
-    // const { updateTranche, myTranches, deleteTranche, pauseTranche } = useMyTranchesContext();
-
     const { queryTrancheAdminData } = useSubgraphUserData(address || '');
-
     const [selectedTranche, setSelectedTranche] = React.useState(
         queryTrancheAdminData.data && queryTrancheAdminData.data.length > 0
             ? queryTrancheAdminData.data[0]
             : {},
     );
+    const { queryTrancheChart } = useSubgraphTrancheData(selectedTranche?.id as any);
+
+    function getTopItems(metric: string, n: number) {
+        if (!selectedTranche.assetsData) return [];
+
+        let top: AssetBalance[] = [];
+        Object.keys(selectedTranche.assetsData || {}).map((asset) => {
+            const assetData = (selectedTranche.assetsData as any)[asset];
+            top.push({
+                asset: asset,
+                amount: nativeAmountToUSD(
+                    ethers.utils.parseUnits(assetData[metric], assetData.decimals),
+                    assetData.decimals,
+                    assetData.priceUSD,
+                ).toString(),
+            });
+        });
+
+        top.sort((a, b) => {
+            return Number(b.amount) - Number(a.amount);
+        });
+
+        return top.slice(0, n);
+    }
 
     function getFrozenTokens() {
         return selectedTranche.assets
@@ -83,7 +106,7 @@ const MyTranches: React.FC = () => {
     }
 
     const [_name, setName] = React.useState(selectedTranche.name);
-    // const [treasuryAddress, setTreasuryAddress] = React.useState(selectedTranche.);
+    const [treasuryAddress, setTreasuryAddress] = React.useState(selectedTranche.treasury);
     const [_isUsingWhitelist, setIsUsingWhitelist] = React.useState(selectedTranche.whitelist);
     const [_whitelisted, setWhitelisted] = React.useState(selectedTranche.whitelistedUsers);
     const [_blackListed, setBlackListed] = React.useState(selectedTranche.blacklistedUsers);
@@ -95,13 +118,7 @@ const MyTranches: React.FC = () => {
 
     const findSelectedTranche = (id: string | number | undefined) => {
         const found = queryTrancheAdminData.data?.find((el) => el.id === id);
-        setSelectedTranche(found || {});
-    };
-
-    //note: ideally, don't use this cause multiple tranches can have the same name
-    const findSelectedTrancheByName = (name: string) => {
-        const found = queryTrancheAdminData.data?.find((el) => el.name === name);
-        setSelectedTranche(found || {});
+        if (found) setSelectedTranche(found);
     };
 
     function findChanges(newProp: any, originalProp: any): SetAddress[] {
@@ -152,6 +169,8 @@ const MyTranches: React.FC = () => {
                 const res = await configureExistingTranche({
                     trancheId: selectedTranche.id as any,
                     newName: _name === selectedTranche.name ? undefined : _name,
+                    newTreasuryAddress:
+                        treasuryAddress === selectedTranche.treasury ? undefined : treasuryAddress,
                     isTrancheWhitelisted:
                         _isUsingWhitelist === selectedTranche.whitelist
                             ? undefined
@@ -214,92 +233,125 @@ const MyTranches: React.FC = () => {
         setFrozenTokens(getFrozenTokens());
         setCollateralTokens(getCollateralTokens());
         setBorrowableTokens(getBorrowableTokens());
+        setTreasuryAddress(selectedTranche.treasury);
         setIsUsingWhitelist(selectedTranche.whitelist);
     }, [selectedTranche, selectedTranche.assets, selectedTranche.assetsData]);
+
+    useEffect(() => {
+        if (queryTrancheAdminData?.data && queryTrancheAdminData.data.length > 0)
+            setSelectedTranche(queryTrancheAdminData.data[0]);
+    }, [queryTrancheAdminData.isLoading]);
 
     return (
         <AppTemplate
             title="My Tranches"
             description={selectedTranche.name && `${selectedTranche.name}`}
+            descriptionLoading={queryTrancheAdminData.isLoading}
         >
             {address ? (
                 <>
-                    {' '}
                     {width < breakpoint && (
-                        <div className="w-full">
-                            <DefaultDropdown
-                                items={
-                                    queryTrancheAdminData.data?.map((obj) => ({
-                                        ...obj,
-                                        text: obj.name,
-                                    })) || []
-                                }
-                                selected={selectedTranche.name}
-                                setSelected={(e: string) => findSelectedTrancheByName(e)}
-                                direction="right"
-                                size="lg"
-                                primary
-                                full
-                                title="Select a tranche"
-                            />
-                        </div>
+                        <DefaultDropdown
+                            items={
+                                queryTrancheAdminData.data?.map((obj) => ({
+                                    ...obj,
+                                    text: obj.name,
+                                    onClick: () => findSelectedTranche(obj.id),
+                                })) || []
+                            }
+                            selected={selectedTranche.name}
+                            direction="right"
+                            size="lg"
+                            primary
+                            full
+                            title="Select a tranche"
+                            wrapperClass="mt-0"
+                        />
                     )}
-                    <GridView>
+                    <div className="flex gap-4 lg:gap-8">
                         <>
                             {width >= breakpoint && (
                                 <Card
                                     title="Select a tranche"
-                                    className="flex flex-col min-w-[300px] overflow-y-auto"
+                                    className="flex flex-col min-w-[320px] w-[320px] max-w-[320px] overflow-y-auto"
                                 >
-                                    {queryTrancheAdminData.data?.map((obj, i) => (
-                                        <button
-                                            className={`
-                                                text-left py-2
+                                    <div className="flex justify-between border-b-2 border-neutral-300 dark:border-neutral-800 text-sm text-neutral-500 my-2">
+                                        <span>Name</span>
+                                        <span>ID</span>
+                                    </div>
+                                    {queryTrancheAdminData.data ? (
+                                        queryTrancheAdminData.data.map((obj, i) => (
+                                            <button
+                                                className={`
+                                                flex justify-between py-2 transition duration-150
                                                 ${
-                                                    selectedTranche.name === obj.name
+                                                    selectedTranche.id === obj.id
                                                         ? 'text-brand-purple'
-                                                        : ''
+                                                        : 'hover:text-neutral-700 dark:hover:text-neutral-400'
                                                 }
                                                 `}
-                                            onClick={(e: any) => findSelectedTranche(obj.id)}
-                                            key={`my-tranches-${i}`}
-                                        >
-                                            {obj.name}, id: {obj.id}
-                                        </button>
-                                    ))}
+                                                onClick={(e: any) => findSelectedTranche(obj.id)}
+                                                key={`my-tranches-${i}`}
+                                            >
+                                                <span>{obj.name}</span>
+                                                <span>{obj.id}</span>
+                                            </button>
+                                        ))
+                                    ) : (
+                                        <SkeletonLoader height="42px" />
+                                    )}
                                 </Card>
                             )}
-                            <div className="flex flex-col gap-4">
-                                <TrancheStatsCard tvl={selectedTranche.tvl} />
+                            <div className="flex flex-col gap-4 w-full">
+                                <TrancheStatsCard
+                                    tvl={selectedTranche.tvl}
+                                    reserve={
+                                        selectedTranche.assets
+                                            ? selectedTranche.assets.length.toString()
+                                            : '0'
+                                    }
+                                    lenders={selectedTranche.uniqueLenders}
+                                    borrowers={selectedTranche.uniqueBorrowers}
+                                    totalSupplied={selectedTranche.totalSupplied}
+                                    totalBorrowed={selectedTranche.totalBorrowed}
+                                    topBorrowedAssets={getTopItems('totalBorrowed', 3)}
+                                    topSuppliedAssets={getTopItems('totalSupplied', 3)}
+                                    tvlChart={queryTrancheChart}
+                                    isLoading={queryTrancheAdminData.isLoading}
+                                />
                                 {selectedTranche.name && (
                                     <Card>
                                         {!isSuccess && !error ? (
                                             // Default State
                                             <>
-                                                <div className="flex flex-col md:grid md:grid-cols-[2fr_1fr] lg:grid-cols-[3fr_1fr] md:gap-3">
-                                                    <DefaultInput
-                                                        value={_name || ''}
-                                                        onType={setName}
-                                                        size="2xl"
-                                                        placeholder="VMEX High Quality..."
-                                                        title="Name"
-                                                        className="flex w-full flex-col mt-6 !mt-0"
-                                                    />
+                                                <div className="grid grid-cols-1 gap-6 2xl:grid-cols-2 2xl:items-start">
+                                                    <div>
+                                                        <DefaultInput
+                                                            value={_name || ''}
+                                                            onType={setName}
+                                                            size="2xl"
+                                                            placeholder="VMEX High Quality..."
+                                                            title="Name"
+                                                            className="flex w-full flex-col"
+                                                        />
+                                                        <MessageStatus
+                                                            type="error"
+                                                            show={checkProfanity(_name || '')}
+                                                            message="Please keep your degen to a minimum"
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <DefaultInput
+                                                            value={treasuryAddress || ''}
+                                                            onType={setTreasuryAddress}
+                                                            size="2xl"
+                                                            placeholder=""
+                                                            title="Treasury Address"
+                                                            required
+                                                            className="flex w-full flex-col"
+                                                        />
+                                                    </div>
                                                 </div>
-                                                <MessageStatus
-                                                    type="error"
-                                                    show={checkProfanity(_name || '')}
-                                                    message="Please keep your degen to a minimum"
-                                                />
-                                                {/* <DefaultInput
-                                                    value={treasuryAddress}
-                                                    onType={setTreasuryAddress}
-                                                    size="2xl"
-                                                    placeholder=""
-                                                    title="Treasury Address"
-                                                    required
-                                                    className="flex w-full flex-col mt-6"
-                                                /> */}
                                                 <ListInput
                                                     title="Whitelisted"
                                                     list={_whitelisted}
@@ -387,7 +439,7 @@ const MyTranches: React.FC = () => {
                                 )}
                             </div>
                         </>
-                    </GridView>
+                    </div>
                 </>
             ) : (
                 <div className="pt-10 lg:pt-20 text-center flex-col">

@@ -29,6 +29,7 @@ export interface IDropdownProps {
     uppercase?: boolean;
     className?: string;
     truncate?: boolean;
+    wrapperClass?: string;
 }
 
 export const DefaultDropdown = ({
@@ -48,6 +49,7 @@ export const DefaultDropdown = ({
     uppercase,
     className,
     truncate,
+    wrapperClass,
 }: IDropdownProps) => {
     const [list, setList] = useState([]);
 
@@ -116,10 +118,10 @@ export const DefaultDropdown = ({
     }, [items, reverse, list]);
 
     return (
-        <>
+        <div className={`${wrapperClass ? wrapperClass : ''}`}>
             {title && (
                 <div className="flex items-baseline justify-between">
-                    <h3 className="mt-6 mb-2 text-neutral400">{title}</h3>
+                    <h3 className="mb-2">{title}</h3>
                     {multiselect && (
                         <span className="text-sm">
                             {selected?.length > 0 ? selected.length : 0} Selected
@@ -241,6 +243,6 @@ export const DefaultDropdown = ({
                     </Transition>
                 )}
             </Menu>
-        </>
+        </div>
     );
 };

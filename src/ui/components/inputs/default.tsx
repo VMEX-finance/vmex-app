@@ -12,6 +12,7 @@ type IInputProps = {
     tooltip?: string;
     required?: boolean;
     className?: string;
+    inputClass?: string;
 };
 
 export const DefaultInput = ({
@@ -25,6 +26,7 @@ export const DefaultInput = ({
     tooltip,
     required,
     className,
+    inputClass,
 }: IInputProps) => {
     const saveTyping = (e: any): void => {
         e.preventDefault();
@@ -78,7 +80,9 @@ export const DefaultInput = ({
                     type={type !== 'string' ? 'number' : 'text'}
                     step={type === 'percent' ? '0.1' : '1'}
                     onKeyDown={entering}
-                    className={`w-full ${textSize()} outline-none border-b-[3px] focus:border-brand-black dark:focus:border-white border-neutral-600 dark:bg-brand-black`}
+                    className={`w-full ${textSize()} outline-none border-b-[3px] focus:border-brand-black dark:focus:border-white border-neutral-600 dark:bg-brand-black ${
+                        inputClass ? inputClass : 'bg-transparent'
+                    }`}
                 />
                 {onEnter && <button onClick={onEnter}>Save</button>}
             </div>
