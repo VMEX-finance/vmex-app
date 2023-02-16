@@ -35,7 +35,7 @@ const MyTranches: React.FC = () => {
             ? queryTrancheAdminData.data[0]
             : {},
     );
-    const { queryTrancheData } = useSubgraphTrancheData(selectedTranche?.id as any);
+    const { queryTrancheChart } = useSubgraphTrancheData(selectedTranche?.id as any);
 
     function getTopItems(metric: string, n: number) {
         if (!selectedTranche.assetsData) return [];
@@ -316,7 +316,7 @@ const MyTranches: React.FC = () => {
                                     totalBorrowed={selectedTranche.totalBorrowed}
                                     topBorrowedAssets={getTopItems('totalBorrowed', 3)}
                                     topSuppliedAssets={getTopItems('totalSupplied', 3)}
-                                    // tvlChart={queryProtocolTVLChart} //TODO
+                                    tvlChart={queryTrancheChart}
                                     isLoading={queryTrancheAdminData.isLoading}
                                 />
                                 {selectedTranche.name && (
