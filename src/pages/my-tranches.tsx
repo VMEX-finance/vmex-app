@@ -273,7 +273,7 @@ const MyTranches: React.FC = () => {
                             {width >= breakpoint && (
                                 <Card
                                     title="Select a tranche"
-                                    className="flex flex-col min-w-[320px] w-[320px] overflow-y-auto"
+                                    className="flex flex-col min-w-[320px] w-[320px] max-w-[320px] overflow-y-auto"
                                 >
                                     <div className="flex justify-between border-b-2 border-neutral-300 dark:border-neutral-800 text-sm text-neutral-500 my-2">
                                         <span>Name</span>

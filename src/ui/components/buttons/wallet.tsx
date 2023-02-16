@@ -80,7 +80,6 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
                 selected={width > 1400 ? truncateAddress(address) : truncate(address, 3)}
                 items={renderDropdownItems()}
                 size="lg"
-                wrapperClass="mt-0"
             />
         );
     } else {
