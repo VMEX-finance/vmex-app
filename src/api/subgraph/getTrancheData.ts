@@ -19,7 +19,7 @@ export const processTrancheData = async (
 ): Promise<IGraphTrancheDataProps> => {
     const assets = data.reserves;
     const prices = await getAllAssetPrices();
-    const finalObj = assets.reduce(
+    const assetsData = assets.reduce(
         (obj: any, item: any) =>
             Object.assign(obj, {
                 [item.assetData.underlyingAssetName]: {
@@ -110,9 +110,23 @@ export const processTrancheData = async (
         return weightedAverageofArr(supplyApys, liquidities);
     };
 
+    const uniqueBorrowers: string[] = [];
+    const uniqueLenders: string[] = [];
+    // History of all users that have borrowed or deposited - NOT JUST CURRENT
+    data.borrowHistory?.length > 0 &&
+        data.borrowHistory.map(({ user }: any) => {
+            if (uniqueBorrowers.includes(user.id) === false) uniqueBorrowers.push(user.id);
+        });
+    data.depositHistory?.length > 0 &&
+        data.depositHistory.map(({ user }: any) => {
+            if (uniqueLenders.includes(user.id) === false) uniqueLenders.push(user.id);
+        });
+
     const returnObj = {
-        assetsData: finalObj,
-        utilityRate: '0',
+        uniqueBorrowers,
+        uniqueLenders,
+        assetsData,
+        utilityRate: '0', // TODO
         assets: assets.map((el: any) => el.assetData.underlyingAssetName as IAvailableCoins),
         id: trancheId ? trancheId : data.id,
         name: data.name,
@@ -189,6 +203,16 @@ export const getSubgraphTrancheData = async (
                         }
                         isFrozen
                         # yieldStrategy
+                    }
+                    depositHistory {
+                        user {
+                            id
+                        }
+                    }
+                    borrowHistory {
+                        user {
+                            id
+                        }
                     }
                 }
             }

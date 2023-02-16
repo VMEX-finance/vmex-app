@@ -149,9 +149,7 @@ const MobileDropdownMenu = ({
                 <div className="p-2">
                     {navItems.map((item: string, i: number) => (
                         <Menu.Item key={`${item}-${i}`}>
-                            {({ active }) => (
-                                <MenuItemButton key={item} label={item} onClick={navigate} mobile />
-                            )}
+                            <MenuItemButton key={item} label={item} onClick={navigate} mobile />
                         </Menu.Item>
                     ))}
                     <div className="flex flex-col justify-center gap-1 border-2 border-neutral-800 rounded-xl mt-1">
