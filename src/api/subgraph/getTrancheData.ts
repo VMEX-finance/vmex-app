@@ -123,7 +123,6 @@ export const processTrancheData = async (
 
     const returnObj = {
         assetsData,
-        utilityRate: '0', // TODO
         assets: assets.map((el: any) => el.assetData.underlyingAssetName as IAvailableCoins),
         id: trancheId ? trancheId : data.id,
         name: data.name,
@@ -146,7 +145,7 @@ export const processTrancheData = async (
         blacklistedUsers: data.blacklistedUsers.map((obj: any) => {
             return obj.id;
         }),
-        isPaused: false, //TODO
+        isPaused: false, // TODO
         treasury: data.treasury,
         uniqueBorrowers: uniqueBorrowers.size,
         uniqueLenders: uniqueLenders.size,
