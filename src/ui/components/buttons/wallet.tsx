@@ -2,12 +2,13 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import React, { useContext, useEffect } from 'react';
 import { IButtonProps } from './default';
 import { useAccount, useDisconnect, useNetwork, useSwitchNetwork } from 'wagmi';
-import { ThemeContext, useMyTranchesContext } from '../../../store';
+import { ThemeContext } from '../../../store';
 import { useWindowSize, useDialogController } from '../../../hooks';
 import { DefaultDropdown, IDropdownItemProps } from '../dropdowns';
 import { truncateAddress, truncate } from '../../../utils/helpers';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
+import { useSubgraphUserData } from '../../../api';
 
 export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: IButtonProps) => {
     const { chain } = useNetwork();
@@ -17,13 +18,13 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
     const { theme, setTheme } = useContext(ThemeContext);
     const { openDialog } = useDialogController();
     const { width } = useWindowSize();
-    const { myTranches } = useMyTranchesContext();
     const { address } = useAccount();
     const title = address ? truncateAddress(address) : label;
     const mode = `transition duration-150 ${
         primary && !address ? '' : 'bg-white text-brand-black hover:bg-neutral-100'
     }`;
     const queryClient = useQueryClient();
+    const { queryTrancheAdminData } = useSubgraphUserData(address || '');
 
     const renderDropdownItems = () => {
         let final: IDropdownItemProps[] = [
@@ -41,7 +42,7 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
             },
         ];
 
-        if (myTranches.length !== 0) {
+        if (queryTrancheAdminData?.data?.length !== 0) {
             final.push({
                 text: 'My Tranches',
                 onClick: () => navigate('/my-tranches'),

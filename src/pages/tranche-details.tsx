@@ -42,7 +42,7 @@ const TrancheDetails: React.FC = () => {
 
     useEffect(() => {
         if (!tranche?.id && !location.state?.trancheId) {
-            console.log('Not set tranche and location');
+            console.warn('Not set tranche and location');
             navigate('/tranches');
         }
     }, [navigate, tranche, location]);

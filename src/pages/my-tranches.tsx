@@ -28,8 +28,6 @@ const MyTranches: React.FC = () => {
     const { address } = useAccount();
     const { data: signer } = useSigner();
     const { isSuccess, error, submitTx, setError, isLoading } = useModal('my-tranches-dialog');
-    // const { updateTranche, myTranches, deleteTranche, pauseTranche } = useMyTranchesContext();
-
     const { queryTrancheAdminData } = useSubgraphUserData(address || '');
 
     const [selectedTranche, setSelectedTranche] = React.useState(
@@ -96,14 +94,6 @@ const MyTranches: React.FC = () => {
 
     const findSelectedTranche = (id: string | number | undefined) => {
         const found = queryTrancheAdminData.data?.find((el) => el.id === id);
-        setSelectedTranche(found || {});
-    };
-
-    //note: ideally, don't use this cause multiple tranches can have the same name
-    const findSelectedTrancheByName = (id: string) => {
-        console.log(id);
-        const found = queryTrancheAdminData.data?.find((el) => el.id === id);
-        console.log(found);
         if (found) setSelectedTranche(found);
     };
 
