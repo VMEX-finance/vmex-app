@@ -193,12 +193,14 @@ export async function getSubgraphProtocolData(): Promise<IGraphProtocolDataProps
     const uniqueBorrowers: string[] = [];
     const uniqueLenders: string[] = [];
     // History of all users that have borrowed or deposited - NOT JUST CURRENT
-    data.borrows.map(({ user }: any) => {
-        if (uniqueBorrowers.includes(user.id) === false) uniqueBorrowers.push(user.id);
-    });
-    data.deposits.map(({ user }: any) => {
-        if (uniqueLenders.includes(user.id) === false) uniqueLenders.push(user.id);
-    });
+    data.borrows?.length > 0 &&
+        data.borrows.map(({ user }: any) => {
+            if (uniqueBorrowers.includes(user.id) === false) uniqueBorrowers.push(user.id);
+        });
+    data.deposits?.length > 0 &&
+        data.deposits.map(({ user }: any) => {
+            if (uniqueLenders.includes(user.id) === false) uniqueLenders.push(user.id);
+        });
 
     const allTrancheData = await getSubgraphTranchesOverviewData();
     const topTranches: TrancheData[] = [];
@@ -228,8 +230,8 @@ export async function getSubgraphProtocolData(): Promise<IGraphProtocolDataProps
     const prices = await getAllAssetPrices();
 
     const returnObj = {
-        uniqueBorrowers: uniqueBorrowers,
-        uniqueLenders: uniqueLenders,
+        uniqueBorrowers,
+        uniqueLenders,
         markets: data.reserves.length,
         topSuppliedAssets: await getTopSuppliedAssets(prices),
         topBorrowedAssets: await getTopBorrowedAssets(prices),

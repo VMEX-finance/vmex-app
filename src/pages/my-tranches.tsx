@@ -12,7 +12,7 @@ import {
     WalletButton,
 } from '../ui/components';
 import { useAccount, useSigner } from 'wagmi';
-import { useSubgraphUserData, IGraphAssetData } from '../api/subgraph';
+import { useSubgraphUserData, IGraphAssetData, useSubgraphTrancheData } from '../api/subgraph';
 import { useModal, useWindowSize } from '../hooks';
 import { TrancheStatsCard } from '../ui/features';
 import { CreateTrancheAssetsTable } from '../ui/tables';
@@ -29,12 +29,12 @@ const MyTranches: React.FC = () => {
     const { data: signer } = useSigner();
     const { isSuccess, error, submitTx, setError, isLoading } = useModal('my-tranches-dialog');
     const { queryTrancheAdminData } = useSubgraphUserData(address || '');
-
     const [selectedTranche, setSelectedTranche] = React.useState(
         queryTrancheAdminData.data && queryTrancheAdminData.data.length > 0
             ? queryTrancheAdminData.data[0]
             : {},
     );
+    const { queryTrancheData } = useSubgraphTrancheData(selectedTranche?.id as any);
 
     function getFrozenTokens() {
         return selectedTranche.assets
@@ -286,8 +286,8 @@ const MyTranches: React.FC = () => {
                                             ? selectedTranche.assets.length.toString()
                                             : '0'
                                     }
-                                    lenders={4} //TODO
-                                    borrowers={2} //TODO
+                                    lenders={queryTrancheData.data?.uniqueLenders?.length || 0}
+                                    borrowers={queryTrancheData.data?.uniqueBorrowers?.length || 0}
                                     totalSupplied={selectedTranche.totalSupplied}
                                     totalBorrowed={selectedTranche.totalBorrowed}
                                     topBorrowedAssets={[]} //TODO
