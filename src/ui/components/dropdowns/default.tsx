@@ -118,7 +118,7 @@ export const DefaultDropdown = ({
     }, [items, reverse, list]);
 
     return (
-        <div className={`${wrapperClass ? wrapperClass : 'mt-6'}`}>
+        <div className={`${wrapperClass ? wrapperClass : ''}`}>
             {title && (
                 <div className="flex items-baseline justify-between">
                     <h3 className="mb-2">{title}</h3>

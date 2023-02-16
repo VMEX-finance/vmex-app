@@ -100,6 +100,7 @@ export type IGraphUserDataProps = {} | Record<any, any>;
 
 export type ISubgraphTrancheData = {
     queryTrancheData: UseQueryResult<IGraphTrancheDataProps, unknown>;
+    queryTrancheChart: UseQueryResult<ILineChartDataPointProps[], unknown>;
     findAssetInMarketsData: (asset: string) => IGraphAssetData;
 };
 
