@@ -161,7 +161,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                           test: SDK_PARAMS.test,
                           providerRpc: SDK_PARAMS.providerRpc,
                       });
-                setEstimatedGasCost(bigNumberToUSD(res, 18));
+                setEstimatedGasCost(bigNumberToUSD(res, DECIMALS.get(data.asset) || 18));
             }
         };
         getter();
