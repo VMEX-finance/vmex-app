@@ -62,6 +62,16 @@ export const getUserAdminTrancheData = async (admin: string): Promise<IGraphTran
                             isFrozen
                             # yieldStrategy
                         }
+                        depositHistory(orderBy: timestamp, orderDirection: asc) {
+                            user {
+                                id
+                            }
+                        }
+                        borrowHistory(orderBy: timestamp, orderDirection: asc) {
+                            user {
+                                id
+                            }
+                        }
                     }
                 }
             }
@@ -74,8 +84,11 @@ export const getUserAdminTrancheData = async (admin: string): Promise<IGraphTran
         if (data.user) {
             const dat = data.user.myTranches;
 
-            const ret = dat.map((el: any) => processTrancheData(el));
-            return await Promise.all(ret);
+            const processedTrancheData = await Promise.all(
+                dat.map((el: any) => processTrancheData(el)),
+            );
+
+            return processedTrancheData;
         }
 
         return [];

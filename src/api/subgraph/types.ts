@@ -76,8 +76,9 @@ export type IGraphTrancheDataProps = {
     blacklistedUsers?: string[];
     isPaused?: boolean;
     treasury?: string;
-    uniqueBorrowers?: string[];
-    uniqueLenders?: string[];
+    uniqueLenders?: number;
+    uniqueBorrowers?: number;
+    tvlChart?: ILineChartDataPointProps[];
 };
 
 export type IGraphProtocolDataProps =
@@ -86,8 +87,8 @@ export type IGraphProtocolDataProps =
           reserve: string;
           totalSupplied: string;
           totalBorrowed: string;
-          uniqueLenders: string[];
-          uniqueBorrowers: string[];
+          uniqueLenders: number;
+          uniqueBorrowers: number;
           markets: number;
           topBorrowedAssets: AssetBalance[];
           topSuppliedAssets: AssetBalance[];

@@ -110,21 +110,17 @@ export const processTrancheData = async (
         return weightedAverageofArr(supplyApys, liquidities);
     };
 
-    const uniqueBorrowers: string[] = [];
-    const uniqueLenders: string[] = [];
-    // History of all users that have borrowed or deposited - NOT JUST CURRENT
-    data.borrowHistory?.length > 0 &&
-        data.borrowHistory.map(({ user }: any) => {
-            if (uniqueBorrowers.includes(user.id) === false) uniqueBorrowers.push(user.id);
-        });
-    data.depositHistory?.length > 0 &&
-        data.depositHistory.map(({ user }: any) => {
-            if (uniqueLenders.includes(user.id) === false) uniqueLenders.push(user.id);
-        });
+    const uniqueBorrowers = new Set<string>();
+    const uniqueLenders = new Set<string>();
+
+    data.depositHistory.forEach((el: any) => {
+        uniqueLenders.add(el.user.id);
+    });
+    data.borrowHistory.forEach((el: any) => {
+        uniqueBorrowers.add(el.user.id);
+    });
 
     const returnObj = {
-        uniqueBorrowers,
-        uniqueLenders,
         assetsData,
         utilityRate: '0', // TODO
         assets: assets.map((el: any) => el.assetData.underlyingAssetName as IAvailableCoins),
@@ -151,6 +147,8 @@ export const processTrancheData = async (
         }),
         isPaused: false, //TODO
         treasury: data.treasury,
+        uniqueBorrowers: uniqueBorrowers.size,
+        uniqueLenders: uniqueLenders.size,
     };
     return returnObj;
 };
