@@ -1,12 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { getAssetPrices } from '@vmexfinance/sdk';
 import {
-    DECIMALS,
     MAINNET_ASSET_MAPPINGS,
     REVERSE_MAINNET_ASSET_MAPPINGS,
     SDK_PARAMS,
 } from '../../utils/sdk-helpers';
-import { utils } from 'ethers';
 import { IAssetPricesProps, IPricesDataProps } from './types';
 import { IAvailableCoins } from '../../utils/helpers';
 
