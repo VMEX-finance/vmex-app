@@ -1,15 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import {
-    AssetDisplay,
-    BasicToggle,
-    NumberAndDollar,
-    HealthFactor,
-    DefaultAccordion,
-} from '../../components';
+import { AssetDisplay, BasicToggle, NumberAndDollar, HealthFactor } from '../../components';
 import { BigNumber } from 'ethers';
 import { useWindowSize, useDialogController } from '../../../hooks';
-import { bigNumberToNative, determineHealthColor } from '../../../utils';
-import { Accordion, AccordionDetails, AccordionSummary } from '@material-ui/core';
+import { bigNumberToNative } from '../../../utils';
 
 export type IYourSuppliesTableItemProps = {
     asset: string;
