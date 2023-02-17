@@ -13,6 +13,8 @@ type IInputProps = {
     required?: boolean;
     className?: string;
     inputClass?: string;
+    max?: number;
+    validate?: boolean;
 };
 
 export const DefaultInput = ({
@@ -27,10 +29,19 @@ export const DefaultInput = ({
     required,
     className,
     inputClass,
+    max,
+    validate,
 }: IInputProps) => {
     const saveTyping = (e: any): void => {
         e.preventDefault();
-        onType(e.target.value);
+        if (validate) {
+            const letterNumberSpace = /^[a-zA-Z0-9 ]*$/;
+            if (e.target.value.match(letterNumberSpace)) {
+                onType(e.target.value);
+            }
+        } else {
+            onType(e.target.value);
+        }
     };
 
     const textSize = () => {
@@ -72,19 +83,27 @@ export const DefaultInput = ({
                     )}
                 </>
             )}
-            <div className="w-full flex items-center gap-2">
-                <input
-                    placeholder={placeholder}
-                    value={value}
-                    onChange={saveTyping}
-                    type={type !== 'string' ? 'number' : 'text'}
-                    step={type === 'percent' ? '0.1' : '1'}
-                    onKeyDown={entering}
-                    className={`w-full ${textSize()} outline-none border-b-[3px] focus:border-brand-black dark:focus:border-white border-neutral-600 dark:bg-brand-black ${
-                        inputClass ? inputClass : 'bg-transparent'
-                    }`}
-                />
-                {onEnter && <button onClick={onEnter}>Save</button>}
+            <div className="flex flex-col">
+                <div className="w-full flex items-center gap-2">
+                    <input
+                        placeholder={placeholder}
+                        value={value}
+                        onChange={saveTyping}
+                        type={type !== 'string' ? 'number' : 'text'}
+                        step={type === 'percent' ? '0.1' : '1'}
+                        onKeyDown={entering}
+                        className={`w-full ${textSize()} outline-none border-b-[3px] focus:border-brand-black dark:focus:border-white border-neutral-600 dark:bg-brand-black ${
+                            inputClass ? inputClass : 'bg-transparent'
+                        }`}
+                        maxLength={max}
+                    />
+                    {onEnter && <button onClick={onEnter}>Save</button>}
+                </div>
+                {max && (
+                    <span className="self-end text-xs">
+                        {value.length}/{max}
+                    </span>
+                )}
             </div>
         </div>
     );
