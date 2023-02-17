@@ -118,6 +118,8 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
                                 title="Tranche Name"
                                 required
                                 className="flex w-full flex-col mt-6"
+                                max={30}
+                                validate
                             />
                         </div>
                         <MessageStatus
