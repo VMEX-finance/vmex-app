@@ -34,7 +34,7 @@ export const connectors = connectorsForWallets([
     {
         groupName: 'Popular',
         wallets: [
-            coinbaseWallet({ appName: 'zeroDAO App', chains }),
+            coinbaseWallet({ appName: 'VMEX Finance App', chains }),
             rainbowWallet({ chains }),
             trustWallet({ chains }),
             ledgerWallet({ chains }),
