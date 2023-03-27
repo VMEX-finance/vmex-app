@@ -9,14 +9,14 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { SelectedTrancheStore, TransactionsStore, ThemeProvider } from './store';
 import { WagmiConfig } from 'wagmi';
-import { chains, RainbowKitProvider, wagmiClient } from './utils';
+import { chains, RainbowKitProvider, wagmiClient, walletTheme } from './utils';
 
 const queryClient = new QueryClient();
 ReactGA.initialize('G-SHL33W6WWC');
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <React.StrictMode>
+    <>
         <ThemeProvider>
             <QueryClientProvider client={queryClient}>
                 <ReactQueryDevtools />
@@ -24,7 +24,7 @@ root.render(
                     <SelectedTrancheStore>
                         <ReduxProvider>
                             <WagmiConfig client={wagmiClient}>
-                                <RainbowKitProvider chains={chains}>
+                                <RainbowKitProvider chains={chains} theme={walletTheme}>
                                     <HashRouter>
                                         <App />
                                     </HashRouter>
@@ -35,5 +35,5 @@ root.render(
                 </TransactionsStore>
             </QueryClientProvider>
         </ThemeProvider>
-    </React.StrictMode>,
+    </>,
 );
