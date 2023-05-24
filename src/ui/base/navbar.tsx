@@ -41,7 +41,7 @@ export const Navbar: React.FC = () => {
             >
                 {/* Desktop/Mobile Left Nav */}
                 <div className="flex items-center gap-4">
-                    <a id="nav-logo" href="/">
+                    <a id="nav-logo" className="flex items-center gap-2" href="/">
                         <img
                             src={
                                 isDark && width >= 1024 ? '/VMEX-logo-white.svg' : '/VMEX-logo.svg'
