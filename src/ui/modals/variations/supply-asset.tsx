@@ -60,37 +60,43 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
     const handleSubmit = async () => {
         if (signer && data) {
             await submitTx(async () => {
-                const res = view?.includes('Supply')
-                    ? await supply({
-                          underlying: data.asset,
-                          trancheId: data.trancheId,
-                          amount: convertStringFormatToNumber(amount),
-                          signer: signer,
-                          network: NETWORK,
-                          isMax: isMax,
-                          test: SDK_PARAMS.test,
-                          providerRpc: SDK_PARAMS.providerRpc,
-                          collateral:
-                              typeof collateral === 'boolean'
-                                  ? existingSupplyCollateral
-                                  : asCollateral,
-                          // referrer: number,
-                          // collateral: boolean,
-                      })
-                    : await withdraw({
-                          asset: data.asset,
-                          trancheId: data.trancheId,
-                          amount: convertStringFormatToNumber(amount),
-                          signer: signer,
-                          network: NETWORK,
-                          interestRateMode: 2,
-                          isMax: isMax,
-                          test: SDK_PARAMS.test,
-                          providerRpc: SDK_PARAMS.providerRpc,
-                          // referrer: number,
-                          //   collateral: boolean,
-                          // test: boolean
-                      });
+                let res;
+                if (view?.includes('Supply')) {
+                    res = await supply({
+                        underlying: data.asset,
+                        trancheId: data.trancheId,
+                        amount: convertStringFormatToNumber(amount),
+                        signer: signer,
+                        network: NETWORK,
+                        isMax: isMax,
+                        test: SDK_PARAMS.test,
+                        providerRpc: SDK_PARAMS.providerRpc,
+                        collateral:
+                            typeof collateral === 'boolean'
+                                ? existingSupplyCollateral
+                                : asCollateral,
+                        // referrer: number,
+                        // collateral: boolean,
+                    });
+                } else if (view?.includes('Claim')) {
+                    // TODO: add claim function
+                    res = null;
+                } else {
+                    res = await withdraw({
+                        asset: data.asset,
+                        trancheId: data.trancheId,
+                        amount: convertStringFormatToNumber(amount),
+                        signer: signer,
+                        network: NETWORK,
+                        interestRateMode: 2,
+                        isMax: isMax,
+                        test: SDK_PARAMS.test,
+                        providerRpc: SDK_PARAMS.providerRpc,
+                        // referrer: number,
+                        //   collateral: boolean,
+                        // test: boolean
+                    });
+                }
                 return res;
             });
         }
@@ -146,29 +152,35 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
     useEffect(() => {
         const getter = async () => {
             if (signer && data) {
-                const res = view?.includes('Supply')
-                    ? await estimateGas({
-                          function: 'supply',
-                          underlying: data.asset,
-                          trancheId: data.trancheId,
-                          amount: convertStringFormatToNumber(amount),
-                          signer: signer,
-                          network: NETWORK,
-                          isMax: isMax,
-                          test: SDK_PARAMS.test,
-                          providerRpc: SDK_PARAMS.providerRpc,
-                      })
-                    : await estimateGas({
-                          function: 'withdraw',
-                          asset: data.asset,
-                          trancheId: data.trancheId,
-                          amount: convertStringFormatToNumber(amount),
-                          signer: signer,
-                          network: NETWORK,
-                          isMax: isMax,
-                          test: SDK_PARAMS.test,
-                          providerRpc: SDK_PARAMS.providerRpc,
-                      });
+                let res;
+                if (view?.includes('Supply')) {
+                    res = await estimateGas({
+                        function: 'supply',
+                        underlying: data.asset,
+                        trancheId: data.trancheId,
+                        amount: convertStringFormatToNumber(amount),
+                        signer: signer,
+                        network: NETWORK,
+                        isMax: isMax,
+                        test: SDK_PARAMS.test,
+                        providerRpc: SDK_PARAMS.providerRpc,
+                    });
+                } else if (view?.includes('Claim')) {
+                    // TODO: add claim estimate gas
+                    res = BigNumber.from('0');
+                } else {
+                    res = await estimateGas({
+                        function: 'withdraw',
+                        asset: data.asset,
+                        trancheId: data.trancheId,
+                        amount: convertStringFormatToNumber(amount),
+                        signer: signer,
+                        network: NETWORK,
+                        isMax: isMax,
+                        test: SDK_PARAMS.test,
+                        providerRpc: SDK_PARAMS.providerRpc,
+                    });
+                }
                 setEstimatedGasCost(bigNumberToUSD(res, DECIMALS.get(data.asset) || 18));
             }
         };
