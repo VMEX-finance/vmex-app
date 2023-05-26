@@ -14,7 +14,7 @@ export const Legend = ({ items }: ILegendProps) => {
                 <span>Legend</span>
             </div>
             <div>
-                <ul className="flex gap-3">
+                <ul className="flex gap-2 xl:gap-3">
                     {items.map((el, i) => (
                         <li key={`legend-item-${i}`} className={`flex items-center gap-1`}>
                             <span className={`w-2 h-2 ${el.color} rounded-full`} />
