@@ -24,7 +24,7 @@ import {
 } from '../../components';
 import { useSubgraphTrancheData, useUserData, useUserTrancheData } from '../../../api';
 import { useSigner, useAccount } from 'wagmi';
-import { BigNumber, utils } from 'ethers';
+import { BigNumber, utils, Wallet } from 'ethers';
 import { IYourSuppliesTableItemProps } from '@ui/tables';
 import { ISupplyBorrowProps } from '../utils';
 import { useNavigate } from 'react-router-dom';
@@ -51,6 +51,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
     const navigate = useNavigate();
     const { setAsset } = useSelectedTrancheContext();
     const { closeDialog, openDialog } = useDialogController();
+
     const [asCollateral, setAsCollateral] = useState<any>(data?.collateral);
     const [existingSupplyCollateral, setExistingSupplyCollateral] = useState(false);
     const [estimatedGasCost, setEstimatedGasCost] = useState('0');
@@ -63,20 +64,26 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
         findAssetInUserSuppliesOrBorrows(data?.asset || '', 'supply') as IYourSuppliesTableItemProps
     )?.collateral;
 
+    const defaultFunctionParams = {
+        trancheId: data ? data.trancheId : 0,
+        amount: convertStringFormatToNumber(amount),
+        signer: signer
+            ? signer
+            : new Wallet('0xdf57089febbacf7ba0bc227dafbffa9fc08a93fdc68e1e42411a14efcf23656e'),
+        network: NETWORK,
+        isMax: isMax,
+        test: SDK_PARAMS.test,
+        providerRpc: SDK_PARAMS.providerRpc,
+    };
+
     const handleSubmit = async () => {
         if (signer && data) {
             await submitTx(async () => {
                 let res;
                 if (view?.includes('Supply')) {
                     res = await supply({
+                        ...defaultFunctionParams,
                         underlying: data.asset,
-                        trancheId: data.trancheId,
-                        amount: convertStringFormatToNumber(amount),
-                        signer: signer,
-                        network: NETWORK,
-                        isMax: isMax,
-                        test: SDK_PARAMS.test,
-                        providerRpc: SDK_PARAMS.providerRpc,
                         collateral:
                             typeof collateral === 'boolean'
                                 ? existingSupplyCollateral
@@ -89,17 +96,11 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                     res = null;
                 } else {
                     res = await withdraw({
+                        ...defaultFunctionParams,
                         asset: data.asset,
-                        trancheId: data.trancheId,
-                        amount: convertStringFormatToNumber(amount),
-                        signer: signer,
-                        network: NETWORK,
                         interestRateMode: 2,
-                        isMax: isMax,
-                        test: SDK_PARAMS.test,
-                        providerRpc: SDK_PARAMS.providerRpc,
                         // referrer: number,
-                        //   collateral: boolean,
+                        // collateral: boolean,
                         // test: boolean
                     });
                 }
@@ -161,30 +162,18 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                 let res;
                 if (view?.includes('Supply')) {
                     res = await estimateGas({
+                        ...defaultFunctionParams,
                         function: 'supply',
                         underlying: data.asset,
-                        trancheId: data.trancheId,
-                        amount: convertStringFormatToNumber(amount),
-                        signer: signer,
-                        network: NETWORK,
-                        isMax: isMax,
-                        test: SDK_PARAMS.test,
-                        providerRpc: SDK_PARAMS.providerRpc,
                     });
                 } else if (view?.includes('Claim')) {
                     // TODO: add claim estimate gas
                     res = BigNumber.from('0');
                 } else {
                     res = await estimateGas({
+                        ...defaultFunctionParams,
                         function: 'withdraw',
                         asset: data.asset,
-                        trancheId: data.trancheId,
-                        amount: convertStringFormatToNumber(amount),
-                        signer: signer,
-                        network: NETWORK,
-                        isMax: isMax,
-                        test: SDK_PARAMS.test,
-                        providerRpc: SDK_PARAMS.providerRpc,
                     });
                 }
                 setEstimatedGasCost(bigNumberToUSD(res, DECIMALS.get(data.asset) || 18));

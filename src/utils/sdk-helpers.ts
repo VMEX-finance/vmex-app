@@ -131,14 +131,9 @@ export const nativeAmountToUSD = (
 };
 
 export const bigNumberToNative = (number: BigNumber | undefined, asset: string): string => {
-    if (!number) {
-        console.error('given invalid bignumber');
-        return '0';
-    }
-
-    let decimals =
+    if (!number) return '0';
+    const decimals =
         DECIMALS.get(REVERSE_MAINNET_ASSET_MAPPINGS.get(asset.toLowerCase()) || asset) || 18;
-
     return nativeTokenFormatter.format(parseFloat(ethers.utils.formatUnits(number, decimals)));
 };
 
