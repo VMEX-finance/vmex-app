@@ -1,27 +1,33 @@
 import { useTransactionsContext } from '../store';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { IDialogNames } from '../store/modals';
 import { TIMER_CLOSE_DELAY } from '../utils/constants';
 import { useDialogController } from '.';
+import { useMediatedState } from 'react-use';
+import { inputMediator } from '../utils/helpers';
 
-type IUseModalProps = {
-    isSuccess: boolean;
-    setIsSuccess: Dispatch<SetStateAction<boolean>>;
-    isLoading: boolean;
-    setIsLoading: Dispatch<SetStateAction<boolean>>;
-    error: string;
-    setError: Dispatch<SetStateAction<string>>;
-    submitTx: (callback?: any, close?: boolean) => Promise<void>;
-    dialog: IDialogNames;
-};
+export const useModal = (dialog: IDialogNames) => {
+    const determineDefaultView = () => {
+        switch (dialog) {
+            case 'loan-asset-dialog':
+                return 'Supply';
+            case 'borrow-asset-dialog':
+                return 'Borrow';
+            default:
+                return 'Modal';
+        }
+    };
 
-export const useModal = (dialog: IDialogNames): IUseModalProps => {
     const { newTransaction } = useTransactionsContext();
     const { closeDialog } = useDialogController();
 
     const [isSuccess, setIsSuccess] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
+
+    const [view, setView] = useState(determineDefaultView());
+    const [isMax, setIsMax] = useState(false);
+    const [amount, setAmount] = useMediatedState(inputMediator, '');
 
     const submitTx = async (callback?: any, close = true) => {
         if (!error) {
@@ -59,5 +65,11 @@ export const useModal = (dialog: IDialogNames): IUseModalProps => {
         setError,
         submitTx,
         dialog,
+        view,
+        setView,
+        isMax,
+        setIsMax,
+        amount,
+        setAmount,
     };
 };

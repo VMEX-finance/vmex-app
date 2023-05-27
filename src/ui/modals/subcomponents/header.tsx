@@ -13,6 +13,9 @@ type IModalHeaderProps = {
     onClick?: Function;
 };
 
+/**
+ * @deprecated Please use header-v2 instead
+ */
 export const ModalHeader = ({ title, dialog, asset, tab, primary, onClick }: IModalHeaderProps) => {
     const { closeDialog } = useDialogController();
 
