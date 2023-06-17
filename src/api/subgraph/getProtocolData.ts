@@ -8,13 +8,19 @@ import { IGraphProtocolDataProps, IGraphTrancheProps, ISubgraphProtocolData } fr
 import { getSubgraphTranchesOverviewData } from './getTranchesOverviewData';
 import { IAssetPricesProps } from '../prices/types';
 
+function subtractSeconds(date: Date, seconds: number): Date {
+    date.setSeconds(date.getSeconds() - seconds);
+
+    return date;
+}
+
 export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointProps[] | any> => {
     const { data, error } = await apolloClient.query({
         query: gql`
             query QueryProtocolTVL {
                 tranches {
                     id
-                    borrowHistory(orderBy: timestamp, orderDirection: asc) {
+                    redeemUnderlyingHistory(orderBy: timestamp, orderDirection: asc) {
                         timestamp
                         amount
                         reserve {
@@ -39,61 +45,56 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
         `,
     });
     if (error) return [];
-    else {
-        let graphData: ILineChartDataPointProps[] = [];
-        const prices = await getAllAssetPrices();
-        data.tranches.map((tranche: IGraphTrancheProps) => {
-            tranche.depositHistory.map((el) => {
-                const asset = el.reserve.assetData.underlyingAssetName;
 
-                const assetUSDPrice = (prices as any)[asset].usdPrice;
-                const usdAmount = nativeAmountToUSD(el.amount, el.reserve.decimals, assetUSDPrice);
-                const date = new Date(el.timestamp * 1000).toLocaleString();
+    let graphData: ILineChartDataPointProps[] = [];
+    const prices = await getAllAssetPrices();
+    data.tranches.map((tranche: IGraphTrancheProps) => {
+        tranche.depositHistory.map((el) => {
+            const asset = el.reserve.assetData.underlyingAssetName;
 
-                const found = graphData.find((element) => element.xaxis === date);
-                if (found) {
-                    found.value = found.value + usdAmount;
-                } else {
-                    graphData.push({ value: usdAmount, xaxis: date });
-                }
-            });
+            const assetUSDPrice = (prices as any)[asset].usdPrice;
+            const usdAmount = nativeAmountToUSD(el.amount, el.reserve.decimals, assetUSDPrice);
+            const date = new Date(el.timestamp * 1000).toLocaleString();
 
-            tranche.borrowHistory.map((el) => {
-                const asset = el.reserve.assetData.underlyingAssetName;
-                const assetUSDPrice = (prices as any)[asset].usdPrice;
-                const usdAmount = nativeAmountToUSD(el.amount, el.reserve.decimals, assetUSDPrice);
-                const date = new Date(el.timestamp * 1000).toLocaleString();
-
-                const found = graphData.find((element) => element.xaxis === date);
-                if (found) {
-                    found.value = found.value + usdAmount;
-                } else {
-                    graphData.push({ value: usdAmount, xaxis: date });
-                }
-            });
+            graphData.push({ value: usdAmount, xaxis: date });
         });
 
-        // Loop through and add previous day TVL to current day TVL
-        graphData.forEach(function (plot, index) {
-            if (index > 0) {
-                plot.value = plot.value + graphData[index - 1].value;
-            }
+        tranche.redeemUnderlyingHistory.map((el) => {
+            const asset = el.reserve.assetData.underlyingAssetName;
+            const assetUSDPrice = (prices as any)[asset].usdPrice;
+            const usdAmount = nativeAmountToUSD(el.amount, el.reserve.decimals, assetUSDPrice) * -1;
+            const date = new Date(el.timestamp * 1000).toLocaleString();
+            graphData.push({ value: usdAmount, xaxis: date });
         });
-        return graphData.sort((a, b) => new Date(a.xaxis).valueOf() - new Date(b.xaxis).valueOf());
-    }
+    });
+
+    graphData.sort((a, b) => new Date(a.xaxis).valueOf() - new Date(b.xaxis).valueOf());
+    graphData.unshift({
+        value: 0,
+        xaxis: subtractSeconds(new Date(graphData[0].xaxis), 100).toLocaleString(),
+    });
+
+    // Loop through and add previous day TVL to current day TVL
+    graphData.forEach(function (plot, index) {
+        if (index > 0) {
+            plot.value = plot.value + graphData[index - 1].value;
+        }
+    });
+    return graphData;
 };
 
-async function getTopSuppliedAssets(
+async function getTopAssets(
     _prices?: Record<IAvailableCoins, IAssetPricesProps>,
-): Promise<AssetBalance[]> {
+): Promise<AssetBalance[][]> {
     const { data, error } = await apolloClient.query({
         query: gql`
             query QueryTopSuppliedAssets {
-                reserves(first: 5, orderBy: totalDeposits, orderDirection: desc) {
+                reserves {
                     assetData {
                         underlyingAssetName
                     }
                     totalDeposits
+                    totalCurrentVariableDebt
                     decimals
                 }
             }
@@ -105,7 +106,7 @@ async function getTopSuppliedAssets(
     if (_prices) prices = _prices;
     else prices = await getAllAssetPrices();
 
-    const result: { asset: string; amount: number }[] = Object.values(
+    const resultSupplied: { asset: string; amount: number }[] = Object.values(
         data.reserves.reduce((r: any, reserve: any) => {
             const _asset = reserve.assetData.underlyingAssetName;
             const _assetUSDPrice = (prices as any)[_asset].usdPrice;
@@ -121,34 +122,7 @@ async function getTopSuppliedAssets(
         }, {}),
     );
 
-    return result
-        .sort((a, b) => b.amount - a.amount)
-        .map((el: any) => ({ ...el, amount: usdFormatter(false).format(el.amount) }));
-}
-
-async function getTopBorrowedAssets(
-    _prices?: Record<IAvailableCoins, IAssetPricesProps>,
-): Promise<AssetBalance[]> {
-    const { data, error } = await apolloClient.query({
-        query: gql`
-            query QueryTopBorrowedAssets {
-                reserves(first: 5, orderBy: totalCurrentVariableDebt, orderDirection: desc) {
-                    assetData {
-                        underlyingAssetName
-                    }
-                    totalCurrentVariableDebt
-                    decimals
-                }
-            }
-        `,
-    });
-    if (error) return [];
-
-    let prices: Record<IAvailableCoins, IAssetPricesProps>;
-    if (_prices) prices = _prices;
-    else prices = await getAllAssetPrices();
-
-    const result: { asset: string; amount: number }[] = Object.values(
+    const resultBorrowed: { asset: string; amount: number }[] = Object.values(
         data.reserves.reduce((r: any, reserve: any) => {
             const _asset = reserve.assetData.underlyingAssetName;
             const _assetUSDPrice = (prices as any)[_asset].usdPrice;
@@ -163,9 +137,14 @@ async function getTopBorrowedAssets(
         }, {}),
     );
 
-    return result
-        .sort((a, b) => b.amount - a.amount)
-        .map((el: any) => ({ ...el, amount: usdFormatter(false).format(el.amount) }));
+    return [
+        resultSupplied
+            .sort((a, b) => b.amount - a.amount)
+            .map((el: any) => ({ ...el, amount: usdFormatter(false).format(el.amount) })),
+        resultBorrowed
+            .sort((a, b) => b.amount - a.amount)
+            .map((el: any) => ({ ...el, amount: usdFormatter(false).format(el.amount) })),
+    ];
 }
 
 export async function getSubgraphProtocolData(): Promise<IGraphProtocolDataProps> {
@@ -226,13 +205,14 @@ export async function getSubgraphProtocolData(): Promise<IGraphProtocolDataProps
     });
 
     const prices = await getAllAssetPrices();
+    const topAssets = await getTopAssets(prices);
 
     const returnObj = {
         uniqueBorrowers: uniqueBorrowers.size,
         uniqueLenders: uniqueLenders.size,
         markets: data.reserves.length,
-        topSuppliedAssets: await getTopSuppliedAssets(prices),
-        topBorrowedAssets: await getTopBorrowedAssets(prices),
+        topSuppliedAssets: topAssets[0],
+        topBorrowedAssets: topAssets[1],
         topTranches: topTranches,
         tvl: usdFormatter(false).format(tvl),
         reserve: usdFormatter().format(tvl),
