@@ -20,7 +20,7 @@ export type IGraphHistoryProps = {
 
 export type IGraphTrancheProps = {
     id: string;
-    borrowHistory: IGraphHistoryProps[];
+    redeemUnderlyingHistory: IGraphHistoryProps[];
     depositHistory: IGraphHistoryProps[];
 };
 
