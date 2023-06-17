@@ -2,17 +2,26 @@ import { gql } from '@apollo/client';
 import { useQuery } from '@tanstack/react-query';
 import { IGraphUserDataProps, ISubgraphUserData, IGraphTrancheDataProps } from './types';
 import { ILineChartDataPointProps } from '@ui/components/charts';
-import { BigNumber } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { getAllAssetPrices } from '../prices';
 import { nativeAmountToUSD, apolloClient } from '../../utils';
 import { processTrancheData } from './getTrancheData';
 
-type BalanceHistoryItem = {
+type IncrementalChangeItem = {
     timestamp: number;
-    aTokenBalance: string;
-    debtTokenBalance: string;
-    reserveSymbol: string;
-    reserveDecimals: number;
+    usdValueDelta: number;
+};
+
+type ATokenBalanceItem = {
+    index: BigNumber;
+    scaledATokenBalance: BigNumber;
+    timestamp: number;
+};
+
+type VariableTokenBalanceItem = {
+    index: BigNumber;
+    scaledVariableDebt: BigNumber;
+    timestamp: number;
 };
 
 export const getUserAdminTrancheData = async (admin: string): Promise<IGraphTrancheDataProps[]> => {
@@ -95,6 +104,119 @@ export const getUserAdminTrancheData = async (admin: string): Promise<IGraphTran
     }
 };
 
+const calculateInterestProfit = (
+    prevATokenBalanceItem: ATokenBalanceItem,
+    aTokenBalanceItem: ATokenBalanceItem,
+    decimals: number,
+    assetUSDPrice: BigNumber,
+): number => {
+    const incrementalInterestProfit = BigNumber.from(aTokenBalanceItem.index)
+        .sub(BigNumber.from(prevATokenBalanceItem.index))
+        .mul(BigNumber.from(prevATokenBalanceItem.scaledATokenBalance))
+        .div(ethers.utils.parseUnits('1', 27)); // index is in ray, which has 27 decimals
+    return nativeAmountToUSD(incrementalInterestProfit, decimals, assetUSDPrice);
+};
+
+const calculateInterestLoss = (
+    prevVariableTokenBalanceItem: VariableTokenBalanceItem,
+    variableTokenBalanceItem: VariableTokenBalanceItem,
+    decimals: number,
+    assetUSDPrice: BigNumber,
+): number => {
+    const incrementalInterestLoss = BigNumber.from(variableTokenBalanceItem.index)
+        .sub(BigNumber.from(prevVariableTokenBalanceItem.index))
+        .mul(BigNumber.from(prevVariableTokenBalanceItem.scaledVariableDebt))
+        .div(ethers.utils.parseUnits('1', 27));
+    return nativeAmountToUSD(incrementalInterestLoss, decimals, assetUSDPrice);
+};
+
+const addAllIncrementalProfits = (
+    reserve: any,
+    allIncrementalChanges: IncrementalChangeItem[],
+    decimals: number,
+    assetUSDPrice: BigNumber,
+) => {
+    if (reserve.aTokenBalanceHistory.length == 0) return;
+
+    // calculate all incremental changes up to the last event
+    reserve.aTokenBalanceHistory.map((aTokenBalanceItem: ATokenBalanceItem, idx: number) => {
+        if (idx == 0) return; // skip first index
+        const usdInterestDelta = calculateInterestProfit(
+            reserve.aTokenBalanceHistory[idx - 1],
+            aTokenBalanceItem,
+            decimals,
+            assetUSDPrice,
+        );
+        allIncrementalChanges.push({
+            timestamp: aTokenBalanceItem.timestamp,
+            usdValueDelta: usdInterestDelta,
+        });
+    });
+    // calculate interest earned from last event until now
+
+    const nowATokenBalanceItem: ATokenBalanceItem = {
+        index: reserve.reserve.liquidityIndex,
+        timestamp: Date.now() / 1000,
+        scaledATokenBalance: BigNumber.from(0), // this value is not used
+    };
+    const usdInterestDelta = calculateInterestProfit(
+        reserve.aTokenBalanceHistory[reserve.aTokenBalanceHistory.length - 1],
+        nowATokenBalanceItem,
+        decimals,
+        assetUSDPrice,
+    );
+    allIncrementalChanges.push({
+        timestamp: nowATokenBalanceItem.timestamp,
+        usdValueDelta: usdInterestDelta,
+    });
+};
+
+const addAllIncrementalLosses = (
+    reserve: any,
+    allIncrementalChanges: IncrementalChangeItem[],
+    decimals: number,
+    assetUSDPrice: BigNumber,
+) => {
+    if (reserve.variableTokenBalanceHistory.length == 0) return;
+
+    // calculate all incremental changes up to the last event
+    reserve.variableTokenBalanceHistory.map(
+        (variableTokenBalanceItem: VariableTokenBalanceItem, idx: number) => {
+            if (idx == 0) return; // skip first index
+            const usdInterestDelta =
+                calculateInterestLoss(
+                    reserve.variableTokenBalanceHistory[idx - 1],
+                    variableTokenBalanceItem,
+                    decimals,
+                    assetUSDPrice,
+                ) * -1;
+
+            allIncrementalChanges.push({
+                timestamp: variableTokenBalanceItem.timestamp,
+                usdValueDelta: usdInterestDelta,
+            });
+        },
+    );
+    // calculate interest loss from last event until now
+
+    const nowDebtTokenBalanceItem: VariableTokenBalanceItem = {
+        index: reserve.reserve.variableBorrowIndex,
+        timestamp: Date.now() / 1000,
+        scaledVariableDebt: BigNumber.from(0), // this value is not used
+    };
+    const usdInterestDelta =
+        calculateInterestLoss(
+            reserve.variableTokenBalanceHistory[reserve.variableTokenBalanceHistory.length - 1],
+            nowDebtTokenBalanceItem,
+            decimals,
+            assetUSDPrice,
+        ) * -1;
+    allIncrementalChanges.push({
+        timestamp: nowDebtTokenBalanceItem.timestamp,
+        usdValueDelta: usdInterestDelta,
+    });
+};
+
 export const getSubgraphUserChart = async (
     address: string,
 ): Promise<ILineChartDataPointProps[]> => {
@@ -104,17 +226,25 @@ export const getSubgraphUserChart = async (
         query: gql`
             query QueryUserChart($address: String!) {
                 user(id: $address) {
+                    id
                     reserves {
                         reserve {
                             assetData {
                                 underlyingAssetName
                             }
                             decimals
+                            liquidityIndex
+                            variableBorrowIndex
                         }
-                        pnlHistory(first: 100, orderBy: timestamp, orderDirection: asc) {
+                        aTokenBalanceHistory(orderBy: timestamp, orderDirection: asc) {
+                            scaledATokenBalance
+                            index
                             timestamp
-                            currentATokenBalance
-                            currentVariableDebt
+                        }
+                        variableTokenBalanceHistory(orderBy: timestamp, orderDirection: asc) {
+                            scaledVariableDebt
+                            index
+                            timestamp
                         }
                     }
                 }
@@ -124,60 +254,48 @@ export const getSubgraphUserChart = async (
     });
 
     if (error || !data.user) return [];
-    else {
-        let allReserves = data.user.reserves;
-        let graphData: ILineChartDataPointProps[] = [];
-        const prices = await getAllAssetPrices();
 
-        const allPnLHistory: BalanceHistoryItem[] = [];
+    let allReserves = data.user.reserves;
+    let graphData: ILineChartDataPointProps[] = [];
+    const prices = await getAllAssetPrices();
 
-        allReserves.map((reserve: any) => {
-            reserve.pnlHistory.map((pnlItem: any) => {
-                allPnLHistory.push({
-                    timestamp: pnlItem.timestamp,
-                    aTokenBalance: pnlItem.currentATokenBalance,
-                    debtTokenBalance: pnlItem.currentVariableDebt,
-                    reserveSymbol: reserve.reserve.assetData.underlyingAssetName,
-                    reserveDecimals: reserve.reserve.decimals,
-                });
-            });
+    const allIncrementalChanges: IncrementalChangeItem[] = [];
+    let earliestDeposit = Number.MAX_SAFE_INTEGER;
+
+    allReserves.map((reserve: any) => {
+        const asset = reserve.reserve.assetData.underlyingAssetName;
+        const decimals = reserve.reserve.decimals;
+        const assetUSDPrice = (prices as any)[asset].usdPrice;
+
+        // PROFITS
+        addAllIncrementalProfits(reserve, allIncrementalChanges, decimals, assetUSDPrice);
+        if (reserve.aTokenBalanceHistory.length) {
+            earliestDeposit = Math.min(earliestDeposit, reserve.aTokenBalanceHistory[0].timestamp);
+        }
+
+        // LOSSES
+        addAllIncrementalLosses(reserve, allIncrementalChanges, decimals, assetUSDPrice);
+    });
+
+    allIncrementalChanges.sort(
+        (a: IncrementalChangeItem, b: IncrementalChangeItem) => a.timestamp - b.timestamp,
+    );
+
+    let cumulativeValue = 0;
+    // add a datapoint for starting at zero
+    graphData.push({
+        xaxis: new Date(earliestDeposit * 1000).toLocaleString(),
+        value: 0,
+    });
+    allIncrementalChanges.map((el, idx) => {
+        cumulativeValue += allIncrementalChanges[idx].usdValueDelta;
+        graphData.push({
+            xaxis: new Date(el.timestamp * 1000).toLocaleString(),
+            value: cumulativeValue,
         });
+    });
 
-        allPnLHistory.sort(
-            (a: BalanceHistoryItem, b: BalanceHistoryItem) => a.timestamp - b.timestamp,
-        );
-
-        const reserveCurrentValues: Map<string, number> = new Map();
-        allPnLHistory.map((pnlItem: BalanceHistoryItem, idx: number) => {
-            // TODO: add congregation for days
-            const date = new Date(pnlItem.timestamp * 1000).toLocaleString();
-            const valueNative = BigNumber.from(pnlItem.aTokenBalance).sub(
-                BigNumber.from(pnlItem.debtTokenBalance),
-            );
-
-            const assetUSDPrice = (prices as any)[pnlItem.reserveSymbol].usdPrice;
-
-            const value = nativeAmountToUSD(valueNative, pnlItem.reserveDecimals, assetUSDPrice);
-
-            if (idx === 0) {
-                graphData.push({
-                    xaxis: date,
-                    value: value,
-                });
-                reserveCurrentValues.set(pnlItem.reserveSymbol, value);
-            } else {
-                let pnl = graphData.at(-1)?.value || 0;
-                pnl -= reserveCurrentValues.get(pnlItem.reserveSymbol) || 0;
-                pnl += value;
-                graphData.push({
-                    xaxis: date,
-                    value: pnl,
-                });
-                reserveCurrentValues.set(pnlItem.reserveSymbol, value);
-            }
-        });
-        return graphData;
-    }
+    return graphData;
 };
 
 export const getSubgraphUserData = async (address: string): Promise<IGraphUserDataProps> => {
