@@ -263,8 +263,16 @@ export const getSubgraphUserChart = async (
     let earliestDeposit = Number.MAX_SAFE_INTEGER;
 
     allReserves.map((reserve: any) => {
-        const asset = reserve.reserve.assetData.underlyingAssetName;
+        const asset = reserve.reserve.assetData.underlyingAssetName.toUpperCase();
         const decimals = reserve.reserve.decimals;
+        if (!(prices as any)[asset]) {
+            console.log(
+                'MISSING ORACLE PRICE FOR',
+                asset,
+                'skipping asset in any usd calculations',
+            );
+            return;
+        }
         const assetUSDPrice = (prices as any)[asset].usdPrice;
 
         // PROFITS
@@ -291,12 +299,10 @@ export const getSubgraphUserChart = async (
     let tempAccrued = 0;
     allIncrementalChanges.forEach((el, idx) => {
         tempAccrued += el.usdValueDelta;
-        console.log(el, idx, allIncrementalChanges.length - 1);
         if (
             idx === allIncrementalChanges.length - 1 ||
             allIncrementalChanges[idx + 1].timestamp - el.timestamp >= 60
         ) {
-            console.log('MERGING');
             // only push to the merged data when the difference in timestamp is greater than a minute
             // or if we are at the last element in the array
             mergedData.push({

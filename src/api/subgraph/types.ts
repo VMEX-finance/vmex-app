@@ -3,6 +3,7 @@ import { ILineChartDataPointProps } from '../../ui/components/charts';
 import { AssetBalance, IAssetMappings, IMarketsAsset, ITrancheProps, TrancheData } from '../types';
 import { BigNumber } from 'ethers';
 import { IAvailableCoins } from '@utils/helpers';
+import { IAssetPricesProps } from '../prices/types';
 export type IAssetData = {
     underlyingAssetName: string;
 };
@@ -119,6 +120,7 @@ export type ISubgraphAllMarketsData = {
 
 export type ISubgraphAllAssetMappingsData = {
     queryAllAssetMappingsData: UseQueryResult<Map<string, IAssetMappings>, unknown>;
+    queryAssetPrices: UseQueryResult<Record<IAvailableCoins, IAssetPricesProps>, unknown>;
     findAssetInMappings: (asset: string) => IAssetMappings | undefined;
 };
 

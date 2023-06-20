@@ -13,6 +13,7 @@ import {
     IAvailableCoins,
 } from '../../utils';
 import { ILineChartDataPointProps } from '../../ui/components';
+import { getTrancheId } from './id-generation';
 
 export const processTrancheData = async (
     data: any,
@@ -60,8 +61,10 @@ export const processTrancheData = async (
                         item.assetData.supplyCap == '0'
                             ? MAX_UINT_AMOUNT
                             : item.assetData.borrowCap,
-                    priceUSD: (prices as any)[item.assetData.underlyingAssetName].usdPrice,
-                    priceETH: (prices as any)[item.assetData.underlyingAssetName].ethPrice,
+                    priceUSD: (prices as any)[item.assetData.underlyingAssetName.toUpperCase()]
+                        .usdPrice,
+                    priceETH: (prices as any)[item.assetData.underlyingAssetName.toUpperCase()]
+                        .ethPrice,
                     isFrozen: item.isFrozen,
                     // yieldStrategy: item.yieldStrategy,
                 },
@@ -71,7 +74,15 @@ export const processTrancheData = async (
 
     const summaryData = assets.reduce(
         (obj: any, item: any) => {
-            const asset = item.assetData.underlyingAssetName;
+            const asset = item.assetData.underlyingAssetName.toUpperCase();
+            if (!(prices as any)[asset]) {
+                console.log(
+                    'MISSING ORACLE PRICE FOR',
+                    asset,
+                    'skipping asset in any usd calculations',
+                );
+                return obj;
+            }
             const assetUSDPrice = (prices as any)[asset].usdPrice;
 
             return Object.assign(obj, {
@@ -158,7 +169,7 @@ export const getSubgraphTrancheData = async (
 ): Promise<IGraphTrancheDataProps> => {
     if (!_trancheId) return {};
 
-    const trancheId = String(_trancheId);
+    const trancheId = getTrancheId(String(_trancheId));
     const { data, error } = await apolloClient.query({
         query: gql`
             query QueryTranche($trancheId: String!) {
@@ -219,7 +230,7 @@ export const getSubgraphTrancheData = async (
     });
 
     if (error) return {};
-    else return processTrancheData(data.tranche, trancheId);
+    else return processTrancheData(data.tranche, String(_trancheId));
 };
 
 export const getSubgraphTrancheChart = async (
@@ -227,7 +238,7 @@ export const getSubgraphTrancheChart = async (
 ): Promise<ILineChartDataPointProps[] | any> => {
     if (!_trancheId) return {};
 
-    const trancheId = String(_trancheId);
+    const trancheId = getTrancheId(String(_trancheId));
     const { data, error } = await apolloClient.query({
         query: gql`
             query QueryTrancheChart($trancheId: String!) {
@@ -263,7 +274,15 @@ export const getSubgraphTrancheChart = async (
         let graphData: ILineChartDataPointProps[] = [];
         const prices = await getAllAssetPrices();
         data.tranche.depositHistory.map((el: any) => {
-            const asset = el.reserve.assetData.underlyingAssetName;
+            const asset = el.reserve.assetData.underlyingAssetName.toUpperCase();
+            if (!(prices as any)[asset]) {
+                console.log(
+                    'MISSING ORACLE PRICE FOR',
+                    asset,
+                    'skipping asset in any usd calculations',
+                );
+                return;
+            }
 
             const assetUSDPrice = (prices as any)[asset].usdPrice;
             const usdAmount = nativeAmountToUSD(el.amount, el.reserve.decimals, assetUSDPrice);
@@ -271,21 +290,29 @@ export const getSubgraphTrancheChart = async (
 
             const found = graphData.find((element) => element.xaxis === date);
             if (found) {
-                found.value = found.value + usdAmount;
+                found.value = (found.value || 0) + usdAmount;
             } else {
                 graphData.push({ value: usdAmount, xaxis: date });
             }
         });
 
         data.tranche.borrowHistory.map((el: any) => {
-            const asset = el.reserve.assetData.underlyingAssetName;
+            const asset = el.reserve.assetData.underlyingAssetName.toUpperCase();
+            if (!(prices as any)[asset]) {
+                console.log(
+                    'MISSING ORACLE PRICE FOR',
+                    asset,
+                    'skipping asset in any usd calculations',
+                );
+                return;
+            }
             const assetUSDPrice = (prices as any)[asset].usdPrice;
             const usdAmount = nativeAmountToUSD(el.amount, el.reserve.decimals, assetUSDPrice);
             const date = new Date(el.timestamp * 1000).toLocaleString();
 
             const found = graphData.find((element) => element.xaxis === date);
             if (found) {
-                found.value = found.value + usdAmount;
+                found.value = (found.value || 0) + usdAmount;
             } else {
                 graphData.push({ value: usdAmount, xaxis: date });
             }
@@ -294,7 +321,7 @@ export const getSubgraphTrancheChart = async (
         // Loop through and add previous day TVL to current day TVL
         graphData.forEach(function (plot, index) {
             if (index > 0) {
-                plot.value = plot.value + graphData[index - 1].value;
+                plot.value = (plot.value || 0) + (graphData[index - 1].value || 0);
             }
         });
         return graphData.sort((a, b) => new Date(a.xaxis).valueOf() - new Date(b.xaxis).valueOf());
