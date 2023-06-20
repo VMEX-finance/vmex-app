@@ -74,6 +74,14 @@ export const processTrancheData = async (
     const summaryData = assets.reduce(
         (obj: any, item: any) => {
             const asset = item.assetData.underlyingAssetName.toUpperCase();
+            if (!(prices as any)[asset]) {
+                console.log(
+                    'MISSING ORACLE PRICE FOR',
+                    asset,
+                    'skipping asset in any usd calculations',
+                );
+                return obj;
+            }
             const assetUSDPrice = (prices as any)[asset].usdPrice;
 
             return Object.assign(obj, {
@@ -265,7 +273,15 @@ export const getSubgraphTrancheChart = async (
         let graphData: ILineChartDataPointProps[] = [];
         const prices = await getAllAssetPrices();
         data.tranche.depositHistory.map((el: any) => {
-            const asset = el.reserve.assetData.underlyingAssetName;
+            const asset = el.reserve.assetData.underlyingAssetName.toUpperCase();
+            if (!(prices as any)[asset]) {
+                console.log(
+                    'MISSING ORACLE PRICE FOR',
+                    asset,
+                    'skipping asset in any usd calculations',
+                );
+                return;
+            }
 
             const assetUSDPrice = (prices as any)[asset].usdPrice;
             const usdAmount = nativeAmountToUSD(el.amount, el.reserve.decimals, assetUSDPrice);
@@ -280,7 +296,15 @@ export const getSubgraphTrancheChart = async (
         });
 
         data.tranche.borrowHistory.map((el: any) => {
-            const asset = el.reserve.assetData.underlyingAssetName;
+            const asset = el.reserve.assetData.underlyingAssetName.toUpperCase();
+            if (!(prices as any)[asset]) {
+                console.log(
+                    'MISSING ORACLE PRICE FOR',
+                    asset,
+                    'skipping asset in any usd calculations',
+                );
+                return;
+            }
             const assetUSDPrice = (prices as any)[asset].usdPrice;
             const usdAmount = nativeAmountToUSD(el.amount, el.reserve.decimals, assetUSDPrice);
             const date = new Date(el.timestamp * 1000).toLocaleString();

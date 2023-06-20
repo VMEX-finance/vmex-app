@@ -50,7 +50,7 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
     const prices = await getAllAssetPrices();
     data.tranches.map((tranche: IGraphTrancheProps) => {
         tranche.depositHistory.map((el) => {
-            const asset = el.reserve.assetData.underlyingAssetName;
+            const asset = el.reserve.assetData.underlyingAssetName.toUpperCase();
 
             const assetUSDPrice = (prices as any)[asset].usdPrice;
             const usdAmount = nativeAmountToUSD(el.amount, el.reserve.decimals, assetUSDPrice);
@@ -60,7 +60,7 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
         });
 
         tranche.redeemUnderlyingHistory.map((el) => {
-            const asset = el.reserve.assetData.underlyingAssetName;
+            const asset = el.reserve.assetData.underlyingAssetName.toUpperCase();
             const assetUSDPrice = (prices as any)[asset].usdPrice;
             const usdAmount = nativeAmountToUSD(el.amount, el.reserve.decimals, assetUSDPrice) * -1;
             const date = new Date(el.timestamp * 1000).toLocaleString();
@@ -69,10 +69,12 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
     });
 
     graphData.sort((a, b) => new Date(a.xaxis).valueOf() - new Date(b.xaxis).valueOf());
-    graphData.unshift({
-        value: 0,
-        xaxis: subtractSeconds(new Date(graphData[0].xaxis), 100).toLocaleString(),
-    });
+    if (graphData.length > 0) {
+        graphData.unshift({
+            value: 0,
+            xaxis: subtractSeconds(new Date(graphData[0].xaxis), 100).toLocaleString(),
+        });
+    }
 
     // Loop through and add previous day TVL to current day TVL
     graphData.forEach(function (plot, index) {
@@ -108,7 +110,16 @@ async function getTopAssets(
 
     const resultSupplied: { asset: string; amount: number }[] = Object.values(
         data.reserves.reduce((r: any, reserve: any) => {
-            const _asset = reserve.assetData.underlyingAssetName;
+            const _asset = reserve.assetData.underlyingAssetName.toUpperCase();
+            if (!(prices as any)[_asset]) {
+                console.log(
+                    'MISSING ORACLE PRICE FOR',
+                    _asset,
+                    'skipping asset in any usd calculations',
+                );
+                r[_asset] ??= { asset: _asset, amount: 0 };
+                return r;
+            }
             const _assetUSDPrice = (prices as any)[_asset].usdPrice;
             const _usdAmount = nativeAmountToUSD(
                 reserve.totalDeposits,
@@ -124,7 +135,16 @@ async function getTopAssets(
 
     const resultBorrowed: { asset: string; amount: number }[] = Object.values(
         data.reserves.reduce((r: any, reserve: any) => {
-            const _asset = reserve.assetData.underlyingAssetName;
+            const _asset = reserve.assetData.underlyingAssetName.toUpperCase();
+            if (!(prices as any)[_asset]) {
+                console.log(
+                    'MISSING ORACLE PRICE FOR',
+                    _asset,
+                    'skipping asset in any usd calculations',
+                );
+                r[_asset] ??= { asset: _asset, amount: 0 };
+                return r;
+            }
             const _assetUSDPrice = (prices as any)[_asset].usdPrice;
             const _usdAmount = nativeAmountToUSD(
                 reserve.totalCurrentVariableDebt,

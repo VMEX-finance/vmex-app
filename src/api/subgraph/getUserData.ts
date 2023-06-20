@@ -263,8 +263,16 @@ export const getSubgraphUserChart = async (
     let earliestDeposit = Number.MAX_SAFE_INTEGER;
 
     allReserves.map((reserve: any) => {
-        const asset = reserve.reserve.assetData.underlyingAssetName;
+        const asset = reserve.reserve.assetData.underlyingAssetName.toUpperCase();
         const decimals = reserve.reserve.decimals;
+        if (!(prices as any)[asset]) {
+            console.log(
+                'MISSING ORACLE PRICE FOR',
+                asset,
+                'skipping asset in any usd calculations',
+            );
+            return;
+        }
         const assetUSDPrice = (prices as any)[asset].usdPrice;
 
         // PROFITS
