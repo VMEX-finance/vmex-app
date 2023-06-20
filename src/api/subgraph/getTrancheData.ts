@@ -60,8 +60,10 @@ export const processTrancheData = async (
                         item.assetData.supplyCap == '0'
                             ? MAX_UINT_AMOUNT
                             : item.assetData.borrowCap,
-                    priceUSD: (prices as any)[item.assetData.underlyingAssetName].usdPrice,
-                    priceETH: (prices as any)[item.assetData.underlyingAssetName].ethPrice,
+                    priceUSD: (prices as any)[item.assetData.underlyingAssetName.toUpperCase()]
+                        .usdPrice,
+                    priceETH: (prices as any)[item.assetData.underlyingAssetName.toUpperCase()]
+                        .ethPrice,
                     isFrozen: item.isFrozen,
                     // yieldStrategy: item.yieldStrategy,
                 },
@@ -71,7 +73,7 @@ export const processTrancheData = async (
 
     const summaryData = assets.reduce(
         (obj: any, item: any) => {
-            const asset = item.assetData.underlyingAssetName;
+            const asset = item.assetData.underlyingAssetName.toUpperCase();
             const assetUSDPrice = (prices as any)[asset].usdPrice;
 
             return Object.assign(obj, {
