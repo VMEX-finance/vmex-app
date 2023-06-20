@@ -5,6 +5,8 @@ import {
     BorrowedAssetData,
     SuppliedAssetData,
     convertAddressToSymbol,
+    MAINNET_ASSET_MAPPINGS,
+    getUserIncentives,
 } from '@vmexfinance/sdk';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -15,6 +17,8 @@ import {
 } from '../../utils/sdk-helpers';
 import { IUserTrancheDataProps, IUserTrancheData } from './types';
 import { BigNumber, ethers } from 'ethers';
+import { getSubgraphRewardData } from '../subgraph/getRewardsData';
+import { VmexRewardsData } from '../types';
 
 export async function _getUserTrancheData(
     userAddress: string,
@@ -95,6 +99,28 @@ export function useUserTrancheData(
         refetchOnMount: true,
     });
 
+    const queryRewardsData = useQuery({
+        queryKey: ['rewards', Number(trancheId)],
+        queryFn: () => getSubgraphRewardData(),
+        refetchOnMount: true,
+    });
+
+    const queryUserRewardsData = useQuery({
+        queryKey: ['user-rewards', Number(trancheId)],
+        queryFn: () =>
+            getUserIncentives({
+                user: userAddress,
+                incentivizedATokens:
+                    queryRewardsData.data?.map<string>((el: VmexRewardsData): string => {
+                        return el.aTokenAddress;
+                    }) || [],
+                network: SDK_PARAMS.network,
+                test: SDK_PARAMS.test,
+                providerRpc: SDK_PARAMS.providerRpc,
+            }),
+        refetchOnMount: true,
+    });
+
     const findAssetInUserSuppliesOrBorrows = (
         asset: string | undefined,
         type: 'supply' | 'borrow',
@@ -106,6 +132,27 @@ export function useUserTrancheData(
                     ? queryUserTrancheData.data?.supplies
                     : queryUserTrancheData.data?.borrows;
             return userData?.find((el) => el.asset.toLowerCase() === asset.toLowerCase());
+        }
+    };
+
+    const findAssetInRewards = (
+        asset: string | undefined,
+        trancheId: string | undefined,
+        type: 'supply' | 'borrow',
+    ): boolean => {
+        if (queryRewardsData.isLoading || !asset || !trancheId || type === 'borrow') return false;
+        else {
+            const rewardsData = queryRewardsData.data || [];
+            const assetAddress = MAINNET_ASSET_MAPPINGS.get(asset)?.toLowerCase();
+            const currentUnixTime = Date.now() / 1000;
+            return (
+                rewardsData.find(
+                    (el: VmexRewardsData) =>
+                        el.underlyingAssetAddress.toLowerCase() === assetAddress &&
+                        el.trancheId === trancheId &&
+                        el.emissionsEndTimestamp > currentUnixTime,
+                ) !== undefined
+            );
         }
     };
 
@@ -150,7 +197,10 @@ export function useUserTrancheData(
 
     return {
         queryUserTrancheData,
+        queryUserRewardsData,
+        queryRewardsData,
         findAssetInUserSuppliesOrBorrows,
         findAmountBorrowable,
+        findAssetInRewards,
     };
 }

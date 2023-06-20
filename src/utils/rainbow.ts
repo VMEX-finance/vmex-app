@@ -22,7 +22,13 @@ import {
 import merge from 'lodash.merge';
 
 export const { chains, provider } = configureChains(
-    [process.env.REACT_APP_TEST ? chain.goerli : chain.mainnet],
+    [
+        process.env.REACT_APP_NETWORK === 'goerli'
+            ? chain.goerli
+            : process.env.REACT_APP_NETWORK === 'localhost'
+            ? chain.hardhat
+            : chain.mainnet,
+    ],
     [publicProvider()],
 );
 

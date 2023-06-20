@@ -106,3 +106,16 @@ export interface TrancheData {
     totalSupplied: string;
     totalBorrowed: string;
 }
+
+export interface VmexRewardsData {
+    emissionsEndTimestamp: number;
+    emissionsPerSecond: BigNumber;
+    index: BigNumber;
+    rewardToken: string;
+    rewardTokenDecimals: number;
+    rewardTokenSymbol: string;
+    // updatedAt: number;
+    trancheId: string;
+    aTokenAddress: string;
+    underlyingAssetAddress: string;
+}

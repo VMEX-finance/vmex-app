@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
 import { useDialogController, useModal } from '../../../hooks';
-import { supply, withdraw, estimateGas } from '@vmexfinance/sdk';
+import { supply, withdraw, estimateGas, claimIncentives } from '@vmexfinance/sdk';
 import {
     NETWORK,
     convertStringFormatToNumber,
@@ -11,6 +11,9 @@ import {
     SDK_PARAMS,
     DECIMALS,
     bigNumberToUSD,
+    REVERSE_MAINNET_ASSET_MAPPINGS,
+    nativeAmountToUSD,
+    IAvailableCoins,
 } from '../../../utils';
 import {
     HealthFactor,
@@ -22,9 +25,14 @@ import {
     Tooltip,
     BasicToggle,
 } from '../../components';
-import { useSubgraphTrancheData, useUserData, useUserTrancheData } from '../../../api';
+import {
+    useSubgraphAllAssetMappingsData,
+    useSubgraphTrancheData,
+    useUserData,
+    useUserTrancheData,
+} from '../../../api';
 import { useSigner, useAccount } from 'wagmi';
-import { BigNumber, utils, Wallet } from 'ethers';
+import { BigNumber, BigNumberish, utils, Wallet } from 'ethers';
 import { IYourSuppliesTableItemProps } from '@ui/tables';
 import { ISupplyBorrowProps } from '../utils';
 import { useNavigate } from 'react-router-dom';
@@ -46,7 +54,9 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
     const { findAssetInMarketsData } = useSubgraphTrancheData(data?.trancheId || 0);
     const { data: signer } = useSigner();
     const { address } = useAccount();
-    const { findAssetInUserSuppliesOrBorrows } = useUserTrancheData(address, data?.trancheId || 0);
+    const { findAssetInUserSuppliesOrBorrows, queryUserRewardsData, queryRewardsData } =
+        useUserTrancheData(address, data?.trancheId || 0);
+    const { queryAssetPrices } = useSubgraphAllAssetMappingsData();
     const { getTokenBalance } = useUserData(address);
     const navigate = useNavigate();
     const { setAsset } = useSelectedTrancheContext();
@@ -76,6 +86,14 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
         providerRpc: SDK_PARAMS.providerRpc,
     };
 
+    const getAllATokenAddresses = () => {
+        return (
+            queryRewardsData.data?.map<string>((el): string => {
+                return el.aTokenAddress;
+            }) || []
+        );
+    };
+
     const handleSubmit = async () => {
         if (signer && data) {
             await submitTx(async () => {
@@ -92,8 +110,11 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                         // collateral: boolean,
                     });
                 } else if (view?.includes('Claim')) {
-                    // TODO: add claim function
-                    res = null;
+                    res = await claimIncentives({
+                        ...defaultFunctionParams,
+                        to: await defaultFunctionParams.signer.getAddress(),
+                        incentivizedATokens: getAllATokenAddresses(),
+                    });
                 } else {
                     res = await withdraw({
                         ...defaultFunctionParams,
@@ -184,8 +205,14 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                         underlying: data.asset,
                     });
                 } else if (view?.includes('Claim')) {
-                    // TODO: add claim estimate gas
-                    res = BigNumber.from('0');
+                    if (queryRewardsData.data) {
+                        res = await estimateGas({
+                            ...defaultFunctionParams,
+                            function: 'claimRewards',
+                            incentivizedAssets: getAllATokenAddresses(),
+                            to: await defaultFunctionParams.signer.getAddress(),
+                        });
+                    }
                 } else {
                     res = await estimateGas({
                         ...defaultFunctionParams,
@@ -195,7 +222,9 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                 }
                 setEstimatedGasCost({
                     loading: false,
-                    cost: bigNumberToUSD(res, DECIMALS.get(data.asset) || 18),
+                    cost: `$${String(
+                        nativeAmountToUSD(res || 0, 18, queryAssetPrices.data?.WETH.usdPrice || 0),
+                    )}`,
                 });
             }
         };
@@ -310,20 +339,35 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                 <>
                     <ModalTableDisplay
                         title="Rewards"
-                        content={[
-                            {
-                                label: 'Reward 1',
-                                value: `$0`,
-                            },
-                            {
-                                label: 'Reward 2',
-                                value: `$0`,
-                            },
-                            {
-                                label: 'Reward 3',
-                                value: `$0`,
-                            },
-                        ]}
+                        content={
+                            queryUserRewardsData.data?.rewardTokens?.map((el: string, idx) => {
+                                const assetSymbol =
+                                    REVERSE_MAINNET_ASSET_MAPPINGS.get(el.toLowerCase()) || el;
+                                const assetDecimals = DECIMALS.get(assetSymbol);
+                                let assetAmount: BigNumberish =
+                                    queryUserRewardsData.data?.rewardAmounts[idx] ||
+                                    'unable to get reward amount';
+                                if (assetDecimals && queryAssetPrices.data) {
+                                    // if the asset decimals mapping exists
+                                    const assetUSDPrice =
+                                        queryAssetPrices.data[assetSymbol as IAvailableCoins]
+                                            .usdPrice;
+                                    assetAmount = '$'.concat(
+                                        String(
+                                            nativeAmountToUSD(
+                                                assetAmount,
+                                                assetDecimals,
+                                                assetUSDPrice,
+                                            ),
+                                        ),
+                                    );
+                                }
+                                return {
+                                    label: assetSymbol,
+                                    value: assetAmount.toString(),
+                                };
+                            }) || []
+                        }
                     />
                 </>
             ) : !isSuccess && !error ? (
