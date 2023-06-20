@@ -22,8 +22,12 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
     const { address } = useAccount();
     const { tranche } = useSelectedTrancheContext();
     const { queryUserWallet, getTokenBalance } = useUserData(address);
-    const { queryUserTrancheData, findAmountBorrowable, findAssetInUserSuppliesOrBorrows } =
-        useUserTrancheData(address, location.state?.trancheId);
+    const {
+        queryUserTrancheData,
+        findAmountBorrowable,
+        findAssetInUserSuppliesOrBorrows,
+        findAssetInRewards,
+    } = useUserTrancheData(address, location.state?.trancheId);
     const { findAssetInMarketsData } = useSubgraphTrancheData(location.state?.trancheId);
     const { openDialog } = useDialogController();
 
@@ -52,9 +56,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
 
     // TODO: check to see if user has rewards
     const hasRewards = (asset: string) =>
-        type === 'supply' &&
-        (findAssetInUserSuppliesOrBorrows(asset || '', 'supply') as IYourSuppliesTableItemProps)
-            ?.collateral;
+        findAssetInRewards(asset || '', tranche?.id || '', 'supply');
 
     const isSuppliedOrBorrowed = (asset: string) => {
         if (!queryUserTrancheData.data) return false;
@@ -215,7 +217,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                             ) : (
                                                 <IoIosClose className="w-full h-full text-red-500" />
                                             )}
-                                            {/* <BasicToggle 
+                                            {/* <BasicToggle
                                                 checked={el.canBeCollat}
                                                 onClick={(e: any) => {
                                                     e.preventDefault();

@@ -4,6 +4,7 @@ import { ISubgraphTranchesDataProps } from './types';
 import { ITrancheProps } from '../types';
 import { getAllAssetPrices } from '../prices';
 import { nativeAmountToUSD, apolloClient } from '../../utils';
+import { getTrancheIdFromTrancheEntity } from './id-generation';
 
 export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]> => {
     const { data, error } = await apolloClient.query({
@@ -42,46 +43,48 @@ export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]
         > = new Map();
         tranches.map((tranche: any) => {
             const assets = tranche.reserves;
-            finalObj.set(
-                tranche.id,
-                assets.reduce(
-                    (obj: any, item: any) => {
-                        const assetUSDPrice = (prices as any)[item.assetData.underlyingAssetName]
-                            .usdPrice;
-                        return Object.assign(obj, {
-                            tvl:
-                                obj.tvl +
-                                nativeAmountToUSD(
-                                    item.availableLiquidity,
-                                    item.decimals,
-                                    assetUSDPrice,
-                                ),
-                            supplyTotal:
-                                obj.supplyTotal +
-                                nativeAmountToUSD(item.totalDeposits, item.decimals, assetUSDPrice),
-                            borrowTotal:
-                                obj.borrowTotal +
-                                nativeAmountToUSD(
-                                    item.totalCurrentVariableDebt,
-                                    item.decimals,
-                                    assetUSDPrice,
-                                ),
-                        });
-                    },
-                    {
-                        tvl: 0,
-                        supplyTotal: 0,
-                        borrowTotal: 0,
-                    },
-                ),
-            );
+            let trancheData: {
+                tvl: number;
+                supplyTotal: number;
+                borrowTotal: number;
+            } = {
+                tvl: 0,
+                supplyTotal: 0,
+                borrowTotal: 0,
+            };
+
+            assets.map((item: any) => {
+                // console.log("asset name to get price", item.assetData.underlyingAssetName, !(prices as any)[item.assetData.underlyingAssetName])
+                const assetName = item.assetData.underlyingAssetName.toUpperCase();
+                if (!(prices as any)[assetName]) {
+                    return;
+                }
+                const assetUSDPrice = (prices as any)[assetName].usdPrice;
+                trancheData = {
+                    tvl:
+                        trancheData.tvl +
+                        nativeAmountToUSD(item.availableLiquidity, item.decimals, assetUSDPrice),
+                    supplyTotal:
+                        trancheData.supplyTotal +
+                        nativeAmountToUSD(item.totalDeposits, item.decimals, assetUSDPrice),
+                    borrowTotal:
+                        trancheData.borrowTotal +
+                        nativeAmountToUSD(
+                            item.totalCurrentVariableDebt,
+                            item.decimals,
+                            assetUSDPrice,
+                        ),
+                };
+            });
+
+            finalObj.set(tranche.id, trancheData);
         });
 
         const returnObj: ITrancheProps[] = [];
 
         tranches.map((tranche: any) => {
             let trancheInfo = {
-                id: tranche.id,
+                id: getTrancheIdFromTrancheEntity(tranche.id),
                 name: tranche.name,
                 assets: tranche.reserves.map((el: any) => el.assetData.underlyingAssetName),
                 tvl: 0,

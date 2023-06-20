@@ -6,14 +6,8 @@ import { BigNumber, utils } from 'ethers';
 import { IMarketsAsset } from '../types';
 import { getAllAssetPrices } from '../prices';
 import { usdFormatter, apolloClient, nativeAmountToUSD, NETWORK } from '../../utils';
-import { convertSymbolToAddress, getContractAddress } from '@vmexfinance/sdk';
-
-function getReserveId(underlyingAsset: string, trancheId: string): string {
-    return `${underlyingAsset}${getContractAddress(
-        'LendingPoolAddressesProvider',
-        NETWORK,
-    ).toLowerCase()}${trancheId}`;
-}
+import { convertSymbolToAddress } from '@vmexfinance/sdk';
+import { getReserveId } from './id-generation';
 
 export const getSubgraphMarketsChart = async (
     _trancheId: string | number,
@@ -106,11 +100,14 @@ export const getSubgraphAllMarketsData = async (): Promise<IMarketsAsset[]> => {
 
         const returnObj: IMarketsAsset[] = [];
         data.reserves.map((reserve: any) => {
-            const asset = reserve.assetData.underlyingAssetName;
+            const asset = reserve.assetData.underlyingAssetName.toUpperCase();
+            if (!(prices as any)[asset]) {
+                return;
+            }
             const assetUSDPrice = (prices as any)[asset].usdPrice;
 
             returnObj.push({
-                asset: asset,
+                asset: reserve.assetData.underlyingAssetName,
                 tranche: reserve.tranche.name,
                 trancheId: reserve.tranche.id,
                 borrowApy: utils.formatUnits(reserve.variableBorrowRate, 27),
