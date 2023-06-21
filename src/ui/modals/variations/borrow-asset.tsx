@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { useMediatedState } from 'react-use';
 import {
     HealthFactor,
     Button,
@@ -8,13 +7,12 @@ import {
     MessageStatus,
     Tooltip,
 } from '../../components';
-import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
+import { ModalFooter, ModalHeaderV2, ModalTableDisplay } from '../subcomponents';
 import { ISupplyBorrowProps } from '../utils';
 import { useDialogController, useModal } from '../../../hooks';
 import { borrow, estimateGas, repay } from '@vmexfinance/sdk';
 import {
     NETWORK,
-    inputMediator,
     convertStringFormatToNumber,
     unformattedStringToBigNumber,
     bigNumberToNative,
@@ -25,15 +23,23 @@ import {
 } from '../../../utils';
 import { useAccount, useSigner } from 'wagmi';
 import { useUserTrancheData, useSubgraphTrancheData } from '../../../api';
-import { BigNumber, utils } from 'ethers';
+import { BigNumber, utils, Wallet } from 'ethers';
 import { useSelectedTrancheContext } from '../../../store';
 import { useNavigate } from 'react-router-dom';
 
 export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, data, tab }) => {
-    const { isSuccess, submitTx, isLoading, error } = useModal('borrow-asset-dialog');
-    const [amount, setAmount] = useMediatedState(inputMediator, '');
-    const [isMax, setIsMax] = React.useState(false);
-    const [view, setView] = React.useState('Borrow');
+    const {
+        isSuccess,
+        submitTx,
+        isLoading,
+        error,
+        amount,
+        setAmount,
+        isMax,
+        setIsMax,
+        view,
+        setView,
+    } = useModal('borrow-asset-dialog');
     const { address } = useAccount();
     const { data: signer } = useSigner();
     const { findAssetInUserSuppliesOrBorrows, findAmountBorrowable } = useUserTrancheData(
@@ -46,33 +52,33 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
     const { closeDialog } = useDialogController();
     const [estimatedGasCost, setEstimatedGasCost] = React.useState('0');
 
+    const defaultFunctionParams = {
+        trancheId: data ? data.trancheId : 0,
+        amount: convertStringFormatToNumber(amount),
+        signer: signer
+            ? signer
+            : new Wallet('0xdf57089febbacf7ba0bc227dafbffa9fc08a93fdc68e1e42411a14efcf23656e'),
+        network: NETWORK,
+        isMax: isMax,
+        test: SDK_PARAMS.test,
+        providerRpc: SDK_PARAMS.providerRpc,
+    };
+
     const handleClick = async () => {
         if (data && signer) {
             await submitTx(async () => {
                 const res = view?.includes('Borrow')
                     ? await borrow({
+                          ...defaultFunctionParams,
                           underlying: data.asset,
-                          trancheId: data.trancheId,
-                          amount: convertStringFormatToNumber(amount),
                           //   interestRateMode: 2,
-                          signer: signer,
-                          network: NETWORK,
-                          isMax: isMax,
-                          test: SDK_PARAMS.test,
-                          providerRpc: SDK_PARAMS.providerRpc,
                           // referrer: number,
                           // collateral: boolean,
                       })
                     : await repay({
+                          ...defaultFunctionParams,
                           asset: data.asset,
-                          trancheId: data.trancheId,
-                          amount: convertStringFormatToNumber(amount),
                           //   rateMode: 2,
-                          signer: signer,
-                          network: NETWORK,
-                          isMax: isMax,
-                          test: SDK_PARAMS.test,
-                          providerRpc: SDK_PARAMS.providerRpc,
                           // referrer: number,
                           // collateral: boolean,
                       });
@@ -140,26 +146,14 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
             if (signer && data) {
                 const res = view?.includes('Borrow')
                     ? await estimateGas({
+                          ...defaultFunctionParams,
                           function: 'borrow',
                           underlying: data.asset,
-                          trancheId: data.trancheId,
-                          amount: convertStringFormatToNumber(amount),
-                          signer: signer,
-                          network: NETWORK,
-                          isMax: isMax,
-                          test: SDK_PARAMS.test,
-                          providerRpc: SDK_PARAMS.providerRpc,
                       })
                     : await estimateGas({
+                          ...defaultFunctionParams,
                           function: 'repay',
                           asset: data.asset,
-                          trancheId: data.trancheId,
-                          amount: convertStringFormatToNumber(amount),
-                          signer: signer,
-                          network: NETWORK,
-                          isMax: isMax,
-                          test: SDK_PARAMS.test,
-                          providerRpc: SDK_PARAMS.providerRpc,
                       });
                 setEstimatedGasCost(bigNumberToUSD(res, DECIMALS.get(data.asset) || 18));
             }
@@ -169,153 +163,132 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
 
     return data && data.asset ? (
         <>
+            <ModalHeaderV2
+                dialog="borrow-asset-dialog"
+                tabs={['Borrow', 'Repay']}
+                onClick={setView}
+                active={view}
+            />
             {view?.includes('Borrow') ? (
+                !isSuccess && !error ? (
+                    // Default State
+                    <>
+                        <h3 className="mt-5 text-neutral400">Amount</h3>
+                        <CoinInput
+                            amount={amount}
+                            setAmount={setAmount}
+                            coin={{
+                                logo: `/coins/${data.asset?.toLowerCase()}.svg`,
+                                name: data.asset,
+                            }}
+                            balance={bigNumberToUnformattedString(
+                                amountBorrwable.amountNative,
+                                data.asset,
+                            )}
+                            type="collateral"
+                            isMax={isMax}
+                            setIsMax={setIsMax}
+                            loading={amountBorrwable.loading}
+                            customMaxClick={maxOnClick}
+                        />
+                        <MessageStatus
+                            type="error"
+                            show={isViolatingMax()}
+                            message="Input amount is over the max"
+                        />
+                        <MessageStatus
+                            type="warning"
+                            show={isViolatingBorrowCap()}
+                            message="WARNING: Attempting to borrow more than borrow cap"
+                        />
+
+                        <h3 className="mt-6 text-neutral400">Health Factor</h3>
+                        <HealthFactor
+                            asset={data.asset}
+                            amount={amount}
+                            type={'borrow'}
+                            trancheId={String(data?.trancheId)}
+                        />
+
+                        <ModalTableDisplay
+                            title="Transaction Overview"
+                            content={[
+                                {
+                                    label: 'Borrow APR (%)',
+                                    value: `${apy}`,
+                                },
+                                {
+                                    label: 'Estimated Gas',
+                                    value: `${estimatedGasCost}`,
+                                },
+                            ]}
+                        />
+                    </>
+                ) : (
+                    <div className="mt-10 mb-8">
+                        <TransactionStatus success={isSuccess} errorText={error} full />
+                    </div>
+                )
+            ) : !isSuccess && !error ? (
+                // Default State
                 <>
-                    <ModalHeader
-                        dialog="borrow-asset-dialog"
-                        title={name}
-                        asset={data.asset}
-                        tab={tab}
-                        onClick={!amountRepay?.eq(BigNumber.from('0')) ? setView : () => {}}
-                        primary
+                    <h3 className="mt-5 text-neutral400">Amount</h3>
+                    <CoinInput
+                        amount={amount}
+                        setAmount={setAmount}
+                        coin={{
+                            logo: `/coins/${data.asset?.toLowerCase()}.svg`,
+                            name: data.asset,
+                        }}
+                        balance={bigNumberToUnformattedString(amountRepay, data.asset)}
+                        type="owed"
+                        isMax={isMax}
+                        setIsMax={setIsMax}
+                        loading={Number(bigNumberToNative(amountRepay, data.asset)) === 0}
+                        customMaxClick={maxOnClick}
                     />
-                    {!isSuccess && !error ? (
-                        // Default State
-                        <>
-                            <h3 className="mt-5 text-neutral400">Amount</h3>
-                            <CoinInput
-                                amount={amount}
-                                setAmount={setAmount}
-                                coin={{
-                                    logo: `/coins/${data.asset?.toLowerCase()}.svg`,
-                                    name: data.asset,
-                                }}
-                                balance={bigNumberToUnformattedString(
-                                    amountBorrwable.amountNative,
-                                    data.asset,
-                                )}
-                                type="collateral"
-                                isMax={isMax}
-                                setIsMax={setIsMax}
-                                loading={amountBorrwable.loading}
-                                customMaxClick={maxOnClick}
-                            />
-                            <MessageStatus
-                                type="error"
-                                show={isViolatingMax()}
-                                message="Input amount is over the max"
-                            />
-                            <MessageStatus
-                                type="warning"
-                                show={isViolatingBorrowCap()}
-                                message="WARNING: Attempting to borrow more than borrow cap"
-                            />
+                    <MessageStatus
+                        type="error"
+                        show={isViolatingMax()}
+                        message="Input amount is over the max"
+                    />
 
-                            <h3 className="mt-6 text-neutral400">Health Factor</h3>
-                            <HealthFactor
-                                asset={data.asset}
-                                amount={amount}
-                                type={'borrow'}
-                                trancheId={String(data?.trancheId)}
-                            />
+                    <h3 className="mt-6 text-neutral400">Health Factor</h3>
+                    <HealthFactor
+                        asset={data.asset}
+                        amount={amount}
+                        type={'repay'}
+                        trancheId={String(data?.trancheId)}
+                    />
 
-                            <ModalTableDisplay
-                                title="Transaction Overview"
-                                content={[
-                                    {
-                                        label: 'Borrow APR (%)',
-                                        value: `${apy}`,
-                                    },
-                                    {
-                                        label: 'Estimated Gas',
-                                        value: `${estimatedGasCost}`,
-                                    },
-                                ]}
-                            />
-                        </>
-                    ) : (
-                        <div className="mt-10 mb-8">
-                            <TransactionStatus success={isSuccess} errorText={error} full />
-                        </div>
-                    )}
+                    <ModalTableDisplay
+                        title="Transaction Overview"
+                        content={[
+                            {
+                                label: 'Remaining Balance',
+                                value: `${
+                                    amount
+                                        ? bigNumberToNative(
+                                              amountRepay.sub(
+                                                  unformattedStringToBigNumber(amount, data.asset),
+                                              ),
+                                              data.asset,
+                                          )
+                                        : bigNumberToNative(amountRepay, data.asset)
+                                } ${data.asset}`,
+                                loading: Number(bigNumberToNative(amountRepay, data.asset)) === 0,
+                            },
+                            {
+                                label: 'Estimated Gas',
+                                value: `${estimatedGasCost}`,
+                            },
+                        ]}
+                    />
                 </>
             ) : (
-                //repay
-                <>
-                    <ModalHeader
-                        dialog="borrow-asset-dialog"
-                        title={name}
-                        asset={data.asset}
-                        tab={tab}
-                        onClick={data?.view ? () => {} : setView}
-                    />
-                    {!isSuccess && !error ? (
-                        // Default State
-                        <>
-                            <h3 className="mt-5 text-neutral400">Amount</h3>
-                            <CoinInput
-                                amount={amount}
-                                setAmount={setAmount}
-                                coin={{
-                                    logo: `/coins/${data.asset?.toLowerCase()}.svg`,
-                                    name: data.asset,
-                                }}
-                                balance={bigNumberToUnformattedString(amountRepay, data.asset)}
-                                type="owed"
-                                isMax={isMax}
-                                setIsMax={setIsMax}
-                                loading={Number(bigNumberToNative(amountRepay, data.asset)) === 0}
-                                customMaxClick={maxOnClick}
-                            />
-                            <MessageStatus
-                                type="error"
-                                show={isViolatingMax()}
-                                message="Input amount is over the max"
-                            />
-
-                            <h3 className="mt-6 text-neutral400">Health Factor</h3>
-                            <HealthFactor
-                                asset={data.asset}
-                                amount={amount}
-                                type={'repay'}
-                                trancheId={String(data?.trancheId)}
-                            />
-
-                            <ModalTableDisplay
-                                title="Transaction Overview"
-                                content={[
-                                    {
-                                        label: 'Remaining Balance',
-                                        value: `${
-                                            amount
-                                                ? bigNumberToNative(
-                                                      amountRepay.sub(
-                                                          unformattedStringToBigNumber(
-                                                              amount,
-                                                              data.asset,
-                                                          ),
-                                                      ),
-                                                      data.asset,
-                                                  )
-                                                : bigNumberToNative(amountRepay, data.asset)
-                                        } ${data.asset}`,
-                                        loading:
-                                            Number(bigNumberToNative(amountRepay, data.asset)) ===
-                                            0,
-                                    },
-                                    {
-                                        label: 'Estimated Gas',
-                                        value: `${estimatedGasCost}`,
-                                    },
-                                ]}
-                            />
-                        </>
-                    ) : (
-                        <div className="mt-10 mb-8">
-                            <TransactionStatus success={isSuccess} errorText={error} full />
-                        </div>
-                    )}
-                </>
+                <div className="mt-10 mb-8">
+                    <TransactionStatus success={isSuccess} errorText={error} full />
+                </div>
             )}
             <ModalFooter between={!location.hash.includes('tranches')}>
                 {!location.hash.includes('tranches') && (

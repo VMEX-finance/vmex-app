@@ -105,6 +105,10 @@ const TrancheDetails: React.FC = () => {
                                             name: 'Collateralized',
                                             color: 'bg-brand-blue',
                                         },
+                                        {
+                                            name: 'Rewards',
+                                            color: 'bg-brand-purple',
+                                        },
                                     ]}
                                 />
                             </div>
