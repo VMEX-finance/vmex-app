@@ -50,6 +50,12 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
         (findAssetInUserSuppliesOrBorrows(asset || '', 'supply') as IYourSuppliesTableItemProps)
             ?.collateral;
 
+    // TODO: check to see if user has rewards
+    const hasRewards = (asset: string) =>
+        type === 'supply' &&
+        (findAssetInUserSuppliesOrBorrows(asset || '', 'supply') as IYourSuppliesTableItemProps)
+            ?.collateral;
+
     const isSuppliedOrBorrowed = (asset: string) => {
         if (!queryUserTrancheData.data) return false;
         const list = (
@@ -148,18 +154,17 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                             >
                                 <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                                     <div className="flex items-center">
-                                        <div className="flex flex-col justify-center">
+                                        <div className="flex flex-col justify-center gap-1 absolute -translate-x-4">
                                             {isSuppliedOrBorrowed(el.asset) && (
                                                 <span
-                                                    className={`absolute -translate-x-4 ${
-                                                        isCollateralized(el.asset)
-                                                            ? 'translate-y-2'
-                                                            : ''
-                                                    } w-2 h-2 bg-brand-green-neon rounded-full`}
+                                                    className={` w-2 h-2 bg-brand-green-neon rounded-full`}
                                                 />
                                             )}
                                             {isCollateralized(el.asset) && (
-                                                <span className="absolute -translate-x-4 -translate-y-2 w-2 h-2 bg-brand-blue rounded-full" />
+                                                <span className="w-2 h-2 bg-brand-blue rounded-full" />
+                                            )}
+                                            {hasRewards(el.asset) && (
+                                                <span className="w-2 h-2 bg-brand-purple rounded-full" />
                                             )}
                                         </div>
                                         <AssetDisplay

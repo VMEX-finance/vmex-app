@@ -3,7 +3,7 @@ import { FaGasPump } from 'react-icons/fa';
 import { useMediatedState } from 'react-use';
 import { inputMediator } from '../../../utils/helpers';
 import { IDialogProps } from '../utils';
-import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
+import { ModalFooter, ModalHeader, ModalHeaderV2, ModalTableDisplay } from '../subcomponents';
 import { useModal } from '../../../hooks';
 import {
     DefaultDropdown,
@@ -26,7 +26,7 @@ export const StakeAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
         data &&
         data.asset && (
             <>
-                <ModalHeader dialog="stake-asset-dialog" title={name} asset={data.asset} />
+                <ModalHeaderV2 dialog="stake-asset-dialog" tabs={[`${name}`]} asset={data.asset} />
                 {!isSuccess && !error ? (
                     // Default State
                     <>
