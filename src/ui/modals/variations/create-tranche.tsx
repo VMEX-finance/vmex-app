@@ -10,7 +10,7 @@ import {
 } from '../../components';
 import { IDialogProps } from '../utils';
 import { useStepper, useModal } from '../../../hooks';
-import { ModalFooter, ModalHeader, ModalHeaderV2 } from '../../modals/subcomponents';
+import { ModalFooter, ModalHeader } from '../../modals/subcomponents';
 import { CreateTrancheAssetsTable } from '../../tables';
 import { NETWORK, AVAILABLE_ASSETS, SDK_PARAMS, checkProfanity } from '../../../utils';
 import { useAccount, useSigner } from 'wagmi';
@@ -101,7 +101,7 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
 
     return (
         <>
-            <ModalHeaderV2 dialog="create-tranche-dialog" tabs={[`${name}`]} />
+            <ModalHeader dialog="create-tranche-dialog" tabs={[`${name}`]} />
             <div className="mt-2">
                 <Stepper steps={steps} previous={prevStep} next={nextStep} />
             </div>

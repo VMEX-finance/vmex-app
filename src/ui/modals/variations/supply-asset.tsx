@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ModalFooter, ModalHeaderV2, ModalTableDisplay } from '../subcomponents';
+import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
 import { useDialogController, useModal } from '../../../hooks';
 import { supply, withdraw, estimateGas } from '@vmexfinance/sdk';
 import {
@@ -184,7 +184,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
 
     return data && data.asset ? (
         <>
-            <ModalHeaderV2
+            <ModalHeader
                 dialog="loan-asset-dialog"
                 tabs={['Supply', 'Withdraw', 'Claim']}
                 onClick={setView}
