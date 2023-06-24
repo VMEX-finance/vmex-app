@@ -148,6 +148,22 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
         return false;
     };
 
+    const isButtonDisabled = () => {
+        if (view?.includes('Claim')) {
+            return false;
+        } else {
+            return (
+                isSuccess ||
+                error.length !== 0 ||
+                (!amount && !isMax) ||
+                (view?.includes('Supply') && amountWalletNative.amountNative.lt(10)) ||
+                (view?.includes('Withdraw') && (!amountWithdraw || amountWithdraw.lt(10))) ||
+                isViolatingSupplyCap() ||
+                isViolatingMax()
+            );
+        }
+    };
+
     useEffect(() => {
         if (data?.view) setView('Withdraw');
     }, [data?.view, setView]);
@@ -285,6 +301,26 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                         <TransactionStatus success={isSuccess} errorText={error} full />
                     </div>
                 )
+            ) : view?.includes('Claim') ? (
+                <>
+                    <ModalTableDisplay
+                        title="Rewards"
+                        content={[
+                            {
+                                label: 'Reward 1',
+                                value: `$0`,
+                            },
+                            {
+                                label: 'Reward 2',
+                                value: `$0`,
+                            },
+                            {
+                                label: 'Reward 3',
+                                value: `$0`,
+                            },
+                        ]}
+                    />
+                </>
             ) : !isSuccess && !error ? (
                 // Default State
                 <>
@@ -366,7 +402,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                         }}
                     />
                 )}
-                {Number(amount) === 0 ? (
+                {Number(amount) === 0 && !view?.includes('Claim') ? (
                     <Tooltip
                         text="Please enter an amount"
                         content={<Button primary label={'Submit Transaction'} disabled />}
@@ -374,18 +410,9 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                 ) : (
                     <Button
                         primary
-                        disabled={
-                            isSuccess ||
-                            error.length !== 0 ||
-                            (!amount && !isMax) ||
-                            (view?.includes('Supply') && amountWalletNative.amountNative.lt(10)) ||
-                            (view?.includes('Withdraw') &&
-                                (!amountWithdraw || amountWithdraw.lt(10))) ||
-                            isViolatingSupplyCap() ||
-                            isViolatingMax()
-                        }
+                        disabled={isButtonDisabled()}
                         onClick={handleSubmit}
-                        label={'Submit Transaction'}
+                        label={view?.includes('Claim') ? 'Claim Rewards' : 'Submit Transaction'}
                         loading={isLoading}
                         loadingText="Submitting"
                     />
