@@ -7,7 +7,7 @@ import {
     MessageStatus,
     Tooltip,
 } from '../../components';
-import { ModalFooter, ModalHeaderV2, ModalTableDisplay } from '../subcomponents';
+import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
 import { ISupplyBorrowProps } from '../utils';
 import { useDialogController, useModal } from '../../../hooks';
 import { borrow, estimateGas, repay } from '@vmexfinance/sdk';
@@ -163,7 +163,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
 
     return data && data.asset ? (
         <>
-            <ModalHeaderV2
+            <ModalHeader
                 dialog="borrow-asset-dialog"
                 tabs={['Borrow', 'Repay']}
                 onClick={setView}

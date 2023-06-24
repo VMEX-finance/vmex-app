@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { IDialogProps } from '../utils';
-import { ModalFooter, ModalHeaderV2 } from '../subcomponents';
+import { ModalFooter, ModalHeader } from '../subcomponents';
 import { Button, TransactionStatus } from '../../components';
 
 export const ConfirmationDialog: React.FC<IDialogProps> = ({ name, isOpen, data, closeDialog }) => {
@@ -14,7 +14,7 @@ export const ConfirmationDialog: React.FC<IDialogProps> = ({ name, isOpen, data,
         data &&
         data.asset && (
             <>
-                <ModalHeaderV2 dialog="confirmation-dialog" tabs={[`${name}`]} asset={data.asset} />
+                <ModalHeader dialog="confirmation-dialog" tabs={[`${name}`]} asset={data.asset} />
                 {!data.success ? (
                     // Default State
                     <div className="py-8">
