@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useLayoutEffect, useState } from 'react';
 import { IDialogProps } from '../utils';
-import { ModalFooter, ModalHeaderV2 } from '../subcomponents';
+import { ModalFooter, ModalHeader } from '../subcomponents';
 import { Button, DefaultInput, TransactionStatus } from '../../components';
 import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from 'react-simple-captcha';
 import { ThemeContext } from '../../../store/theme';
@@ -81,7 +81,7 @@ export const FeedbackDialog: React.FC<IDialogProps> = ({ name, isOpen, data, clo
 
     return (
         <>
-            <ModalHeaderV2 dialog="feedback-dialog" tabs={[`${name}`]} />
+            <ModalHeader dialog="feedback-dialog" tabs={[`${name}`]} />
             {!isSuccess ? (
                 <>
                     <div className="py-8 flex flex-col gap-4">

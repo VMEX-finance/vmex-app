@@ -1,6 +1,6 @@
 import React from 'react';
 import { IDialogProps } from '../utils';
-import { ModalFooter, ModalHeaderV2 } from '../subcomponents';
+import { ModalFooter, ModalHeader } from '../subcomponents';
 import { Button, HealthFactor, TransactionStatus } from '../../components';
 import { useSigner } from 'wagmi';
 import { useModal } from '../../../hooks/useModal';
@@ -42,7 +42,7 @@ export const ToggleCollateralDialog: React.FC<IDialogProps> = ({
         data &&
         data.asset && (
             <>
-                <ModalHeaderV2
+                <ModalHeader
                     dialog="toggle-collateral-dialog"
                     tabs={[`${data.collateral ? 'Disable' : 'Enable'} ${name}`]}
                     asset={data.asset}
