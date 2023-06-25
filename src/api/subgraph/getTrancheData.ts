@@ -13,6 +13,7 @@ import {
     IAvailableCoins,
 } from '../../utils';
 import { ILineChartDataPointProps } from '../../ui/components';
+import { getTrancheId } from './id-generation';
 
 export const processTrancheData = async (
     data: any,
@@ -168,7 +169,7 @@ export const getSubgraphTrancheData = async (
 ): Promise<IGraphTrancheDataProps> => {
     if (!_trancheId) return {};
 
-    const trancheId = String(_trancheId);
+    const trancheId = getTrancheId(String(_trancheId));
     const { data, error } = await apolloClient.query({
         query: gql`
             query QueryTranche($trancheId: String!) {
@@ -229,7 +230,7 @@ export const getSubgraphTrancheData = async (
     });
 
     if (error) return {};
-    else return processTrancheData(data.tranche, trancheId);
+    else return processTrancheData(data.tranche, String(_trancheId));
 };
 
 export const getSubgraphTrancheChart = async (
@@ -237,7 +238,7 @@ export const getSubgraphTrancheChart = async (
 ): Promise<ILineChartDataPointProps[] | any> => {
     if (!_trancheId) return {};
 
-    const trancheId = String(_trancheId);
+    const trancheId = getTrancheId(String(_trancheId));
     const { data, error } = await apolloClient.query({
         query: gql`
             query QueryTrancheChart($trancheId: String!) {

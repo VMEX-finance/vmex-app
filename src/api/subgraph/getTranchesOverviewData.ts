@@ -4,6 +4,7 @@ import { ISubgraphTranchesDataProps } from './types';
 import { ITrancheProps } from '../types';
 import { getAllAssetPrices } from '../prices';
 import { nativeAmountToUSD, apolloClient } from '../../utils';
+import { getTrancheIdFromTrancheEntity } from './id-generation';
 
 export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]> => {
     const { data, error } = await apolloClient.query({
@@ -83,7 +84,7 @@ export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]
 
         tranches.map((tranche: any) => {
             let trancheInfo = {
-                id: tranche.id,
+                id: getTrancheIdFromTrancheEntity(tranche.id),
                 name: tranche.name,
                 assets: tranche.reserves.map((el: any) => el.assetData.underlyingAssetName),
                 tvl: 0,

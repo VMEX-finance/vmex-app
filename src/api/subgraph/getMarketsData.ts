@@ -6,14 +6,8 @@ import { BigNumber, utils } from 'ethers';
 import { IMarketsAsset } from '../types';
 import { getAllAssetPrices } from '../prices';
 import { usdFormatter, apolloClient, nativeAmountToUSD, NETWORK } from '../../utils';
-import { convertSymbolToAddress, getContractAddress } from '@vmexfinance/sdk';
-
-function getReserveId(underlyingAsset: string, trancheId: string): string {
-    return `${underlyingAsset}${getContractAddress(
-        'LendingPoolAddressesProvider',
-        NETWORK,
-    ).toLowerCase()}${trancheId}`;
-}
+import { convertSymbolToAddress } from '@vmexfinance/sdk';
+import { getReserveId } from './id-generation';
 
 export const getSubgraphMarketsChart = async (
     _trancheId: string | number,

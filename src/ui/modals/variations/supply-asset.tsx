@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
 import { useDialogController, useModal } from '../../../hooks';
-import { supply, withdraw, estimateGas } from '@vmexfinance/sdk';
+import { supply, withdraw, estimateGas, claimIncentives } from '@vmexfinance/sdk';
 import {
     NETWORK,
     convertStringFormatToNumber,
@@ -11,6 +11,7 @@ import {
     SDK_PARAMS,
     DECIMALS,
     bigNumberToUSD,
+    REVERSE_MAINNET_ASSET_MAPPINGS,
 } from '../../../utils';
 import {
     HealthFactor,
@@ -46,7 +47,8 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
     const { findAssetInMarketsData } = useSubgraphTrancheData(data?.trancheId || 0);
     const { data: signer } = useSigner();
     const { address } = useAccount();
-    const { findAssetInUserSuppliesOrBorrows } = useUserTrancheData(address, data?.trancheId || 0);
+    const { findAssetInUserSuppliesOrBorrows, queryUserRewardsData, queryRewardsData } =
+        useUserTrancheData(address, data?.trancheId || 0);
     const { getTokenBalance } = useUserData(address);
     const navigate = useNavigate();
     const { setAsset } = useSelectedTrancheContext();
@@ -92,8 +94,15 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                         // collateral: boolean,
                     });
                 } else if (view?.includes('Claim')) {
-                    // TODO: add claim function
-                    res = null;
+                    if (queryRewardsData.data) {
+                        res = await claimIncentives({
+                            ...defaultFunctionParams,
+                            to: await defaultFunctionParams.signer.getAddress(),
+                            incentivizedATokens: queryRewardsData.data.map<string>((el): string => {
+                                return el.aTokenAddress;
+                            }),
+                        });
+                    }
                 } else {
                     res = await withdraw({
                         ...defaultFunctionParams,
@@ -310,20 +319,15 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                 <>
                     <ModalTableDisplay
                         title="Rewards"
-                        content={[
-                            {
-                                label: 'Reward 1',
-                                value: `$0`,
-                            },
-                            {
-                                label: 'Reward 2',
-                                value: `$0`,
-                            },
-                            {
-                                label: 'Reward 3',
-                                value: `$0`,
-                            },
-                        ]}
+                        content={
+                            queryUserRewardsData.data?.rewardTokens?.map((el: string, idx) => {
+                                return {
+                                    label:
+                                        REVERSE_MAINNET_ASSET_MAPPINGS.get(el.toLowerCase()) || el,
+                                    value: `${queryUserRewardsData.data?.rewardAmounts[idx]}`,
+                                };
+                            }) || []
+                        }
                     />
                 </>
             ) : !isSuccess && !error ? (
