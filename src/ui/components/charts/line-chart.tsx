@@ -1,6 +1,7 @@
 import React from 'react';
 import { LineChart, Line, Tooltip, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 import { CustomTooltip } from './custom-tooltip';
+import { getTimeseriesAvgByDay } from '../../../utils/helpers';
 
 export type ILineChartDataPointProps = {
     xaxis: string | number; // x axis
@@ -27,6 +28,7 @@ type ILineChartProps = {
     type?: 'asset-stats' | 'utilization' | 'usd' | 'default';
     noTooltip?: boolean;
     height?: `h-${string}`;
+    interval?: 'datapoint' | 'day';
 };
 
 export const ReLineChart = (props: ILineChartProps) => {
@@ -67,7 +69,7 @@ export const ReLineChart = (props: ILineChartProps) => {
                 new Date(el.xaxis).getTime() <= new Date().getTime()
             );
         });
-
+        console.log('rangeData', rangeData);
         setDatedData(rangeData);
     };
 
@@ -97,7 +99,11 @@ export const ReLineChart = (props: ILineChartProps) => {
                     <LineChart
                         width={500}
                         height={300}
-                        data={datedData}
+                        data={
+                            props.interval === 'datapoint'
+                                ? datedData
+                                : getTimeseriesAvgByDay(datedData as any)
+                        }
                         margin={{
                             top: 10,
                             bottom: 10,
