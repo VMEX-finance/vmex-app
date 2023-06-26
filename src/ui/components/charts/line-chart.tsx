@@ -1,11 +1,11 @@
 import React from 'react';
 import { LineChart, Line, Tooltip, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 import { CustomTooltip } from './custom-tooltip';
-import { getTimeseriesAvgByDay } from '../../../utils/helpers';
+import { addMissingDatesToTimeseries, getTimeseriesAvgByDay } from '../../../utils/helpers';
 
 export type ILineChartDataPointProps = {
     xaxis: string | number; // x axis
-    value: number; // y axis
+    value: number | null; // y axis
     value2?: number; // y axis
     value3?: number; // y axis
     asset?: string;
@@ -69,7 +69,7 @@ export const ReLineChart = (props: ILineChartProps) => {
                 new Date(el.xaxis).getTime() <= new Date().getTime()
             );
         });
-        console.log('rangeData', rangeData);
+
         setDatedData(rangeData);
     };
 
@@ -102,7 +102,9 @@ export const ReLineChart = (props: ILineChartProps) => {
                         data={
                             props.interval === 'datapoint'
                                 ? datedData
-                                : getTimeseriesAvgByDay(datedData as any)
+                                : addMissingDatesToTimeseries(
+                                      getTimeseriesAvgByDay(datedData as any),
+                                  )
                         }
                         margin={{
                             top: 10,
@@ -120,6 +122,7 @@ export const ReLineChart = (props: ILineChartProps) => {
                             dataKey={props.dataKey || 'value'}
                             stroke={props.color || '#8884d8'}
                             activeDot={{ r: 3 }}
+                            connectNulls={true}
                         />
                         {props.data.length > 0 &&
                             (props.data[0].value2 || props.data[0].value2 === 0) && (
@@ -129,6 +132,7 @@ export const ReLineChart = (props: ILineChartProps) => {
                                     dataKey={props.dataKey2 || 'value2'}
                                     stroke={props.color2 || '#fff'}
                                     activeDot={{ r: 3 }}
+                                    connectNulls={true}
                                 />
                             )}
                         {props.data.length > 0 &&
@@ -139,6 +143,7 @@ export const ReLineChart = (props: ILineChartProps) => {
                                     dataKey={props.dataKey3 || 'value3'}
                                     stroke={props.color3 || '#7667db'}
                                     activeDot={{ r: 3 }}
+                                    connectNulls={true}
                                 />
                             )}
                         {props.xaxis && <XAxis dataKey="xaxis" tickLine={false} />}

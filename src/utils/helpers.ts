@@ -1,6 +1,9 @@
 import { IMarketsAsset, ITrancheProps } from '@app/api/types';
 import { ethers } from 'ethers';
 import { HEALTH } from './constants';
+import moment from 'moment';
+import { ILineChartDataPointProps } from '@ui/components';
+
 const Filter = require('bad-words'),
     filter = new Filter();
 
@@ -214,4 +217,28 @@ export function getTimeseriesAvgByDay(
             xaxis: date,
         };
     });
+}
+
+export function addMissingDatesToTimeseries(
+    data: ILineChartDataPointProps[],
+): ILineChartDataPointProps[] {
+    const finalDataPoints: ILineChartDataPointProps[] = [];
+    data.forEach(function (point, index) {
+        const plotDate = moment(point.xaxis);
+        finalDataPoints.push(point);
+
+        const nextPoint = data[index + 1];
+        if (!nextPoint) {
+            return;
+        }
+
+        const nextDate = moment(nextPoint.xaxis);
+        while (plotDate.add(1, 'd').isBefore(nextDate)) {
+            finalDataPoints.push({
+                xaxis: plotDate.toDate().toLocaleDateString(),
+                value: point.value,
+            });
+        }
+    });
+    return finalDataPoints;
 }
