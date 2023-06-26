@@ -54,7 +54,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
 
     const [asCollateral, setAsCollateral] = useState<any>(data?.collateral);
     const [existingSupplyCollateral, setExistingSupplyCollateral] = useState(false);
-    const [estimatedGasCost, setEstimatedGasCost] = useState('0');
+    const [estimatedGasCost, setEstimatedGasCost] = useState({ cost: '0', loading: false });
 
     const amountWalletNative = getTokenBalance(data?.asset || '');
     const apy = findAssetInMarketsData(data?.asset || '')?.supplyRate;
@@ -174,6 +174,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
 
     useEffect(() => {
         const getter = async () => {
+            setEstimatedGasCost({ ...estimatedGasCost, loading: true });
             if (signer && data) {
                 let res;
                 if (view?.includes('Supply')) {
@@ -192,7 +193,10 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                         asset: data.asset,
                     });
                 }
-                setEstimatedGasCost(bigNumberToUSD(res, DECIMALS.get(data.asset) || 18));
+                setEstimatedGasCost({
+                    loading: false,
+                    cost: bigNumberToUSD(res, DECIMALS.get(data.asset) || 18),
+                });
             }
         };
         getter();
@@ -291,7 +295,8 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                                 },
                                 {
                                     label: 'Estimated Gas',
-                                    value: `${estimatedGasCost}`,
+                                    value: estimatedGasCost.cost,
+                                    loading: estimatedGasCost.loading,
                                 },
                             ]}
                         />
@@ -374,7 +379,8 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                             },
                             {
                                 label: 'Estimated Gas',
-                                value: `${estimatedGasCost}`,
+                                value: estimatedGasCost.cost,
+                                loading: estimatedGasCost.loading,
                             },
                         ]}
                     />

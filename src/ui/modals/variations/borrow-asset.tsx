@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     HealthFactor,
     Button,
@@ -50,7 +50,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
     const { setAsset } = useSelectedTrancheContext();
     const navigate = useNavigate();
     const { closeDialog } = useDialogController();
-    const [estimatedGasCost, setEstimatedGasCost] = React.useState('0');
+    const [estimatedGasCost, setEstimatedGasCost] = useState({ cost: '0', loading: false });
 
     const defaultFunctionParams = {
         trancheId: data ? data.trancheId : 0,
@@ -143,6 +143,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
 
     useEffect(() => {
         const getter = async () => {
+            setEstimatedGasCost({ ...estimatedGasCost, loading: true });
             if (signer && data) {
                 const res = view?.includes('Borrow')
                     ? await estimateGas({
@@ -155,7 +156,10 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                           function: 'repay',
                           asset: data.asset,
                       });
-                setEstimatedGasCost(bigNumberToUSD(res, DECIMALS.get(data.asset) || 18));
+                setEstimatedGasCost({
+                    cost: bigNumberToUSD(res, DECIMALS.get(data.asset) || 18),
+                    loading: false,
+                });
             }
         };
         getter();
@@ -219,7 +223,8 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                                 },
                                 {
                                     label: 'Estimated Gas',
-                                    value: `${estimatedGasCost}`,
+                                    value: estimatedGasCost.cost,
+                                    loading: estimatedGasCost.loading,
                                 },
                             ]}
                         />
@@ -280,7 +285,8 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                             },
                             {
                                 label: 'Estimated Gas',
-                                value: `${estimatedGasCost}`,
+                                value: estimatedGasCost.cost,
+                                loading: estimatedGasCost.loading,
                             },
                         ]}
                     />
