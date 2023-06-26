@@ -281,14 +281,35 @@ export const getSubgraphUserChart = async (
         (a: IncrementalChangeItem, b: IncrementalChangeItem) => a.timestamp - b.timestamp,
     );
 
-    let cumulativeValue = 0;
     // add a datapoint for starting at zero
     graphData.push({
         xaxis: new Date(earliestDeposit * 1000).toLocaleString(),
         value: 0,
     });
-    allIncrementalChanges.map((el, idx) => {
-        cumulativeValue += allIncrementalChanges[idx].usdValueDelta;
+
+    const mergedData: IncrementalChangeItem[] = [];
+    let tempAccrued = 0;
+    allIncrementalChanges.forEach((el, idx) => {
+        tempAccrued += el.usdValueDelta;
+        console.log(el, idx, allIncrementalChanges.length - 1);
+        if (
+            idx === allIncrementalChanges.length - 1 ||
+            allIncrementalChanges[idx + 1].timestamp - el.timestamp >= 60
+        ) {
+            console.log('MERGING');
+            // only push to the merged data when the difference in timestamp is greater than a minute
+            // or if we are at the last element in the array
+            mergedData.push({
+                timestamp: el.timestamp,
+                usdValueDelta: tempAccrued,
+            });
+            tempAccrued = 0;
+        }
+    });
+
+    let cumulativeValue = 0;
+    mergedData.map((el, idx) => {
+        cumulativeValue += mergedData[idx].usdValueDelta;
         graphData.push({
             xaxis: new Date(el.timestamp * 1000).toLocaleString(),
             value: cumulativeValue,
