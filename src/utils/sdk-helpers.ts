@@ -116,9 +116,9 @@ export const bigNumberToUSD = (
 };
 
 export const nativeAmountToUSD = (
-    amount: BigNumber,
+    amount: BigNumberish,
     decimals: number,
-    assetUSDPrice: BigNumber,
+    assetUSDPrice: BigNumberish,
 ): number => {
     return parseFloat(
         Number(

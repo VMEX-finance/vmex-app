@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { ISubgraphAllAssetMappingsData } from './types';
 import { IAssetMappings } from '../types';
 import { apolloClient } from '../../utils';
+import { getAllAssetPrices } from '../prices';
 
 export const getSubgraphAllAssetMappingsData = async (): Promise<Map<string, IAssetMappings>> => {
     const { data, error } = await apolloClient.query({
@@ -54,6 +55,11 @@ export function useSubgraphAllAssetMappingsData(): ISubgraphAllAssetMappingsData
         queryFn: () => getSubgraphAllAssetMappingsData(),
     });
 
+    const queryAssetPrices = useQuery({
+        queryKey: ['all-asset-prices'],
+        queryFn: () => getAllAssetPrices(),
+    });
+
     const findAssetInMappings = (asset: string) => {
         if (queryAllAssetMappingsData.isLoading) return undefined;
         else {
@@ -63,6 +69,7 @@ export function useSubgraphAllAssetMappingsData(): ISubgraphAllAssetMappingsData
 
     return {
         queryAllAssetMappingsData,
+        queryAssetPrices,
         findAssetInMappings,
     };
 }
