@@ -195,3 +195,23 @@ export const addFeaturedTranches = (
         );
     }
 };
+
+export function getTimeseriesAvgByDay(
+    data: { value: number; xaxis: string }[],
+): { value: number; xaxis: string }[] {
+    const sums = data.reduce(function (acc, obj) {
+        const date = String(obj.xaxis).split(',')[0];
+        if (!acc[date]) {
+            acc[date] = { sum: 0, count: 0 };
+        }
+        acc[date].sum += +obj.value;
+        acc[date].count++;
+        return acc;
+    }, Object.create(null));
+    return Object.keys(sums).map(function (date) {
+        return {
+            value: sums[date].sum / sums[date].count,
+            xaxis: date,
+        };
+    });
+}
