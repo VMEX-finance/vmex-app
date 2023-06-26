@@ -1,7 +1,7 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import React, { useContext, useEffect } from 'react';
 import { IButtonProps } from './default';
-import { useAccount, useDisconnect, useNetwork, useSwitchNetwork } from 'wagmi';
+import { useAccount, useDisconnect, useNetwork } from 'wagmi';
 import { ThemeContext } from '../../../store';
 import { useWindowSize, useDialogController } from '../../../hooks';
 import { DefaultDropdown, IDropdownItemProps } from '../dropdowns';
@@ -12,7 +12,6 @@ import { useSubgraphUserData } from '../../../api';
 
 export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: IButtonProps) => {
     const { chain } = useNetwork();
-    const { switchNetwork } = useSwitchNetwork();
     const navigate = useNavigate();
     const { disconnect } = useDisconnect();
     const { theme, setTheme } = useContext(ThemeContext);
@@ -90,6 +89,7 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
                     chain,
                     openAccountModal,
                     openConnectModal,
+                    openChainModal,
                     authenticationStatus,
                     mounted,
                 }) => {
@@ -106,7 +106,7 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
                         if (!connected) {
                             return { onClick: openConnectModal, render: title };
                         } else if (chain.unsupported) {
-                            return { onClick: () => switchNetwork?.(5), render: 'Wrong Network' };
+                            return { onClick: openChainModal, render: 'Wrong Network' };
                         } else {
                             return { onClick: openAccountModal, render: account.displayName };
                         }
