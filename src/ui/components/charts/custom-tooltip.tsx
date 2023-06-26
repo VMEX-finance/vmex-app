@@ -8,7 +8,7 @@ type ICustomTooltipProps = {
 };
 
 export const CustomTooltip = ({ active, payload, label, type }: ICustomTooltipProps) => {
-    const wrapperClass = 'bg-brand-black text:neutral-100 px-2 py-1 flex flex-col';
+    const wrapperClass = 'bg-brand-black text-neutral-100 px-2 py-1 flex flex-col';
     if (active && payload && payload.length) {
         if (type === 'asset-stats') {
             return (

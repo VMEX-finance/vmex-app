@@ -54,7 +54,7 @@ export const UserPerformanceCard: React.FC<IUserPerformanceCardProps> = ({
         >
             {/* <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-1 gap-3 w-full px-3"> */}
             <div className="grid grid-cols-1 gap-3 w-full px-3">
-                <div className="w-full h-[240px] overflow-y-hidden">
+                <div className="w-full max-h-[200px] pb-16">
                     <h4>Profit / Loss (P&L)</h4>
                     <ReLineChart
                         data={profitLossChart || []}

@@ -26,6 +26,7 @@ type ILineChartProps = {
     labels?: boolean;
     type?: 'asset-stats' | 'utilization' | 'usd' | 'default';
     noTooltip?: boolean;
+    height?: `h-${string}`;
 };
 
 export const ReLineChart = (props: ILineChartProps) => {
