@@ -79,7 +79,7 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
     // Loop through and add previous day TVL to current day TVL
     graphData.forEach(function (plot, index) {
         if (index > 0) {
-            plot.value = plot.value + graphData[index - 1].value;
+            plot.value = (plot.value || 0) + (graphData[index - 1].value || 0);
         }
     });
     return graphData;

@@ -290,7 +290,7 @@ export const getSubgraphTrancheChart = async (
 
             const found = graphData.find((element) => element.xaxis === date);
             if (found) {
-                found.value = found.value + usdAmount;
+                found.value = (found.value || 0) + usdAmount;
             } else {
                 graphData.push({ value: usdAmount, xaxis: date });
             }
@@ -312,7 +312,7 @@ export const getSubgraphTrancheChart = async (
 
             const found = graphData.find((element) => element.xaxis === date);
             if (found) {
-                found.value = found.value + usdAmount;
+                found.value = (found.value || 0) + usdAmount;
             } else {
                 graphData.push({ value: usdAmount, xaxis: date });
             }
@@ -321,7 +321,7 @@ export const getSubgraphTrancheChart = async (
         // Loop through and add previous day TVL to current day TVL
         graphData.forEach(function (plot, index) {
             if (index > 0) {
-                plot.value = plot.value + graphData[index - 1].value;
+                plot.value = (plot.value || 0) + (graphData[index - 1].value || 0);
             }
         });
         return graphData.sort((a, b) => new Date(a.xaxis).valueOf() - new Date(b.xaxis).valueOf());
