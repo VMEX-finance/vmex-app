@@ -13,6 +13,7 @@ import {
     bigNumberToUSD,
     REVERSE_MAINNET_ASSET_MAPPINGS,
     nativeAmountToUSD,
+    IAvailableCoins,
 } from '../../../utils';
 import {
     HealthFactor,
@@ -31,7 +32,7 @@ import {
     useUserTrancheData,
 } from '../../../api';
 import { useSigner, useAccount } from 'wagmi';
-import { BigNumber, utils, Wallet } from 'ethers';
+import { BigNumber, BigNumberish, utils, Wallet } from 'ethers';
 import { IYourSuppliesTableItemProps } from '@ui/tables';
 import { ISupplyBorrowProps } from '../utils';
 import { useNavigate } from 'react-router-dom';
@@ -340,10 +341,30 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                         title="Rewards"
                         content={
                             queryUserRewardsData.data?.rewardTokens?.map((el: string, idx) => {
+                                const assetSymbol =
+                                    REVERSE_MAINNET_ASSET_MAPPINGS.get(el.toLowerCase()) || el;
+                                const assetDecimals = DECIMALS.get(assetSymbol);
+                                let assetAmount: BigNumberish =
+                                    queryUserRewardsData.data?.rewardAmounts[idx] ||
+                                    'unable to get reward amount';
+                                if (assetDecimals && queryAssetPrices.data) {
+                                    // if the asset decimals mapping exists
+                                    const assetUSDPrice =
+                                        queryAssetPrices.data[assetSymbol as IAvailableCoins]
+                                            .usdPrice;
+                                    assetAmount = '$'.concat(
+                                        String(
+                                            nativeAmountToUSD(
+                                                assetAmount,
+                                                assetDecimals,
+                                                assetUSDPrice,
+                                            ),
+                                        ),
+                                    );
+                                }
                                 return {
-                                    label:
-                                        REVERSE_MAINNET_ASSET_MAPPINGS.get(el.toLowerCase()) || el,
-                                    value: `${queryUserRewardsData.data?.rewardAmounts[idx]}`,
+                                    label: assetSymbol,
+                                    value: assetAmount.toString(),
                                 };
                             }) || []
                         }
