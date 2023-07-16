@@ -3,7 +3,7 @@ import { CgSpinner } from 'react-icons/cg';
 
 type ISpinnerLoaderProps = {
     size?: 'lg' | 'md' | 'sm';
-    height?: string;
+    height?: string | 'auto';
     width?: string;
 };
 

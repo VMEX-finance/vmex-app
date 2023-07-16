@@ -119,7 +119,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                     res = await withdraw({
                         ...defaultFunctionParams,
                         asset: data.asset,
-                        interestRateMode: 2,
+                        // interestRateMode: 2,
                         // referrer: number,
                         // collateral: boolean,
                         // test: boolean
@@ -171,6 +171,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
 
     const isButtonDisabled = () => {
         if (view?.includes('Claim')) {
+            if (!queryUserRewardsData?.data?.rewardTokens?.length) return true;
             return false;
         } else {
             return (
@@ -183,6 +184,29 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                 isViolatingMax()
             );
         }
+    };
+
+    const renderRewards = () => {
+        if (!queryUserRewardsData?.data?.rewardTokens?.length) return [];
+        return queryUserRewardsData.data?.rewardTokens?.map((el: string, idx) => {
+            const assetSymbol = REVERSE_MAINNET_ASSET_MAPPINGS.get(el.toLowerCase()) || el;
+            const assetDecimals = DECIMALS.get(assetSymbol);
+            let assetAmount: BigNumberish =
+                queryUserRewardsData.data?.rewardAmounts[idx] || 'unable to get reward amount';
+            if (assetDecimals && queryAssetPrices.data) {
+                // if the asset decimals mapping exists
+                const assetUSDPrice =
+                    queryAssetPrices.data[assetSymbol as IAvailableCoins].usdPrice;
+                assetAmount = '$'.concat(
+                    String(nativeAmountToUSD(assetAmount, assetDecimals, assetUSDPrice)),
+                );
+            }
+            return {
+                label: assetSymbol,
+                value: assetAmount.toString(),
+                loading: queryRewardsData.isLoading,
+            };
+        });
     };
 
     useEffect(() => {
@@ -231,7 +255,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
         getter();
     }, [view, data, isMax, amount, signer]);
 
-    return data && data.asset ? (
+    return (
         <>
             <ModalHeader
                 dialog="loan-asset-dialog"
@@ -248,12 +272,12 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                             amount={amount}
                             setAmount={setAmount}
                             coin={{
-                                logo: `/coins/${data.asset?.toLowerCase()}.svg`,
-                                name: data.asset,
+                                logo: `/coins/${data?.asset?.toLowerCase() || 'eth'}.svg`,
+                                name: data?.asset || 'ETH',
                             }}
                             balance={bigNumberToUnformattedString(
                                 amountWalletNative.amountNative,
-                                data.asset,
+                                data?.asset || 'eth',
                             )}
                             isMax={isMax}
                             setIsMax={setIsMax}
@@ -305,7 +329,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
 
                         <h3 className="mt-6 text-neutral400">Health Factor</h3>
                         <HealthFactor
-                            asset={data.asset}
+                            asset={data?.asset || 'ETH'}
                             amount={amount}
                             type={'supply'}
                             trancheId={String(data?.trancheId)}
@@ -339,35 +363,11 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                 <>
                     <ModalTableDisplay
                         title="Rewards"
-                        content={
-                            queryUserRewardsData.data?.rewardTokens?.map((el: string, idx) => {
-                                const assetSymbol =
-                                    REVERSE_MAINNET_ASSET_MAPPINGS.get(el.toLowerCase()) || el;
-                                const assetDecimals = DECIMALS.get(assetSymbol);
-                                let assetAmount: BigNumberish =
-                                    queryUserRewardsData.data?.rewardAmounts[idx] ||
-                                    'unable to get reward amount';
-                                if (assetDecimals && queryAssetPrices.data) {
-                                    // if the asset decimals mapping exists
-                                    const assetUSDPrice =
-                                        queryAssetPrices.data[assetSymbol as IAvailableCoins]
-                                            .usdPrice;
-                                    assetAmount = '$'.concat(
-                                        String(
-                                            nativeAmountToUSD(
-                                                assetAmount,
-                                                assetDecimals,
-                                                assetUSDPrice,
-                                            ),
-                                        ),
-                                    );
-                                }
-                                return {
-                                    label: assetSymbol,
-                                    value: assetAmount.toString(),
-                                };
-                            }) || []
-                        }
+                        content={renderRewards()}
+                        noData={{
+                            text: 'No Rewards Available',
+                        }}
+                        loading={queryUserRewardsData.isLoading}
                     />
                 </>
             ) : !isSuccess && !error ? (
@@ -378,16 +378,18 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                         amount={amount}
                         setAmount={setAmount}
                         coin={{
-                            logo: `/coins/${data.asset?.toLowerCase()}.svg`,
-                            name: data.asset,
+                            logo: `/coins/${data?.asset?.toLowerCase() || 'eth'}.svg`,
+                            name: data?.asset || 'ETH',
                         }}
                         balance={bigNumberToUnformattedString(
                             amountWithdraw || BigNumber.from('0'),
-                            data.asset,
+                            data?.asset || 'ETH',
                         )}
                         isMax={isMax}
                         setIsMax={setIsMax}
-                        loading={Number(bigNumberToNative(amountWithdraw, data.asset)) === 0}
+                        loading={
+                            Number(bigNumberToNative(amountWithdraw, data?.asset || 'ETH')) === 0
+                        }
                         customMaxClick={maxOnClick}
                     />
                     <MessageStatus
@@ -398,7 +400,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
 
                     <h3 className="mt-6 text-neutral400">Health Factor</h3>
                     <HealthFactor
-                        asset={data.asset}
+                        asset={data?.asset || 'ETH'}
                         amount={amount}
                         type={'withdraw'}
                         trancheId={String(data?.trancheId)}
@@ -413,13 +415,18 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                                     amount && amountWithdraw
                                         ? bigNumberToNative(
                                               amountWithdraw.sub(
-                                                  unformattedStringToBigNumber(amount, data.asset),
+                                                  unformattedStringToBigNumber(
+                                                      amount,
+                                                      data?.asset || 'ETH',
+                                                  ),
                                               ),
-                                              data.asset,
+                                              data?.asset || 'ETH',
                                           )
-                                        : bigNumberToNative(amountWithdraw, data.asset),
+                                        : bigNumberToNative(amountWithdraw, data?.asset || 'ETH'),
                                 loading:
-                                    Number(bigNumberToNative(amountWithdraw, data.asset)) === 0,
+                                    Number(
+                                        bigNumberToNative(amountWithdraw, data?.asset || 'ETH'),
+                                    ) === 0,
                             },
                             {
                                 label: 'Estimated Gas',
@@ -440,13 +447,13 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                     <Button
                         label={`View Tranche`}
                         onClick={() => {
-                            setAsset(data.asset);
+                            setAsset(data?.asset);
                             closeDialog('loan-asset-dialog');
                             window.scroll(0, 0);
                             navigate(
-                                `/tranches/${data.tranche?.toLowerCase().replace(/\s+/g, '-')}`,
+                                `/tranches/${data?.tranche?.toLowerCase().replace(/\s+/g, '-')}`,
                                 {
-                                    state: { view: 'details', trancheId: data.trancheId },
+                                    state: { view: 'details', trancheId: data?.trancheId },
                                 },
                             );
                         }}
@@ -469,7 +476,5 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                 )}
             </ModalFooter>
         </>
-    ) : (
-        <></>
     );
 };
