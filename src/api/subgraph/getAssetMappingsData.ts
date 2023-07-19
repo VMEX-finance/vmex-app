@@ -16,7 +16,7 @@ export const getSubgraphAllAssetMappingsData = async (): Promise<Map<string, IAs
                     baseLTV
                     borrowCap
                     borrowFactor
-                    interestRateStrategyAddresses
+                    interestRateStrategyAddress
                     liquidationBonus
                     liquidationThreshold
                     supplyCap
@@ -38,7 +38,7 @@ export const getSubgraphAllAssetMappingsData = async (): Promise<Map<string, IAs
                 baseLTV: el.baseLTV.toString(),
                 supplyCap: el.supplyApy,
                 vmexReserveFactor: el.vmexReserveFactor,
-                interestRateStrategyAddresses: el.interestRateStrategyAddresses,
+                interestRateStrategyAddress: el.interestRateStrategyAddress,
                 liquidationBonus: el.liquidationBonus,
                 liqudiationThreshold: el.liqudiationThreshold,
                 canBeBorrowed: el.borrowingEnabled,
