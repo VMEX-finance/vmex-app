@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
 import { useDialogController, useModal } from '../../../hooks';
-import { supply, withdraw, estimateGas, claimIncentives } from '@vmexfinance/sdk';
+import {
+    supply,
+    withdraw,
+    estimateGas,
+    claimIncentives,
+    convertAddressToSymbol,
+} from '@vmexfinance/sdk';
 import {
     NETWORK,
     convertStringFormatToNumber,
@@ -10,8 +16,6 @@ import {
     bigNumberToUnformattedString,
     SDK_PARAMS,
     DECIMALS,
-    bigNumberToUSD,
-    REVERSE_MAINNET_ASSET_MAPPINGS,
     nativeAmountToUSD,
     IAvailableCoins,
 } from '../../../utils';
@@ -189,7 +193,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
     const renderRewards = () => {
         if (!queryUserRewardsData?.data?.rewardTokens?.length) return [];
         return queryUserRewardsData.data?.rewardTokens?.map((el: string, idx) => {
-            const assetSymbol = REVERSE_MAINNET_ASSET_MAPPINGS.get(el.toLowerCase()) || el;
+            const assetSymbol = convertAddressToSymbol(el, SDK_PARAMS.network) || el;
             const assetDecimals = DECIMALS.get(assetSymbol);
             let assetAmount: BigNumberish =
                 queryUserRewardsData.data?.rewardAmounts[idx] || 'unable to get reward amount';
