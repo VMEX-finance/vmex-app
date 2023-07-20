@@ -27,7 +27,7 @@ export type IAssetMappings = {
     supplyCap: BigNumber;
     vmexReserveFactor: BigNumber;
 
-    interestRateStrategyAddresses: string[];
+    interestRateStrategyAddress: string;
 
     liquidationBonus: BigNumber;
     liqudiationThreshold: BigNumber;
