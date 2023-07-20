@@ -5,8 +5,8 @@ import {
     BorrowedAssetData,
     SuppliedAssetData,
     convertAddressToSymbol,
-    MAINNET_ASSET_MAPPINGS,
     getUserIncentives,
+    convertSymbolToAddress,
 } from '@vmexfinance/sdk';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -143,7 +143,7 @@ export function useUserTrancheData(
         if (queryRewardsData.isLoading || !asset || !trancheId || type === 'borrow') return false;
         else {
             const rewardsData = queryRewardsData.data || [];
-            const assetAddress = MAINNET_ASSET_MAPPINGS.get(asset)?.toLowerCase();
+            const assetAddress = convertSymbolToAddress(asset, SDK_PARAMS.network)?.toLowerCase();
             const currentUnixTime = Date.now() / 1000;
             return (
                 rewardsData.find(
