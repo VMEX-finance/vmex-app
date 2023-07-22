@@ -229,7 +229,7 @@ export const getSubgraphTrancheData = async (
         variables: { trancheId },
     });
 
-    if (error) return {};
+    if (error || !data.tranche) return {};
     else return processTrancheData(data.tranche, String(_trancheId));
 };
 
@@ -343,9 +343,12 @@ export function useSubgraphTrancheData(trancheId: number): ISubgraphTrancheData 
 
     const findAssetInMarketsData = (asset: string) => {
         if (queryTrancheData.isLoading) return undefined;
-        else {
-            return (queryTrancheData.data?.assetsData as any)[asset];
+        if (asset === 'ETH') {
+            console.log('Trying to get asset data for ETH, returning undefined');
+            return undefined;
         }
+
+        return (queryTrancheData.data?.assetsData as any)[asset];
     };
 
     return {

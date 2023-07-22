@@ -70,9 +70,10 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
 
     graphData.sort((a, b) => new Date(a.xaxis).valueOf() - new Date(b.xaxis).valueOf());
     if (graphData.length > 0) {
+        // add a zero to the very beginning
         graphData.unshift({
             value: 0,
-            xaxis: subtractSeconds(new Date(graphData[0].xaxis), 100).toLocaleString(),
+            xaxis: subtractSeconds(new Date(graphData[0].xaxis), 24 * 60 * 60).toLocaleString(),
         });
     }
 

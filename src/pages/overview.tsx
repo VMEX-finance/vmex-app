@@ -10,6 +10,7 @@ import { useSubgraphProtocolData, useSubgraphUserData, useUserData } from '../ap
 import useAnalyticsEventTracker from '../utils/google-analytics';
 
 const Overview: React.FC = () => {
+    console.log('ALCHEMY', process.env.REACT_APP_ALCHEMY_KEY);
     const gaEventTracker = useAnalyticsEventTracker('Overview');
     const { address, isConnected } = useAccount();
     const { chain } = useNetwork();

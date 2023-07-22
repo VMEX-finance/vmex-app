@@ -20,9 +20,14 @@ import {
     SDK_PARAMS,
     DECIMALS,
     bigNumberToUSD,
+    nativeAmountToUSD,
 } from '../../../utils';
 import { useAccount, useSigner } from 'wagmi';
-import { useUserTrancheData, useSubgraphTrancheData } from '../../../api';
+import {
+    useUserTrancheData,
+    useSubgraphTrancheData,
+    useSubgraphAllAssetMappingsData,
+} from '../../../api';
 import { BigNumber, utils, Wallet } from 'ethers';
 import { useSelectedTrancheContext } from '../../../store';
 import { useNavigate } from 'react-router-dom';
@@ -50,6 +55,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
     const { setAsset } = useSelectedTrancheContext();
     const navigate = useNavigate();
     const { closeDialog } = useDialogController();
+    const { queryAssetPrices } = useSubgraphAllAssetMappingsData();
     const [estimatedGasCost, setEstimatedGasCost] = useState({ cost: '0', loading: false });
 
     const defaultFunctionParams = {
@@ -157,8 +163,10 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                           asset: data.asset,
                       });
                 setEstimatedGasCost({
-                    cost: bigNumberToUSD(res, DECIMALS.get(data.asset) || 18),
                     loading: false,
+                    cost: `$${String(
+                        nativeAmountToUSD(res || 0, 18, queryAssetPrices.data?.WETH.usdPrice || 0),
+                    )}`,
                 });
             }
         };
