@@ -40,7 +40,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
 
     // TODO: cleanup / optimize
     return (
-        <div className="max-w-[125rem] mx-auto p-3 md:p-6 lg:p-10">
+        <div className="max-w-[125rem] mx-auto p-3 md:p-4 lg:p-5 xl:p-10">
             <header
                 className={`
                     ${right ? 'flex justify-between w-full' : ''}

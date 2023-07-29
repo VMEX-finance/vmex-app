@@ -4,7 +4,7 @@ import { useSelectedTrancheContext } from '../../../store';
 import { useWindowSize } from '../../../hooks';
 import { determineRatingColor } from '../../../utils/helpers';
 import { BsArrowDownCircle, BsArrowUpCircle } from 'react-icons/bs';
-import { Tooltip, MultipleAssetsDisplay, Button } from '../../components';
+import { Tooltip, MultipleAssetsDisplay, Button, Label } from '../../components';
 
 type ITranchesCustomRowProps = {
     name: string[];
@@ -14,10 +14,12 @@ type ITranchesCustomRowProps = {
     supplyTotal: string | number;
     borrowTotal: string | number;
     id: string | number;
+    category: string;
 };
 
 const TranchesCustomRow = (props: ITranchesCustomRowProps) => {
-    const { name, assets, aggregateRating, yourActivity, supplyTotal, borrowTotal, id } = props;
+    const { name, assets, aggregateRating, yourActivity, supplyTotal, borrowTotal, id, category } =
+        props;
 
     const navigate = useNavigate();
     const { width } = useWindowSize();
@@ -59,6 +61,26 @@ const TranchesCustomRow = (props: ITranchesCustomRowProps) => {
         }
     };
 
+    const renderCategory = () => {
+        // if(!category) return <></>; // Uncomment when done
+        let _category = category;
+        // TODO: connect to SDK
+        // Start: delete below when done
+        const categories = ['VMEX', 'Verified', 'External'];
+        _category = categories[Math.floor(Math.random() * categories.length)];
+        // End: delete above when done
+        switch (_category?.toLowerCase()) {
+            case 'vmex':
+                return <Label>VMEX</Label>;
+            case 'verified':
+                return <Label color="blue">Verified</Label>;
+            case 'external':
+                return <Label color="green">External</Label>;
+            default:
+                return <span>{category}</span>;
+        }
+    };
+
     // Mobile
     if (width < 900) {
         return (
@@ -77,6 +99,10 @@ const TranchesCustomRow = (props: ITranchesCustomRowProps) => {
                 <td className="flex justify-between">
                     <span className="font-bold">Assets</span>
                     <MultipleAssetsDisplay assets={assets} show={4} size="h-6 w-6" />
+                </td>
+                <td className="flex justify-between">
+                    <span className="font-bold">Category</span>
+                    <span>{renderCategory()}</span>
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Rating</span>
@@ -115,6 +141,7 @@ const TranchesCustomRow = (props: ITranchesCustomRowProps) => {
                 <td className="min-w-[120px] pl-4">
                     <MultipleAssetsDisplay assets={assets} show={width > 1100 ? 4 : 2} />
                 </td>
+                <td className="pl-4">{renderCategory()}</td>
                 <td
                     className="text-lg pl-4"
                     style={{ color: determineRatingColor(aggregateRating) }}
@@ -127,7 +154,7 @@ const TranchesCustomRow = (props: ITranchesCustomRowProps) => {
                 <td className="text-right pr-3.5">
                     <Button
                         primary
-                        label="View Details"
+                        label={width < 1080 ? 'Details' : 'View Details'}
                         onClick={(e: any) => route(e, { id, name }, 'details')}
                     />
                 </td>
