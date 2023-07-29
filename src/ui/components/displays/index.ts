@@ -6,3 +6,4 @@ export * from './pill';
 export * from './multi-asset';
 export * from './health';
 export * from './legend';
+export * from './label';
