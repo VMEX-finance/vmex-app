@@ -79,14 +79,19 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                             {titleLoading ? (
                                 <Skeleton variant="rounded" height={'36px'} width={'180px'} />
                             ) : (
-                                <h1 className="text-3xl font-basefont capitalize leading-tight text-neutral-900 dark:text-neutral-300 text-center">
-                                    {title}
+                                <div className="flex flex-col items-center justify-center">
+                                    <h1 className="text-3xl font-basefont capitalize leading-tight text-neutral-900 dark:text-neutral-300 text-center">
+                                        {title}
+                                    </h1>
                                     {tranche?.category && ( // TODO: connect with SDK
-                                        <Label className="!text-xs absolute ml-3 mt-2 md:ml-0 md:mt-10 !py-0.5 md:left-1/2 md:-translate-x-1/2">
+                                        <Label
+                                            tooltip
+                                            className="!py-0.5 !text-sm absolute left-1/2 -translate-x-1/2"
+                                        >
                                             {tranche?.category || 'VMEX'}
                                         </Label>
                                     )}
-                                </h1>
+                                </div>
                             )}
                         </div>
                         <div className="flex gap-3 md:justify-end">

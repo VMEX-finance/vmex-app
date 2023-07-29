@@ -62,13 +62,8 @@ const TranchesCustomRow = (props: ITranchesCustomRowProps) => {
     };
 
     const renderCategory = () => {
-        // if(!category) return <></>; // Uncomment when done
-        let _category = category;
-        // TODO: connect to SDK // Start: delete below when done
-        const categories = ['VMEX', 'Verified', 'External'];
-        _category = categories[Math.floor(Math.random() * categories.length)];
-        // End: delete above when done
-        return <Label>{_category}</Label>;
+        if (!category) return <></>;
+        return <Label tooltip>{category}</Label>;
     };
 
     // Mobile
