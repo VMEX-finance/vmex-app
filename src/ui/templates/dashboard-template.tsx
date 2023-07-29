@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useWindowSize, useDialogController } from '../../hooks';
 import { BiChevronLeft, BiPlus } from 'react-icons/bi';
-import { Tooltip, Button, LinkButton, SkeletonLoader } from '../components';
+import { Tooltip, Button, LinkButton, SkeletonLoader, Label } from '../components';
 import { useAccount, useNetwork } from 'wagmi';
 import { Skeleton } from '@mui/material';
 import { useSubgraphUserData } from '../../api';
@@ -16,6 +16,7 @@ interface IDashboardTemplateProps {
     titleLoading?: boolean;
     right?: React.ReactNode;
     descriptionLoading?: boolean;
+    tranche?: any;
 }
 
 const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
@@ -27,6 +28,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
     titleLoading,
     right,
     descriptionLoading,
+    tranche,
 }) => {
     const { chain } = useNetwork();
     const { openDialog } = useDialogController();
@@ -79,6 +81,11 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                             ) : (
                                 <h1 className="text-3xl font-basefont capitalize leading-tight text-neutral-900 dark:text-neutral-300 text-center">
                                     {title}
+                                    {tranche?.category && ( // TODO: connect with SDK
+                                        <Label className="!text-xs absolute ml-3 mt-2 md:ml-0 md:mt-10 !py-0.5 md:left-1/2 md:-translate-x-1/2">
+                                            {tranche?.category || 'VMEX'}
+                                        </Label>
+                                    )}
                                 </h1>
                             )}
                         </div>

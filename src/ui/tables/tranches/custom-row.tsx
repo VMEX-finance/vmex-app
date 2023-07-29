@@ -64,21 +64,11 @@ const TranchesCustomRow = (props: ITranchesCustomRowProps) => {
     const renderCategory = () => {
         // if(!category) return <></>; // Uncomment when done
         let _category = category;
-        // TODO: connect to SDK
-        // Start: delete below when done
+        // TODO: connect to SDK // Start: delete below when done
         const categories = ['VMEX', 'Verified', 'External'];
         _category = categories[Math.floor(Math.random() * categories.length)];
         // End: delete above when done
-        switch (_category?.toLowerCase()) {
-            case 'vmex':
-                return <Label>VMEX</Label>;
-            case 'verified':
-                return <Label color="blue">Verified</Label>;
-            case 'external':
-                return <Label color="green">External</Label>;
-            default:
-                return <span>{category}</span>;
-        }
+        return <Label>{_category}</Label>;
     };
 
     // Mobile
