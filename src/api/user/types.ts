@@ -73,7 +73,6 @@ export type IUserTrancheData = {
     totalDebtETH: BigNumber;
     // availableBorrowsETH: string;
     currentLiquidationThreshold: BigNumber;
-    // ltv: string;
     healthFactor: string;
     avgBorrowFactor: BigNumber;
     supplies: IYourSuppliesTableItemProps[];

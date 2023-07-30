@@ -88,7 +88,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                                             tooltip
                                             className="!py-0.5 !text-sm absolute left-1/2 -translate-x-1/2"
                                         >
-                                            {tranche?.category || 'VMEX'}
+                                            {tranche?.category || 'Unknown'}
                                         </Label>
                                     )}
                                 </div>
