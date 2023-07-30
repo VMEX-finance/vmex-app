@@ -132,7 +132,7 @@ export const TrancheStatisticsCard = ({
                             <NumberDisplay
                                 label="LTV"
                                 value={percentFormatter.format(
-                                    Number(convertContractsPercent(assetData?.ltv as string)),
+                                    Number(convertContractsPercent(assetData?.baseLTV as string)),
                                 )}
                                 color="text-white"
                                 center

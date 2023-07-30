@@ -27,13 +27,11 @@ export const processTrancheData = async (
                 [item.assetData.underlyingAssetName]: {
                     liquidity: item.availableLiquidity,
                     decimals: item.decimals,
-                    ltv: item.assetData.baseLTV,
                     optimalUtilityRate: percentFormatter.format(
                         parseFloat(utils.formatUnits(item.optimalUtilisationRate, 27)),
                     ),
                     reserveFactor: item.reserveFactor,
                     vmexReserveFactor: item.assetData.vmexReserveFactor,
-                    liquidationThreshold: item.assetData.liquidationThreshold,
                     utilityRate: `${item.utilizationRate}`,
                     borrowRate: percentFormatter.format(
                         Number(utils.formatUnits(item.variableBorrowRate, 27)),
@@ -50,9 +48,14 @@ export const processTrancheData = async (
                         item.totalLiquidityAsCollateral,
                         item.decimals,
                     ),
-                    baseLTV: item.assetData.baseLTV,
-                    liquidationBonus: item.assetData.liquidationBonus,
-                    borrowFactor: item.assetData.borrowFactor,
+                    baseLTV: item.isVerified ? item.baseLTV : item.assetData.baseLTV,
+                    liquidationThreshold: item.isVerified
+                        ? item.liquidationThreshold
+                        : item.assetData.liquidationThreshold,
+                    liquidationBonus: item.isVerified
+                        ? item.liquidationBonus
+                        : item.assetData.liquidationBonus,
+                    borrowFactor: item.isVerified ? item.borrowFactor : item.assetData.borrowFactor,
                     borrowCap:
                         item.assetData.borrowCap == '0'
                             ? MAX_UINT_AMOUNT
@@ -177,6 +180,7 @@ export const getSubgraphTrancheData = async (
                     name
                     isUsingWhitelist
                     treasury
+                    isVerified
                     trancheAdmin {
                         id
                     }
@@ -211,7 +215,11 @@ export const getSubgraphTrancheData = async (
                             vmexReserveFactor
                         }
                         isFrozen
-                        # yieldStrategy
+
+                        baseLTV
+                        liquidationThreshold
+                        liquidationBonus
+                        borrowFactor
                     }
                     depositHistory {
                         user {
