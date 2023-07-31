@@ -75,7 +75,6 @@ export type ITrancheProps = {
     adminFee?: number | string;
     oracle?: string;
     whitelist?: 'Yes' | 'No';
-    ltv?: number | string;
     liquidThreshold?: number | string;
     liquidPenalty?: number | string;
     collateral?: 'Yes' | 'No';
@@ -84,6 +83,7 @@ export type ITrancheProps = {
     utilization?: number | string;
     reserveFactor?: number | string;
     strategy?: number | string;
+    category?: 'Vmex Controlled' | 'Standard' | 'Externally Controlled' | 'Unknown';
 };
 
 export type AvailableAsset = {

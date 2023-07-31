@@ -28,7 +28,6 @@ export type IGraphTrancheProps = {
 export type IGraphAssetData = {
     liquidity: BigNumber;
     decimals: string;
-    ltv: string;
     optimalUtilityRate: number;
     reserveFactor: string;
     vmexReserveFactor: string;

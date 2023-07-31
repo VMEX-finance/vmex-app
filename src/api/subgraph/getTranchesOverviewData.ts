@@ -14,6 +14,7 @@ export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]
                     id
                     name
                     paused
+                    isVerified
                     reserves {
                         assetData {
                             underlyingAssetName
@@ -22,6 +23,9 @@ export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]
                         availableLiquidity
                         totalCurrentVariableDebt
                         decimals
+                    }
+                    trancheAdmin {
+                        id
                     }
                 }
             }
@@ -81,6 +85,7 @@ export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]
         });
 
         const returnObj: ITrancheProps[] = [];
+        const globalAdmin = ''; // TODO: Find the global admin
 
         tranches.map((tranche: any) => {
             let trancheInfo = {
@@ -90,6 +95,15 @@ export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]
                 tvl: 0,
                 supplyTotal: 0,
                 borrowTotal: 0,
+                category: (tranche.isVerified
+                    ? 'Externally Controlled'
+                    : tranche.trancheAdmin.id === globalAdmin
+                    ? 'Vmex Controlled'
+                    : 'Standard') as
+                    | 'Vmex Controlled'
+                    | 'Standard'
+                    | 'Externally Controlled'
+                    | 'Unknown',
             };
 
             const trancheTotals = finalObj.get(tranche.id);

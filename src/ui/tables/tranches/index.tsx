@@ -75,6 +75,16 @@ export const TranchesTable: React.FC<IDataTable> = ({ data, loading, userActivit
             },
         },
         {
+            // TODO: connect to SDK
+            name: 'category',
+            label: 'Category',
+            options: {
+                filter: true,
+                sort: true,
+                sortThirdClickReset: true,
+            },
+        },
+        {
             name: 'aggregateRating',
             label: 'Rating',
             options: {
@@ -144,6 +154,7 @@ export const TranchesTable: React.FC<IDataTable> = ({ data, loading, userActivit
                                 id,
                                 name,
                                 assets,
+                                category, // TODO: connnect to SDK
                                 aggregateRating,
                                 yourActivity,
                                 supplyTotal,
@@ -159,6 +170,7 @@ export const TranchesTable: React.FC<IDataTable> = ({ data, loading, userActivit
                                 yourActivity={renderActivity(id)}
                                 supplyTotal={usdFormatter().format(supplyTotal)}
                                 borrowTotal={usdFormatter().format(borrowTotal)}
+                                category={category}
                                 id={id}
                                 key={`tranches-table-${
                                     rowIndex || Math.floor(Math.random() * 10000)
