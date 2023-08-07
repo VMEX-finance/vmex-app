@@ -15,7 +15,7 @@ export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]
                     name
                     paused
                     isVerified
-                    reserves {
+                    reserves(where: { symbol_not: "" }) {
                         assetData {
                             underlyingAssetName
                         }

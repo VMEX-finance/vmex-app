@@ -15,11 +15,16 @@ import {
 import { ILineChartDataPointProps } from '../../ui/components';
 import { getTrancheId } from './id-generation';
 
+const useCustomRiskParams = (isVerified: boolean, item: any) => {
+    return isVerified && item.borrowFactor !== '0';
+};
+
 export const processTrancheData = async (
     data: any,
     trancheId?: string,
 ): Promise<IGraphTrancheDataProps> => {
     const assets = data.reserves;
+    const isVerified = data.isVerified;
     const prices = await getAllAssetPrices();
     const assetsData = assets.reduce(
         (obj: any, item: any) =>
@@ -48,14 +53,18 @@ export const processTrancheData = async (
                         item.totalLiquidityAsCollateral,
                         item.decimals,
                     ),
-                    baseLTV: item.isVerified ? item.baseLTV : item.assetData.baseLTV,
-                    liquidationThreshold: item.isVerified
+                    baseLTV: useCustomRiskParams(isVerified, item)
+                        ? item.baseLTV
+                        : item.assetData.baseLTV,
+                    liquidationThreshold: useCustomRiskParams(isVerified, item)
                         ? item.liquidationThreshold
                         : item.assetData.liquidationThreshold,
-                    liquidationBonus: item.isVerified
+                    liquidationBonus: useCustomRiskParams(isVerified, item)
                         ? item.liquidationBonus
                         : item.assetData.liquidationBonus,
-                    borrowFactor: item.isVerified ? item.borrowFactor : item.assetData.borrowFactor,
+                    borrowFactor: useCustomRiskParams(isVerified, item)
+                        ? item.borrowFactor
+                        : item.assetData.borrowFactor,
                     borrowCap:
                         item.assetData.borrowCap == '0'
                             ? MAX_UINT_AMOUNT
@@ -190,7 +199,7 @@ export const getSubgraphTrancheData = async (
                     blacklistedUsers {
                         id
                     }
-                    reserves {
+                    reserves(where: { symbol_not: "" }) {
                         totalLiquidityAsCollateral
                         utilizationRate
                         reserveFactor
@@ -215,7 +224,6 @@ export const getSubgraphTrancheData = async (
                             vmexReserveFactor
                         }
                         isFrozen
-
                         baseLTV
                         liquidationThreshold
                         liquidationBonus
