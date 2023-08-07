@@ -71,7 +71,11 @@ export const getSubgraphAllMarketsData = async (): Promise<IMarketsAsset[]> => {
     const { data, error } = await apolloClient.query({
         query: gql`
             query QueryAllMarkets {
-                reserves(orderBy: availableLiquidity, orderDirection: desc) {
+                reserves(
+                    orderBy: availableLiquidity
+                    orderDirection: desc
+                    where: { symbol_not: "" }
+                ) {
                     decimals
                     tranche {
                         id

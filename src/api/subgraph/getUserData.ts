@@ -35,6 +35,7 @@ export const getUserAdminTrancheData = async (admin: string): Promise<IGraphTran
                         name
                         treasury
                         isUsingWhitelist
+                        isVerified
                         trancheAdmin {
                             id
                         }
@@ -44,7 +45,7 @@ export const getUserAdminTrancheData = async (admin: string): Promise<IGraphTran
                         blacklistedUsers {
                             id
                         }
-                        reserves {
+                        reserves(where: { symbol_not: "" }) {
                             totalLiquidityAsCollateral
                             utilizationRate
                             reserveFactor
@@ -69,7 +70,10 @@ export const getUserAdminTrancheData = async (admin: string): Promise<IGraphTran
                                 vmexReserveFactor
                             }
                             isFrozen
-                            # yieldStrategy
+                            baseLTV
+                            liquidationThreshold
+                            liquidationBonus
+                            borrowFactor
                         }
                         depositHistory(orderBy: timestamp, orderDirection: asc) {
                             user {
