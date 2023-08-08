@@ -1,9 +1,9 @@
 import { gql } from '@apollo/client';
 import { useQuery } from '@tanstack/react-query';
-import { ISubgraphTranchesDataProps } from './types';
+import { ISubgraphTranchesDataProps, ITrancheCategories } from './types';
 import { ITrancheProps } from '../types';
 import { getAllAssetPrices } from '../prices';
-import { nativeAmountToUSD, apolloClient } from '../../utils';
+import { nativeAmountToUSD, apolloClient, getTrancheCategory } from '../../utils';
 import { getTrancheIdFromTrancheEntity } from './id-generation';
 
 export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]> => {
@@ -58,7 +58,6 @@ export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]
             };
 
             assets.map((item: any) => {
-                // console.log("asset name to get price", item.assetData.underlyingAssetName, !(prices as any)[item.assetData.underlyingAssetName])
                 const assetName = item.assetData.underlyingAssetName.toUpperCase();
                 if (!(prices as any)[assetName]) {
                     return;
@@ -95,15 +94,7 @@ export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]
                 tvl: 0,
                 supplyTotal: 0,
                 borrowTotal: 0,
-                category: (tranche.isVerified
-                    ? 'Externally Controlled'
-                    : tranche.trancheAdmin.id === globalAdmin
-                    ? 'Vmex Controlled'
-                    : 'Standard') as
-                    | 'Vmex Controlled'
-                    | 'Standard'
-                    | 'Externally Controlled'
-                    | 'Unknown',
+                category: getTrancheCategory(tranche),
             };
 
             const trancheTotals = finalObj.get(tranche.id);

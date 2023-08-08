@@ -270,7 +270,7 @@ export const getSubgraphUserChart = async (
         const asset = reserve.reserve.assetData.underlyingAssetName.toUpperCase();
         const decimals = reserve.reserve.decimals;
         if (!(prices as any)[asset]) {
-            console.log(
+            console.warn(
                 'MISSING ORACLE PRICE FOR',
                 asset,
                 'skipping asset in any usd calculations',

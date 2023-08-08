@@ -1,4 +1,5 @@
 import { BigNumber } from 'ethers';
+import { ITrancheCategories } from './subgraph';
 
 export type IQueryKeys =
     | 'user-tranche'
@@ -83,7 +84,7 @@ export type ITrancheProps = {
     utilization?: number | string;
     reserveFactor?: number | string;
     strategy?: number | string;
-    category?: 'Vmex Controlled' | 'Standard' | 'Externally Controlled' | 'Unknown';
+    category?: ITrancheCategories;
 };
 
 export type AvailableAsset = {

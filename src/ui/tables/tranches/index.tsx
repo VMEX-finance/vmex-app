@@ -75,7 +75,6 @@ export const TranchesTable: React.FC<IDataTable> = ({ data, loading, userActivit
             },
         },
         {
-            // TODO: connect to SDK
             name: 'category',
             label: 'Category',
             options: {
@@ -154,7 +153,7 @@ export const TranchesTable: React.FC<IDataTable> = ({ data, loading, userActivit
                                 id,
                                 name,
                                 assets,
-                                category, // TODO: connnect to SDK
+                                category,
                                 aggregateRating,
                                 yourActivity,
                                 supplyTotal,

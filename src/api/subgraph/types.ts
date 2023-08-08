@@ -4,9 +4,12 @@ import { AssetBalance, IAssetMappings, IMarketsAsset, ITrancheProps, TrancheData
 import { BigNumber } from 'ethers';
 import { IAvailableCoins } from '@utils/helpers';
 import { IAssetPricesProps } from '../prices/types';
+
 export type IAssetData = {
     underlyingAssetName: string;
 };
+
+export type ITrancheCategories = 'VMEX' | 'Standard' | 'External' | 'Unknown';
 
 export type IGraphHistoryProps = {
     action?: 'Borrow' | 'Deposit';

@@ -2,6 +2,7 @@ import { JsonRpcProvider } from '@ethersproject/providers';
 import { BigNumber, BigNumberish, ethers } from 'ethers';
 import { usdFormatter, nativeTokenFormatter } from './helpers';
 import { convertAddressToSymbol } from '@vmexfinance/sdk';
+import { ITrancheCategories } from '@app/api';
 
 export const NETWORK = process.env.REACT_APP_NETWORK ? process.env.REACT_APP_NETWORK : 'mainnet';
 
@@ -158,4 +159,13 @@ export const calculateHealthFactorFromBalances = (
             // .div(BigNumber.from('10000'))
             .div(borrowFactorTimesDebt)
     );
+};
+
+export const getTrancheCategory = (tranche: any, globalAdmin = ''): ITrancheCategories => {
+    if (!tranche) return 'Standard';
+    if (tranche.isVerified) return 'External';
+    else {
+        if (tranche.trancheAdmin.id === globalAdmin) return 'VMEX';
+        else return 'Standard';
+    }
 };

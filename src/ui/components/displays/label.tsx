@@ -24,7 +24,7 @@ export const Label = ({ children, className = '', color = 'purple', tooltip }: I
             _tooltip = 'This is a VMEX featured tranche.';
             customClass = 'bg-gradient-to-r from-violet-500 to-purple-400';
         } else {
-            customClass = 'bg-gradient-to-r from-violet-500 to-purple-400';
+            customClass = 'bg-gradient-to-r from-neutral-500 to-gray-400';
         }
         return {
             class: `px-2 py-1 text-xs text-neutral-100 sm:text-sm font-semibold rounded-lg text-center ${customClass} ${color} ${className}`,
