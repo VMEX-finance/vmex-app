@@ -52,7 +52,7 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
         tranche.depositHistory.map((el) => {
             const asset = el.reserve.assetData.underlyingAssetName.toUpperCase();
 
-            const assetUSDPrice = (prices as any)[asset].usdPrice;
+            const assetUSDPrice = (prices as any)[asset]?.usdPrice || '0';
             const usdAmount = nativeAmountToUSD(el.amount, el.reserve.decimals, assetUSDPrice);
             const date = new Date(el.timestamp * 1000).toLocaleString();
 
@@ -61,7 +61,7 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
 
         tranche.redeemUnderlyingHistory.map((el) => {
             const asset = el.reserve.assetData.underlyingAssetName.toUpperCase();
-            const assetUSDPrice = (prices as any)[asset].usdPrice;
+            const assetUSDPrice = (prices as any)[asset]?.usdPrice || '0';
             const usdAmount = nativeAmountToUSD(el.amount, el.reserve.decimals, assetUSDPrice) * -1;
             const date = new Date(el.timestamp * 1000).toLocaleString();
             graphData.push({ value: usdAmount, xaxis: date });
@@ -120,7 +120,7 @@ async function getTopAssets(
                 r[_asset] ??= { asset: _asset, amount: 0 };
                 return r;
             }
-            const _assetUSDPrice = (prices as any)[_asset].usdPrice;
+            const _assetUSDPrice = (prices as any)[_asset]?.usdPrice || '0';
             const _usdAmount = nativeAmountToUSD(
                 reserve.totalDeposits,
                 reserve.decimals,
@@ -145,7 +145,7 @@ async function getTopAssets(
                 r[_asset] ??= { asset: _asset, amount: 0 };
                 return r;
             }
-            const _assetUSDPrice = (prices as any)[_asset].usdPrice;
+            const _assetUSDPrice = (prices as any)[_asset]?.usdPrice || '0';
             const _usdAmount = nativeAmountToUSD(
                 reserve.totalCurrentVariableDebt,
                 reserve.decimals,
