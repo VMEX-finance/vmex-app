@@ -14,7 +14,6 @@ interface IAppTemplateProps {
     titleLoading?: boolean;
     right?: React.ReactNode;
     descriptionLoading?: boolean;
-    tranche?: any;
 }
 
 const AppTemplate: React.FC<IAppTemplateProps> = ({
@@ -26,7 +25,6 @@ const AppTemplate: React.FC<IAppTemplateProps> = ({
     titleLoading,
     right,
     descriptionLoading,
-    tranche,
 }) => {
     return (
         <div className="min-h-screen bg-[#eee] dark:bg-neutral-900">
@@ -39,7 +37,6 @@ const AppTemplate: React.FC<IAppTemplateProps> = ({
                 titleLoading={titleLoading}
                 descriptionLoading={descriptionLoading}
                 right={right}
-                tranche={tranche}
             >
                 {children}
             </DashboardTemplate>

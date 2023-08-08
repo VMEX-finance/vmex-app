@@ -11,6 +11,7 @@ import {
     weightedAverageofArr,
     MAX_UINT_AMOUNT,
     IAvailableCoins,
+    getTrancheCategory,
 } from '../../utils';
 import { ILineChartDataPointProps } from '../../ui/components';
 import { getTrancheId } from './id-generation';
@@ -88,7 +89,7 @@ export const processTrancheData = async (
         (obj: any, item: any) => {
             const asset = item.assetData.underlyingAssetName.toUpperCase();
             if (!(prices as any)[asset]) {
-                console.log(
+                console.warn(
                     'MISSING ORACLE PRICE FOR',
                     asset,
                     'skipping asset in any usd calculations',
@@ -172,6 +173,7 @@ export const processTrancheData = async (
         treasury: data.treasury,
         uniqueBorrowers: uniqueBorrowers.size,
         uniqueLenders: uniqueLenders.size,
+        category: getTrancheCategory(data),
     };
     return returnObj;
 };
@@ -292,7 +294,7 @@ export const getSubgraphTrancheChart = async (
         data.tranche.depositHistory.map((el: any) => {
             const asset = el.reserve.assetData.underlyingAssetName.toUpperCase();
             if (!(prices as any)[asset]) {
-                console.log(
+                console.warn(
                     'MISSING ORACLE PRICE FOR',
                     asset,
                     'skipping asset in any usd calculations',
@@ -315,7 +317,7 @@ export const getSubgraphTrancheChart = async (
         data.tranche.borrowHistory.map((el: any) => {
             const asset = el.reserve.assetData.underlyingAssetName.toUpperCase();
             if (!(prices as any)[asset]) {
-                console.log(
+                console.warn(
                     'MISSING ORACLE PRICE FOR',
                     asset,
                     'skipping asset in any usd calculations',

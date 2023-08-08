@@ -112,7 +112,7 @@ async function getTopAssets(
         data.reserves.reduce((r: any, reserve: any) => {
             const _asset = reserve.assetData.underlyingAssetName.toUpperCase();
             if (!(prices as any)[_asset]) {
-                console.log(
+                console.warn(
                     'MISSING ORACLE PRICE FOR',
                     _asset,
                     'skipping asset in any usd calculations',
@@ -137,7 +137,7 @@ async function getTopAssets(
         data.reserves.reduce((r: any, reserve: any) => {
             const _asset = reserve.assetData.underlyingAssetName.toUpperCase();
             if (!(prices as any)[_asset]) {
-                console.log(
+                console.warn(
                     'MISSING ORACLE PRICE FOR',
                     _asset,
                     'skipping asset in any usd calculations',
