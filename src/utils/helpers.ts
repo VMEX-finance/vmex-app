@@ -224,7 +224,7 @@ export function addMissingDatesToTimeseries(
 ): ILineChartDataPointProps[] {
     const finalDataPoints: ILineChartDataPointProps[] = [];
     data.forEach(function (point, index) {
-        const plotDate = moment(point.xaxis);
+        const plotDate = moment(point.xaxis, 'MM-DD-YYYY');
         finalDataPoints.push(point);
 
         const nextPoint = data[index + 1];
@@ -232,7 +232,7 @@ export function addMissingDatesToTimeseries(
             return;
         }
 
-        const nextDate = moment(nextPoint.xaxis);
+        const nextDate = moment(nextPoint.xaxis, 'MM-DD-YYYY');
         while (plotDate.add(1, 'd').isBefore(nextDate)) {
             finalDataPoints.push({
                 xaxis: plotDate.toDate().toLocaleDateString(),
