@@ -91,7 +91,7 @@ async function getTopAssets(
     const { data, error } = await apolloClient.query({
         query: gql`
             query QueryTopSuppliedAssets {
-                reserves {
+                reserves(where: { symbol_not: "" }) {
                     assetData {
                         underlyingAssetName
                     }
