@@ -362,7 +362,11 @@ export function useSubgraphTrancheData(trancheId: number): ISubgraphTrancheData 
     const findAssetInMarketsData = (asset: string) => {
         if (queryTrancheData.isLoading) return undefined;
         else {
-            return (queryTrancheData.data?.assetsData as any)[asset];
+            console.log('queryTrancheData', queryTrancheData.data?.assetsData);
+            if (queryTrancheData.data?.assetsData) {
+                return (queryTrancheData.data?.assetsData as any)[asset];
+            }
+            return {};
         }
     };
 
