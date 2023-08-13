@@ -78,9 +78,7 @@ export const YourRewardsTable: React.FC<IYourRewardsTableProps> = ({ data, isLoa
                     </tbody>
                 </table>
             ) : (
-                <span className="flex justify-center text-center py-12 lg:py-16">
-                    No Rewards Available
-                </span>
+                <span className="flex justify-center text-center py-12">No Rewards Available</span>
             )}
         </Card>
     );
