@@ -15,6 +15,7 @@ type IInputProps = {
     inputClass?: string;
     max?: number;
     validate?: boolean;
+    min?: number;
 };
 
 export const DefaultInput = ({
@@ -31,6 +32,7 @@ export const DefaultInput = ({
     inputClass,
     max,
     validate,
+    min,
 }: IInputProps) => {
     const saveTyping = (e: any): void => {
         e.preventDefault();
@@ -89,13 +91,18 @@ export const DefaultInput = ({
                         placeholder={placeholder}
                         value={value}
                         onChange={saveTyping}
-                        type={type !== 'string' ? 'number' : 'text'}
+                        type={
+                            type !== 'string' && (type === 'percent' || type === 'number')
+                                ? 'number'
+                                : 'text'
+                        }
                         step={type === 'percent' ? '0.1' : '1'}
                         onKeyDown={entering}
                         className={`w-full ${textSize()} outline-none border-b-[3px] focus:border-brand-black dark:focus:border-white border-neutral-600 dark:bg-brand-black ${
                             inputClass ? inputClass : 'bg-transparent'
                         }`}
                         maxLength={max}
+                        min={min || '0'}
                     />
                     {onEnter && <button onClick={onEnter}>Save</button>}
                 </div>
