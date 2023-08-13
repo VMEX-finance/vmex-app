@@ -1,11 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { USER_REWARDS_URL } from '../../utils/constants';
-import {
-    SDK_PARAMS,
-    bigNumberToNative,
-    bigNumberToUSD,
-    bigNumberToUnformattedString,
-} from '../../utils/sdk-helpers';
+import { SDK_PARAMS, bigNumberToNative, nativeAmountToUSD } from '../../utils/sdk-helpers';
 import { BigNumber } from 'ethers';
 import { convertAddressToSymbol } from '@vmexfinance/sdk';
 
@@ -24,7 +19,11 @@ export async function getUserRewards(userAddress: string) {
                 BigNumber.from(`0x${(value as any).amount}`),
                 asset,
             );
-            const amountUsd = bigNumberToUSD(BigNumber.from(`0x${(value as any).amount}`), 18);
+            const amountUsd = nativeAmountToUSD(
+                BigNumber.from(`0x${(value as any).amount}`),
+                18,
+                '1',
+            ); // TODO
             formattedArr.push({ asset, amountNative, amountUsd });
         }
         return formattedArr;
