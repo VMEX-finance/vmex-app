@@ -15,11 +15,7 @@ export async function getUserRewards(userAddress: string) {
         return [];
     }
 
-    const res = await (
-        await fetch(
-            `${USER_REWARDS_URL}/v1/user/rewards/0x170bB74C6e143C0b2caB5fa3ef37C7212C993F62`,
-        )
-    ).json();
+    const res = await (await fetch(`${USER_REWARDS_URL}/v1/user/rewards/${userAddress}`)).json();
     if (res) {
         const formattedArr: any[] = [];
         for (let [key, value] of Object.entries(res)) {
