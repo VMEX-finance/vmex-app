@@ -17,7 +17,7 @@ export const Checkbox = ({ checked, disabled, label, onClick }: ICheckboxProps) 
             <input
                 name="checkbox"
                 type="checkbox"
-                className={['cursor-pointer', mode].join(' ')}
+                className={['cursor-pointer disabled:cursor-not-allowed', mode].join(' ')}
                 checked={checked}
                 disabled={disabled}
                 onChange={() => {}}

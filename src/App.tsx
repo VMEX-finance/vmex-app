@@ -38,12 +38,12 @@ function App() {
                 <Route path="/tranches/:name" element={<TrancheDetails />} />
             </Routes>
 
-            <button
+            {/* <button
                 onClick={() => openDialog('feedback-dialog')}
                 className="fixed bottom-2 right-3 bg-brand-purple text-neutral-100 hover:opacity-95 transition duration-150 rounded-lg py-2 px-4 shadow-lg"
             >
                 Send Feedback
-            </button>
+            </button> */}
         </FullPageLoader>
     );
 }
