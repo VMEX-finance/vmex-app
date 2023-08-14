@@ -128,7 +128,7 @@ const Portfolio: React.FC = () => {
                             />
                         </div>
                     </div>
-                    <div className="col-span-2 2xl:col-span-1">
+                    <div className="flex flex-col gap-4 xl:gap-8 col-span-2 2xl:col-span-1">
                         <UserPerformanceCard
                             isLoading={queryUserActivity.isLoading || queryUserPnlChart.isLoading}
                             loanedAssets={queryUserActivity.data?.supplies?.map((el) => ({
@@ -142,9 +142,6 @@ const Portfolio: React.FC = () => {
                             tranches={queryUserActivity.data?.tranchesInteractedWith}
                             profitLossChart={queryUserPnlChart.data || []}
                         />
-                    </div>
-
-                    <div className="col-span-2">
                         <YourRewardsTable
                             data={queryUserRewards.data || []}
                             isLoading={queryUserRewards.isLoading}
