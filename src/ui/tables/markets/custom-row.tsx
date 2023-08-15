@@ -19,7 +19,7 @@ const MarketsCustomRow = (props: any) => {
         available,
         borrowTotal,
         supplyTotal,
-        rating,
+        // rating,
         strategies,
         collateral,
     } = props;
@@ -97,10 +97,10 @@ const MarketsCustomRow = (props: any) => {
                     <span className="font-bold">Borrow</span>
                     <span>{borrowTotal}</span>
                 </td>
-                <td className="flex justify-between">
+                {/* <td className="flex justify-between">
                     <span className="font-bold">Rating</span>
                     <span style={{ color: determineRatingColor(rating) }}>{rating}</span>
-                </td>
+                </td> */}
                 <td className="flex justify-between">
                     <span className="font-bold">Strategy</span>
                     {strategies ? (
@@ -144,9 +144,9 @@ const MarketsCustomRow = (props: any) => {
                 <td className="pl-4">{available}</td>
                 <td className="pl-4">{supplyTotal}</td>
                 <td className="pl-4">{borrowTotal}</td>
-                <td className="text-lg pl-4" style={{ color: determineRatingColor(rating) }}>
+                {/* <td className="text-lg pl-4" style={{ color: determineRatingColor(rating) }}>
                     {rating}
-                </td>
+                </td> */}
                 <td className="pl-4">
                     <div className="w-8 h-8">
                         {strategies ? (
