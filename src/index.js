@@ -11,8 +11,15 @@ import { SelectedTrancheStore, TransactionsStore, ThemeProvider, AuthStore } fro
 import { WagmiConfig } from 'wagmi';
 import { chains, RainbowKitProvider, wagmiClient, walletTheme } from './utils';
 
-const queryClient = new QueryClient();
 ReactGA.initialize('G-SHL33W6WWC');
+
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            refetchOnWindowFocus: false, // default: true
+        },
+    },
+});
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
