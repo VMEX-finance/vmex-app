@@ -24,8 +24,8 @@ export const processTrancheData = async (
     data: any,
     trancheId?: string,
 ): Promise<IGraphTrancheDataProps> => {
-    const assets = data.reserves;
-    const isVerified = data.isVerified;
+    const assets = data?.reserves;
+    const isVerified = data?.isVerified || false;
     const prices = await getAllAssetPrices();
     const assetsData = assets.reduce(
         (obj: any, item: any) =>
@@ -138,10 +138,10 @@ export const processTrancheData = async (
     const uniqueBorrowers = new Set<string>();
     const uniqueLenders = new Set<string>();
 
-    data.depositHistory.forEach((el: any) => {
+    data?.depositHistory?.forEach((el: any) => {
         uniqueLenders.add(el.user.id);
     });
-    data.borrowHistory.forEach((el: any) => {
+    data?.borrowHistory?.forEach((el: any) => {
         uniqueBorrowers.add(el.user.id);
     });
 
@@ -291,7 +291,7 @@ export const getSubgraphTrancheChart = async (
     else {
         let graphData: ILineChartDataPointProps[] = [];
         const prices = await getAllAssetPrices();
-        data.tranche.depositHistory.map((el: any) => {
+        data.tranche?.depositHistory?.map((el: any) => {
             const asset = el.reserve.assetData.underlyingAssetName.toUpperCase();
             if (!(prices as any)[asset]) {
                 console.warn(
@@ -362,7 +362,6 @@ export function useSubgraphTrancheData(trancheId: number): ISubgraphTrancheData 
     const findAssetInMarketsData = (asset: string) => {
         if (queryTrancheData.isLoading) return undefined;
         else {
-            console.log('queryTrancheData', queryTrancheData.data?.assetsData);
             if (queryTrancheData.data?.assetsData) {
                 return (queryTrancheData.data?.assetsData as any)[asset];
             }

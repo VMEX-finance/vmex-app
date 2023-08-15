@@ -30,6 +30,8 @@ export const { chains, provider } = configureChains(
             : process.env.REACT_APP_NETWORK === 'localhost' ||
               process.env.REACT_APP_NETWORK === 'optimism_localhost'
             ? chain.hardhat
+            : process.env.REACT_APP_NETWORK === 'optimism'
+            ? chain.optimism
             : chain.mainnet,
     ],
     [publicProvider()],
