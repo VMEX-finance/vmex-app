@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeCompact } from '../../../utils/helpers';
+import { makeCompact, truncate } from '../../../utils/helpers';
 import { TrancheData } from '../../../api/types';
 import { SkeletonLoader } from '../../components';
 
@@ -31,7 +31,7 @@ export const TopTranchesTable: React.FC<ITableProps> = ({ data, loading }) => {
                     ? data.slice(0, 5).map((i, index: number) => {
                           return (
                               <tr key={`${i.name}-${index}`} className="text-left">
-                                  <td>{i.name}</td>
+                                  <td>{truncate(i.name)}</td>
                                   <td>{makeCompact(i.totalSupplied)}</td>
                                   <td>{makeCompact(i.totalBorrowed)}</td>
                               </tr>
