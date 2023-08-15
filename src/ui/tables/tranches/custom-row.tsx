@@ -9,7 +9,7 @@ import { Tooltip, MultipleAssetsDisplay, Button, Label } from '../../components'
 type ITranchesCustomRowProps = {
     name: string[];
     assets: string[];
-    aggregateRating: string;
+    // aggregateRating: string;
     yourActivity: string;
     supplyTotal: string | number;
     borrowTotal: string | number;
@@ -18,8 +18,7 @@ type ITranchesCustomRowProps = {
 };
 
 const TranchesCustomRow = (props: ITranchesCustomRowProps) => {
-    const { name, assets, aggregateRating, yourActivity, supplyTotal, borrowTotal, id, category } =
-        props;
+    const { name, assets, yourActivity, supplyTotal, borrowTotal, id, category } = props;
 
     const navigate = useNavigate();
     const { width } = useWindowSize();
@@ -89,12 +88,12 @@ const TranchesCustomRow = (props: ITranchesCustomRowProps) => {
                     <span className="font-bold">Category</span>
                     <span>{renderCategory()}</span>
                 </td>
-                <td className="flex justify-between">
+                {/* <td className="flex justify-between">
                     <span className="font-bold">Rating</span>
                     <span style={{ color: determineRatingColor(aggregateRating) }}>
                         {aggregateRating || '-'}
                     </span>
-                </td>
+                </td> */}
                 <td className="flex justify-between">
                     <span className="font-bold">Activity</span>
                     <span>{renderActivity(yourActivity)}</span>
@@ -127,12 +126,12 @@ const TranchesCustomRow = (props: ITranchesCustomRowProps) => {
                     <MultipleAssetsDisplay assets={assets} show={width > 1100 ? 4 : 2} />
                 </td>
                 <td className="pl-4">{renderCategory()}</td>
-                <td
+                {/* <td
                     className="text-lg pl-4"
                     style={{ color: determineRatingColor(aggregateRating) }}
                 >
                     {aggregateRating}
-                </td>
+                </td> */}
                 <td className="pl-4">{renderActivity(yourActivity)}</td>
                 <td className="pl-4">{supplyTotal}</td>
                 <td className="pl-4">{borrowTotal}</td>
