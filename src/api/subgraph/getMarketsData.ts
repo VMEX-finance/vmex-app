@@ -113,7 +113,10 @@ export const getSubgraphAllMarketsData = async (): Promise<IMarketsAsset[]> => {
             returnObj.push({
                 asset: reserve.assetData.underlyingAssetName,
                 tranche: reserve.tranche.name,
-                trancheId: reserve.tranche.id,
+                trancheId:
+                    reserve.tranche.id && reserve.tranche.id.includes(':')
+                        ? reserve.tranche.id.split(':')[1]
+                        : reserve.tranche.id,
                 borrowApy: utils.formatUnits(reserve.variableBorrowRate, 27),
                 supplyApy: utils.formatUnits(reserve.liquidityRate, 27),
                 available: usdFormatter().format(

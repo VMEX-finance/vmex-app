@@ -49,7 +49,7 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
     let graphData: ILineChartDataPointProps[] = [];
     const prices = await getAllAssetPrices();
     data.tranches.map((tranche: IGraphTrancheProps) => {
-        tranche.depositHistory.map((el) => {
+        tranche?.depositHistory?.map((el) => {
             const asset = el.reserve.assetData.underlyingAssetName.toUpperCase();
 
             const assetUSDPrice = (prices as any)[asset]?.usdPrice || '0';
@@ -59,7 +59,7 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
             graphData.push({ value: usdAmount, xaxis: date });
         });
 
-        tranche.redeemUnderlyingHistory.map((el) => {
+        tranche?.redeemUnderlyingHistory?.map((el) => {
             const asset = el.reserve.assetData.underlyingAssetName.toUpperCase();
             const assetUSDPrice = (prices as any)[asset]?.usdPrice || '0';
             const usdAmount = nativeAmountToUSD(el.amount, el.reserve.decimals, assetUSDPrice) * -1;
