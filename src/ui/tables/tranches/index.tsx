@@ -83,15 +83,15 @@ export const TranchesTable: React.FC<IDataTable> = ({ data, loading, userActivit
                 sortThirdClickReset: true,
             },
         },
-        {
-            name: 'aggregateRating',
-            label: 'Rating',
-            options: {
-                filter: true,
-                sort: true,
-                sortThirdClickReset: true,
-            },
-        },
+        // {
+        //     name: 'aggregateRating',
+        //     label: 'Rating',
+        //     options: {
+        //         filter: true,
+        //         sort: true,
+        //         sortThirdClickReset: true,
+        //     },
+        // },
         {
             name: 'yourActivity',
             label: 'Your Activity',
@@ -154,7 +154,7 @@ export const TranchesTable: React.FC<IDataTable> = ({ data, loading, userActivit
                                 name,
                                 assets,
                                 category,
-                                aggregateRating,
+                                // aggregateRating,
                                 yourActivity,
                                 supplyTotal,
                                 borrowTotal,
@@ -165,7 +165,7 @@ export const TranchesTable: React.FC<IDataTable> = ({ data, loading, userActivit
                             <TranchesCustomRow
                                 name={name}
                                 assets={assets}
-                                aggregateRating={aggregateRating}
+                                // aggregateRating={aggregateRating}
                                 yourActivity={renderActivity(id)}
                                 supplyTotal={usdFormatter().format(supplyTotal)}
                                 borrowTotal={usdFormatter().format(borrowTotal)}
