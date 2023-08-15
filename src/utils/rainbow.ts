@@ -65,7 +65,7 @@ export const walletTheme = merge(
 );
 
 export const wagmiClient = createClient({
-    autoConnect: false,
+    autoConnect: true,
     connectors,
     provider,
 });
