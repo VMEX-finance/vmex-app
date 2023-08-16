@@ -1,12 +1,29 @@
 import { useTransactionsContext } from '../store';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { IDialogNames } from '../store/modals';
 import { TIMER_CLOSE_DELAY } from '../utils/constants';
 import { useDialogController } from '.';
 import { useMediatedState } from 'react-use';
 import { inputMediator } from '../utils/helpers';
 
-export const useModal = (dialog: IDialogNames) => {
+export type IUseModal = {
+    isSuccess: boolean;
+    setIsSuccess: React.Dispatch<React.SetStateAction<boolean>>;
+    isLoading: boolean;
+    setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+    error: string;
+    setError: React.Dispatch<React.SetStateAction<string>>;
+    submitTx: (callback?: any, close?: boolean) => Promise<void>;
+    dialog: IDialogNames;
+    view: string;
+    setView: React.Dispatch<React.SetStateAction<string>>;
+    isMax: boolean;
+    setIsMax: React.Dispatch<React.SetStateAction<boolean>>;
+    amount: string;
+    setAmount: React.Dispatch<React.SetStateAction<string>>;
+};
+
+export const useModal = (dialog: IDialogNames): IUseModal => {
     const determineDefaultView = () => {
         switch (dialog) {
             case 'loan-asset-dialog':

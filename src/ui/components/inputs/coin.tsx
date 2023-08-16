@@ -3,7 +3,7 @@ import React from 'react';
 import { bigNumberToUSD, DECIMALS, NETWORK, SDK_PARAMS } from '../../../utils/sdk-helpers';
 import { useSigner } from 'wagmi';
 import { mintTokens } from '@vmexfinance/sdk';
-import { Button } from '../buttons';
+import { Button, SecondaryButton } from '../buttons';
 import { usePricesData } from '../../../api/prices';
 import { BigNumber, utils } from 'ethers';
 
@@ -102,12 +102,7 @@ export const CoinInput = ({
                 <div className="flex flex-row justify-end items-end gap-3">
                     {/* TODO: add usd value */}
                     {/* <div className="text-neutral-400">{calculateUsd()} USD</div> */}
-                    <button
-                        className={`text-xs text-right text-blue-700 dark:text-brand-blue dark:hover:text-blue-500 hover:text-brand-purple transition duration-150 ${
-                            loading ? 'animate-pulse' : ''
-                        }`}
-                        onClick={onMaxButtonClick}
-                    >
+                    <SecondaryButton onClick={onMaxButtonClick} loading={loading}>
                         <span>MAX</span>
                         <p>
                             {`${
@@ -119,7 +114,7 @@ export const CoinInput = ({
                             }:`}{' '}
                             {balance || 0}
                         </p>
-                    </button>
+                    </SecondaryButton>
                 </div>
             </div>
             {process.env.REACT_APP_TEST && (
