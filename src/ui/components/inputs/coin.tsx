@@ -88,20 +88,20 @@ export const CoinInput = ({
 
     return (
         <>
-            <div className="w-full flex flex-row justify-between mt-1 rounded-xl border border-neutral-300 dark:border-neutral-700 p-2">
-                <div className="flex flex-col justify-between gap-3">
+            <div className="w-full flex flex-col justify-between mt-1 rounded-xl border border-neutral-300 dark:border-neutral-700 p-2 gap-3">
+                <div className="flex flex-row justify-between gap-3">
                     <input
                         type="text"
                         value={amount}
                         onChange={onChange}
-                        className="text-2xl focus:outline-none max-w-[200px] dark:bg-brand-black overflow-auto dark:placeholder:text-neutral-700"
+                        className="text-2xl focus:outline-none max-w-[225px] dark:bg-brand-black overflow-auto dark:placeholder:text-neutral-700"
                         placeholder="0.00"
                     />
+                    <AssetDisplay logo={coin.logo} name={coin.name} />
+                </div>
+                <div className="flex flex-row justify-end items-end gap-3">
                     {/* TODO: add usd value */}
                     {/* <div className="text-neutral-400">{calculateUsd()} USD</div> */}
-                </div>
-                <div className="flex flex-col justify-between items-end gap-3">
-                    <AssetDisplay logo={coin.logo} name={coin.name} />
                     <button
                         className={`text-xs text-right text-blue-700 dark:text-brand-blue dark:hover:text-blue-500 hover:text-brand-purple transition duration-150 ${
                             loading ? 'animate-pulse' : ''
