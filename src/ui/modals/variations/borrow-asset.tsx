@@ -71,6 +71,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                     ? await borrow({
                           ...defaultFunctionParams,
                           underlying: data.asset,
+                          isMax: false, // TODO: fix in SDK as isMax: true breaks the app
                           //   interestRateMode: 2,
                           // referrer: number,
                           // collateral: boolean,
