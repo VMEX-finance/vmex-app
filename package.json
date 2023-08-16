@@ -9,7 +9,7 @@
         "start:tenderly": "REACT_APP_NETWORK='tenderly' REACT_APP_RPC='https://rpc.tenderly.co/fork/53fea442-6f5a-4c23-9a03-918f0db9c824' REACT_APP_SUBGRAPH_ENDPOINT='https://dev.volatilelabs.ltd:443/subgraphs/name/vmex-finance' REACT_APP_TEST=true react-scripts start",
         "start:sepolia": "REACT_APP_NETWORK='sepolia' REACT_APP_RPC='https://eth-sepolia.public.blastapi.io' REACT_APP_SUBGRAPH_ENDPOINT='https://api.studio.thegraph.com/query/40387/vmex-finance-sepolia/version/latest' REACT_APP_TEST=true react-scripts start",
         "start:goerli": "REACT_APP_NETWORK='goerli' REACT_APP_RPC='https://eth-goerli.public.blastapi.io' REACT_APP_SUBGRAPH_ENDPOINT='https://api.studio.thegraph.com/query/40387/vmex-finance-goerli/version/latest' REACT_APP_TEST=true react-scripts start",
-        "start:optimism": "REACT_APP_NETWORK=optimism REACT_APP_RPC=<REPLACE> REACT_APP_SUBGRAPH_ENDPOINT=https://api.thegraph.com/subgraphs/name/fico23/optimism-vmex react-scripts start",
+        "start:optimism": "REACT_APP_NETWORK='optimism' REACT_APP_RPC='https://mainnet.optimism.io' REACT_APP_SUBGRAPH_ENDPOINT='https://api.thegraph.com/subgraphs/name/fico23/optimism-vmex' react-scripts start",
         "start": "react-app-rewired start",
         "build": "react-app-rewired build",
         "test": "react-scripts test",
