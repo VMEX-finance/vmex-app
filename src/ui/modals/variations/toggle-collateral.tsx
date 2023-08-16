@@ -32,7 +32,7 @@ export const ToggleCollateralDialog: React.FC<IDialogProps> = ({
                 });
                 if (data.setChecked) data.setChecked(newArr);
                 if (data.setCollateral && !data.setChecked) data.setCollateral(!data.collateral);
-                closeDialog('toggle-collateral-dialog');
+                closeDialog && closeDialog('toggle-collateral-dialog');
                 return res;
             });
         }

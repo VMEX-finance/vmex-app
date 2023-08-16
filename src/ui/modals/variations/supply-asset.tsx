@@ -1,23 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
-import { useDialogController, useModal } from '../../../hooks';
+import { useDialogController, useModal, useSupply } from '../../../hooks';
 import {
-    supply,
-    withdraw,
-    estimateGas,
-    claimIncentives,
-    convertAddressToSymbol,
-} from '@vmexfinance/sdk';
-import {
-    NETWORK,
-    convertStringFormatToNumber,
     unformattedStringToBigNumber,
     bigNumberToNative,
     bigNumberToUnformattedString,
-    SDK_PARAMS,
-    DECIMALS,
-    nativeAmountToUSD,
-    IAvailableCoins,
 } from '../../../utils';
 import {
     HealthFactor,
@@ -28,236 +15,45 @@ import {
     MessageStatus,
     Tooltip,
     BasicToggle,
+    SecondaryButton,
 } from '../../components';
-import {
-    useSubgraphAllAssetMappingsData,
-    useSubgraphTrancheData,
-    useUserData,
-    useUserTrancheData,
-} from '../../../api';
-import { useSigner, useAccount } from 'wagmi';
-import { BigNumber, BigNumberish, utils, Wallet } from 'ethers';
-import { IYourSuppliesTableItemProps } from '@ui/tables';
+import { BigNumber } from 'ethers';
 import { ISupplyBorrowProps } from '../utils';
 import { useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '../../../store';
 
 export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
+    const modalProps = useModal('loan-asset-dialog');
     const {
-        submitTx,
-        isSuccess,
-        error,
-        isLoading,
+        amountWalletNative,
+        maxOnClick,
+        isViolatingMax,
+        isViolatingSupplyCap,
+        collateral,
+        existingSupplyCollateral,
+        setExistingSupplyCollateral,
+        asCollateral,
+        setAsCollateral,
+        apy,
+        renderRewards,
+        estimatedGasCost,
+        queryUserRewardsData,
+        amountWithdraw,
+        handleSubmit,
         view,
         setView,
-        isMax,
-        setIsMax,
+        isSuccess,
+        error,
         amount,
         setAmount,
-    } = useModal('loan-asset-dialog');
-    const { findAssetInMarketsData } = useSubgraphTrancheData(data?.trancheId || 0);
-    const { data: signer } = useSigner();
-    const { address } = useAccount();
-    const { findAssetInUserSuppliesOrBorrows, queryUserRewardsData, queryRewardsData } =
-        useUserTrancheData(address, data?.trancheId || 0);
-    const { queryAssetPrices } = useSubgraphAllAssetMappingsData();
-    const { getTokenBalance } = useUserData(address);
+        isMax,
+        setIsMax,
+        isLoading,
+        isButtonDisabled,
+    } = useSupply({ data, ...modalProps });
     const navigate = useNavigate();
     const { setAsset } = useSelectedTrancheContext();
     const { closeDialog, openDialog } = useDialogController();
-
-    const [asCollateral, setAsCollateral] = useState<any>(data?.collateral);
-    const [existingSupplyCollateral, setExistingSupplyCollateral] = useState(false);
-    const [estimatedGasCost, setEstimatedGasCost] = useState({ cost: '0', loading: false });
-
-    const amountWalletNative = getTokenBalance(data?.asset || '');
-    const apy = findAssetInMarketsData(data?.asset || '')?.supplyRate;
-    const amountWithdraw =
-        findAssetInUserSuppliesOrBorrows(data?.asset, 'supply')?.amountNative || data?.amountNative;
-    const collateral = (
-        findAssetInUserSuppliesOrBorrows(data?.asset || '', 'supply') as IYourSuppliesTableItemProps
-    )?.collateral;
-
-    const defaultFunctionParams = {
-        trancheId: data ? data.trancheId : 0,
-        amount: convertStringFormatToNumber(amount),
-        signer: signer
-            ? signer
-            : new Wallet('0xdf57089febbacf7ba0bc227dafbffa9fc08a93fdc68e1e42411a14efcf23656e'),
-        network: NETWORK,
-        isMax: isMax,
-        test: SDK_PARAMS.test,
-        providerRpc: SDK_PARAMS.providerRpc,
-    };
-
-    const getAllATokenAddresses = () => {
-        return (
-            queryRewardsData.data?.map<string>((el): string => {
-                return el.aTokenAddress;
-            }) || []
-        );
-    };
-
-    const handleSubmit = async () => {
-        if (signer && data) {
-            await submitTx(async () => {
-                let res;
-                if (view?.includes('Supply')) {
-                    res = await supply({
-                        ...defaultFunctionParams,
-                        underlying: data.asset,
-                        collateral:
-                            typeof collateral === 'boolean'
-                                ? existingSupplyCollateral
-                                : asCollateral,
-                        // referrer: number,
-                        // collateral: boolean,
-                    });
-                } else if (view?.includes('Claim')) {
-                    res = await claimIncentives({
-                        ...defaultFunctionParams,
-                        to: await defaultFunctionParams.signer.getAddress(),
-                        incentivizedATokens: getAllATokenAddresses(),
-                    });
-                } else {
-                    res = await withdraw({
-                        ...defaultFunctionParams,
-                        asset: data.asset,
-                        // interestRateMode: 2,
-                        // referrer: number,
-                        // collateral: boolean,
-                        // test: boolean
-                    });
-                }
-                return res;
-            });
-        }
-    };
-
-    const maxOnClick = () => {
-        setAmount(
-            view?.includes('Supply')
-                ? bigNumberToUnformattedString(amountWalletNative.amountNative, data?.asset || '')
-                : bigNumberToUnformattedString(amountWithdraw, data?.asset || ''),
-        );
-        setIsMax(true);
-    };
-
-    const isViolatingSupplyCap = function () {
-        if (!amount || !view?.includes('Supply')) return false;
-        const supplyCap = Number(findAssetInMarketsData(data?.asset || '')?.supplyCap);
-        const currentSupplied = Number(findAssetInMarketsData(data?.asset || '')?.totalSupplied); //already considers decimals
-        const newTotalSupply = Number(amount) + currentSupplied;
-        if (newTotalSupply > supplyCap) {
-            return true;
-        }
-        return false;
-    };
-
-    const isViolatingMax = () => {
-        if (data?.asset && amount) {
-            if (
-                amount.includes('.') &&
-                amount.split('.')[1].length > (DECIMALS.get(data.asset) || 18)
-            ) {
-                return true;
-            } else {
-                const inputAmount = utils.parseUnits(amount, DECIMALS.get(data.asset));
-                return inputAmount.gt(
-                    view?.includes('Supply')
-                        ? amountWalletNative.amountNative
-                        : amountWithdraw || BigNumber.from('0'),
-                );
-            }
-        }
-        return false;
-    };
-
-    const isButtonDisabled = () => {
-        if (view?.includes('Claim')) {
-            if (!queryUserRewardsData?.data?.rewardTokens?.length) return true;
-            return false;
-        } else {
-            return (
-                isSuccess ||
-                error.length !== 0 ||
-                (!amount && !isMax) ||
-                (view?.includes('Supply') && amountWalletNative.amountNative.lt(10)) ||
-                (view?.includes('Withdraw') && (!amountWithdraw || amountWithdraw.lt(10))) ||
-                isViolatingSupplyCap() ||
-                isViolatingMax()
-            );
-        }
-    };
-
-    const renderRewards = () => {
-        if (!queryUserRewardsData?.data?.rewardTokens?.length) return [];
-        return queryUserRewardsData.data?.rewardTokens?.map((el: string, idx) => {
-            const assetSymbol = convertAddressToSymbol(el, SDK_PARAMS.network) || el;
-            const assetDecimals = DECIMALS.get(assetSymbol);
-            let assetAmount: BigNumberish =
-                queryUserRewardsData.data?.rewardAmounts[idx] || 'unable to get reward amount';
-            if (assetDecimals && queryAssetPrices.data) {
-                // if the asset decimals mapping exists
-                const assetUSDPrice =
-                    queryAssetPrices.data[assetSymbol as IAvailableCoins].usdPrice;
-                assetAmount = '$'.concat(
-                    String(nativeAmountToUSD(assetAmount, assetDecimals, assetUSDPrice)),
-                );
-            }
-            return {
-                label: assetSymbol,
-                value: assetAmount.toString(),
-                loading: queryRewardsData.isLoading,
-            };
-        });
-    };
-
-    useEffect(() => {
-        if (data?.view) setView('Withdraw');
-    }, [data?.view, setView]);
-
-    useEffect(() => {
-        if (typeof collateral === 'boolean') setExistingSupplyCollateral(collateral);
-    }, [collateral]);
-
-    useEffect(() => {
-        const getter = async () => {
-            setEstimatedGasCost({ ...estimatedGasCost, loading: true });
-            if (signer && data) {
-                let res;
-                if (view?.includes('Supply')) {
-                    res = await estimateGas({
-                        ...defaultFunctionParams,
-                        function: 'supply',
-                        underlying: data.asset,
-                    });
-                } else if (view?.includes('Claim')) {
-                    if (queryRewardsData.data) {
-                        res = await estimateGas({
-                            ...defaultFunctionParams,
-                            function: 'claimRewards',
-                            incentivizedAssets: getAllATokenAddresses(),
-                            to: await defaultFunctionParams.signer.getAddress(),
-                        });
-                    }
-                } else {
-                    res = await estimateGas({
-                        ...defaultFunctionParams,
-                        function: 'withdraw',
-                        asset: data.asset,
-                    });
-                }
-                setEstimatedGasCost({
-                    loading: false,
-                    cost: `$${String(
-                        nativeAmountToUSD(res || 0, 18, queryAssetPrices.data?.WETH.usdPrice || 0),
-                    )}`,
-                });
-            }
-        };
-        getter();
-    }, [view, data, isMax, amount, signer]);
 
     return (
         <>
@@ -271,7 +67,14 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                 !isSuccess && !error ? (
                     // Default State
                     <>
-                        <h3 className="mt-5 text-neutral400">Amount</h3>
+                        <div className="mt-5 flex justify-between items-center">
+                            <h3>Amount</h3>
+                            {data?.asset?.toLowerCase() === 'weth' && (
+                                <SecondaryButton className="p-1" onClick={() => {}}>
+                                    Use ETH
+                                </SecondaryButton>
+                            )}
+                        </div>
                         <CoinInput
                             amount={amount}
                             setAmount={setAmount}
@@ -377,7 +180,14 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
             ) : !isSuccess && !error ? (
                 // Default State
                 <>
-                    <h3 className="mt-5 text-neutral400">Amount</h3>
+                    <div className="mt-5 flex justify-between items-center">
+                        <h3>Amount</h3>
+                        {data?.asset?.toLowerCase() === 'weth' && (
+                            <SecondaryButton className="p-1" onClick={() => {}}>
+                                Use ETH
+                            </SecondaryButton>
+                        )}
+                    </div>
                     <CoinInput
                         amount={amount}
                         setAmount={setAmount}
