@@ -177,13 +177,15 @@ export function useUserTrancheData(
                 const liquidity = BigNumber.from(liquidityNative)
                     .mul(price)
                     .div(ethers.utils.parseEther('1'));
+                const amountUsd = found?.amountNative.lt(liquidityNative)
+                    ? found?.amountUSD
+                    : ethers.utils.formatUnits(liquidity.toString(), decimals);
+                const amountNative = found?.amountNative.lt(liquidityNative)
+                    ? found?.amountNative
+                    : BigNumber.from(liquidityNative);
                 return {
-                    amount: found?.amountNative.lt(liquidityNative)
-                        ? found?.amountUSD
-                        : ethers.utils.formatUnits(liquidity.toString(), decimals),
-                    amountNative: found?.amountNative.lt(liquidityNative)
-                        ? found?.amountNative
-                        : BigNumber.from(liquidityNative),
+                    amount: amountUsd,
+                    amountNative: amountNative,
                     loading: false,
                 };
             } else
