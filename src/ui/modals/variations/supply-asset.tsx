@@ -73,7 +73,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                         <div className="mt-5 flex justify-between items-center">
                             <h3>Amount</h3>
                             {/* TODO: uncomment when ETH is ready */}
-                            {/* {data?.asset?.toLowerCase() === 'weth' && (
+                            {/* {asset?.toLowerCase() === 'weth' && (
                                 <SecondaryButton className="p-1" onClick={toggleEthWeth}>
                                     Use {isEth ? 'WETH' : 'ETH'}
                                 </SecondaryButton>
@@ -140,7 +140,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
 
                         <h3 className="mt-6 text-neutral400">Health Factor</h3>
                         <HealthFactor
-                            asset={data?.asset || 'ETH'}
+                            asset={asset || 'ETH'}
                             amount={amount}
                             type={'supply'}
                             trancheId={String(data?.trancheId)}
@@ -187,7 +187,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                     <div className="mt-5 flex justify-between items-center">
                         <h3>Amount</h3>
                         {/* TODO: uncomment when ETH wrapping ready */}
-                        {/* {data?.asset?.toLowerCase() === 'weth' && (
+                        {/* {asset?.toLowerCase() === 'weth' && (
                             <SecondaryButton className="p-1" onClick={toggleEthWeth}>
                                 Use ETH
                             </SecondaryButton>
@@ -217,7 +217,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
 
                     <h3 className="mt-6 text-neutral400">Health Factor</h3>
                     <HealthFactor
-                        asset={data?.asset || 'ETH'}
+                        asset={asset || 'ETH'}
                         amount={amount}
                         type={'withdraw'}
                         trancheId={String(data?.trancheId)}
@@ -234,16 +234,14 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                                               amountWithdraw.sub(
                                                   unformattedStringToBigNumber(
                                                       amount,
-                                                      data?.asset || 'ETH',
+                                                      asset || 'ETH',
                                                   ),
                                               ),
-                                              data?.asset || 'ETH',
+                                              asset || 'ETH',
                                           )
-                                        : bigNumberToNative(amountWithdraw, data?.asset || 'ETH'),
+                                        : bigNumberToNative(amountWithdraw, asset || 'ETH'),
                                 loading:
-                                    Number(
-                                        bigNumberToNative(amountWithdraw, data?.asset || 'ETH'),
-                                    ) === 0,
+                                    Number(bigNumberToNative(amountWithdraw, asset || 'ETH')) === 0,
                             },
                             {
                                 label: 'Estimated Gas',
@@ -264,7 +262,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                     <Button
                         label={`View Tranche`}
                         onClick={() => {
-                            setAsset(data?.asset);
+                            setAsset(asset);
                             closeDialog('loan-asset-dialog');
                             window.scroll(0, 0);
                             navigate(

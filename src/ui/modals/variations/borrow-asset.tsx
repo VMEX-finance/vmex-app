@@ -39,12 +39,15 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
         error,
         isLoading,
         setView,
+        toggleEthWeth,
+        isEth,
+        asset,
     } = useBorrow({ data, ...modalProps });
     const { setAsset } = useSelectedTrancheContext();
     const navigate = useNavigate();
     const { closeDialog } = useDialogController();
 
-    return data && data.asset ? (
+    return data && asset ? (
         <>
             <ModalHeader
                 dialog="borrow-asset-dialog"
@@ -61,12 +64,12 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                             amount={amount}
                             setAmount={setAmount}
                             coin={{
-                                logo: `/coins/${data.asset?.toLowerCase()}.svg`,
-                                name: data.asset,
+                                logo: `/coins/${asset?.toLowerCase()}.svg`,
+                                name: asset,
                             }}
                             balance={bigNumberToUnformattedString(
                                 amountBorrwable.amountNative,
-                                data.asset,
+                                asset,
                             )}
                             type="collateral"
                             isMax={isMax}
@@ -87,7 +90,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
 
                         <h3 className="mt-6 text-neutral400">Health Factor</h3>
                         <HealthFactor
-                            asset={data.asset}
+                            asset={asset}
                             amount={amount}
                             type={'borrow'}
                             trancheId={String(data?.trancheId)}
@@ -121,14 +124,14 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                         amount={amount}
                         setAmount={setAmount}
                         coin={{
-                            logo: `/coins/${data.asset?.toLowerCase()}.svg`,
-                            name: data.asset,
+                            logo: `/coins/${asset?.toLowerCase()}.svg`,
+                            name: asset,
                         }}
-                        balance={bigNumberToUnformattedString(amountRepay, data.asset)}
+                        balance={bigNumberToUnformattedString(amountRepay, asset)}
                         type="owed"
                         isMax={isMax}
                         setIsMax={setIsMax}
-                        loading={Number(bigNumberToNative(amountRepay, data.asset)) === 0}
+                        loading={Number(bigNumberToNative(amountRepay, asset)) === 0}
                         customMaxClick={maxOnClick}
                     />
                     <MessageStatus
@@ -139,7 +142,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
 
                     <h3 className="mt-6 text-neutral400">Health Factor</h3>
                     <HealthFactor
-                        asset={data.asset}
+                        asset={asset}
                         amount={amount}
                         type={'repay'}
                         trancheId={String(data?.trancheId)}
@@ -154,13 +157,13 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                                     amount
                                         ? bigNumberToNative(
                                               amountRepay.sub(
-                                                  unformattedStringToBigNumber(amount, data.asset),
+                                                  unformattedStringToBigNumber(amount, asset),
                                               ),
-                                              data.asset,
+                                              asset,
                                           )
-                                        : bigNumberToNative(amountRepay, data.asset)
-                                } ${data.asset}`,
-                                loading: Number(bigNumberToNative(amountRepay, data.asset)) === 0,
+                                        : bigNumberToNative(amountRepay, asset)
+                                } ${asset}`,
+                                loading: Number(bigNumberToNative(amountRepay, asset)) === 0,
                             },
                             {
                                 label: 'Estimated Gas',
@@ -180,7 +183,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                     <Button
                         label={`View Tranche`}
                         onClick={() => {
-                            setAsset(data.asset);
+                            setAsset(asset);
                             closeDialog('borrow-asset-dialog');
                             window.scroll(0, 0);
                             navigate(
