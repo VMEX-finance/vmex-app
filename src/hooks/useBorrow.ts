@@ -36,6 +36,14 @@ export const useBorrow = ({
     const { findAssetInMarketsData } = useSubgraphTrancheData(data?.trancheId || 0);
 
     const [estimatedGasCost, setEstimatedGasCost] = useState({ cost: '0', loading: false });
+    const [asset, setAsset] = useState(data?.asset || '');
+
+    const toggleEthWeth = () => {
+        if (data?.asset.toLowerCase() === 'weth') {
+            if (asset.toLowerCase() === 'weth') setAsset('ETH');
+            else setAsset('WETH');
+        }
+    };
 
     const defaultFunctionParams = {
         trancheId: data ? data.trancheId : 0,
@@ -55,7 +63,7 @@ export const useBorrow = ({
                 const res = view?.includes('Borrow')
                     ? await borrow({
                           ...defaultFunctionParams,
-                          underlying: data.asset,
+                          underlying: asset,
                           isMax: false, // TODO: fix in SDK as isMax: true breaks the app
                           //   interestRateMode: 2,
                           // referrer: number,
@@ -63,7 +71,7 @@ export const useBorrow = ({
                       })
                     : await repay({
                           ...defaultFunctionParams,
-                          asset: data.asset,
+                          asset: asset,
                           //   rateMode: 2,
                           // referrer: number,
                           // collateral: boolean,
@@ -74,21 +82,21 @@ export const useBorrow = ({
     };
 
     const amountBorrwable = findAmountBorrowable(
-        data?.asset || '',
-        findAssetInMarketsData(data?.asset || '')?.liquidity,
-        findAssetInMarketsData(data?.asset || '')?.decimals,
-        findAssetInMarketsData(data?.asset || '')?.priceUSD,
+        asset || '',
+        findAssetInMarketsData(asset || '')?.liquidity,
+        findAssetInMarketsData(asset || '')?.decimals,
+        findAssetInMarketsData(asset || '')?.priceUSD,
     );
-    const apy = findAssetInMarketsData(data?.asset || '')?.borrowRate;
+    const apy = findAssetInMarketsData(asset || '')?.borrowRate;
     const amountRepay =
-        findAssetInUserSuppliesOrBorrows(data?.asset, 'borrow')?.amountNative ||
+        findAssetInUserSuppliesOrBorrows(asset, 'borrow')?.amountNative ||
         data?.amountNative ||
         BigNumber.from('0');
 
     const isViolatingBorrowCap = function () {
         if (!amount || !view?.includes('Borrow')) return false;
-        const borrowCap = Number(findAssetInMarketsData(data?.asset || '')?.borrowCap);
-        const currentBorrowed = Number(findAssetInMarketsData(data?.asset || '')?.totalBorrowed); //already considers decimals
+        const borrowCap = Number(findAssetInMarketsData(asset || '')?.borrowCap);
+        const currentBorrowed = Number(findAssetInMarketsData(asset || '')?.totalBorrowed); //already considers decimals
         const newTotalBorrow = Number(amount) + currentBorrowed;
 
         if (newTotalBorrow > borrowCap) {
@@ -98,14 +106,11 @@ export const useBorrow = ({
     };
 
     const isViolatingMax = () => {
-        if (data?.asset && amount) {
-            if (
-                amount.includes('.') &&
-                amount.split('.')[1].length > (DECIMALS.get(data.asset) || 18)
-            ) {
+        if (asset && amount) {
+            if (amount.includes('.') && amount.split('.')[1].length > (DECIMALS.get(asset) || 18)) {
                 return true;
             } else {
-                const inputAmount = utils.parseUnits(amount, DECIMALS.get(data.asset));
+                const inputAmount = utils.parseUnits(amount, DECIMALS.get(asset));
                 return inputAmount.gt(
                     view?.includes('Borrow') ? amountBorrwable.amountNative : amountRepay,
                 );
@@ -117,8 +122,8 @@ export const useBorrow = ({
     const maxOnClick = () => {
         setAmount(
             view?.includes('Borrow')
-                ? bigNumberToUnformattedString(amountBorrwable.amountNative, data?.asset || '')
-                : bigNumberToUnformattedString(amountRepay, data?.asset || ''),
+                ? bigNumberToUnformattedString(amountBorrwable.amountNative, asset || '')
+                : bigNumberToUnformattedString(amountRepay, asset || ''),
         );
         setIsMax(true);
     };
@@ -147,15 +152,15 @@ export const useBorrow = ({
                     ? await estimateGas({
                           ...defaultFunctionParams,
                           function: 'borrow',
-                          underlying: data.asset,
+                          underlying: asset,
                       })
                     : await estimateGas({
                           ...defaultFunctionParams,
                           function: 'repay',
-                          asset: data.asset,
+                          asset: asset,
                       });
                 setEstimatedGasCost({
-                    cost: bigNumberToUSD(res, DECIMALS.get(data.asset) || 18),
+                    cost: bigNumberToUSD(res, DECIMALS.get(asset) || 18),
                     loading: false,
                 });
             }
@@ -182,5 +187,8 @@ export const useBorrow = ({
         error,
         isLoading,
         setView,
+        toggleEthWeth,
+        isEth: asset?.toLowerCase() === 'weth' && asset === 'ETH' ? true : false,
+        asset,
     };
 };

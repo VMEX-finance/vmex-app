@@ -88,42 +88,39 @@ export const useSupply = ({
     };
 
     const handleSubmit = async () => {
-        console.log('data', data);
-        console.log('default', defaultFunctionParams);
-
-        // if (signer && data) {
-        //     await submitTx(async () => {
-        //         let res;
-        //         if (view?.includes('Supply')) {
-        //             res = await supply({
-        //                 ...defaultFunctionParams,
-        //                 underlying: data.asset,
-        //                 collateral:
-        //                     typeof collateral === 'boolean'
-        //                         ? existingSupplyCollateral
-        //                         : asCollateral,
-        //                 // referrer: number,
-        //                 // collateral: boolean,
-        //             });
-        //         } else if (view?.includes('Claim')) {
-        //             res = await claimIncentives({
-        //                 ...defaultFunctionParams,
-        //                 to: await defaultFunctionParams.signer.getAddress(),
-        //                 incentivizedATokens: getAllATokenAddresses(),
-        //             });
-        //         } else {
-        //             res = await withdraw({
-        //                 ...defaultFunctionParams,
-        //                 asset: data.asset,
-        //                 // interestRateMode: 2,
-        //                 // referrer: number,
-        //                 // collateral: boolean,
-        //                 // test: boolean
-        //             });
-        //         }
-        //         return res;
-        //     });
-        // }
+        if (signer && data) {
+            await submitTx(async () => {
+                let res;
+                if (view?.includes('Supply')) {
+                    res = await supply({
+                        ...defaultFunctionParams,
+                        underlying: asset,
+                        collateral:
+                            typeof collateral === 'boolean'
+                                ? existingSupplyCollateral
+                                : asCollateral,
+                        // referrer: number,
+                        // collateral: boolean,
+                    });
+                } else if (view?.includes('Claim')) {
+                    res = await claimIncentives({
+                        ...defaultFunctionParams,
+                        to: await defaultFunctionParams.signer.getAddress(),
+                        incentivizedATokens: getAllATokenAddresses(),
+                    });
+                } else {
+                    res = await withdraw({
+                        ...defaultFunctionParams,
+                        asset,
+                        // interestRateMode: 2,
+                        // referrer: number,
+                        // collateral: boolean,
+                        // test: boolean
+                    });
+                }
+                return res;
+            });
+        }
     };
 
     const maxOnClick = () => {
@@ -219,7 +216,7 @@ export const useSupply = ({
                     res = await estimateGas({
                         ...defaultFunctionParams,
                         function: 'supply',
-                        underlying: data.asset,
+                        underlying: asset,
                     });
                 } else if (view?.includes('Claim')) {
                     if (queryRewardsData.data) {
@@ -234,7 +231,7 @@ export const useSupply = ({
                     res = await estimateGas({
                         ...defaultFunctionParams,
                         function: 'withdraw',
-                        asset: data.asset,
+                        asset: asset,
                     });
                 }
                 setEstimatedGasCost({
