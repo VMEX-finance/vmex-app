@@ -24,6 +24,9 @@ import { useSelectedTrancheContext } from '../../../store';
 
 export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
     const modalProps = useModal('loan-asset-dialog');
+    const navigate = useNavigate();
+    const { setAsset } = useSelectedTrancheContext();
+    const { closeDialog, openDialog } = useDialogController();
     const {
         amountWalletNative,
         maxOnClick,
@@ -50,10 +53,10 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
         setIsMax,
         isLoading,
         isButtonDisabled,
+        toggleEthWeth,
+        isEth,
+        asset,
     } = useSupply({ data, ...modalProps });
-    const navigate = useNavigate();
-    const { setAsset } = useSelectedTrancheContext();
-    const { closeDialog, openDialog } = useDialogController();
 
     return (
         <>
@@ -69,22 +72,23 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                     <>
                         <div className="mt-5 flex justify-between items-center">
                             <h3>Amount</h3>
-                            {data?.asset?.toLowerCase() === 'weth' && (
-                                <SecondaryButton className="p-1" onClick={() => {}}>
-                                    Use ETH
+                            {/* TODO: uncomment when ETH is ready */}
+                            {/* {data?.asset?.toLowerCase() === 'weth' && (
+                                <SecondaryButton className="p-1" onClick={toggleEthWeth}>
+                                    Use {isEth ? 'WETH' : 'ETH'}
                                 </SecondaryButton>
-                            )}
+                            )} */}
                         </div>
                         <CoinInput
                             amount={amount}
                             setAmount={setAmount}
                             coin={{
-                                logo: `/coins/${data?.asset?.toLowerCase() || 'eth'}.svg`,
-                                name: data?.asset || 'ETH',
+                                logo: `/coins/${asset?.toLowerCase() || 'eth'}.svg`,
+                                name: asset || 'ETH',
                             }}
                             balance={bigNumberToUnformattedString(
                                 amountWalletNative.amountNative,
-                                data?.asset || 'eth',
+                                asset || 'eth',
                             )}
                             isMax={isMax}
                             setIsMax={setIsMax}
@@ -182,28 +186,27 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                 <>
                     <div className="mt-5 flex justify-between items-center">
                         <h3>Amount</h3>
-                        {data?.asset?.toLowerCase() === 'weth' && (
-                            <SecondaryButton className="p-1" onClick={() => {}}>
+                        {/* TODO: uncomment when ETH wrapping ready */}
+                        {/* {data?.asset?.toLowerCase() === 'weth' && (
+                            <SecondaryButton className="p-1" onClick={toggleEthWeth}>
                                 Use ETH
                             </SecondaryButton>
-                        )}
+                        )} */}
                     </div>
                     <CoinInput
                         amount={amount}
                         setAmount={setAmount}
                         coin={{
-                            logo: `/coins/${data?.asset?.toLowerCase() || 'eth'}.svg`,
-                            name: data?.asset || 'ETH',
+                            logo: `/coins/${asset?.toLowerCase() || 'eth'}.svg`,
+                            name: asset || 'ETH',
                         }}
                         balance={bigNumberToUnformattedString(
                             amountWithdraw || BigNumber.from('0'),
-                            data?.asset || 'ETH',
+                            asset || 'ETH',
                         )}
                         isMax={isMax}
                         setIsMax={setIsMax}
-                        loading={
-                            Number(bigNumberToNative(amountWithdraw, data?.asset || 'ETH')) === 0
-                        }
+                        loading={Number(bigNumberToNative(amountWithdraw, asset || 'ETH')) === 0}
                         customMaxClick={maxOnClick}
                     />
                     <MessageStatus

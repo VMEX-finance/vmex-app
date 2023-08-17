@@ -51,13 +51,20 @@ export const useSupply = ({
     const [asCollateral, setAsCollateral] = useState<any>(data?.collateral);
     const [existingSupplyCollateral, setExistingSupplyCollateral] = useState(false);
     const [estimatedGasCost, setEstimatedGasCost] = useState({ cost: '0', loading: false });
+    const [asset, setAsset] = useState(data?.asset || '');
 
-    const amountWalletNative = getTokenBalance(data?.asset || '');
-    const apy = findAssetInMarketsData(data?.asset || '')?.supplyRate;
+    const toggleEthWeth = () => {
+        if (data?.asset.toLowerCase() === 'weth') {
+            if (asset.toLowerCase() === 'weth') setAsset('ETH');
+            else setAsset('WETH');
+        }
+    };
+    const amountWalletNative = getTokenBalance(asset || '');
+    const apy = findAssetInMarketsData(asset || '')?.supplyRate;
     const amountWithdraw =
-        findAssetInUserSuppliesOrBorrows(data?.asset, 'supply')?.amountNative || data?.amountNative;
+        findAssetInUserSuppliesOrBorrows(asset, 'supply')?.amountNative || data?.amountNative;
     const collateral = (
-        findAssetInUserSuppliesOrBorrows(data?.asset || '', 'supply') as IYourSuppliesTableItemProps
+        findAssetInUserSuppliesOrBorrows(asset || '', 'supply') as IYourSuppliesTableItemProps
     )?.collateral;
 
     const defaultFunctionParams = {
@@ -81,54 +88,57 @@ export const useSupply = ({
     };
 
     const handleSubmit = async () => {
-        if (signer && data) {
-            await submitTx(async () => {
-                let res;
-                if (view?.includes('Supply')) {
-                    res = await supply({
-                        ...defaultFunctionParams,
-                        underlying: data.asset,
-                        collateral:
-                            typeof collateral === 'boolean'
-                                ? existingSupplyCollateral
-                                : asCollateral,
-                        // referrer: number,
-                        // collateral: boolean,
-                    });
-                } else if (view?.includes('Claim')) {
-                    res = await claimIncentives({
-                        ...defaultFunctionParams,
-                        to: await defaultFunctionParams.signer.getAddress(),
-                        incentivizedATokens: getAllATokenAddresses(),
-                    });
-                } else {
-                    res = await withdraw({
-                        ...defaultFunctionParams,
-                        asset: data.asset,
-                        // interestRateMode: 2,
-                        // referrer: number,
-                        // collateral: boolean,
-                        // test: boolean
-                    });
-                }
-                return res;
-            });
-        }
+        console.log('data', data);
+        console.log('default', defaultFunctionParams);
+
+        // if (signer && data) {
+        //     await submitTx(async () => {
+        //         let res;
+        //         if (view?.includes('Supply')) {
+        //             res = await supply({
+        //                 ...defaultFunctionParams,
+        //                 underlying: data.asset,
+        //                 collateral:
+        //                     typeof collateral === 'boolean'
+        //                         ? existingSupplyCollateral
+        //                         : asCollateral,
+        //                 // referrer: number,
+        //                 // collateral: boolean,
+        //             });
+        //         } else if (view?.includes('Claim')) {
+        //             res = await claimIncentives({
+        //                 ...defaultFunctionParams,
+        //                 to: await defaultFunctionParams.signer.getAddress(),
+        //                 incentivizedATokens: getAllATokenAddresses(),
+        //             });
+        //         } else {
+        //             res = await withdraw({
+        //                 ...defaultFunctionParams,
+        //                 asset: data.asset,
+        //                 // interestRateMode: 2,
+        //                 // referrer: number,
+        //                 // collateral: boolean,
+        //                 // test: boolean
+        //             });
+        //         }
+        //         return res;
+        //     });
+        // }
     };
 
     const maxOnClick = () => {
         setAmount(
             view?.includes('Supply')
-                ? bigNumberToUnformattedString(amountWalletNative.amountNative, data?.asset || '')
-                : bigNumberToUnformattedString(amountWithdraw, data?.asset || ''),
+                ? bigNumberToUnformattedString(amountWalletNative.amountNative, asset || '')
+                : bigNumberToUnformattedString(amountWithdraw, asset || ''),
         );
         setIsMax(true);
     };
 
     const isViolatingSupplyCap = function () {
         if (!amount || !view?.includes('Supply')) return false;
-        const supplyCap = Number(findAssetInMarketsData(data?.asset || '')?.supplyCap);
-        const currentSupplied = Number(findAssetInMarketsData(data?.asset || '')?.totalSupplied); //already considers decimals
+        const supplyCap = Number(findAssetInMarketsData(asset || '')?.supplyCap);
+        const currentSupplied = Number(findAssetInMarketsData(asset || '')?.totalSupplied); //already considers decimals
         const newTotalSupply = Number(amount) + currentSupplied;
         if (newTotalSupply > supplyCap) {
             return true;
@@ -137,14 +147,11 @@ export const useSupply = ({
     };
 
     const isViolatingMax = () => {
-        if (data?.asset && amount) {
-            if (
-                amount.includes('.') &&
-                amount.split('.')[1].length > (DECIMALS.get(data.asset) || 18)
-            ) {
+        if (asset && amount) {
+            if (amount.includes('.') && amount.split('.')[1].length > (DECIMALS.get(asset) || 18)) {
                 return true;
             } else {
-                const inputAmount = utils.parseUnits(amount, DECIMALS.get(data.asset));
+                const inputAmount = utils.parseUnits(amount, DECIMALS.get(asset));
                 return inputAmount.gt(
                     view?.includes('Supply')
                         ? amountWalletNative.amountNative
@@ -267,5 +274,8 @@ export const useSupply = ({
         setIsMax,
         isLoading,
         isButtonDisabled,
+        toggleEthWeth,
+        isEth: data?.asset?.toLowerCase() === 'weth' && asset === 'ETH' ? true : false,
+        asset,
     };
 };
