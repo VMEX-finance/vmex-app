@@ -1,5 +1,5 @@
 import { ISupplyBorrowProps } from '../ui/modals';
-import { IUseModal } from './useModal';
+import { IUseModal } from './modal';
 import { useEffect, useState } from 'react';
 import { BigNumber, Wallet, utils } from 'ethers';
 import {
