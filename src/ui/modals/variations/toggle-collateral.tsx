@@ -3,7 +3,7 @@ import { IDialogProps } from '../utils';
 import { ModalFooter, ModalHeader } from '../subcomponents';
 import { Button, HealthFactor, TransactionStatus } from '../../components';
 import { useSigner } from 'wagmi';
-import { useModal } from '../../../hooks/useModal';
+import { useModal } from '../../../hooks/modal';
 import { markReserveAsCollateral } from '@vmexfinance/sdk';
 import { NETWORK, SDK_PARAMS } from '../../../utils/sdk-helpers';
 

@@ -1,6 +1,6 @@
 import { ISupplyBorrowProps } from '../ui/modals';
 import { useEffect, useState } from 'react';
-import { IUseModal } from './useModal';
+import { IUseModal } from './modal';
 import {
     useSubgraphAllAssetMappingsData,
     useSubgraphTrancheData,
