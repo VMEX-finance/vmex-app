@@ -35,6 +35,7 @@ export const getUserAdminTrancheData = async (admin: string): Promise<IGraphTran
                         name
                         treasury
                         isUsingWhitelist
+                        isVerified
                         trancheAdmin {
                             id
                         }
@@ -44,7 +45,7 @@ export const getUserAdminTrancheData = async (admin: string): Promise<IGraphTran
                         blacklistedUsers {
                             id
                         }
-                        reserves {
+                        reserves(where: { symbol_not: "" }) {
                             totalLiquidityAsCollateral
                             utilizationRate
                             reserveFactor
@@ -69,7 +70,10 @@ export const getUserAdminTrancheData = async (admin: string): Promise<IGraphTran
                                 vmexReserveFactor
                             }
                             isFrozen
-                            # yieldStrategy
+                            baseLTV
+                            liquidationThreshold
+                            liquidationBonus
+                            borrowFactor
                         }
                         depositHistory(orderBy: timestamp, orderDirection: asc) {
                             user {
@@ -263,8 +267,16 @@ export const getSubgraphUserChart = async (
     let earliestDeposit = Number.MAX_SAFE_INTEGER;
 
     allReserves.map((reserve: any) => {
-        const asset = reserve.reserve.assetData.underlyingAssetName;
+        const asset = reserve.reserve.assetData.underlyingAssetName.toUpperCase();
         const decimals = reserve.reserve.decimals;
+        if (!(prices as any)[asset]) {
+            console.warn(
+                'MISSING ORACLE PRICE FOR',
+                asset,
+                'skipping asset in any usd calculations',
+            );
+            return;
+        }
         const assetUSDPrice = (prices as any)[asset].usdPrice;
 
         // PROFITS
@@ -281,14 +293,33 @@ export const getSubgraphUserChart = async (
         (a: IncrementalChangeItem, b: IncrementalChangeItem) => a.timestamp - b.timestamp,
     );
 
-    let cumulativeValue = 0;
     // add a datapoint for starting at zero
     graphData.push({
         xaxis: new Date(earliestDeposit * 1000).toLocaleString(),
         value: 0,
     });
-    allIncrementalChanges.map((el, idx) => {
-        cumulativeValue += allIncrementalChanges[idx].usdValueDelta;
+
+    const mergedData: IncrementalChangeItem[] = [];
+    let tempAccrued = 0;
+    allIncrementalChanges.forEach((el, idx) => {
+        tempAccrued += el.usdValueDelta;
+        if (
+            idx === allIncrementalChanges.length - 1 ||
+            allIncrementalChanges[idx + 1].timestamp - el.timestamp >= 60
+        ) {
+            // only push to the merged data when the difference in timestamp is greater than a minute
+            // or if we are at the last element in the array
+            mergedData.push({
+                timestamp: el.timestamp,
+                usdValueDelta: tempAccrued,
+            });
+            tempAccrued = 0;
+        }
+    });
+
+    let cumulativeValue = 0;
+    mergedData.map((el, idx) => {
+        cumulativeValue += mergedData[idx].usdValueDelta;
         graphData.push({
             xaxis: new Date(el.timestamp * 1000).toLocaleString(),
             value: cumulativeValue,

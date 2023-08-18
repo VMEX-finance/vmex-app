@@ -1,22 +1,18 @@
 import { useQuery } from '@tanstack/react-query';
-import { getAssetPrices } from '@vmexfinance/sdk';
-import {
-    MAINNET_ASSET_MAPPINGS,
-    REVERSE_MAINNET_ASSET_MAPPINGS,
-    SDK_PARAMS,
-} from '../../utils/sdk-helpers';
+import { getAssetPrices, getAllAssetSymbols, convertAddressToSymbol } from '@vmexfinance/sdk';
+import { SDK_PARAMS } from '../../utils/sdk-helpers';
 import { IAssetPricesProps, IPricesDataProps } from './types';
 import { IAvailableCoins } from '../../utils/helpers';
 
 export async function getAllAssetPrices(): Promise<Record<IAvailableCoins, IAssetPricesProps>> {
     const pricesMap = await getAssetPrices({
-        assets: Array.from(MAINNET_ASSET_MAPPINGS.keys()),
+        assets: getAllAssetSymbols(SDK_PARAMS.network),
         ...SDK_PARAMS,
     });
-
     const returnObj: Record<string, IAssetPricesProps> = {};
     pricesMap.forEach(({ oracle, priceETH, priceUSD }, key) => {
-        const asset = REVERSE_MAINNET_ASSET_MAPPINGS.get(key.toLowerCase()) || key;
+        let asset = convertAddressToSymbol(key, SDK_PARAMS.network);
+        asset = asset.toUpperCase();
         (returnObj as any)[asset] = {
             oracle,
             ethPrice: priceETH,

@@ -105,14 +105,14 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                             change={tvlChange}
                             loading={loading}
                         />
-                        <NumberDisplay
+                        {/* <NumberDisplay
                             center
                             size="xl"
                             label="Avg. APY"
                             value={`${(avgApy ? avgApy : 0).toFixed(2)}%`}
                             change={tvlChange}
                             loading={loading}
-                        />
+                        /> */}
                         <NumberDisplay
                             center
                             size="xl"
@@ -143,9 +143,9 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                             width > customBreakpoint ? 'order-3' : 'order-2'
                         } sm:min-w-[162px] 2xl:min-w-[194px]`}
                     >
-                        <div className="flex flex-col justify-between">
-                            <div className="flex flex-col items-end">
-                                <h2 className="text-2xl">Grade</h2>
+                        <div className="flex flex-col h-full justify-end">
+                            <div className="flex flex-col items-end mb-1">
+                                {/* <h2 className="text-2xl">Grade</h2>
                                 {loading ? (
                                     <SkeletonLoader
                                         variant="rounded"
@@ -154,7 +154,15 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                                     />
                                 ) : (
                                     <p className="text-3xl">{grade || '-'}</p>
-                                )}
+                                )} */}
+                                <NumberDisplay
+                                    center
+                                    size="xl"
+                                    label="Avg. APY"
+                                    value={`${(avgApy ? avgApy : 0).toFixed(2)}%`}
+                                    change={tvlChange}
+                                    loading={loading}
+                                />
                             </div>
                         </div>
                     </div>

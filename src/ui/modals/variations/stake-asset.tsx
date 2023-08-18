@@ -26,7 +26,7 @@ export const StakeAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
         data &&
         data.asset && (
             <>
-                <ModalHeader dialog="stake-asset-dialog" title={name} asset={data.asset} />
+                <ModalHeader dialog="stake-asset-dialog" tabs={[`${name}`]} asset={data.asset} />
                 {!isSuccess && !error ? (
                     // Default State
                     <>

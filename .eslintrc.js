@@ -21,7 +21,7 @@ module.exports = {
     },
     plugins: ['react', 'jsx-a11y', '@typescript-eslint'],
     rules: {
-        'react-hooks/exhaustive-deps': 'warn',
+        'react-hooks/exhaustive-deps': 'off',
         'no-var': 'error',
         'brace-style': 'error',
         'prefer-template': 'error',

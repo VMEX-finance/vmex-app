@@ -11,14 +11,21 @@ import {
     weightedAverageofArr,
     MAX_UINT_AMOUNT,
     IAvailableCoins,
+    getTrancheCategory,
 } from '../../utils';
 import { ILineChartDataPointProps } from '../../ui/components';
+import { getTrancheId } from './id-generation';
+
+const useCustomRiskParams = (isVerified: boolean, item: any) => {
+    return isVerified && item.borrowFactor !== '0';
+};
 
 export const processTrancheData = async (
     data: any,
     trancheId?: string,
 ): Promise<IGraphTrancheDataProps> => {
-    const assets = data.reserves;
+    const assets = data?.reserves;
+    const isVerified = data?.isVerified || false;
     const prices = await getAllAssetPrices();
     const assetsData = assets.reduce(
         (obj: any, item: any) =>
@@ -26,13 +33,11 @@ export const processTrancheData = async (
                 [item.assetData.underlyingAssetName]: {
                     liquidity: item.availableLiquidity,
                     decimals: item.decimals,
-                    ltv: item.assetData.baseLTV,
                     optimalUtilityRate: percentFormatter.format(
                         parseFloat(utils.formatUnits(item.optimalUtilisationRate, 27)),
                     ),
                     reserveFactor: item.reserveFactor,
                     vmexReserveFactor: item.assetData.vmexReserveFactor,
-                    liquidationThreshold: item.assetData.liquidationThreshold,
                     utilityRate: `${item.utilizationRate}`,
                     borrowRate: percentFormatter.format(
                         Number(utils.formatUnits(item.variableBorrowRate, 27)),
@@ -49,9 +54,18 @@ export const processTrancheData = async (
                         item.totalLiquidityAsCollateral,
                         item.decimals,
                     ),
-                    baseLTV: item.assetData.baseLTV,
-                    liquidationBonus: item.assetData.liquidationBonus,
-                    borrowFactor: item.assetData.borrowFactor,
+                    baseLTV: useCustomRiskParams(isVerified, item)
+                        ? item.baseLTV
+                        : item.assetData.baseLTV,
+                    liquidationThreshold: useCustomRiskParams(isVerified, item)
+                        ? item.liquidationThreshold
+                        : item.assetData.liquidationThreshold,
+                    liquidationBonus: useCustomRiskParams(isVerified, item)
+                        ? item.liquidationBonus
+                        : item.assetData.liquidationBonus,
+                    borrowFactor: useCustomRiskParams(isVerified, item)
+                        ? item.borrowFactor
+                        : item.assetData.borrowFactor,
                     borrowCap:
                         item.assetData.borrowCap == '0'
                             ? MAX_UINT_AMOUNT
@@ -60,8 +74,10 @@ export const processTrancheData = async (
                         item.assetData.supplyCap == '0'
                             ? MAX_UINT_AMOUNT
                             : item.assetData.borrowCap,
-                    priceUSD: (prices as any)[item.assetData.underlyingAssetName].usdPrice,
-                    priceETH: (prices as any)[item.assetData.underlyingAssetName].ethPrice,
+                    priceUSD: (prices as any)[item.assetData.underlyingAssetName.toUpperCase()]
+                        .usdPrice,
+                    priceETH: (prices as any)[item.assetData.underlyingAssetName.toUpperCase()]
+                        .ethPrice,
                     isFrozen: item.isFrozen,
                     // yieldStrategy: item.yieldStrategy,
                 },
@@ -71,7 +87,15 @@ export const processTrancheData = async (
 
     const summaryData = assets.reduce(
         (obj: any, item: any) => {
-            const asset = item.assetData.underlyingAssetName;
+            const asset = item.assetData.underlyingAssetName.toUpperCase();
+            if (!(prices as any)[asset]) {
+                console.warn(
+                    'MISSING ORACLE PRICE FOR',
+                    asset,
+                    'skipping asset in any usd calculations',
+                );
+                return obj;
+            }
             const assetUSDPrice = (prices as any)[asset].usdPrice;
 
             return Object.assign(obj, {
@@ -114,10 +138,10 @@ export const processTrancheData = async (
     const uniqueBorrowers = new Set<string>();
     const uniqueLenders = new Set<string>();
 
-    data.depositHistory.forEach((el: any) => {
+    data?.depositHistory?.forEach((el: any) => {
         uniqueLenders.add(el.user.id);
     });
-    data.borrowHistory.forEach((el: any) => {
+    data?.borrowHistory?.forEach((el: any) => {
         uniqueBorrowers.add(el.user.id);
     });
 
@@ -149,6 +173,7 @@ export const processTrancheData = async (
         treasury: data.treasury,
         uniqueBorrowers: uniqueBorrowers.size,
         uniqueLenders: uniqueLenders.size,
+        category: getTrancheCategory(data),
     };
     return returnObj;
 };
@@ -158,7 +183,7 @@ export const getSubgraphTrancheData = async (
 ): Promise<IGraphTrancheDataProps> => {
     if (!_trancheId) return {};
 
-    const trancheId = String(_trancheId);
+    const trancheId = getTrancheId(String(_trancheId));
     const { data, error } = await apolloClient.query({
         query: gql`
             query QueryTranche($trancheId: String!) {
@@ -166,6 +191,7 @@ export const getSubgraphTrancheData = async (
                     name
                     isUsingWhitelist
                     treasury
+                    isVerified
                     trancheAdmin {
                         id
                     }
@@ -175,7 +201,7 @@ export const getSubgraphTrancheData = async (
                     blacklistedUsers {
                         id
                     }
-                    reserves {
+                    reserves(where: { symbol_not: "" }) {
                         totalLiquidityAsCollateral
                         utilizationRate
                         reserveFactor
@@ -200,7 +226,10 @@ export const getSubgraphTrancheData = async (
                             vmexReserveFactor
                         }
                         isFrozen
-                        # yieldStrategy
+                        baseLTV
+                        liquidationThreshold
+                        liquidationBonus
+                        borrowFactor
                     }
                     depositHistory {
                         user {
@@ -219,7 +248,7 @@ export const getSubgraphTrancheData = async (
     });
 
     if (error) return {};
-    else return processTrancheData(data.tranche, trancheId);
+    else return processTrancheData(data.tranche, String(_trancheId));
 };
 
 export const getSubgraphTrancheChart = async (
@@ -227,7 +256,7 @@ export const getSubgraphTrancheChart = async (
 ): Promise<ILineChartDataPointProps[] | any> => {
     if (!_trancheId) return {};
 
-    const trancheId = String(_trancheId);
+    const trancheId = getTrancheId(String(_trancheId));
     const { data, error } = await apolloClient.query({
         query: gql`
             query QueryTrancheChart($trancheId: String!) {
@@ -262,8 +291,16 @@ export const getSubgraphTrancheChart = async (
     else {
         let graphData: ILineChartDataPointProps[] = [];
         const prices = await getAllAssetPrices();
-        data.tranche.depositHistory.map((el: any) => {
-            const asset = el.reserve.assetData.underlyingAssetName;
+        data.tranche?.depositHistory?.map((el: any) => {
+            const asset = el.reserve.assetData.underlyingAssetName.toUpperCase();
+            if (!(prices as any)[asset]) {
+                console.warn(
+                    'MISSING ORACLE PRICE FOR',
+                    asset,
+                    'skipping asset in any usd calculations',
+                );
+                return;
+            }
 
             const assetUSDPrice = (prices as any)[asset].usdPrice;
             const usdAmount = nativeAmountToUSD(el.amount, el.reserve.decimals, assetUSDPrice);
@@ -271,21 +308,29 @@ export const getSubgraphTrancheChart = async (
 
             const found = graphData.find((element) => element.xaxis === date);
             if (found) {
-                found.value = found.value + usdAmount;
+                found.value = (found.value || 0) + usdAmount;
             } else {
                 graphData.push({ value: usdAmount, xaxis: date });
             }
         });
 
         data.tranche.borrowHistory.map((el: any) => {
-            const asset = el.reserve.assetData.underlyingAssetName;
+            const asset = el.reserve.assetData.underlyingAssetName.toUpperCase();
+            if (!(prices as any)[asset]) {
+                console.warn(
+                    'MISSING ORACLE PRICE FOR',
+                    asset,
+                    'skipping asset in any usd calculations',
+                );
+                return;
+            }
             const assetUSDPrice = (prices as any)[asset].usdPrice;
             const usdAmount = nativeAmountToUSD(el.amount, el.reserve.decimals, assetUSDPrice);
             const date = new Date(el.timestamp * 1000).toLocaleString();
 
             const found = graphData.find((element) => element.xaxis === date);
             if (found) {
-                found.value = found.value + usdAmount;
+                found.value = (found.value || 0) + usdAmount;
             } else {
                 graphData.push({ value: usdAmount, xaxis: date });
             }
@@ -294,7 +339,7 @@ export const getSubgraphTrancheChart = async (
         // Loop through and add previous day TVL to current day TVL
         graphData.forEach(function (plot, index) {
             if (index > 0) {
-                plot.value = plot.value + graphData[index - 1].value;
+                plot.value = (plot.value || 0) + (graphData[index - 1].value || 0);
             }
         });
         return graphData.sort((a, b) => new Date(a.xaxis).valueOf() - new Date(b.xaxis).valueOf());
@@ -317,7 +362,10 @@ export function useSubgraphTrancheData(trancheId: number): ISubgraphTrancheData 
     const findAssetInMarketsData = (asset: string) => {
         if (queryTrancheData.isLoading) return undefined;
         else {
-            return (queryTrancheData.data?.assetsData as any)[asset];
+            if (queryTrancheData.data?.assetsData) {
+                return (queryTrancheData.data?.assetsData as any)[asset];
+            }
+            return {};
         }
     };
 

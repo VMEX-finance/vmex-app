@@ -123,15 +123,15 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
                 sortThirdClickReset: true,
             },
         },
-        {
-            name: 'rating',
-            label: 'Rating',
-            options: {
-                filter: true,
-                sort: true,
-                sortThirdClickReset: true,
-            },
-        },
+        // {
+        //     name: 'rating',
+        //     label: 'Rating',
+        //     options: {
+        //         filter: true,
+        //         sort: true,
+        //         sortThirdClickReset: true,
+        //     },
+        // },
         {
             name: 'strategies',
             label: 'Strategies',
@@ -198,32 +198,34 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
                                 available,
                                 supplyTotal,
                                 borrowTotal,
-                                rating,
+                                // rating,
                                 strategies,
                                 canBeCollateral,
                                 trancheId,
                             ],
                             dataIndex,
                             rowIndex,
-                        ) => (
-                            <MarketsCustomRow
-                                asset={asset}
-                                tranche={tranche}
-                                trancheId={trancheId}
-                                supplyApy={percentFormatter.format(supplyApy)}
-                                borrowApy={percentFormatter.format(borrowApy)}
-                                yourAmount={renderYourAmount(asset)}
-                                available={available}
-                                borrowTotal={borrowTotal}
-                                supplyTotal={supplyTotal}
-                                rating={rating}
-                                strategies={asset.toLowerCase().startsWith('yv')}
-                                collateral={canBeCollateral}
-                                key={`markets-table-${
-                                    rowIndex || Math.floor(Math.random() * 10000)
-                                }`}
-                            />
-                        ),
+                        ) => {
+                            return (
+                                <MarketsCustomRow
+                                    asset={asset}
+                                    tranche={tranche}
+                                    trancheId={trancheId}
+                                    supplyApy={percentFormatter.format(supplyApy)}
+                                    borrowApy={percentFormatter.format(borrowApy)}
+                                    yourAmount={renderYourAmount(asset)}
+                                    available={available}
+                                    borrowTotal={borrowTotal}
+                                    supplyTotal={supplyTotal}
+                                    // rating={rating}
+                                    strategies={asset.toLowerCase().startsWith('yv')}
+                                    collateral={canBeCollateral}
+                                    key={`markets-table-${
+                                        rowIndex || Math.floor(Math.random() * 10000)
+                                    }`}
+                                />
+                            );
+                        },
                         textLabels: {
                             body: {
                                 noMatch: loading ? (

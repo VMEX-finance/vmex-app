@@ -6,14 +6,8 @@ import { BigNumber, utils } from 'ethers';
 import { IMarketsAsset } from '../types';
 import { getAllAssetPrices } from '../prices';
 import { usdFormatter, apolloClient, nativeAmountToUSD, NETWORK } from '../../utils';
-import { convertSymbolToAddress, getContractAddress } from '@vmexfinance/sdk';
-
-function getReserveId(underlyingAsset: string, trancheId: string): string {
-    return `${underlyingAsset}${getContractAddress(
-        'LendingPoolAddressesProvider',
-        NETWORK,
-    ).toLowerCase()}${trancheId}`;
-}
+import { convertSymbolToAddress } from '@vmexfinance/sdk';
+import { getReserveId } from './id-generation';
 
 export const getSubgraphMarketsChart = async (
     _trancheId: string | number,
@@ -77,7 +71,11 @@ export const getSubgraphAllMarketsData = async (): Promise<IMarketsAsset[]> => {
     const { data, error } = await apolloClient.query({
         query: gql`
             query QueryAllMarkets {
-                reserves(orderBy: availableLiquidity, orderDirection: desc) {
+                reserves(
+                    orderBy: availableLiquidity
+                    orderDirection: desc
+                    where: { symbol_not: "" }
+                ) {
                     decimals
                     tranche {
                         id
@@ -106,13 +104,19 @@ export const getSubgraphAllMarketsData = async (): Promise<IMarketsAsset[]> => {
 
         const returnObj: IMarketsAsset[] = [];
         data.reserves.map((reserve: any) => {
-            const asset = reserve.assetData.underlyingAssetName;
+            const asset = reserve.assetData.underlyingAssetName.toUpperCase();
+            if (!(prices as any)[asset]) {
+                return;
+            }
             const assetUSDPrice = (prices as any)[asset].usdPrice;
 
             returnObj.push({
-                asset: asset,
+                asset: reserve.assetData.underlyingAssetName,
                 tranche: reserve.tranche.name,
-                trancheId: reserve.tranche.id,
+                trancheId:
+                    reserve.tranche.id && reserve.tranche.id.includes(':')
+                        ? reserve.tranche.id.split(':')[1]
+                        : reserve.tranche.id,
                 borrowApy: utils.formatUnits(reserve.variableBorrowRate, 27),
                 supplyApy: utils.formatUnits(reserve.liquidityRate, 27),
                 available: usdFormatter().format(

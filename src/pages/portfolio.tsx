@@ -1,15 +1,16 @@
 import React from 'react';
 import { AppTemplate, GridView } from '../ui/templates';
 import { PortfolioStatsCard, UserPerformanceCard } from '../ui/features';
-import { YourPositionsTable } from '../ui/tables';
+import { YourPositionsTable, YourRewardsTable } from '../ui/tables';
 import { Button, WalletButton } from '../ui/components/buttons';
-import { useUserData, useUserTranchesData } from '../api/user';
+import { useUserData, useUserRewards, useUserTranchesData } from '../api/user';
 import { useAccount, useNetwork } from 'wagmi';
 import { addDollarAmounts, bigNumberToUnformattedString } from '../utils/sdk-helpers';
 import { useSubgraphUserData } from '../api/subgraph';
 import { averageOfArr, numberFormatter } from '../utils/helpers';
 import { useNavigate } from 'react-router-dom';
 import useAnalyticsEventTracker from '../utils/google-analytics';
+import { usePricesData } from '../api/prices';
 
 const Portfolio: React.FC = () => {
     const gaEventTracker = useAnalyticsEventTracker('Portfolio');
@@ -20,6 +21,8 @@ const Portfolio: React.FC = () => {
     const { queryUserActivity } = useUserData(address);
     const { queryUserPnlChart } = useSubgraphUserData(address);
     const { queryUserTranchesData } = useUserTranchesData(address);
+    const { prices } = usePricesData();
+    const { queryUserRewards } = useUserRewards(address, prices);
 
     const calculateNetworth = () => {
         let sum = 0;
@@ -45,43 +48,44 @@ const Portfolio: React.FC = () => {
         }
     };
 
-    const suppliesWithHealth = () => {
-        if (queryUserActivity.isLoading || !queryUserActivity.data) return [];
-        else {
-            if (!queryUserTranchesData.data) {
-                return queryUserActivity.data?.supplies;
-            } else {
-                return queryUserActivity.data?.supplies.map((supply) => {
-                    const foundHealth = queryUserTranchesData.data.find(
-                        ({ trancheId }) => trancheId === supply.trancheId,
-                    );
-                    return {
-                        ...supply,
-                        healthFactor: foundHealth ? parseFloat(foundHealth.healthFactor) : 0,
-                    };
-                });
-            }
-        }
-    };
+    // UNCOMMENT TO HAVE HEALTH FACTORS
+    // const suppliesWithHealth = () => {
+    //     if (queryUserActivity.isLoading || !queryUserActivity.data) return [];
+    //     else {
+    //         if (!queryUserTranchesData.data) {
+    //             return queryUserActivity.data?.supplies;
+    //         } else {
+    //             return queryUserActivity.data?.supplies.map((supply) => {
+    //                 const foundHealth = queryUserTranchesData.data.find(
+    //                     ({ trancheId }) => trancheId === supply.trancheId,
+    //                 );
+    //                 return {
+    //                     ...supply,
+    //                     healthFactor: foundHealth ? parseFloat(foundHealth.healthFactor) : 0,
+    //                 };
+    //             });
+    //         }
+    //     }
+    // };
 
-    const borrowsWithHealth = () => {
-        if (queryUserActivity.isLoading || !queryUserActivity.data) return [];
-        else {
-            if (!queryUserTranchesData.data) {
-                return queryUserActivity.data?.borrows;
-            } else {
-                return queryUserActivity.data?.borrows.map((borrow) => {
-                    const foundHealth = queryUserTranchesData.data.find(
-                        ({ trancheId }) => trancheId === borrow.trancheId,
-                    );
-                    return {
-                        ...borrow,
-                        healthFactor: foundHealth ? parseFloat(foundHealth.healthFactor) : 0,
-                    };
-                });
-            }
-        }
-    };
+    // const borrowsWithHealth = () => {
+    //     if (queryUserActivity.isLoading || !queryUserActivity.data) return [];
+    //     else {
+    //         if (!queryUserTranchesData.data) {
+    //             return queryUserActivity.data?.borrows;
+    //         } else {
+    //             return queryUserActivity.data?.borrows.map((borrow) => {
+    //                 const foundHealth = queryUserTranchesData.data.find(
+    //                     ({ trancheId }) => trancheId === borrow.trancheId,
+    //                 );
+    //                 return {
+    //                     ...borrow,
+    //                     healthFactor: foundHealth ? parseFloat(foundHealth.healthFactor) : 0,
+    //                 };
+    //             });
+    //         }
+    //     }
+    // };
 
     return (
         <AppTemplate
@@ -124,7 +128,7 @@ const Portfolio: React.FC = () => {
                             />
                         </div>
                     </div>
-                    <div className="col-span-2 2xl:col-span-1">
+                    <div className="flex flex-col gap-4 xl:gap-8 col-span-2 2xl:col-span-1">
                         <UserPerformanceCard
                             isLoading={queryUserActivity.isLoading || queryUserPnlChart.isLoading}
                             loanedAssets={queryUserActivity.data?.supplies?.map((el) => ({
@@ -137,6 +141,10 @@ const Portfolio: React.FC = () => {
                             }))}
                             tranches={queryUserActivity.data?.tranchesInteractedWith}
                             profitLossChart={queryUserPnlChart.data || []}
+                        />
+                        <YourRewardsTable
+                            data={queryUserRewards.data || []}
+                            isLoading={queryUserRewards.isLoading}
                         />
                     </div>
                 </GridView>

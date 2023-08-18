@@ -2,6 +2,8 @@ import { UseQueryResult } from '@tanstack/react-query';
 import { IUserPerformanceCardProps } from '@ui/features';
 import { IYourBorrowsTableItemProps, IYourSuppliesTableItemProps } from '@ui/tables';
 import { BigNumber } from 'ethers';
+import { UserRewards } from '@vmexfinance/sdk';
+import { VmexRewardsData } from '../types';
 
 type ITokenBalanceProps = {
     amount: string;
@@ -43,6 +45,8 @@ export type IUserWalletDataProps = {
 
 export type IUserTrancheDataProps = {
     queryUserTrancheData: UseQueryResult<IUserTrancheData, unknown>;
+    queryUserRewardsData: UseQueryResult<UserRewards, unknown>;
+    queryRewardsData: UseQueryResult<VmexRewardsData[], unknown>;
     findAssetInUserSuppliesOrBorrows: (
         asset: string | undefined,
         type: 'supply' | 'borrow',
@@ -53,6 +57,11 @@ export type IUserTrancheDataProps = {
         decimals: string | undefined,
         price: BigNumber | undefined,
     ) => ITokenBalanceProps;
+    findAssetInRewards: (
+        asset: string | undefined,
+        tranche: string | undefined,
+        type: 'supply' | 'borrow',
+    ) => boolean;
 };
 
 export type IUserTranchesDataProps = {
@@ -64,7 +73,6 @@ export type IUserTrancheData = {
     totalDebtETH: BigNumber;
     // availableBorrowsETH: string;
     currentLiquidationThreshold: BigNumber;
-    // ltv: string;
     healthFactor: string;
     avgBorrowFactor: BigNumber;
     supplies: IYourSuppliesTableItemProps[];

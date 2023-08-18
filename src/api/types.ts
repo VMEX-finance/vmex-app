@@ -1,4 +1,5 @@
 import { BigNumber } from 'ethers';
+import { ITrancheCategories } from './subgraph';
 
 export type IQueryKeys =
     | 'user-tranche'
@@ -27,7 +28,7 @@ export type IAssetMappings = {
     supplyCap: BigNumber;
     vmexReserveFactor: BigNumber;
 
-    interestRateStrategyAddresses: string[];
+    interestRateStrategyAddress: string;
 
     liquidationBonus: BigNumber;
     liqudiationThreshold: BigNumber;
@@ -75,7 +76,6 @@ export type ITrancheProps = {
     adminFee?: number | string;
     oracle?: string;
     whitelist?: 'Yes' | 'No';
-    ltv?: number | string;
     liquidThreshold?: number | string;
     liquidPenalty?: number | string;
     collateral?: 'Yes' | 'No';
@@ -84,6 +84,7 @@ export type ITrancheProps = {
     utilization?: number | string;
     reserveFactor?: number | string;
     strategy?: number | string;
+    category?: ITrancheCategories;
 };
 
 export type AvailableAsset = {
@@ -105,4 +106,17 @@ export interface TrancheData {
     name: string;
     totalSupplied: string;
     totalBorrowed: string;
+}
+
+export interface VmexRewardsData {
+    emissionsEndTimestamp: number;
+    emissionsPerSecond: BigNumber;
+    index: BigNumber;
+    rewardToken: string;
+    rewardTokenDecimals: number;
+    rewardTokenSymbol: string;
+    // updatedAt: number;
+    trancheId: string;
+    aTokenAddress: string;
+    underlyingAssetAddress: string;
 }
