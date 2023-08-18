@@ -15,7 +15,7 @@ export type ISupplyBorrowProps = {
     isOpen?: boolean;
     data?: AssetDetails;
     tab?: string;
-    closeDialog(e: any): void;
+    closeDialog?(e: any): void;
 };
 
 export type IDialogProps = {
@@ -23,5 +23,5 @@ export type IDialogProps = {
     isOpen?: boolean;
     data?: any;
     tab?: string;
-    closeDialog(e: any): void;
+    closeDialog?(e: any): void;
 };

@@ -3,7 +3,7 @@ import { IDialogProps } from '../utils';
 import { ModalFooter, ModalHeader } from '../subcomponents';
 import { Button, HealthFactor, TransactionStatus } from '../../components';
 import { useSigner } from 'wagmi';
-import { useModal } from '../../../hooks/useModal';
+import { useModal } from '../../../hooks/modal';
 import { markReserveAsCollateral } from '@vmexfinance/sdk';
 import { NETWORK, SDK_PARAMS } from '../../../utils/sdk-helpers';
 
@@ -32,7 +32,7 @@ export const ToggleCollateralDialog: React.FC<IDialogProps> = ({
                 });
                 if (data.setChecked) data.setChecked(newArr);
                 if (data.setCollateral && !data.setChecked) data.setCollateral(!data.collateral);
-                closeDialog('toggle-collateral-dialog');
+                closeDialog && closeDialog('toggle-collateral-dialog');
                 return res;
             });
         }
@@ -43,8 +43,8 @@ export const ToggleCollateralDialog: React.FC<IDialogProps> = ({
         data.asset && (
             <>
                 <ModalHeader
-                    dialog={'toggle-collateral-dialog'}
-                    title={`${data.collateral ? 'Disable' : 'Enable'} ${name}`}
+                    dialog="toggle-collateral-dialog"
+                    tabs={[`${data.collateral ? 'Disable' : 'Enable'} ${name}`]}
                     asset={data.asset}
                 />
                 {!isSuccess ? (

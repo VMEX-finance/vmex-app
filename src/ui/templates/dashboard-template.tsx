@@ -2,10 +2,11 @@ import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useWindowSize, useDialogController } from '../../hooks';
 import { BiChevronLeft, BiPlus } from 'react-icons/bi';
-import { Tooltip, Button, LinkButton, SkeletonLoader } from '../components';
+import { Tooltip, Button, LinkButton, SkeletonLoader, Label } from '../components';
 import { useAccount, useNetwork } from 'wagmi';
 import { Skeleton } from '@mui/material';
 import { useSubgraphUserData } from '../../api';
+import { useSelectedTrancheContext } from '../../store/selected-tranche';
 
 interface IDashboardTemplateProps {
     title?: string;
@@ -37,10 +38,11 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
     const { width } = useWindowSize();
     const { address } = useAccount();
     const { queryTrancheAdminData } = useSubgraphUserData(address || '');
+    const { tranche } = useSelectedTrancheContext();
 
     // TODO: cleanup / optimize
     return (
-        <div className="max-w-[125rem] mx-auto p-3 md:p-6 lg:p-10">
+        <div className="max-w-[125rem] mx-auto p-3 md:p-4 lg:p-5 xl:p-6 2xl:p-10">
             <header
                 className={`
                     ${right ? 'flex justify-between w-full' : ''}
@@ -77,9 +79,21 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                             {titleLoading ? (
                                 <Skeleton variant="rounded" height={'36px'} width={'180px'} />
                             ) : (
-                                <h1 className="text-3xl font-basefont capitalize leading-tight text-neutral-900 dark:text-neutral-300 text-center">
-                                    {title}
-                                </h1>
+                                <div className="flex flex-col items-center justify-center">
+                                    <div className="flex flex-row gap-3 items-center md:flex-col md:gap-0">
+                                        <h1 className="text-3xl font-basefont capitalize leading-tight text-neutral-900 dark:text-neutral-300 text-center">
+                                            {title}
+                                        </h1>
+                                        {tranche?.category && ( // TODO: connect with SDK
+                                            <Label
+                                                tooltip
+                                                className="!py-0.5 !text-xs md:absolute md:left-1/2 md:-translate-x-1/2"
+                                            >
+                                                {tranche?.category || 'Unknown'}
+                                            </Label>
+                                        )}
+                                    </div>
+                                </div>
                             )}
                         </div>
                         <div className="flex gap-3 md:justify-end">

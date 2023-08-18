@@ -49,19 +49,19 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
     let graphData: ILineChartDataPointProps[] = [];
     const prices = await getAllAssetPrices();
     data.tranches.map((tranche: IGraphTrancheProps) => {
-        tranche.depositHistory.map((el) => {
-            const asset = el.reserve.assetData.underlyingAssetName;
+        tranche?.depositHistory?.map((el) => {
+            const asset = el.reserve.assetData.underlyingAssetName.toUpperCase();
 
-            const assetUSDPrice = (prices as any)[asset].usdPrice;
+            const assetUSDPrice = (prices as any)[asset]?.usdPrice || '0';
             const usdAmount = nativeAmountToUSD(el.amount, el.reserve.decimals, assetUSDPrice);
             const date = new Date(el.timestamp * 1000).toLocaleString();
 
             graphData.push({ value: usdAmount, xaxis: date });
         });
 
-        tranche.redeemUnderlyingHistory.map((el) => {
-            const asset = el.reserve.assetData.underlyingAssetName;
-            const assetUSDPrice = (prices as any)[asset].usdPrice;
+        tranche?.redeemUnderlyingHistory?.map((el) => {
+            const asset = el.reserve.assetData.underlyingAssetName.toUpperCase();
+            const assetUSDPrice = (prices as any)[asset]?.usdPrice || '0';
             const usdAmount = nativeAmountToUSD(el.amount, el.reserve.decimals, assetUSDPrice) * -1;
             const date = new Date(el.timestamp * 1000).toLocaleString();
             graphData.push({ value: usdAmount, xaxis: date });
@@ -69,15 +69,17 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
     });
 
     graphData.sort((a, b) => new Date(a.xaxis).valueOf() - new Date(b.xaxis).valueOf());
-    graphData.unshift({
-        value: 0,
-        xaxis: subtractSeconds(new Date(graphData[0].xaxis), 100).toLocaleString(),
-    });
+    if (graphData.length > 0) {
+        graphData.unshift({
+            value: 0,
+            xaxis: subtractSeconds(new Date(graphData[0].xaxis), 100).toLocaleString(),
+        });
+    }
 
     // Loop through and add previous day TVL to current day TVL
     graphData.forEach(function (plot, index) {
         if (index > 0) {
-            plot.value = plot.value + graphData[index - 1].value;
+            plot.value = (plot.value || 0) + (graphData[index - 1].value || 0);
         }
     });
     return graphData;
@@ -89,7 +91,7 @@ async function getTopAssets(
     const { data, error } = await apolloClient.query({
         query: gql`
             query QueryTopSuppliedAssets {
-                reserves {
+                reserves(where: { symbol_not: "" }) {
                     assetData {
                         underlyingAssetName
                     }
@@ -108,8 +110,17 @@ async function getTopAssets(
 
     const resultSupplied: { asset: string; amount: number }[] = Object.values(
         data.reserves.reduce((r: any, reserve: any) => {
-            const _asset = reserve.assetData.underlyingAssetName;
-            const _assetUSDPrice = (prices as any)[_asset].usdPrice;
+            const _asset = reserve.assetData.underlyingAssetName.toUpperCase();
+            if (!(prices as any)[_asset]) {
+                console.warn(
+                    'MISSING ORACLE PRICE FOR',
+                    _asset,
+                    'skipping asset in any usd calculations',
+                );
+                r[_asset] ??= { asset: _asset, amount: 0 };
+                return r;
+            }
+            const _assetUSDPrice = (prices as any)[_asset]?.usdPrice || '0';
             const _usdAmount = nativeAmountToUSD(
                 reserve.totalDeposits,
                 reserve.decimals,
@@ -124,8 +135,17 @@ async function getTopAssets(
 
     const resultBorrowed: { asset: string; amount: number }[] = Object.values(
         data.reserves.reduce((r: any, reserve: any) => {
-            const _asset = reserve.assetData.underlyingAssetName;
-            const _assetUSDPrice = (prices as any)[_asset].usdPrice;
+            const _asset = reserve.assetData.underlyingAssetName.toUpperCase();
+            if (!(prices as any)[_asset]) {
+                console.warn(
+                    'MISSING ORACLE PRICE FOR',
+                    _asset,
+                    'skipping asset in any usd calculations',
+                );
+                r[_asset] ??= { asset: _asset, amount: 0 };
+                return r;
+            }
+            const _assetUSDPrice = (prices as any)[_asset]?.usdPrice || '0';
             const _usdAmount = nativeAmountToUSD(
                 reserve.totalCurrentVariableDebt,
                 reserve.decimals,

@@ -1,18 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { useMediatedState } from 'react-use';
+import React from 'react';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
-import { useDialogController, useModal } from '../../../hooks';
-import { supply, withdraw, estimateGas } from '@vmexfinance/sdk';
+import { useDialogController, useModal, useSupply } from '../../../hooks';
 import {
-    NETWORK,
-    inputMediator,
-    convertStringFormatToNumber,
     unformattedStringToBigNumber,
     bigNumberToNative,
     bigNumberToUnformattedString,
-    SDK_PARAMS,
-    DECIMALS,
-    bigNumberToUSD,
 } from '../../../utils';
 import {
     HealthFactor,
@@ -23,345 +15,246 @@ import {
     MessageStatus,
     Tooltip,
     BasicToggle,
+    SecondaryButton,
 } from '../../components';
-import { useSubgraphTrancheData, useUserData, useUserTrancheData } from '../../../api';
-import { useSigner, useAccount } from 'wagmi';
-import { BigNumber, utils } from 'ethers';
-import { IYourSuppliesTableItemProps } from '@ui/tables';
+import { BigNumber } from 'ethers';
 import { ISupplyBorrowProps } from '../utils';
 import { useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '../../../store';
 
-export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, data, tab }) => {
-    const { submitTx, isSuccess, error, isLoading } = useModal('loan-asset-dialog');
-    const [view, setView] = React.useState('Supply');
-    const [isMax, setIsMax] = React.useState(false);
-    const [amount, setAmount] = useMediatedState(inputMediator, '');
-    const { findAssetInMarketsData } = useSubgraphTrancheData(data?.trancheId || 0);
-    const { data: signer } = useSigner();
-    const { address } = useAccount();
-    const { findAssetInUserSuppliesOrBorrows } = useUserTrancheData(address, data?.trancheId || 0);
-    const { getTokenBalance } = useUserData(address);
+export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
+    const modalProps = useModal('loan-asset-dialog');
     const navigate = useNavigate();
     const { setAsset } = useSelectedTrancheContext();
     const { closeDialog, openDialog } = useDialogController();
-    const [asCollateral, setAsCollateral] = useState<any>(data?.collateral);
-    const [existingSupplyCollateral, setExistingSupplyCollateral] = useState(false);
-    const [estimatedGasCost, setEstimatedGasCost] = useState('0');
+    const {
+        amountWalletNative,
+        maxOnClick,
+        isViolatingMax,
+        isViolatingSupplyCap,
+        collateral,
+        existingSupplyCollateral,
+        setExistingSupplyCollateral,
+        asCollateral,
+        setAsCollateral,
+        apy,
+        renderRewards,
+        estimatedGasCost,
+        queryUserRewardsData,
+        amountWithdraw,
+        handleSubmit,
+        view,
+        setView,
+        isSuccess,
+        error,
+        amount,
+        setAmount,
+        isMax,
+        setIsMax,
+        isLoading,
+        isButtonDisabled,
+        toggleEthWeth,
+        isEth,
+        asset,
+    } = useSupply({ data, ...modalProps });
 
-    const amountWalletNative = getTokenBalance(data?.asset || '');
-    const apy = findAssetInMarketsData(data?.asset || '')?.supplyRate;
-    const amountWithdraw =
-        findAssetInUserSuppliesOrBorrows(data?.asset, 'supply')?.amountNative || data?.amountNative;
-    const collateral = (
-        findAssetInUserSuppliesOrBorrows(data?.asset || '', 'supply') as IYourSuppliesTableItemProps
-    )?.collateral;
-
-    const handleSubmit = async () => {
-        if (signer && data) {
-            await submitTx(async () => {
-                const res = view?.includes('Supply')
-                    ? await supply({
-                          underlying: data.asset,
-                          trancheId: data.trancheId,
-                          amount: convertStringFormatToNumber(amount),
-                          signer: signer,
-                          network: NETWORK,
-                          isMax: isMax,
-                          test: SDK_PARAMS.test,
-                          providerRpc: SDK_PARAMS.providerRpc,
-                          collateral:
-                              typeof collateral === 'boolean'
-                                  ? existingSupplyCollateral
-                                  : asCollateral,
-                          // referrer: number,
-                          // collateral: boolean,
-                      })
-                    : await withdraw({
-                          asset: data.asset,
-                          trancheId: data.trancheId,
-                          amount: convertStringFormatToNumber(amount),
-                          signer: signer,
-                          network: NETWORK,
-                          interestRateMode: 2,
-                          isMax: isMax,
-                          test: SDK_PARAMS.test,
-                          providerRpc: SDK_PARAMS.providerRpc,
-                          // referrer: number,
-                          //   collateral: boolean,
-                          // test: boolean
-                      });
-                return res;
-            });
-        }
-    };
-
-    const maxOnClick = () => {
-        setAmount(
-            view?.includes('Supply')
-                ? bigNumberToUnformattedString(amountWalletNative.amountNative, data?.asset || '')
-                : bigNumberToUnformattedString(amountWithdraw, data?.asset || ''),
-        );
-        setIsMax(true);
-    };
-
-    const isViolatingSupplyCap = function () {
-        if (!amount || !view?.includes('Supply')) return false;
-        const supplyCap = Number(findAssetInMarketsData(data?.asset || '')?.supplyCap);
-        const currentSupplied = Number(findAssetInMarketsData(data?.asset || '')?.totalSupplied); //already considers decimals
-        const newTotalSupply = Number(amount) + currentSupplied;
-        if (newTotalSupply > supplyCap) {
-            return true;
-        }
-        return false;
-    };
-
-    const isViolatingMax = () => {
-        if (data?.asset && amount) {
-            if (
-                amount.includes('.') &&
-                amount.split('.')[1].length > (DECIMALS.get(data.asset) || 18)
-            ) {
-                return true;
-            } else {
-                const inputAmount = utils.parseUnits(amount, DECIMALS.get(data.asset));
-                return inputAmount.gt(
-                    view?.includes('Supply')
-                        ? amountWalletNative.amountNative
-                        : amountWithdraw || BigNumber.from('0'),
-                );
-            }
-        }
-        return false;
-    };
-
-    useEffect(() => {
-        if (data?.view) setView('Withdraw');
-    }, [data?.view]);
-
-    useEffect(() => {
-        if (typeof collateral === 'boolean') setExistingSupplyCollateral(collateral);
-    }, [collateral]);
-
-    useEffect(() => {
-        const getter = async () => {
-            if (signer && data) {
-                const res = view?.includes('Supply')
-                    ? await estimateGas({
-                          function: 'supply',
-                          underlying: data.asset,
-                          trancheId: data.trancheId,
-                          amount: convertStringFormatToNumber(amount),
-                          signer: signer,
-                          network: NETWORK,
-                          isMax: isMax,
-                          test: SDK_PARAMS.test,
-                          providerRpc: SDK_PARAMS.providerRpc,
-                      })
-                    : await estimateGas({
-                          function: 'withdraw',
-                          asset: data.asset,
-                          trancheId: data.trancheId,
-                          amount: convertStringFormatToNumber(amount),
-                          signer: signer,
-                          network: NETWORK,
-                          isMax: isMax,
-                          test: SDK_PARAMS.test,
-                          providerRpc: SDK_PARAMS.providerRpc,
-                      });
-                setEstimatedGasCost(bigNumberToUSD(res, DECIMALS.get(data.asset) || 18));
-            }
-        };
-        getter();
-    }, [view, data, isMax, amount, signer]);
-
-    return data && data.asset ? (
+    return (
         <>
+            <ModalHeader
+                dialog="loan-asset-dialog"
+                tabs={['Supply', 'Withdraw', 'Claim']}
+                onClick={setView}
+                active={view}
+            />
             {view?.includes('Supply') ? (
-                <>
-                    <ModalHeader
-                        dialog="loan-asset-dialog"
-                        title={name}
-                        asset={data.asset}
-                        tab={tab}
-                        onClick={amountWithdraw ? setView : () => {}}
-                        primary
-                    />
-                    {!isSuccess && !error ? (
-                        // Default State
-                        <>
-                            <h3 className="mt-5 text-neutral400">Amount</h3>
-                            <CoinInput
-                                amount={amount}
-                                setAmount={setAmount}
-                                coin={{
-                                    logo: `/coins/${data.asset?.toLowerCase()}.svg`,
-                                    name: data.asset,
-                                }}
-                                balance={bigNumberToUnformattedString(
-                                    amountWalletNative.amountNative,
-                                    data.asset,
-                                )}
-                                isMax={isMax}
-                                setIsMax={setIsMax}
-                                loading={amountWalletNative.loading}
-                                customMaxClick={maxOnClick}
-                            />
-                            <MessageStatus
-                                type="error"
-                                show={isViolatingMax()}
-                                message="Input amount is over the max"
-                            />
-                            <MessageStatus
-                                type="warning"
-                                show={isViolatingSupplyCap()}
-                                message="WARNING: Attempting to supply more than the supply cap"
-                            />
-
-                            <h3 className="mt-6">Collaterize</h3>
-                            <div className="mt-1">
-                                {typeof collateral === 'boolean' ? (
-                                    <Tooltip
-                                        text={`Your previous supply is ${
-                                            collateral === false ? 'not' : ''
-                                        } collateralized.`}
-                                        content={
-                                            <BasicToggle
-                                                checked={existingSupplyCollateral}
-                                                disabled={!data?.collateral}
-                                                onClick={(e: any) => {
-                                                    e.preventDefault();
-                                                    openDialog('toggle-collateral-dialog', {
-                                                        ...data,
-                                                        collateral: collateral,
-                                                        setCollateral: setExistingSupplyCollateral,
-                                                    });
-                                                    e.stopPropagation();
-                                                }}
-                                            />
-                                        }
-                                    />
-                                ) : (
-                                    <BasicToggle
-                                        checked={asCollateral}
-                                        onChange={() => setAsCollateral(!asCollateral)}
-                                        disabled={!data?.collateral}
-                                    />
-                                )}
-                            </div>
-
-                            <h3 className="mt-6 text-neutral400">Health Factor</h3>
-                            <HealthFactor
-                                asset={data.asset}
-                                amount={amount}
-                                type={'supply'}
-                                trancheId={String(data?.trancheId)}
-                            />
-
-                            <ModalTableDisplay
-                                title="Transaction Overview"
-                                content={[
-                                    {
-                                        label: 'Supply APR',
-                                        value: `${apy || '0.00%'}`,
-                                    },
-                                    {
-                                        label: 'Collateralization',
-                                        value: <ActiveStatus active={asCollateral} size="sm" />,
-                                    },
-                                    {
-                                        label: 'Estimated Gas',
-                                        value: `${estimatedGasCost}`,
-                                    },
-                                ]}
-                            />
-                        </>
-                    ) : (
-                        <div className="mt-10 mb-8">
-                            <TransactionStatus success={isSuccess} errorText={error} full />
+                !isSuccess && !error ? (
+                    // Default State
+                    <>
+                        <div className="mt-5 flex justify-between items-center">
+                            <h3>Amount</h3>
+                            {/* TODO: uncomment when ETH is ready */}
+                            {/* {asset?.toLowerCase() === 'weth' && (
+                                <SecondaryButton className="p-1" onClick={toggleEthWeth}>
+                                    Use {isEth ? 'WETH' : 'ETH'}
+                                </SecondaryButton>
+                            )} */}
                         </div>
-                    )}
+                        <CoinInput
+                            amount={amount}
+                            setAmount={setAmount}
+                            coin={{
+                                logo: `/coins/${asset?.toLowerCase() || 'eth'}.svg`,
+                                name: asset || 'ETH',
+                            }}
+                            balance={bigNumberToUnformattedString(
+                                amountWalletNative.amountNative,
+                                asset || 'eth',
+                            )}
+                            isMax={isMax}
+                            setIsMax={setIsMax}
+                            loading={amountWalletNative.loading}
+                            customMaxClick={maxOnClick}
+                        />
+                        <MessageStatus
+                            type="error"
+                            show={isViolatingMax()}
+                            message="Input amount is over the max"
+                        />
+                        <MessageStatus
+                            type="warning"
+                            show={isViolatingSupplyCap()}
+                            message="WARNING: Attempting to supply more than the supply cap"
+                        />
+
+                        <h3 className="mt-6">Collaterize</h3>
+                        <div className="mt-1">
+                            {typeof collateral === 'boolean' ? (
+                                <Tooltip
+                                    text={`Your previous supply is ${
+                                        collateral === false ? 'not' : ''
+                                    } collateralized.`}
+                                    content={
+                                        <BasicToggle
+                                            checked={existingSupplyCollateral}
+                                            disabled={!data?.collateral}
+                                            onClick={(e: any) => {
+                                                e.preventDefault();
+                                                openDialog('toggle-collateral-dialog', {
+                                                    ...data,
+                                                    collateral: collateral,
+                                                    setCollateral: setExistingSupplyCollateral,
+                                                });
+                                                e.stopPropagation();
+                                            }}
+                                        />
+                                    }
+                                />
+                            ) : (
+                                <BasicToggle
+                                    checked={asCollateral}
+                                    onChange={() => setAsCollateral(!asCollateral)}
+                                    disabled={!data?.collateral}
+                                />
+                            )}
+                        </div>
+
+                        <h3 className="mt-6 text-neutral400">Health Factor</h3>
+                        <HealthFactor
+                            asset={asset || 'ETH'}
+                            amount={amount}
+                            type={'supply'}
+                            trancheId={String(data?.trancheId)}
+                        />
+
+                        <ModalTableDisplay
+                            title="Transaction Overview"
+                            content={[
+                                {
+                                    label: 'Supply APR',
+                                    value: `${apy || '0.00%'}`,
+                                },
+                                {
+                                    label: 'Collateralization',
+                                    value: <ActiveStatus active={asCollateral} size="sm" />,
+                                },
+                                {
+                                    label: 'Estimated Gas',
+                                    value: estimatedGasCost.cost,
+                                    loading: estimatedGasCost.loading,
+                                },
+                            ]}
+                        />
+                    </>
+                ) : (
+                    <div className="mt-10 mb-8">
+                        <TransactionStatus success={isSuccess} errorText={error} full />
+                    </div>
+                )
+            ) : view?.includes('Claim') ? (
+                <>
+                    <ModalTableDisplay
+                        title="Rewards"
+                        content={renderRewards()}
+                        noData={{
+                            text: 'No Rewards Available',
+                        }}
+                        loading={queryUserRewardsData.isLoading}
+                    />
+                </>
+            ) : !isSuccess && !error ? (
+                // Default State
+                <>
+                    <div className="mt-5 flex justify-between items-center">
+                        <h3>Amount</h3>
+                        {/* TODO: uncomment when ETH wrapping ready */}
+                        {/* {asset?.toLowerCase() === 'weth' && (
+                            <SecondaryButton className="p-1" onClick={toggleEthWeth}>
+                                Use ETH
+                            </SecondaryButton>
+                        )} */}
+                    </div>
+                    <CoinInput
+                        amount={amount}
+                        setAmount={setAmount}
+                        coin={{
+                            logo: `/coins/${asset?.toLowerCase() || 'eth'}.svg`,
+                            name: asset || 'ETH',
+                        }}
+                        balance={bigNumberToUnformattedString(
+                            amountWithdraw || BigNumber.from('0'),
+                            asset || 'ETH',
+                        )}
+                        isMax={isMax}
+                        setIsMax={setIsMax}
+                        loading={Number(bigNumberToNative(amountWithdraw, asset || 'ETH')) === 0}
+                        customMaxClick={maxOnClick}
+                    />
+                    <MessageStatus
+                        type="error"
+                        show={isViolatingMax()}
+                        message="Input amount is over the max"
+                    />
+
+                    <h3 className="mt-6 text-neutral400">Health Factor</h3>
+                    <HealthFactor
+                        asset={asset || 'ETH'}
+                        amount={amount}
+                        type={'withdraw'}
+                        trancheId={String(data?.trancheId)}
+                    />
+
+                    <ModalTableDisplay
+                        title="Transaction Overview"
+                        content={[
+                            {
+                                label: 'Remaining Supply',
+                                value:
+                                    amount && amountWithdraw
+                                        ? bigNumberToNative(
+                                              amountWithdraw.sub(
+                                                  unformattedStringToBigNumber(
+                                                      amount,
+                                                      asset || 'ETH',
+                                                  ),
+                                              ),
+                                              asset || 'ETH',
+                                          )
+                                        : bigNumberToNative(amountWithdraw, asset || 'ETH'),
+                                loading:
+                                    Number(bigNumberToNative(amountWithdraw, asset || 'ETH')) === 0,
+                            },
+                            {
+                                label: 'Estimated Gas',
+                                value: estimatedGasCost.cost,
+                                loading: estimatedGasCost.loading,
+                            },
+                        ]}
+                    />
                 </>
             ) : (
-                <>
-                    <ModalHeader
-                        dialog="loan-asset-dialog"
-                        title={name}
-                        asset={data.asset}
-                        tab={tab}
-                        onClick={data?.view ? () => {} : setView}
-                    />
-                    {!isSuccess && !error ? (
-                        // Default State
-                        <>
-                            <h3 className="mt-5 text-neutral400">Amount</h3>
-                            <CoinInput
-                                amount={amount}
-                                setAmount={setAmount}
-                                coin={{
-                                    logo: `/coins/${data.asset?.toLowerCase()}.svg`,
-                                    name: data.asset,
-                                }}
-                                balance={bigNumberToUnformattedString(
-                                    amountWithdraw || BigNumber.from('0'),
-                                    data.asset,
-                                )}
-                                isMax={isMax}
-                                setIsMax={setIsMax}
-                                loading={
-                                    Number(bigNumberToNative(amountWithdraw, data.asset)) === 0
-                                }
-                                customMaxClick={maxOnClick}
-                            />
-                            <MessageStatus
-                                type="error"
-                                show={isViolatingMax()}
-                                message="Input amount is over the max"
-                            />
-
-                            <h3 className="mt-6 text-neutral400">Health Factor</h3>
-                            <HealthFactor
-                                asset={data.asset}
-                                amount={amount}
-                                type={'withdraw'}
-                                trancheId={String(data?.trancheId)}
-                            />
-
-                            <ModalTableDisplay
-                                title="Transaction Overview"
-                                content={[
-                                    {
-                                        label: 'Remaining Supply',
-                                        value:
-                                            amount && amountWithdraw
-                                                ? bigNumberToNative(
-                                                      amountWithdraw.sub(
-                                                          unformattedStringToBigNumber(
-                                                              amount,
-                                                              data.asset,
-                                                          ),
-                                                      ),
-                                                      data.asset,
-                                                  )
-                                                : bigNumberToNative(amountWithdraw, data.asset),
-                                        loading:
-                                            Number(
-                                                bigNumberToNative(amountWithdraw, data.asset),
-                                            ) === 0,
-                                    },
-                                    {
-                                        label: 'Estimated Gas',
-                                        value: `${estimatedGasCost}`,
-                                    },
-                                ]}
-                            />
-                        </>
-                    ) : (
-                        <div className="mt-10 mb-8">
-                            <TransactionStatus full success={isSuccess} errorText={error} />
-                        </div>
-                    )}
-                </>
+                <div className="mt-10 mb-8">
+                    <TransactionStatus full success={isSuccess} errorText={error} />
+                </div>
             )}
 
             <ModalFooter between={!location.hash.includes('tranches')}>
@@ -369,19 +262,19 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                     <Button
                         label={`View Tranche`}
                         onClick={() => {
-                            setAsset(data.asset);
+                            setAsset(asset);
                             closeDialog('loan-asset-dialog');
                             window.scroll(0, 0);
                             navigate(
-                                `/tranches/${data.tranche?.toLowerCase().replace(/\s+/g, '-')}`,
+                                `/tranches/${data?.tranche?.toLowerCase().replace(/\s+/g, '-')}`,
                                 {
-                                    state: { view: 'details', trancheId: data.trancheId },
+                                    state: { view: 'details', trancheId: data?.trancheId },
                                 },
                             );
                         }}
                     />
                 )}
-                {Number(amount) === 0 ? (
+                {Number(amount) === 0 && !view?.includes('Claim') ? (
                     <Tooltip
                         text="Please enter an amount"
                         content={<Button primary label={'Submit Transaction'} disabled />}
@@ -389,25 +282,14 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                 ) : (
                     <Button
                         primary
-                        disabled={
-                            isSuccess ||
-                            error.length !== 0 ||
-                            (!amount && !isMax) ||
-                            (view?.includes('Supply') && amountWalletNative.amountNative.lt(10)) ||
-                            (view?.includes('Withdraw') &&
-                                (!amountWithdraw || amountWithdraw.lt(10))) ||
-                            isViolatingSupplyCap() ||
-                            isViolatingMax()
-                        }
+                        disabled={isButtonDisabled()}
                         onClick={handleSubmit}
-                        label={'Submit Transaction'}
+                        label={view?.includes('Claim') ? 'Claim Rewards' : 'Submit Transaction'}
                         loading={isLoading}
                         loadingText="Submitting"
                     />
                 )}
             </ModalFooter>
         </>
-    ) : (
-        <></>
     );
 };

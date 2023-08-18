@@ -101,7 +101,7 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
 
     return (
         <>
-            <ModalHeader title={name} dialog="create-tranche-dialog" />
+            <ModalHeader dialog="create-tranche-dialog" tabs={[`${name}`]} />
             <div className="mt-2">
                 <Stepper steps={steps} previous={prevStep} next={nextStep} />
             </div>

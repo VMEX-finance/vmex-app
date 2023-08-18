@@ -1,6 +1,9 @@
 import { IMarketsAsset, ITrancheProps } from '@app/api/types';
 import { ethers } from 'ethers';
 import { HEALTH } from './constants';
+import moment from 'moment';
+import { ILineChartDataPointProps } from '@ui/components';
+
 const Filter = require('bad-words'),
     filter = new Filter();
 
@@ -195,3 +198,47 @@ export const addFeaturedTranches = (
         );
     }
 };
+
+export function getTimeseriesAvgByDay(
+    data: { value: number; xaxis: string }[],
+): { value: number; xaxis: string }[] {
+    const sums = data.reduce(function (acc, obj) {
+        const date = String(obj.xaxis).split(',')[0];
+        if (!acc[date]) {
+            acc[date] = { sum: 0, count: 0 };
+        }
+        acc[date].sum += +obj.value;
+        acc[date].count++;
+        return acc;
+    }, Object.create(null));
+    return Object.keys(sums).map(function (date) {
+        return {
+            value: sums[date].sum / sums[date].count,
+            xaxis: date,
+        };
+    });
+}
+
+export function addMissingDatesToTimeseries(
+    data: ILineChartDataPointProps[],
+): ILineChartDataPointProps[] {
+    const finalDataPoints: ILineChartDataPointProps[] = [];
+    data.forEach(function (point, index) {
+        const plotDate = moment(point.xaxis, 'MM-DD-YYYY');
+        finalDataPoints.push(point);
+
+        const nextPoint = data[index + 1];
+        if (!nextPoint) {
+            return;
+        }
+
+        const nextDate = moment(nextPoint.xaxis, 'MM-DD-YYYY');
+        while (plotDate.add(1, 'd').isBefore(nextDate)) {
+            finalDataPoints.push({
+                xaxis: plotDate.toDate().toLocaleDateString(),
+                value: point.value,
+            });
+        }
+    });
+    return finalDataPoints;
+}

@@ -3,9 +3,13 @@ import { ILineChartDataPointProps } from '../../ui/components/charts';
 import { AssetBalance, IAssetMappings, IMarketsAsset, ITrancheProps, TrancheData } from '../types';
 import { BigNumber } from 'ethers';
 import { IAvailableCoins } from '@utils/helpers';
+import { IAssetPricesProps } from '../prices/types';
+
 export type IAssetData = {
     underlyingAssetName: string;
 };
+
+export type ITrancheCategories = 'VMEX' | 'Standard' | 'External' | 'Unknown';
 
 export type IGraphHistoryProps = {
     action?: 'Borrow' | 'Deposit';
@@ -27,7 +31,6 @@ export type IGraphTrancheProps = {
 export type IGraphAssetData = {
     liquidity: BigNumber;
     decimals: string;
-    ltv: string;
     optimalUtilityRate: number;
     reserveFactor: string;
     vmexReserveFactor: string;
@@ -119,6 +122,7 @@ export type ISubgraphAllMarketsData = {
 
 export type ISubgraphAllAssetMappingsData = {
     queryAllAssetMappingsData: UseQueryResult<Map<string, IAssetMappings>, unknown>;
+    queryAssetPrices: UseQueryResult<Record<IAvailableCoins, IAssetPricesProps>, unknown>;
     findAssetInMappings: (asset: string) => IAssetMappings | undefined;
 };
 
