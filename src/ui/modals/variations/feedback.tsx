@@ -55,7 +55,7 @@ export const FeedbackDialog: React.FC<IDialogProps> = ({ name, isOpen, data, clo
                 setTimeout(() => {
                     setError('');
                     setIsSuccess(false);
-                    closeDialog('feedback-dialog');
+                    closeDialog && closeDialog('feedback-dialog');
                 }, 3000);
             })
             .catch((err) => {
