@@ -73,7 +73,7 @@ export const processTrancheData = async (
                     supplyCap:
                         item.assetData.supplyCap == '0'
                             ? MAX_UINT_AMOUNT
-                            : item.assetData.borrowCap,
+                            : item.assetData.supplyCap,
                     priceUSD: (prices as any)[item.assetData.underlyingAssetName.toUpperCase()]
                         .usdPrice,
                     priceETH: (prices as any)[item.assetData.underlyingAssetName.toUpperCase()]

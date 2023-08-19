@@ -5,10 +5,12 @@ import { IAssetPricesProps, IPricesDataProps } from './types';
 import { IAvailableCoins } from '../../utils/helpers';
 
 export async function getAllAssetPrices(): Promise<Record<IAvailableCoins, IAssetPricesProps>> {
+    // console.log("getAllAssetSymbols(SDK_PARAMS.network): ", getAllAssetSymbols(SDK_PARAMS.network))
     const pricesMap = await getAssetPrices({
         assets: getAllAssetSymbols(SDK_PARAMS.network),
         ...SDK_PARAMS,
     });
+    // console.log("pricesMap: ", pricesMap)
     const returnObj: Record<string, IAssetPricesProps> = {};
     pricesMap.forEach(({ oracle, priceETH, priceUSD }, key) => {
         let asset = convertAddressToSymbol(key, SDK_PARAMS.network);
