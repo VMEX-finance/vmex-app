@@ -8,7 +8,7 @@ export const NETWORK = process.env.REACT_APP_NETWORK ? process.env.REACT_APP_NET
 
 export const SDK_PARAMS = {
     network: NETWORK,
-    test: process.env.REACT_APP_TEST ? true : false,
+    test: process.env.REACT_APP_TEST === 'true' ? true : false,
     providerRpc: process.env.REACT_APP_RPC,
     signer: new JsonRpcProvider(process.env.REACT_APP_RPC).getSigner(),
 };
