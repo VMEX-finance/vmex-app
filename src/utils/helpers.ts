@@ -52,7 +52,15 @@ export const determineCoinImg = (asset: string, custom?: string) => {
     if (custom) return custom;
     else {
         let url = '/coins/';
+        if (asset == 'beefy') return `${url}beefy.png`;
         if (asset?.startsWith('yv')) return `${url}generic.svg`;
+        if (
+            asset.toLowerCase().includes('crv') ||
+            asset.toLowerCase().includes('curve') ||
+            asset.toLowerCase().includes('bpt') ||
+            asset.toLowerCase().includes('ammv2')
+        )
+            return `${url}${asset.toLowerCase()}.webp`;
         else return `${url}${asset.toLowerCase()}.svg`;
     }
 };
