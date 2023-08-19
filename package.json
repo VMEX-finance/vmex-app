@@ -54,7 +54,7 @@
         "@types/node": "^18.0.5",
         "@types/react": "^18.0.21",
         "@types/react-dom": "^18.0.6",
-        "@vmexfinance/sdk": "^1.0.3",
+        "@vmexfinance/sdk": "^1.0.4",
         "bad-words": "^3.0.4",
         "ethers": "^5.6.9",
         "flowbite": "^1.5.1",
