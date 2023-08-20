@@ -3,6 +3,7 @@ import React from 'react';
 import { Card, MultipleAssetsDisplay, NumberDisplay } from '../../components';
 import { useSelectedTrancheContext } from '../../../store';
 import { IGraphTrancheDataProps } from '../../../api/subgraph/types';
+import { EXPLORER_URLS, NETWORK } from '@utils/constants';
 
 type ITrancheInfoCard = {
     tranche?: IGraphTrancheDataProps;
@@ -52,7 +53,7 @@ export const TrancheInfoCard = ({ tranche, loading }: ITrancheInfoCard) => {
                         label="Admin"
                         value={
                             <a
-                                href={`https://etherscan.io/address/${
+                                href={`${EXPLORER_URLS[NETWORK]}/address/${
                                     tranche?.admin || _tranche?.admin
                                 }`}
                                 target="_blank"
