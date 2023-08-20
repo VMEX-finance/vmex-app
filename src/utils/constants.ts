@@ -1,4 +1,5 @@
 export const SUBGRAPH_ENDPOINT = process.env.REACT_APP_SUBGRAPH_ENDPOINT;
+export const NETWORK = process.env.REACT_APP_NETWORK || 'optimism';
 export const USER_REWARDS_URL = 'https://dolphin-app-ajfiy.ondigitalocean.app';
 
 export const HEALTH = {
@@ -7,6 +8,11 @@ export const HEALTH = {
     OKAY: 2,
     BAD: 1.5,
     DEAD: 1,
+};
+
+export const EXPLORER_URLS: any = {
+    optimism: 'https://optimistic.etherscan.io',
+    mainnet: 'https://etherscan.io',
 };
 
 export const TIMER_CLOSE_DELAY = 1500;

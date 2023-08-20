@@ -1,3 +1,4 @@
+import { EXPLORER_URLS, NETWORK } from '@utils/constants';
 import { truncate } from '../../../utils/helpers';
 import React from 'react';
 
@@ -22,7 +23,7 @@ export const ToastStatus = ({ status, transaction }: IToastStatusProps) => {
             <span>{determineText()}</span>
             {transaction && (
                 <a
-                    href={`https://etherscan.io/tx/${transaction}`}
+                    href={`${EXPLORER_URLS[NETWORK]}/tx/${transaction}`}
                     target="_blank"
                     rel="noreferrer"
                     className="underline text-brand-blue hover:text-brand-purple transition duration-150"
