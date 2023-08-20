@@ -13,6 +13,9 @@ export const HEALTH = {
 export const EXPLORER_URLS: any = {
     optimism: 'https://optimistic.etherscan.io',
     mainnet: 'https://etherscan.io',
+    sepolia: 'https://sepolia.etherscan.io',
+    goerli: 'https://goerli.etherscan.io',
+    arbitrum: 'https://arbiscan.io',
 };
 
 export const TIMER_CLOSE_DELAY = 1500;
