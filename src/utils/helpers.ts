@@ -53,7 +53,6 @@ export const determineCoinImg = (asset: string, custom?: string) => {
     else {
         let url = '/coins/';
         if (asset == 'beefy') return `${url}beefy.png`;
-        if (asset?.startsWith('yv')) return `${url}generic.svg`;
         if (
             asset.toLowerCase().includes('crv') ||
             asset.toLowerCase().includes('curve') ||

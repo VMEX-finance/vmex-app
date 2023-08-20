@@ -2,6 +2,7 @@ import { determineCoinImg } from '../../../utils/helpers';
 import React from 'react';
 import { SkeletonLoader } from '../loaders';
 import { Tooltip } from '../tooltips';
+import { renderAsset } from './asset';
 
 interface IMultipleAssetsProps {
     assets?: string[];
@@ -29,24 +30,7 @@ export const MultipleAssetsDisplay = ({ assets, show = 4, size, gap }: IMultiple
         >
             {mapAssets().length !== 0
                 ? mapAssets().map((el, i) =>
-                      // TODO: if we want to dynamically create token symbols based on the underlying, use the below code
-                      // el.includes("AMMV2")
-                      // ? MultipleAssetsDisplayOverlapping({
-                      //     assets: [el.split("/")[0].substring(7), el.split("/")[1]]
-                      // })
-                      // :
-                      el.includes('moo') ? (
-                          MultipleAssetsDisplayOverlapping({
-                              assets: [el.substring(3), 'beefy'],
-                          })
-                      ) : (
-                          <img
-                              key={`tranches-asset-${i}`}
-                              src={determineCoinImg(el)}
-                              alt={el}
-                              className={`${size ? size : 'h-8 w-8'}`}
-                          />
-                      ),
+                      renderAsset(el, size, 0, undefined, `tranches-asset-${i}`),
                   )
                 : [1, 2, 3, 4].map((el) => (
                       <SkeletonLoader key={el} variant="circular" height={'2rem'} width={'2rem'} />
