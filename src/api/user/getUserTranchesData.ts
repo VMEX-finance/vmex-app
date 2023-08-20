@@ -13,7 +13,7 @@ import {
     rayToPercent,
     SDK_PARAMS,
     bigNumberToUnformattedString,
-} from '../../utils/sdk-helpers';
+} from '../../utils';
 import { IUserTrancheData, IUserTranchesDataProps } from './types';
 import { BigNumber } from 'ethers';
 

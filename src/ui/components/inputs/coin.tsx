@@ -1,6 +1,6 @@
 import { AssetDisplay } from '../displays/asset';
 import React from 'react';
-import { bigNumberToUSD, DECIMALS, NETWORK, SDK_PARAMS } from '../../../utils/sdk-helpers';
+import { bigNumberToUSD, NETWORK, SDK_PARAMS } from '../../../utils';
 import { useSigner } from 'wagmi';
 import { mintTokens } from '@vmexfinance/sdk';
 import { Button, SecondaryButton } from '../buttons';

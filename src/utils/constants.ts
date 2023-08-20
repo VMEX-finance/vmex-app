@@ -1,5 +1,6 @@
+import { JsonRpcProvider } from '@ethersproject/providers';
+
 export const SUBGRAPH_ENDPOINT = process.env.REACT_APP_SUBGRAPH_ENDPOINT;
-export const NETWORK = process.env.REACT_APP_NETWORK || 'optimism';
 export const USER_REWARDS_URL = 'https://dolphin-app-ajfiy.ondigitalocean.app';
 
 export const HEALTH = {
@@ -61,3 +62,54 @@ export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
 export const MAX_UINT_AMOUNT =
     '115792089237316195423570985008687907853269984665640564039457584007913129639935';
+
+export const NETWORK = process.env.REACT_APP_NETWORK ? process.env.REACT_APP_NETWORK : 'optimism';
+
+export const SDK_PARAMS = {
+    network: NETWORK,
+    test: process.env.REACT_APP_TEST === 'true' ? true : false,
+    providerRpc: process.env.REACT_APP_RPC,
+    signer: new JsonRpcProvider(process.env.REACT_APP_RPC).getSigner(),
+};
+
+export const DECIMALS = new Map<string, number>([
+    ['AAVE', 18],
+    ['BAT', 18],
+    ['BUSD', 18],
+    ['DAI', 18],
+    ['ENJ', 18],
+    ['KNC', 18],
+    ['LINK', 18],
+    ['MANA', 18],
+    ['MKR', 18],
+    ['REN', 18],
+    ['SNX', 18],
+    ['SUSD', 18],
+    ['TUSD', 18],
+    ['UNI', 18],
+    ['USDC', 6],
+    ['USDT', 6],
+    ['WBTC', 8],
+    ['WETH', 18],
+    ['YFI', 18],
+    ['ZRX', 18],
+    ['Tricrypto2', 18],
+    ['ThreePool', 18],
+    ['StethEth', 18],
+    ['Steth', 18],
+    ['FraxUSDC', 18],
+    ['Frax3Crv', 18],
+    ['Frax', 18],
+    ['BAL', 18],
+    ['CRV', 18],
+    ['CVX', 18],
+    ['BADGER', 18],
+    ['LDO', 18],
+    ['ALCX', 18],
+    ['Oneinch', 18],
+    ['yvTricrypto2', 18],
+    ['yvThreePool', 18],
+    ['yvStethEth', 18],
+    ['yvFraxUSDC', 18],
+    ['yvFrax3Crv', 18],
+]);

@@ -1,6 +1,7 @@
-import { EXPLORER_URLS, NETWORK } from '@utils/constants';
-import { truncate } from '../../../utils/helpers';
+import { truncate, EXPLORER_URLS, NETWORK } from '../../../utils';
 import React from 'react';
+
+console.log('network', NETWORK);
 
 type IToastStatusProps = {
     status: 'error' | 'success' | 'pending';
