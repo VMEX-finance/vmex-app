@@ -1,10 +1,10 @@
-import { truncateAddress } from '../../../utils/helpers';
+import { EXPLORER_URLS, truncateAddress, NETWORK } from '../../../utils';
 import React from 'react';
 import { Card, MultipleAssetsDisplay, NumberDisplay } from '../../components';
 import { useSelectedTrancheContext } from '../../../store';
 import { IGraphTrancheDataProps } from '../../../api/subgraph/types';
-import { EXPLORER_URLS, NETWORK } from '@utils/constants';
 
+console.log('network', NETWORK);
 type ITrancheInfoCard = {
     tranche?: IGraphTrancheDataProps;
     loading?: boolean;

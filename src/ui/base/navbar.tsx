@@ -9,7 +9,7 @@ import { useAccount } from 'wagmi';
 import { useDialogController, useWindowSize } from '../../hooks';
 import { IDialogNames } from '@store/modals';
 import { useSubgraphUserData } from '../../api';
-import { EXPLORER_URLS, NETWORK } from '@utils/constants';
+import { EXPLORER_URLS, NETWORK } from '../../utils';
 
 const navItems = ['Overview', 'Tranches', 'Markets', 'Governance', 'Develop'];
 

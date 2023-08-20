@@ -5,7 +5,7 @@ import { Button, HealthFactor, TransactionStatus } from '../../components';
 import { useSigner } from 'wagmi';
 import { useModal } from '../../../hooks/modal';
 import { markReserveAsCollateral } from '@vmexfinance/sdk';
-import { NETWORK, SDK_PARAMS } from '../../../utils/sdk-helpers';
+import { NETWORK, SDK_PARAMS } from '../../../utils';
 
 export const ToggleCollateralDialog: React.FC<IDialogProps> = ({
     name,

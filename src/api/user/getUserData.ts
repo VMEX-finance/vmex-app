@@ -4,8 +4,6 @@ import {
     SuppliedAssetData,
     getUserWalletData,
     UserWalletData,
-    UserTrancheData,
-    getUserTrancheData,
     convertAddressToSymbol,
 } from '@vmexfinance/sdk';
 import { useQuery } from '@tanstack/react-query';
@@ -14,12 +12,12 @@ import {
     rayToPercent,
     SDK_PARAMS,
     bigNumberToNative,
-} from '../../utils/sdk-helpers';
+    AVAILABLE_ASSETS,
+    averageOfArr,
+} from '../../utils';
 import { IUserActivityDataProps, IUserDataProps, IUserWalletDataProps } from './types';
 import { BigNumber } from 'ethers';
-import { AVAILABLE_ASSETS } from '../../utils/constants';
 import { getSubgraphTranchesOverviewData } from '../subgraph';
-import { averageOfArr } from '../../utils/helpers';
 
 // Gets
 export async function getUserActivityData(userAddress: string): Promise<IUserActivityDataProps> {

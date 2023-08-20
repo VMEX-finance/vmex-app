@@ -1,16 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 import { getAssetPrices, getAllAssetSymbols, convertAddressToSymbol } from '@vmexfinance/sdk';
-import { SDK_PARAMS } from '../../utils/sdk-helpers';
+import { SDK_PARAMS, IAvailableCoins } from '../../utils';
 import { IAssetPricesProps, IPricesDataProps } from './types';
-import { IAvailableCoins } from '../../utils/helpers';
 
 export async function getAllAssetPrices(): Promise<Record<IAvailableCoins, IAssetPricesProps>> {
-    // console.log("getAllAssetSymbols(SDK_PARAMS.network): ", getAllAssetSymbols(SDK_PARAMS.network))
     const pricesMap = await getAssetPrices({
         assets: getAllAssetSymbols(SDK_PARAMS.network),
         ...SDK_PARAMS,
     });
-    // console.log("pricesMap: ", pricesMap)
     const returnObj: Record<string, IAssetPricesProps> = {};
     pricesMap &&
         pricesMap.forEach(({ oracle, priceETH, priceUSD }, key) => {
