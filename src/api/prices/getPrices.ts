@@ -12,15 +12,16 @@ export async function getAllAssetPrices(): Promise<Record<IAvailableCoins, IAsse
     });
     // console.log("pricesMap: ", pricesMap)
     const returnObj: Record<string, IAssetPricesProps> = {};
-    pricesMap.forEach(({ oracle, priceETH, priceUSD }, key) => {
-        let asset = convertAddressToSymbol(key, SDK_PARAMS.network);
-        asset = asset.toUpperCase();
-        (returnObj as any)[asset] = {
-            oracle,
-            ethPrice: priceETH,
-            usdPrice: priceUSD, //bignumber
-        };
-    });
+    pricesMap &&
+        pricesMap.forEach(({ oracle, priceETH, priceUSD }, key) => {
+            let asset = convertAddressToSymbol(key, SDK_PARAMS.network);
+            asset = asset.toUpperCase();
+            (returnObj as any)[asset] = {
+                oracle,
+                ethPrice: priceETH,
+                usdPrice: priceUSD, //bignumber
+            };
+        });
 
     return returnObj;
 }
