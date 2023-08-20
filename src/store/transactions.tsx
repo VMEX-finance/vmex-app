@@ -55,7 +55,7 @@ export function TransactionsStore(props: { children: ReactNode }) {
         setTransactions(shallow);
 
         const receipt = await (tx as any).wait();
-        if (receipt?.blockHash) {
+        if (receipt?.blockHash || receipt?.transactionHash || receipt?.status === 1) {
             toast.update(toastId, {
                 render: <ToastStatus status="success" transaction={hash} />,
                 type: 'success',

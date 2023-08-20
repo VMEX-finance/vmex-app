@@ -75,9 +75,9 @@ export const processTrancheData = async (
                             ? MAX_UINT_AMOUNT
                             : item.assetData.supplyCap,
                     priceUSD: (prices as any)[item.assetData.underlyingAssetName.toUpperCase()]
-                        .usdPrice,
+                        ?.usdPrice,
                     priceETH: (prices as any)[item.assetData.underlyingAssetName.toUpperCase()]
-                        .ethPrice,
+                        ?.ethPrice,
                     isFrozen: item.isFrozen,
                     // yieldStrategy: item.yieldStrategy,
                 },
@@ -96,7 +96,7 @@ export const processTrancheData = async (
                 );
                 return obj;
             }
-            const assetUSDPrice = (prices as any)[asset].usdPrice;
+            const assetUSDPrice = (prices as any)[asset]?.usdPrice;
 
             return Object.assign(obj, {
                 tvl:
@@ -302,7 +302,7 @@ export const getSubgraphTrancheChart = async (
                 return;
             }
 
-            const assetUSDPrice = (prices as any)[asset].usdPrice;
+            const assetUSDPrice = (prices as any)[asset]?.usdPrice;
             const usdAmount = nativeAmountToUSD(el.amount, el.reserve.decimals, assetUSDPrice);
             const date = new Date(el.timestamp * 1000).toLocaleString();
 
@@ -324,7 +324,7 @@ export const getSubgraphTrancheChart = async (
                 );
                 return;
             }
-            const assetUSDPrice = (prices as any)[asset].usdPrice;
+            const assetUSDPrice = (prices as any)[asset]?.usdPrice;
             const usdAmount = nativeAmountToUSD(el.amount, el.reserve.decimals, assetUSDPrice);
             const date = new Date(el.timestamp * 1000).toLocaleString();
 

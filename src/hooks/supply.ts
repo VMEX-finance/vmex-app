@@ -169,7 +169,7 @@ export const useSupply = ({
             if (assetDecimals && queryAssetPrices.data) {
                 // if the asset decimals mapping exists
                 const assetUSDPrice =
-                    queryAssetPrices.data[assetSymbol as IAvailableCoins].usdPrice;
+                    queryAssetPrices.data[assetSymbol as IAvailableCoins]?.usdPrice;
                 assetAmount = '$'.concat(
                     String(nativeAmountToUSD(assetAmount, assetDecimals, assetUSDPrice)),
                 );
@@ -237,7 +237,7 @@ export const useSupply = ({
                 setEstimatedGasCost({
                     loading: false,
                     cost: `$${String(
-                        nativeAmountToUSD(res || 0, 18, queryAssetPrices.data?.WETH.usdPrice || 0),
+                        nativeAmountToUSD(res || 0, 18, queryAssetPrices.data?.WETH?.usdPrice || 0),
                     )}`,
                 });
             }
