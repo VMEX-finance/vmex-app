@@ -7,7 +7,6 @@ import {
     numberFormatter,
     percentFormatter,
     convertContractsPercent,
-    ZERO_ADDRESS,
     MAX_UINT_AMOUNT,
 } from '../../../utils';
 import { useSubgraphMarketsData } from '../../../api/subgraph';
@@ -133,7 +132,12 @@ export const TrancheStatisticsCard = ({
                             <NumberDisplay
                                 label="LTV"
                                 value={percentFormatter.format(
-                                    Number(convertContractsPercent(assetData?.baseLTV as string)),
+                                    Number(
+                                        convertContractsPercent(
+                                            assetData?.baseLTV as string,
+                                            Number(assetData?.decimals),
+                                        ),
+                                    ),
                                 )}
                                 color="text-white"
                                 center
@@ -145,6 +149,7 @@ export const TrancheStatisticsCard = ({
                                         Number(
                                             convertContractsPercent(
                                                 assetData?.borrowFactor as string,
+                                                Number(assetData?.decimals),
                                             ),
                                         ),
                                     )}
@@ -158,6 +163,7 @@ export const TrancheStatisticsCard = ({
                                     Number(
                                         convertContractsPercent(
                                             assetData?.liquidationThreshold as string,
+                                            Number(assetData?.decimals),
                                         ),
                                     ),
                                 )}
@@ -170,6 +176,7 @@ export const TrancheStatisticsCard = ({
                                     Number(
                                         convertContractsPercent(
                                             assetData?.liquidationBonus as string,
+                                            Number(assetData?.decimals),
                                         ),
                                     ),
                                 )}`}
@@ -260,7 +267,10 @@ export const TrancheStatisticsCard = ({
                                 label="Tranche Admin Fee"
                                 value={percentFormatter.format(
                                     Number(
-                                        convertContractsPercent(assetData?.reserveFactor as any),
+                                        convertContractsPercent(
+                                            assetData?.reserveFactor as any,
+                                            Number(assetData?.decimals),
+                                        ),
                                     ),
                                 )}
                                 color="text-white"
@@ -272,6 +282,7 @@ export const TrancheStatisticsCard = ({
                                     Number(
                                         convertContractsPercent(
                                             assetData?.vmexReserveFactor as any,
+                                            Number(assetData?.decimals),
                                         ),
                                     ),
                                 )}
