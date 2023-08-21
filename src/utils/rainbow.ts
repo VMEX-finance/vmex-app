@@ -20,22 +20,25 @@ import {
     braveWallet,
 } from '@rainbow-me/rainbowkit/wallets';
 import merge from 'lodash.merge';
+import { NETWORK } from './constants';
 
-export const { chains, provider } = configureChains(
-    [
-        process.env.REACT_APP_NETWORK === 'goerli'
-            ? chain.goerli
-            : process.env.REACT_APP_NETWORK === 'sepolia'
-            ? chain.sepolia
-            : process.env.REACT_APP_NETWORK === 'localhost' ||
-              process.env.REACT_APP_NETWORK === 'optimism_localhost'
-            ? chain.hardhat
-            : process.env.REACT_APP_NETWORK === 'optimism'
-            ? chain.optimism
-            : chain.mainnet,
-    ],
-    [publicProvider()],
-);
+const determineChain = () => {
+    switch (NETWORK.toLowerCase()) {
+        case 'goerli':
+            return [chain.goerli];
+        case 'sepolia':
+            return [chain.sepolia];
+        case 'localhost':
+        case 'optimism_localhost':
+            return [chain.hardhat];
+        case 'optimism':
+            return [chain.optimism, chain.sepolia];
+        default:
+            return [chain.mainnet];
+    }
+};
+
+export const { chains, provider } = configureChains(determineChain(), [publicProvider()]);
 
 export const connectors = connectorsForWallets([
     {

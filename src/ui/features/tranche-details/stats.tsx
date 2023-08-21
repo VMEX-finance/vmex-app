@@ -7,11 +7,11 @@ import {
     numberFormatter,
     percentFormatter,
     convertContractsPercent,
-    ZERO_ADDRESS,
     MAX_UINT_AMOUNT,
 } from '../../../utils';
 import { useSubgraphMarketsData } from '../../../api/subgraph';
 import { TbInfinity } from 'react-icons/tb';
+import { ethers } from 'ethers';
 
 type ITrancheStatisticsCardProps = {
     tranche?: IGraphTrancheDataProps;
@@ -132,27 +132,38 @@ export const TrancheStatisticsCard = ({
                             <NumberDisplay
                                 label="LTV"
                                 value={percentFormatter.format(
-                                    Number(convertContractsPercent(assetData?.baseLTV as string)),
-                                )}
-                                color="text-white"
-                                center
-                            />
-                            <NumberDisplay
-                                label="Borrow Factor"
-                                value={percentFormatter.format(
                                     Number(
-                                        convertContractsPercent(assetData?.borrowFactor as string),
+                                        convertContractsPercent(
+                                            assetData?.baseLTV as string,
+                                            Number(assetData?.decimals),
+                                        ),
                                     ),
                                 )}
                                 color="text-white"
                                 center
                             />
+                            {assetData?.canBeBorrowed && (
+                                <NumberDisplay
+                                    label="Borrow Factor"
+                                    value={percentFormatter.format(
+                                        Number(
+                                            convertContractsPercent(
+                                                assetData?.borrowFactor as string,
+                                                Number(assetData?.decimals),
+                                            ),
+                                        ),
+                                    )}
+                                    color="text-white"
+                                    center
+                                />
+                            )}
                             <NumberDisplay
                                 label="Liq. Threshold"
                                 value={percentFormatter.format(
                                     Number(
                                         convertContractsPercent(
                                             assetData?.liquidationThreshold as string,
+                                            Number(assetData?.decimals),
                                         ),
                                     ),
                                 )}
@@ -165,6 +176,7 @@ export const TrancheStatisticsCard = ({
                                     Number(
                                         convertContractsPercent(
                                             assetData?.liquidationBonus as string,
+                                            Number(assetData?.decimals),
                                         ),
                                     ),
                                 )}`}
@@ -184,27 +196,43 @@ export const TrancheStatisticsCard = ({
                                         <TbInfinity color="text-white" />
                                     ) : (
                                         `${numberFormatter.format(
-                                            assetData?.supplyCap as any,
+                                            ethers.utils.formatUnits(
+                                                assetData?.supplyCap
+                                                    ? (assetData?.supplyCap as any)
+                                                    : 0,
+                                                assetData?.decimals
+                                                    ? (assetData?.decimals as any)
+                                                    : 0,
+                                            ) as any,
                                         )} ${asset}`
                                     )
                                 }
                                 color="text-white"
                                 center
                             />
-                            <NumberDisplay
-                                label="Borrow Cap"
-                                value={
-                                    assetData?.borrowCap == MAX_UINT_AMOUNT ? (
-                                        <TbInfinity color="text-white" />
-                                    ) : (
-                                        `${numberFormatter.format(
-                                            assetData?.borrowCap as any,
-                                        )} ${asset}`
-                                    )
-                                }
-                                color="text-white"
-                                center
-                            />
+                            {assetData?.canBeBorrowed && (
+                                <NumberDisplay
+                                    label="Borrow Cap"
+                                    value={
+                                        assetData?.borrowCap == MAX_UINT_AMOUNT ? (
+                                            <TbInfinity color="text-white" />
+                                        ) : (
+                                            `${numberFormatter.format(
+                                                ethers.utils.formatUnits(
+                                                    assetData?.borrowCap
+                                                        ? (assetData?.borrowCap as any)
+                                                        : 0,
+                                                    assetData?.decimals
+                                                        ? (assetData?.decimals as any)
+                                                        : 0,
+                                                ) as any,
+                                            )} ${asset}`
+                                        )
+                                    }
+                                    color="text-white"
+                                    center
+                                />
+                            )}
                             <NumberDisplay
                                 label="Oracle"
                                 value={assetData?.oracle as any}
@@ -225,19 +253,24 @@ export const TrancheStatisticsCard = ({
                                 color="text-white"
                                 center
                             />
-                            <NumberDisplay
-                                label="Total Borrowed"
-                                value={`${numberFormatter.format(
-                                    assetData?.totalBorrowed as any,
-                                )} ${asset}`}
-                                color="text-white"
-                                center
-                            />
+                            {assetData?.canBeBorrowed && (
+                                <NumberDisplay
+                                    label="Total Borrowed"
+                                    value={`${numberFormatter.format(
+                                        assetData?.totalBorrowed as any,
+                                    )} ${asset}`}
+                                    color="text-white"
+                                    center
+                                />
+                            )}
                             <NumberDisplay
                                 label="Tranche Admin Fee"
                                 value={percentFormatter.format(
                                     Number(
-                                        convertContractsPercent(assetData?.reserveFactor as any),
+                                        convertContractsPercent(
+                                            assetData?.reserveFactor as any,
+                                            Number(assetData?.decimals),
+                                        ),
                                     ),
                                 )}
                                 color="text-white"
@@ -249,6 +282,7 @@ export const TrancheStatisticsCard = ({
                                     Number(
                                         convertContractsPercent(
                                             assetData?.vmexReserveFactor as any,
+                                            Number(assetData?.decimals),
                                         ),
                                     ),
                                 )}

@@ -1,5 +1,6 @@
 import { determineCoinImg } from '../../../utils/helpers';
 import React from 'react';
+import { MultipleAssetsDisplayOverlapping } from './multi-asset';
 
 type IAssetDisplayProps = {
     logo?: string;
@@ -14,11 +15,11 @@ export const AssetDisplay = (props: IAssetDisplayProps) => {
     const iconSize = () => {
         switch (props.size) {
             case 'lg':
-                return '40';
+                return 'h-10 w-10';
             case 'sm':
-                return '20';
+                return 'h-8 w-8';
             default:
-                return '30';
+                return 'h-8 w-8';
         }
     };
 
@@ -28,14 +29,34 @@ export const AssetDisplay = (props: IAssetDisplayProps) => {
                 props.className ? props.className : ''
             } ${props.border ? 'border border-1 border-brand-black w-fit px-2' : ''}`}
         >
-            <img
-                src={determineCoinImg(props.name, props.logo)}
-                alt={props.name}
-                height={iconSize()}
-                width={iconSize()}
-            />
-            <span>{props.name?.toUpperCase()}</span>
+            {renderAsset(props.name, iconSize())}
+            <span>{props.name}</span>
             {props.value && <span>{props.value}</span>}
         </div>
+    );
+};
+
+export const renderAsset = (
+    asset: string,
+    size?: string,
+    i?: number,
+    custom?: string,
+    key?: string,
+) => {
+    return asset.includes('moo') ? (
+        MultipleAssetsDisplayOverlapping({
+            assets: [asset.substring(3), 'beefy'],
+        })
+    ) : asset.substring(0, 2) == 'yv' ? (
+        MultipleAssetsDisplayOverlapping({
+            assets: [asset.substring(2), 'yearn'],
+        })
+    ) : (
+        <img
+            key={`${key}`}
+            src={determineCoinImg(asset, custom)}
+            alt={asset}
+            className={`${size ? size : 'h-8 w-8'}`}
+        />
     );
 };

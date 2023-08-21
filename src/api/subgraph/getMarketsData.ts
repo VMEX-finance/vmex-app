@@ -150,7 +150,7 @@ export function useSubgraphMarketsData(
 ): ISubgraphMarketsChart {
     let underlyingAsset: string = '';
     if (_underlyingAsset) {
-        underlyingAsset = convertSymbolToAddress(_underlyingAsset || '', NETWORK).toLowerCase();
+        underlyingAsset = convertSymbolToAddress(_underlyingAsset || '', NETWORK)?.toLowerCase();
     }
     const queryMarketsChart = useQuery({
         queryKey: [`markets-chart`, Number(_trancheId), _underlyingAsset],

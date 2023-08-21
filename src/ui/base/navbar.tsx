@@ -9,6 +9,7 @@ import { useAccount } from 'wagmi';
 import { useDialogController, useWindowSize } from '../../hooks';
 import { IDialogNames } from '@store/modals';
 import { useSubgraphUserData } from '../../api';
+import { EXPLORER_URLS, NETWORK } from '../../utils';
 
 const navItems = ['Overview', 'Tranches', 'Markets', 'Governance', 'Develop'];
 
@@ -81,7 +82,7 @@ export const Navbar: React.FC = () => {
                         <DefaultDropdown
                             reverse
                             items={transactions}
-                            baseLink={`https://etherscan.io/tx`}
+                            baseLink={`${EXPLORER_URLS[NETWORK]}/tx`}
                             selected={'Transactions'}
                             label={
                                 width < 1400 && (
