@@ -72,6 +72,12 @@ export const SDK_PARAMS = {
     signer: new JsonRpcProvider(process.env.REACT_APP_RPC).getSigner(),
 };
 
+export const PRICING_DECIMALS: any = {
+    optimism: 8,
+    mainnet: 18,
+    sepolia: 18,
+};
+
 export const DECIMALS = new Map<string, number>([
     ['AAVE', 18],
     ['BAT', 18],

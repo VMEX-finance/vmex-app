@@ -167,7 +167,6 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                         </div>
                     </div>
                 </div>
-
                 {(renderUserInteractions('borrows').length !== 0 ||
                     renderUserInteractions('supplies').length !== 0) && (
                     <>

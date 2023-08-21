@@ -93,6 +93,11 @@ export const getSubgraphAllMarketsData = async (): Promise<IMarketsAsset[]> => {
                         underlyingAssetName
                         liquidationThreshold
                     }
+                    aToken {
+                        externalReward {
+                            isActive
+                        }
+                    }
                 }
             }
         `,
@@ -137,9 +142,9 @@ export const getSubgraphAllMarketsData = async (): Promise<IMarketsAsset[]> => {
                 canBeCollateral: reserve.usageAsCollateralEnabled,
                 canBeBorrowed: reserve.borrowingEnabled,
                 liquidationThreshold: reserve.assetData.liquidationThreshold,
+                strategies: reserve.aToken?.externalReward?.isActive || false,
             });
         });
-
         return returnObj;
     }
 };

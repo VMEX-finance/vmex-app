@@ -217,7 +217,7 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
                                 borrowTotal={borrowTotal}
                                 supplyTotal={supplyTotal}
                                 // rating={rating}
-                                strategies={asset.toLowerCase().startsWith('yv')}
+                                strategies={strategies}
                                 collateral={canBeCollateral}
                                 key={`markets-table-${
                                     rowIndex || Math.floor(Math.random() * 10000)
