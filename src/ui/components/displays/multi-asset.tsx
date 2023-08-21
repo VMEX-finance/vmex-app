@@ -27,6 +27,7 @@ export const MultipleAssetsDisplay = ({ assets, show = 4, size, gap }: IMultiple
             className={`flex flex-wrap items-center ${
                 gap ? gap : `${show === 'all' ? 'gap-3' : 'xl:gap-2'}`
             }`}
+            key={`multiple-assets-display-${Math.random()}`}
         >
             {mapAssets().length !== 0
                 ? mapAssets().map((el, i) =>
@@ -84,7 +85,12 @@ export const MultipleAssetsDisplayOverlapping = ({ assets, size, gap }: IMultipl
                     ),
                 )
             ) : (
-                <SkeletonLoader variant="circular" height={'2rem'} width={'2rem'} />
+                <SkeletonLoader
+                    variant="circular"
+                    height={'2rem'}
+                    width={'2rem'}
+                    key={`${Math.random()}`}
+                />
             )}
         </div>
     );

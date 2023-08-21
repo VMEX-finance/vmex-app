@@ -14,6 +14,8 @@ import {
     rayToPercent,
     SDK_PARAMS,
     bigNumberToUnformattedString,
+    PRICING_DECIMALS,
+    NETWORK,
 } from '../../utils';
 import { IUserTrancheDataProps, IUserTrancheData } from './types';
 import { BigNumber, ethers } from 'ethers';
@@ -57,7 +59,7 @@ export async function _getUserTrancheData(
         supplies: userTrancheData.suppliedAssetData.map((assetData: SuppliedAssetData) => {
             return {
                 asset: convertAddressToSymbol(assetData.asset, SDK_PARAMS.network),
-                amount: bigNumberToUSD(assetData.amount, 18),
+                amount: bigNumberToUSD(assetData.amount, PRICING_DECIMALS[NETWORK]),
                 amountNative: assetData.amountNative,
                 collateral: assetData.isCollateral,
                 apy: rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0)),
@@ -68,7 +70,7 @@ export async function _getUserTrancheData(
         borrows: userTrancheData.borrowedAssetData.map((assetData: BorrowedAssetData) => {
             return {
                 asset: convertAddressToSymbol(assetData.asset, SDK_PARAMS.network),
-                amount: bigNumberToUSD(assetData.amount, 18),
+                amount: bigNumberToUSD(assetData.amount, PRICING_DECIMALS[NETWORK]),
                 amountNative: assetData.amountNative,
                 apy: rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0)),
                 tranche: assetData.tranche.toString(),
@@ -80,7 +82,7 @@ export async function _getUserTrancheData(
                 let asset = convertAddressToSymbol(marketData.asset, SDK_PARAMS.network);
                 return {
                     asset: asset,
-                    amountUSD: bigNumberToUSD(marketData.amountUSD, 18),
+                    amountUSD: bigNumberToUSD(marketData.amountUSD, PRICING_DECIMALS[NETWORK]),
                     amountNative: marketData.amountNative,
                 };
             },

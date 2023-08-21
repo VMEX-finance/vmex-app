@@ -139,7 +139,7 @@ const MarketsCustomRow = (props: any) => {
                 <td className="pl-4">{supplyApy}</td>
                 <td className="pl-4">{borrowApy}</td>
                 <td className={`pl-4 ${yourAmount.loading ? 'animate-pulse' : ''}`}>
-                    {yourAmount.amount} {asset}
+                    {yourAmount.amount}
                 </td>
                 <td className="pl-4">{available}</td>
                 <td className="pl-4">{supplyTotal}</td>
