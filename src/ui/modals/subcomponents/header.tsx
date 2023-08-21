@@ -27,8 +27,8 @@ export const ModalHeader = ({ dialog, asset, tabs, onClick, active }: IModalHead
                     text-xl leading-6 font-medium transition duration-150
                     ${
                         tab === current
-                            ? 'text-neutral-900 cursor-default'
-                            : 'text-neutral-400 cursor-pointer hover:text-neutral-500'
+                            ? 'text-neutral-900 cursor-default dark:text-neutral-100'
+                            : 'text-neutral-400 cursor-pointer hover:text-neutral-500 dark:text-neutral-600 dark:hover:text-neutral-500'
                     }
                   `}
                         onClick={() => (onClick ? onClick(tab) : {})}
