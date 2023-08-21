@@ -148,7 +148,9 @@ export function useUserData(userAddress: any): IUserDataProps {
                 loading: false,
             };
         } else {
-            const found = queryUserWallet.data.assets.find((el) => el.asset === asset);
+            const found = queryUserWallet.data.assets.find(
+                (el) => el.asset.toLowerCase() === asset.toLowerCase(),
+            );
             return {
                 amountNative: found?.amountNative || BigNumber.from('0'),
                 amount: found?.amount || '$0',
