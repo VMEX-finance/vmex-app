@@ -3995,22 +3995,22 @@
   resolved "https://registry.yarnpkg.com/@vanilla-extract/sprinkles/-/sprinkles-1.5.0.tgz#c921183ae518bb484299c2dc81f2acefd91c3dbe"
   integrity sha512-W58f2Rzz5lLmk0jbhgStVlZl5wEiPB1Ur3fRvUaBM+MrifZ3qskmFq/CiH//fEYeG5Dh9vF1qRviMMH46cX9Nw==
 
-"@vmexfinance/contracts@^1.0.5":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@vmexfinance/contracts/-/contracts-1.0.5.tgz#dd6f67bd586636772b9c5054f9db275718458272"
-  integrity sha512-dt5foVD74xJbQ5zFt8B+JCLJTFtNnkiOX7GQ3WZQ85Tn43Zh+izC3Cpl2TxUlXvRPwlIBF9nvLiGq3ShhJZ3ZA==
+"@vmexfinance/contracts@^1.0.7":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@vmexfinance/contracts/-/contracts-1.0.7.tgz#f20f6a1b95078e26e9811225bd7d210df33e0e11"
+  integrity sha512-gVnSnW3HwSDT1cFK8NhAMZ1QEMGPpXuufef0raskqMfwRF8FWW1gjqUNrjAZ6P4AFPoP8iTLwG/kaoKOXZXEJg==
   dependencies:
     "@openzeppelin/contracts" "^4.9.2"
     bignumber.js "9.0.0"
     hardhat "^2.13.0"
     mocha "^10.2.0"
 
-"@vmexfinance/sdk@^1.0.5":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@vmexfinance/sdk/-/sdk-1.0.5.tgz#3661671a63ce6fdc03d938ca30867dec3d8fdf6c"
-  integrity sha512-LiOw7NPKeN2INuYnBnjz3aXEhcY2nBIfSM5Z78oLEaoNcHdTHK5x9EVq71IZz0icH3CtI+lrrTxfIzY0c+19Yw==
+"@vmexfinance/sdk@^1.0.7":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@vmexfinance/sdk/-/sdk-1.0.7.tgz#73c750a23b9a4165e20f000764a5ce3d7e6d6a78"
+  integrity sha512-1Vz3f16vk4ZSpI+zImJ1aWdq8M13y1lWXuOpqs6jx+Vld7AjrrXuBMuIayD3AQMpcS94btU2AfZYSby2MCi6ZQ==
   dependencies:
-    "@vmexfinance/contracts" "^1.0.5"
+    "@vmexfinance/contracts" "^1.0.7"
     chai "^4.3.6"
     chai-bignumber "^3.1.0"
     cross-env "^7.0.3"
