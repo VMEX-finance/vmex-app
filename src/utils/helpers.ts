@@ -170,9 +170,10 @@ export const convertStringFormatToNumber = (amount: string | number) => {
     return amount.toString().replaceAll(',', '');
 };
 
-export const convertContractsPercent = (amount: string) => {
+export const convertContractsPercent = (amount: string, decimals?: number) => {
     if (!amount) return 'N/A';
-    return ethers.utils.formatUnits(amount.split('.')[0], 18);
+    if (amount.includes('.')) return ethers.utils.formatUnits(amount.split('.')[0], decimals || 18);
+    return ethers.utils.formatUnits(amount, decimals || 18);
 };
 
 export const averageOfArr = (array: number[]) =>
