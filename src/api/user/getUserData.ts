@@ -4,8 +4,6 @@ import {
     SuppliedAssetData,
     getUserWalletData,
     UserWalletData,
-    UserTrancheData,
-    getUserTrancheData,
     convertAddressToSymbol,
 } from '@vmexfinance/sdk';
 import { useQuery } from '@tanstack/react-query';
@@ -14,12 +12,12 @@ import {
     rayToPercent,
     SDK_PARAMS,
     bigNumberToNative,
-} from '../../utils/sdk-helpers';
+    AVAILABLE_ASSETS,
+    averageOfArr,
+} from '../../utils';
 import { IUserActivityDataProps, IUserDataProps, IUserWalletDataProps } from './types';
 import { BigNumber } from 'ethers';
-import { AVAILABLE_ASSETS } from '../../utils/constants';
 import { getSubgraphTranchesOverviewData } from '../subgraph';
-import { averageOfArr } from '../../utils/helpers';
 
 // Gets
 export async function getUserActivityData(userAddress: string): Promise<IUserActivityDataProps> {
@@ -142,7 +140,7 @@ export function useUserData(userAddress: any): IUserDataProps {
                 amount: '$0',
                 loading: true,
             };
-        if (!AVAILABLE_ASSETS.includes(asset) || !queryUserWallet.data) {
+        if (!queryUserWallet.data) {
             if (queryUserWallet.data) console.warn(`Token Balance for ${asset} not found`);
             return {
                 amountNative: BigNumber.from('0'),
@@ -150,7 +148,9 @@ export function useUserData(userAddress: any): IUserDataProps {
                 loading: false,
             };
         } else {
-            const found = queryUserWallet.data.assets.find((el) => el.asset === asset);
+            const found = queryUserWallet.data.assets.find(
+                (el) => el.asset.toLowerCase() === asset.toLowerCase(),
+            );
             return {
                 amountNative: found?.amountNative || BigNumber.from('0'),
                 amount: found?.amount || '$0',

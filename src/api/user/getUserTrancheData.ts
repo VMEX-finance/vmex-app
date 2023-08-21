@@ -14,7 +14,7 @@ import {
     rayToPercent,
     SDK_PARAMS,
     bigNumberToUnformattedString,
-} from '../../utils/sdk-helpers';
+} from '../../utils';
 import { IUserTrancheDataProps, IUserTrancheData } from './types';
 import { BigNumber, ethers } from 'ethers';
 import { getSubgraphRewardData } from '../subgraph/getRewardsData';

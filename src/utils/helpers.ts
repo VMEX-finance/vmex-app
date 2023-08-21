@@ -52,8 +52,15 @@ export const determineCoinImg = (asset: string, custom?: string) => {
     if (custom) return custom;
     else {
         let url = '/coins/';
-        if (asset?.startsWith('yv')) return `${url}generic.svg`;
-        else return `${url}${asset.toLowerCase()}.svg`;
+        if (asset == 'beefy') return `${url}beefy.png`;
+        if (
+            asset.toLowerCase().includes('crv') ||
+            asset.toLowerCase().includes('curve') ||
+            asset.toLowerCase().includes('bpt') ||
+            asset.toLowerCase().includes('ammv2')
+        ) {
+            return `${url}${asset.toLowerCase()}.webp`;
+        } else return `${url}${asset.toLowerCase()}.svg`;
     }
 };
 
@@ -163,9 +170,10 @@ export const convertStringFormatToNumber = (amount: string | number) => {
     return amount.toString().replaceAll(',', '');
 };
 
-export const convertContractsPercent = (amount: string) => {
+export const convertContractsPercent = (amount: string, decimals?: number) => {
     if (!amount) return 'N/A';
-    return ethers.utils.formatUnits(amount.split('.')[0], 18);
+    if (amount.includes('.')) return ethers.utils.formatUnits(amount.split('.')[0], decimals || 18);
+    return ethers.utils.formatUnits(amount, decimals || 18);
 };
 
 export const averageOfArr = (array: number[]) =>

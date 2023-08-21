@@ -144,6 +144,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                             amount={amount}
                             type={'supply'}
                             trancheId={String(data?.trancheId)}
+                            withChange={asCollateral}
                         />
 
                         <ModalTableDisplay

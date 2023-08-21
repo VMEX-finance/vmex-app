@@ -1,11 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { USER_REWARDS_URL } from '../../utils/constants';
-import {
-    DECIMALS,
-    SDK_PARAMS,
-    bigNumberToNative,
-    nativeAmountToUSD,
-} from '../../utils/sdk-helpers';
+import { DECIMALS, SDK_PARAMS, bigNumberToNative, nativeAmountToUSD } from '../../utils';
 import { BigNumber } from 'ethers';
 import { convertAddressToSymbol } from '@vmexfinance/sdk';
 

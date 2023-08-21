@@ -73,11 +73,11 @@ export const processTrancheData = async (
                     supplyCap:
                         item.assetData.supplyCap == '0'
                             ? MAX_UINT_AMOUNT
-                            : item.assetData.borrowCap,
+                            : item.assetData.supplyCap,
                     priceUSD: (prices as any)[item.assetData.underlyingAssetName.toUpperCase()]
-                        .usdPrice,
+                        ?.usdPrice,
                     priceETH: (prices as any)[item.assetData.underlyingAssetName.toUpperCase()]
-                        .ethPrice,
+                        ?.ethPrice,
                     isFrozen: item.isFrozen,
                     // yieldStrategy: item.yieldStrategy,
                 },
@@ -96,7 +96,7 @@ export const processTrancheData = async (
                 );
                 return obj;
             }
-            const assetUSDPrice = (prices as any)[asset].usdPrice;
+            const assetUSDPrice = (prices as any)[asset]?.usdPrice;
 
             return Object.assign(obj, {
                 tvl:
@@ -247,7 +247,7 @@ export const getSubgraphTrancheData = async (
         variables: { trancheId },
     });
 
-    if (error) return {};
+    if (error || !data.tranche) return {};
     else return processTrancheData(data.tranche, String(_trancheId));
 };
 
@@ -302,7 +302,7 @@ export const getSubgraphTrancheChart = async (
                 return;
             }
 
-            const assetUSDPrice = (prices as any)[asset].usdPrice;
+            const assetUSDPrice = (prices as any)[asset]?.usdPrice;
             const usdAmount = nativeAmountToUSD(el.amount, el.reserve.decimals, assetUSDPrice);
             const date = new Date(el.timestamp * 1000).toLocaleString();
 
@@ -324,7 +324,7 @@ export const getSubgraphTrancheChart = async (
                 );
                 return;
             }
-            const assetUSDPrice = (prices as any)[asset].usdPrice;
+            const assetUSDPrice = (prices as any)[asset]?.usdPrice;
             const usdAmount = nativeAmountToUSD(el.amount, el.reserve.decimals, assetUSDPrice);
             const date = new Date(el.timestamp * 1000).toLocaleString();
 
@@ -360,13 +360,12 @@ export function useSubgraphTrancheData(trancheId: number): ISubgraphTrancheData 
     });
 
     const findAssetInMarketsData = (asset: string) => {
-        if (queryTrancheData.isLoading) return undefined;
-        else {
-            if (queryTrancheData.data?.assetsData) {
-                return (queryTrancheData.data?.assetsData as any)[asset];
-            }
-            return {};
+        if (queryTrancheData.isLoading || !queryTrancheData.data?.assetsData) return undefined;
+        if (asset === 'ETH') {
+            console.log('Trying to get asset data for ETH, returning undefined');
+            return undefined;
         }
+        return (queryTrancheData.data?.assetsData as any)[asset];
     };
 
     return {
