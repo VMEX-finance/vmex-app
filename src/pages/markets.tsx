@@ -12,6 +12,8 @@ const Markets: React.FC = () => {
     const { queryUserActivity } = useUserData(address);
     const { queryAllMarketsData } = useSubgraphAllMarketsData();
 
+    console.log('markets data', queryAllMarketsData.data);
+
     return (
         <AppTemplate title="markets">
             <MarketsTable
