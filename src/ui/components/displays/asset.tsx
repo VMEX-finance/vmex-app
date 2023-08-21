@@ -53,7 +53,7 @@ export const renderAsset = (
         })
     ) : (
         <img
-            key={`${key}`}
+            key={`render-asset-${key || i || asset}`}
             src={determineCoinImg(asset, custom)}
             alt={asset}
             className={`${size ? size : 'h-8 w-8'}`}
