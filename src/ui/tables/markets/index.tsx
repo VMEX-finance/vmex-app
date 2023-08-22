@@ -160,6 +160,13 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
             },
         },
         {
+            name: 'canBeBorrowed',
+            label: '',
+            options: {
+                display: false,
+            },
+        },
+        {
             name: 'featured',
             label: 'Featured',
             options: {
@@ -202,6 +209,8 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
                                 strategies,
                                 canBeCollateral,
                                 trancheId,
+                                canBeBorrowed,
+                                featured,
                             ],
                             dataIndex,
                             rowIndex,
@@ -222,6 +231,7 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
                                 key={`markets-table-${
                                     rowIndex || Math.floor(Math.random() * 10000)
                                 }`}
+                                borrowable={canBeBorrowed}
                             />
                         ),
                         textLabels: {
