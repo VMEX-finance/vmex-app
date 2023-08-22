@@ -25,7 +25,7 @@
         "start:mainnetfork": "REACT_APP_NETWORK='localhost' REACT_APP_RPC='https://dev.volatilelabs.ltd:8443' REACT_APP_SUBGRAPH_ENDPOINT='https://dev.volatilelabs.ltd:443/subgraphs/name/vmex-finance' REACT_APP_TEST=true react-scripts start",
         "start:sepolia": "REACT_APP_NETWORK='sepolia' REACT_APP_RPC='https://eth-sepolia.public.blastapi.io' REACT_APP_SUBGRAPH_ENDPOINT='https://api.studio.thegraph.com/query/40387/vmex-finance-sepolia/version/latest' REACT_APP_TEST=true react-scripts start",
         "start:optimism:local": "REACT_APP_NETWORK='optimism_localhost' REACT_APP_RPC='http://127.0.0.1:8545' REACT_APP_SUBGRAPH_ENDPOINT='http://127.0.0.1:8000/subgraphs/name/vmex-finance' REACT_APP_TEST=true react-scripts start",
-        "start:optimism": "REACT_APP_NETWORK='optimism' REACT_APP_RPC='https://mainnet.optimism.io' REACT_APP_SUBGRAPH_ENDPOINT='https://api.thegraph.com/subgraphs/name/fico23/optimism-vmex' react-scripts start",
+        "start:optimism": "REACT_APP_NETWORK='optimism' REACT_APP_RPC='https://mainnet.optimism.io' REACT_APP_SUBGRAPH_ENDPOINT='https://api.thegraph.com/subgraphs/name/vmex-finance/vmex-optimism' react-scripts start",
         "start": "react-app-rewired start",
         "build": "react-app-rewired build",
         "test": "react-scripts test",
