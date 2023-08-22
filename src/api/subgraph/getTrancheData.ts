@@ -25,6 +25,7 @@ const useCustomRiskParams = (isVerified: boolean, item: any) => {
 export const processTrancheData = async (
     data: any,
     trancheId?: string,
+    globalAdmin?: string,
 ): Promise<IGraphTrancheDataProps> => {
     const assets = data?.reserves;
     const isVerified = data?.isVerified || false;
@@ -189,7 +190,7 @@ export const processTrancheData = async (
         treasury: data.treasury,
         uniqueBorrowers: uniqueBorrowers.size,
         uniqueLenders: uniqueLenders.size,
-        category: getTrancheCategory(data),
+        category: getTrancheCategory(data, globalAdmin),
     };
     return returnObj;
 };
@@ -258,13 +259,15 @@ export const getSubgraphTrancheData = async (
                         }
                     }
                 }
+                protocol(id: "1") {
+                    globalAdmin
+                }
             }
         `,
         variables: { trancheId },
     });
-
     if (error || !data.tranche) return {};
-    else return processTrancheData(data.tranche, String(_trancheId));
+    else return processTrancheData(data.tranche, String(_trancheId), data.protocol.globalAdmin);
 };
 
 export const getSubgraphTrancheChart = async (
