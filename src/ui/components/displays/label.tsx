@@ -23,6 +23,10 @@ export const Label = ({ children, className = '', color = 'purple', tooltip }: I
         } else if (children === 'VMEX') {
             _tooltip = 'This is a VMEX featured tranche.';
             customClass = 'bg-gradient-to-r from-violet-500 to-purple-400';
+        } else if (children === 'Standard') {
+            _tooltip =
+                'This is a standard tranche that any permissionless actor created following our risk guidelines.';
+            customClass = 'bg-gradient-to-r from-neutral-500 to-gray-400';
         } else {
             customClass = 'bg-gradient-to-r from-neutral-500 to-gray-400';
         }
