@@ -1,7 +1,14 @@
 import { gql } from '@apollo/client';
 import { useQuery } from '@tanstack/react-query';
 import { ILineChartDataPointProps } from '@ui/components/charts';
-import { nativeAmountToUSD, IAvailableCoins, usdFormatter, apolloClient } from '../../utils';
+import {
+    nativeAmountToUSD,
+    IAvailableCoins,
+    usdFormatter,
+    apolloClient,
+    PRICING_DECIMALS,
+    NETWORK,
+} from '../../utils';
 import { getAllAssetPrices } from '../prices';
 import { AssetBalance, TrancheData } from '../types';
 import { IGraphProtocolDataProps, IGraphTrancheProps, ISubgraphProtocolData } from './types';
@@ -53,7 +60,12 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
             const asset = el.reserve.assetData.underlyingAssetName.toUpperCase();
 
             const assetUSDPrice = (prices as any)[asset]?.usdPrice || '0';
-            const usdAmount = nativeAmountToUSD(el.amount, el.reserve.decimals, assetUSDPrice);
+            const usdAmount = nativeAmountToUSD(
+                el.amount,
+                PRICING_DECIMALS[NETWORK],
+                el.reserve.decimals,
+                assetUSDPrice,
+            );
             const date = new Date(el.timestamp * 1000).toLocaleString();
 
             graphData.push({ value: usdAmount, xaxis: date });
@@ -62,7 +74,13 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
         tranche?.redeemUnderlyingHistory?.map((el) => {
             const asset = el.reserve.assetData.underlyingAssetName.toUpperCase();
             const assetUSDPrice = (prices as any)[asset]?.usdPrice || '0';
-            const usdAmount = nativeAmountToUSD(el.amount, el.reserve.decimals, assetUSDPrice) * -1;
+            const usdAmount =
+                nativeAmountToUSD(
+                    el.amount,
+                    PRICING_DECIMALS[NETWORK],
+                    el.reserve.decimals,
+                    assetUSDPrice,
+                ) * -1;
             const date = new Date(el.timestamp * 1000).toLocaleString();
             graphData.push({ value: usdAmount, xaxis: date });
         });
@@ -124,6 +142,7 @@ async function getTopAssets(
             const _assetUSDPrice = (prices as any)[_asset]?.usdPrice || '0';
             const _usdAmount = nativeAmountToUSD(
                 reserve.totalDeposits,
+                PRICING_DECIMALS[NETWORK],
                 reserve.decimals,
                 _assetUSDPrice,
             );
@@ -149,6 +168,7 @@ async function getTopAssets(
             const _assetUSDPrice = (prices as any)[_asset]?.usdPrice || '0';
             const _usdAmount = nativeAmountToUSD(
                 reserve.totalCurrentVariableDebt,
+                PRICING_DECIMALS[NETWORK],
                 reserve.decimals,
                 _assetUSDPrice,
             );

@@ -5,7 +5,13 @@ import { ILineChartDataPointProps } from '@ui/components/charts';
 import { BigNumber, utils } from 'ethers';
 import { IMarketsAsset } from '../types';
 import { getAllAssetPrices } from '../prices';
-import { usdFormatter, apolloClient, nativeAmountToUSD, NETWORK } from '../../utils';
+import {
+    usdFormatter,
+    apolloClient,
+    nativeAmountToUSD,
+    NETWORK,
+    PRICING_DECIMALS,
+} from '../../utils';
 import { convertSymbolToAddress } from '@vmexfinance/sdk';
 import { getReserveId } from './id-generation';
 
@@ -125,15 +131,26 @@ export const getSubgraphAllMarketsData = async (): Promise<IMarketsAsset[]> => {
                 borrowApy: utils.formatUnits(reserve.variableBorrowRate, 27),
                 supplyApy: utils.formatUnits(reserve.liquidityRate, 27),
                 available: usdFormatter().format(
-                    nativeAmountToUSD(reserve.availableLiquidity, reserve.decimals, assetUSDPrice),
+                    nativeAmountToUSD(
+                        reserve.availableLiquidity,
+                        PRICING_DECIMALS[NETWORK],
+                        reserve.decimals,
+                        assetUSDPrice,
+                    ),
                 ),
                 availableNative: reserve.availableLiquidity,
                 supplyTotal: usdFormatter().format(
-                    nativeAmountToUSD(reserve.totalDeposits, reserve.decimals, assetUSDPrice),
+                    nativeAmountToUSD(
+                        reserve.totalDeposits,
+                        PRICING_DECIMALS[NETWORK],
+                        reserve.decimals,
+                        assetUSDPrice,
+                    ),
                 ),
                 borrowTotal: usdFormatter().format(
                     nativeAmountToUSD(
                         reserve.totalCurrentVariableDebt,
+                        PRICING_DECIMALS[NETWORK],
                         reserve.decimals,
                         assetUSDPrice,
                     ),
