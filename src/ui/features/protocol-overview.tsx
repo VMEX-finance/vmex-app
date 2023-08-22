@@ -50,7 +50,7 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
             const arr = _arr.filter(
                 (el) => parseFloat(el.amount.includes('$') ? el.amount.slice(1) : el.amount) !== 0,
             );
-            return arr.slice(0, 4);
+            return arr.slice(0, 5);
         }
     };
 
