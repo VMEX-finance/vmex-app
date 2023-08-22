@@ -115,9 +115,7 @@ export const calculateHealthFactorFromBalances = (
 
 export const getTrancheCategory = (tranche: any, globalAdmin = ''): ITrancheCategories => {
     if (!tranche) return 'Standard';
+    if (tranche.trancheAdmin.id === globalAdmin) return 'VMEX';
     if (tranche.isVerified) return 'External';
-    else {
-        if (tranche.trancheAdmin.id === globalAdmin) return 'VMEX';
-        else return 'Standard';
-    }
+    return 'Standard';
 };
