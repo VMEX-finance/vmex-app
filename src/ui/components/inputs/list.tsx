@@ -3,7 +3,12 @@ import { IoIosClose } from 'react-icons/io';
 import { AssetDisplay } from '../displays';
 import { BasicToggle } from '../toggles';
 import { ethers, utils } from 'ethers';
-import { AVAILABLE_ASSETS, bigNumberToUnformattedString, truncateAddress } from '../../../utils';
+import {
+    AVAILABLE_ASSETS,
+    bigNumberToUnformattedString,
+    NETWORK,
+    truncateAddress,
+} from '../../../utils';
 import { AutoCompleteInput } from '.';
 import { useSubgraphAllAssetMappingsData } from '../../../api';
 
@@ -80,7 +85,9 @@ export const ListInput = ({
         if (e.key === 'Enter') {
             if (
                 coin &&
-                !AVAILABLE_ASSETS.map((coin) => coin.toUpperCase()).includes(toBeSet.toUpperCase())
+                !AVAILABLE_ASSETS[NETWORK].map((coin: any) => coin.toUpperCase()).includes(
+                    toBeSet.toUpperCase(),
+                )
             ) {
                 setError('Please enter a valid token.');
                 setValue('');
