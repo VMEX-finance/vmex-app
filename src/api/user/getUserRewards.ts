@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { USER_REWARDS_URL } from '../../utils/constants';
+import { NETWORK, PRICING_DECIMALS, USER_REWARDS_URL } from '../../utils/constants';
 import { DECIMALS, SDK_PARAMS, bigNumberToNative, nativeAmountToUSD } from '../../utils';
 import { BigNumber } from 'ethers';
 import { convertAddressToSymbol } from '@vmexfinance/sdk';
@@ -27,6 +27,7 @@ export async function getUserRewards(userAddress: string, assetPrices: any) {
             );
             const amountUsd = nativeAmountToUSD(
                 BigNumber.from(`0x${(value as any).amount}`),
+                PRICING_DECIMALS[NETWORK],
                 decimals,
                 priceMapping.get(asset) || BigNumber.from('0'),
             );

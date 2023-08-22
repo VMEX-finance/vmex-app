@@ -21,14 +21,17 @@ export const bigNumberToUSD = (
 
 export const nativeAmountToUSD = (
     amount: BigNumberish,
-    decimals: number,
+    priceDecimals: number,
+    assetDecimals: number,
     assetUSDPrice: BigNumberish,
 ): number => {
     return parseFloat(
         Number(
             ethers.utils.formatUnits(
-                BigNumber.from(amount).mul(assetUSDPrice).div(ethers.utils.parseEther('1')),
-                decimals,
+                BigNumber.from(amount)
+                    .mul(assetUSDPrice)
+                    .div(ethers.utils.parseUnits('1', priceDecimals)),
+                assetDecimals,
             ),
         ).toFixed(2),
     );

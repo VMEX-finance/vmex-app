@@ -12,6 +12,8 @@ import {
     MAX_UINT_AMOUNT,
     IAvailableCoins,
     getTrancheCategory,
+    PRICING_DECIMALS,
+    NETWORK,
 } from '../../utils';
 import { ILineChartDataPointProps } from '../../ui/components';
 import { getTrancheId } from './id-generation';
@@ -101,17 +103,33 @@ export const processTrancheData = async (
             return Object.assign(obj, {
                 tvl:
                     obj.tvl +
-                    nativeAmountToUSD(item.availableLiquidity, item.decimals, assetUSDPrice),
+                    nativeAmountToUSD(
+                        item.availableLiquidity,
+                        PRICING_DECIMALS[NETWORK],
+                        item.decimals,
+                        assetUSDPrice,
+                    ),
                 supplyTotal:
                     obj.supplyTotal +
-                    nativeAmountToUSD(item.totalDeposits, item.decimals, assetUSDPrice),
+                    nativeAmountToUSD(
+                        item.totalDeposits,
+                        PRICING_DECIMALS[NETWORK],
+                        item.decimals,
+                        assetUSDPrice,
+                    ),
                 borrowTotal:
                     obj.borrowTotal +
-                    nativeAmountToUSD(item.totalCurrentVariableDebt, item.decimals, assetUSDPrice),
+                    nativeAmountToUSD(
+                        item.totalCurrentVariableDebt,
+                        PRICING_DECIMALS[NETWORK],
+                        item.decimals,
+                        assetUSDPrice,
+                    ),
                 collateralTotal:
                     obj.collateralTotal +
                     nativeAmountToUSD(
                         item.totalLiquidityAsCollateral,
+                        PRICING_DECIMALS[NETWORK],
                         item.decimals,
                         assetUSDPrice,
                     ),
@@ -154,9 +172,7 @@ export const processTrancheData = async (
         availableLiquidity: usdFormatter().format(summaryData.tvl),
         totalSupplied: usdFormatter().format(summaryData.supplyTotal),
         totalBorrowed: usdFormatter().format(summaryData.borrowTotal),
-        totalCollateral: usdFormatter().format(
-            summaryData.supplyTotal - summaryData.collateralTotal,
-        ), // TODO: is this right for total collateral since subgraph only provides collateral liquidity?
+        totalCollateral: usdFormatter().format(summaryData.collateralTotal), // TODO: is this right for total collateral since subgraph only provides collateral liquidity?
         tvl: usdFormatter().format(summaryData.tvl),
         poolUtilization: percentFormatter.format(
             1 - (summaryData.supplyTotal - summaryData.borrowTotal) / summaryData.supplyTotal,
@@ -303,7 +319,12 @@ export const getSubgraphTrancheChart = async (
             }
 
             const assetUSDPrice = (prices as any)[asset]?.usdPrice;
-            const usdAmount = nativeAmountToUSD(el.amount, el.reserve.decimals, assetUSDPrice);
+            const usdAmount = nativeAmountToUSD(
+                el.amount,
+                PRICING_DECIMALS[NETWORK],
+                el.reserve.decimals,
+                assetUSDPrice,
+            );
             const date = new Date(el.timestamp * 1000).toLocaleString();
 
             const found = graphData.find((element) => element.xaxis === date);
@@ -325,7 +346,12 @@ export const getSubgraphTrancheChart = async (
                 return;
             }
             const assetUSDPrice = (prices as any)[asset]?.usdPrice;
-            const usdAmount = nativeAmountToUSD(el.amount, el.reserve.decimals, assetUSDPrice);
+            const usdAmount = nativeAmountToUSD(
+                el.amount,
+                PRICING_DECIMALS[NETWORK],
+                el.reserve.decimals,
+                assetUSDPrice,
+            );
             const date = new Date(el.timestamp * 1000).toLocaleString();
 
             const found = graphData.find((element) => element.xaxis === date);

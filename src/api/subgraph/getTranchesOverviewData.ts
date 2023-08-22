@@ -3,7 +3,13 @@ import { useQuery } from '@tanstack/react-query';
 import { ISubgraphTranchesDataProps, ITrancheCategories } from './types';
 import { ITrancheProps } from '../types';
 import { getAllAssetPrices } from '../prices';
-import { nativeAmountToUSD, apolloClient, getTrancheCategory } from '../../utils';
+import {
+    nativeAmountToUSD,
+    apolloClient,
+    getTrancheCategory,
+    NETWORK,
+    PRICING_DECIMALS,
+} from '../../utils';
 import { getTrancheIdFromTrancheEntity } from './id-generation';
 
 export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]> => {
@@ -66,14 +72,25 @@ export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]
                 trancheData = {
                     tvl:
                         trancheData.tvl +
-                        nativeAmountToUSD(item.availableLiquidity, item.decimals, assetUSDPrice),
+                        nativeAmountToUSD(
+                            item.availableLiquidity,
+                            PRICING_DECIMALS[NETWORK],
+                            item.decimals,
+                            assetUSDPrice,
+                        ),
                     supplyTotal:
                         trancheData.supplyTotal +
-                        nativeAmountToUSD(item.totalDeposits, item.decimals, assetUSDPrice),
+                        nativeAmountToUSD(
+                            item.totalDeposits,
+                            PRICING_DECIMALS[NETWORK],
+                            item.decimals,
+                            assetUSDPrice,
+                        ),
                     borrowTotal:
                         trancheData.borrowTotal +
                         nativeAmountToUSD(
                             item.totalCurrentVariableDebt,
+                            PRICING_DECIMALS[NETWORK],
                             item.decimals,
                             assetUSDPrice,
                         ),
