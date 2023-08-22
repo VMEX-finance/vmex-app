@@ -2,7 +2,7 @@ import { BigNumber, BigNumberish, ethers } from 'ethers';
 import { usdFormatter, nativeTokenFormatter } from './helpers';
 import { convertAddressToSymbol } from '@vmexfinance/sdk';
 import { ITrancheCategories } from '@app/api';
-import { DECIMALS, SDK_PARAMS } from './constants';
+import { DECIMALS, NETWORK, PRICING_DECIMALS, SDK_PARAMS } from './constants';
 
 export const bigNumberToUSD = (
     number: BigNumberish | undefined,
@@ -107,7 +107,7 @@ export const calculateHealthFactorFromBalances = (
     }
     return (
         liquidationThresholdTimesCollateral
-            .mul(ethers.utils.parseEther('1'))
+            .mul(ethers.utils.parseUnits('1', 18))
             // .div(BigNumber.from('10000'))
             .div(borrowFactorTimesDebt)
     );
