@@ -8,6 +8,8 @@ import {
     HFFormatter,
     calculateHealthFactorFromBalances,
     determineHealthColor,
+    NETWORK,
+    PRICING_DECIMALS,
 } from '../../../utils';
 import { ethers } from 'ethers';
 import { useAccount } from 'wagmi';
@@ -109,13 +111,21 @@ export const HealthFactor = ({
         }
 
         try {
-            let ethAmount = ethers.utils
-                .parseUnits(convertStringFormatToNumber(amount), d)
-                .mul(a.priceETH)
-                .div(ethers.utils.parseUnits('1', d)); //18 decimals
+            let ethAmount;
+            if (PRICING_DECIMALS[NETWORK] == 8) {
+                ethAmount = ethers.utils
+                    .parseUnits(convertStringFormatToNumber(amount), d)
+                    .mul(a.priceUSD)
+                    .div(ethers.utils.parseUnits('1', d)); //18 decimals or 8 decimals
+            } else {
+                ethAmount = ethers.utils
+                    .parseUnits(convertStringFormatToNumber(amount), d)
+                    .mul(a.priceETH)
+                    .div(ethers.utils.parseUnits('1', d)); //18 decimals or 8 decimals
+            }
 
             let totalCollateralETH = queryUserTrancheData.data?.totalCollateralETH;
-            let totalDebtInETH = queryUserTrancheData.data?.totalDebtETH;
+            let totalDebtInETH = queryUserTrancheData.data?.totalDebtETH; //ETH or USD, depending on underlying chainlink decimals
             let currentLiquidationThreshold =
                 queryUserTrancheData.data?.currentLiquidationThreshold;
             let currentAvgBorrowFactor = queryUserTrancheData.data?.avgBorrowFactor;
@@ -163,10 +173,20 @@ export const HealthFactor = ({
                     ethAmount.mul(a.borrowFactor),
                 );
             }
+            console.log('total collateral after calc: ', collateralAfter);
+            console.log('total debtAfter after calc: ', debtAfter);
+            console.log(
+                'total liquidationThresholdTimesCollateralAfter after calc: ',
+                liquidationThresholdTimesCollateralAfter,
+            );
+            console.log(
+                'total borrowFactorTimesDebtAfter after calc: ',
+                borrowFactorTimesDebtAfter,
+            );
 
             let healthFactorAfterDecrease = calculateHealthFactorFromBalances(
                 borrowFactorTimesDebtAfter,
-                liquidationThresholdTimesCollateralAfter,
+                liquidationThresholdTimesCollateralAfter, //they both have the same number of decimals
             );
 
             return renderHealth(
