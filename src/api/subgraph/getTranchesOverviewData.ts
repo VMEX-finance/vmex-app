@@ -34,7 +34,7 @@ export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]
                         id
                     }
                 }
-                protocols {
+                protocol(id: "1") {
                     globalAdmin
                 }
             }
@@ -104,7 +104,6 @@ export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]
         });
 
         const returnObj: ITrancheProps[] = [];
-        const globalAdmin = protocols.globalAdmin; // TODO: Find the global admin
 
         tranches.map((tranche: any) => {
             let trancheInfo = {
@@ -114,7 +113,7 @@ export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]
                 tvl: 0,
                 supplyTotal: 0,
                 borrowTotal: 0,
-                category: getTrancheCategory(tranche, globalAdmin),
+                category: getTrancheCategory(tranche, data.protocol.globalAdmin),
             };
 
             const trancheTotals = finalObj.get(tranche.id);
