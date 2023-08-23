@@ -64,6 +64,34 @@ export const determineCoinImg = (asset: string, custom?: string) => {
     }
 };
 
+export const determineCoinDescription = (asset: string, custom?: string) => {
+    if (custom) return custom;
+    else {
+        if (asset.toLowerCase() == 'moocurvewsteth')
+            return 'Beefy vault for the wstETH/ETH curve pool';
+        if (asset.toLowerCase() == '3crv')
+            return 'Curve stableswap pool between DAI, USDT, and USDC';
+        if (asset.toLowerCase() == 'susd3crv-f')
+            return 'Curve stableswap pool between sUSD, DAI, USDT, and USDC';
+        if (asset.toLowerCase() == 'wstethcrv')
+            return 'Curve stableswap pool between wstETH and ETH';
+        if (asset.toLowerCase().startsWith('yv')) return `Yearn vault for ${asset.substring(2)}`;
+        if (asset.toLowerCase().includes('bpt')) {
+            return `Beethoven pool between ${asset.split('-')[1]} and ${asset.split('-')[2]}`;
+        }
+        if (asset.toLowerCase().includes('ammv2')) {
+            let stable = 'Stable';
+            if (asset.startsWith('v')) {
+                stable = 'Volatile';
+            }
+            const assets = asset.substring(7).split('/');
+            return `${stable} Velodrome pool between ${assets[0]} and ${assets[1]}`;
+        }
+
+        return `Base ${asset}`;
+    }
+};
+
 export const determineHealthColor = (health: number | string | undefined) => {
     if (!health) return 'text-black';
     let _health;

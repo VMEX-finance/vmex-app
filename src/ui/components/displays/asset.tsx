@@ -1,6 +1,7 @@
-import { determineCoinImg } from '../../../utils/helpers';
+import { determineCoinDescription, determineCoinImg } from '../../../utils/helpers';
 import React from 'react';
 import { MultipleAssetsDisplayOverlapping } from './multi-asset';
+import { Tooltip } from '../tooltips';
 
 type IAssetDisplayProps = {
     logo?: string;
@@ -46,17 +47,21 @@ export const renderAsset = (
     return asset.includes('moo') ? (
         MultipleAssetsDisplayOverlapping({
             assets: [asset.substring(3), 'beefy'],
+            origAssetName: asset,
         })
     ) : asset.substring(0, 2) == 'yv' ? (
         MultipleAssetsDisplayOverlapping({
             assets: [asset.substring(2), 'yearn'],
+            origAssetName: asset,
         })
     ) : (
-        <img
-            key={`render-asset-${key || i || asset}`}
-            src={determineCoinImg(asset, custom)}
-            alt={asset}
-            className={`${size ? size : 'h-8 w-8'}`}
-        />
+        <Tooltip text={determineCoinDescription(asset)}>
+            <img
+                key={`render-asset-${key || i || asset}`}
+                src={determineCoinImg(asset, custom)}
+                alt={asset}
+                className={`${size ? size : 'h-8 w-8'}`}
+            />
+        </Tooltip>
     );
 };
