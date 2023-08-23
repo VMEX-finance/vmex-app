@@ -6,6 +6,7 @@ import { getNetwork } from '@wagmi/core';
 
 export async function getAllAssetPrices(): Promise<Record<IAvailableCoins, IAssetPricesProps>> {
     const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+    console.log('GET ALL ASSET PRICES: network', network);
     const pricesMap = await getAssetPrices({
         assets: getAllAssetSymbols(network),
         network,
