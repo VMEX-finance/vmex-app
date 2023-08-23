@@ -25,7 +25,7 @@ interface ITableProps {
 export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivity }) => {
     const { isDark } = useContext(ThemeContext);
 
-    const renderYourAmount = (asset: string) => {
+    const renderYourAmount = (asset: string, trancheId: number) => {
         let amount = 0;
         if (userActivity?.isLoading)
             return {
@@ -33,13 +33,14 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
                 loading: true,
             };
         userActivity?.data?.supplies.map((supply) => {
-            if (supply.asset === asset)
+            if (supply.asset === asset && supply.trancheId == trancheId) {
                 amount =
                     amount +
                     parseFloat(bigNumberToUnformattedString(supply.amountNative, supply.asset));
+            }
         });
         userActivity?.data?.borrows.map((borrow) => {
-            if (borrow.asset === asset)
+            if (borrow.asset === asset && borrow.trancheId == trancheId)
                 amount =
                     amount -
                     parseFloat(bigNumberToUnformattedString(borrow.amountNative, borrow.asset));
@@ -58,6 +59,24 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
                 filter: true,
                 sort: true,
                 sortThirdClickReset: true,
+                filterOptions: {
+                    names: ['Yearn', 'Curve', 'Balancer', 'Velo'],
+                    logic: (location: any, filters: any, row: any) => {
+                        if (filters.length) {
+                            switch (filters[0].toLowerCase()) {
+                                case 'yearn':
+                                    return !location.startsWith('yv');
+                                case 'curve':
+                                    return !location.toLowerCase().includes('crv');
+                                case 'balancer':
+                                    return !location.startsWith('BPT');
+                                case 'velo':
+                                    return !location.startsWith('v');
+                            }
+                        }
+                        return false;
+                    },
+                },
             },
         },
         {
@@ -164,6 +183,7 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
             label: '',
             options: {
                 display: false,
+                filter: false,
             },
         },
         {
@@ -221,7 +241,7 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
                                 trancheId={trancheId}
                                 supplyApy={percentFormatter.format(supplyApy)}
                                 borrowApy={percentFormatter.format(borrowApy)}
-                                yourAmount={renderYourAmount(asset)}
+                                yourAmount={renderYourAmount(asset, trancheId)}
                                 available={available}
                                 borrowTotal={borrowTotal}
                                 supplyTotal={supplyTotal}
