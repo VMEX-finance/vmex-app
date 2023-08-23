@@ -1,4 +1,4 @@
-import { determineCoinImg } from '../../../utils/helpers';
+import { determineCoinDescription, determineCoinImg } from '../../../utils/helpers';
 import React from 'react';
 import { SkeletonLoader } from '../loaders';
 import { Tooltip } from '../tooltips';
@@ -10,6 +10,7 @@ interface IMultipleAssetsProps {
     size?: string;
     loading?: boolean;
     gap?: string;
+    origAssetName?: string;
 }
 
 export const MultipleAssetsDisplay = ({ assets, show = 4, size, gap }: IMultipleAssetsProps) => {
@@ -50,48 +51,55 @@ export const MultipleAssetsDisplay = ({ assets, show = 4, size, gap }: IMultiple
     );
 };
 
-export const MultipleAssetsDisplayOverlapping = ({ assets, size, gap }: IMultipleAssetsProps) => {
+export const MultipleAssetsDisplayOverlapping = ({
+    assets,
+    size,
+    gap,
+    origAssetName,
+}: IMultipleAssetsProps) => {
     return (
-        <div
-            className={`flex ${gap ? gap : 'gap-2'}`}
-            style={{ flexWrap: 'wrap' }} // Added style for wrapping
-        >
-            {assets?.length !== 0 ? (
-                assets?.map((el, i) =>
-                    i == assets?.length - 1 ? (
-                        <img
-                            key={`tranches-asset-${i}`}
-                            src={determineCoinImg(el)}
-                            alt={el}
-                            className={`${size ? size : 'h-4 w-4'} absolute top-0 right-0`}
-                            style={{
-                                position: 'relative',
-                                zIndex: i, // Increase zIndex for overlapping effect
-                                marginLeft: i > 0 ? '-1.5rem' : 0, // Overlapping margin
-                            }}
-                        />
-                    ) : (
-                        <img
-                            key={`tranches-asset-${i}`}
-                            src={determineCoinImg(el)}
-                            alt={el}
-                            className={`${size ? size : 'h-8 w-8'}`}
-                            style={{
-                                position: 'relative',
-                                zIndex: i, // Increase zIndex for overlapping effect
-                                marginLeft: i > 0 ? '-1.5rem' : 0, // Overlapping margin
-                            }}
-                        />
-                    ),
-                )
-            ) : (
-                <SkeletonLoader
-                    variant="circular"
-                    height={'2rem'}
-                    width={'2rem'}
-                    key={`${Math.random()}`}
-                />
-            )}
-        </div>
+        <Tooltip text={determineCoinDescription(origAssetName || '')}>
+            <div
+                className={`flex ${gap ? gap : 'gap-2'}`}
+                style={{ flexWrap: 'wrap' }} // Added style for wrapping
+            >
+                {assets?.length !== 0 ? (
+                    assets?.map((el, i) =>
+                        i == assets?.length - 1 ? (
+                            <img
+                                key={`tranches-asset-${i}`}
+                                src={determineCoinImg(el)}
+                                alt={el}
+                                className={`${size ? size : 'h-4 w-4'} absolute top-0 right-0`}
+                                style={{
+                                    position: 'relative',
+                                    zIndex: i, // Increase zIndex for overlapping effect
+                                    marginLeft: i > 0 ? '-1.5rem' : 0, // Overlapping margin
+                                }}
+                            />
+                        ) : (
+                            <img
+                                key={`tranches-asset-${i}`}
+                                src={determineCoinImg(el)}
+                                alt={el}
+                                className={`${size ? size : 'h-8 w-8'}`}
+                                style={{
+                                    position: 'relative',
+                                    zIndex: i, // Increase zIndex for overlapping effect
+                                    marginLeft: i > 0 ? '-1.5rem' : 0, // Overlapping margin
+                                }}
+                            />
+                        ),
+                    )
+                ) : (
+                    <SkeletonLoader
+                        variant="circular"
+                        height={'2rem'}
+                        width={'2rem'}
+                        key={`${Math.random()}`}
+                    />
+                )}
+            </div>
+        </Tooltip>
     );
 };
