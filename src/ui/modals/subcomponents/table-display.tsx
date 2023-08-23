@@ -1,11 +1,13 @@
 import { SpinnerLoader } from '../../components/loaders';
 import React, { ReactNode } from 'react';
+import { Tooltip } from '../../components';
 
 type IModalTableItemProps = {
     label: string;
     value: string | number | ReactNode;
     baseLink?: string;
     loading?: boolean;
+    error?: string;
 };
 
 type IModalTableDisplayProps = {
@@ -52,7 +54,12 @@ export const ModalTableDisplay = ({ title, content, noData, loading }: IModalTab
                                                     : ''
                                             }`}
                                         >
-                                            {el.baseLink ? (
+                                            {el.error && el.error != '' ? (
+                                                <Tooltip
+                                                    text={el.error}
+                                                    content="Transaction likely to revert"
+                                                />
+                                            ) : el.baseLink ? (
                                                 <a href={`${el.baseLink}/${el.value}`}>
                                                     {el.value}
                                                 </a>
