@@ -178,10 +178,10 @@ export function useUserTrancheData(
             if (found && liquidityNative && price && decimals) {
                 const liquidity = BigNumber.from(liquidityNative)
                     .mul(price)
-                    .div(ethers.utils.parseEther('1'));
+                    .div(ethers.utils.parseUnits('1', PRICING_DECIMALS[NETWORK]));
                 const amountUsd = found?.amountNative.lt(liquidityNative)
                     ? found?.amountUSD
-                    : ethers.utils.formatUnits(liquidity.toString(), decimals);
+                    : bigNumberToUSD(liquidity.toString(), Number(decimals));
                 const amountNative = found?.amountNative.lt(liquidityNative)
                     ? found?.amountNative
                     : BigNumber.from(liquidityNative);

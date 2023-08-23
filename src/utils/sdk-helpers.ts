@@ -2,7 +2,7 @@ import { BigNumber, BigNumberish, ethers } from 'ethers';
 import { usdFormatter, nativeTokenFormatter } from './helpers';
 import { convertAddressToSymbol } from '@vmexfinance/sdk';
 import { ITrancheCategories } from '@app/api';
-import { DECIMALS, SDK_PARAMS } from './constants';
+import { DECIMALS, NETWORK, PRICING_DECIMALS, SDK_PARAMS } from './constants';
 
 export const bigNumberToUSD = (
     number: BigNumberish | undefined,
@@ -21,14 +21,17 @@ export const bigNumberToUSD = (
 
 export const nativeAmountToUSD = (
     amount: BigNumberish,
-    decimals: number,
+    priceDecimals: number,
+    assetDecimals: number,
     assetUSDPrice: BigNumberish,
 ): number => {
     return parseFloat(
         Number(
             ethers.utils.formatUnits(
-                BigNumber.from(amount).mul(assetUSDPrice).div(ethers.utils.parseEther('1')),
-                decimals,
+                BigNumber.from(amount)
+                    .mul(assetUSDPrice)
+                    .div(ethers.utils.parseUnits('1', priceDecimals)),
+                assetDecimals,
             ),
         ).toFixed(2),
     );
@@ -104,7 +107,7 @@ export const calculateHealthFactorFromBalances = (
     }
     return (
         liquidationThresholdTimesCollateral
-            .mul(ethers.utils.parseEther('1'))
+            .mul(ethers.utils.parseUnits('1', 18))
             // .div(BigNumber.from('10000'))
             .div(borrowFactorTimesDebt)
     );
@@ -112,9 +115,7 @@ export const calculateHealthFactorFromBalances = (
 
 export const getTrancheCategory = (tranche: any, globalAdmin = ''): ITrancheCategories => {
     if (!tranche) return 'Standard';
+    if (tranche.trancheAdmin.id === globalAdmin) return 'VMEX';
     if (tranche.isVerified) return 'External';
-    else {
-        if (tranche.trancheAdmin.id === globalAdmin) return 'VMEX';
-        else return 'Standard';
-    }
+    return 'Standard';
 };

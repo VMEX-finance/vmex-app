@@ -3,7 +3,13 @@ import { useQuery } from '@tanstack/react-query';
 import { ISubgraphTranchesDataProps, ITrancheCategories } from './types';
 import { ITrancheProps } from '../types';
 import { getAllAssetPrices } from '../prices';
-import { nativeAmountToUSD, apolloClient, getTrancheCategory } from '../../utils';
+import {
+    nativeAmountToUSD,
+    apolloClient,
+    getTrancheCategory,
+    NETWORK,
+    PRICING_DECIMALS,
+} from '../../utils';
 import { getTrancheIdFromTrancheEntity } from './id-generation';
 
 export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]> => {
@@ -28,13 +34,16 @@ export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]
                         id
                     }
                 }
+                protocol(id: "1") {
+                    globalAdmin
+                }
             }
         `,
     });
 
     if (error) return [];
     else {
-        const { tranches } = data;
+        const { tranches, protocols } = data;
         const prices = await getAllAssetPrices();
 
         let finalObj: Map<
@@ -66,14 +75,25 @@ export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]
                 trancheData = {
                     tvl:
                         trancheData.tvl +
-                        nativeAmountToUSD(item.availableLiquidity, item.decimals, assetUSDPrice),
+                        nativeAmountToUSD(
+                            item.availableLiquidity,
+                            PRICING_DECIMALS[NETWORK],
+                            item.decimals,
+                            assetUSDPrice,
+                        ),
                     supplyTotal:
                         trancheData.supplyTotal +
-                        nativeAmountToUSD(item.totalDeposits, item.decimals, assetUSDPrice),
+                        nativeAmountToUSD(
+                            item.totalDeposits,
+                            PRICING_DECIMALS[NETWORK],
+                            item.decimals,
+                            assetUSDPrice,
+                        ),
                     borrowTotal:
                         trancheData.borrowTotal +
                         nativeAmountToUSD(
                             item.totalCurrentVariableDebt,
+                            PRICING_DECIMALS[NETWORK],
                             item.decimals,
                             assetUSDPrice,
                         ),
@@ -84,7 +104,6 @@ export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]
         });
 
         const returnObj: ITrancheProps[] = [];
-        const globalAdmin = ''; // TODO: Find the global admin
 
         tranches.map((tranche: any) => {
             let trancheInfo = {
@@ -94,7 +113,7 @@ export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]
                 tvl: 0,
                 supplyTotal: 0,
                 borrowTotal: 0,
-                category: getTrancheCategory(tranche),
+                category: getTrancheCategory(tranche, data.protocol.globalAdmin),
             };
 
             const trancheTotals = finalObj.get(tranche.id);

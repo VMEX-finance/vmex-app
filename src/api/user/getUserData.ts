@@ -14,6 +14,8 @@ import {
     bigNumberToNative,
     AVAILABLE_ASSETS,
     averageOfArr,
+    PRICING_DECIMALS,
+    NETWORK,
 } from '../../utils';
 import { IUserActivityDataProps, IUserDataProps, IUserWalletDataProps } from './types';
 import { BigNumber } from 'ethers';
@@ -57,7 +59,7 @@ export async function getUserActivityData(userAddress: string): Promise<IUserAct
         apys.push(apy);
         return {
             asset: convertAddressToSymbol(assetData.asset, SDK_PARAMS.network),
-            amount: bigNumberToUSD(assetData.amount, 18),
+            amount: bigNumberToUSD(assetData.amount, PRICING_DECIMALS[NETWORK]),
             amountNative: assetData.amountNative,
             collateral: assetData.isCollateral,
             apy,
@@ -72,7 +74,7 @@ export async function getUserActivityData(userAddress: string): Promise<IUserAct
         apys.push(apy);
         return {
             asset: convertAddressToSymbol(assetData.asset, SDK_PARAMS.network),
-            amount: bigNumberToUSD(assetData.amount, 18),
+            amount: bigNumberToUSD(assetData.amount, PRICING_DECIMALS[NETWORK]),
             amountNative: assetData.amountNative,
             apy,
             tranche: tranchesDat[assetData.tranche.toNumber()].name || '',
@@ -111,7 +113,7 @@ export async function _getUserWalletData(
         assets: res.map((assetData: UserWalletData) => {
             return {
                 asset: convertAddressToSymbol(assetData.asset, SDK_PARAMS.network),
-                amount: bigNumberToUSD(assetData.amount, 18),
+                amount: bigNumberToUSD(assetData.amount, PRICING_DECIMALS[NETWORK]),
                 amountNative: assetData.amountNative,
                 currentPrice: assetData.currentPrice,
             };
