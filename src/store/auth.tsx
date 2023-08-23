@@ -1,8 +1,10 @@
 import { useLocalStorage } from '../hooks';
 import { useMerkle } from '../utils/merkle';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
-import { useAccount } from 'wagmi';
+import { useAccount, useSwitchNetwork } from 'wagmi';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { DEFAULT_NETWORK } from '../utils/network';
+import { getNetwork } from '@wagmi/core';
 
 // Types
 export type IAuthStoreProps = {
@@ -14,11 +16,13 @@ const AuthContext = createContext<IAuthStoreProps>({});
 
 // Wrapper
 export function AuthStore(props: { children: ReactNode }) {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const { address } = useAccount();
     const merkle = useMerkle();
     const navigate = useNavigate();
     const location = useLocation();
     const [isAuthenticated, setIsAuthenticated] = useLocalStorage('isAuthenticated', false);
+    const [oldChain, setOldChain] = useState(network);
 
     useEffect(() => {
         if (address) {
@@ -29,6 +33,13 @@ export function AuthStore(props: { children: ReactNode }) {
             }
         }
     }, [address]);
+
+    useEffect(() => {
+        if (network && address && oldChain !== network) {
+            setOldChain(network);
+            window.location.reload();
+        }
+    }, [network]);
 
     return (
         <AuthContext.Provider

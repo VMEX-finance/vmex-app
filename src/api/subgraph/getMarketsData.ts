@@ -173,9 +173,9 @@ export function useSubgraphMarketsData(
     _trancheId: string | number,
     _underlyingAsset: string | undefined,
 ): ISubgraphMarketsChart {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     let underlyingAsset: string = '';
     if (_underlyingAsset) {
-        const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
         underlyingAsset = convertSymbolToAddress(_underlyingAsset || '', network)?.toLowerCase();
     }
     const queryMarketsChart = useQuery({
