@@ -17,6 +17,7 @@ import {
     bigNumberToUnformattedString,
     convertStringFormatToNumber,
     nativeAmountToUSD,
+    PRICING_DECIMALS,
 } from '../utils';
 import { BigNumber, BigNumberish, Wallet, utils } from 'ethers';
 import {
@@ -171,7 +172,14 @@ export const useSupply = ({
                 const assetUSDPrice =
                     queryAssetPrices.data[assetSymbol as IAvailableCoins]?.usdPrice;
                 assetAmount = '$'.concat(
-                    String(nativeAmountToUSD(assetAmount, assetDecimals, assetUSDPrice)),
+                    String(
+                        nativeAmountToUSD(
+                            assetAmount,
+                            PRICING_DECIMALS[NETWORK],
+                            assetDecimals,
+                            assetUSDPrice,
+                        ),
+                    ),
                 );
             }
             return {
@@ -237,7 +245,12 @@ export const useSupply = ({
                 setEstimatedGasCost({
                     loading: false,
                     cost: `$${String(
-                        nativeAmountToUSD(res || 0, 18, queryAssetPrices.data?.WETH?.usdPrice || 0),
+                        nativeAmountToUSD(
+                            res || 0,
+                            PRICING_DECIMALS[NETWORK],
+                            18,
+                            queryAssetPrices.data?.WETH?.usdPrice || 0,
+                        ),
                     )}`,
                 });
             }

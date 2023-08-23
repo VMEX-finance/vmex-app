@@ -22,6 +22,7 @@ const MarketsCustomRow = (props: any) => {
         // rating,
         strategies,
         collateral,
+        borrowable,
     } = props;
     const navigate = useNavigate();
     const { width } = useWindowSize();
@@ -77,7 +78,7 @@ const MarketsCustomRow = (props: any) => {
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Borrow APY</span>
-                    <span>{borrowApy}</span>
+                    <span>{borrowable ? borrowApy : '-'}</span>
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Your Amount</span>
@@ -87,7 +88,7 @@ const MarketsCustomRow = (props: any) => {
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Borrowing Power</span>
-                    <span>{available}</span>
+                    <span>{borrowable ? available : '-'}</span>
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Supply</span>
@@ -95,7 +96,7 @@ const MarketsCustomRow = (props: any) => {
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Borrow</span>
-                    <span>{borrowTotal}</span>
+                    <span>{borrowable ? borrowTotal : '-'}</span>
                 </td>
                 {/* <td className="flex justify-between">
                     <span className="font-bold">Rating</span>
@@ -121,6 +122,7 @@ const MarketsCustomRow = (props: any) => {
                             left: handleActionClick,
                             right: handleActionClick,
                         }}
+                        disabled={{ right: !borrowable }}
                     />
                 </td>
             </tr>
@@ -137,13 +139,13 @@ const MarketsCustomRow = (props: any) => {
                 </td>
                 <td className="min-w-[150px] pl-4 py-4">{tranche}</td>
                 <td className="pl-4">{supplyApy}</td>
-                <td className="pl-4">{borrowApy}</td>
+                <td className="pl-4">{borrowable ? borrowApy : '-'}</td>
                 <td className={`pl-4 ${yourAmount.loading ? 'animate-pulse' : ''}`}>
                     {yourAmount.amount}
                 </td>
-                <td className="pl-4">{available}</td>
+                <td className="pl-4">{borrowable ? available : '-'}</td>
                 <td className="pl-4">{supplyTotal}</td>
-                <td className="pl-4">{borrowTotal}</td>
+                <td className="pl-4">{borrowable ? borrowTotal : '-'}</td>
                 {/* <td className="text-lg pl-4" style={{ color: determineRatingColor(rating) }}>
                     {rating}
                 </td> */}
@@ -166,6 +168,7 @@ const MarketsCustomRow = (props: any) => {
                             left: handleActionClick,
                             right: handleActionClick,
                         }}
+                        disabled={{ right: !borrowable }}
                     />
                 </td>
             </tr>

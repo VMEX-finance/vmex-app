@@ -18,7 +18,14 @@ import { TrancheStatsCard } from '../ui/features';
 import { CreateTrancheAssetsTable } from '../ui/tables';
 import { BigNumber, ethers } from 'ethers';
 import { configureExistingTranche, SetAddress } from '@vmexfinance/sdk';
-import { NETWORK, AVAILABLE_ASSETS, SDK_PARAMS, checkProfanity, nativeAmountToUSD } from '../utils';
+import {
+    NETWORK,
+    AVAILABLE_ASSETS,
+    SDK_PARAMS,
+    checkProfanity,
+    nativeAmountToUSD,
+    PRICING_DECIMALS,
+} from '../utils';
 import useAnalyticsEventTracker from '../utils/google-analytics';
 import { AssetBalance } from '@app/api/types';
 
@@ -47,6 +54,7 @@ const MyTranches: React.FC = () => {
                 asset: asset,
                 amount: nativeAmountToUSD(
                     ethers.utils.parseUnits(assetData[metric], assetData.decimals),
+                    PRICING_DECIMALS[NETWORK],
                     assetData.decimals,
                     assetData.priceUSD,
                 ).toString(),
@@ -370,12 +378,15 @@ const MyTranches: React.FC = () => {
                                                 <ListInput
                                                     title="Tokens"
                                                     list={_newTokens}
-                                                    autocomplete={AVAILABLE_ASSETS.filter((val) => {
-                                                        const tmp = getOriginalAndNewTokens();
-                                                        return (
-                                                            tmp && !(tmp as string[]).includes(val)
-                                                        );
-                                                    })}
+                                                    autocomplete={AVAILABLE_ASSETS[NETWORK].filter(
+                                                        (val: any) => {
+                                                            const tmp = getOriginalAndNewTokens();
+                                                            return (
+                                                                tmp &&
+                                                                !(tmp as string[]).includes(val)
+                                                            );
+                                                        },
+                                                    )}
                                                     setList={setNewTokens}
                                                     placeholder="USDC"
                                                     coin
