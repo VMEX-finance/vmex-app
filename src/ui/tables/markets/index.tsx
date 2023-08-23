@@ -25,7 +25,7 @@ interface ITableProps {
 export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivity }) => {
     const { isDark } = useContext(ThemeContext);
 
-    const renderYourAmount = (asset: string, trancheId: string) => {
+    const renderYourAmount = (asset: string, trancheId: number) => {
         let amount = 0;
         if (userActivity?.isLoading)
             return {
@@ -33,13 +33,14 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
                 loading: true,
             };
         userActivity?.data?.supplies.map((supply) => {
-            if (supply.asset === asset && supply.trancheId === trancheId)
+            if (supply.asset === asset && supply.trancheId == trancheId) {
                 amount =
                     amount +
                     parseFloat(bigNumberToUnformattedString(supply.amountNative, supply.asset));
+            }
         });
         userActivity?.data?.borrows.map((borrow) => {
-            if (borrow.asset === asset && borrow.trancheId === trancheId)
+            if (borrow.asset === asset && borrow.trancheId == trancheId)
                 amount =
                     amount -
                     parseFloat(bigNumberToUnformattedString(borrow.amountNative, borrow.asset));

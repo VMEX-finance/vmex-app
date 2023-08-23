@@ -12,7 +12,6 @@ import {
     rayToPercent,
     SDK_PARAMS,
     bigNumberToNative,
-    AVAILABLE_ASSETS,
     averageOfArr,
     PRICING_DECIMALS,
     NETWORK,
@@ -68,6 +67,7 @@ export async function getUserActivityData(userAddress: string): Promise<IUserAct
             // supplyCap: assetData.supplyCap,
         };
     });
+    console.log('supplies: ', supplies);
 
     const borrows = summary.borrowedAssetData.map((assetData: BorrowedAssetData) => {
         const apy = rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0));
