@@ -64,9 +64,9 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
             type === 'borrow'
                 ? queryUserTrancheData.data.borrows
                 : queryUserTrancheData.data.supplies
-        ).map((el) => el.asset);
+        ).map((el) => el.asset.toLowerCase());
 
-        return list.includes(asset) ? true : false;
+        return list.includes(asset.toLowerCase()) ? true : false;
     };
 
     const amountBorrwable = (asset: string) => {
