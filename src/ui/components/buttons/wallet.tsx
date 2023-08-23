@@ -9,6 +9,7 @@ import { truncateAddress, truncate } from '../../../utils/helpers';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSubgraphUserData } from '../../../api';
+import { useChainModal } from '@rainbow-me/rainbowkit';
 
 export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: IButtonProps) => {
     const { chain } = useNetwork();
@@ -24,12 +25,17 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
     }`;
     const queryClient = useQueryClient();
     const { queryTrancheAdminData } = useSubgraphUserData(address || '');
+    const { openChainModal } = useChainModal();
 
     const renderDropdownItems = () => {
         let final: IDropdownItemProps[] = [
             {
                 text: theme === 'light' ? 'Dark Mode' : 'Light Mode',
                 onClick: () => setTheme(theme === 'light' ? 'dark' : 'light'),
+            },
+            {
+                text: 'Switch Network',
+                onClick: openChainModal,
             },
             {
                 text: 'My Portfolio',
