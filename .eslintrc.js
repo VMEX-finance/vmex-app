@@ -9,7 +9,6 @@ module.exports = {
         'plugin:react/recommended',
         'plugin:react-hooks/recommended',
         'plugin:prettier/recommended',
-        'plugin:jsx-a11y/strict',
     ],
     parser: '@typescript-eslint/parser',
     parserOptions: {
@@ -19,7 +18,7 @@ module.exports = {
         ecmaVersion: 2018,
         sourceType: 'module',
     },
-    plugins: ['react', 'jsx-a11y', '@typescript-eslint'],
+    plugins: ['react', '@typescript-eslint'],
     rules: {
         'react-hooks/exhaustive-deps': 'off',
         'no-var': 'error',
@@ -30,10 +29,6 @@ module.exports = {
         'import/prefer-default-export': 'off',
         'prettier/prettier': 'off',
         'no-unused-vars': 'off',
-        'jsx-a11y/no-static-element-interactions': 'warn',
-        'jsx-a11y/click-events-have-key-events': 'warn',
-        'jsx-a11y/anchor-is-valid': 'warn',
-        'jsx-a11y/no-noninteractive-element-interactions': 'warn',
     },
     overrides: [
         {

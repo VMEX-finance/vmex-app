@@ -32,64 +32,6 @@
         "eject": "react-scripts eject",
         "prepare": "husky install"
     },
-    "dependencies": {
-        "@apollo/client": "^3.7.2",
-        "@emotion/react": "11.10.5",
-        "@emotion/styled": "11.10.5",
-        "@headlessui/react": "^1.6.6",
-        "@material-ui/core": "4.12.4",
-        "@material-ui/icons": "4.11.3",
-        "@mui/icons-material": "5.10.9",
-        "@mui/material": "^5.10.11",
-        "@rainbow-me/rainbowkit": "^0.8.0",
-        "@reduxjs/toolkit": "^1.8.3",
-        "@tailwindcss/forms": "^0.5.2",
-        "@tanstack/react-query": "^4.16.1",
-        "@tanstack/react-query-devtools": "^4.22.0",
-        "@testing-library/jest-dom": "^5.16.4",
-        "@testing-library/react": "^13.3.0",
-        "@testing-library/user-event": "^13.5.0",
-        "@types/jest": "^28.1.6",
-        "@types/mui-datatables": "^3.7.9",
-        "@types/node": "^18.0.5",
-        "@types/react": "^18.0.21",
-        "@types/react-dom": "^18.0.6",
-        "@vmexfinance/sdk": "^1.0.8",
-        "bad-words": "^3.0.4",
-        "ethers": "^5.6.9",
-        "flowbite": "^1.5.1",
-        "flowbite-react": "^0.1.3",
-        "graphql": "^16.6.0",
-        "lodash.merge": "^4.6.2",
-        "merkletreejs": "^0.3.10",
-        "moment": "^2.29.4",
-        "mui-datatables": "^4.2.2",
-        "next": "^12.0.9",
-        "next-seo": "^4.29.0",
-        "node-polyfill-webpack-plugin": "^2.0.1",
-        "path": "^0.12.7",
-        "postcss": "^8.4.14",
-        "postcss-scss": "^4.0.4",
-        "react": "^18.2.0",
-        "react-app-rewired": "^2.2.1",
-        "react-dom": "^18.2.0",
-        "react-ga": "^3.3.1",
-        "react-icons": "^4.4.0",
-        "react-minimal-pie-chart": "^8.3.0",
-        "react-redux": "^8.0.2",
-        "react-router-dom": "^6.3.0",
-        "react-scripts": "5.0.1",
-        "react-simple-captcha": "^9.0.2",
-        "react-toastify": "^9.1.1",
-        "react-tooltip": "^4.4.2",
-        "react-use": "^17.4.0",
-        "recharts": "^2.1.13",
-        "symlinked": "^0.5.0",
-        "tailwindcss": "^3.1.6",
-        "typescript": "^4.8.4",
-        "wagmi": "^0.8.10",
-        "web-vitals": "^2.1.4"
-    },
     "eslintConfig": {
         "extends": [
             "react-app",
@@ -118,12 +60,63 @@
             "last 1 safari version"
         ]
     },
+    "lint-staged": {
+        "*.{js,ts,tsx}": [
+            "eslint --quiet --fix"
+        ],
+        "*.{json,js,ts,jsx,tsx,html}": [
+            "prettier --check --write"
+        ]
+    },
+    "dependencies": {
+        "@apollo/client": "^3.7.2",
+        "@emotion/react": "11.10.5",
+        "@emotion/styled": "11.10.5",
+        "@headlessui/react": "^1.6.6",
+        "@mui/icons-material": "5.10.9",
+        "@mui/material": "^5.10.11",
+        "@rainbow-me/rainbowkit": "^0.8.0",
+        "@reduxjs/toolkit": "^1.8.3",
+        "@tanstack/react-query": "^4.16.1",
+        "@tanstack/react-query-devtools": "^4.22.0",
+        "@testing-library/jest-dom": "^5.16.4",
+        "@testing-library/react": "^13.3.0",
+        "@testing-library/user-event": "^13.5.0",
+        "@vmexfinance/sdk": "^1.0.8",
+        "bad-words": "^3.0.4",
+        "ethers": "^5.6.9",
+        "graphql": "^16.6.0",
+        "lodash.merge": "^4.6.2",
+        "merkletreejs": "^0.3.10",
+        "moment": "^2.29.4",
+        "mui-datatables": "^4.2.2",
+        "react": "^18.2.0",
+        "react-app-rewired": "^2.2.1",
+        "react-dom": "^18.2.0",
+        "react-ga": "^3.3.1",
+        "react-icons": "^4.4.0",
+        "react-redux": "^8.0.2",
+        "react-router-dom": "^6.3.0",
+        "react-scripts": "5.0.1",
+        "react-simple-captcha": "^9.0.2",
+        "react-toastify": "^9.1.1",
+        "react-tooltip": "^4.4.2",
+        "react-use": "^17.4.0",
+        "recharts": "^2.1.13",
+        "tailwindcss": "^3.1.6",
+        "typescript": "^4.8.4",
+        "wagmi": "^0.8.10"
+    },
     "devDependencies": {
         "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+        "@types/jest": "^29.5.4",
         "@types/lodash.merge": "^4.6.7",
+        "@types/mui-datatables": "^4.3.5",
+        "@types/node": "^20.5.3",
+        "@types/react": "^18.2.21",
+        "@types/react-dom": "^18.2.7",
         "@typescript-eslint/eslint-plugin": "^5.38.1",
         "@typescript-eslint/parser": "^5.38.1",
-        "assert": "^2.0.0",
         "babel-plugin-named-exports-order": "^0.0.2",
         "eslint": "^8.24.0",
         "eslint-config-prettier": "^8.5.0",
@@ -133,15 +126,6 @@
         "eslint-plugin-react-hooks": "^4.6.0",
         "husky": "^7.0.0",
         "lint-staged": "^13.0.3",
-        "prettier": "^2.7.1",
-        "webpack": "^5.73.0"
-    },
-    "lint-staged": {
-        "*.{js,ts,tsx}": [
-            "eslint --quiet --fix"
-        ],
-        "*.{json,js,ts,jsx,tsx,html}": [
-            "prettier --check --write"
-        ]
+        "prettier": "^2.7.1"
     }
 }
