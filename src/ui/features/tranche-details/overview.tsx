@@ -97,14 +97,6 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                                 : 'order-3 justify-around w-full'
                         } sm:px-4`}
                     >
-                        <NumberDisplay
-                            center
-                            size="xl"
-                            label="TVL"
-                            value={`${makeCompact(tvl, true)}`}
-                            change={tvlChange}
-                            loading={loading}
-                        />
                         {/* <NumberDisplay
                             center
                             size="xl"
@@ -113,20 +105,29 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                             change={tvlChange}
                             loading={loading}
                         /> */}
-                        <NumberDisplay
+                        {/* TODO: uncomment when collateral is fixed, or just keep it removed */}
+                        {/* <NumberDisplay
                             center
                             size="xl"
                             label="Collateral"
                             value={`${makeCompact(collateral, true)}`}
                             change={collateralChange}
                             loading={loading}
+                        /> */}
+                        <NumberDisplay
+                            center
+                            size="xl"
+                            label="Tranche Market Size"
+                            value={`${makeCompact(supplied, true)}`}
+                            change={supplyChange}
+                            loading={loading}
                         />
                         <NumberDisplay
                             center
                             size="xl"
-                            label="Supplied"
-                            value={`${makeCompact(supplied, true)}`}
-                            change={supplyChange}
+                            label="Available"
+                            value={`${makeCompact(tvl, true)}`}
+                            change={tvlChange}
                             loading={loading}
                         />
                         <NumberDisplay
