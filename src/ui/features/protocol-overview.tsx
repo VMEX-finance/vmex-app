@@ -61,7 +61,7 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                     <div className="flex flex-col justify-between min-w-[90%] xl:min-w-[300px]">
                         <NumberDisplay
                             size="xl"
-                            label="Total Value Locked (TVL)"
+                            label="Total Available"
                             value={tvl ? makeCompact(tvl, true) : '-'}
                             labelClass="text-2xl"
                             loading={isLoading}
@@ -120,7 +120,7 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                     <div className="flex flex-col gap-2">
                         <NumberDisplay
                             size="xl"
-                            label="Total Supplied"
+                            label="Total Market Size"
                             value={totalSupplied ? totalSupplied : '-'}
                             loading={isLoading}
                         />
