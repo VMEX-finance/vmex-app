@@ -115,7 +115,7 @@ export const TrancheStatsCard: React.FC<ITrancheStatsCardProps> = ({
                     <div className="flex flex-col gap-2">
                         <NumberDisplay
                             size="xl"
-                            label="Total Supplied"
+                            label="Total Market Size"
                             value={totalSupplied ? totalSupplied : '-'}
                             loading={isLoading}
                         />
