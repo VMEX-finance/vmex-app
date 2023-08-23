@@ -23,6 +23,7 @@ export function AuthStore(props: { children: ReactNode }) {
     const location = useLocation();
     const [isAuthenticated, setIsAuthenticated] = useLocalStorage('isAuthenticated', false);
     const [oldChain, setOldChain] = useState(network);
+    useSwitchNetwork(); // for some reason, it reloads page on chain change with this hook
 
     useEffect(() => {
         if (address) {
