@@ -2,7 +2,9 @@ import { BigNumber, BigNumberish, ethers } from 'ethers';
 import { usdFormatter, nativeTokenFormatter } from './helpers';
 import { convertAddressToSymbol } from '@vmexfinance/sdk';
 import { ITrancheCategories } from '@app/api';
-import { DECIMALS, NETWORK, PRICING_DECIMALS, SDK_PARAMS } from './constants';
+import { DECIMALS } from './constants';
+import { getNetwork } from '@wagmi/core';
+import { DEFAULT_NETWORK } from './network';
 
 export const bigNumberToUSD = (
     number: BigNumberish | undefined,
@@ -38,8 +40,9 @@ export const nativeAmountToUSD = (
 };
 
 export const bigNumberToNative = (number: BigNumber | undefined, asset: string): string => {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     if (!number) return '0';
-    const decimals = DECIMALS.get(convertAddressToSymbol(asset, SDK_PARAMS.network) || asset) || 18;
+    const decimals = DECIMALS.get(convertAddressToSymbol(asset, network) || asset) || 18;
     return nativeTokenFormatter.format(parseFloat(ethers.utils.formatUnits(number, decimals)));
 };
 
@@ -47,6 +50,7 @@ export const bigNumberToUnformattedString = (
     number: BigNumber | undefined,
     asset: string,
 ): string => {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     if (!number) {
         console.error('given invalid bignumber');
         return '0';
@@ -58,7 +62,7 @@ export const bigNumberToUnformattedString = (
 
     return ethers.utils.formatUnits(
         number,
-        DECIMALS.get(convertAddressToSymbol(asset, SDK_PARAMS.network) || asset) || 18,
+        DECIMALS.get(convertAddressToSymbol(asset, network) || asset) || 18,
     );
 };
 
@@ -66,6 +70,7 @@ export const unformattedStringToBigNumber = (
     number: string | undefined,
     asset: string,
 ): BigNumber => {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     if (!number) {
         console.error('given invalid number');
         return BigNumber.from('0');
@@ -74,7 +79,7 @@ export const unformattedStringToBigNumber = (
     try {
         return ethers.utils.parseUnits(
             number,
-            DECIMALS.get(convertAddressToSymbol(asset, SDK_PARAMS.network) || asset) || 18,
+            DECIMALS.get(convertAddressToSymbol(asset, network) || asset) || 18,
         );
     } catch {
         return BigNumber.from('0');

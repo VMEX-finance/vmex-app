@@ -1,16 +1,24 @@
 import { useQuery } from '@tanstack/react-query';
-import { NETWORK, PRICING_DECIMALS, USER_REWARDS_URL } from '../../utils/constants';
-import { DECIMALS, SDK_PARAMS, bigNumberToNative, nativeAmountToUSD } from '../../utils';
+import {
+    DECIMALS,
+    NETWORKS,
+    DEFAULT_NETWORK,
+    bigNumberToNative,
+    nativeAmountToUSD,
+    PRICING_DECIMALS,
+} from '../../utils';
 import { BigNumber } from 'ethers';
 import { convertAddressToSymbol } from '@vmexfinance/sdk';
+import { getNetwork } from '@wagmi/core';
 
 // Gets
 export async function getUserRewards(userAddress: string, assetPrices: any) {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     if (!userAddress) {
         return [];
     }
     const res = await (
-        await fetch(`${USER_REWARDS_URL['production']}/v1/user/rewards/${userAddress}`)
+        await fetch(`${NETWORKS[network].backend}/v1/user/rewards/${userAddress}`)
     ).json();
     if (res && assetPrices) {
         const priceMapping = new Map();
@@ -20,7 +28,7 @@ export async function getUserRewards(userAddress: string, assetPrices: any) {
 
         const formattedArr: any[] = [];
         for (let [key, value] of Object.entries(res)) {
-            const asset = convertAddressToSymbol(key, SDK_PARAMS.network) || key;
+            const asset = convertAddressToSymbol(key, network) || key;
             const decimals = DECIMALS.get(asset) || 18;
 
             const amountNative = bigNumberToNative(
@@ -29,7 +37,7 @@ export async function getUserRewards(userAddress: string, assetPrices: any) {
             );
             const amountUsd = nativeAmountToUSD(
                 BigNumber.from(`0x${(value as any).amount}`),
-                PRICING_DECIMALS[NETWORK],
+                PRICING_DECIMALS[network],
                 decimals,
                 priceMapping.get(asset) || BigNumber.from('0'),
             );

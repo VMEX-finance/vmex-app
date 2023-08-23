@@ -8,15 +8,16 @@ import {
     HFFormatter,
     calculateHealthFactorFromBalances,
     determineHealthColor,
-    NETWORK,
     PRICING_DECIMALS,
+    NETWORKS,
+    DEFAULT_NETWORK,
+    TESTING,
 } from '../../../utils';
 import { ethers } from 'ethers';
 import { useAccount } from 'wagmi';
 import { useLocation } from 'react-router-dom';
-import { SkeletonLoader, SpinnerLoader } from '../loaders';
-import { UseQueryResult } from '@tanstack/react-query';
-import { IUserTrancheData } from '@app/api/user/types';
+import { SkeletonLoader } from '../loaders';
+import { getNetwork } from '@wagmi/core';
 
 interface IHealthFactorProps {
     asset?: string;
@@ -81,6 +82,7 @@ export const HealthFactor = ({
     showInfo = true,
     loader = 'default',
 }: IHealthFactorProps) => {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const location = useLocation();
     const { address } = useAccount();
     const { tranche } = useSelectedTrancheContext();
@@ -112,7 +114,7 @@ export const HealthFactor = ({
 
         try {
             let ethAmount;
-            if (PRICING_DECIMALS[NETWORK] == 8) {
+            if (PRICING_DECIMALS[network] == 8) {
                 ethAmount = ethers.utils
                     .parseUnits(convertStringFormatToNumber(amount), d)
                     .mul(a.priceUSD)

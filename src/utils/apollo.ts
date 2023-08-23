@@ -1,5 +1,6 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client';
-import { SUBGRAPH_ENDPOINT } from './constants';
+import { DEFAULT_NETWORK, NETWORKS } from './network';
+import { getNetwork } from '@wagmi/core';
 
 const cache = new InMemoryCache({
     typePolicies: {
@@ -16,6 +17,6 @@ const cache = new InMemoryCache({
 });
 
 export const apolloClient = new ApolloClient({
-    uri: SUBGRAPH_ENDPOINT,
+    uri: NETWORKS[process.env.REACT_APP_NETWORK || DEFAULT_NETWORK].subgraph,
     cache: cache,
 });

@@ -5,8 +5,9 @@ import { Button, HealthFactor, TransactionStatus } from '../../components';
 import { useSigner } from 'wagmi';
 import { useModal } from '../../../hooks/modal';
 import { markReserveAsCollateral } from '@vmexfinance/sdk';
-import { DECIMALS, NETWORK, SDK_PARAMS } from '../../../utils';
+import { DECIMALS, DEFAULT_NETWORK, NETWORKS, TESTING } from '../../../utils';
 import { ethers } from 'ethers';
+import { getNetwork } from '@wagmi/core';
 
 export const ToggleCollateralDialog: React.FC<IDialogProps> = ({
     name,
@@ -16,6 +17,7 @@ export const ToggleCollateralDialog: React.FC<IDialogProps> = ({
 }) => {
     const { submitTx, isLoading, isSuccess, error } = useModal('confirmation-dialog');
     const { data: signer } = useSigner();
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
 
     const handleCollateral = async () => {
         if (signer) {
@@ -24,12 +26,12 @@ export const ToggleCollateralDialog: React.FC<IDialogProps> = ({
             await submitTx(async () => {
                 const res = await markReserveAsCollateral({
                     signer: signer,
-                    network: NETWORK,
+                    network,
                     asset: data.asset,
                     trancheId: data.trancheId,
                     useAsCollateral: !data.collateral,
-                    test: SDK_PARAMS.test,
-                    providerRpc: SDK_PARAMS.providerRpc,
+                    test: TESTING,
+                    providerRpc: NETWORKS[network].rpc,
                 });
                 if (data.setChecked) data.setChecked(newArr);
                 if (data.setCollateral && !data.setChecked) data.setCollateral(!data.collateral);

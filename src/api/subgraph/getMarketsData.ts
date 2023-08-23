@@ -2,18 +2,20 @@ import { gql } from '@apollo/client';
 import { useQuery } from '@tanstack/react-query';
 import { ISubgraphAllMarketsData, ISubgraphMarketsChart } from './types';
 import { ILineChartDataPointProps } from '@ui/components/charts';
-import { BigNumber, utils } from 'ethers';
+import { utils } from 'ethers';
 import { IMarketsAsset } from '../types';
 import { getAllAssetPrices } from '../prices';
 import {
     usdFormatter,
     apolloClient,
     nativeAmountToUSD,
-    NETWORK,
+    NETWORKS,
+    DEFAULT_NETWORK,
     PRICING_DECIMALS,
 } from '../../utils';
 import { convertSymbolToAddress } from '@vmexfinance/sdk';
 import { getReserveId } from './id-generation';
+import { getNetwork } from '@wagmi/core';
 
 export const getSubgraphMarketsChart = async (
     _trancheId: string | number,
@@ -111,6 +113,7 @@ export const getSubgraphAllMarketsData = async (): Promise<IMarketsAsset[]> => {
 
     if (error) return [];
     else {
+        const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
         const prices = await getAllAssetPrices();
 
         const returnObj: IMarketsAsset[] = [];
@@ -133,7 +136,7 @@ export const getSubgraphAllMarketsData = async (): Promise<IMarketsAsset[]> => {
                 available: usdFormatter().format(
                     nativeAmountToUSD(
                         reserve.availableLiquidity,
-                        PRICING_DECIMALS[NETWORK],
+                        PRICING_DECIMALS[network],
                         reserve.decimals,
                         assetUSDPrice,
                     ),
@@ -142,7 +145,7 @@ export const getSubgraphAllMarketsData = async (): Promise<IMarketsAsset[]> => {
                 supplyTotal: usdFormatter().format(
                     nativeAmountToUSD(
                         reserve.totalDeposits,
-                        PRICING_DECIMALS[NETWORK],
+                        PRICING_DECIMALS[network],
                         reserve.decimals,
                         assetUSDPrice,
                     ),
@@ -150,7 +153,7 @@ export const getSubgraphAllMarketsData = async (): Promise<IMarketsAsset[]> => {
                 borrowTotal: usdFormatter().format(
                     nativeAmountToUSD(
                         reserve.totalCurrentVariableDebt,
-                        PRICING_DECIMALS[NETWORK],
+                        PRICING_DECIMALS[network],
                         reserve.decimals,
                         assetUSDPrice,
                     ),
@@ -172,7 +175,8 @@ export function useSubgraphMarketsData(
 ): ISubgraphMarketsChart {
     let underlyingAsset: string = '';
     if (_underlyingAsset) {
-        underlyingAsset = convertSymbolToAddress(_underlyingAsset || '', NETWORK)?.toLowerCase();
+        const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+        underlyingAsset = convertSymbolToAddress(_underlyingAsset || '', network)?.toLowerCase();
     }
     const queryMarketsChart = useQuery({
         queryKey: [`markets-chart`, Number(_trancheId), _underlyingAsset],

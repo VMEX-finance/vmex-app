@@ -9,11 +9,13 @@ import { useAccount } from 'wagmi';
 import { useDialogController, useWindowSize } from '../../hooks';
 import { IDialogNames } from '@store/modals';
 import { useSubgraphUserData } from '../../api';
-import { EXPLORER_URLS, NETWORK } from '../../utils';
+import { NETWORKS, DEFAULT_NETWORK } from '../../utils';
+import { getNetwork } from '@wagmi/core';
 
 const navItems = ['Overview', 'Tranches', 'Markets', 'Governance', 'Develop'];
 
 export const Navbar: React.FC = () => {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const { isDark } = useContext(ThemeContext);
     const navigate = useNavigate();
     const location = useLocation();
@@ -82,7 +84,7 @@ export const Navbar: React.FC = () => {
                         <DefaultDropdown
                             reverse
                             items={transactions}
-                            baseLink={`${EXPLORER_URLS[NETWORK]}/tx`}
+                            baseLink={`${NETWORKS[network].explorer}/tx`}
                             selected={'Transactions'}
                             label={
                                 width < 1400 && (

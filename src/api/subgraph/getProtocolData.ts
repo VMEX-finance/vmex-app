@@ -7,13 +7,15 @@ import {
     usdFormatter,
     apolloClient,
     PRICING_DECIMALS,
-    NETWORK,
+    NETWORKS,
+    DEFAULT_NETWORK,
 } from '../../utils';
 import { getAllAssetPrices } from '../prices';
 import { AssetBalance, TrancheData } from '../types';
 import { IGraphProtocolDataProps, IGraphTrancheProps, ISubgraphProtocolData } from './types';
 import { getSubgraphTranchesOverviewData } from './getTranchesOverviewData';
 import { IAssetPricesProps } from '../prices/types';
+import { getNetwork } from '@wagmi/core';
 
 function subtractSeconds(date: Date, seconds: number): Date {
     date.setSeconds(date.getSeconds() - seconds);
@@ -53,6 +55,7 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
     });
     if (error) return [];
 
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     let graphData: ILineChartDataPointProps[] = [];
     const prices = await getAllAssetPrices();
     data.tranches.map((tranche: IGraphTrancheProps) => {
@@ -62,7 +65,7 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
             const assetUSDPrice = (prices as any)[asset]?.usdPrice || '0';
             const usdAmount = nativeAmountToUSD(
                 el.amount,
-                PRICING_DECIMALS[NETWORK],
+                PRICING_DECIMALS[network],
                 el.reserve.decimals,
                 assetUSDPrice,
             );
@@ -77,7 +80,7 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
             const usdAmount =
                 nativeAmountToUSD(
                     el.amount,
-                    PRICING_DECIMALS[NETWORK],
+                    PRICING_DECIMALS[network],
                     el.reserve.decimals,
                     assetUSDPrice,
                 ) * -1;
@@ -123,6 +126,7 @@ async function getTopAssets(
     });
     if (error) return [];
 
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     let prices: Record<IAvailableCoins, IAssetPricesProps>;
     if (_prices) prices = _prices;
     else prices = await getAllAssetPrices();
@@ -142,7 +146,7 @@ async function getTopAssets(
             const _assetUSDPrice = (prices as any)[_asset]?.usdPrice || '0';
             const _usdAmount = nativeAmountToUSD(
                 reserve.totalDeposits,
-                PRICING_DECIMALS[NETWORK],
+                PRICING_DECIMALS[network],
                 reserve.decimals,
                 _assetUSDPrice,
             );
@@ -168,7 +172,7 @@ async function getTopAssets(
             const _assetUSDPrice = (prices as any)[_asset]?.usdPrice || '0';
             const _usdAmount = nativeAmountToUSD(
                 reserve.totalCurrentVariableDebt,
-                PRICING_DECIMALS[NETWORK],
+                PRICING_DECIMALS[network],
                 reserve.decimals,
                 _assetUSDPrice,
             );

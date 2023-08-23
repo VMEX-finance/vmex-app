@@ -1,18 +1,21 @@
 import { gql } from '@apollo/client';
 import { useQuery } from '@tanstack/react-query';
-import { ISubgraphTranchesDataProps, ITrancheCategories } from './types';
+import { ISubgraphTranchesDataProps } from './types';
 import { ITrancheProps } from '../types';
 import { getAllAssetPrices } from '../prices';
 import {
     nativeAmountToUSD,
     apolloClient,
     getTrancheCategory,
-    NETWORK,
+    NETWORKS,
+    DEFAULT_NETWORK,
     PRICING_DECIMALS,
 } from '../../utils';
 import { getTrancheIdFromTrancheEntity } from './id-generation';
+import { getNetwork } from '@wagmi/core';
 
 export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]> => {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const { data, error } = await apolloClient.query({
         query: gql`
             query queryAllTranches {
@@ -77,7 +80,7 @@ export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]
                         trancheData.tvl +
                         nativeAmountToUSD(
                             item.availableLiquidity,
-                            PRICING_DECIMALS[NETWORK],
+                            PRICING_DECIMALS[network],
                             item.decimals,
                             assetUSDPrice,
                         ),
@@ -85,7 +88,7 @@ export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]
                         trancheData.supplyTotal +
                         nativeAmountToUSD(
                             item.totalDeposits,
-                            PRICING_DECIMALS[NETWORK],
+                            PRICING_DECIMALS[network],
                             item.decimals,
                             assetUSDPrice,
                         ),
@@ -93,7 +96,7 @@ export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]
                         trancheData.borrowTotal +
                         nativeAmountToUSD(
                             item.totalCurrentVariableDebt,
-                            PRICING_DECIMALS[NETWORK],
+                            PRICING_DECIMALS[network],
                             item.decimals,
                             assetUSDPrice,
                         ),

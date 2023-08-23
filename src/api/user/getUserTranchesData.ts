@@ -11,26 +11,29 @@ import { useQuery } from '@tanstack/react-query';
 import {
     bigNumberToUSD,
     rayToPercent,
-    SDK_PARAMS,
+    NETWORKS,
     bigNumberToUnformattedString,
     PRICING_DECIMALS,
-    NETWORK,
+    DEFAULT_NETWORK,
+    TESTING,
 } from '../../utils';
 import { IUserTrancheData, IUserTranchesDataProps } from './types';
 import { BigNumber } from 'ethers';
+import { getNetwork } from '@wagmi/core';
 
 export async function _getUserTranchesData(
     userAddress: string,
     trancheIds: number[],
 ): Promise<IUserTrancheData[]> {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     if (!userAddress) return [];
     let _trancheIds;
     if (trancheIds?.length === 0) {
         const summary = await getUserSummaryData({
             user: userAddress,
-            network: SDK_PARAMS.network,
-            test: SDK_PARAMS.test,
-            providerRpc: SDK_PARAMS.providerRpc,
+            network,
+            test: TESTING,
+            providerRpc: NETWORKS[network].rpc,
         });
 
         const tranchesInteractedWith = [...summary.borrowedAssetData, ...summary.suppliedAssetData]
@@ -51,9 +54,9 @@ export async function _getUserTranchesData(
             const userTrancheData: UserTrancheData = await getUserTrancheData({
                 tranche: String(id),
                 user: userAddress,
-                network: SDK_PARAMS.network,
-                test: SDK_PARAMS.test,
-                providerRpc: SDK_PARAMS.providerRpc,
+                network,
+                test: TESTING,
+                providerRpc: NETWORKS[network].rpc,
             });
 
             const returnObj = {
@@ -65,8 +68,8 @@ export async function _getUserTranchesData(
                 avgBorrowFactor: userTrancheData.avgBorrowFactor,
                 supplies: userTrancheData.suppliedAssetData.map((assetData: SuppliedAssetData) => {
                     return {
-                        asset: convertAddressToSymbol(assetData.asset, SDK_PARAMS.network),
-                        amount: bigNumberToUSD(assetData.amount, PRICING_DECIMALS[NETWORK]),
+                        asset: convertAddressToSymbol(assetData.asset, network),
+                        amount: bigNumberToUSD(assetData.amount, PRICING_DECIMALS[network]),
                         amountNative: assetData.amountNative,
                         collateral: assetData.isCollateral,
                         apy: rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0)),
@@ -76,8 +79,8 @@ export async function _getUserTranchesData(
                 }),
                 borrows: userTrancheData.borrowedAssetData.map((assetData: BorrowedAssetData) => {
                     return {
-                        asset: convertAddressToSymbol(assetData.asset, SDK_PARAMS.network),
-                        amount: bigNumberToUSD(assetData.amount, PRICING_DECIMALS[NETWORK]),
+                        asset: convertAddressToSymbol(assetData.asset, network),
+                        amount: bigNumberToUSD(assetData.amount, PRICING_DECIMALS[network]),
                         amountNative: assetData.amountNative,
                         apy: rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0)),
                         tranche: assetData.tranche.toString(),
@@ -86,12 +89,12 @@ export async function _getUserTranchesData(
                 }),
                 assetBorrowingPower: userTrancheData.assetBorrowingPower.map(
                     (marketData: AvailableBorrowData) => {
-                        let asset = convertAddressToSymbol(marketData.asset, SDK_PARAMS.network);
+                        let asset = convertAddressToSymbol(marketData.asset, network);
                         return {
                             asset: asset,
                             amountUSD: bigNumberToUSD(
                                 marketData.amountUSD,
-                                PRICING_DECIMALS[NETWORK],
+                                PRICING_DECIMALS[network],
                             ),
                             amountNative: marketData.amountNative,
                         };
