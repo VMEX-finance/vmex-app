@@ -60,7 +60,7 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
                 sort: true,
                 sortThirdClickReset: true,
                 filterOptions: {
-                    names: ['Yearn', 'Curve', 'Balancer', 'Velo'],
+                    names: ['Yearn', 'Curve', 'Beethoven', 'Velo', 'Base'],
                     logic: (location: any, filters: any, row: any) => {
                         if (filters.length) {
                             switch (filters[0].toLowerCase()) {
@@ -68,10 +68,17 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
                                     return !location.startsWith('yv');
                                 case 'curve':
                                     return !location.toLowerCase().includes('crv');
-                                case 'balancer':
+                                case 'beethoven':
                                     return !location.startsWith('BPT');
                                 case 'velo':
-                                    return !location.startsWith('v');
+                                    return !location.toLowerCase().includes('ammv2');
+                                case 'base':
+                                    return (
+                                        location.toLowerCase().includes('ammv2') ||
+                                        location.startsWith('yv') ||
+                                        location.toLowerCase().includes('crv') ||
+                                        location.startsWith('BPT')
+                                    );
                             }
                         }
                         return false;
