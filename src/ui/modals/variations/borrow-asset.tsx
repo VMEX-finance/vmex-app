@@ -25,6 +25,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
         amountRepay,
         isViolatingMax,
         isViolatingBorrowCap,
+        isViolatingMaxInWallet,
         apy,
         estimatedGasCost,
         handleClick,
@@ -83,9 +84,9 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                             message="Input amount is over the max"
                         />
                         <MessageStatus
-                            type="warning"
+                            type="error"
                             show={isViolatingBorrowCap()}
-                            message="WARNING: Attempting to borrow more than borrow cap"
+                            message="Attempting to borrow more than borrow cap"
                         />
 
                         <h3 className="mt-6 text-neutral400">Health Factor</h3>
@@ -139,6 +140,11 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                         show={isViolatingMax()}
                         message="Input amount is over the max"
                     />
+                    <MessageStatus
+                        type="error"
+                        show={isViolatingMaxInWallet()}
+                        message="Attempting to repay more than in wallet"
+                    />
 
                     <h3 className="mt-6 text-neutral400">Health Factor</h3>
                     <HealthFactor
@@ -169,6 +175,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                                 label: 'Estimated Gas',
                                 value: estimatedGasCost.cost,
                                 loading: estimatedGasCost.loading,
+                                error: estimatedGasCost.errorMessage,
                             },
                         ]}
                     />
