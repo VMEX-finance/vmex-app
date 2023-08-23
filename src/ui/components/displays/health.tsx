@@ -173,17 +173,6 @@ export const HealthFactor = ({
                     ethAmount.mul(a.borrowFactor),
                 );
             }
-            console.log('total collateral after calc: ', collateralAfter);
-            console.log('total debtAfter after calc: ', debtAfter);
-            console.log(
-                'total liquidationThresholdTimesCollateralAfter after calc: ',
-                liquidationThresholdTimesCollateralAfter,
-            );
-            console.log(
-                'total borrowFactorTimesDebtAfter after calc: ',
-                borrowFactorTimesDebtAfter,
-            );
-
             let healthFactorAfterDecrease = calculateHealthFactorFromBalances(
                 borrowFactorTimesDebtAfter,
                 liquidationThresholdTimesCollateralAfter, //they both have the same number of decimals
