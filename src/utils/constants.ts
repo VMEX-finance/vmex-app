@@ -1,7 +1,10 @@
 import { JsonRpcProvider } from '@ethersproject/providers';
 
 export const SUBGRAPH_ENDPOINT = process.env.REACT_APP_SUBGRAPH_ENDPOINT;
-export const USER_REWARDS_URL = 'https://dolphin-app-ajfiy.ondigitalocean.app';
+export const USER_REWARDS_URL = {
+    production: 'https://seal-app-bomfb.ondigitalocean.app/',
+    development: 'https://dolphin-app-ajfiy.ondigitalocean.app',
+};
 
 export const HEALTH = {
     GREAT: 5,
