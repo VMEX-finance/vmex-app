@@ -51,7 +51,11 @@ export const useSupply = ({
 
     const [asCollateral, setAsCollateral] = useState<any>(data?.collateral);
     const [existingSupplyCollateral, setExistingSupplyCollateral] = useState(false);
-    const [estimatedGasCost, setEstimatedGasCost] = useState({ cost: '0', loading: false });
+    const [estimatedGasCost, setEstimatedGasCost] = useState({
+        cost: '0',
+        loading: false,
+        errorMessage: '',
+    });
     const [asset, setAsset] = useState(data?.asset || '');
 
     const toggleEthWeth = () => {
@@ -219,40 +223,49 @@ export const useSupply = ({
         const getter = async () => {
             setEstimatedGasCost({ ...estimatedGasCost, loading: true });
             if (signer && data) {
-                let res;
-                if (view?.includes('Supply')) {
-                    res = await estimateGas({
-                        ...defaultFunctionParams,
-                        function: 'supply',
-                        underlying: asset,
-                    });
-                } else if (view?.includes('Claim')) {
-                    if (queryRewardsData.data) {
+                try {
+                    let res;
+                    if (view?.includes('Supply')) {
                         res = await estimateGas({
                             ...defaultFunctionParams,
-                            function: 'claimRewards',
-                            incentivizedAssets: getAllATokenAddresses(),
-                            to: await defaultFunctionParams.signer.getAddress(),
+                            function: 'supply',
+                            underlying: asset,
+                        });
+                    } else if (view?.includes('Claim')) {
+                        if (queryRewardsData.data) {
+                            res = await estimateGas({
+                                ...defaultFunctionParams,
+                                function: 'claimRewards',
+                                incentivizedAssets: getAllATokenAddresses(),
+                                to: await defaultFunctionParams.signer.getAddress(),
+                            });
+                        }
+                    } else {
+                        res = await estimateGas({
+                            ...defaultFunctionParams,
+                            function: 'withdraw',
+                            asset: asset,
                         });
                     }
-                } else {
-                    res = await estimateGas({
-                        ...defaultFunctionParams,
-                        function: 'withdraw',
-                        asset: asset,
+                    setEstimatedGasCost({
+                        loading: false,
+                        cost: `$${String(
+                            nativeAmountToUSD(
+                                res || 0,
+                                PRICING_DECIMALS[NETWORK],
+                                18,
+                                queryAssetPrices.data?.WETH?.usdPrice || 0,
+                            ),
+                        )}`,
+                        errorMessage: '',
+                    });
+                } catch (err: any) {
+                    setEstimatedGasCost({
+                        loading: false,
+                        cost: `$0`,
+                        errorMessage: err.toString(),
                     });
                 }
-                setEstimatedGasCost({
-                    loading: false,
-                    cost: `$${String(
-                        nativeAmountToUSD(
-                            res || 0,
-                            PRICING_DECIMALS[NETWORK],
-                            18,
-                            queryAssetPrices.data?.WETH?.usdPrice || 0,
-                        ),
-                    )}`,
-                });
             }
         };
         getter();

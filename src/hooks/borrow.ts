@@ -9,10 +9,11 @@ import {
     bigNumberToUSD,
     bigNumberToUnformattedString,
     convertStringFormatToNumber,
+    PRICING_DECIMALS,
 } from '../utils';
 import { borrow, estimateGas, repay } from '@vmexfinance/sdk';
 import { useAccount, useSigner } from 'wagmi';
-import { useSubgraphTrancheData, useUserTrancheData } from '../api';
+import { useSubgraphTrancheData, useUserData, useUserTrancheData } from '../api';
 
 export const useBorrow = ({
     data,
@@ -34,9 +35,15 @@ export const useBorrow = ({
         data?.trancheId || 0,
     );
     const { findAssetInMarketsData } = useSubgraphTrancheData(data?.trancheId || 0);
+    const { getTokenBalance } = useUserData(address);
 
-    const [estimatedGasCost, setEstimatedGasCost] = useState({ cost: '0', loading: false });
+    const [estimatedGasCost, setEstimatedGasCost] = useState({
+        cost: '0',
+        loading: false,
+        errorMessage: '',
+    });
     const [asset, setAsset] = useState(data?.asset || '');
+    const amountWalletNative = getTokenBalance(asset || '');
 
     const toggleEthWeth = () => {
         if (data?.asset.toLowerCase() === 'weth') {
@@ -107,6 +114,7 @@ export const useBorrow = ({
 
     const isViolatingMax = () => {
         if (asset && amount) {
+            console.log('control');
             if (amount.includes('.') && amount.split('.')[1].length > (DECIMALS.get(asset) || 18)) {
                 return true;
             } else {
@@ -114,6 +122,19 @@ export const useBorrow = ({
                 return inputAmount.gt(
                     view?.includes('Borrow') ? amountBorrwable.amountNative : amountRepay,
                 );
+            }
+        }
+        return false;
+    };
+
+    const isViolatingMaxInWallet = () => {
+        if (asset && amount) {
+            if (!amount || !view?.includes('Repay')) return false;
+            if (amount.includes('.') && amount.split('.')[1].length > (DECIMALS.get(asset) || 18)) {
+                return true;
+            } else {
+                const inputAmount = utils.parseUnits(amount, DECIMALS.get(asset));
+                return inputAmount.gt(amountWalletNative.amountNative);
             }
         }
         return false;
@@ -136,7 +157,8 @@ export const useBorrow = ({
             (view?.includes('Borrow') && amountBorrwable.amountNative.lt(10)) ||
             (view?.includes('Repay') && amountRepay.lt(10)) ||
             isViolatingBorrowCap() ||
-            isViolatingMax()
+            isViolatingMax() ||
+            isViolatingMaxInWallet()
         );
     };
 
@@ -148,21 +170,30 @@ export const useBorrow = ({
         const getter = async () => {
             setEstimatedGasCost({ ...estimatedGasCost, loading: true });
             if (signer && data) {
-                const res = view?.includes('Borrow')
-                    ? await estimateGas({
-                          ...defaultFunctionParams,
-                          function: 'borrow',
-                          underlying: asset,
-                      })
-                    : await estimateGas({
-                          ...defaultFunctionParams,
-                          function: 'repay',
-                          asset: asset,
-                      });
-                setEstimatedGasCost({
-                    cost: bigNumberToUSD(res, DECIMALS.get(asset) || 18),
-                    loading: false,
-                });
+                try {
+                    const res = view?.includes('Borrow')
+                        ? await estimateGas({
+                              ...defaultFunctionParams,
+                              function: 'borrow',
+                              underlying: asset,
+                          })
+                        : await estimateGas({
+                              ...defaultFunctionParams,
+                              function: 'repay',
+                              asset: asset,
+                          });
+                    setEstimatedGasCost({
+                        cost: bigNumberToUSD(res, PRICING_DECIMALS[NETWORK]),
+                        loading: false,
+                        errorMessage: '',
+                    });
+                } catch (err: any) {
+                    setEstimatedGasCost({
+                        cost: '0',
+                        loading: false,
+                        errorMessage: err.toString(),
+                    });
+                }
             }
         };
         getter();
@@ -173,6 +204,7 @@ export const useBorrow = ({
         amountRepay,
         isViolatingMax,
         isViolatingBorrowCap,
+        isViolatingMaxInWallet,
         apy,
         estimatedGasCost,
         handleClick,

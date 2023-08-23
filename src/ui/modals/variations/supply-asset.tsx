@@ -163,6 +163,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                                     label: 'Estimated Gas',
                                     value: estimatedGasCost.cost,
                                     loading: estimatedGasCost.loading,
+                                    error: estimatedGasCost.errorMessage,
                                 },
                             ]}
                         />
