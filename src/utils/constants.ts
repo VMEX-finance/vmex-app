@@ -2,7 +2,7 @@ import { JsonRpcProvider } from '@ethersproject/providers';
 
 export const SUBGRAPH_ENDPOINT = process.env.REACT_APP_SUBGRAPH_ENDPOINT;
 export const USER_REWARDS_URL = {
-    production: 'https://seal-app-bomfb.ondigitalocean.app/',
+    production: 'https://seal-app-bomfb.ondigitalocean.app',
     development: 'https://dolphin-app-ajfiy.ondigitalocean.app',
 };
 
