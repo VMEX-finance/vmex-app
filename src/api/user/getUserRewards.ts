@@ -9,7 +9,9 @@ export async function getUserRewards(userAddress: string, assetPrices: any) {
     if (!userAddress) {
         return [];
     }
-    const res = await (await fetch(`${USER_REWARDS_URL}/v1/user/rewards/${userAddress}`)).json();
+    const res = await (
+        await fetch(`${USER_REWARDS_URL['production']}/v1/user/rewards/${userAddress}`)
+    ).json();
     if (res && assetPrices) {
         const priceMapping = new Map();
         Object.keys(assetPrices).forEach((key) => {
