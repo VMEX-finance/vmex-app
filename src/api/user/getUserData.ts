@@ -154,7 +154,7 @@ export function useUserData(userAddress: any): IUserDataProps {
             };
         } else {
             const found = queryUserWallet.data.assets.find(
-                (el) => el.asset.toLowerCase() === asset.toLowerCase(),
+                (el) => el.asset?.toLowerCase() === asset?.toLowerCase(),
             );
             return {
                 amountNative: found?.amountNative || BigNumber.from('0'),

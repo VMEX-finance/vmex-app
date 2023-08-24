@@ -40,7 +40,7 @@ export const ReLineChart = (props: ILineChartProps) => {
     };
 
     const handleClick = (e: any) => {
-        const eventText = e.target.innerHTML.toLowerCase();
+        const eventText = e.target.innerHTML?.toLowerCase();
         setActive(eventText);
 
         const toDate = new Date();

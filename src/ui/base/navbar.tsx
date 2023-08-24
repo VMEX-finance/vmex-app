@@ -30,7 +30,7 @@ export const Navbar: React.FC = () => {
         if (typeof e === 'string') navigate(`../${e}`, { replace: false });
         else {
             e.preventDefault();
-            let value = e.target.innerText.toLowerCase();
+            let value = e.target.innerText?.toLowerCase();
             navigate(`../${value}`, { replace: false });
         }
     }
@@ -68,7 +68,7 @@ export const Navbar: React.FC = () => {
                                 <MenuItemButton
                                     key={item}
                                     label={item}
-                                    selected={location.pathname === `/${item.toLowerCase()}`}
+                                    selected={location.pathname === `/${item?.toLowerCase()}`}
                                     onClick={navigateTo}
                                 />
                             ))}

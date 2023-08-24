@@ -32,7 +32,7 @@ type VariableTokenBalanceItem = {
 };
 
 export const getUserAdminTrancheData = async (admin: string): Promise<IGraphTrancheDataProps[]> => {
-    admin = admin.toLowerCase();
+    admin = admin?.toLowerCase();
     const { data, error } = await getApolloClient().query({
         query: gql`
             query QueryTrancheAdmin($admin: String!) {
@@ -244,7 +244,7 @@ export const getSubgraphUserChart = async (
     address: string,
 ): Promise<ILineChartDataPointProps[]> => {
     if (!address) return [];
-    address = address.toLowerCase();
+    address = address?.toLowerCase();
     const { data, error } = await getApolloClient().query({
         query: gql`
             query QueryUserChart($address: String!) {
@@ -350,7 +350,7 @@ export const getSubgraphUserChart = async (
 
 export const getSubgraphUserData = async (address: string): Promise<IGraphUserDataProps> => {
     if (!address) return {};
-    address = address.toLowerCase();
+    address = address?.toLowerCase();
     const { data, error } = await getApolloClient().query({
         query: gql`
             query QueryUserData($address: String!) {
