@@ -137,7 +137,7 @@ export function useUserTrancheData(
                 type === 'supply'
                     ? queryUserTrancheData.data?.supplies
                     : queryUserTrancheData.data?.borrows;
-            return userData?.find((el) => el.asset.toLowerCase() === asset.toLowerCase());
+            return userData?.find((el) => el.asset?.toLowerCase() === asset?.toLowerCase());
         }
     };
 
@@ -154,7 +154,7 @@ export function useUserTrancheData(
             return (
                 rewardsData.find(
                     (el: VmexRewardsData) =>
-                        el.underlyingAssetAddress.toLowerCase() === assetAddress &&
+                        el.underlyingAssetAddress?.toLowerCase() === assetAddress &&
                         el.trancheId === trancheId &&
                         el.emissionsEndTimestamp > currentUnixTime,
                 ) !== undefined
@@ -177,7 +177,7 @@ export function useUserTrancheData(
         else {
             const userWalletData = queryUserTrancheData.data?.assetBorrowingPower;
             const found = userWalletData?.find(
-                (el) => el.asset.toLowerCase() === asset.toLowerCase(),
+                (el) => el.asset?.toLowerCase() === asset?.toLowerCase(),
             );
             if (found && liquidityNative && price && decimals) {
                 const liquidity = BigNumber.from(liquidityNative)

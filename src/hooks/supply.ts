@@ -62,8 +62,8 @@ export const useSupply = ({
     const [asset, setAsset] = useState(data?.asset || '');
 
     const toggleEthWeth = () => {
-        if (data?.asset.toLowerCase() === 'weth') {
-            if (asset.toLowerCase() === 'weth') setAsset('ETH');
+        if (data?.asset?.toLowerCase() === 'weth') {
+            if (asset?.toLowerCase() === 'weth') setAsset('ETH');
             else setAsset('WETH');
         }
     };
