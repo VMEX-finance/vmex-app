@@ -20,6 +20,7 @@ export interface ICoinInput {
     setIsMax: React.Dispatch<React.SetStateAction<boolean>>;
     loading?: boolean;
     customMaxClick?: any;
+    disabled?: boolean;
 }
 
 export const CoinInput = ({
@@ -96,13 +97,14 @@ export const CoinInput = ({
                         onChange={onChange}
                         className="text-2xl focus:outline-none max-w-[225px] dark:bg-brand-black overflow-auto dark:placeholder:text-neutral-700"
                         placeholder="0.00"
+                        disabled
                     />
                     <AssetDisplay logo={coin.logo} name={coin.name} />
                 </div>
                 <div className="flex flex-row justify-end items-end gap-3">
                     {/* TODO: add usd value */}
                     {/* <div className="text-neutral-400">{calculateUsd()} USD</div> */}
-                    <SecondaryButton onClick={onMaxButtonClick} loading={loading}>
+                    <SecondaryButton onClick={onMaxButtonClick} loading={loading} disabled>
                         <span>MAX</span>
                         <p>
                             {`${

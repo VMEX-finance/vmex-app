@@ -65,6 +65,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                 tabs={['Supply', 'Withdraw', 'Claim']}
                 onClick={setView}
                 active={view}
+                disabled={isLoading}
             />
             {view?.includes('Supply') ? (
                 !isSuccess && !error ? (
@@ -95,6 +96,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                             setIsMax={setIsMax}
                             loading={amountWalletNative.loading}
                             customMaxClick={maxOnClick}
+                            disabled={isLoading}
                         />
                         <MessageStatus
                             type="error"
@@ -117,7 +119,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                                     content={
                                         <BasicToggle
                                             checked={existingSupplyCollateral}
-                                            disabled={!data?.collateral}
+                                            disabled={!data?.collateral || isLoading}
                                             onClick={(e: any) => {
                                                 e.preventDefault();
                                                 openDialog('toggle-collateral-dialog', {
@@ -134,7 +136,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                                 <BasicToggle
                                     checked={asCollateral}
                                     onChange={() => setAsCollateral(!asCollateral)}
-                                    disabled={!data?.collateral}
+                                    disabled={!data?.collateral || isLoading}
                                 />
                             )}
                         </div>
