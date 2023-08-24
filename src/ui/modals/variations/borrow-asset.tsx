@@ -55,6 +55,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                 tabs={['Borrow', 'Repay']}
                 onClick={setView}
                 active={view}
+                disabled={isLoading}
             />
             {view?.includes('Borrow') ? (
                 !isSuccess && !error ? (
@@ -77,6 +78,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                             setIsMax={setIsMax}
                             loading={amountBorrwable.loading}
                             customMaxClick={maxOnClick}
+                            disabled={isLoading}
                         />
                         <MessageStatus
                             type="error"
