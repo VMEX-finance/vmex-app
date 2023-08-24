@@ -25,10 +25,10 @@ Then, inside the VMEX monorepo, run:
 Then, in the VMEX App repo, run:
 
 ```bash
-yarn start
+yarn dev
 ```
 
-_Note: Make sure your Metamask network is set to localhost:8545 with a chain ID 31337 and reset your MetaMask account if needed_
+_Note: Make sure your Metamask network is set to localhost:8545 with a chain ID 31337 and reset your MetaMask account for using the hardhat network_
 
 When adding new features, create a new branch based on `origin/develop`. Upon completing new features, create pull requests to `origin/develop`.
 
