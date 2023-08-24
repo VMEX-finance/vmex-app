@@ -1,15 +1,17 @@
 import { useQuery } from '@tanstack/react-query';
-import { USER_REWARDS_URL } from '../../utils/constants';
 import { nativeTokenFormatter } from '../../utils';
 import { formatUnits } from 'ethers/lib/utils.js';
+import { NETWORKS, DEFAULT_NETWORK } from '../../utils';
+import { getNetwork } from '@wagmi/core';
 
 // Gets
 export async function getUserRewards(userAddress: string) {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     if (!userAddress) {
         return [];
     }
     const res = await (
-        await fetch(`${USER_REWARDS_URL['production']}/v1/user/rewards/${userAddress}`)
+        await fetch(`${NETWORKS[network].backend}/v1/user/rewards/${userAddress}`)
     ).json();
     const formattedArr: any[] = [];
     for (const token in res) {

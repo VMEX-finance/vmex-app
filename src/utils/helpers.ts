@@ -278,3 +278,5 @@ export function addMissingDatesToTimeseries(
     });
     return finalDataPoints;
 }
+
+export const getRandomNumber = (number?: number) => Math.floor(Math.random() * (number || 100000));

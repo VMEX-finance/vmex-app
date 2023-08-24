@@ -1,10 +1,4 @@
-import { JsonRpcProvider } from '@ethersproject/providers';
-
-export const SUBGRAPH_ENDPOINT = process.env.REACT_APP_SUBGRAPH_ENDPOINT;
-export const USER_REWARDS_URL = {
-    production: 'https://seal-app-bomfb.ondigitalocean.app',
-    development: 'https://dolphin-app-ajfiy.ondigitalocean.app',
-};
+export const TESTING = process.env.REACT_APP_TEST ? true : false;
 
 export const HEALTH = {
     GREAT: 5,
@@ -12,14 +6,6 @@ export const HEALTH = {
     OKAY: 2,
     BAD: 1.5,
     DEAD: 1,
-};
-
-export const EXPLORER_URLS: any = {
-    optimism: 'https://optimistic.etherscan.io',
-    mainnet: 'https://etherscan.io',
-    sepolia: 'https://sepolia.etherscan.io',
-    goerli: 'https://goerli.etherscan.io',
-    arbitrum: 'https://arbiscan.io',
 };
 
 export const TIMER_CLOSE_DELAY = 1500;
@@ -94,15 +80,6 @@ export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
 export const MAX_UINT_AMOUNT =
     '115792089237316195423570985008687907853269984665640564039457584007913129639935';
-
-export const NETWORK = process.env.REACT_APP_NETWORK ? process.env.REACT_APP_NETWORK : 'optimism';
-
-export const SDK_PARAMS = {
-    network: NETWORK,
-    test: process.env.REACT_APP_TEST === 'true' ? true : false,
-    providerRpc: process.env.REACT_APP_RPC,
-    signer: new JsonRpcProvider(process.env.REACT_APP_RPC).getSigner(),
-};
 
 export const PRICING_DECIMALS: any = {
     optimism: 8,

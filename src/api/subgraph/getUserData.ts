@@ -4,8 +4,15 @@ import { IGraphUserDataProps, ISubgraphUserData, IGraphTrancheDataProps } from '
 import { ILineChartDataPointProps } from '@ui/components/charts';
 import { BigNumber, ethers } from 'ethers';
 import { getAllAssetPrices } from '../prices';
-import { nativeAmountToUSD, apolloClient, PRICING_DECIMALS, NETWORK } from '../../utils';
+import {
+    nativeAmountToUSD,
+    getApolloClient,
+    PRICING_DECIMALS,
+    NETWORKS,
+    DEFAULT_NETWORK,
+} from '../../utils';
 import { processTrancheData } from './getTrancheData';
+import { getNetwork } from '@wagmi/core';
 
 type IncrementalChangeItem = {
     timestamp: number;
@@ -26,7 +33,7 @@ type VariableTokenBalanceItem = {
 
 export const getUserAdminTrancheData = async (admin: string): Promise<IGraphTrancheDataProps[]> => {
     admin = admin.toLowerCase();
-    const { data, error } = await apolloClient.query({
+    const { data, error } = await getApolloClient().query({
         query: gql`
             query QueryTrancheAdmin($admin: String!) {
                 user(id: $admin) {
@@ -114,13 +121,14 @@ const calculateInterestProfit = (
     decimals: number,
     assetUSDPrice: BigNumber,
 ): number => {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const incrementalInterestProfit = BigNumber.from(aTokenBalanceItem.index)
         .sub(BigNumber.from(prevATokenBalanceItem.index))
         .mul(BigNumber.from(prevATokenBalanceItem.scaledATokenBalance))
         .div(ethers.utils.parseUnits('1', 27)); // index is in ray, which has 27 decimals
     return nativeAmountToUSD(
         incrementalInterestProfit,
-        PRICING_DECIMALS[NETWORK],
+        PRICING_DECIMALS[network],
         decimals,
         assetUSDPrice,
     );
@@ -132,13 +140,14 @@ const calculateInterestLoss = (
     decimals: number,
     assetUSDPrice: BigNumber,
 ): number => {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const incrementalInterestLoss = BigNumber.from(variableTokenBalanceItem.index)
         .sub(BigNumber.from(prevVariableTokenBalanceItem.index))
         .mul(BigNumber.from(prevVariableTokenBalanceItem.scaledVariableDebt))
         .div(ethers.utils.parseUnits('1', 27));
     return nativeAmountToUSD(
         incrementalInterestLoss,
-        PRICING_DECIMALS[NETWORK],
+        PRICING_DECIMALS[network],
         decimals,
         assetUSDPrice,
     );
@@ -236,7 +245,7 @@ export const getSubgraphUserChart = async (
 ): Promise<ILineChartDataPointProps[]> => {
     if (!address) return [];
     address = address.toLowerCase();
-    const { data, error } = await apolloClient.query({
+    const { data, error } = await getApolloClient().query({
         query: gql`
             query QueryUserChart($address: String!) {
                 user(id: $address) {
@@ -342,7 +351,7 @@ export const getSubgraphUserChart = async (
 export const getSubgraphUserData = async (address: string): Promise<IGraphUserDataProps> => {
     if (!address) return {};
     address = address.toLowerCase();
-    const { data, error } = await apolloClient.query({
+    const { data, error } = await getApolloClient().query({
         query: gql`
             query QueryUserData($address: String!) {
                 user(id: $address) {

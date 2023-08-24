@@ -12,20 +12,23 @@ import { useQuery } from '@tanstack/react-query';
 import {
     bigNumberToUSD,
     rayToPercent,
-    SDK_PARAMS,
+    DEFAULT_NETWORK,
     bigNumberToUnformattedString,
     PRICING_DECIMALS,
-    NETWORK,
+    NETWORKS,
+    TESTING,
 } from '../../utils';
 import { IUserTrancheDataProps, IUserTrancheData } from './types';
 import { BigNumber, ethers } from 'ethers';
 import { getSubgraphRewardData } from '../subgraph/getRewardsData';
 import { VmexRewardsData } from '../types';
+import { getNetwork } from '@wagmi/core';
 
 export async function _getUserTrancheData(
     userAddress: string,
     _trancheId: number | string,
 ): Promise<IUserTrancheData> {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const trancheId = String(_trancheId);
     if (!userAddress || !trancheId) {
         return {
@@ -44,9 +47,9 @@ export async function _getUserTrancheData(
     const userTrancheData: UserTrancheData = await getUserTrancheData({
         tranche: trancheId,
         user: userAddress,
-        network: SDK_PARAMS.network,
-        test: SDK_PARAMS.test,
-        providerRpc: SDK_PARAMS.providerRpc,
+        network,
+        test: TESTING,
+        providerRpc: NETWORKS[network].rpc,
     });
 
     const returnObj = {
@@ -58,8 +61,8 @@ export async function _getUserTrancheData(
         avgBorrowFactor: userTrancheData.avgBorrowFactor,
         supplies: userTrancheData.suppliedAssetData.map((assetData: SuppliedAssetData) => {
             return {
-                asset: convertAddressToSymbol(assetData.asset, SDK_PARAMS.network),
-                amount: bigNumberToUSD(assetData.amount, PRICING_DECIMALS[NETWORK]),
+                asset: convertAddressToSymbol(assetData.asset, network),
+                amount: bigNumberToUSD(assetData.amount, PRICING_DECIMALS[network]),
                 amountNative: assetData.amountNative,
                 collateral: assetData.isCollateral,
                 apy: rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0)),
@@ -69,8 +72,8 @@ export async function _getUserTrancheData(
         }),
         borrows: userTrancheData.borrowedAssetData.map((assetData: BorrowedAssetData) => {
             return {
-                asset: convertAddressToSymbol(assetData.asset, SDK_PARAMS.network),
-                amount: bigNumberToUSD(assetData.amount, PRICING_DECIMALS[NETWORK]),
+                asset: convertAddressToSymbol(assetData.asset, network),
+                amount: bigNumberToUSD(assetData.amount, PRICING_DECIMALS[network]),
                 amountNative: assetData.amountNative,
                 apy: rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0)),
                 tranche: assetData.tranche.toString(),
@@ -79,10 +82,10 @@ export async function _getUserTrancheData(
         }),
         assetBorrowingPower: userTrancheData.assetBorrowingPower.map(
             (marketData: AvailableBorrowData) => {
-                let asset = convertAddressToSymbol(marketData.asset, SDK_PARAMS.network);
+                let asset = convertAddressToSymbol(marketData.asset, network);
                 return {
                     asset: asset,
-                    amountUSD: bigNumberToUSD(marketData.amountUSD, PRICING_DECIMALS[NETWORK]),
+                    amountUSD: bigNumberToUSD(marketData.amountUSD, PRICING_DECIMALS[network]),
                     amountNative: marketData.amountNative,
                 };
             },
@@ -95,6 +98,7 @@ export function useUserTrancheData(
     userAddress: any,
     trancheId: number | string,
 ): IUserTrancheDataProps {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const queryUserTrancheData = useQuery({
         queryKey: ['user-tranche', Number(trancheId)],
         queryFn: () => _getUserTrancheData(userAddress, trancheId),
@@ -116,9 +120,9 @@ export function useUserTrancheData(
                     queryRewardsData.data?.map<string>((el: VmexRewardsData): string => {
                         return el.aTokenAddress;
                     }) || [],
-                network: SDK_PARAMS.network,
-                test: SDK_PARAMS.test,
-                providerRpc: SDK_PARAMS.providerRpc,
+                network,
+                test: TESTING,
+                providerRpc: NETWORKS[network].rpc,
             }),
         refetchOnMount: true,
     });
@@ -145,7 +149,7 @@ export function useUserTrancheData(
         if (queryRewardsData.isLoading || !asset || !trancheId || type === 'borrow') return false;
         else {
             const rewardsData = queryRewardsData.data || [];
-            const assetAddress = convertSymbolToAddress(asset, SDK_PARAMS.network)?.toLowerCase();
+            const assetAddress = convertSymbolToAddress(asset, network)?.toLowerCase();
             const currentUnixTime = Date.now() / 1000;
             return (
                 rewardsData.find(
@@ -178,7 +182,7 @@ export function useUserTrancheData(
             if (found && liquidityNative && price && decimals) {
                 const liquidity = BigNumber.from(liquidityNative)
                     .mul(price)
-                    .div(ethers.utils.parseUnits('1', PRICING_DECIMALS[NETWORK]));
+                    .div(ethers.utils.parseUnits('1', PRICING_DECIMALS[network]));
                 const amountUsd = found?.amountNative.lt(liquidityNative)
                     ? found?.amountUSD
                     : bigNumberToUSD(liquidity.toString(), Number(decimals));
