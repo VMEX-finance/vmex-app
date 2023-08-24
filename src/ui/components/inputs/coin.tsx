@@ -33,6 +33,7 @@ export const CoinInput = ({
     setIsMax,
     loading,
     customMaxClick,
+    disabled,
 }: ICoinInput) => {
     const { data: signer } = useSigner();
     const { prices } = usePricesData();
@@ -87,6 +88,8 @@ export const CoinInput = ({
         }
     };
 
+    console.log('disabled: ', disabled);
+
     return (
         <>
             <div className="w-full flex flex-col justify-between mt-1 rounded-xl border border-neutral-300 dark:border-neutral-700 p-2 gap-3">
@@ -97,14 +100,18 @@ export const CoinInput = ({
                         onChange={onChange}
                         className="text-2xl focus:outline-none max-w-[225px] dark:bg-brand-black overflow-auto dark:placeholder:text-neutral-700"
                         placeholder="0.00"
-                        disabled
+                        disabled={disabled}
                     />
                     <AssetDisplay logo={coin.logo} name={coin.name} />
                 </div>
                 <div className="flex flex-row justify-end items-end gap-3">
                     {/* TODO: add usd value */}
                     {/* <div className="text-neutral-400">{calculateUsd()} USD</div> */}
-                    <SecondaryButton onClick={onMaxButtonClick} loading={loading} disabled>
+                    <SecondaryButton
+                        onClick={onMaxButtonClick}
+                        loading={loading}
+                        disabled={disabled}
+                    >
                         <span>MAX</span>
                         <p>
                             {`${
