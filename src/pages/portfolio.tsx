@@ -10,7 +10,6 @@ import { useSubgraphUserData } from '../api/subgraph';
 import { averageOfArr, numberFormatter } from '../utils/helpers';
 import { useNavigate } from 'react-router-dom';
 import useAnalyticsEventTracker from '../utils/google-analytics';
-import { usePricesData } from '../api/prices';
 
 const Portfolio: React.FC = () => {
     const gaEventTracker = useAnalyticsEventTracker('Portfolio');
@@ -21,8 +20,7 @@ const Portfolio: React.FC = () => {
     const { queryUserActivity } = useUserData(address);
     const { queryUserPnlChart } = useSubgraphUserData(address);
     const { queryUserTranchesData } = useUserTranchesData(address);
-    const { prices } = usePricesData();
-    const { queryUserRewards } = useUserRewards(address, prices);
+    const { queryUserRewards } = useUserRewards(address);
 
     const calculateNetworth = () => {
         let sum = 0;
@@ -145,6 +143,7 @@ const Portfolio: React.FC = () => {
                         <YourRewardsTable
                             data={queryUserRewards.data || []}
                             isLoading={queryUserRewards.isLoading}
+                            address={address}
                         />
                     </div>
                 </GridView>
