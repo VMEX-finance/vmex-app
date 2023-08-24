@@ -14,9 +14,10 @@ import {
     braveWallet,
 } from '@rainbow-me/rainbowkit/wallets';
 import merge from 'lodash.merge';
+import { TESTING } from './constants';
 
 const determineChains = () => {
-    if (process.env.REACT_APP_TEST) return [chain.optimism, chain.sepolia, chain.hardhat];
+    if (TESTING) return [chain.optimism, chain.sepolia, chain.hardhat];
     else return [chain.optimism, chain.sepolia];
 };
 

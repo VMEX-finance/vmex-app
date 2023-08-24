@@ -76,7 +76,7 @@ export const CoinInput = ({
     };
 
     const mint = async () => {
-        if (!process.env.REACT_APP_TEST) return;
+        if (!TESTING) return;
         if (signer && coin) {
             const res = await mintTokens({
                 token: coin.name,
@@ -126,7 +126,7 @@ export const CoinInput = ({
                     </SecondaryButton>
                 </div>
             </div>
-            {process.env.REACT_APP_TEST && (
+            {TESTING && (
                 <div className="mt-2 flex justify-end">
                     <Button
                         primary
