@@ -1,16 +1,17 @@
-import { EXPLORER_URLS, truncateAddress, NETWORK } from '../../../utils';
+import { NETWORKS, DEFAULT_NETWORK, truncateAddress } from '../../../utils';
 import React from 'react';
 import { Card, MultipleAssetsDisplay, NumberDisplay } from '../../components';
 import { useSelectedTrancheContext } from '../../../store';
 import { IGraphTrancheDataProps } from '../../../api/subgraph/types';
+import { getNetwork } from '@wagmi/core';
 
-console.log('network', NETWORK);
 type ITrancheInfoCard = {
     tranche?: IGraphTrancheDataProps;
     loading?: boolean;
 };
 
 export const TrancheInfoCard = ({ tranche, loading }: ITrancheInfoCard) => {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const { tranche: _tranche } = useSelectedTrancheContext();
 
     return (
@@ -53,7 +54,7 @@ export const TrancheInfoCard = ({ tranche, loading }: ITrancheInfoCard) => {
                         label="Admin"
                         value={
                             <a
-                                href={`${EXPLORER_URLS[NETWORK]}/address/${
+                                href={`${NETWORKS[network].explorer}/address/${
                                     tranche?.admin || _tranche?.admin
                                 }`}
                                 target="_blank"

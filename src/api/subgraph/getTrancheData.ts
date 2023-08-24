@@ -6,17 +6,19 @@ import { getAllAssetPrices } from '../prices';
 import {
     usdFormatter,
     percentFormatter,
-    apolloClient,
+    getApolloClient,
     nativeAmountToUSD,
     weightedAverageofArr,
     MAX_UINT_AMOUNT,
     IAvailableCoins,
     getTrancheCategory,
     PRICING_DECIMALS,
-    NETWORK,
+    NETWORKS,
+    DEFAULT_NETWORK,
 } from '../../utils';
 import { ILineChartDataPointProps } from '../../ui/components';
 import { getTrancheId } from './id-generation';
+import { getNetwork } from '@wagmi/core';
 
 const useCustomRiskParams = (isVerified: boolean, item: any) => {
     return isVerified && item.borrowFactor !== '0';
@@ -27,6 +29,7 @@ export const processTrancheData = async (
     trancheId?: string,
     globalAdmin?: string,
 ): Promise<IGraphTrancheDataProps> => {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const assets = data?.reserves;
     const isVerified = data?.isVerified || false;
     const prices = await getAllAssetPrices();
@@ -106,7 +109,7 @@ export const processTrancheData = async (
                     obj.tvl +
                     nativeAmountToUSD(
                         item.availableLiquidity,
-                        PRICING_DECIMALS[NETWORK],
+                        PRICING_DECIMALS[network],
                         item.decimals,
                         assetUSDPrice,
                     ),
@@ -114,7 +117,7 @@ export const processTrancheData = async (
                     obj.supplyTotal +
                     nativeAmountToUSD(
                         item.totalDeposits,
-                        PRICING_DECIMALS[NETWORK],
+                        PRICING_DECIMALS[network],
                         item.decimals,
                         assetUSDPrice,
                     ),
@@ -122,7 +125,7 @@ export const processTrancheData = async (
                     obj.borrowTotal +
                     nativeAmountToUSD(
                         item.totalCurrentVariableDebt,
-                        PRICING_DECIMALS[NETWORK],
+                        PRICING_DECIMALS[network],
                         item.decimals,
                         assetUSDPrice,
                     ),
@@ -130,7 +133,7 @@ export const processTrancheData = async (
                     obj.collateralTotal +
                     nativeAmountToUSD(
                         item.totalLiquidityAsCollateral,
-                        PRICING_DECIMALS[NETWORK],
+                        PRICING_DECIMALS[network],
                         item.decimals,
                         assetUSDPrice,
                     ),
@@ -201,7 +204,7 @@ export const getSubgraphTrancheData = async (
     if (!_trancheId) return {};
 
     const trancheId = getTrancheId(String(_trancheId));
-    const { data, error } = await apolloClient.query({
+    const { data, error } = await getApolloClient().query({
         query: gql`
             query QueryTranche($trancheId: String!) {
                 tranche(id: $trancheId) {
@@ -274,9 +277,9 @@ export const getSubgraphTrancheChart = async (
     _trancheId: number,
 ): Promise<ILineChartDataPointProps[] | any> => {
     if (!_trancheId) return {};
-
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const trancheId = getTrancheId(String(_trancheId));
-    const { data, error } = await apolloClient.query({
+    const { data, error } = await getApolloClient().query({
         query: gql`
             query QueryTrancheChart($trancheId: String!) {
                 tranche(id: $trancheId) {
@@ -324,7 +327,7 @@ export const getSubgraphTrancheChart = async (
             const assetUSDPrice = (prices as any)[asset]?.usdPrice;
             const usdAmount = nativeAmountToUSD(
                 el.amount,
-                PRICING_DECIMALS[NETWORK],
+                PRICING_DECIMALS[network],
                 el.reserve.decimals,
                 assetUSDPrice,
             );
@@ -351,7 +354,7 @@ export const getSubgraphTrancheChart = async (
             const assetUSDPrice = (prices as any)[asset]?.usdPrice;
             const usdAmount = nativeAmountToUSD(
                 el.amount,
-                PRICING_DECIMALS[NETWORK],
+                PRICING_DECIMALS[network],
                 el.reserve.decimals,
                 assetUSDPrice,
             );

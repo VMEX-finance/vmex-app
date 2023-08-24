@@ -1,4 +1,4 @@
-import { determineCoinDescription, determineCoinImg } from '../../../utils/helpers';
+import { determineCoinDescription, determineCoinImg, getRandomNumber } from '../../../utils';
 import React from 'react';
 import { MultipleAssetsDisplayOverlapping } from './multi-asset';
 import { Tooltip } from '../tooltips';
@@ -55,12 +55,15 @@ export const renderAsset = (
             origAssetName: asset,
         })
     ) : (
-        <Tooltip text={determineCoinDescription(asset)}>
+        <Tooltip
+            text={determineCoinDescription(asset)}
+            key={`tooltip-render-asset-${key || i || asset}-${getRandomNumber()}`}
+        >
             <img
-                key={`render-asset-${key || i || asset}`}
                 src={determineCoinImg(asset, custom)}
                 alt={asset}
                 className={`${size ? size : 'h-8 w-8'}`}
+                key={`render-asset-${key || i || asset}-${getRandomNumber()}`}
             />
         </Tooltip>
     );
