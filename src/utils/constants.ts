@@ -123,6 +123,7 @@ export const DECIMALS = new Map<string, number>([
     ['REN', 18],
     ['SNX', 18],
     ['SUSD', 18],
+    ['sUSD', 18],
     ['TUSD', 18],
     ['UNI', 18],
     ['USDC', 6],
