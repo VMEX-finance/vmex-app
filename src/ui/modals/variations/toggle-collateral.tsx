@@ -5,7 +5,8 @@ import { Button, HealthFactor, TransactionStatus } from '../../components';
 import { useSigner } from 'wagmi';
 import { useModal } from '../../../hooks/modal';
 import { markReserveAsCollateral } from '@vmexfinance/sdk';
-import { NETWORK, SDK_PARAMS } from '../../../utils';
+import { DECIMALS, NETWORK, SDK_PARAMS } from '../../../utils';
+import { ethers } from 'ethers';
 
 export const ToggleCollateralDialog: React.FC<IDialogProps> = ({
     name,
@@ -61,8 +62,12 @@ export const ToggleCollateralDialog: React.FC<IDialogProps> = ({
                             <HealthFactor
                                 asset={data.asset}
                                 trancheId={data?.trancheId}
-                                type={'no collateral'}
-                                withChange={false}
+                                amount={ethers.utils.formatUnits(
+                                    data.amountNative,
+                                    DECIMALS.get(data.asset),
+                                )}
+                                type={data.collateral ? 'disable collateral' : 'enable collateral'}
+                                withChange={true}
                                 center
                                 size="lg"
                             />
