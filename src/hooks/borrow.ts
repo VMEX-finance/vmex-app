@@ -186,7 +186,7 @@ export const useBorrow = ({
                               asset: asset,
                           });
                     setEstimatedGasCost({
-                        cost: bigNumberToUSD(res, PRICING_DECIMALS[NETWORK]),
+                        cost: bigNumberToUSD(res, PRICING_DECIMALS[network]),
                         loading: false,
                         errorMessage: '',
                     });

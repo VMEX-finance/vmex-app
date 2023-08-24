@@ -125,8 +125,6 @@ export const HealthFactor = ({
                     .mul(a.priceETH)
                     .div(ethers.utils.parseUnits('1', d)); //18 decimals or 8 decimals
             }
-            console.log('amount: ', amount);
-            console.log('ethAmount: ', ethAmount);
 
             let totalCollateralETH = queryUserTrancheData.data?.totalCollateralETH;
             let totalDebtInETH = queryUserTrancheData.data?.totalDebtETH; //ETH or USD, depending on underlying chainlink decimals
