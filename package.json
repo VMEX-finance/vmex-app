@@ -22,7 +22,7 @@
     "private": true,
     "scripts": {
         "start": "react-app-rewired start",
-        "dev": "react-app-rewired dev",
+        "dev": "REACT_APP_TEST=1 react-app-rewired start",
         "build": "react-app-rewired build",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
