@@ -82,7 +82,7 @@
         "@testing-library/jest-dom": "^5.16.4",
         "@testing-library/react": "^13.3.0",
         "@testing-library/user-event": "^13.5.0",
-        "@vmexfinance/sdk": "^1.0.10",
+        "@vmexfinance/sdk": "^1.0.11",
         "bad-words": "^3.0.4",
         "ethers": "^5.6.9",
         "graphql": "^16.6.0",
