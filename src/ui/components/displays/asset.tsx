@@ -30,7 +30,7 @@ export const AssetDisplay = (props: IAssetDisplayProps) => {
                 props.className ? props.className : ''
             } ${props.border ? 'border border-1 border-brand-black w-fit px-2' : ''}`}
         >
-            {renderAsset(props.name, iconSize())}
+            <img key={`render-asset-${props.name}`} src={props.logo} className={'h-8 w-8'} />{' '}
             <span>{props.name}</span>
             {props.value && <span>{props.value}</span>}
         </div>
