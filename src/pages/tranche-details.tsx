@@ -47,6 +47,8 @@ const TrancheDetails: React.FC = () => {
         }
     }, [navigate, tranche, location]);
 
+    console.log(queryTrancheData.data, queryTrancheData.error);
+
     return (
         <AppTemplate
             title={tranche?.name}
