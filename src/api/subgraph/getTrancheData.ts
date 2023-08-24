@@ -29,7 +29,6 @@ export const processTrancheData = async (
     trancheId?: string,
     globalAdmin?: string,
 ): Promise<IGraphTrancheDataProps> => {
-    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const assets = data?.reserves;
     const isVerified = data?.isVerified || false;
     const prices = await getAllAssetPrices();
@@ -91,6 +90,7 @@ export const processTrancheData = async (
         {},
     );
 
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const summaryData = assets.reduce(
         (obj: any, item: any) => {
             const asset = item.assetData.underlyingAssetName.toUpperCase();
@@ -269,6 +269,8 @@ export const getSubgraphTrancheData = async (
         `,
         variables: { trancheId },
     });
+    console.log('data', data, 'error', error, 'getApolloClient', getApolloClient());
+
     if (error || !data.tranche) return {};
     else return processTrancheData(data.tranche, String(_trancheId), data.protocol.globalAdmin);
 };
@@ -277,7 +279,6 @@ export const getSubgraphTrancheChart = async (
     _trancheId: number,
 ): Promise<ILineChartDataPointProps[] | any> => {
     if (!_trancheId) return {};
-    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const trancheId = getTrancheId(String(_trancheId));
     const { data, error } = await getApolloClient().query({
         query: gql`
@@ -311,6 +312,7 @@ export const getSubgraphTrancheChart = async (
 
     if (error) return [];
     else {
+        const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
         let graphData: ILineChartDataPointProps[] = [];
         const prices = await getAllAssetPrices();
         data.tranche?.depositHistory?.map((el: any) => {
