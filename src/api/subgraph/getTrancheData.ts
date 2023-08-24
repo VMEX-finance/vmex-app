@@ -269,7 +269,6 @@ export const getSubgraphTrancheData = async (
         `,
         variables: { trancheId },
     });
-    console.log('data', data, 'error', error, 'getApolloClient', getApolloClient());
 
     if (error || !data.tranche) return {};
     else return processTrancheData(data.tranche, String(_trancheId), data.protocol.globalAdmin);

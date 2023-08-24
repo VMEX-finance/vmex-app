@@ -76,7 +76,7 @@ export const MultipleAssetsDisplayOverlapping = ({
     return (
         <Tooltip
             text={determineCoinDescription(origAssetName || '')}
-            key={`multiple-assets-display-overlap-${getRandomNumber()}`}
+            key={`tooltip-multiple-assets-overlap-${getRandomNumber()}`}
         >
             <div
                 className={`flex ${gap ? gap : 'gap-2'}`}
@@ -115,7 +115,7 @@ export const MultipleAssetsDisplayOverlapping = ({
                         variant="circular"
                         height={'2rem'}
                         width={'2rem'}
-                        key={`skeleton-loader-${getRandomNumber()}`}
+                        key={`skeleton-loader-multiple-assets-${getRandomNumber()}`}
                     />
                 )}
             </div>
