@@ -1,7 +1,6 @@
-import { truncate, EXPLORER_URLS, NETWORK } from '../../../utils';
+import { truncate, NETWORKS, DEFAULT_NETWORK } from '../../../utils';
 import React from 'react';
-
-console.log('network', NETWORK);
+import { getNetwork } from '@wagmi/core';
 
 type IToastStatusProps = {
     status: 'error' | 'success' | 'pending';
@@ -9,6 +8,7 @@ type IToastStatusProps = {
 };
 
 export const ToastStatus = ({ status, transaction }: IToastStatusProps) => {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const determineText = () => {
         switch (status) {
             case 'error':
@@ -24,7 +24,7 @@ export const ToastStatus = ({ status, transaction }: IToastStatusProps) => {
             <span>{determineText()}</span>
             {transaction && (
                 <a
-                    href={`${EXPLORER_URLS[NETWORK]}/tx/${transaction}`}
+                    href={`${NETWORKS[network].explorer}/tx/${transaction}`}
                     target="_blank"
                     rel="noreferrer"
                     className="underline text-brand-blue hover:text-brand-purple transition duration-150"

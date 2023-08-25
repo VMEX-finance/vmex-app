@@ -35,7 +35,7 @@ const TranchesCustomRow = (props: ITranchesCustomRowProps) => {
     const renderActivity = (status: string) => {
         const size = '20px';
         if (status) {
-            switch (status.toLowerCase()) {
+            switch (status?.toLowerCase()) {
                 case 'loading':
                     return (
                         <div className="flex gap-2 animate-pulse">

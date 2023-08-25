@@ -1,11 +1,12 @@
 import { AssetDisplay } from '../displays/asset';
 import React from 'react';
-import { bigNumberToUSD, NETWORK, SDK_PARAMS } from '../../../utils';
+import { bigNumberToUSD, NETWORKS, DEFAULT_NETWORK, TESTING } from '../../../utils';
 import { useSigner } from 'wagmi';
 import { mintTokens } from '@vmexfinance/sdk';
 import { Button, SecondaryButton } from '../buttons';
 import { usePricesData } from '../../../api/prices';
 import { BigNumber, utils } from 'ethers';
+import { getNetwork } from '@wagmi/core';
 
 export interface ICoinInput {
     amount: string;
@@ -35,6 +36,7 @@ export const CoinInput = ({
     customMaxClick,
     disabled,
 }: ICoinInput) => {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const { data: signer } = useSigner();
     const { prices } = usePricesData();
     const onChange = (e: any) => {
@@ -74,21 +76,19 @@ export const CoinInput = ({
     };
 
     const mint = async () => {
-        if (!process.env.REACT_APP_TEST) return;
+        if (!TESTING) return;
         if (signer && coin) {
             const res = await mintTokens({
                 token: coin.name,
                 signer: signer,
-                network: NETWORK,
-                test: SDK_PARAMS.test,
-                providerRpc: SDK_PARAMS.providerRpc,
+                network: network,
+                test: TESTING,
+                providerRpc: NETWORKS[network].rpc,
             });
             console.log(`Minted ${coin.name} to wallet`);
             return res;
         }
     };
-
-    console.log('disabled: ', disabled);
 
     return (
         <>
@@ -126,7 +126,7 @@ export const CoinInput = ({
                     </SecondaryButton>
                 </div>
             </div>
-            {process.env.REACT_APP_TEST && (
+            {TESTING && (
                 <div className="mt-2 flex justify-end">
                     <Button
                         primary

@@ -21,7 +21,7 @@ export const inputMediator = (s: string) => {
 
 export const determineRatingColor = (s: string) => {
     if (s) {
-        switch (s.toLowerCase()) {
+        switch (s?.toLowerCase()) {
             case 'a+':
                 return '#00DD3E';
             case 'a':
@@ -54,32 +54,32 @@ export const determineCoinImg = (asset: string, custom?: string) => {
         let url = '/coins/';
         if (asset == 'beefy') return `${url}beefy.png`;
         if (
-            asset.toLowerCase().includes('crv') ||
-            asset.toLowerCase().includes('curve') ||
-            asset.toLowerCase().includes('bpt') ||
-            asset.toLowerCase().includes('ammv2')
+            asset?.toLowerCase().includes('crv') ||
+            asset?.toLowerCase().includes('curve') ||
+            asset?.toLowerCase().includes('bpt') ||
+            asset?.toLowerCase().includes('ammv2')
         ) {
-            return `${url}${asset.toLowerCase()}.webp`;
-        } else return `${url}${asset.toLowerCase()}.svg`;
+            return `${url}${asset?.toLowerCase()}.webp`;
+        } else return `${url}${asset?.toLowerCase()}.svg`;
     }
 };
 
 export const determineCoinDescription = (asset: string, custom?: string) => {
     if (custom) return custom;
     else {
-        if (asset.toLowerCase() == 'moocurvewsteth')
+        if (asset?.toLowerCase() == 'moocurvewsteth')
             return 'Beefy vault for the wstETH/ETH curve pool';
-        if (asset.toLowerCase() == '3crv')
+        if (asset?.toLowerCase() == '3crv')
             return 'Curve stableswap pool between DAI, USDT, and USDC';
-        if (asset.toLowerCase() == 'susd3crv-f')
+        if (asset?.toLowerCase() == 'susd3crv-f')
             return 'Curve stableswap pool between sUSD, DAI, USDT, and USDC';
-        if (asset.toLowerCase() == 'wstethcrv')
+        if (asset?.toLowerCase() == 'wstethcrv')
             return 'Curve stableswap pool between wstETH and ETH';
-        if (asset.toLowerCase().startsWith('yv')) return `Yearn vault for ${asset.substring(2)}`;
-        if (asset.toLowerCase().includes('bpt')) {
+        if (asset?.toLowerCase().startsWith('yv')) return `Yearn vault for ${asset.substring(2)}`;
+        if (asset?.toLowerCase().includes('bpt')) {
             return `Beethoven pool between ${asset.split('-')[1]} and ${asset.split('-')[2]}`;
         }
-        if (asset.toLowerCase().includes('ammv2')) {
+        if (asset?.toLowerCase().includes('ammv2')) {
             let stable = 'Stable';
             if (asset.startsWith('v')) {
                 stable = 'Volatile';
@@ -278,3 +278,5 @@ export function addMissingDatesToTimeseries(
     });
     return finalDataPoints;
 }
+
+export const getRandomNumber = (number?: number) => Math.floor(Math.random() * (number || 100000));

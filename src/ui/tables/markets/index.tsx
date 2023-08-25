@@ -63,20 +63,20 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
                     names: ['Yearn', 'Curve', 'Beethoven', 'Velo', 'Base'],
                     logic: (location: any, filters: any, row: any) => {
                         if (filters.length) {
-                            switch (filters[0].toLowerCase()) {
+                            switch (filters[0]?.toLowerCase()) {
                                 case 'yearn':
                                     return !location.startsWith('yv');
                                 case 'curve':
-                                    return !location.toLowerCase().includes('crv');
+                                    return !location?.toLowerCase().includes('crv');
                                 case 'beethoven':
                                     return !location.startsWith('BPT');
                                 case 'velo':
-                                    return !location.toLowerCase().includes('ammv2');
+                                    return !location?.toLowerCase().includes('ammv2');
                                 case 'base':
                                     return (
-                                        location.toLowerCase().includes('ammv2') ||
+                                        location?.toLowerCase().includes('ammv2') ||
                                         location.startsWith('yv') ||
-                                        location.toLowerCase().includes('crv') ||
+                                        location?.toLowerCase().includes('crv') ||
                                         location.startsWith('BPT')
                                     );
                             }

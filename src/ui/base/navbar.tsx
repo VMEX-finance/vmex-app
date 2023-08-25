@@ -9,11 +9,13 @@ import { useAccount } from 'wagmi';
 import { useDialogController, useWindowSize } from '../../hooks';
 import { IDialogNames } from '@store/modals';
 import { useSubgraphUserData } from '../../api';
-import { EXPLORER_URLS, NETWORK } from '../../utils';
+import { NETWORKS, DEFAULT_NETWORK } from '../../utils';
+import { getNetwork } from '@wagmi/core';
 
 const navItems = ['Overview', 'Tranches', 'Markets', 'Governance', 'Develop'];
 
 export const Navbar: React.FC = () => {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const { isDark } = useContext(ThemeContext);
     const navigate = useNavigate();
     const location = useLocation();
@@ -28,13 +30,13 @@ export const Navbar: React.FC = () => {
         if (typeof e === 'string') navigate(`../${e}`, { replace: false });
         else {
             e.preventDefault();
-            let value = e.target.innerText.toLowerCase();
+            let value = e.target.innerText?.toLowerCase();
             navigate(`../${value}`, { replace: false });
         }
     }
 
     return (
-        <nav className="flex justify-center flex-row sticky h-fit items-center top-0 font-basefont px-3 md:px-4 py-2 lg:px-5 2xl:px-10 lg:py-5 bg-neutral-900 dark:bg-brand-black lg:bg-[#FFF] z-[1000] shadow-lg lg:shadow-md">
+        <nav className="flex justify-center flex-row sticky h-fit items-center top-0 font-basefont px-3 md:px-4 py-2 lg:px-5 2xl:px-10 lg:py-4 bg-neutral-900 dark:bg-brand-black lg:bg-[#FFF] z-[1000] shadow-lg lg:shadow-md">
             <div
                 className={`w-full max-w-[150rem]
                 ${width <= 1080 ? 'flex flex-row items-center justify-between' : 'grid grid-cols-3'}
@@ -48,7 +50,7 @@ export const Navbar: React.FC = () => {
                                 isDark && width >= 1024 ? '/VMEX-logo-white.svg' : '/VMEX-logo.svg'
                             }
                             alt="VMEX Finance Logo"
-                            width="100"
+                            width="85"
                             className="invert lg:invert-0"
                         />
                     </a>
@@ -59,14 +61,14 @@ export const Navbar: React.FC = () => {
                     <div className="justify-self-center">
                         <div
                             className={
-                                'grid grid-flow-col auto-cols-max justify-between gap-2 2xl:gap-4 w-max p-2 shadow-neutral-500 shadow-inner dark:shadow-black bg-brand-black dark:bg-neutral-900 rounded-2xl'
+                                'grid grid-flow-col auto-cols-max justify-between gap-2 2xl:gap-3 w-max p-2 shadow-neutral-500 shadow-inner dark:shadow-black bg-brand-black dark:bg-neutral-900 rounded-2xl'
                             }
                         >
                             {navItems.map((item) => (
                                 <MenuItemButton
                                     key={item}
                                     label={item}
-                                    selected={location.pathname === `/${item.toLowerCase()}`}
+                                    selected={location.pathname === `/${item?.toLowerCase()}`}
                                     onClick={navigateTo}
                                 />
                             ))}
@@ -82,7 +84,7 @@ export const Navbar: React.FC = () => {
                         <DefaultDropdown
                             reverse
                             items={transactions}
-                            baseLink={`${EXPLORER_URLS[NETWORK]}/tx`}
+                            baseLink={`${NETWORKS[network].explorer}/tx`}
                             selected={'Transactions'}
                             label={
                                 width < 1400 && (

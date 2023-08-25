@@ -117,13 +117,14 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                     </>
                 )}
                 {location.pathname === `/tranches` && isConnected && !chain?.unsupported && (
-                    <div className="flex gap-3 md:justify-end mt-2">
+                    <div className="flex gap-2 xl:gap-3 md:justify-end mt-2">
                         {queryTrancheAdminData.data?.length &&
                         queryTrancheAdminData.data?.length > 0 ? (
                             <Button
                                 label={'My Tranches'}
                                 onClick={() => navigate(`/my-tranches`)}
                                 primary
+                                className="h-full sm:h-auto"
                             />
                         ) : (
                             <Tooltip
@@ -133,6 +134,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                                         label={'My Tranches'}
                                         primary
                                         disabled={queryTrancheAdminData?.data?.length === 0}
+                                        className="h-full sm:h-auto"
                                     />
                                 }
                             />
@@ -146,7 +148,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                 )}
             </header>
             <main>
-                <div className="py-4 md:py-8 flex flex-col gap-4 xl:gap-8">
+                <div className="py-4 md:py-8 flex flex-col gap-4 xl:gap-5">
                     {children ? (
                         children
                     ) : (
