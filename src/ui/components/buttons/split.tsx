@@ -40,7 +40,7 @@ export const SplitButton = ({
                     colors
                         ? colors.left
                         : 'bg-brand-black text-neutral-200 dark:bg-neutral-200 dark:text-neutral-900'
-                } rounded-l-md py-1 pb-1.5 px-4 transition duration-150 hover:opacity-90`}
+                } rounded-l-md py-1 pb-1.5 md:pb-1 px-4 transition duration-150 hover:opacity-90`}
                 onClick={onClick.left}
                 disabled={disabled?.left}
             >
@@ -51,7 +51,7 @@ export const SplitButton = ({
                     colors
                         ? colors.right
                         : 'bg-neutral-900 text-neutral-200 dark:bg-neutral-200 dark:text-neutral-900'
-                } rounded-r-md py-1 px-4 transition duration-150 hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-80`}
+                } rounded-r-md py-1 pb-1.5 md:pb-1 px-4 transition duration-150 hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-80`}
                 onClick={onClick.right}
                 disabled={disabled?.right}
             >
