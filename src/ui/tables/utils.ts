@@ -19,11 +19,21 @@ export function vmexTheme(isDark = false) {
             },
         },
         components: {
+            MUIDataTableToolbar: {
+                styleOverrides: {
+                    root: {
+                        display: 'flex',
+                        alignItems: 'center',
+                    },
+                },
+            },
             MuiPaper: {
                 styleOverrides: {
                     root: {
-                        borderRadius: '0.5rem',
+                        borderRadius: '0.375rem',
                         backgroundImage: 'none',
+                        boxShadow:
+                            '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
                     },
                 },
             },

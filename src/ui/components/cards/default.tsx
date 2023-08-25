@@ -28,7 +28,7 @@ export const Card = ({
 }: ICardProps) => (
     <div
         className={`dark:bg-brand-black dark:text-neutral-300 dark:shadow-xl
-    w-full rounded-lg shadow-lg overflow-auto
+    w-full rounded-md shadow-md overflow-auto
     ${color ? color : black ? 'bg-neutral-900 text-neutral-100' : 'bg-neutral-100'}
     ${padding ? padding : 'p-4 lg:p-8'}
     ${className ? className : ''}
