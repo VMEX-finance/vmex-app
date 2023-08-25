@@ -10,6 +10,7 @@ type IAssetDisplayProps = {
     size?: 'lg' | 'md' | 'sm';
     value?: string;
     border?: boolean;
+    noText?: boolean;
 };
 
 export const AssetDisplay = (props: IAssetDisplayProps) => {
@@ -23,7 +24,6 @@ export const AssetDisplay = (props: IAssetDisplayProps) => {
                 return 'h-8 w-8';
         }
     };
-
     return (
         <div
             className={`flex items-center gap-1 rounded-lg w-max ${
@@ -31,7 +31,7 @@ export const AssetDisplay = (props: IAssetDisplayProps) => {
             } ${props.border ? 'border border-1 border-brand-black w-fit px-2' : ''}`}
         >
             {renderAsset(props.name, iconSize())}
-            <span>{props.name}</span>
+            {!props.noText && <span>{props.name}</span>}
             {props.value && <span>{props.value}</span>}
         </div>
     );

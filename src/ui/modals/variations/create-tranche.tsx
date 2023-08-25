@@ -12,13 +12,7 @@ import { IDialogProps } from '../utils';
 import { useStepper, useModal } from '../../../hooks';
 import { ModalFooter, ModalHeader } from '../../modals/subcomponents';
 import { CreateTrancheAssetsTable } from '../../tables';
-import {
-    NETWORKS,
-    DEFAULT_NETWORK,
-    TESTING,
-    AVAILABLE_ASSETS,
-    checkProfanity,
-} from '../../../utils';
+import { NETWORKS, DEFAULT_NETWORK, AVAILABLE_ASSETS, checkProfanity } from '../../../utils';
 import { useAccount, useSigner } from 'wagmi';
 import { initTranche } from '@vmexfinance/sdk';
 import { useSubgraphTranchesOverviewData } from '../../../api';
@@ -92,7 +86,7 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
                 treasuryAddress: treasuryAddress,
                 incentivesController: '0x0000000000000000000000000000000000000000', //disabled for now
                 network: network,
-                test: TESTING,
+                test: NETWORKS[network].testing,
                 providerRpc: NETWORKS[network].rpc,
                 chunks: chunkMaxSize,
             });

@@ -16,7 +16,6 @@ import {
     bigNumberToUnformattedString,
     PRICING_DECIMALS,
     NETWORKS,
-    TESTING,
 } from '../../utils';
 import { IUserTrancheDataProps, IUserTrancheData } from './types';
 import { BigNumber, ethers } from 'ethers';
@@ -48,7 +47,7 @@ export async function _getUserTrancheData(
         tranche: trancheId,
         user: userAddress,
         network,
-        test: TESTING,
+        test: NETWORKS[network].testing,
         providerRpc: NETWORKS[network].rpc,
     });
 
@@ -121,7 +120,7 @@ export function useUserTrancheData(
                         return el.aTokenAddress;
                     }) || [],
                 network,
-                test: TESTING,
+                test: NETWORKS[network].testing,
                 providerRpc: NETWORKS[network].rpc,
             }),
         refetchOnMount: true,
