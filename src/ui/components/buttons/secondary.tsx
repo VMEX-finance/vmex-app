@@ -21,7 +21,7 @@ export const SecondaryButton = ({
                 loading ? 'animate-pulse' : ''
             } ${className ? className : ''}`}
             onClick={onClick}
-            disabled
+            disabled={disabled}
         >
             {children}
         </button>
