@@ -51,16 +51,18 @@ export const determineRatingColor = (s: string) => {
 export const determineCoinImg = (asset: string, custom?: string) => {
     if (custom) return custom;
     else {
+        const _asset = asset.trim();
         let url = '/coins/';
-        if (asset == 'beefy') return `${url}beefy.png`;
+        if (_asset == 'beefy') return `${url}beefy.png`;
         if (
-            asset?.toLowerCase().includes('crv') ||
-            asset?.toLowerCase().includes('curve') ||
-            asset?.toLowerCase().includes('bpt') ||
-            asset?.toLowerCase().includes('ammv2')
+            _asset?.toLowerCase().includes('crv') ||
+            _asset?.toLowerCase().includes('curve') ||
+            _asset?.toLowerCase().includes('bpt') ||
+            _asset?.toLowerCase().includes('ammv2')
         ) {
-            return `${url}${asset?.toLowerCase()}.webp`;
-        } else return `${url}${asset?.toLowerCase()}.svg`;
+            return `${url}${_asset?.toLowerCase()}.webp`;
+        }
+        return `${url}${_asset?.toLowerCase()}.svg`;
     }
 };
 

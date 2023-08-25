@@ -170,12 +170,9 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                             )}
                                         </div>
                                         <AssetDisplay
-                                            name={
-                                                width < 600 || (width >= 1024 && width < 1280)
-                                                    ? ''
-                                                    : el.asset
-                                            }
+                                            name={el.asset}
                                             className="text-lg"
+                                            noText={width < breakpoint}
                                         />
                                     </div>
                                 </td>
@@ -192,11 +189,11 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                                           getTokenBalance(el.asset).amountNative,
                                                       ),
                                                       el.asset,
-                                                  )} ${el.asset}`
+                                                  )}`
                                                 : `${bigNumberToNative(
                                                       amountBorrwable(el.asset).amountNative,
                                                       el.asset,
-                                                  )} ${el.asset}`
+                                                  )}`
                                         }`}
                                         dollar={`${
                                             type === 'supply'

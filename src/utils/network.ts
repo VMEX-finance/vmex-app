@@ -6,6 +6,7 @@ export const NETWORKS: Record<string, any> = {
         chainId: 10,
         explorer: 'https://explorer.optimism.io',
         backend: 'https://seal-app-bomfb.ondigitalocean.app',
+        testing: false,
     },
     localhost: {
         name: 'localhost',
@@ -14,6 +15,7 @@ export const NETWORKS: Record<string, any> = {
         chainId: 31337,
         explorer: 'https://etherscan.io',
         backend: 'https://dolphin-app-ajfiy.ondigitalocean.app', // replace later
+        testing: true,
     },
     sepolia: {
         name: 'sepolia',
@@ -22,6 +24,7 @@ export const NETWORKS: Record<string, any> = {
         chainId: 11155111,
         explorer: 'https://sepolia.etherscan.io',
         backend: 'https://dolphin-app-ajfiy.ondigitalocean.app', // replace later
+        testing: true,
     },
     mainnet: {
         name: 'mainnet',
@@ -30,6 +33,7 @@ export const NETWORKS: Record<string, any> = {
         chainId: 1,
         explorer: 'https://etherscan.io',
         backend: 'https://dolphin-app-ajfiy.ondigitalocean.app', // replace later
+        testing: false,
     },
 };
 
