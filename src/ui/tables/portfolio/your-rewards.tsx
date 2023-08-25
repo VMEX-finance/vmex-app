@@ -1,5 +1,5 @@
 import React from 'react';
-import { useWindowSize } from '../../../hooks';
+import { useModal, useWindowSize } from '../../../hooks';
 import { Button, Card, AssetDisplay, NumberAndDollar } from '../../components';
 import { useNetwork, useSigner } from 'wagmi';
 import { DEFAULT_NETWORK, NETWORKS } from '../../../utils';
@@ -31,25 +31,29 @@ export const YourRewardsTable: React.FC<IYourRewardsTableProps> = ({
     const headers = ['Asset', 'Amount', ''];
     const { data: signer } = useSigner();
     const { chain } = useNetwork();
+    const { submitTx } = useModal();
 
-    const onClaim = async (
+    const handleClaim = async (
         account: string,
         rewardToken: string,
         amountWei: string,
         proof: string[],
     ) => {
-        if (!signer || !chain) return;
-        const tx = await claimExternalRewards(
-            signer,
-            chain?.network,
-            account,
-            rewardToken,
-            amountWei,
-            proof,
-            false,
-            NETWORKS[network].rpc,
-        );
-        await tx.wait();
+        if (data && signer) {
+            await submitTx(async () => {
+                const tx = await claimExternalRewards(
+                    signer,
+                    chain?.network || DEFAULT_NETWORK,
+                    account,
+                    rewardToken,
+                    amountWei,
+                    proof,
+                    false,
+                    NETWORKS[network].rpc,
+                );
+                return tx;
+            });
+        }
     };
 
     return (
@@ -103,7 +107,7 @@ export const YourRewardsTable: React.FC<IYourRewardsTableProps> = ({
                                                 label="Claim"
                                                 primary
                                                 onClick={() =>
-                                                    onClaim(
+                                                    handleClaim(
                                                         address,
                                                         reward.token,
                                                         reward.amountWei,
