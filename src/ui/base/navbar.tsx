@@ -11,6 +11,7 @@ import { IDialogNames } from '@store/modals';
 import { useSubgraphUserData } from '../../api';
 import { NETWORKS, DEFAULT_NETWORK } from '../../utils';
 import { getNetwork } from '@wagmi/core';
+import { useChainModal } from '@rainbow-me/rainbowkit';
 
 const navItems = ['Overview', 'Tranches', 'Markets', 'Governance', 'Develop'];
 
@@ -131,55 +132,64 @@ const MobileDropdownMenu = ({
     navigate: any;
     isConnected: boolean;
     tranches?: any[];
-}) => (
-    <Menu as="div" className="relative inline-block">
-        <div>
-            <Menu.Button className="inline-flex justify-center w-full rounded-md border shadow-sm px-2 md:px-3 py-1 bg-neutral-100 text-sm font-medium text-neutral-900 focus:outline-none focus:ring-2 focus:ring-offset-2">
-                <HiOutlineMenuAlt3 size="30px" />
-            </Menu.Button>
-        </div>
+}) => {
+    const { openChainModal } = useChainModal();
 
-        <Transition
-            as={Fragment}
-            enter="transition ease-out duration-100"
-            enterFrom="transform opacity-0 scale-95"
-            enterTo="transform opacity-100 scale-100"
-            leave="transition ease-in duration-75"
-            leaveFrom="transform opacity-100 scale-100"
-            leaveTo="transform opacity-0 scale-95"
-        >
-            <Menu.Items className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                <div className="p-2">
-                    {navItems.map((item: string, i: number) => (
-                        <Menu.Item key={`${item}-${i}`}>
-                            <MenuItemButton key={item} label={item} onClick={navigate} mobile />
-                        </Menu.Item>
-                    ))}
-                    <div className="flex flex-col justify-center gap-1 border-2 border-neutral-800 rounded-xl mt-1">
-                        <WalletButton
-                            primary
-                            className="border-0 !bg-neutral-900 !rounded-b-none !text-white hover:!bg-neutral-800"
-                        />
-                        {isConnected && (
-                            <>
-                                <MenuItemButton label={`Portfolio`} onClick={navigate} mobile />
-                                <MenuItemButton
-                                    label={`Create Tranche`}
-                                    onClick={() => onClick('create-tranche-dialog')}
-                                    mobile
-                                />
-                                {tranches?.length !== 0 && (
+    return (
+        <Menu as="div" className="relative inline-block">
+            <div>
+                <Menu.Button className="inline-flex justify-center w-full rounded-md border shadow-sm px-2 md:px-3 py-1 bg-neutral-100 text-sm font-medium text-neutral-900 focus:outline-none focus:ring-2 focus:ring-offset-2">
+                    <HiOutlineMenuAlt3 size="30px" />
+                </Menu.Button>
+            </div>
+
+            <Transition
+                as={Fragment}
+                enter="transition ease-out duration-100"
+                enterFrom="transform opacity-0 scale-95"
+                enterTo="transform opacity-100 scale-100"
+                leave="transition ease-in duration-75"
+                leaveFrom="transform opacity-100 scale-100"
+                leaveTo="transform opacity-0 scale-95"
+            >
+                <Menu.Items className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <div className="p-2">
+                        {navItems.map((item: string, i: number) => (
+                            <Menu.Item key={`${item}-${i}`}>
+                                <MenuItemButton key={item} label={item} onClick={navigate} mobile />
+                            </Menu.Item>
+                        ))}
+                        <div className="flex flex-col justify-center gap-1 border-2 border-neutral-800 rounded-xl mt-1">
+                            <WalletButton
+                                primary
+                                className="border-0 !bg-neutral-900 !rounded-b-none !text-white hover:!bg-neutral-800"
+                            />
+                            {isConnected && (
+                                <>
+                                    <MenuItemButton label={`Portfolio`} onClick={navigate} mobile />
                                     <MenuItemButton
-                                        label={`My Tranches`}
-                                        onClick={() => navigate('my-tranches')}
+                                        label={`Create Tranche`}
+                                        onClick={() => onClick('create-tranche-dialog')}
                                         mobile
                                     />
-                                )}
-                            </>
-                        )}
+                                    <MenuItemButton
+                                        label={`Switch Network`}
+                                        onClick={openChainModal}
+                                        mobile
+                                    />
+                                    {tranches?.length !== 0 && (
+                                        <MenuItemButton
+                                            label={`My Tranches`}
+                                            onClick={() => navigate('my-tranches')}
+                                            mobile
+                                        />
+                                    )}
+                                </>
+                            )}
+                        </div>
                     </div>
-                </div>
-            </Menu.Items>
-        </Transition>
-    </Menu>
-);
+                </Menu.Items>
+            </Transition>
+        </Menu>
+    );
+};
