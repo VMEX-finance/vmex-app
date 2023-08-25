@@ -14,14 +14,16 @@ import {
     braveWallet,
 } from '@rainbow-me/rainbowkit/wallets';
 import merge from 'lodash.merge';
-import { TESTING } from './constants';
 
-const determineChains = () => {
-    if (TESTING) return [chain.optimism, chain.sepolia, chain.hardhat];
-    else return [chain.optimism, chain.sepolia];
-};
+// const determineChains = () => {
+//     if (NETWORKS[network].testing) return [chain.optimism, chain.sepolia, chain.hardhat];
+//     else return [chain.optimism, chain.sepolia];
+// };
 
-export const { chains, provider } = configureChains(determineChains(), [publicProvider()]);
+export const { chains, provider } = configureChains(
+    [chain.optimism, chain.sepolia],
+    [publicProvider()],
+);
 
 export const connectors = connectorsForWallets([
     {

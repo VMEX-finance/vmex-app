@@ -11,7 +11,6 @@ import {
     PRICING_DECIMALS,
     NETWORKS,
     DEFAULT_NETWORK,
-    TESTING,
 } from '../../../utils';
 import { ethers } from 'ethers';
 import { useAccount } from 'wagmi';
@@ -125,10 +124,6 @@ export const HealthFactor = ({
                     .mul(a.priceETH)
                     .div(ethers.utils.parseUnits('1', d)); //18 decimals or 8 decimals
             }
-            if (TESTING) {
-                console.log('amount: ', amount);
-                console.log('ethAmount: ', ethAmount);
-            }
 
             let totalCollateralETH = queryUserTrancheData.data?.totalCollateralETH;
             let totalDebtInETH = queryUserTrancheData.data?.totalDebtETH; //ETH or USD, depending on underlying chainlink decimals
@@ -177,18 +172,6 @@ export const HealthFactor = ({
                 debtAfter = totalDebtInETH.sub(ethAmount);
                 borrowFactorTimesDebtAfter = borrowFactorTimesDebtAfter.sub(
                     ethAmount.mul(a.borrowFactor),
-                );
-            }
-            if (TESTING) {
-                console.log('total collateral after calc: ', collateralAfter);
-                console.log('total debtAfter after calc: ', debtAfter);
-                console.log(
-                    'total liquidationThresholdTimesCollateralAfter after calc: ',
-                    liquidationThresholdTimesCollateralAfter,
-                );
-                console.log(
-                    'total borrowFactorTimesDebtAfter after calc: ',
-                    borrowFactorTimesDebtAfter,
                 );
             }
 

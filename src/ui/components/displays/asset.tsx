@@ -44,6 +44,11 @@ export const renderAsset = (
     custom?: string,
     key?: string,
 ) => {
+    // if(!asset) {
+    //     console.log("Skipping due to undefined")
+    //     return;
+    // }
+    // console.log("Asset: ", asset )
     return asset.includes('moo') ? (
         MultipleAssetsDisplayOverlapping({
             assets: [asset.substring(3), 'beefy'],

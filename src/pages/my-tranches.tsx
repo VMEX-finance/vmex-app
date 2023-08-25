@@ -25,7 +25,6 @@ import {
     checkProfanity,
     nativeAmountToUSD,
     PRICING_DECIMALS,
-    TESTING,
 } from '../utils';
 import useAnalyticsEventTracker from '../utils/google-analytics';
 import { AssetBalance } from '@app/api/types';
@@ -212,7 +211,7 @@ const MyTranches: React.FC = () => {
                     ),
                     admin: signer,
                     network,
-                    test: TESTING,
+                    test: NETWORKS[network].testing,
                     providerRpc: NETWORKS[network].rpc,
                 });
                 return res;

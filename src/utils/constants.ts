@@ -1,5 +1,3 @@
-export const TESTING = process.env.REACT_APP_TEST ? true : false;
-
 export const HEALTH = {
     GREAT: 5,
     GOOD: 3,

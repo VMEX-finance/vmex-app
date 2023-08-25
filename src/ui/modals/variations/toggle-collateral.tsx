@@ -6,7 +6,7 @@ import { useSigner } from 'wagmi';
 import { useModal } from '../../../hooks/modal';
 import { markReserveAsCollateral } from '@vmexfinance/sdk';
 import { ethers } from 'ethers';
-import { DEFAULT_NETWORK, NETWORKS, TESTING, DECIMALS } from '../../../utils';
+import { DEFAULT_NETWORK, NETWORKS, DECIMALS } from '../../../utils';
 import { getNetwork } from '@wagmi/core';
 
 export const ToggleCollateralDialog: React.FC<IDialogProps> = ({
@@ -30,7 +30,7 @@ export const ToggleCollateralDialog: React.FC<IDialogProps> = ({
                     asset: data.asset,
                     trancheId: data.trancheId,
                     useAsCollateral: !data.collateral,
-                    test: TESTING,
+                    test: NETWORKS[network].testing,
                     providerRpc: NETWORKS[network].rpc,
                 });
                 if (data.setChecked) data.setChecked(newArr);

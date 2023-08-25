@@ -10,7 +10,6 @@ import {
     bigNumberToUnformattedString,
     convertStringFormatToNumber,
     PRICING_DECIMALS,
-    TESTING,
 } from '../utils';
 import { borrow, estimateGas, repay } from '@vmexfinance/sdk';
 import { useAccount, useSigner } from 'wagmi';
@@ -63,7 +62,7 @@ export const useBorrow = ({
             : new Wallet('0xdf57089febbacf7ba0bc227dafbffa9fc08a93fdc68e1e42411a14efcf23656e'),
         network,
         isMax: isMax,
-        test: TESTING,
+        test: NETWORKS[network].testing,
         providerRpc: NETWORKS[network].rpc,
     };
 
