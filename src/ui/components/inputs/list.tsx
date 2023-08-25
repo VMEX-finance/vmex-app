@@ -3,14 +3,10 @@ import { IoIosClose } from 'react-icons/io';
 import { AssetDisplay } from '../displays';
 import { BasicToggle } from '../toggles';
 import { ethers, utils } from 'ethers';
-import {
-    AVAILABLE_ASSETS,
-    bigNumberToUnformattedString,
-    NETWORK,
-    truncateAddress,
-} from '../../../utils';
+import { AVAILABLE_ASSETS, DEFAULT_NETWORK, truncateAddress } from '../../../utils';
 import { AutoCompleteInput } from '.';
 import { useSubgraphAllAssetMappingsData } from '../../../api';
+import { getNetwork } from '@wagmi/core';
 
 export interface IListInput {
     coin?: boolean;
@@ -79,15 +75,16 @@ export const ListInput = ({
     const [value, setValue] = React.useState('');
     const [isOpen, setIsOpen] = React.useState(false);
     const [error, setError] = React.useState('');
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
 
     const handleType = (e: any, val = '') => {
         const toBeSet = val ? val : value;
         if (e.key === 'Enter') {
             if (
                 coin &&
-                !AVAILABLE_ASSETS[NETWORK].map((coin: any) => coin.toUpperCase()).includes(
-                    toBeSet.toUpperCase(),
-                )
+                !AVAILABLE_ASSETS[network]
+                    .map((coin: any) => coin.toUpperCase())
+                    .includes(toBeSet.toUpperCase())
             ) {
                 setError('Please enter a valid token.');
                 setValue('');

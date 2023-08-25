@@ -1,10 +1,10 @@
 import { gql } from '@apollo/client';
-import { apolloClient } from '../../utils';
+import { getApolloClient } from '../../utils';
 import { VmexRewardsData } from '../types';
 import { getTrancheIdFromTrancheEntity } from './id-generation';
 
 export const getSubgraphRewardData = async (): Promise<VmexRewardsData[]> => {
-    const { data, error } = await apolloClient.query({
+    const { data, error } = await getApolloClient().query({
         query: gql`
             query QueryReservesAndTranches {
                 vmexRewards {

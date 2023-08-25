@@ -40,7 +40,7 @@ export const SplitButton = ({
                     colors
                         ? colors.left
                         : 'bg-brand-black text-neutral-200 dark:bg-neutral-200 dark:text-neutral-900'
-                } rounded-l-md py-1 px-4 transition duration-150 hover:opacity-90`}
+                } rounded-l-md py-1 pb-1.5 px-4 transition duration-150 hover:opacity-90`}
                 onClick={onClick.left}
                 disabled={disabled?.left}
             >

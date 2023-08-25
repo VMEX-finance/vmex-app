@@ -8,15 +8,16 @@ import {
     HFFormatter,
     calculateHealthFactorFromBalances,
     determineHealthColor,
-    NETWORK,
     PRICING_DECIMALS,
+    NETWORKS,
+    DEFAULT_NETWORK,
+    TESTING,
 } from '../../../utils';
 import { ethers } from 'ethers';
 import { useAccount } from 'wagmi';
 import { useLocation } from 'react-router-dom';
-import { SkeletonLoader, SpinnerLoader } from '../loaders';
-import { UseQueryResult } from '@tanstack/react-query';
-import { IUserTrancheData } from '@app/api/user/types';
+import { SkeletonLoader } from '../loaders';
+import { getNetwork } from '@wagmi/core';
 
 interface IHealthFactorProps {
     asset?: string;
@@ -81,6 +82,7 @@ export const HealthFactor = ({
     showInfo = true,
     loader = 'default',
 }: IHealthFactorProps) => {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const location = useLocation();
     const { address } = useAccount();
     const { tranche } = useSelectedTrancheContext();
@@ -112,7 +114,7 @@ export const HealthFactor = ({
 
         try {
             let ethAmount;
-            if (PRICING_DECIMALS[NETWORK] == 8) {
+            if (PRICING_DECIMALS[network] == 8) {
                 ethAmount = ethers.utils
                     .parseUnits(convertStringFormatToNumber(amount), d)
                     .mul(a.priceUSD)
@@ -123,8 +125,10 @@ export const HealthFactor = ({
                     .mul(a.priceETH)
                     .div(ethers.utils.parseUnits('1', d)); //18 decimals or 8 decimals
             }
-            console.log('amount: ', amount);
-            console.log('ethAmount: ', ethAmount);
+            if (TESTING) {
+                console.log('amount: ', amount);
+                console.log('ethAmount: ', ethAmount);
+            }
 
             let totalCollateralETH = queryUserTrancheData.data?.totalCollateralETH;
             let totalDebtInETH = queryUserTrancheData.data?.totalDebtETH; //ETH or USD, depending on underlying chainlink decimals
@@ -173,6 +177,18 @@ export const HealthFactor = ({
                 debtAfter = totalDebtInETH.sub(ethAmount);
                 borrowFactorTimesDebtAfter = borrowFactorTimesDebtAfter.sub(
                     ethAmount.mul(a.borrowFactor),
+                );
+            }
+            if (TESTING) {
+                console.log('total collateral after calc: ', collateralAfter);
+                console.log('total debtAfter after calc: ', debtAfter);
+                console.log(
+                    'total liquidationThresholdTimesCollateralAfter after calc: ',
+                    liquidationThresholdTimesCollateralAfter,
+                );
+                console.log(
+                    'total borrowFactorTimesDebtAfter after calc: ',
+                    borrowFactorTimesDebtAfter,
                 );
             }
 

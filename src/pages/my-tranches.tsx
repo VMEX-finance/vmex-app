@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { AppTemplate, GridView } from '../ui/templates';
+import { AppTemplate } from '../ui/templates';
 import {
     Button,
     Card,
@@ -16,20 +16,23 @@ import { useSubgraphUserData, IGraphAssetData, useSubgraphTrancheData } from '..
 import { useModal, useWindowSize } from '../hooks';
 import { TrancheStatsCard } from '../ui/features';
 import { CreateTrancheAssetsTable } from '../ui/tables';
-import { BigNumber, ethers } from 'ethers';
+import { ethers } from 'ethers';
 import { configureExistingTranche, SetAddress } from '@vmexfinance/sdk';
 import {
-    NETWORK,
+    NETWORKS,
+    DEFAULT_NETWORK,
     AVAILABLE_ASSETS,
-    SDK_PARAMS,
     checkProfanity,
     nativeAmountToUSD,
     PRICING_DECIMALS,
+    TESTING,
 } from '../utils';
 import useAnalyticsEventTracker from '../utils/google-analytics';
 import { AssetBalance } from '@app/api/types';
+import { getNetwork } from '@wagmi/core';
 
 const MyTranches: React.FC = () => {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const gaEventTracker = useAnalyticsEventTracker('My Tranches');
     const breakpoint = 1024;
     const { width } = useWindowSize();
@@ -54,7 +57,7 @@ const MyTranches: React.FC = () => {
                 asset: asset,
                 amount: nativeAmountToUSD(
                     ethers.utils.parseUnits(assetData[metric], assetData.decimals),
-                    PRICING_DECIMALS[NETWORK],
+                    PRICING_DECIMALS[network],
                     assetData.decimals,
                     assetData.priceUSD,
                 ).toString(),
@@ -208,9 +211,9 @@ const MyTranches: React.FC = () => {
                         getFrozenTokens(),
                     ),
                     admin: signer,
-                    network: NETWORK,
-                    test: SDK_PARAMS.test,
-                    providerRpc: SDK_PARAMS.providerRpc,
+                    network,
+                    test: TESTING,
+                    providerRpc: NETWORKS[network].rpc,
                 });
                 return res;
             }, false);
@@ -378,7 +381,7 @@ const MyTranches: React.FC = () => {
                                                 <ListInput
                                                     title="Tokens"
                                                     list={_newTokens}
-                                                    autocomplete={AVAILABLE_ASSETS[NETWORK].filter(
+                                                    autocomplete={AVAILABLE_ASSETS[network].filter(
                                                         (val: any) => {
                                                             const tmp = getOriginalAndNewTokens();
                                                             return (

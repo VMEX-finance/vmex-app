@@ -14,7 +14,7 @@ const GridView: React.FC<IGridViewProps> = ({
     className = '',
 }) => {
     if (type === 'fixed') {
-        return <div className={`w-full grid gap-4 xl:gap-8 ${cols} ${className}`}>{children}</div>;
+        return <div className={`w-full grid gap-4 xl:gap-5 ${cols} ${className}`}>{children}</div>;
     } else {
         return (
             <div

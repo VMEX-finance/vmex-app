@@ -3771,10 +3771,10 @@
     hardhat "^2.13.0"
     mocha "^10.2.0"
 
-"@vmexfinance/sdk@^1.0.11":
-  version "1.0.11"
-  resolved "https://registry.yarnpkg.com/@vmexfinance/sdk/-/sdk-1.0.11.tgz#dae9baec1a461c778efcadf131b7a557f45ce66e"
-  integrity sha512-J7Iepjoc4+faDRMGSzSy3K0HfWdHF29Ocux7UtQFBDTcs78haiEdJ10f1dP9gaAohMcjMUbaQZ+dIRxCWAsQ6A==
+"@vmexfinance/sdk@^1.0.12":
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/@vmexfinance/sdk/-/sdk-1.0.12.tgz#f066618f4afb665e4e084e488fc5d17300a2dd4a"
+  integrity sha512-O5ZzWNfg26Y0Z0M/vMXO+iUqlH0XkH3rJzSk4UlQG9Xp8cYtVrtNgFl+llxK+YCMEVsDlCl/RIn+tDojYJUB3g==
   dependencies:
     "@vmexfinance/contracts" "^1.0.9"
     chai "^4.3.6"
@@ -5179,9 +5179,9 @@ chai-bignumber@^3.1.0:
   integrity sha512-omxEc80jAU+pZwRmoWr3aEzeLad4JW3iBhLRQlgISvghBdIxrMT7mVAGsDz4WSyCkKowENshH2j9OABAhld7QQ==
 
 chai@^4.3.6:
-  version "4.3.7"
-  resolved "https://registry.yarnpkg.com/chai/-/chai-4.3.7.tgz#ec63f6df01829088e8bf55fca839bcd464a8ec51"
-  integrity sha512-HLnAzZ2iupm25PlN0xFreAlBA5zaBSv3og0DdeGA4Ar6h6rJ3A0rolRUKJhSF2V10GZKDgWF/VmAEsNWjCRB+A==
+  version "4.3.8"
+  resolved "https://registry.yarnpkg.com/chai/-/chai-4.3.8.tgz#40c59718ad6928da6629c70496fe990b2bb5b17c"
+  integrity sha512-vX4YvVVtxlfSZ2VecZgFUTU5qPCYsobVI2O9FmwEXBhDigYGQA6jRXCycIs1yJnnWbZ6/+a2zNIF5DfVCcJBFQ==
   dependencies:
     assertion-error "^1.1.0"
     check-error "^1.0.2"

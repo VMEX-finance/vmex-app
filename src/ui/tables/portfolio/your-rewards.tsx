@@ -1,10 +1,10 @@
 import React from 'react';
-import { AssetDisplay, NumberAndDollar } from '../../components/displays';
 import { useWindowSize } from '../../../hooks';
-import { Button, Card } from '../../components';
+import { Button, Card, AssetDisplay, NumberAndDollar } from '../../components';
 import { useNetwork, useSigner } from 'wagmi';
-import { SDK_PARAMS } from '../../../utils/constants';
+import { DEFAULT_NETWORK, NETWORKS } from '../../../utils';
 import { claimExternalRewards } from '@vmexfinance/sdk';
+import { getNetwork } from '@wagmi/core';
 
 export type IYourRewardsTableItemProps = {
     asset: string;
@@ -26,6 +26,7 @@ export const YourRewardsTable: React.FC<IYourRewardsTableProps> = ({
     isLoading,
     address,
 }) => {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const { width } = useWindowSize();
     const headers = ['Asset', 'Amount', ''];
     const { data: signer } = useSigner();
@@ -38,7 +39,6 @@ export const YourRewardsTable: React.FC<IYourRewardsTableProps> = ({
         proof: string[],
     ) => {
         if (!signer || !chain) return;
-        console.log(account, rewardToken, amountWei, proof);
         const tx = await claimExternalRewards(
             signer,
             chain?.network,
@@ -47,7 +47,7 @@ export const YourRewardsTable: React.FC<IYourRewardsTableProps> = ({
             amountWei,
             proof,
             false,
-            SDK_PARAMS.providerRpc,
+            NETWORKS[network].rpc,
         );
         await tx.wait();
     };
