@@ -7,15 +7,19 @@ import { DEFAULT_NETWORK } from '../utils/network';
 import { getNetwork } from '@wagmi/core';
 
 // Types
-export type IAuthStoreProps = {
-    isAuthenticated?: boolean;
+export type IGlobalStoreProps = {
+    isAuthenticated: boolean;
+    currentNetwork: string;
 };
 
 // Context
-const AuthContext = createContext<IAuthStoreProps>({});
+const GlobalContext = createContext<IGlobalStoreProps>({
+    isAuthenticated: false,
+    currentNetwork: DEFAULT_NETWORK,
+});
 
 // Wrapper
-export function AuthStore(props: { children: ReactNode }) {
+export function GlobalStore(props: { children: ReactNode }) {
     const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const { address } = useAccount();
     const merkle = useMerkle();
@@ -43,24 +47,25 @@ export function AuthStore(props: { children: ReactNode }) {
     }, [network]);
 
     return (
-        <AuthContext.Provider
+        <GlobalContext.Provider
             value={{
                 isAuthenticated,
+                currentNetwork: network,
             }}
         >
             {props.children}
-        </AuthContext.Provider>
+        </GlobalContext.Provider>
     );
 }
 
 // Independent
-export function useAuthContext() {
-    return useContext(AuthContext);
+export function useGlobalContext() {
+    return useContext(GlobalContext);
 }
 
 // Protected Routes
 export const ProtectedRoute = ({ children }: any) => {
-    const { isAuthenticated } = useAuthContext();
+    const { isAuthenticated } = useGlobalContext();
     if (!isAuthenticated) {
         // user is not authenticated
         return <Navigate to="/beta-auth" />;
