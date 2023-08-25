@@ -15,7 +15,6 @@ import {
     averageOfArr,
     PRICING_DECIMALS,
     DEFAULT_NETWORK,
-    TESTING,
 } from '../../utils';
 import { IUserActivityDataProps, IUserDataProps, IUserWalletDataProps } from './types';
 import { BigNumber } from 'ethers';
@@ -41,7 +40,7 @@ export async function getUserActivityData(userAddress: string): Promise<IUserAct
     const summary = await getUserSummaryData({
         user: userAddress,
         network,
-        test: TESTING,
+        test: NETWORKS[network].testing,
         providerRpc: NETWORKS[network].rpc,
     });
 
@@ -108,7 +107,7 @@ export async function _getUserWalletData(
     const res = await getUserWalletData({
         user: userAddress,
         network,
-        test: TESTING,
+        test: NETWORKS[network].testing,
         providerRpc: NETWORKS[network].rpc,
     });
 

@@ -18,7 +18,6 @@ import {
     convertStringFormatToNumber,
     nativeAmountToUSD,
     PRICING_DECIMALS,
-    TESTING,
 } from '../utils';
 import { BigNumber, BigNumberish, Wallet, utils } from 'ethers';
 import {
@@ -83,7 +82,7 @@ export const useSupply = ({
             : new Wallet('0xdf57089febbacf7ba0bc227dafbffa9fc08a93fdc68e1e42411a14efcf23656e'),
         network,
         isMax: isMax,
-        test: TESTING,
+        test: NETWORKS[network].testing,
         providerRpc: NETWORKS[network].rpc,
     };
 

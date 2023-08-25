@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { getAssetPrices, getAllAssetSymbols, convertAddressToSymbol } from '@vmexfinance/sdk';
-import { NETWORKS, DEFAULT_NETWORK, IAvailableCoins, TESTING } from '../../utils';
+import { NETWORKS, DEFAULT_NETWORK, IAvailableCoins } from '../../utils';
 import { IAssetPricesProps, IPricesDataProps } from './types';
 import { getNetwork } from '@wagmi/core';
 
@@ -9,7 +9,7 @@ export async function getAllAssetPrices(): Promise<Record<IAvailableCoins, IAsse
     const pricesMap = await getAssetPrices({
         assets: getAllAssetSymbols(network),
         network,
-        test: TESTING,
+        test: NETWORKS[network].testing,
         providerRpc: NETWORKS[network].rpc,
     });
     const returnObj: Record<string, IAssetPricesProps> = {};

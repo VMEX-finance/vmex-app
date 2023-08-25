@@ -1,6 +1,6 @@
 import { AssetDisplay } from '../displays/asset';
 import React from 'react';
-import { bigNumberToUSD, NETWORKS, DEFAULT_NETWORK, TESTING } from '../../../utils';
+import { bigNumberToUSD, NETWORKS, DEFAULT_NETWORK } from '../../../utils';
 import { useSigner } from 'wagmi';
 import { mintTokens } from '@vmexfinance/sdk';
 import { Button, SecondaryButton } from '../buttons';
@@ -76,13 +76,13 @@ export const CoinInput = ({
     };
 
     const mint = async () => {
-        if (!TESTING) return;
+        if (!NETWORKS[network].testing) return;
         if (signer && coin) {
             const res = await mintTokens({
                 token: coin.name,
                 signer: signer,
                 network: network,
-                test: TESTING,
+                test: NETWORKS[network].testing,
                 providerRpc: NETWORKS[network].rpc,
             });
             console.log(`Minted ${coin.name} to wallet`);
@@ -126,14 +126,9 @@ export const CoinInput = ({
                     </SecondaryButton>
                 </div>
             </div>
-            {TESTING && (
+            {NETWORKS[network].testing && (
                 <div className="mt-2 flex justify-end">
-                    <Button
-                        primary
-                        onClick={mint}
-                        label={`DEV: Mint ${coin.name}`}
-                        className="w-fit"
-                    />
+                    <Button primary onClick={mint} label={`Mint ${coin.name}`} className="w-fit" />
                 </div>
             )}
         </>

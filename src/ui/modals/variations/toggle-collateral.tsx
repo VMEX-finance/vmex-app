@@ -30,7 +30,7 @@ export const ToggleCollateralDialog: React.FC<IDialogProps> = ({
                     asset: data.asset,
                     trancheId: data.trancheId,
                     useAsCollateral: !data.collateral,
-                    test: TESTING,
+                    test: NETWORKS[network].testing,
                     providerRpc: NETWORKS[network].rpc,
                 });
                 if (data.setChecked) data.setChecked(newArr);

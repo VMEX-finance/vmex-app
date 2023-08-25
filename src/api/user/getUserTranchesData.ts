@@ -15,7 +15,6 @@ import {
     bigNumberToUnformattedString,
     PRICING_DECIMALS,
     DEFAULT_NETWORK,
-    TESTING,
 } from '../../utils';
 import { IUserTrancheData, IUserTranchesDataProps } from './types';
 import { BigNumber } from 'ethers';
@@ -32,7 +31,7 @@ export async function _getUserTranchesData(
         const summary = await getUserSummaryData({
             user: userAddress,
             network,
-            test: TESTING,
+            test: NETWORKS[network].testing,
             providerRpc: NETWORKS[network].rpc,
         });
 
@@ -55,7 +54,7 @@ export async function _getUserTranchesData(
                 tranche: String(id),
                 user: userAddress,
                 network,
-                test: TESTING,
+                test: NETWORKS[network].testing,
                 providerRpc: NETWORKS[network].rpc,
             });
 
