@@ -18,6 +18,7 @@ import {
     convertStringFormatToNumber,
     nativeAmountToUSD,
     PRICING_DECIMALS,
+    bigNumberToUSD,
 } from '../utils';
 import { BigNumber, BigNumberish, Wallet, utils } from 'ethers';
 import {
@@ -251,14 +252,7 @@ export const useSupply = ({
                     }
                     setEstimatedGasCost({
                         loading: false,
-                        cost: `$${String(
-                            nativeAmountToUSD(
-                                res || 0,
-                                PRICING_DECIMALS[network],
-                                18,
-                                queryAssetPrices.data?.WETH?.usdPrice || 0,
-                            ),
-                        )}`,
+                        cost: `${String(bigNumberToUSD(res, PRICING_DECIMALS[network]))}`,
                         errorMessage: '',
                     });
                 } catch (err: any) {
