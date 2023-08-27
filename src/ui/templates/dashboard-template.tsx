@@ -42,7 +42,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
 
     // TODO: cleanup / optimize
     return (
-        <div className="max-w-[125rem] mx-auto p-3 md:p-4 lg:p-5 xl:p-6 2xl:p-10">
+        <div className="max-w-[125rem] mx-auto p-3 md:p-4 lg:p-5 xl:p-6 2xl:px-10">
             <header
                 className={`
                     ${right ? 'flex justify-between w-full' : ''}
@@ -84,7 +84,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                                         <h1 className="text-3xl font-basefont capitalize leading-tight text-neutral-900 dark:text-neutral-300 text-center">
                                             {title}
                                         </h1>
-                                        {tranche?.category && ( // TODO: connect with SDK
+                                        {tranche?.category && (
                                             <Label
                                                 tooltip
                                                 className="!py-0.5 !text-xs md:absolute md:left-1/2 md:-translate-x-1/2"
