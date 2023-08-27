@@ -125,14 +125,16 @@ export async function _getUserWalletData(
 
 // Master
 export function useUserData(userAddress: any): IUserDataProps {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+
     const queryUserActivity = useQuery({
-        queryKey: ['user-activity'],
+        queryKey: ['user-activity', network],
         queryFn: () => getUserActivityData(userAddress),
         enabled: !!userAddress,
     });
 
     const queryUserWallet = useQuery({
-        queryKey: ['user-wallet'],
+        queryKey: ['user-wallet', network],
         queryFn: () => _getUserWalletData(userAddress),
         enabled: !!userAddress,
     });

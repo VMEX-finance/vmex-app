@@ -143,8 +143,10 @@ export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]
 };
 
 export function useSubgraphTranchesOverviewData(): ISubgraphTranchesDataProps {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+
     const queryAllTranches = useQuery({
-        queryKey: ['tranches-overview-data'],
+        queryKey: ['tranches-overview-data', network],
         queryFn: () => getSubgraphTranchesOverviewData(),
     });
 

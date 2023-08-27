@@ -179,7 +179,7 @@ export function useSubgraphMarketsData(
         underlyingAsset = convertSymbolToAddress(_underlyingAsset || '', network)?.toLowerCase();
     }
     const queryMarketsChart = useQuery({
-        queryKey: [`markets-chart`, Number(_trancheId), _underlyingAsset],
+        queryKey: [`markets-chart`, Number(_trancheId), _underlyingAsset, network],
         queryFn: () => getSubgraphMarketsChart(_trancheId, underlyingAsset),
     });
 

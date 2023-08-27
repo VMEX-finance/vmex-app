@@ -269,14 +269,16 @@ export async function getSubgraphProtocolData(): Promise<IGraphProtocolDataProps
 }
 
 export function useSubgraphProtocolData(): ISubgraphProtocolData {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+
     const queryProtocolTVLChart = useQuery({
-        queryKey: ['protocol-charts'],
+        queryKey: ['protocol-charts', network],
         queryFn: () => getSubgraphProtocolChart(),
         refetchInterval: 1 * 60 * 1000, // Refetch every minute
     });
 
     const queryProtocolData = useQuery({
-        queryKey: ['protocol-data'],
+        queryKey: ['protocol-data', network],
         queryFn: () => getSubgraphProtocolData(),
     });
 
