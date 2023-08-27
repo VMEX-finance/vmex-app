@@ -34,8 +34,10 @@ export async function getUserRewards(userAddress: string) {
 
 // Master
 export function useUserRewards(userAddress: any) {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+
     const queryUserRewards = useQuery({
-        queryKey: [`user-external-rewards-${userAddress}`],
+        queryKey: [`user-external-rewards`, userAddress, network],
         queryFn: () => getUserRewards(userAddress),
         enabled: !!userAddress,
     });

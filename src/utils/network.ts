@@ -1,3 +1,5 @@
+import { getNetwork } from '@wagmi/core';
+
 export const NETWORKS: Record<string, any> = {
     optimism: {
         name: 'optimism',

@@ -28,8 +28,9 @@ export async function getAllAssetPrices(): Promise<Record<IAvailableCoins, IAsse
 }
 
 export function usePricesData(): IPricesDataProps {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const queryAssetPrices = useQuery({
-        queryKey: ['asset-prices'],
+        queryKey: ['asset-prices', network],
         queryFn: getAllAssetPrices,
         refetchInterval: 60000, // refetch prices every minute
     });
