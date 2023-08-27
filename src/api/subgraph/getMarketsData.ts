@@ -189,8 +189,10 @@ export function useSubgraphMarketsData(
 }
 
 export function useSubgraphAllMarketsData(): ISubgraphAllMarketsData {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+
     const queryAllMarketsData = useQuery({
-        queryKey: [`all-markets-data`],
+        queryKey: [`all-markets-data`, network],
         queryFn: () => getSubgraphAllMarketsData(),
     });
 
