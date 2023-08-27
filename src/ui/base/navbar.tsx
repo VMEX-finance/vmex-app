@@ -81,6 +81,7 @@ export const Navbar: React.FC = () => {
                 <div className="flex items-center justify-end gap-3">
                     {width <= 1024 && <ToggleThemeButton />}
                     {/* Transactions Dropdown */}
+                    {/* TODO: move this to inside wallet button */}
                     {isConnected && transactions && transactions.length !== 0 && (
                         <DefaultDropdown
                             reverse
