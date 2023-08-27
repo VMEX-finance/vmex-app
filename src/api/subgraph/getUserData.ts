@@ -405,21 +405,23 @@ export const getSubgraphUserData = async (address: string): Promise<IGraphUserDa
 };
 
 export function useSubgraphUserData(address?: string): ISubgraphUserData {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+
     const queryUserPnlChart = useQuery({
-        queryKey: ['user-pnl-chart'],
+        queryKey: ['user-pnl-chart', network],
         queryFn: () => getSubgraphUserChart(address || ''),
         refetchInterval: 1 * 60 * 1000, // Refetch every minute
         enabled: !!address,
     });
 
     const queryUserData = useQuery({
-        queryKey: ['user-data'],
+        queryKey: ['user-data', network],
         queryFn: () => getSubgraphUserData(address || ''),
         enabled: !!address,
     });
 
     const queryTrancheAdminData = useQuery({
-        queryKey: ['tranche-admin-data'],
+        queryKey: ['tranche-admin-data', network],
         queryFn: () => getUserAdminTrancheData(address || ''),
     });
 

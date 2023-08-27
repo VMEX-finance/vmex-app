@@ -380,14 +380,16 @@ export const getSubgraphTrancheChart = async (
 };
 
 export function useSubgraphTrancheData(trancheId: number): ISubgraphTrancheData {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+
     const queryTrancheData = useQuery({
-        queryKey: ['tranche-data', Number(trancheId)],
+        queryKey: ['tranche-data', Number(trancheId), network],
         queryFn: () => getSubgraphTrancheData(trancheId),
         enabled: !!trancheId,
     });
 
     const queryTrancheChart = useQuery({
-        queryKey: ['tranche-chart', Number(trancheId)],
+        queryKey: ['tranche-chart', Number(trancheId), network],
         queryFn: () => getSubgraphTrancheChart(trancheId),
         enabled: !!trancheId,
     });

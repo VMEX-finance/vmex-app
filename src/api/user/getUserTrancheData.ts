@@ -99,19 +99,19 @@ export function useUserTrancheData(
 ): IUserTrancheDataProps {
     const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const queryUserTrancheData = useQuery({
-        queryKey: ['user-tranche', Number(trancheId)],
+        queryKey: ['user-tranche', Number(trancheId), network],
         queryFn: () => _getUserTrancheData(userAddress, trancheId),
         refetchOnMount: true,
     });
 
     const queryRewardsData = useQuery({
-        queryKey: ['rewards', Number(trancheId)],
+        queryKey: ['rewards', Number(trancheId), network],
         queryFn: () => getSubgraphRewardData(),
         refetchOnMount: true,
     });
 
     const queryUserRewardsData = useQuery({
-        queryKey: ['user-rewards', Number(trancheId)],
+        queryKey: ['user-rewards', Number(trancheId), network],
         queryFn: () =>
             getUserIncentives({
                 user: userAddress,

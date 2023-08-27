@@ -110,8 +110,10 @@ export function useUserTranchesData(
     userAddress: any,
     trancheIds?: number[],
 ): IUserTranchesDataProps {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+
     const queryUserTranchesData = useQuery({
-        queryKey: ['user-tranches'],
+        queryKey: ['user-tranches', network],
         queryFn: () => _getUserTranchesData(userAddress, trancheIds || []),
         refetchOnMount: true,
     });
