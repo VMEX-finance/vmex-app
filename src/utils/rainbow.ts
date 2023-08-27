@@ -1,12 +1,7 @@
 import '@rainbow-me/rainbowkit/styles.css';
-import {
-    connectorsForWallets,
-    getDefaultWallets,
-    RainbowKitProvider,
-    darkTheme,
-    lightTheme,
-} from '@rainbow-me/rainbowkit';
-import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
+import { connectorsForWallets, RainbowKitProvider, lightTheme } from '@rainbow-me/rainbowkit';
+import { configureChains, createClient, WagmiConfig } from 'wagmi';
+import { mainnet, polygon, optimism, sepolia, hardhat } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 import {
     coinbaseWallet,
@@ -20,25 +15,14 @@ import {
     braveWallet,
 } from '@rainbow-me/rainbowkit/wallets';
 import merge from 'lodash.merge';
-import { NETWORK } from './constants';
+import { TESTING } from './constants';
 
-const determineChain = () => {
-    switch (NETWORK.toLowerCase()) {
-        case 'goerli':
-            return [chain.goerli];
-        case 'sepolia':
-            return [chain.sepolia];
-        case 'localhost':
-        case 'optimism_localhost':
-            return [chain.hardhat];
-        case 'optimism':
-            return [chain.optimism, chain.sepolia];
-        default:
-            return [chain.mainnet];
-    }
+const determineChains = () => {
+    if (TESTING) return [optimism, sepolia, hardhat];
+    else return [optimism, sepolia];
 };
 
-export const { chains, provider } = configureChains(determineChain(), [publicProvider()]);
+export const { chains, provider } = configureChains(determineChains(), [publicProvider()]);
 
 export const connectors = connectorsForWallets([
     {

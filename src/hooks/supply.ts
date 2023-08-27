@@ -12,12 +12,13 @@ import { IYourSuppliesTableItemProps } from '../ui/tables';
 import {
     DECIMALS,
     IAvailableCoins,
-    NETWORK,
-    SDK_PARAMS,
+    NETWORKS,
+    DEFAULT_NETWORK,
     bigNumberToUnformattedString,
     convertStringFormatToNumber,
     nativeAmountToUSD,
     PRICING_DECIMALS,
+    bigNumberToUSD,
 } from '../utils';
 import { BigNumber, BigNumberish, Wallet, utils } from 'ethers';
 import {
@@ -27,6 +28,7 @@ import {
     supply,
     withdraw,
 } from '@vmexfinance/sdk';
+import { getNetwork } from '@wagmi/core';
 
 export const useSupply = ({
     data,
@@ -41,6 +43,7 @@ export const useSupply = ({
     amount,
     setAmount,
 }: ISupplyBorrowProps & IUseModal) => {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const { findAssetInMarketsData } = useSubgraphTrancheData(data?.trancheId || 0);
     const { data: signer } = useSigner();
     const { address } = useAccount();
@@ -59,8 +62,8 @@ export const useSupply = ({
     const [asset, setAsset] = useState(data?.asset || '');
 
     const toggleEthWeth = () => {
-        if (data?.asset.toLowerCase() === 'weth') {
-            if (asset.toLowerCase() === 'weth') setAsset('ETH');
+        if (data?.asset?.toLowerCase() === 'weth') {
+            if (asset?.toLowerCase() === 'weth') setAsset('ETH');
             else setAsset('WETH');
         }
     };
@@ -78,10 +81,10 @@ export const useSupply = ({
         signer: signer
             ? signer
             : new Wallet('0xdf57089febbacf7ba0bc227dafbffa9fc08a93fdc68e1e42411a14efcf23656e'),
-        network: NETWORK,
+        network,
         isMax: isMax,
-        test: SDK_PARAMS.test,
-        providerRpc: SDK_PARAMS.providerRpc,
+        test: NETWORKS[network].testing,
+        providerRpc: NETWORKS[network].rpc,
     };
 
     const getAllATokenAddresses = () => {
@@ -167,7 +170,7 @@ export const useSupply = ({
     const renderRewards = () => {
         if (!queryUserRewardsData?.data?.rewardTokens?.length) return [];
         return queryUserRewardsData.data?.rewardTokens?.map((el: string, idx) => {
-            const assetSymbol = convertAddressToSymbol(el, SDK_PARAMS.network) || el;
+            const assetSymbol = convertAddressToSymbol(el, network) || el;
             const assetDecimals = DECIMALS.get(assetSymbol);
             let assetAmount: BigNumberish =
                 queryUserRewardsData.data?.rewardAmounts[idx] || 'unable to get reward amount';
@@ -179,7 +182,7 @@ export const useSupply = ({
                     String(
                         nativeAmountToUSD(
                             assetAmount,
-                            PRICING_DECIMALS[NETWORK],
+                            PRICING_DECIMALS[network],
                             assetDecimals,
                             assetUSDPrice,
                         ),
@@ -249,14 +252,7 @@ export const useSupply = ({
                     }
                     setEstimatedGasCost({
                         loading: false,
-                        cost: `$${String(
-                            nativeAmountToUSD(
-                                res || 0,
-                                PRICING_DECIMALS[NETWORK],
-                                18,
-                                queryAssetPrices.data?.WETH?.usdPrice || 0,
-                            ),
-                        )}`,
+                        cost: `${String(bigNumberToUSD(res, PRICING_DECIMALS[network]))}`,
                         errorMessage: '',
                     });
                 } catch (err: any) {

@@ -4,4 +4,4 @@ export * from './theme';
 export * from './transactions';
 export * from './modals';
 export * from './redux';
-export * from './auth';
+export * from './global';

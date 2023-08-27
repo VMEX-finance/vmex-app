@@ -7,7 +7,7 @@ import ReduxProvider from './store/redux';
 import { HashRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { SelectedTrancheStore, TransactionsStore, ThemeProvider, AuthStore } from './store';
+import { SelectedTrancheStore, TransactionsStore, ThemeProvider, GlobalStore } from './store';
 import { WagmiConfig } from 'wagmi';
 import { chains, RainbowKitProvider, wagmiClient, walletTheme } from './utils';
 
@@ -23,24 +23,24 @@ const queryClient = new QueryClient({
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <HashRouter>
-        <ThemeProvider>
-            <QueryClientProvider client={queryClient}>
-                <ReactQueryDevtools />
-                <TransactionsStore>
-                    <SelectedTrancheStore>
-                        <ReduxProvider>
-                            <WagmiConfig client={wagmiClient}>
-                                <RainbowKitProvider chains={chains} theme={walletTheme}>
-                                    <AuthStore>
+    <WagmiConfig client={wagmiClient}>
+        <HashRouter>
+            <GlobalStore>
+                <ThemeProvider>
+                    <QueryClientProvider client={queryClient}>
+                        <ReactQueryDevtools />
+                        <TransactionsStore>
+                            <SelectedTrancheStore>
+                                <ReduxProvider>
+                                    <RainbowKitProvider chains={chains} theme={walletTheme}>
                                         <App />
-                                    </AuthStore>
-                                </RainbowKitProvider>
-                            </WagmiConfig>
-                        </ReduxProvider>
-                    </SelectedTrancheStore>
-                </TransactionsStore>
-            </QueryClientProvider>
-        </ThemeProvider>
-    </HashRouter>,
+                                    </RainbowKitProvider>
+                                </ReduxProvider>
+                            </SelectedTrancheStore>
+                        </TransactionsStore>
+                    </QueryClientProvider>
+                </ThemeProvider>
+            </GlobalStore>
+        </HashRouter>
+    </WagmiConfig>,
 );

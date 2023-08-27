@@ -1,4 +1,4 @@
-import { determineCoinDescription, determineCoinImg } from '../../../utils/helpers';
+import { determineCoinDescription, determineCoinImg, getRandomNumber } from '../../../utils';
 import React from 'react';
 import { MultipleAssetsDisplayOverlapping } from './multi-asset';
 import { Tooltip } from '../tooltips';
@@ -10,6 +10,7 @@ type IAssetDisplayProps = {
     size?: 'lg' | 'md' | 'sm';
     value?: string;
     border?: boolean;
+    noText?: boolean;
 };
 
 export const AssetDisplay = (props: IAssetDisplayProps) => {
@@ -23,7 +24,6 @@ export const AssetDisplay = (props: IAssetDisplayProps) => {
                 return 'h-8 w-8';
         }
     };
-
     return (
         <div
             className={`flex items-center gap-1 rounded-lg w-max ${
@@ -31,7 +31,7 @@ export const AssetDisplay = (props: IAssetDisplayProps) => {
             } ${props.border ? 'border border-1 border-brand-black w-fit px-2' : ''}`}
         >
             {renderAsset(props.name, iconSize())}
-            <span>{props.name}</span>
+            {!props.noText && <span>{props.name}</span>}
             {props.value && <span>{props.value}</span>}
         </div>
     );
@@ -55,12 +55,15 @@ export const renderAsset = (
             origAssetName: asset,
         })
     ) : (
-        <Tooltip text={determineCoinDescription(asset)}>
+        <Tooltip
+            text={determineCoinDescription(asset)}
+            key={`tooltip-render-asset-${key || i || asset}-${getRandomNumber()}`}
+        >
             <img
-                key={`render-asset-${key || i || asset}`}
                 src={determineCoinImg(asset, custom)}
                 alt={asset}
                 className={`${size ? size : 'h-8 w-8'}`}
+                key={`render-asset-${key || i || asset}-${getRandomNumber()}`}
             />
         </Tooltip>
     );

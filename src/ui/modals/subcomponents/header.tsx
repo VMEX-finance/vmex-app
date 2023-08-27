@@ -10,9 +10,17 @@ type IModalHeaderProps = {
     tabs: string[];
     onClick?: Function;
     active?: string;
+    disabled?: boolean;
 };
 
-export const ModalHeader = ({ dialog, asset, tabs, onClick, active }: IModalHeaderProps) => {
+export const ModalHeader = ({
+    dialog,
+    asset,
+    tabs,
+    onClick,
+    active,
+    disabled,
+}: IModalHeaderProps) => {
     const { closeDialog } = useDialogController();
     const current = active ? active : tabs[0];
 
@@ -31,7 +39,7 @@ export const ModalHeader = ({ dialog, asset, tabs, onClick, active }: IModalHead
                             : 'text-neutral-400 cursor-pointer hover:text-neutral-500 dark:text-neutral-600 dark:hover:text-neutral-500'
                     }
                   `}
-                        onClick={() => (onClick ? onClick(tab) : {})}
+                        onClick={() => (disabled ? {} : onClick ? onClick(tab) : {})}
                     >
                         {tab} {asset ? asset : ''}
                     </Dialog.Title>

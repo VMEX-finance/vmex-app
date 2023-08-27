@@ -23,7 +23,7 @@ export type IUseModal = {
     setAmount: React.Dispatch<React.SetStateAction<string>>;
 };
 
-export const useModal = (dialog: IDialogNames): IUseModal => {
+export const useModal = (dialog?: IDialogNames): IUseModal => {
     const determineDefaultView = () => {
         switch (dialog) {
             case 'loan-asset-dialog':
@@ -61,7 +61,7 @@ export const useModal = (dialog: IDialogNames): IUseModal => {
 
                 setTimeout(() => {
                     setIsSuccess(false);
-                    close && closeDialog(dialog);
+                    close && dialog && closeDialog(dialog);
                 }, TIMER_CLOSE_DELAY);
             } catch (err) {
                 console.error('Error in submitting tx:', err);
@@ -81,7 +81,7 @@ export const useModal = (dialog: IDialogNames): IUseModal => {
         error,
         setError,
         submitTx,
-        dialog,
+        dialog: dialog || 'disclaimer-dialog',
         view,
         setView,
         isMax,

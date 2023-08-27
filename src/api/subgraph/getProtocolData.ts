@@ -5,15 +5,17 @@ import {
     nativeAmountToUSD,
     IAvailableCoins,
     usdFormatter,
-    apolloClient,
+    getApolloClient,
     PRICING_DECIMALS,
-    NETWORK,
+    NETWORKS,
+    DEFAULT_NETWORK,
 } from '../../utils';
 import { getAllAssetPrices } from '../prices';
 import { AssetBalance, TrancheData } from '../types';
 import { IGraphProtocolDataProps, IGraphTrancheProps, ISubgraphProtocolData } from './types';
 import { getSubgraphTranchesOverviewData } from './getTranchesOverviewData';
 import { IAssetPricesProps } from '../prices/types';
+import { getNetwork } from '@wagmi/core';
 
 function subtractSeconds(date: Date, seconds: number): Date {
     date.setSeconds(date.getSeconds() - seconds);
@@ -22,7 +24,7 @@ function subtractSeconds(date: Date, seconds: number): Date {
 }
 
 export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointProps[] | any> => {
-    const { data, error } = await apolloClient.query({
+    const { data, error } = await getApolloClient().query({
         query: gql`
             query QueryProtocolTVL {
                 tranches {
@@ -53,6 +55,7 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
     });
     if (error) return [];
 
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     let graphData: ILineChartDataPointProps[] = [];
     const prices = await getAllAssetPrices();
     data.tranches.map((tranche: IGraphTrancheProps) => {
@@ -62,7 +65,7 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
             const assetUSDPrice = (prices as any)[asset]?.usdPrice || '0';
             const usdAmount = nativeAmountToUSD(
                 el.amount,
-                PRICING_DECIMALS[NETWORK],
+                PRICING_DECIMALS[network],
                 el.reserve.decimals,
                 assetUSDPrice,
             );
@@ -77,7 +80,7 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
             const usdAmount =
                 nativeAmountToUSD(
                     el.amount,
-                    PRICING_DECIMALS[NETWORK],
+                    PRICING_DECIMALS[network],
                     el.reserve.decimals,
                     assetUSDPrice,
                 ) * -1;
@@ -107,7 +110,7 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
 async function getTopAssets(
     _prices?: Record<IAvailableCoins, IAssetPricesProps>,
 ): Promise<AssetBalance[][]> {
-    const { data, error } = await apolloClient.query({
+    const { data, error } = await getApolloClient().query({
         query: gql`
             query QueryTopSuppliedAssets {
                 reserves(where: { symbol_not: "" }) {
@@ -123,6 +126,7 @@ async function getTopAssets(
     });
     if (error) return [];
 
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     let prices: Record<IAvailableCoins, IAssetPricesProps>;
     if (_prices) prices = _prices;
     else prices = await getAllAssetPrices();
@@ -142,7 +146,7 @@ async function getTopAssets(
             const _assetUSDPrice = (prices as any)[_asset]?.usdPrice || '0';
             const _usdAmount = nativeAmountToUSD(
                 reserve.totalDeposits,
-                PRICING_DECIMALS[NETWORK],
+                PRICING_DECIMALS[network],
                 reserve.decimals,
                 _assetUSDPrice,
             );
@@ -168,7 +172,7 @@ async function getTopAssets(
             const _assetUSDPrice = (prices as any)[_asset]?.usdPrice || '0';
             const _usdAmount = nativeAmountToUSD(
                 reserve.totalCurrentVariableDebt,
-                PRICING_DECIMALS[NETWORK],
+                PRICING_DECIMALS[network],
                 reserve.decimals,
                 _assetUSDPrice,
             );
@@ -189,7 +193,7 @@ async function getTopAssets(
 }
 
 export async function getSubgraphProtocolData(): Promise<IGraphProtocolDataProps> {
-    const { data, error } = await apolloClient.query({
+    const { data, error } = await getApolloClient().query({
         query: gql`
             query QueryProtocolData {
                 deposits {
@@ -265,14 +269,16 @@ export async function getSubgraphProtocolData(): Promise<IGraphProtocolDataProps
 }
 
 export function useSubgraphProtocolData(): ISubgraphProtocolData {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+
     const queryProtocolTVLChart = useQuery({
-        queryKey: ['protocol-charts'],
+        queryKey: ['protocol-charts', network],
         queryFn: () => getSubgraphProtocolChart(),
         refetchInterval: 1 * 60 * 1000, // Refetch every minute
     });
 
     const queryProtocolData = useQuery({
-        queryKey: ['protocol-data'],
+        queryKey: ['protocol-data', network],
         queryFn: () => getSubgraphProtocolData(),
     });
 

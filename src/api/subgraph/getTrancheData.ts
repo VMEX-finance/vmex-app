@@ -6,17 +6,19 @@ import { getAllAssetPrices } from '../prices';
 import {
     usdFormatter,
     percentFormatter,
-    apolloClient,
+    getApolloClient,
     nativeAmountToUSD,
     weightedAverageofArr,
     MAX_UINT_AMOUNT,
     IAvailableCoins,
     getTrancheCategory,
     PRICING_DECIMALS,
-    NETWORK,
+    NETWORKS,
+    DEFAULT_NETWORK,
 } from '../../utils';
 import { ILineChartDataPointProps } from '../../ui/components';
 import { getTrancheId } from './id-generation';
+import { getNetwork } from '@wagmi/core';
 
 const useCustomRiskParams = (isVerified: boolean, item: any) => {
     return isVerified && item.borrowFactor !== '0';
@@ -88,6 +90,7 @@ export const processTrancheData = async (
         {},
     );
 
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const summaryData = assets.reduce(
         (obj: any, item: any) => {
             const asset = item.assetData.underlyingAssetName.toUpperCase();
@@ -106,7 +109,7 @@ export const processTrancheData = async (
                     obj.tvl +
                     nativeAmountToUSD(
                         item.availableLiquidity,
-                        PRICING_DECIMALS[NETWORK],
+                        PRICING_DECIMALS[network],
                         item.decimals,
                         assetUSDPrice,
                     ),
@@ -114,7 +117,7 @@ export const processTrancheData = async (
                     obj.supplyTotal +
                     nativeAmountToUSD(
                         item.totalDeposits,
-                        PRICING_DECIMALS[NETWORK],
+                        PRICING_DECIMALS[network],
                         item.decimals,
                         assetUSDPrice,
                     ),
@@ -122,7 +125,7 @@ export const processTrancheData = async (
                     obj.borrowTotal +
                     nativeAmountToUSD(
                         item.totalCurrentVariableDebt,
-                        PRICING_DECIMALS[NETWORK],
+                        PRICING_DECIMALS[network],
                         item.decimals,
                         assetUSDPrice,
                     ),
@@ -130,7 +133,7 @@ export const processTrancheData = async (
                     obj.collateralTotal +
                     nativeAmountToUSD(
                         item.totalLiquidityAsCollateral,
-                        PRICING_DECIMALS[NETWORK],
+                        PRICING_DECIMALS[network],
                         item.decimals,
                         assetUSDPrice,
                     ),
@@ -201,7 +204,7 @@ export const getSubgraphTrancheData = async (
     if (!_trancheId) return {};
 
     const trancheId = getTrancheId(String(_trancheId));
-    const { data, error } = await apolloClient.query({
+    const { data, error } = await getApolloClient().query({
         query: gql`
             query QueryTranche($trancheId: String!) {
                 tranche(id: $trancheId) {
@@ -266,6 +269,7 @@ export const getSubgraphTrancheData = async (
         `,
         variables: { trancheId },
     });
+
     if (error || !data.tranche) return {};
     else return processTrancheData(data.tranche, String(_trancheId), data.protocol.globalAdmin);
 };
@@ -274,9 +278,8 @@ export const getSubgraphTrancheChart = async (
     _trancheId: number,
 ): Promise<ILineChartDataPointProps[] | any> => {
     if (!_trancheId) return {};
-
     const trancheId = getTrancheId(String(_trancheId));
-    const { data, error } = await apolloClient.query({
+    const { data, error } = await getApolloClient().query({
         query: gql`
             query QueryTrancheChart($trancheId: String!) {
                 tranche(id: $trancheId) {
@@ -308,6 +311,7 @@ export const getSubgraphTrancheChart = async (
 
     if (error) return [];
     else {
+        const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
         let graphData: ILineChartDataPointProps[] = [];
         const prices = await getAllAssetPrices();
         data.tranche?.depositHistory?.map((el: any) => {
@@ -324,7 +328,7 @@ export const getSubgraphTrancheChart = async (
             const assetUSDPrice = (prices as any)[asset]?.usdPrice;
             const usdAmount = nativeAmountToUSD(
                 el.amount,
-                PRICING_DECIMALS[NETWORK],
+                PRICING_DECIMALS[network],
                 el.reserve.decimals,
                 assetUSDPrice,
             );
@@ -351,7 +355,7 @@ export const getSubgraphTrancheChart = async (
             const assetUSDPrice = (prices as any)[asset]?.usdPrice;
             const usdAmount = nativeAmountToUSD(
                 el.amount,
-                PRICING_DECIMALS[NETWORK],
+                PRICING_DECIMALS[network],
                 el.reserve.decimals,
                 assetUSDPrice,
             );
@@ -376,14 +380,16 @@ export const getSubgraphTrancheChart = async (
 };
 
 export function useSubgraphTrancheData(trancheId: number): ISubgraphTrancheData {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+
     const queryTrancheData = useQuery({
-        queryKey: ['tranche-data', Number(trancheId)],
+        queryKey: ['tranche-data', Number(trancheId), network],
         queryFn: () => getSubgraphTrancheData(trancheId),
         enabled: !!trancheId,
     });
 
     const queryTrancheChart = useQuery({
-        queryKey: ['tranche-chart', Number(trancheId)],
+        queryKey: ['tranche-chart', Number(trancheId), network],
         queryFn: () => getSubgraphTrancheChart(trancheId),
         enabled: !!trancheId,
     });

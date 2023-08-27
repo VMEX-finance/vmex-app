@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react';
 import { BigNumber, Wallet, utils } from 'ethers';
 import {
     DECIMALS,
-    NETWORK,
-    SDK_PARAMS,
+    NETWORKS,
+    DEFAULT_NETWORK,
     bigNumberToUSD,
     bigNumberToUnformattedString,
     convertStringFormatToNumber,
@@ -13,7 +13,8 @@ import {
 } from '../utils';
 import { borrow, estimateGas, repay } from '@vmexfinance/sdk';
 import { useAccount, useSigner } from 'wagmi';
-import { useSubgraphTrancheData, useUserData, useUserTrancheData } from '../api';
+import { useSubgraphTrancheData, useUserTrancheData, useUserData } from '../api';
+import { getNetwork } from '@wagmi/core';
 
 export const useBorrow = ({
     data,
@@ -28,6 +29,7 @@ export const useBorrow = ({
     amount,
     setAmount,
 }: ISupplyBorrowProps & IUseModal) => {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const { address } = useAccount();
     const { data: signer } = useSigner();
     const { findAssetInUserSuppliesOrBorrows, findAmountBorrowable } = useUserTrancheData(
@@ -46,8 +48,8 @@ export const useBorrow = ({
     const amountWalletNative = getTokenBalance(asset || '');
 
     const toggleEthWeth = () => {
-        if (data?.asset.toLowerCase() === 'weth') {
-            if (asset.toLowerCase() === 'weth') setAsset('ETH');
+        if (data?.asset?.toLowerCase() === 'weth') {
+            if (asset?.toLowerCase() === 'weth') setAsset('ETH');
             else setAsset('WETH');
         }
     };
@@ -58,10 +60,10 @@ export const useBorrow = ({
         signer: signer
             ? signer
             : new Wallet('0xdf57089febbacf7ba0bc227dafbffa9fc08a93fdc68e1e42411a14efcf23656e'),
-        network: NETWORK,
+        network,
         isMax: isMax,
-        test: SDK_PARAMS.test,
-        providerRpc: SDK_PARAMS.providerRpc,
+        test: NETWORKS[network].testing,
+        providerRpc: NETWORKS[network].rpc,
     };
 
     const handleClick = async () => {
@@ -114,7 +116,6 @@ export const useBorrow = ({
 
     const isViolatingMax = () => {
         if (asset && amount) {
-            console.log('control');
             if (amount.includes('.') && amount.split('.')[1].length > (DECIMALS.get(asset) || 18)) {
                 return true;
             } else {
@@ -183,7 +184,7 @@ export const useBorrow = ({
                               asset: asset,
                           });
                     setEstimatedGasCost({
-                        cost: bigNumberToUSD(res, PRICING_DECIMALS[NETWORK]),
+                        cost: bigNumberToUSD(res, PRICING_DECIMALS[network]),
                         loading: false,
                         errorMessage: '',
                     });

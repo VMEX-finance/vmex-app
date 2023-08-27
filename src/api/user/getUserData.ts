@@ -10,15 +10,16 @@ import { useQuery } from '@tanstack/react-query';
 import {
     bigNumberToUSD,
     rayToPercent,
-    SDK_PARAMS,
+    NETWORKS,
     bigNumberToNative,
     averageOfArr,
     PRICING_DECIMALS,
-    NETWORK,
+    DEFAULT_NETWORK,
 } from '../../utils';
 import { IUserActivityDataProps, IUserDataProps, IUserWalletDataProps } from './types';
 import { BigNumber } from 'ethers';
 import { getSubgraphTranchesOverviewData } from '../subgraph';
+import { getNetwork } from '@wagmi/core';
 
 // Gets
 export async function getUserActivityData(userAddress: string): Promise<IUserActivityDataProps> {
@@ -33,13 +34,14 @@ export async function getUserActivityData(userAddress: string): Promise<IUserAct
             avgApy: 0,
         };
     }
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
 
     const tranchesDat = await getSubgraphTranchesOverviewData();
     const summary = await getUserSummaryData({
         user: userAddress,
-        network: SDK_PARAMS.network,
-        test: SDK_PARAMS.test,
-        providerRpc: SDK_PARAMS.providerRpc,
+        network,
+        test: NETWORKS[network].testing,
+        providerRpc: NETWORKS[network].rpc,
     });
 
     const apys: number[] = [];
@@ -57,8 +59,8 @@ export async function getUserActivityData(userAddress: string): Promise<IUserAct
         const apy = rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0));
         apys.push(apy);
         return {
-            asset: convertAddressToSymbol(assetData.asset, SDK_PARAMS.network),
-            amount: bigNumberToUSD(assetData.amount, PRICING_DECIMALS[NETWORK]),
+            asset: convertAddressToSymbol(assetData.asset, network),
+            amount: bigNumberToUSD(assetData.amount, PRICING_DECIMALS[network]),
             amountNative: assetData.amountNative,
             collateral: assetData.isCollateral,
             apy,
@@ -67,14 +69,13 @@ export async function getUserActivityData(userAddress: string): Promise<IUserAct
             // supplyCap: assetData.supplyCap,
         };
     });
-    console.log('supplies: ', supplies);
 
     const borrows = summary.borrowedAssetData.map((assetData: BorrowedAssetData) => {
         const apy = rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0));
         apys.push(apy);
         return {
-            asset: convertAddressToSymbol(assetData.asset, SDK_PARAMS.network),
-            amount: bigNumberToUSD(assetData.amount, PRICING_DECIMALS[NETWORK]),
+            asset: convertAddressToSymbol(assetData.asset, network),
+            amount: bigNumberToUSD(assetData.amount, PRICING_DECIMALS[network]),
             amountNative: assetData.amountNative,
             apy,
             tranche: tranchesDat[assetData.tranche.toNumber()].name || '',
@@ -101,19 +102,20 @@ export async function _getUserWalletData(
             assets: [],
         };
     }
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
 
     const res = await getUserWalletData({
         user: userAddress,
-        network: SDK_PARAMS.network,
-        test: SDK_PARAMS.test,
-        providerRpc: SDK_PARAMS.providerRpc,
+        network,
+        test: NETWORKS[network].testing,
+        providerRpc: NETWORKS[network].rpc,
     });
 
     return {
         assets: res.map((assetData: UserWalletData) => {
             return {
-                asset: convertAddressToSymbol(assetData.asset, SDK_PARAMS.network),
-                amount: bigNumberToUSD(assetData.amount, PRICING_DECIMALS[NETWORK]),
+                asset: convertAddressToSymbol(assetData.asset, network),
+                amount: bigNumberToUSD(assetData.amount, PRICING_DECIMALS[network]),
                 amountNative: assetData.amountNative,
                 currentPrice: assetData.currentPrice,
             };
@@ -123,14 +125,16 @@ export async function _getUserWalletData(
 
 // Master
 export function useUserData(userAddress: any): IUserDataProps {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+
     const queryUserActivity = useQuery({
-        queryKey: ['user-activity'],
+        queryKey: ['user-activity', network],
         queryFn: () => getUserActivityData(userAddress),
         enabled: !!userAddress,
     });
 
     const queryUserWallet = useQuery({
-        queryKey: ['user-wallet'],
+        queryKey: ['user-wallet', network],
         queryFn: () => _getUserWalletData(userAddress),
         enabled: !!userAddress,
     });
@@ -151,7 +155,7 @@ export function useUserData(userAddress: any): IUserDataProps {
             };
         } else {
             const found = queryUserWallet.data.assets.find(
-                (el) => el.asset.toLowerCase() === asset.toLowerCase(),
+                (el) => el.asset?.toLowerCase() === asset?.toLowerCase(),
             );
             return {
                 amountNative: found?.amountNative || BigNumber.from('0'),

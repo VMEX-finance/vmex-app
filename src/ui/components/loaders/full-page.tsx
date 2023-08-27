@@ -1,6 +1,7 @@
 import { Transition } from '@headlessui/react';
 import React, { ReactNode } from 'react';
 import { useLocation } from 'react-router-dom';
+import { getNetwork } from '@wagmi/core';
 
 type IFullPageLoader = {
     loading?: boolean;
@@ -17,6 +18,7 @@ export const FullPageLoader = ({
     children,
     animation,
 }: IFullPageLoader) => {
+    const network = getNetwork()?.chain?.name || 'Optimism';
     const { pathname } = useLocation();
 
     const determineShow = () => {
@@ -45,9 +47,15 @@ export const FullPageLoader = ({
                         leaveFrom="opacity-100"
                         leaveTo="opacity-0"
                     >
-                        <img src="/3D-logo.svg" alt="VMEX Logo" width="165" height="150" />
+                        <img
+                            src="/3D-logo.svg"
+                            alt="VMEX Logo"
+                            width="165"
+                            height="150"
+                            rel="preload"
+                        />
                         <p className="text-center font-medium dark:text-neutral-300 mt-6">{text}</p>
-                        <p className="text-sm font-light dark:text-neutral-300">Optimism</p>
+                        <p className="text-sm font-light dark:text-neutral-300">{network}</p>
                     </Transition>
                 </div>
             </Transition>

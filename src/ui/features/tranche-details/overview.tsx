@@ -117,7 +117,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                         <NumberDisplay
                             center
                             size="xl"
-                            label="Tranche Market Size"
+                            label="Supplied"
                             value={`${makeCompact(supplied, true)}`}
                             change={supplyChange}
                             loading={loading}
@@ -190,6 +190,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                                                 }
                                                 className={buttonClass}
                                             >
+                                                <> {console.log(el.asset)}</>
                                                 <AssetDisplay
                                                     className={assetDisplayClass}
                                                     name={el.asset}

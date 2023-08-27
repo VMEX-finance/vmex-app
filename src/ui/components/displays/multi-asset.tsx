@@ -1,4 +1,8 @@
-import { determineCoinDescription, determineCoinImg } from '../../../utils/helpers';
+import {
+    determineCoinDescription,
+    determineCoinImg,
+    getRandomNumber,
+} from '../../../utils/helpers';
 import React from 'react';
 import { SkeletonLoader } from '../loaders';
 import { Tooltip } from '../tooltips';
@@ -28,14 +32,25 @@ export const MultipleAssetsDisplay = ({ assets, show = 4, size, gap }: IMultiple
             className={`flex flex-wrap items-center ${
                 gap ? gap : `${show === 'all' ? 'gap-3' : 'xl:gap-2'}`
             }`}
-            key={`multiple-assets-display-${Math.random()}`}
+            key={`multiple-assets-display-${getRandomNumber()}`}
         >
             {mapAssets().length !== 0
                 ? mapAssets().map((el, i) =>
-                      renderAsset(el, size, 0, undefined, `tranches-asset-${i}`),
+                      renderAsset(
+                          el,
+                          size,
+                          0,
+                          undefined,
+                          `tranches-asset-${i}-${getRandomNumber()}`,
+                      ),
                   )
                 : [1, 2, 3, 4].map((el) => (
-                      <SkeletonLoader key={el} variant="circular" height={'2rem'} width={'2rem'} />
+                      <SkeletonLoader
+                          key={`${el}-${getRandomNumber()}`}
+                          variant="circular"
+                          height={'2rem'}
+                          width={'2rem'}
+                      />
                   ))}
             {show !== 'all' && assets && assets.length > (show ? show : 4) && (
                 <Tooltip
@@ -45,6 +60,7 @@ export const MultipleAssetsDisplay = ({ assets, show = 4, size, gap }: IMultiple
                             +{assets.slice(show ? show : 4).length}
                         </span>
                     }
+                    key={`tooltip-multi-asset-display-${getRandomNumber()}`}
                 />
             )}
         </div>
@@ -58,7 +74,10 @@ export const MultipleAssetsDisplayOverlapping = ({
     origAssetName,
 }: IMultipleAssetsProps) => {
     return (
-        <Tooltip text={determineCoinDescription(origAssetName || '')}>
+        <Tooltip
+            text={determineCoinDescription(origAssetName || '')}
+            key={`tooltip-multiple-assets-overlap-${getRandomNumber()}`}
+        >
             <div
                 className={`flex ${gap ? gap : 'gap-2'}`}
                 style={{ flexWrap: 'wrap' }} // Added style for wrapping
@@ -67,7 +86,7 @@ export const MultipleAssetsDisplayOverlapping = ({
                     assets?.map((el, i) =>
                         i == assets?.length - 1 ? (
                             <img
-                                key={`tranches-asset-${i}`}
+                                key={`tranches-asset-${i}-${getRandomNumber()}`}
                                 src={determineCoinImg(el)}
                                 alt={el}
                                 className={`${size ? size : 'h-4 w-4'} absolute top-0 right-0`}
@@ -79,7 +98,7 @@ export const MultipleAssetsDisplayOverlapping = ({
                             />
                         ) : (
                             <img
-                                key={`tranches-asset-${i}`}
+                                key={`tranches-asset-${i}-${getRandomNumber()}`}
                                 src={determineCoinImg(el)}
                                 alt={el}
                                 className={`${size ? size : 'h-8 w-8'}`}
@@ -96,7 +115,7 @@ export const MultipleAssetsDisplayOverlapping = ({
                         variant="circular"
                         height={'2rem'}
                         width={'2rem'}
-                        key={`${Math.random()}`}
+                        key={`skeleton-loader-multiple-assets-${getRandomNumber()}`}
                     />
                 )}
             </div>

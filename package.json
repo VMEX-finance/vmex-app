@@ -21,12 +21,8 @@
     },
     "private": true,
     "scripts": {
-        "start:hardhat": "REACT_APP_NETWORK='localhost' REACT_APP_RPC='http://127.0.0.1:8545' REACT_APP_SUBGRAPH_ENDPOINT='http://127.0.0.1:8000/subgraphs/name/vmex-finance' REACT_APP_TEST=true react-scripts start",
-        "start:mainnetfork": "REACT_APP_NETWORK='localhost' REACT_APP_RPC='https://dev.volatilelabs.ltd:8443' REACT_APP_SUBGRAPH_ENDPOINT='https://dev.volatilelabs.ltd:443/subgraphs/name/vmex-finance' REACT_APP_TEST=true react-scripts start",
-        "start:sepolia": "REACT_APP_NETWORK='sepolia' REACT_APP_RPC='https://eth-sepolia.public.blastapi.io' REACT_APP_SUBGRAPH_ENDPOINT='https://api.studio.thegraph.com/query/40387/vmex-finance-sepolia/version/latest' REACT_APP_TEST=true react-scripts start",
-        "start:optimism:local": "REACT_APP_NETWORK='optimism_localhost' REACT_APP_RPC='http://127.0.0.1:8545' REACT_APP_SUBGRAPH_ENDPOINT='http://127.0.0.1:8000/subgraphs/name/vmex-finance' REACT_APP_TEST=true react-scripts start",
-        "start:optimism": "REACT_APP_NETWORK='optimism' REACT_APP_RPC='https://mainnet.optimism.io' REACT_APP_SUBGRAPH_ENDPOINT='https://api.thegraph.com/subgraphs/name/vmex-finance/vmex-optimism' react-scripts start",
         "start": "react-app-rewired start",
+        "dev": "REACT_APP_TEST=1 react-app-rewired start",
         "build": "react-app-rewired build",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
@@ -82,7 +78,7 @@
         "@testing-library/jest-dom": "^5.16.4",
         "@testing-library/react": "^13.3.0",
         "@testing-library/user-event": "^13.5.0",
-        "@vmexfinance/sdk": "^1.0.9",
+        "@vmexfinance/sdk": "^1.0.13",
         "bad-words": "^3.0.4",
         "ethers": "^5.6.9",
         "graphql": "^16.6.0",
@@ -105,7 +101,7 @@
         "recharts": "^2.1.13",
         "tailwindcss": "^3.1.6",
         "typescript": "^4.8.4",
-        "wagmi": "^0.8.10"
+        "wagmi": "0.10.5"
     },
     "devDependencies": {
         "@babel/plugin-proposal-private-property-in-object": "^7.21.11",

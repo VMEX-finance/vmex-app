@@ -1,11 +1,12 @@
 import { AssetDisplay } from '../displays/asset';
 import React from 'react';
-import { bigNumberToUSD, NETWORK, SDK_PARAMS } from '../../../utils';
+import { bigNumberToUSD, NETWORKS, DEFAULT_NETWORK } from '../../../utils';
 import { useSigner } from 'wagmi';
 import { mintTokens } from '@vmexfinance/sdk';
 import { Button, SecondaryButton } from '../buttons';
 import { usePricesData } from '../../../api/prices';
 import { BigNumber, utils } from 'ethers';
+import { getNetwork } from '@wagmi/core';
 
 export interface ICoinInput {
     amount: string;
@@ -20,6 +21,7 @@ export interface ICoinInput {
     setIsMax: React.Dispatch<React.SetStateAction<boolean>>;
     loading?: boolean;
     customMaxClick?: any;
+    disabled?: boolean;
 }
 
 export const CoinInput = ({
@@ -32,7 +34,9 @@ export const CoinInput = ({
     setIsMax,
     loading,
     customMaxClick,
+    disabled,
 }: ICoinInput) => {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const { data: signer } = useSigner();
     const { prices } = usePricesData();
     const onChange = (e: any) => {
@@ -72,14 +76,14 @@ export const CoinInput = ({
     };
 
     const mint = async () => {
-        if (!process.env.REACT_APP_TEST) return;
+        if (!NETWORKS[network].testing) return;
         if (signer && coin) {
             const res = await mintTokens({
                 token: coin.name,
                 signer: signer,
-                network: NETWORK,
-                test: SDK_PARAMS.test,
-                providerRpc: SDK_PARAMS.providerRpc,
+                network: network,
+                test: NETWORKS[network].testing,
+                providerRpc: NETWORKS[network].rpc,
             });
             console.log(`Minted ${coin.name} to wallet`);
             return res;
@@ -96,13 +100,18 @@ export const CoinInput = ({
                         onChange={onChange}
                         className="text-2xl focus:outline-none max-w-[225px] dark:bg-brand-black overflow-auto dark:placeholder:text-neutral-700"
                         placeholder="0.00"
+                        disabled={disabled}
                     />
                     <AssetDisplay logo={coin.logo} name={coin.name} />
                 </div>
                 <div className="flex flex-row justify-end items-end gap-3">
                     {/* TODO: add usd value */}
                     {/* <div className="text-neutral-400">{calculateUsd()} USD</div> */}
-                    <SecondaryButton onClick={onMaxButtonClick} loading={loading}>
+                    <SecondaryButton
+                        onClick={onMaxButtonClick}
+                        loading={loading}
+                        disabled={disabled}
+                    >
                         <span>MAX</span>
                         <p>
                             {`${
@@ -117,14 +126,9 @@ export const CoinInput = ({
                     </SecondaryButton>
                 </div>
             </div>
-            {process.env.REACT_APP_TEST && (
+            {NETWORKS[network].testing && (
                 <div className="mt-2 flex justify-end">
-                    <Button
-                        primary
-                        onClick={mint}
-                        label={`DEV: Mint ${coin.name}`}
-                        className="w-fit"
-                    />
+                    <Button primary onClick={mint} label={`Mint ${coin.name}`} className="w-fit" />
                 </div>
             )}
         </>

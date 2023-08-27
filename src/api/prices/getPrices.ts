@@ -1,17 +1,21 @@
 import { useQuery } from '@tanstack/react-query';
 import { getAssetPrices, getAllAssetSymbols, convertAddressToSymbol } from '@vmexfinance/sdk';
-import { SDK_PARAMS, IAvailableCoins } from '../../utils';
+import { NETWORKS, DEFAULT_NETWORK, IAvailableCoins } from '../../utils';
 import { IAssetPricesProps, IPricesDataProps } from './types';
+import { getNetwork } from '@wagmi/core';
 
 export async function getAllAssetPrices(): Promise<Record<IAvailableCoins, IAssetPricesProps>> {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const pricesMap = await getAssetPrices({
-        assets: getAllAssetSymbols(SDK_PARAMS.network),
-        ...SDK_PARAMS,
+        assets: getAllAssetSymbols(network),
+        network,
+        test: NETWORKS[network].testing,
+        providerRpc: NETWORKS[network].rpc,
     });
     const returnObj: Record<string, IAssetPricesProps> = {};
     pricesMap &&
         pricesMap.forEach(({ oracle, priceETH, priceUSD }, key) => {
-            let asset = convertAddressToSymbol(key, SDK_PARAMS.network);
+            let asset = convertAddressToSymbol(key, network);
             asset = asset.toUpperCase();
             (returnObj as any)[asset] = {
                 oracle,
@@ -24,8 +28,9 @@ export async function getAllAssetPrices(): Promise<Record<IAvailableCoins, IAsse
 }
 
 export function usePricesData(): IPricesDataProps {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const queryAssetPrices = useQuery({
-        queryKey: ['asset-prices'],
+        queryKey: ['asset-prices', network],
         queryFn: getAllAssetPrices,
         refetchInterval: 60000, // refetch prices every minute
     });

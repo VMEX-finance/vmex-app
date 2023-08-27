@@ -5,6 +5,7 @@ type ISecondaryButtonProps = {
     onClick: any;
     loading?: boolean;
     className?: string;
+    disabled?: boolean;
 };
 
 export const SecondaryButton = ({
@@ -12,6 +13,7 @@ export const SecondaryButton = ({
     onClick,
     loading,
     className,
+    disabled,
 }: ISecondaryButtonProps) => {
     return (
         <button
@@ -19,6 +21,7 @@ export const SecondaryButton = ({
                 loading ? 'animate-pulse' : ''
             } ${className ? className : ''}`}
             onClick={onClick}
+            disabled={disabled}
         >
             {children}
         </button>

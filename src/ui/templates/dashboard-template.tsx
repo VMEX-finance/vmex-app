@@ -42,7 +42,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
 
     // TODO: cleanup / optimize
     return (
-        <div className="max-w-[125rem] mx-auto p-3 md:p-4 lg:p-5 xl:p-6 2xl:p-10">
+        <div className="max-w-[125rem] mx-auto p-3 md:p-4 lg:p-5 xl:p-6 2xl:px-10">
             <header
                 className={`
                     ${right ? 'flex justify-between w-full' : ''}
@@ -84,7 +84,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                                         <h1 className="text-3xl font-basefont capitalize leading-tight text-neutral-900 dark:text-neutral-300 text-center">
                                             {title}
                                         </h1>
-                                        {tranche?.category && ( // TODO: connect with SDK
+                                        {tranche?.category && (
                                             <Label
                                                 tooltip
                                                 className="!py-0.5 !text-xs md:absolute md:left-1/2 md:-translate-x-1/2"
@@ -117,13 +117,14 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                     </>
                 )}
                 {location.pathname === `/tranches` && isConnected && !chain?.unsupported && (
-                    <div className="flex gap-3 md:justify-end mt-2">
+                    <div className="flex gap-2 xl:gap-3 md:justify-end mt-2">
                         {queryTrancheAdminData.data?.length &&
                         queryTrancheAdminData.data?.length > 0 ? (
                             <Button
                                 label={'My Tranches'}
                                 onClick={() => navigate(`/my-tranches`)}
                                 primary
+                                className="h-full sm:h-auto"
                             />
                         ) : (
                             <Tooltip
@@ -133,6 +134,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                                         label={'My Tranches'}
                                         primary
                                         disabled={queryTrancheAdminData?.data?.length === 0}
+                                        className="h-full sm:h-auto"
                                     />
                                 }
                             />
@@ -146,7 +148,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                 )}
             </header>
             <main>
-                <div className="py-4 md:py-8 flex flex-col gap-4 xl:gap-8">
+                <div className="py-4 md:py-8 flex flex-col gap-4 xl:gap-5">
                     {children ? (
                         children
                     ) : (

@@ -2,11 +2,12 @@ import { gql } from '@apollo/client';
 import { useQuery } from '@tanstack/react-query';
 import { ISubgraphAllAssetMappingsData } from './types';
 import { IAssetMappings } from '../types';
-import { apolloClient } from '../../utils';
+import { DEFAULT_NETWORK, getApolloClient } from '../../utils';
 import { getAllAssetPrices } from '../prices';
+import { getNetwork } from '@wagmi/core';
 
 export const getSubgraphAllAssetMappingsData = async (): Promise<Map<string, IAssetMappings>> => {
-    const { data, error } = await apolloClient.query({
+    const { data, error } = await getApolloClient().query({
         query: gql`
             query QueryAllAssetMappings {
                 assetDatas {
@@ -50,13 +51,15 @@ export const getSubgraphAllAssetMappingsData = async (): Promise<Map<string, IAs
 };
 
 export function useSubgraphAllAssetMappingsData(): ISubgraphAllAssetMappingsData {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+
     const queryAllAssetMappingsData = useQuery({
-        queryKey: [`subgraph-all-asset-mappings-data`],
+        queryKey: [`subgraph-all-asset-mappings-data`, network],
         queryFn: () => getSubgraphAllAssetMappingsData(),
     });
 
     const queryAssetPrices = useQuery({
-        queryKey: ['all-asset-prices'],
+        queryKey: ['all-asset-prices', network],
         queryFn: () => getAllAssetPrices(),
     });
 

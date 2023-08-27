@@ -12,12 +12,14 @@ import { IDialogProps } from '../utils';
 import { useStepper, useModal } from '../../../hooks';
 import { ModalFooter, ModalHeader } from '../../modals/subcomponents';
 import { CreateTrancheAssetsTable } from '../../tables';
-import { NETWORK, AVAILABLE_ASSETS, SDK_PARAMS, checkProfanity } from '../../../utils';
+import { NETWORKS, DEFAULT_NETWORK, AVAILABLE_ASSETS, checkProfanity } from '../../../utils';
 import { useAccount, useSigner } from 'wagmi';
 import { initTranche } from '@vmexfinance/sdk';
 import { useSubgraphTranchesOverviewData } from '../../../api';
+import { getNetwork } from '@wagmi/core';
 
 export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeDialog }) => {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const { address } = useAccount();
     const { data: signer } = useSigner();
     const { setError, isSuccess, error, submitTx, isLoading } = useModal('create-tranche-dialog');
@@ -83,9 +85,9 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
                 admin: signer,
                 treasuryAddress: treasuryAddress,
                 incentivesController: '0x0000000000000000000000000000000000000000', //disabled for now
-                network: NETWORK,
-                test: SDK_PARAMS.test,
-                providerRpc: SDK_PARAMS.providerRpc,
+                network: network,
+                test: NETWORKS[network].testing,
+                providerRpc: NETWORKS[network].rpc,
                 chunks: chunkMaxSize,
             });
             return res;
@@ -153,7 +155,7 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
                         <ListInput
                             title="Tokens"
                             list={_tokens}
-                            autocomplete={AVAILABLE_ASSETS[NETWORK].filter(
+                            autocomplete={AVAILABLE_ASSETS[network].filter(
                                 (val: any) => !_tokens.includes(val),
                             )}
                             setList={setTokens}
