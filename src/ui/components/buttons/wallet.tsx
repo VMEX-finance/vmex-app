@@ -110,7 +110,7 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
                         if (!connected) {
                             return { onClick: openConnectModal, render: title };
                         } else if (chain.unsupported) {
-                            return { onClick: openChainModal, render: 'Wrong Network' };
+                            return { onClick: openChainModal, render: 'Swtich Network' };
                         } else {
                             return { onClick: openAccountModal, render: account.displayName };
                         }
@@ -141,7 +141,7 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
                                             'min-h-[36px] !py-2',
                                             mode,
                                             className,
-                                            'bg-brand-black dark:bg-neutral-200 dark:text-neutral-900 dark:hover:bg-neutral-300 rounded-lg text-neutral-100 hover:bg-neutral-800 border border-brand-black',
+                                            'bg-brand-black dark:bg-neutral-200 dark:hover:bg-neutral-300 rounded-lg text-neutral-900 border border-brand-black',
                                         ].join(' ')}
                                     >
                                         {determineConnection().render}

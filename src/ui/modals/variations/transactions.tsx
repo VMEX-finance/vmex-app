@@ -10,7 +10,9 @@ import { getNetwork } from '@wagmi/core';
 export const TransactionsDialog: React.FC<IDialogProps> = ({ name, isOpen, data }) => {
     const { transactions } = useTransactionsContext();
     const { closeDialog } = useDialogController();
-    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+    const network = getNetwork()?.chain?.unsupported
+        ? DEFAULT_NETWORK
+        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
 
     const renderStatus = (status: 'error' | 'pending' | 'complete') => {
         switch (status) {

@@ -5,7 +5,9 @@ import { IAssetPricesProps, IPricesDataProps } from './types';
 import { getNetwork } from '@wagmi/core';
 
 export async function getAllAssetPrices(): Promise<Record<IAvailableCoins, IAssetPricesProps>> {
-    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+    const network = getNetwork()?.chain?.unsupported
+        ? DEFAULT_NETWORK
+        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const pricesMap = await getAssetPrices({
         assets: getAllAssetSymbols(network),
         network,
@@ -28,7 +30,9 @@ export async function getAllAssetPrices(): Promise<Record<IAvailableCoins, IAsse
 }
 
 export function usePricesData(): IPricesDataProps {
-    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+    const network = getNetwork()?.chain?.unsupported
+        ? DEFAULT_NETWORK
+        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const queryAssetPrices = useQuery({
         queryKey: ['asset-prices', network],
         queryFn: getAllAssetPrices,

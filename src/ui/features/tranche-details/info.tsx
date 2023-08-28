@@ -11,7 +11,9 @@ type ITrancheInfoCard = {
 };
 
 export const TrancheInfoCard = ({ tranche, loading }: ITrancheInfoCard) => {
-    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+    const network = getNetwork()?.chain?.unsupported
+        ? DEFAULT_NETWORK
+        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const { tranche: _tranche } = useSelectedTrancheContext();
 
     return (

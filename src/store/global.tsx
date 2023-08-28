@@ -20,7 +20,9 @@ const GlobalContext = createContext<IGlobalStoreProps>({
 
 // Wrapper
 export function GlobalStore(props: { children: ReactNode }) {
-    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+    const network = getNetwork()?.chain?.unsupported
+        ? DEFAULT_NETWORK
+        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const { address } = useAccount();
     const merkle = useMerkle();
     const navigate = useNavigate();

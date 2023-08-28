@@ -17,7 +17,9 @@ export const ToggleCollateralDialog: React.FC<IDialogProps> = ({
 }) => {
     const { submitTx, isLoading, isSuccess, error } = useModal('confirmation-dialog');
     const { data: signer } = useSigner();
-    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+    const network = getNetwork()?.chain?.unsupported
+        ? DEFAULT_NETWORK
+        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
 
     const handleCollateral = async () => {
         if (signer) {

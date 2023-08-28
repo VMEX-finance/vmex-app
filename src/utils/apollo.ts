@@ -17,7 +17,9 @@ const cache = new InMemoryCache({
 });
 
 export const getApolloClient = () => {
-    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+    const network = getNetwork()?.chain?.unsupported
+        ? DEFAULT_NETWORK
+        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     return new ApolloClient({
         uri: NETWORKS[network].subgraph,
         cache: cache,

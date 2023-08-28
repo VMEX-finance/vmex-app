@@ -26,7 +26,9 @@ export const YourRewardsTable: React.FC<IYourRewardsTableProps> = ({
     isLoading,
     address,
 }) => {
-    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+    const network = getNetwork()?.chain?.unsupported
+        ? DEFAULT_NETWORK
+        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const { width } = useWindowSize();
     const headers = ['Asset', 'Amount', ''];
     const { data: signer } = useSigner();

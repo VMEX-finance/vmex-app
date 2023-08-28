@@ -6,7 +6,9 @@ import { getNetwork } from '@wagmi/core';
 
 // Gets
 export async function getUserRewards(userAddress: string) {
-    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+    const network = getNetwork()?.chain?.unsupported
+        ? DEFAULT_NETWORK
+        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     if (!userAddress) {
         return [];
     }
@@ -34,7 +36,9 @@ export async function getUserRewards(userAddress: string) {
 
 // Master
 export function useUserRewards(userAddress: any) {
-    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+    const network = getNetwork()?.chain?.unsupported
+        ? DEFAULT_NETWORK
+        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
 
     const queryUserRewards = useQuery({
         queryKey: [`user-external-rewards`, userAddress, network],

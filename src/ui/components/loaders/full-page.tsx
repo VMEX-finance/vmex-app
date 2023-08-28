@@ -18,7 +18,9 @@ export const FullPageLoader = ({
     children,
     animation,
 }: IFullPageLoader) => {
-    const network = getNetwork()?.chain?.name || 'Optimism';
+    const network = getNetwork()?.chain?.unsupported
+        ? 'Optimism'
+        : getNetwork()?.chain?.name || 'Optimism';
     const { pathname } = useLocation();
 
     const determineShow = () => {

@@ -83,10 +83,12 @@ export const Navbar: React.FC = () => {
                     {width <= breakpoints.lg && <ToggleThemeButton />}
                     <DefaultDropdown
                         selected={
-                            renderNetworks().filter(
-                                (network) =>
-                                    network.text === getNetwork()?.chain?.name?.toLowerCase(),
-                            )[0]?.icon
+                            getNetwork()?.chain?.unsupported
+                                ? 'coins/op.svg'
+                                : renderNetworks().filter(
+                                      (network) =>
+                                          network.text === getNetwork()?.chain?.name?.toLowerCase(),
+                                  )[0]?.icon
                         }
                         items={renderNetworks(switchNetworkAsync)}
                         size="lg"
