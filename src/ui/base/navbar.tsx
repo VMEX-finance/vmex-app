@@ -1,31 +1,28 @@
 import { Menu, Transition } from '@headlessui/react';
 import React, { Fragment, useContext } from 'react';
 import { HiOutlineMenuAlt3 } from 'react-icons/hi';
-import { BiTransferAlt } from 'react-icons/bi';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { DefaultDropdown, MenuItemButton, WalletButton, ToggleThemeButton } from '../components';
-import { ThemeContext, useTransactionsContext } from '../../store';
-import { useAccount } from 'wagmi';
+import { ThemeContext } from '../../store';
+import { useAccount, useSwitchNetwork } from 'wagmi';
 import { useDialogController, useWindowSize } from '../../hooks';
 import { IDialogNames } from '@store/modals';
 import { useSubgraphUserData } from '../../api';
-import { NETWORKS, DEFAULT_NETWORK } from '../../utils';
+import { renderNetworks } from '../../utils';
 import { getNetwork } from '@wagmi/core';
-import { useChainModal } from '@rainbow-me/rainbowkit';
 
 const navItems = ['Overview', 'Tranches', 'Markets', 'Governance', 'Develop'];
 
 export const Navbar: React.FC = () => {
-    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const { isDark } = useContext(ThemeContext);
     const navigate = useNavigate();
     const location = useLocation();
-    const { width } = useWindowSize();
+    const { width, breakpoints } = useWindowSize();
     const { isConnected } = useAccount();
-    const { transactions } = useTransactionsContext();
     const { openDialog } = useDialogController();
     const { address } = useAccount();
     const { queryTrancheAdminData } = useSubgraphUserData(address || '');
+    const { switchNetworkAsync } = useSwitchNetwork();
 
     function navigateTo(e: any) {
         if (typeof e === 'string') navigate(`../${e}`, { replace: false });
@@ -40,7 +37,11 @@ export const Navbar: React.FC = () => {
         <nav className="flex justify-center flex-row sticky h-fit items-center top-0 font-basefont px-3 md:px-4 py-2 lg:px-5 2xl:px-10 lg:py-4 bg-neutral-900 dark:bg-brand-black lg:bg-[#FFF] z-[1000] shadow-lg lg:shadow-md">
             <div
                 className={`w-full max-w-[150rem]
-                ${width <= 1080 ? 'flex flex-row items-center justify-between' : 'grid grid-cols-3'}
+                ${
+                    width <= breakpoints.lg
+                        ? 'flex flex-row items-center justify-between'
+                        : 'grid grid-cols-3'
+                }
             `}
             >
                 {/* Desktop/Mobile Left Nav */}
@@ -58,7 +59,7 @@ export const Navbar: React.FC = () => {
                 </div>
 
                 {/* Desktop Center Nav */}
-                {width >= 1024 && (
+                {width >= breakpoints.lg && (
                     <div className="justify-self-center">
                         <div
                             className={
@@ -78,36 +79,24 @@ export const Navbar: React.FC = () => {
                 )}
 
                 {/* Desktop/Mobile Right Nav */}
-                <div className="flex items-center justify-end gap-3">
-                    {width <= 1024 && <ToggleThemeButton />}
-                    {/* Transactions Dropdown */}
-                    {/* TODO: move this to inside wallet button */}
-                    {isConnected && transactions && transactions.length !== 0 && (
-                        <DefaultDropdown
-                            reverse
-                            items={transactions}
-                            baseLink={`${NETWORKS[network].explorer}/tx`}
-                            selected={'Transactions'}
-                            label={
-                                width < 1400 && (
-                                    <span className="flex gap-2 items-center !max-h-[25px]">
-                                        <BiTransferAlt size={'24px'} />
-                                        {
-                                            transactions.filter((el) => el.status === 'pending')
-                                                .length
-                                        }
-                                    </span>
-                                )
-                            }
-                            size="lg"
-                            className={`border border-1 border-brand-black ${
-                                width < 1400 ? '!py-[0.45rem]' : ''
-                            }`}
-                            truncate
-                        />
-                    )}
+                <div className="flex items-center justify-end gap-2">
+                    {width <= breakpoints.lg && <ToggleThemeButton />}
+                    <DefaultDropdown
+                        selected={
+                            renderNetworks().filter(
+                                (network) =>
+                                    network.text === getNetwork()?.chain?.name?.toLowerCase(),
+                            )[0]?.icon
+                        }
+                        items={renderNetworks(switchNetworkAsync)}
+                        size="lg"
+                        className={`border border-1 border-brand-black ${
+                            width < 1400 ? '!py-[0.45rem]' : ''
+                        } bg-white hover:bg-neutral-100 !px-0 !pl-2 !py-[5px] lg:!py-1`}
+                        icon
+                    />
 
-                    {width >= 1024 ? (
+                    {width >= breakpoints.lg ? (
                         <WalletButton primary label={width > 1200 ? 'Connect Wallet' : 'Connect'} />
                     ) : (
                         <MobileDropdownMenu
@@ -134,8 +123,6 @@ const MobileDropdownMenu = ({
     isConnected: boolean;
     tranches?: any[];
 }) => {
-    const { openChainModal } = useChainModal();
-
     return (
         <Menu as="div" className="relative inline-block">
             <div>
@@ -174,8 +161,8 @@ const MobileDropdownMenu = ({
                                         mobile
                                     />
                                     <MenuItemButton
-                                        label={`Switch Network`}
-                                        onClick={openChainModal}
+                                        label={`History`}
+                                        onClick={() => onClick('transactions-dialog')}
                                         mobile
                                     />
                                     {tranches?.length !== 0 && (

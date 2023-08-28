@@ -24,7 +24,8 @@ export type IDialogNames =
     | 'confirmation-dialog'
     | 'feedback-dialog'
     | 'disclaimer-dialog'
-    | 'toggle-collateral-dialog';
+    | 'toggle-collateral-dialog'
+    | 'transactions-dialog';
 
 const DialogControllerState: IDialogState = {
     dialogs: new Map<string, DialogType>([
@@ -114,6 +115,16 @@ const DialogControllerState: IDialogState = {
             'toggle-collateral-dialog',
             {
                 name: 'Collateral',
+                isOpen: false,
+                data: {},
+                isSuccess: false,
+                isError: false,
+            },
+        ],
+        [
+            'transactions-dialog',
+            {
+                name: 'Transaction History',
                 isOpen: false,
                 data: {},
                 isSuccess: false,

@@ -4,7 +4,7 @@ import { RiArrowDropDownLine } from 'react-icons/ri';
 import { CgSpinner } from 'react-icons/cg';
 import { IoMdCheckmarkCircle } from 'react-icons/io';
 import { MenuItemButton } from '../buttons/menu-item';
-import { truncate as _truncate } from '../../../utils/helpers';
+import { truncate as _truncate, capFirstLetter } from '../../../utils/helpers';
 
 export interface IDropdownItemProps {
     text: string;
@@ -30,6 +30,7 @@ export interface IDropdownProps {
     className?: string;
     truncate?: boolean;
     wrapperClass?: string;
+    icon?: boolean;
 }
 
 export const DefaultDropdown = ({
@@ -50,6 +51,7 @@ export const DefaultDropdown = ({
     className,
     truncate,
     wrapperClass,
+    icon,
 }: IDropdownProps) => {
     const [list, setList] = useState([]);
 
@@ -149,7 +151,20 @@ export const DefaultDropdown = ({
                         label
                     ) : (
                         <span className="inline-flex items-center justify-between w-full">
-                            {!multiselect ? selected : 'Select One...'}{' '}
+                            {!multiselect ? (
+                                icon ? (
+                                    <img
+                                        src={selected as string}
+                                        alt={selected as string}
+                                        width={25}
+                                        height={25}
+                                    />
+                                ) : (
+                                    selected
+                                )
+                            ) : (
+                                'Select One...'
+                            )}{' '}
                             <RiArrowDropDownLine size={iconSize} />
                         </span>
                     )}
@@ -188,26 +203,48 @@ export const DefaultDropdown = ({
                                                                         item?.className || ''
                                                                     }`}
                                                                 >
-                                                                    {uppercase
-                                                                        ? truncate
-                                                                            ? _truncate(
-                                                                                  item.text.toUpperCase(),
-                                                                                  3,
-                                                                              )
-                                                                            : item.text.toUpperCase()
-                                                                        : truncate
-                                                                        ? _truncate(item.text, 3)
-                                                                        : item.text}
-                                                                    {item?.status &&
-                                                                    item.status === 'pending' ? (
-                                                                        <CgSpinner
-                                                                            size="20px"
-                                                                            className="animate-spin"
-                                                                        />
+                                                                    {icon ? (
+                                                                        <span className="flex items-center gap-1.5">
+                                                                            <img
+                                                                                src={item.icon}
+                                                                                alt={item.text}
+                                                                                width={25}
+                                                                                height={25}
+                                                                            />
+                                                                            <span>
+                                                                                {capFirstLetter(
+                                                                                    item.text,
+                                                                                )}
+                                                                            </span>
+                                                                        </span>
                                                                     ) : (
-                                                                        item?.status && (
-                                                                            <IoMdCheckmarkCircle size="20px" />
-                                                                        )
+                                                                        <>
+                                                                            {uppercase
+                                                                                ? truncate
+                                                                                    ? _truncate(
+                                                                                          item.text.toUpperCase(),
+                                                                                          3,
+                                                                                      )
+                                                                                    : item.text.toUpperCase()
+                                                                                : truncate
+                                                                                ? _truncate(
+                                                                                      item.text,
+                                                                                      3,
+                                                                                  )
+                                                                                : item.text}
+                                                                            {item?.status &&
+                                                                            item.status ===
+                                                                                'pending' ? (
+                                                                                <CgSpinner
+                                                                                    size="20px"
+                                                                                    className="animate-spin"
+                                                                                />
+                                                                            ) : (
+                                                                                item?.status && (
+                                                                                    <IoMdCheckmarkCircle size="20px" />
+                                                                                )
+                                                                            )}
+                                                                        </>
                                                                     )}
                                                                 </span>
                                                             }

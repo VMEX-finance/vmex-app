@@ -282,3 +282,5 @@ export function addMissingDatesToTimeseries(
 }
 
 export const getRandomNumber = (number?: number) => Math.floor(Math.random() * (number || 100000));
+
+export const capFirstLetter = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);

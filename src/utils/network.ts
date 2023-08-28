@@ -1,4 +1,5 @@
-import { getNetwork } from '@wagmi/core';
+import { mainnet, optimism, sepolia, hardhat } from 'wagmi/chains';
+import { TESTING } from './constants';
 
 export const NETWORKS: Record<string, any> = {
     optimism: {
@@ -9,15 +10,17 @@ export const NETWORKS: Record<string, any> = {
         explorer: 'https://explorer.optimism.io',
         backend: 'https://seal-app-bomfb.ondigitalocean.app',
         testing: false,
+        icon: '/coins/op.svg',
     },
     localhost: {
-        name: 'localhost',
+        name: 'hardhat',
         rpc: 'http://127.0.0.1:8545',
         subgraph: 'http://127.0.0.1:8000/subgraphs/name/vmex-finance',
         chainId: 31337,
         explorer: 'https://etherscan.io',
         backend: 'https://dolphin-app-ajfiy.ondigitalocean.app', // replace later
         testing: true,
+        icon: '/networks/hardhat.svg',
     },
     sepolia: {
         name: 'sepolia',
@@ -27,6 +30,7 @@ export const NETWORKS: Record<string, any> = {
         explorer: 'https://sepolia.etherscan.io',
         backend: 'https://dolphin-app-ajfiy.ondigitalocean.app', // replace later
         testing: true,
+        icon: '/networks/sepolia.png',
     },
     mainnet: {
         name: 'mainnet',
@@ -36,7 +40,28 @@ export const NETWORKS: Record<string, any> = {
         explorer: 'https://etherscan.io',
         backend: 'https://dolphin-app-ajfiy.ondigitalocean.app', // replace later
         testing: false,
+        icon: '/coins/eth.svg',
     },
 };
 
 export const DEFAULT_NETWORK = 'optimism';
+
+export const availableNetworks = (type: 'wagmi' | 'string') => {
+    if (type === 'wagmi') {
+        if (TESTING) return [optimism, sepolia, hardhat];
+        return [optimism, sepolia];
+    }
+    if (TESTING) return ['optimism', 'sepolia', 'hardhat'];
+    return ['optimism', 'sepolia'];
+};
+
+export const renderNetworks = (fx?: any) => {
+    const networks = Object.values(NETWORKS).filter(
+        (network) => availableNetworks('string').indexOf(network.name) >= 0,
+    );
+    return networks.map((network) => ({
+        text: network.name,
+        onClick: () => (fx ? fx(network.chainId) : {}),
+        icon: network.icon,
+    }));
+};

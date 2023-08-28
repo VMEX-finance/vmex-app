@@ -42,7 +42,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
     collateral,
     collateralChange,
 }) => {
-    const { width, breakpoint } = useWindowSize();
+    const { width, breakpoints } = useWindowSize();
     const { openDialog } = useDialogController();
     const { data } = userData;
 
@@ -175,7 +175,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
                             <div className="text-center flex flex-col">
                                 <span className="text-sm">
-                                    {width > breakpoint && 'User '}Supplies
+                                    {width > breakpoints.md && 'User '}Supplies
                                 </span>
                                 <div className="flex flex-wrap gap-2">
                                     {renderUserInteractions('supplies').length !== 0 ? (
@@ -210,7 +210,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                             </div>
                             <div className="text-center flex flex-col">
                                 <span className="text-sm">
-                                    {width > breakpoint && 'User '}Borrows
+                                    {width > breakpoints.md && 'User '}Borrows
                                 </span>
                                 <div className="flex flex-wrap gap-2">
                                     {renderUserInteractions('borrows').length !== 0 ? (
@@ -244,13 +244,13 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                             </div>
                             <div className="text-center text-sm flex flex-col items-center">
                                 <span>
-                                    {width > breakpoint && 'User '}Health
-                                    {width > breakpoint && ' Factor'}
+                                    {width > breakpoints.md && 'User '}Health
+                                    {width > breakpoints.md && ' Factor'}
                                 </span>
                                 <HealthFactor withChange={false} center />
                             </div>
                             <div className="text-center text-sm flex flex-col items-center">
-                                <span>{width > breakpoint && 'User '}Net APY</span>
+                                <span>{width > breakpoints.md && 'User '}Net APY</span>
                                 <NumberDisplay value={calculateUserNetAPY()} />
                             </div>
                         </div>
