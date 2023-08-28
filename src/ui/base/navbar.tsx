@@ -20,7 +20,7 @@ export const Navbar: React.FC = () => {
     const { isDark } = useContext(ThemeContext);
     const navigate = useNavigate();
     const location = useLocation();
-    const { width } = useWindowSize();
+    const { width, breakpoints } = useWindowSize();
     const { isConnected } = useAccount();
     const { transactions } = useTransactionsContext();
     const { openDialog } = useDialogController();
@@ -40,7 +40,11 @@ export const Navbar: React.FC = () => {
         <nav className="flex justify-center flex-row sticky h-fit items-center top-0 font-basefont px-3 md:px-4 py-2 lg:px-5 2xl:px-10 lg:py-4 bg-neutral-900 dark:bg-brand-black lg:bg-[#FFF] z-[1000] shadow-lg lg:shadow-md">
             <div
                 className={`w-full max-w-[150rem]
-                ${width <= 1080 ? 'flex flex-row items-center justify-between' : 'grid grid-cols-3'}
+                ${
+                    width <= breakpoints.lg
+                        ? 'flex flex-row items-center justify-between'
+                        : 'grid grid-cols-3'
+                }
             `}
             >
                 {/* Desktop/Mobile Left Nav */}
@@ -58,7 +62,7 @@ export const Navbar: React.FC = () => {
                 </div>
 
                 {/* Desktop Center Nav */}
-                {width >= 1024 && (
+                {width >= breakpoints.lg && (
                     <div className="justify-self-center">
                         <div
                             className={
@@ -79,7 +83,7 @@ export const Navbar: React.FC = () => {
 
                 {/* Desktop/Mobile Right Nav */}
                 <div className="flex items-center justify-end gap-3">
-                    {width <= 1024 && <ToggleThemeButton />}
+                    {width <= breakpoints.lg && <ToggleThemeButton />}
                     {/* Transactions Dropdown */}
                     {/* TODO: move this to inside wallet button */}
                     {isConnected && transactions && transactions.length !== 0 && (
@@ -107,7 +111,7 @@ export const Navbar: React.FC = () => {
                         />
                     )}
 
-                    {width >= 1024 ? (
+                    {width >= breakpoints.lg ? (
                         <WalletButton primary label={width > 1200 ? 'Connect Wallet' : 'Connect'} />
                     ) : (
                         <MobileDropdownMenu

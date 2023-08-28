@@ -1,5 +1,12 @@
 import { useEffect, useState } from 'react';
 
+const breakpoints = {
+    sm: 600,
+    md: 768,
+    lg: 1024,
+    xl: 1280,
+};
+
 // Hook
 export function useWindowSize() {
     // Initialize state with undefined width/height so server and client renders match
@@ -26,6 +33,6 @@ export function useWindowSize() {
     }, []); // Empty array ensures that effect is only run on mount
     return {
         ...windowSize,
-        breakpoint: 768,
+        breakpoints,
     };
 }

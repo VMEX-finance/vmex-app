@@ -18,7 +18,7 @@ interface ITableProps {
 }
 export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
     const location = useLocation();
-    const { width, breakpoint } = useWindowSize();
+    const { width, breakpoints } = useWindowSize();
     const { address } = useAccount();
     const { tranche } = useSelectedTrancheContext();
     const { queryUserWallet, getTokenBalance } = useUserData(address);
@@ -33,19 +33,19 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
 
     const mode1 =
         type === 'supply'
-            ? width > breakpoint
+            ? width > breakpoints.md
                 ? 'Wallet Balance'
                 : 'Balance'
-            : width > breakpoint
+            : width > breakpoints.md
             ? 'Available Borrows'
             : 'Available';
 
     const mode2 =
         type === 'supply'
-            ? width > breakpoint
+            ? width > breakpoints.md
                 ? 'Can Collateralize'
                 : 'Collateral'
-            : width > breakpoint
+            : width > breakpoints.md
             ? 'Total liquidity'
             : 'Liquidity';
 
@@ -172,7 +172,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                         <AssetDisplay
                                             name={el.asset}
                                             className="text-lg"
-                                            noText={width < breakpoint}
+                                            noText={width < breakpoints.md}
                                         />
                                     </div>
                                 </td>
