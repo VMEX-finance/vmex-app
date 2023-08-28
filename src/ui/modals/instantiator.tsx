@@ -7,9 +7,10 @@ import {
     CreateTrancheDialog,
     ConfirmationDialog,
     FeedbackDialog,
+    ToggleCollateralDialog,
+    TransactionsDialog,
 } from '../modals';
 import { ModalWrapper } from './subcomponents';
-import { ToggleCollateralDialog } from './variations/toggle-collateral';
 
 export const AllModalsInstance: React.FC = () => {
     const { getDialogProps } = useDialogController();
@@ -55,6 +56,12 @@ export const AllModalsInstance: React.FC = () => {
             <React.Fragment>
                 <ModalWrapper {...getDialogProps('toggle-collateral-dialog')}>
                     <ToggleCollateralDialog {...getDialogProps('toggle-collateral-dialog')} />
+                </ModalWrapper>
+            </React.Fragment>
+
+            <React.Fragment>
+                <ModalWrapper {...getDialogProps('transactions-dialog')}>
+                    <TransactionsDialog {...getDialogProps('transactions-dialog')} />
                 </ModalWrapper>
             </React.Fragment>
         </>
