@@ -31,7 +31,9 @@ import { AssetBalance } from '@app/api/types';
 import { getNetwork } from '@wagmi/core';
 
 const MyTranches: React.FC = () => {
-    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+    const network = getNetwork()?.chain?.unsupported
+        ? DEFAULT_NETWORK
+        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const gaEventTracker = useAnalyticsEventTracker('My Tranches');
     const breakpoint = 1024;
     const { width } = useWindowSize();
@@ -457,7 +459,11 @@ const MyTranches: React.FC = () => {
             ) : (
                 <div className="pt-10 lg:pt-20 text-center flex-col">
                     <div className="mb-4">
-                        <span className="text-lg lg:text-2xl">Please connect your wallet.</span>
+                        <span className="text-lg lg:text-2xl">
+                            {getNetwork()?.chain?.unsupported
+                                ? 'Please switch networks.'
+                                : 'Please connect your wallet'}
+                        </span>
                     </div>
                     <WalletButton primary className="w-fit" />
                 </div>

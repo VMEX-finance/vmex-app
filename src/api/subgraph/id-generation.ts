@@ -3,7 +3,9 @@ import { getNetwork } from '@wagmi/core';
 import { DEFAULT_NETWORK } from '../../utils';
 
 export const getPoolId = (): string => {
-    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+    const network = getNetwork()?.chain?.unsupported
+        ? DEFAULT_NETWORK
+        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     return `${getContractAddress('LendingPoolAddressesProvider', network)?.toLowerCase()}`;
 };
 

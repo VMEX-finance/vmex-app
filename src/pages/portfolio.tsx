@@ -10,6 +10,7 @@ import { useSubgraphUserData } from '../api/subgraph';
 import { averageOfArr, numberFormatter } from '../utils/helpers';
 import { useNavigate } from 'react-router-dom';
 import useAnalyticsEventTracker from '../utils/google-analytics';
+import { getNetwork } from '@wagmi/core';
 
 const Portfolio: React.FC = () => {
     const gaEventTracker = useAnalyticsEventTracker('Portfolio');
@@ -151,7 +152,9 @@ const Portfolio: React.FC = () => {
                 <div className="mt-10 text-center flex-col">
                     <div className="mb-4">
                         <span className="text-lg dark:text-neutral-200">
-                            Please connect your wallet.
+                            {getNetwork()?.chain?.unsupported
+                                ? 'Please switch networks.'
+                                : 'Please connect your wallet'}
                         </span>
                     </div>
                     <WalletButton primary className="!w-fit" />

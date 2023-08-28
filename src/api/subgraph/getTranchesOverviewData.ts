@@ -15,7 +15,9 @@ import { getTrancheIdFromTrancheEntity } from './id-generation';
 import { getNetwork } from '@wagmi/core';
 
 export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]> => {
-    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+    const network = getNetwork()?.chain?.unsupported
+        ? DEFAULT_NETWORK
+        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const { data, error } = await getApolloClient().query({
         query: gql`
             query queryAllTranches {
@@ -143,7 +145,9 @@ export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]
 };
 
 export function useSubgraphTranchesOverviewData(): ISubgraphTranchesDataProps {
-    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+    const network = getNetwork()?.chain?.unsupported
+        ? DEFAULT_NETWORK
+        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
 
     const queryAllTranches = useQuery({
         queryKey: ['tranches-overview-data', network],

@@ -55,7 +55,9 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
     });
     if (error) return [];
 
-    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+    const network = getNetwork()?.chain?.unsupported
+        ? DEFAULT_NETWORK
+        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     let graphData: ILineChartDataPointProps[] = [];
     const prices = await getAllAssetPrices();
     data.tranches.map((tranche: IGraphTrancheProps) => {
@@ -126,7 +128,9 @@ async function getTopAssets(
     });
     if (error) return [];
 
-    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+    const network = getNetwork()?.chain?.unsupported
+        ? DEFAULT_NETWORK
+        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     let prices: Record<IAvailableCoins, IAssetPricesProps>;
     if (_prices) prices = _prices;
     else prices = await getAllAssetPrices();
@@ -269,7 +273,9 @@ export async function getSubgraphProtocolData(): Promise<IGraphProtocolDataProps
 }
 
 export function useSubgraphProtocolData(): ISubgraphProtocolData {
-    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+    const network = getNetwork()?.chain?.unsupported
+        ? DEFAULT_NETWORK
+        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
 
     const queryProtocolTVLChart = useQuery({
         queryKey: ['protocol-charts', network],

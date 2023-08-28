@@ -51,7 +51,9 @@ export const getSubgraphAllAssetMappingsData = async (): Promise<Map<string, IAs
 };
 
 export function useSubgraphAllAssetMappingsData(): ISubgraphAllAssetMappingsData {
-    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+    const network = getNetwork()?.chain?.unsupported
+        ? DEFAULT_NETWORK
+        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
 
     const queryAllAssetMappingsData = useQuery({
         queryKey: [`subgraph-all-asset-mappings-data`, network],

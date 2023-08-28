@@ -8,7 +8,9 @@ type IToastStatusProps = {
 };
 
 export const ToastStatus = ({ status, transaction }: IToastStatusProps) => {
-    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+    const network = getNetwork()?.chain?.unsupported
+        ? DEFAULT_NETWORK
+        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const determineText = () => {
         switch (status) {
             case 'error':

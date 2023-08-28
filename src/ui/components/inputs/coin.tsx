@@ -36,7 +36,9 @@ export const CoinInput = ({
     customMaxClick,
     disabled,
 }: ICoinInput) => {
-    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+    const network = getNetwork()?.chain?.unsupported
+        ? DEFAULT_NETWORK
+        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const { data: signer } = useSigner();
     const { prices } = usePricesData();
     const onChange = (e: any) => {

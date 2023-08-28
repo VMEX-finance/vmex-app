@@ -90,7 +90,9 @@ export const processTrancheData = async (
         {},
     );
 
-    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+    const network = getNetwork()?.chain?.unsupported
+        ? DEFAULT_NETWORK
+        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const summaryData = assets.reduce(
         (obj: any, item: any) => {
             const asset = item.assetData.underlyingAssetName.toUpperCase();
@@ -311,7 +313,9 @@ export const getSubgraphTrancheChart = async (
 
     if (error) return [];
     else {
-        const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+        const network = getNetwork()?.chain?.unsupported
+            ? DEFAULT_NETWORK
+            : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
         let graphData: ILineChartDataPointProps[] = [];
         const prices = await getAllAssetPrices();
         data.tranche?.depositHistory?.map((el: any) => {
@@ -380,7 +384,9 @@ export const getSubgraphTrancheChart = async (
 };
 
 export function useSubgraphTrancheData(trancheId: number): ISubgraphTrancheData {
-    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+    const network = getNetwork()?.chain?.unsupported
+        ? DEFAULT_NETWORK
+        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
 
     const queryTrancheData = useQuery({
         queryKey: ['tranche-data', Number(trancheId), network],

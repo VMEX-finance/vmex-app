@@ -27,7 +27,9 @@ export async function _getUserTrancheData(
     userAddress: string,
     _trancheId: number | string,
 ): Promise<IUserTrancheData> {
-    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+    const network = getNetwork()?.chain?.unsupported
+        ? DEFAULT_NETWORK
+        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const trancheId = String(_trancheId);
     if (!userAddress || !trancheId) {
         return {
@@ -97,7 +99,9 @@ export function useUserTrancheData(
     userAddress: any,
     trancheId: number | string,
 ): IUserTrancheDataProps {
-    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+    const network = getNetwork()?.chain?.unsupported
+        ? DEFAULT_NETWORK
+        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const queryUserTrancheData = useQuery({
         queryKey: ['user-tranche', Number(trancheId), network],
         queryFn: () => _getUserTrancheData(userAddress, trancheId),
