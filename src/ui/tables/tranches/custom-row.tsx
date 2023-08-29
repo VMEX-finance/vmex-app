@@ -82,7 +82,7 @@ const TranchesCustomRow = (props: ITranchesCustomRowProps) => {
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Assets</span>
-                    <MultipleAssetsDisplay assets={assets} show={4} size="h-6 w-6" />
+                    <MultipleAssetsDisplay assets={assets} show={4} />
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Category</span>
