@@ -76,7 +76,7 @@ export const YourPositionsTable: React.FC<IYourPositionsProps> = ({ type, data, 
                                 <span className="justify-self-end">
                                     <MultipleAssetsDisplay
                                         assets={assetsPreview[i]}
-                                        size="h-4 w-4"
+                                        size="sm"
                                         show="all"
                                         gap="gap-1"
                                     />
@@ -112,7 +112,7 @@ export const YourPositionsTable: React.FC<IYourPositionsProps> = ({ type, data, 
                                 <span className="justify-self-end">
                                     <MultipleAssetsDisplay
                                         assets={assetsPreview[i]}
-                                        size="h-4 w-4"
+                                        size="sm"
                                         show="all"
                                         gap="gap-1"
                                     />

@@ -68,9 +68,7 @@ export const YourBorrowsTable: React.FC<IYourBorrowsTableProps> = ({
                                 </td>
                                 <td>
                                     <NumberAndDollar
-                                        value={`${bigNumberToNative(i.amountNative, i.asset)} ${
-                                            width > 600 ? i.asset : ''
-                                        }`}
+                                        value={`${bigNumberToNative(i.amountNative, i.asset)}`}
                                         dollar={i.amount}
                                         size="xs"
                                         color="text-brand-black"
