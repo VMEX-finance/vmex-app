@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import ReactTooltip from 'react-tooltip';
 import { useSelectedTrancheContext } from '../../../store';
-import { NumberDisplay, DefaultDropdown, Card, ReLineChart } from '../../components';
+import { NumberDisplay, DefaultDropdown, Card, ReLineChart, Tooltip } from '../../components';
 import { IGraphTrancheAssetProps, IGraphTrancheDataProps } from '../../../api/subgraph/types';
 import {
     numberFormatter,
@@ -294,11 +293,15 @@ export const TrancheStatisticsCard = ({
                 </div>
             </Card>
 
-            <ReactTooltip id="strategiesTip" place="top" effect="solid">
-                When deposited, {asset || 'this asset'} is deployed into a VMEX strategy. Your{' '}
-                {asset || 'asset'} will be staked on Convex and earned rewards will be automatically
+            <Tooltip
+                text={`
+                When deposited, ${asset || 'this asset'} is deployed into a VMEX strategy. Your{' '}
+                ${
+                    asset || 'asset'
+                } will be staked on Convex and earned rewards will be automatically
                 compounded back into your underlying position.
-            </ReactTooltip>
+            `}
+            ></Tooltip>
         </>
     );
 };

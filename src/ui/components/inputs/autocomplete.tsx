@@ -73,7 +73,7 @@ export const AutoCompleteInput: FC<IAutoCompleteInputProps> = ({
                             {renderList().map((item: any, i) => (
                                 <button
                                     key={`${item}-${i}`}
-                                    className="transition duration-150 hover:bg-neutral-200 dark:hover:bg-neutral-800 py-2 rounded-lg"
+                                    className="transition duration-100 hover:bg-neutral-200 dark:hover:bg-neutral-800 py-2 rounded-lg"
                                     onClick={(e) => {
                                         setValue(item);
                                         setTimeout(() => {}, 200);

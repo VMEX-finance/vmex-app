@@ -14,23 +14,13 @@ type IAssetDisplayProps = {
 };
 
 export const AssetDisplay = (props: IAssetDisplayProps) => {
-    const iconSize = () => {
-        switch (props.size) {
-            case 'lg':
-                return 'h-10 w-10';
-            case 'sm':
-                return 'h-8 w-8';
-            default:
-                return 'h-8 w-8';
-        }
-    };
     return (
         <div
             className={`flex items-center gap-1 rounded-lg w-max ${
                 props.className ? props.className : ''
             } ${props.border ? 'border border-1 border-brand-black w-fit px-2' : ''}`}
         >
-            {renderAsset(props.name, iconSize())}
+            {renderAsset(props.name, props.size)}
             {!props.noText && <span>{props.name}</span>}
             {props.value && <span>{props.value}</span>}
         </div>
@@ -39,7 +29,7 @@ export const AssetDisplay = (props: IAssetDisplayProps) => {
 
 export const renderAsset = (
     asset: string,
-    size?: string,
+    size?: 'lg' | 'md' | 'sm',
     i?: number,
     custom?: string,
     key?: string,
@@ -47,11 +37,13 @@ export const renderAsset = (
     return asset.includes('moo') ? (
         MultipleAssetsDisplayOverlapping({
             assets: [asset.substring(3), 'beefy'],
+            size,
             origAssetName: asset,
         })
     ) : asset.substring(0, 2) == 'yv' ? (
         MultipleAssetsDisplayOverlapping({
             assets: [asset.substring(2), 'yearn'],
+            size,
             origAssetName: asset,
         })
     ) : (
@@ -61,10 +53,53 @@ export const renderAsset = (
         >
             <img
                 src={determineCoinImg(asset, custom)}
+                className={`${size ? iconSizeClass(size) : 'h-8 w-8'}`}
                 alt={asset}
-                className={`${size ? size : 'h-8 w-8'}`}
                 key={`render-asset-${key || i || asset}-${getRandomNumber()}`}
             />
         </Tooltip>
     );
+};
+
+export const iconSize = (size?: 'lg' | 'md' | 'sm') => {
+    switch (size) {
+        case 'lg':
+            return '40';
+        case 'sm':
+            return '20';
+        default:
+            return '30';
+    }
+};
+export const smallerIconSize = (size?: 'lg' | 'md' | 'sm') => {
+    switch (size) {
+        case 'lg':
+            return 'h-4 w-4';
+        case 'sm':
+            return 'h-2 w-2';
+        default:
+            return 'h-3 w-3';
+    }
+};
+
+export const iconSizeClass = (size?: 'lg' | 'md' | 'sm') => {
+    switch (size) {
+        case 'lg':
+            return 'h-8 w-8';
+        case 'sm':
+            return 'h-4 w-4';
+        default:
+            return 'h-6 w-6';
+    }
+};
+
+export const marginLeft = (size?: 'lg' | 'md' | 'sm') => {
+    switch (size) {
+        case 'lg':
+            return '-1.5rem';
+        case 'sm':
+            return '-1rem';
+        default:
+            return '-1.2rem';
+    }
 };

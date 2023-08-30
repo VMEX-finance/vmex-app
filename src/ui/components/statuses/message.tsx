@@ -40,7 +40,7 @@ export const MessageStatus = ({ message, type, className, size, show = true }: I
             enter="transition-opacity duration-75"
             enterFrom="opacity-0"
             enterTo="opacity-100"
-            leave="transition-opacity duration-150"
+            leave="transition-opacity duration-100"
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
         >

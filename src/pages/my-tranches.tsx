@@ -295,7 +295,7 @@ const MyTranches: React.FC = () => {
                                         queryTrancheAdminData.data.map((obj, i) => (
                                             <button
                                                 className={`
-                                                flex justify-between py-2 transition duration-150
+                                                flex justify-between py-2 transition duration-100
                                                 ${
                                                     selectedTranche.id === obj.id
                                                         ? 'text-brand-purple'
@@ -461,7 +461,7 @@ const MyTranches: React.FC = () => {
                     <div className="mb-4">
                         <span className="text-lg lg:text-2xl">
                             {getNetwork()?.chain?.unsupported
-                                ? 'Please switch networks.'
+                                ? 'Please switch networks'
                                 : 'Please connect your wallet'}
                         </span>
                     </div>

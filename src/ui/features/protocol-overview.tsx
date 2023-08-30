@@ -81,7 +81,7 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                                 </div>
                             </SkeletonLoader>
                         ) : (
-                            <div className="h-[100px] w-full">
+                            <div className="h-[100px] xl:h-full w-full">
                                 <ReLineChart
                                     data={tvlChart?.data || []}
                                     color="#3CB55E"

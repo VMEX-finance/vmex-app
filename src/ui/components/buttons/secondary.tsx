@@ -17,7 +17,7 @@ export const SecondaryButton = ({
 }: ISecondaryButtonProps) => {
     return (
         <button
-            className={`text-xs text-right text-blue-700 dark:text-brand-blue dark:hover:text-blue-500 hover:text-brand-purple transition duration-150 ${
+            className={`text-xs text-right text-blue-700 dark:text-brand-blue dark:hover:text-blue-500 hover:text-brand-purple transition duration-100 ${
                 loading ? 'animate-pulse' : ''
             } ${className ? className : ''}`}
             onClick={onClick}

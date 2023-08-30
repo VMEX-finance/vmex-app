@@ -38,10 +38,9 @@ export const Label = ({ children, className = '', color = 'purple', tooltip }: I
 
     if (tooltip)
         return (
-            <Tooltip
-                content={<span className={render().class}>{children}</span>}
-                text={render().tooltip}
-            />
+            <Tooltip text={render().tooltip}>
+                <span className={render().class}>{children}</span>
+            </Tooltip>
         );
     return <span className={render().class}>{children}</span>;
 };

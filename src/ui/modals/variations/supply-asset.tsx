@@ -116,23 +116,24 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                                     text={`Your previous supply is ${
                                         collateral === false ? 'not' : ''
                                     } collateralized.`}
-                                    content={
-                                        <BasicToggle
-                                            checked={existingSupplyCollateral}
-                                            disabled={!data?.collateral || isLoading}
-                                            onClick={(e: any) => {
-                                                e.preventDefault();
-                                                openDialog('toggle-collateral-dialog', {
-                                                    ...data,
-                                                    collateral: collateral,
-                                                    setCollateral: setExistingSupplyCollateral,
-                                                    amountNative: amountWithdraw,
-                                                });
-                                                e.stopPropagation();
-                                            }}
-                                        />
-                                    }
-                                />
+
+                                    position="right"
+                                >
+                                    <BasicToggle
+                                        checked={existingSupplyCollateral}
+                                        disabled={!data?.collateral || isLoading}
+                                        onClick={(e: any) => {
+                                            e.preventDefault();
+                                            openDialog('toggle-collateral-dialog', {
+                                                ...data,
+                                                collateral: collateral,
+                                                setCollateral: setExistingSupplyCollateral,
+                                                amountNative: amountWithdraw,
+                                            });
+                                            e.stopPropagation();
+                                        }}
+                                    />
+                                </Tooltip>
                             ) : (
                                 <BasicToggle
                                     checked={asCollateral}
@@ -160,7 +161,16 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                                 },
                                 {
                                     label: 'Collateralization',
-                                    value: <ActiveStatus active={asCollateral} size="sm" />,
+                                    value: (
+                                        <ActiveStatus
+                                            active={
+                                                typeof collateral === 'boolean'
+                                                    ? existingSupplyCollateral
+                                                    : asCollateral
+                                            }
+                                            size="sm"
+                                        />
+                                    ),
                                 },
                                 {
                                     label: 'Estimated Gas',
@@ -281,10 +291,9 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                     />
                 )}
                 {Number(amount) === 0 && !view?.includes('Claim') ? (
-                    <Tooltip
-                        text="Please enter an amount"
-                        content={<Button primary label={'Submit Transaction'} disabled />}
-                    />
+                    <Tooltip text="Please enter an amount">
+                        <Button primary label={'Submit Transaction'} disabled />
+                    </Tooltip>
                 ) : (
                     <Button
                         primary

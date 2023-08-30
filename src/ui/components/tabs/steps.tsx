@@ -20,7 +20,7 @@ export const Stepper = ({ steps, previous, next, noSkip }: IStepperProps) => {
                     <li key={step.name} className="md:flex-1">
                         {step.status === 'complete' ? (
                             <button
-                                className="w-full group flex flex-col border-l-4 border-brand-purple py-2 pl-4 hover:border-brand-purple md:border-l-0 md:border-t-4 md:pl-0 md:pb-0 opacity-70 hover:opacity-100 transition duration-150"
+                                className="w-full group flex flex-col border-l-4 border-brand-purple py-2 pl-4 hover:border-brand-purple md:border-l-0 md:border-t-4 md:pl-0 md:pb-0 opacity-70 hover:opacity-100 transition duration-100"
                                 onClick={previous}
                             >
                                 <span className="text-sm font-medium text-brand-purple group-hover:text-brand-purple">{`Step ${
@@ -40,7 +40,7 @@ export const Stepper = ({ steps, previous, next, noSkip }: IStepperProps) => {
                             </button>
                         ) : (
                             <button
-                                className="w-full group flex flex-col border-l-4 border-gray-200 py-2 pl-4 md:border-l-0 md:border-t-4 md:pl-0 md:pb-0 transition duration-150 hover:border-gray-300"
+                                className="w-full group flex flex-col border-l-4 border-gray-200 py-2 pl-4 md:border-l-0 md:border-t-4 md:pl-0 md:pb-0 transition duration-100 hover:border-gray-300"
                                 onClick={noSkip ? () => {} : next}
                             >
                                 <span className="text-sm font-medium text-neutral500 hover:text-neutral700">{`Step ${

@@ -55,10 +55,9 @@ export const ModalTableDisplay = ({ title, content, noData, loading }: IModalTab
                                             }`}
                                         >
                                             {el.error && el.error != '' ? (
-                                                <Tooltip
-                                                    text={el.error}
-                                                    content="Transaction likely to revert"
-                                                />
+                                                <Tooltip text={el.error}>
+                                                    Transaction likely to revert
+                                                </Tooltip>
                                             ) : el.baseLink ? (
                                                 <a href={`${el.baseLink}/${el.value}`}>
                                                     {el.value}

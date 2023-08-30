@@ -6,12 +6,12 @@ import {
 import React from 'react';
 import { SkeletonLoader } from '../loaders';
 import { Tooltip } from '../tooltips';
-import { renderAsset } from './asset';
+import { renderAsset, iconSize, smallerIconSize, iconSizeClass, marginLeft } from './asset';
 
 interface IMultipleAssetsProps {
     assets?: string[];
     show?: number | 'all';
-    size?: string;
+    size?: 'lg' | 'md' | 'sm';
     loading?: boolean;
     gap?: string;
     origAssetName?: string;
@@ -47,21 +47,17 @@ export const MultipleAssetsDisplay = ({ assets, show = 4, size, gap }: IMultiple
                 : [1, 2, 3, 4].map((el) => (
                       <SkeletonLoader
                           key={`${el}-${getRandomNumber()}`}
+                          className={`${size ? iconSizeClass(size) : '!h-8 !w-8'}`}
                           variant="circular"
-                          height={'2rem'}
-                          width={'2rem'}
                       />
                   ))}
             {show !== 'all' && assets && assets.length > (show ? show : 4) && (
                 <Tooltip
                     text={assets.slice(show ? show : 4).join(', ')}
-                    content={
-                        <span className="ml-1 md:ml-2">
-                            +{assets.slice(show ? show : 4).length}
-                        </span>
-                    }
                     key={`tooltip-multi-asset-display-${getRandomNumber()}`}
-                />
+                >
+                    <span className="ml-1 md:ml-2">+{assets.slice(show ? show : 4).length}</span>
+                </Tooltip>
             )}
         </div>
     );
@@ -80,7 +76,7 @@ export const MultipleAssetsDisplayOverlapping = ({
         >
             <div
                 className={`flex ${gap ? gap : 'gap-2'}`}
-                style={{ flexWrap: 'wrap' }} // Added style for wrapping
+                style={{ flexWrap: 'wrap', position: 'relative' }} // Added style for wrapping
             >
                 {assets?.length !== 0 ? (
                     assets?.map((el, i) =>
@@ -89,11 +85,13 @@ export const MultipleAssetsDisplayOverlapping = ({
                                 key={`tranches-asset-${i}-${getRandomNumber()}`}
                                 src={determineCoinImg(el)}
                                 alt={el}
-                                className={`${size ? size : 'h-4 w-4'} absolute top-0 right-0`}
+                                className={`${
+                                    size ? smallerIconSize(size) : 'h-4 w-4'
+                                } absolute top-0 right-0`}
                                 style={{
                                     position: 'relative',
                                     zIndex: i, // Increase zIndex for overlapping effect
-                                    marginLeft: i > 0 ? '-1.5rem' : 0, // Overlapping margin
+                                    marginLeft: i > 0 ? marginLeft(size) : 0, // Overlapping margin
                                 }}
                             />
                         ) : (
@@ -101,11 +99,11 @@ export const MultipleAssetsDisplayOverlapping = ({
                                 key={`tranches-asset-${i}-${getRandomNumber()}`}
                                 src={determineCoinImg(el)}
                                 alt={el}
-                                className={`${size ? size : 'h-8 w-8'}`}
+                                className={`${size ? iconSizeClass(size) : 'h-8 w-8'}`}
                                 style={{
                                     position: 'relative',
                                     zIndex: i, // Increase zIndex for overlapping effect
-                                    marginLeft: i > 0 ? '-1.5rem' : 0, // Overlapping margin
+                                    marginLeft: i > 0 ? marginLeft(size) : 0, // Overlapping margin
                                 }}
                             />
                         ),
@@ -113,8 +111,7 @@ export const MultipleAssetsDisplayOverlapping = ({
                 ) : (
                     <SkeletonLoader
                         variant="circular"
-                        height={'2rem'}
-                        width={'2rem'}
+                        className={`${size ? iconSizeClass(size) : 'h-8 w-8'}`}
                         key={`skeleton-loader-multiple-assets-${getRandomNumber()}`}
                     />
                 )}

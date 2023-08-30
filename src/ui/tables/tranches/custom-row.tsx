@@ -44,14 +44,26 @@ const TranchesCustomRow = (props: ITranchesCustomRowProps) => {
                         </div>
                     );
                 case 'supplied':
-                    return <Tooltip text="Supplying" content={<BsArrowDownCircle size={size} />} />;
+                    return (
+                        <Tooltip text="Supplying">
+                            <BsArrowDownCircle size={size} />
+                        </Tooltip>
+                    );
                 case 'borrowed':
-                    return <Tooltip text="Borrowing" content={<BsArrowUpCircle size={size} />} />;
+                    return (
+                        <Tooltip text="Borrowing">
+                            <BsArrowUpCircle size={size} />
+                        </Tooltip>
+                    );
                 case 'both':
                     return (
                         <div className="flex gap-2">
-                            <Tooltip text="Supplying" content={<BsArrowDownCircle size={size} />} />
-                            <Tooltip text="Borrowing" content={<BsArrowUpCircle size={size} />} />
+                            <Tooltip text="Supplying">
+                                <BsArrowDownCircle size={size} />
+                            </Tooltip>
+                            <Tooltip text="Borrowing">
+                                <BsArrowUpCircle size={size} />
+                            </Tooltip>
                         </div>
                     );
                 default:
@@ -82,7 +94,7 @@ const TranchesCustomRow = (props: ITranchesCustomRowProps) => {
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Assets</span>
-                    <MultipleAssetsDisplay assets={assets} show={4} size="h-6 w-6" />
+                    <MultipleAssetsDisplay assets={assets} show={4} />
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Category</span>
@@ -132,7 +144,9 @@ const TranchesCustomRow = (props: ITranchesCustomRowProps) => {
                 >
                     {aggregateRating}
                 </td> */}
-                <td className="pl-4">{renderActivity(yourActivity)}</td>
+                <td className="pl-4">
+                    {<div className="max-w-fit">{renderActivity(yourActivity)}</div>}
+                </td>
                 <td className="pl-4">{supplyTotal}</td>
                 <td className="pl-4">{borrowTotal}</td>
                 <td className="text-right pr-3.5">
