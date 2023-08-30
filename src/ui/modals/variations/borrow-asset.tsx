@@ -205,10 +205,9 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                     />
                 )}
                 {Number(amount) === 0 ? (
-                    <Tooltip
-                        text="Please enter an amount"
-                        content={<Button primary label={'Submit Transaction'} disabled />}
-                    />
+                    <Tooltip text="Please enter an amount">
+                        <Button primary label={'Submit Transaction'} disabled />
+                    </Tooltip>
                 ) : (
                     <Button
                         primary

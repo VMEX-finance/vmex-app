@@ -44,14 +44,26 @@ const TranchesCustomRow = (props: ITranchesCustomRowProps) => {
                         </div>
                     );
                 case 'supplied':
-                    return <Tooltip text="Supplying" content={<BsArrowDownCircle size={size} />} />;
+                    return (
+                        <Tooltip text="Supplying">
+                            <BsArrowDownCircle size={size} />
+                        </Tooltip>
+                    );
                 case 'borrowed':
-                    return <Tooltip text="Borrowing" content={<BsArrowUpCircle size={size} />} />;
+                    return (
+                        <Tooltip text="Borrowing">
+                            <BsArrowUpCircle size={size} />
+                        </Tooltip>
+                    );
                 case 'both':
                     return (
                         <div className="flex gap-2">
-                            <Tooltip text="Supplying" content={<BsArrowDownCircle size={size} />} />
-                            <Tooltip text="Borrowing" content={<BsArrowUpCircle size={size} />} />
+                            <Tooltip text="Supplying">
+                                <BsArrowDownCircle size={size} />
+                            </Tooltip>
+                            <Tooltip text="Borrowing">
+                                <BsArrowUpCircle size={size} />
+                            </Tooltip>
                         </div>
                     );
                 default:

@@ -4,26 +4,18 @@ import { BsInfoCircle } from 'react-icons/bs';
 
 interface ITooltipProps {
     text: string;
-    content?: ReactNode | string;
     size?: string;
-    disable?: boolean;
-    children?: ReactNode;
+    children?: ReactNode | string;
     position?: 'left' | 'right' | 'bottom' | 'top';
 }
 
-export const Tooltip = ({ text, content, size, disable, children, position }: ITooltipProps) => {
+export const Tooltip = ({ text, size, children, position }: ITooltipProps) => {
     return (
         <>
             <span data-tooltip-id={text} data-tooltip-content={text}>
-                {content || children || <BsInfoCircle size={size || '18px'} />}
+                {children || <BsInfoCircle size={size || '18px'} />}
             </span>
-            <ReactTooltip
-                // backgroundColor="#000"
-                // disable={disable}
-                place={position || 'top'}
-                id={text}
-                className="!z-[999999999]"
-            />
+            <ReactTooltip place={position || 'top'} id={text} className="!z-[999999999]" />
         </>
     );
 };

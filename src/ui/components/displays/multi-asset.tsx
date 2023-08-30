@@ -54,13 +54,10 @@ export const MultipleAssetsDisplay = ({ assets, show = 4, size, gap }: IMultiple
             {show !== 'all' && assets && assets.length > (show ? show : 4) && (
                 <Tooltip
                     text={assets.slice(show ? show : 4).join(', ')}
-                    content={
-                        <span className="ml-1 md:ml-2">
-                            +{assets.slice(show ? show : 4).length}
-                        </span>
-                    }
                     key={`tooltip-multi-asset-display-${getRandomNumber()}`}
-                />
+                >
+                    <span className="ml-1 md:ml-2">+{assets.slice(show ? show : 4).length}</span>
+                </Tooltip>
             )}
         </div>
     );

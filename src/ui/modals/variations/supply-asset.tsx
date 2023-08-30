@@ -280,10 +280,9 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                     />
                 )}
                 {Number(amount) === 0 && !view?.includes('Claim') ? (
-                    <Tooltip
-                        text="Please enter an amount"
-                        content={<Button primary label={'Submit Transaction'} disabled />}
-                    />
+                    <Tooltip text="Please enter an amount">
+                        <Button primary label={'Submit Transaction'} disabled />
+                    </Tooltip>
                 ) : (
                     <Button
                         primary

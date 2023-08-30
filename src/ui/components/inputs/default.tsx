@@ -68,15 +68,12 @@ export const DefaultInput = ({
             {title && (
                 <>
                     {tooltip ? (
-                        <Tooltip
-                            text={tooltip}
-                            content={
-                                <h3 className="mb-1">
-                                    {title}
-                                    {required && <span className="text-red-500 ml-1">*</span>}
-                                </h3>
-                            }
-                        />
+                        <Tooltip text={tooltip}>
+                            <h3 className="mb-1">
+                                {title}
+                                {required && <span className="text-red-500 ml-1">*</span>}
+                            </h3>
+                        </Tooltip>
                     ) : (
                         <h3 className="mb-1">
                             {title}
