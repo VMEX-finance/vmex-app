@@ -29,7 +29,7 @@ export const ToastStatus = ({ status, transaction }: IToastStatusProps) => {
                     href={`${NETWORKS[network].explorer}/tx/${transaction}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="underline text-brand-blue hover:text-brand-purple transition duration-150"
+                    className="underline text-brand-blue hover:text-brand-purple transition duration-100"
                 >
                     {truncate(transaction, 3)}
                 </a>

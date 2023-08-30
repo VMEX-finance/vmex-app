@@ -295,7 +295,7 @@ const MyTranches: React.FC = () => {
                                         queryTrancheAdminData.data.map((obj, i) => (
                                             <button
                                                 className={`
-                                                flex justify-between py-2 transition duration-150
+                                                flex justify-between py-2 transition duration-100
                                                 ${
                                                     selectedTranche.id === obj.id
                                                         ? 'text-brand-purple'

@@ -19,7 +19,7 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
     const { width } = useWindowSize();
     const { address } = useAccount();
     const title = address ? truncateAddress(address) : label;
-    const mode = `transition duration-150 ${
+    const mode = `transition duration-100 ${
         primary && !address ? '' : 'bg-white text-brand-black hover:bg-neutral-100'
     }`;
     const queryClient = useQueryClient();

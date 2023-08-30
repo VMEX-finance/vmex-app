@@ -23,7 +23,7 @@ export const AvailableAssetDisplay = ({
     return (
         <div
             className={`
-        transition duration-150
+        transition duration-100
         flex justify-between items-center 
         p-2 border-4
         ${background ? 'rounded-lg bg-neutral-200' : ''}

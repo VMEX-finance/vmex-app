@@ -32,7 +32,7 @@ export const ModalHeader = ({
                         key={`dialog-title-${i}`}
                         as="h3"
                         className={`
-                    text-xl leading-6 font-medium transition duration-150
+                    text-xl leading-6 font-medium transition duration-100
                     ${
                         tab === current
                             ? 'text-neutral-900 cursor-default dark:text-neutral-100'
@@ -46,10 +46,10 @@ export const ModalHeader = ({
                 ))}
             </div>
             <button
-                className="self-baseline h-fit w-fit cursor-pointer text-neutral-900 dark:text-neutral-300 hover:text-neutral-600 dark:hover:text-neutral-300 transition duration-200 p-[0.5px]"
+                className="self-baseline h-fit w-fit cursor-pointer text-neutral-900 dark:text-neutral-300 hover:text-neutral-600 dark:hover:text-neutral-300 transition duration-200 p-1 relative -mt-2 -mr-2"
                 onClick={() => closeDialog(dialog)}
             >
-                <IoIosClose className="w-7 h-7" />
+                <IoIosClose className="w-8 h-8" />
             </button>
         </div>
     );
