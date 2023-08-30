@@ -126,6 +126,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                                                     ...data,
                                                     collateral: collateral,
                                                     setCollateral: setExistingSupplyCollateral,
+                                                    amountNative: amountWithdraw,
                                                 });
                                                 e.stopPropagation();
                                             }}
