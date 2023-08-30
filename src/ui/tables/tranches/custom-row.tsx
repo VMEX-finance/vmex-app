@@ -144,7 +144,9 @@ const TranchesCustomRow = (props: ITranchesCustomRowProps) => {
                 >
                     {aggregateRating}
                 </td> */}
-                <td className="pl-4">{renderActivity(yourActivity)}</td>
+                <td className="pl-4">
+                    {<div className="max-w-fit">{renderActivity(yourActivity)}</div>}
+                </td>
                 <td className="pl-4">{supplyTotal}</td>
                 <td className="pl-4">{borrowTotal}</td>
                 <td className="text-right pr-3.5">

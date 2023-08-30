@@ -127,7 +127,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                                 className="h-full sm:h-auto"
                             />
                         ) : (
-                            <Tooltip text="Create a tranche first">
+                            <Tooltip text="Create a tranche first" position="left">
                                 <Button
                                     label={'My Tranches'}
                                     primary
