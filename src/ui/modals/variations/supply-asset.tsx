@@ -127,6 +127,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                                                 ...data,
                                                 collateral: collateral,
                                                 setCollateral: setExistingSupplyCollateral,
+                                                amountNative: amountWithdraw,
                                             });
                                             e.stopPropagation();
                                         }}
@@ -159,7 +160,16 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                                 },
                                 {
                                     label: 'Collateralization',
-                                    value: <ActiveStatus active={asCollateral} size="sm" />,
+                                    value: (
+                                        <ActiveStatus
+                                            active={
+                                                typeof collateral === 'boolean'
+                                                    ? existingSupplyCollateral
+                                                    : asCollateral
+                                            }
+                                            size="sm"
+                                        />
+                                    ),
                                 },
                                 {
                                     label: 'Estimated Gas',
