@@ -47,7 +47,7 @@ export const MultipleAssetsDisplay = ({ assets, show = 4, size, gap }: IMultiple
                 : [1, 2, 3, 4].map((el) => (
                       <SkeletonLoader
                           key={`${el}-${getRandomNumber()}`}
-                          className={`${size ? iconSizeClass(size) : 'h-8 w-8'}`}
+                          className={`${size ? iconSizeClass(size) : '!h-8 !w-8'}`}
                           variant="circular"
                       />
                   ))}
