@@ -116,6 +116,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                                     text={`Your previous supply is ${
                                         collateral === false ? 'not' : ''
                                     } collateralized.`}
+
                                     position="right"
                                 >
                                     <BasicToggle
