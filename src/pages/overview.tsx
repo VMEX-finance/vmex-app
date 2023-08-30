@@ -65,7 +65,7 @@ const Overview: React.FC = () => {
                     <div className="mb-4">
                         <span className="text-lg dark:text-neutral-200">
                             {getNetwork()?.chain?.unsupported
-                                ? 'Please switch networks.'
+                                ? 'Please switch networks'
                                 : 'Please connect your wallet'}
                         </span>
                     </div>

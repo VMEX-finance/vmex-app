@@ -1,10 +1,10 @@
 import { useSubgraphTrancheData, useUserData, useUserTrancheData } from '../../../api';
 import { useAccount } from 'wagmi';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { BsCheck } from 'react-icons/bs';
 import { IoIosClose } from 'react-icons/io';
 import { useSelectedTrancheContext } from '../../../store';
-import { AssetDisplay, NumberAndDollar } from '../../components';
+import { AssetDisplay, NumberAndDollar, Tooltip } from '../../components';
 import { useWindowSize, useDialogController } from '../../../hooks';
 import { AvailableAsset } from '@app/api/types';
 import { BigNumber, ethers } from 'ethers';
@@ -84,6 +84,11 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
         return 0;
     };
 
+    const sortedList = useMemo(() => {
+        if (data) return data.sort(compareListsSorter);
+        return [];
+    }, [data]);
+
     // Uncomment if want to enable collateral toggle from the table
     // const handleCollateral = async (el: AvailableAsset, index: number) => {
     //     const { asset, canBeCollat } = el;
@@ -135,85 +140,81 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                 </tr>
             </thead>
             <tbody className="divide-y divide-neutral-200 dark:divide-neutral-800">
-                {data &&
-                    data.sort(compareListsSorter).map((el, i) => {
-                        return (
-                            <tr
-                                key={`${el.asset}-${i}`}
-                                className="text-left transition duration-200 hover:bg-neutral-200 dark:hover:bg-neutral-900 hover:cursor-pointer"
-                                onClick={() =>
-                                    openDialog(
-                                        type === 'supply'
-                                            ? 'loan-asset-dialog'
-                                            : 'borrow-asset-dialog',
-                                        {
-                                            asset: el.asset,
-                                            trancheId: tranche.id,
-                                            collateral: el.canBeCollat,
-                                        },
-                                    )
-                                }
-                            >
-                                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
-                                    <div className="flex items-center">
-                                        <div className="flex flex-col justify-center gap-1 absolute -translate-x-4">
-                                            {isSuppliedOrBorrowed(el.asset) && (
-                                                <span
-                                                    className={` w-2 h-2 bg-brand-green-neon rounded-full`}
-                                                />
-                                            )}
-                                            {isCollateralized(el.asset) && (
-                                                <span className="w-2 h-2 bg-brand-blue rounded-full" />
-                                            )}
-                                            {hasRewards(el.asset) && (
-                                                <span className="w-2 h-2 bg-brand-purple rounded-full" />
-                                            )}
-                                        </div>
-                                        <AssetDisplay
-                                            name={el.asset}
-                                            className="text-lg"
-                                            noText={width < breakpoints.md}
-                                        />
+                {sortedList.map((el, i) => {
+                    return (
+                        <tr
+                            key={`${el.asset}-${i}`}
+                            className="text-left transition duration-200 hover:bg-neutral-200 dark:hover:bg-neutral-900 hover:cursor-pointer"
+                            onClick={() =>
+                                openDialog(
+                                    type === 'supply' ? 'loan-asset-dialog' : 'borrow-asset-dialog',
+                                    {
+                                        asset: el.asset,
+                                        trancheId: tranche.id,
+                                        collateral: el.canBeCollat,
+                                    },
+                                )
+                            }
+                        >
+                            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
+                                <div className="flex items-center">
+                                    <div className="flex flex-col justify-center gap-1 absolute -translate-x-4">
+                                        {isSuppliedOrBorrowed(el.asset) && (
+                                            <span
+                                                className={` w-2 h-2 bg-brand-green-neon rounded-full`}
+                                            />
+                                        )}
+                                        {isCollateralized(el.asset) && (
+                                            <span className="w-2 h-2 bg-brand-blue rounded-full" />
+                                        )}
+                                        {hasRewards(el.asset) && (
+                                            <span className="w-2 h-2 bg-brand-purple rounded-full" />
+                                        )}
                                     </div>
-                                </td>
-                                <td
-                                    className={`${
-                                        queryUserWallet.isLoading ? 'animate-pulse' : ''
-                                    }`}
-                                >
-                                    <NumberAndDollar
-                                        value={`${
-                                            type === 'supply'
-                                                ? `${bigNumberToNative(
-                                                      BigNumber.from(
-                                                          getTokenBalance(el.asset).amountNative,
-                                                      ),
-                                                      el.asset,
-                                                  )}`
-                                                : `${bigNumberToNative(
-                                                      amountBorrwable(el.asset).amountNative,
-                                                      el.asset,
-                                                  )}`
-                                        }`}
-                                        dollar={`${
-                                            type === 'supply'
-                                                ? `${getTokenBalance(el.asset).amount}`
-                                                : `${amountBorrwable(el.asset).amount}`
-                                        }`}
-                                        size="xs"
-                                        color="text-brand-black"
+                                    <AssetDisplay
+                                        name={el.asset}
+                                        className="text-lg"
+                                        noText={width < breakpoints.md}
                                     />
-                                </td>
-                                <td>{el.apy}</td>
-                                <td>
-                                    {type === 'supply' ? (
-                                        <div className="w-8 h-8">
-                                            {el.canBeCollat ? (
-                                                <BsCheck className="w-full h-full text-green-500" />
-                                            ) : (
-                                                <IoIosClose className="w-full h-full text-red-500" />
-                                            )}
-                                            {/* <BasicToggle
+                                </div>
+                            </td>
+                            <td className={`${queryUserWallet.isLoading ? 'animate-pulse' : ''}`}>
+                                <NumberAndDollar
+                                    value={`${
+                                        type === 'supply'
+                                            ? `${bigNumberToNative(
+                                                  BigNumber.from(
+                                                      getTokenBalance(el.asset).amountNative,
+                                                  ),
+                                                  el.asset,
+                                              )}`
+                                            : `${bigNumberToNative(
+                                                  amountBorrwable(el.asset).amountNative,
+                                                  el.asset,
+                                              )}`
+                                    }`}
+                                    dollar={`${
+                                        type === 'supply'
+                                            ? `${getTokenBalance(el.asset).amount}`
+                                            : `${amountBorrwable(el.asset).amount}`
+                                    }`}
+                                    size="xs"
+                                    color="text-brand-black"
+                                />
+                            </td>
+                            <td>
+                                {/* TODO: where does apy come from */}
+                                <Tooltip text="">{el.apy}</Tooltip>
+                            </td>
+                            <td>
+                                {type === 'supply' ? (
+                                    <div className="w-8 h-8">
+                                        {el.canBeCollat ? (
+                                            <BsCheck className="w-full h-full text-green-500" />
+                                        ) : (
+                                            <IoIosClose className="w-full h-full text-red-500" />
+                                        )}
+                                        {/* <BasicToggle
                                                 checked={el.canBeCollat}
                                                 onClick={(e: any) => {
                                                     e.preventDefault();
@@ -225,21 +226,21 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                                     e.stopPropagation();
                                                 }}
                                             /> */}
-                                        </div>
-                                    ) : (
-                                        `${numberFormatter.format(
-                                            parseFloat(
-                                                ethers.utils.formatUnits(
-                                                    el.liquidity || '',
-                                                    findAssetInMarketsData(el.asset).decimals,
-                                                ),
-                                            ) || 0,
-                                        )} ${el.asset}`
-                                    )}
-                                </td>
-                            </tr>
-                        );
-                    })}
+                                    </div>
+                                ) : (
+                                    `${numberFormatter.format(
+                                        parseFloat(
+                                            ethers.utils.formatUnits(
+                                                el.liquidity || '',
+                                                findAssetInMarketsData(el.asset).decimals,
+                                            ),
+                                        ) || 0,
+                                    )} ${el.asset}`
+                                )}
+                            </td>
+                        </tr>
+                    );
+                })}
             </tbody>
         </table>
     );

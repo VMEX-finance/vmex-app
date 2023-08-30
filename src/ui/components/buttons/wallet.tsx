@@ -140,8 +140,11 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
                                             'transition duration-200',
                                             'min-h-[36px] !py-2',
                                             mode,
+                                            !address
+                                                ? 'text-neutral-100 hover:bg-neutral-800 dark:text-neutral-900'
+                                                : 'text-neutral-900',
                                             className,
-                                            'bg-brand-black dark:bg-neutral-200 dark:hover:bg-neutral-300 rounded-lg text-neutral-900 border border-brand-black',
+                                            'bg-brand-black dark:bg-neutral-200 dark:hover:bg-neutral-300 rounded-lg border border-brand-black',
                                         ].join(' ')}
                                     >
                                         {determineConnection().render}

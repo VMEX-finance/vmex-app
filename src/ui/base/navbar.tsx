@@ -83,7 +83,7 @@ export const Navbar: React.FC = () => {
                     {width <= breakpoints.lg && <ToggleThemeButton />}
                     <DefaultDropdown
                         selected={
-                            getNetwork()?.chain?.unsupported
+                            getNetwork()?.chain?.unsupported || !address
                                 ? 'coins/op.svg'
                                 : renderNetworks().filter(
                                       (network) =>
