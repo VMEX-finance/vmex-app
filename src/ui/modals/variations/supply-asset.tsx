@@ -116,22 +116,22 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                                     text={`Your previous supply is ${
                                         collateral === false ? 'not' : ''
                                     } collateralized.`}
-                                    content={
-                                        <BasicToggle
-                                            checked={existingSupplyCollateral}
-                                            disabled={!data?.collateral || isLoading}
-                                            onClick={(e: any) => {
-                                                e.preventDefault();
-                                                openDialog('toggle-collateral-dialog', {
-                                                    ...data,
-                                                    collateral: collateral,
-                                                    setCollateral: setExistingSupplyCollateral,
-                                                });
-                                                e.stopPropagation();
-                                            }}
-                                        />
-                                    }
-                                />
+                                    position="right"
+                                >
+                                    <BasicToggle
+                                        checked={existingSupplyCollateral}
+                                        disabled={!data?.collateral || isLoading}
+                                        onClick={(e: any) => {
+                                            e.preventDefault();
+                                            openDialog('toggle-collateral-dialog', {
+                                                ...data,
+                                                collateral: collateral,
+                                                setCollateral: setExistingSupplyCollateral,
+                                            });
+                                            e.stopPropagation();
+                                        }}
+                                    />
+                                </Tooltip>
                             ) : (
                                 <BasicToggle
                                     checked={asCollateral}

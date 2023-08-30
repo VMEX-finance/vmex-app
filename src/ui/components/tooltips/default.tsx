@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import ReactTooltip from 'react-tooltip';
+import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { BsInfoCircle } from 'react-icons/bs';
 
 interface ITooltipProps {
@@ -14,14 +14,15 @@ interface ITooltipProps {
 export const Tooltip = ({ text, content, size, disable, children, position }: ITooltipProps) => {
     return (
         <>
-            <span data-tip={text}>
+            <span data-tooltip-id={text} data-tooltip-content={text}>
                 {content || children || <BsInfoCircle size={size || '18px'} />}
             </span>
             <ReactTooltip
-                effect="solid"
-                backgroundColor="#000"
-                disable={disable}
+                // backgroundColor="#000"
+                // disable={disable}
                 place={position || 'top'}
+                id={text}
+                className="!z-[999999999]"
             />
         </>
     );
