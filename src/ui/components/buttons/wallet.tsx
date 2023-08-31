@@ -28,6 +28,10 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
     const renderDropdownItems = () => {
         let final: IDropdownItemProps[] = [
             {
+                text: 'Referrals',
+                onClick: () => openDialog('referrals-dialog'),
+            },
+            {
                 text: 'History',
                 onClick: () => openDialog('transactions-dialog'),
             },

@@ -25,7 +25,8 @@ export type IDialogNames =
     | 'feedback-dialog'
     | 'disclaimer-dialog'
     | 'toggle-collateral-dialog'
-    | 'transactions-dialog';
+    | 'transactions-dialog'
+    | 'referrals-dialog';
 
 const DialogControllerState: IDialogState = {
     dialogs: new Map<string, DialogType>([
@@ -125,6 +126,16 @@ const DialogControllerState: IDialogState = {
             'transactions-dialog',
             {
                 name: 'Transaction History',
+                isOpen: false,
+                data: {},
+                isSuccess: false,
+                isError: false,
+            },
+        ],
+        [
+            'referrals-dialog',
+            {
+                name: 'Referrals',
                 isOpen: false,
                 data: {},
                 isSuccess: false,

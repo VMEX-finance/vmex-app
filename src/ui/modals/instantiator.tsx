@@ -9,6 +9,7 @@ import {
     FeedbackDialog,
     ToggleCollateralDialog,
     TransactionsDialog,
+    ReferralsDialog,
 } from '../modals';
 import { ModalWrapper } from './subcomponents';
 
@@ -62,6 +63,12 @@ export const AllModalsInstance: React.FC = () => {
             <React.Fragment>
                 <ModalWrapper {...getDialogProps('transactions-dialog')}>
                     <TransactionsDialog {...getDialogProps('transactions-dialog')} />
+                </ModalWrapper>
+            </React.Fragment>
+
+            <React.Fragment>
+                <ModalWrapper {...getDialogProps('referrals-dialog')}>
+                    <ReferralsDialog {...getDialogProps('referrals-dialog')} />
                 </ModalWrapper>
             </React.Fragment>
         </>

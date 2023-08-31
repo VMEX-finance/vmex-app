@@ -11,6 +11,9 @@ type IAccordionProps = {
     title: string;
     summary: React.ReactNode;
     details: React.ReactNode;
+    noIcon?: boolean;
+    className?: string;
+    customHover?: string;
 };
 
 const Accordion = styled((props: AccordionProps) => (
@@ -24,12 +27,7 @@ const Accordion = styled((props: AccordionProps) => (
 const AccordionSummary = styled((props: AccordionSummaryProps) => {
     const { isDark } = React.useContext(ThemeContext);
 
-    return (
-        <MuiAccordionSummary
-            expandIcon={<RiArrowDropDownLine fontSize="30px" color={isDark ? '#f5f5f5' : 'gray'} />}
-            {...props}
-        />
-    );
+    return <MuiAccordionSummary {...props} />;
 })(({ theme }) => ({
     flexDirection: 'row-reverse',
     '& .MuiAccordionSummary-expandIconWrapper': {
@@ -48,7 +46,14 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
     borderTop: '1px solid rgba(0, 0, 0, .125)',
 }));
 
-export function DefaultAccordion({ title, summary, details }: IAccordionProps) {
+export function DefaultAccordion({
+    title,
+    summary,
+    details,
+    noIcon,
+    className,
+    customHover,
+}: IAccordionProps) {
     const [expanded, setExpanded] = React.useState<string | false>('');
     const { isDark } = React.useContext(ThemeContext);
 
@@ -63,12 +68,21 @@ export function DefaultAccordion({ title, summary, details }: IAccordionProps) {
             className={`border-t ${isDark ? 'border-neutral-800' : 'border-neutral-300'}`}
         >
             <AccordionSummary
+                expandIcon={
+                    noIcon ? (
+                        <></>
+                    ) : (
+                        <RiArrowDropDownLine fontSize="30px" color={isDark ? '#f5f5f5' : 'gray'} />
+                    )
+                }
                 aria-controls={`${title}-content`}
                 id={`${title}-header`}
-                className={`${
+                className={`${className || ''} ${
                     isDark
-                        ? '!bg-brand-black !text-neutral-200 hover:!bg-neutral-900'
-                        : '!bg-neutral-100 hover:!bg-neutral-200'
+                        ? `!bg-brand-black !text-neutral-200 ${
+                              customHover ? customHover : 'hover:!bg-neutral-900'
+                          }`
+                        : `!bg-neutral-100 ${customHover ? customHover : 'hover:!bg-neutral-200'}`
                 }`}
             >
                 {summary}
