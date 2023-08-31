@@ -28,10 +28,6 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
     const renderDropdownItems = () => {
         let final: IDropdownItemProps[] = [
             {
-                text: theme === 'light' ? 'Dark Mode' : 'Light Mode',
-                onClick: () => setTheme(theme === 'light' ? 'dark' : 'light'),
-            },
-            {
                 text: 'History',
                 onClick: () => openDialog('transactions-dialog'),
             },
@@ -45,7 +41,7 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
             },
         ];
 
-        if (queryTrancheAdminData?.data?.length !== 0) {
+        if (queryTrancheAdminData?.data && queryTrancheAdminData?.data?.length !== 0) {
             final.push({
                 text: 'My Tranches',
                 onClick: () => navigate('/my-tranches'),

@@ -45,7 +45,7 @@ export const Navbar: React.FC = () => {
             `}
             >
                 {/* Desktop/Mobile Left Nav */}
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-6 xl:gap-8">
                     <a id="nav-logo" className="flex items-center gap-2" href="/">
                         <img
                             src={
@@ -56,6 +56,7 @@ export const Navbar: React.FC = () => {
                             className="invert lg:invert-0"
                         />
                     </a>
+                    {width > breakpoints.lg && <ToggleThemeButton switch />}
                 </div>
 
                 {/* Desktop Center Nav */}
