@@ -20,12 +20,12 @@ export const ReferralsDialog: React.FC<IDialogProps> = ({ name, isOpen, data }) 
             <ModalHeader dialog="referrals-dialog" tabs={['Referrals']} />
             {referralCode ? (
                 <div className="flex flex-col pt-6 pb-2 px-2">
-                    <div className="flex items-center justify-between text-sm text-neutral-700 dark:text-neutral-400">
+                    <div className="flex items-center justify-between text-sm text-neutral-900 dark:text-neutral-300">
                         <span>My Code</span>
                         <span>Used</span>
                     </div>
                     <div className="flex items-center justify-between">
-                        <button className="py-1 flex items-center gap-2 text-lg transition duration-100 hover:text-neutral-600 dark:hover:text-neutral-100">
+                        <button className="py-1 flex items-center gap-2 text-lg transition duration-100 hover:text-neutral-800 dark:hover:text-white">
                             <span>{referralCode}</span>
                             <RxCopy />
                         </button>
