@@ -16,6 +16,8 @@ import {
     Tooltip,
     BasicToggle,
     SecondaryButton,
+    DefaultAccordion,
+    DefaultInput,
 } from '../../components';
 import { BigNumber } from 'ethers';
 import { ISupplyBorrowProps } from '../utils';
@@ -116,7 +118,6 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                                     text={`Your previous supply is ${
                                         collateral === false ? 'not' : ''
                                     } collateralized.`}
-
                                     position="right"
                                 >
                                     <BasicToggle
@@ -179,6 +180,26 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                                     error: estimatedGasCost.errorMessage,
                                 },
                             ]}
+                        />
+
+                        <DefaultAccordion
+                            noIcon
+                            customHover="hover:!text-brand-purple"
+                            className="!px-0 !hover:!bg-inherit"
+                            title={`referral-code`}
+                            summary={<span>Have a referral code?</span>}
+                            details={
+                                <div className="px-2">
+                                    <DefaultInput
+                                        value={''}
+                                        onType={(e: any) => {}}
+                                        size="lg"
+                                        placeholder="Paste code here"
+                                        required
+                                        className="flex w-full flex-col"
+                                    />
+                                </div>
+                            }
                         />
                     </>
                 ) : (

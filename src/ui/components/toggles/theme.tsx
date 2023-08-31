@@ -17,7 +17,7 @@ const ToggleThemeButton = (props: IToggleThemeButton) => {
         const iconColor = '#525252';
         return (
             <BasicToggle
-                colors={['bg-brand-purple', 'bg-neutral-700']}
+                colors={['bg-brand-purple', 'bg-neutral-800']}
                 checked={theme === 'dark'}
                 onChange={toggleTheme}
                 customIcon={

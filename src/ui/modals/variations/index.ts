@@ -6,3 +6,4 @@ export * from './confirmation';
 export * from './feedback';
 export * from './transactions';
 export * from './toggle-collateral';
+export * from './referrals';
