@@ -212,7 +212,8 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                             <td>
                                 <Tooltip
                                     text={
-                                        findAvailableAssetProps(el.asset, network)?.rewardSource
+                                        findAvailableAssetProps(el.asset, network)?.rewardSource &&
+                                        type === 'supply'
                                             ? `Staked in ${
                                                   findAvailableAssetProps(el.asset, network)
                                                       ?.rewardSource
