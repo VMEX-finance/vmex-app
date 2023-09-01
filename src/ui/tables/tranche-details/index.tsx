@@ -8,15 +8,22 @@ import { AssetDisplay, NumberAndDollar, Tooltip } from '../../components';
 import { useWindowSize, useDialogController } from '../../../hooks';
 import { AvailableAsset } from '@app/api/types';
 import { BigNumber, ethers } from 'ethers';
-import { numberFormatter, bigNumberToNative } from '../../../utils';
+import {
+    numberFormatter,
+    bigNumberToNative,
+    findAvailableAssetProps,
+    DEFAULT_NETWORK,
+} from '../../../utils';
 import { useLocation } from 'react-router-dom';
 import { IYourSuppliesTableItemProps } from '../portfolio';
+import { getNetwork } from '@wagmi/core';
 
 interface ITableProps {
     data: AvailableAsset[];
     type: 'supply' | 'borrow';
 }
 export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
+    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const location = useLocation();
     const { width, breakpoints } = useWindowSize();
     const { address } = useAccount();
@@ -203,8 +210,18 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                 />
                             </td>
                             <td>
-                                {/* TODO: where does apy come from */}
-                                <Tooltip text="">{el.apy}</Tooltip>
+                                <Tooltip
+                                    text={
+                                        findAvailableAssetProps(el.asset, network)?.rewardSource
+                                            ? `Staked in ${
+                                                  findAvailableAssetProps(el.asset, network)
+                                                      ?.rewardSource
+                                              }`
+                                            : ''
+                                    }
+                                >
+                                    {el.apy}
+                                </Tooltip>
                             </td>
                             <td>
                                 {type === 'supply' ? (

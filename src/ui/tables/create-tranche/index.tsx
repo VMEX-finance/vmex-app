@@ -199,7 +199,7 @@ export const CreateTrancheAssetsTable = ({
                 setList={setAssets}
                 placeholder="USDC"
                 coin
-                autocomplete={AVAILABLE_ASSETS.filter((val) => !(assets as any).includes(val))}
+                autocomplete={AVAILABLE_ASSETS[network].map(el => el.symbol).filter((val) => !(assets as any).includes(val))}
                 _adminFee={_adminFee}
                 setAdminFee={setAdminFee}
             /> */}

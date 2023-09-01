@@ -1,6 +1,6 @@
 import { IMarketsAsset, ITrancheProps } from '@app/api/types';
 import { ethers } from 'ethers';
-import { HEALTH } from './constants';
+import { AVAILABLE_ASSETS, HEALTH } from './constants';
 import moment from 'moment';
 import { ILineChartDataPointProps } from '@ui/components';
 
@@ -284,3 +284,6 @@ export function addMissingDatesToTimeseries(
 export const getRandomNumber = (number?: number) => Math.floor(Math.random() * (number || 100000));
 
 export const capFirstLetter = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
+
+export const findAvailableAssetProps = (asset: string, network: string) =>
+    AVAILABLE_ASSETS[network].find((el) => el.symbol.toLowerCase() === asset.toLowerCase());

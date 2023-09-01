@@ -382,15 +382,15 @@ const MyTranches: React.FC = () => {
                                                 <ListInput
                                                     title="Tokens"
                                                     list={_newTokens}
-                                                    autocomplete={AVAILABLE_ASSETS[network].filter(
-                                                        (val: any) => {
+                                                    autocomplete={AVAILABLE_ASSETS[network]
+                                                        .map((el) => el.symbol)
+                                                        .filter((val: any) => {
                                                             const tmp = getOriginalAndNewTokens();
                                                             return (
                                                                 tmp &&
                                                                 !(tmp as string[]).includes(val)
                                                             );
-                                                        },
-                                                    )}
+                                                        })}
                                                     setList={setNewTokens}
                                                     placeholder="USDC"
                                                     coin

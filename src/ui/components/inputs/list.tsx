@@ -85,7 +85,7 @@ export const ListInput = ({
             if (
                 coin &&
                 !AVAILABLE_ASSETS[network]
-                    .map((coin: any) => coin.toUpperCase())
+                    .map((coin) => coin.symbol.toUpperCase())
                     .includes(toBeSet.toUpperCase())
             ) {
                 setError('Please enter a valid token.');
