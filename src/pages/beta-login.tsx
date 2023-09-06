@@ -5,7 +5,7 @@ import { useGlobalContext } from '../store/global';
 
 const BetaLogin: React.FC = () => {
     const { address } = useAccount();
-    const { isAuthenticated, currentNetwork } = useGlobalContext();
+    const { currentNetwork } = useGlobalContext();
     return (
         <div className="flex flex-col gap-6 justify-center items-center h-screen w-screen text-center">
             <div className="flex flex-col text-center justify-center items-center">
@@ -15,11 +15,11 @@ const BetaLogin: React.FC = () => {
                 <p className="text-center font-medium">Beta</p>
             </div>
             <ConnectButton showBalance={false} />
-            {!isAuthenticated && address && (
+            {/* {!isAuthenticated && address && (
                 <span className="text-red-600">
                     You are not on the beta whitelist. Please contact an administrator to be added.
                 </span>
-            )}
+            )} */}
         </div>
     );
 };

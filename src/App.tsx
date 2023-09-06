@@ -92,9 +92,6 @@ function App() {
                     }
                 />
 
-                {/* For BETA */}
-                <Route path="/beta-auth" element={<BetaLogin />} />
-
                 {/* Dynamic Tranche Routes */}
                 <Route
                     path="/tranches/:name"
