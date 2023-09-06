@@ -4,38 +4,62 @@ import { ModalFooter, ModalHeader } from '../subcomponents';
 import { Button } from '../../components';
 import { useDialogController } from '../../../hooks';
 import { RxCopy } from 'react-icons/rx';
+import { useAccount } from 'wagmi';
+import { truncate } from '../../../utils';
+import { useUserReferrals } from '../../../api';
 
 export const ReferralsDialog: React.FC<IDialogProps> = ({ name, isOpen, data }) => {
+    const { address } = useAccount();
     const { closeDialog } = useDialogController();
-    const [referralCode, setReferralCode] = useState('');
+    const [showSuccess, setShowSuccess] = useState(false);
+    const { queryUserReferrals } = useUserReferrals(address);
+
+    const copyToClipboard = () => {
+        if (address) {
+            navigator.clipboard.writeText(address);
+            setShowSuccess(true);
+        }
+    };
 
     useEffect(() => {
-        if (isOpen) {
-            setReferralCode('ABC123DEF456');
+        if (showSuccess) {
+            const timeout = setTimeout(() => setShowSuccess(false), 1500);
+            return () => clearTimeout(timeout);
         }
-    }, [isOpen]);
+    }, [showSuccess]);
 
     return (
         <>
             <ModalHeader dialog="referrals-dialog" tabs={['Referrals']} />
-            {referralCode ? (
+            {address ? (
                 <div className="flex flex-col pt-6 pb-2 px-2">
-                    <div className="flex items-center justify-between text-sm text-neutral-900 dark:text-neutral-300">
-                        <span>My Code</span>
+                    <div className="flex items-center justify-between text-sm text-neutral-800 dark:text-neutral-300">
+                        <span>My Address</span>
                         <span>Used</span>
                     </div>
                     <div className="flex items-center justify-between">
-                        <button className="py-1 flex items-center gap-2 text-lg transition duration-100 hover:text-neutral-800 dark:hover:text-white">
-                            <span>{referralCode}</span>
+                        <button
+                            onClick={copyToClipboard}
+                            className="py-1 flex items-center gap-2 text-lg transition duration-100 hover:text-neutral-800 dark:hover:text-white"
+                        >
+                            <span>{truncate(address, 6)}</span>
                             <RxCopy />
+                            {showSuccess && (
+                                <span className="absolute text-sm mt-10 text-green-600 dark:text-green-500">
+                                    Copied
+                                </span>
+                            )}
                         </button>
-                        <span className="text-lg">0</span>
+                        <span className="text-lg">{queryUserReferrals.data}</span>
+                    </div>
+                    <div>
+                        <span></span>
                     </div>
                 </div>
             ) : (
                 <div className="flex justify-center items-center pt-12 pb-4">
                     <span className="text-neutral-700 dark:text-neutral-400">
-                        No Referral Code Available
+                        Referrals Not Available
                     </span>
                 </div>
             )}

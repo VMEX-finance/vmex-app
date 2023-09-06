@@ -13,7 +13,7 @@ const ToggleThemeButton = (props: IToggleThemeButton) => {
     const toggleTheme = () => setTheme(theme === 'dark' ? 'light' : 'dark');
 
     if (props.switch) {
-        const iconSize = 16;
+        const iconSize = 12;
         const iconColor = '#525252';
         return (
             <BasicToggle
@@ -27,7 +27,6 @@ const ToggleThemeButton = (props: IToggleThemeButton) => {
                         <FaMoon size={iconSize} color={iconColor} />
                     )
                 }
-                size="large"
             />
         );
     }

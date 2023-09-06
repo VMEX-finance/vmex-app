@@ -6,6 +6,7 @@ import {
     useSubgraphTrancheData,
     useUserData,
     useUserTrancheData,
+    addUserReferral,
 } from '../api';
 import { useAccount, useSigner } from 'wagmi';
 import { IYourSuppliesTableItemProps } from '../ui/tables';
@@ -20,7 +21,7 @@ import {
     PRICING_DECIMALS,
     bigNumberToUSD,
 } from '../utils';
-import { BigNumber, BigNumberish, Wallet, utils } from 'ethers';
+import { BigNumber, BigNumberish, Wallet, ethers, utils } from 'ethers';
 import {
     claimIncentives,
     convertAddressToSymbol,
@@ -29,6 +30,7 @@ import {
     withdraw,
 } from '@vmexfinance/sdk';
 import { getNetwork } from '@wagmi/core';
+import { toast } from 'react-toastify';
 
 export const useSupply = ({
     data,
@@ -62,6 +64,7 @@ export const useSupply = ({
         errorMessage: '',
     });
     const [asset, setAsset] = useState(data?.asset || '');
+    const [referralAddress, setReferralAddress] = useState('');
 
     const toggleEthWeth = () => {
         if (data?.asset?.toLowerCase() === 'weth') {
@@ -99,6 +102,13 @@ export const useSupply = ({
 
     const handleSubmit = async () => {
         if (signer && data) {
+            if (referralAddress) {
+                const { isSuccess, message } = await addUserReferral(address, referralAddress);
+                if (!isSuccess) {
+                    toast.error(message);
+                    return;
+                }
+            }
             await submitTx(async () => {
                 let res;
                 if (view?.includes('Supply')) {
@@ -298,5 +308,7 @@ export const useSupply = ({
         toggleEthWeth,
         isEth: data?.asset?.toLowerCase() === 'weth' && asset === 'ETH' ? true : false,
         asset,
+        referralAddress,
+        setReferralAddress,
     };
 };
