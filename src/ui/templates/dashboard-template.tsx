@@ -145,7 +145,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                 )}
             </header>
             <main>
-                <div className="py-4 md:py-8 flex flex-col gap-4 xl:gap-5">
+                <div className="py-4 md:py-8 flex flex-col gap-4">
                     {children ? (
                         children
                     ) : (

@@ -157,9 +157,9 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
                         <ListInput
                             title="Tokens"
                             list={_tokens}
-                            autocomplete={AVAILABLE_ASSETS[network].filter(
-                                (val: any) => !_tokens.includes(val),
-                            )}
+                            autocomplete={AVAILABLE_ASSETS[network]
+                                .map((el) => el.symbol)
+                                .filter((val: any) => !_tokens.includes(val))}
                             setList={setTokens}
                             placeholder="USDC"
                             coin
