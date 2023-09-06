@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
 import { useDialogController, useModal, useSupply } from '../../../hooks';
 import {
@@ -58,6 +58,8 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
         toggleEthWeth,
         isEth,
         asset,
+        referralAddress,
+        setReferralAddress,
     } = useSupply({ data, ...modalProps });
 
     return (
@@ -185,18 +187,18 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                         <DefaultAccordion
                             noIcon
                             customHover="hover:!text-brand-purple"
-                            className="!px-0 !hover:!bg-inherit"
+                            className="!px-0 !hover:!bg-inherit !bg-white dark:!bg-brand-black"
                             title={`referral-code`}
-                            summary={<span>Have a referral code?</span>}
+                            summary={<span>Did someone refer you?</span>}
                             details={
                                 <div className="px-2">
                                     <DefaultInput
-                                        value={''}
-                                        onType={(e: any) => {}}
+                                        value={referralAddress}
+                                        onType={(e: string) => setReferralAddress(e)}
                                         size="lg"
-                                        placeholder="Paste code here"
+                                        placeholder="Paste address here"
                                         required
-                                        className="flex w-full flex-col"
+                                        className="flex w-full flex-col py-2"
                                     />
                                 </div>
                             }

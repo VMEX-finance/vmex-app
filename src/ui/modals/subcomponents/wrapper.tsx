@@ -31,7 +31,7 @@ export const ModalWrapper: React.FC<IModalWrapperProps> = ({
                 </Transition.Child>
 
                 <div className="fixed z-10 inset-0 overflow-y-auto">
-                    <div className="flex justify-center p-2 pt-6 lg:pt-8 text-center">
+                    <div className="flex justify-center p-2 pt-6 text-center">
                         <Transition.Child
                             as={Fragment}
                             enter="ease-out duration-300"
