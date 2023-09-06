@@ -102,10 +102,10 @@ export const useSupply = ({
 
     const handleSubmit = async () => {
         if (signer && data) {
-            if (ethers.utils.isAddress(referralAddress)) {
-                const res = await addUserReferral(address, referralAddress);
-                if (res?.code !== 200) {
-                    toast.error('Please check referral address');
+            if (referralAddress) {
+                const { isSuccess, message } = await addUserReferral(address, referralAddress);
+                if (!isSuccess) {
+                    toast.error(message);
                     return;
                 }
             }

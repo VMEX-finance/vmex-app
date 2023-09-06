@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { NETWORKS, DEFAULT_NETWORK } from '../../utils';
 import { getNetwork } from '@wagmi/core';
+import { ethers } from 'ethers';
 
 // Gets
 export async function getUserReferrals(userAddress: string) {
@@ -19,26 +20,29 @@ export async function getUserReferrals(userAddress: string) {
 
 // Gets
 export async function addUserReferral(userAddress?: string, referredAddress?: string) {
+    if (!userAddress) return { isSuccess: false, message: 'Missing user address' };
+    if (!ethers.utils.isAddress(userAddress))
+        return { isSuccess: false, message: 'User address is not a valid address' };
+
+    if (!referredAddress) return { isSuccess: false, message: 'Missing referral address' };
+    if (!ethers.utils.isAddress(referredAddress))
+        return { isSuccess: false, message: 'Referral address is not a valid address' };
+
     const network = getNetwork()?.chain?.unsupported
         ? DEFAULT_NETWORK
         : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
-    if (!userAddress || !referredAddress) {
-        return false;
-    }
 
-    const res = await (
-        await fetch(`${NETWORKS[network].backend}/v1/user/referrals/${userAddress}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                referred: referredAddress,
-            }),
-        })
-    ).json();
-    console.log(res);
-    return res || false;
+    const res = await fetch(`${NETWORKS[network].backend}/v1/user/referrals/${referredAddress}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            referred: userAddress,
+        }),
+    });
+    if (res.status === 200) return { isSuccess: true, message: 'Success' };
+    return { isSuccess: false, message: (await res.text()) || 'Error adding referral' };
 }
 
 // Master
