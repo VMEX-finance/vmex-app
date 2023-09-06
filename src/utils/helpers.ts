@@ -1,5 +1,5 @@
 import { IMarketsAsset, ITrancheProps } from '@app/api/types';
-import { ethers } from 'ethers';
+import { Contract, ethers } from 'ethers';
 import { AVAILABLE_ASSETS, HEALTH } from './constants';
 import moment from 'moment';
 import { ILineChartDataPointProps } from '@ui/components';
@@ -287,3 +287,28 @@ export const capFirstLetter = (str: string) => str.charAt(0).toUpperCase() + str
 
 export const findAvailableAssetProps = (asset: string, network: string) =>
     AVAILABLE_ASSETS[network].find((el) => el.symbol.toLowerCase() === asset.toLowerCase());
+
+export const getContractMetadata = async (
+    contractAddress: string,
+    provider: any,
+    type: 'name' | 'symbol',
+) => {
+    let abi;
+    switch (type.toLowerCase()) {
+        case 'name': {
+            abi = 'function name() view returns (string)';
+            break;
+        }
+        default: {
+            abi = 'function symbol() view returns (string)';
+            break;
+        }
+    }
+    const contract = new Contract(contractAddress, [abi], provider);
+    switch (type.toLowerCase()) {
+        case 'name':
+            return await contract.name();
+        default:
+            return await contract.symbol();
+    }
+};

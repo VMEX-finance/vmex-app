@@ -42,6 +42,16 @@ export const NETWORKS: Record<string, any> = {
         testing: false,
         icon: '/coins/eth.svg',
     },
+    // base: {
+    //     name: 'Base',
+    //     rpc: 'https://mainnet.base.org',
+    //     subgraph: '',
+    //     chainId: 8453,
+    //     explorer: 'https://basescan.org',
+    //     backend: 'https://dolphin-app-ajfiy.ondigitalocean.app',
+    //     testing: false,
+    //     icon: ''
+    // }
 };
 
 export const DEFAULT_NETWORK = 'optimism';

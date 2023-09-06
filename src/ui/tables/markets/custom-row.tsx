@@ -1,12 +1,12 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '../../../store';
-import { determineRatingColor } from '../../../utils/helpers';
+// import { determineRatingColor } from '../../../utils/helpers';
 import { BsCheck } from 'react-icons/bs';
 import { IoIosClose } from 'react-icons/io';
 import { AssetDisplay, SplitButton } from '../../components';
-import { IMarketsAsset } from '@app/api/types';
 import { useDialogController, useWindowSize } from '../../../hooks';
+import { useApyData, IMarketsAsset } from '../../../api';
 
 const MarketsCustomRow = (props: any) => {
     const {
@@ -28,6 +28,7 @@ const MarketsCustomRow = (props: any) => {
     const { width } = useWindowSize();
     const { updateTranche, setAsset } = useSelectedTrancheContext();
     const { openDialog } = useDialogController();
+    const { apys } = useApyData();
 
     const route = (e: Event, market: IMarketsAsset, view = 'overview') => {
         e.stopPropagation();
@@ -55,6 +56,11 @@ const MarketsCustomRow = (props: any) => {
         }
     };
 
+    const assetTotalApy = `${
+        apys?.find((el) => el.assetSymbol?.toUpperCase() === asset.toUpperCase())?.totalApy ||
+        supplyApy.replace('%', '')
+    }%`;
+
     // Mobile
     if (width < 900) {
         return (
@@ -74,7 +80,7 @@ const MarketsCustomRow = (props: any) => {
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Supply APY</span>
-                    <span>{supplyApy}</span>
+                    <span>{assetTotalApy}</span>
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Borrow APY</span>
@@ -138,7 +144,7 @@ const MarketsCustomRow = (props: any) => {
                     <AssetDisplay name={asset} />
                 </td>
                 <td className="min-w-[150px] pl-4 py-4">{tranche}</td>
-                <td className="pl-4">{supplyApy}</td>
+                <td className="pl-4">{assetTotalApy}</td>
                 <td className="pl-4">{borrowable ? borrowApy : '-'}</td>
                 <td className={`pl-4 ${yourAmount.loading ? 'animate-pulse' : ''}`}>
                     {yourAmount.amount}

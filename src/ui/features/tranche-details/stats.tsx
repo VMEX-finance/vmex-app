@@ -292,16 +292,6 @@ export const TrancheStatisticsCard = ({
                     )}
                 </div>
             </Card>
-
-            <Tooltip
-                text={`
-                When deposited, ${asset || 'this asset'} is deployed into a VMEX strategy. Your{' '}
-                ${
-                    asset || 'asset'
-                } will be staked on Convex and earned rewards will be automatically
-                compounded back into your underlying position.
-            `}
-            ></Tooltip>
         </>
     );
 };

@@ -1,4 +1,4 @@
-import { useSubgraphTrancheData, useUserData, useUserTrancheData } from '../../../api';
+import { useApyData, useSubgraphTrancheData, useUserData, useUserTrancheData } from '../../../api';
 import { useAccount } from 'wagmi';
 import React, { useMemo } from 'react';
 import { BsCheck } from 'react-icons/bs';
@@ -28,6 +28,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
     const { width, breakpoints } = useWindowSize();
     const { address } = useAccount();
     const { tranche } = useSelectedTrancheContext();
+    const { apys } = useApyData();
     const { queryUserWallet, getTokenBalance } = useUserData(address);
     const {
         queryUserTrancheData,
@@ -148,6 +149,10 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
             </thead>
             <tbody className="divide-y divide-neutral-200 dark:divide-neutral-800">
                 {sortedList.map((el, i) => {
+                    const assetTotalApy = `${
+                        apys?.find((x) => x.assetSymbol?.toUpperCase() === el.asset.toUpperCase())
+                            ?.totalApy || (el.apy as string).replace('%', '')
+                    }%`;
                     return (
                         <tr
                             key={`${el.asset}-${i}`}
@@ -212,6 +217,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                             <td>
                                 <Tooltip
                                     text={
+                                        // TODO: add breakdown of apy
                                         findAvailableAssetProps(el.asset, network)?.rewardSource &&
                                         type === 'supply'
                                             ? `Staked in ${
