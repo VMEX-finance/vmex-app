@@ -1,39 +1,26 @@
-import {
-    useApyData,
-    useSubgraphTrancheData,
-    useUserData,
-    useUserTrancheData,
-    AvailableAsset,
-} from '@/api';
+import { useSubgraphTrancheData, useUserData, useUserTrancheData, AvailableAsset } from '@/api';
 import { useAccount } from 'wagmi';
 import React, { useMemo } from 'react';
 import { BsCheck } from 'react-icons/bs';
 import { IoIosClose } from 'react-icons/io';
 import { useSelectedTrancheContext } from '@/store';
-import { AssetDisplay, NumberAndDollar, Tooltip } from '@/ui/components';
+import { AssetDisplay, NumberAndDollar, ApyToolitp } from '@/ui/components';
 import { useWindowSize, useDialogController } from '@/hooks';
 import { BigNumber, ethers } from 'ethers';
-import {
-    numberFormatter,
-    bigNumberToNative,
-    findAvailableAssetProps,
-    DEFAULT_NETWORK,
-} from '@/utils';
+import { numberFormatter, bigNumberToNative } from '@/utils';
 import { useLocation } from 'react-router-dom';
 import { IYourSuppliesTableItemProps } from '../portfolio';
-import { getNetwork } from '@wagmi/core';
 
 interface ITableProps {
     data: AvailableAsset[];
     type: 'supply' | 'borrow';
 }
 export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
-    const network = getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+    console.log('data', data);
     const location = useLocation();
     const { width, breakpoints } = useWindowSize();
     const { address } = useAccount();
     const { tranche } = useSelectedTrancheContext();
-    const { queryAssetApys } = useApyData();
     const { queryUserWallet, getTokenBalance } = useUserData(address);
     const {
         queryUserTrancheData,
@@ -216,20 +203,11 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                 />
                             </td>
                             <td>
-                                <Tooltip
-                                    text={
-                                        // TODO: add breakdown of apy
-                                        findAvailableAssetProps(el.asset, network)?.rewardSource &&
-                                        type === 'supply'
-                                            ? `Staked in ${
-                                                  findAvailableAssetProps(el.asset, network)
-                                                      ?.rewardSource
-                                              }`
-                                            : ''
-                                    }
-                                >
-                                    {el.apy}
-                                </Tooltip>
+                                {type === 'supply' ? (
+                                    <ApyToolitp symbol={el.asset} oldApy={el.apy} />
+                                ) : (
+                                    el.apy
+                                )}
                             </td>
                             <td>
                                 {type === 'supply' ? (

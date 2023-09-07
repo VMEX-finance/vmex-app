@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelectedTrancheContext } from '@/store';
-import { NumberDisplay, DefaultDropdown, Card, ReLineChart } from '@/ui/components';
+import { NumberDisplay, DefaultDropdown, Card, ReLineChart, ApyToolitp } from '@/ui/components';
 import { IGraphTrancheAssetProps, IGraphTrancheDataProps } from '@/api';
 import {
     numberFormatter,
@@ -83,12 +83,14 @@ export const TrancheStatisticsCard = ({
                 <div className="flex gap-6 mb-3 mt-1">
                     <NumberDisplay
                         label="Supply APY"
-                        value={(assetData?.supplyRate as string) || '0%'}
+                        value={
+                            <ApyToolitp symbol={asset} oldApy={assetData?.supplyRate as string} />
+                        }
                         color="text-brand-green"
                     />
                     <NumberDisplay
                         label="Borrow APY"
-                        value={(assetData?.borrowRate as string) || '0%'}
+                        value={percentFormatter.format(Number(assetData?.borrowRate) || 0)}
                         color="text-brand-purple"
                     />
                     <NumberDisplay
@@ -203,7 +205,7 @@ export const TrancheStatisticsCard = ({
                                                     ? (assetData?.decimals as any)
                                                     : 0,
                                             ) as any,
-                                        )} ${asset}`
+                                        )}`
                                     )
                                 }
                                 color="text-white"
@@ -225,7 +227,7 @@ export const TrancheStatisticsCard = ({
                                                         ? (assetData?.decimals as any)
                                                         : 0,
                                                 ) as any,
-                                            )} ${asset}`
+                                            )}`
                                         )
                                     }
                                     color="text-white"
@@ -240,9 +242,7 @@ export const TrancheStatisticsCard = ({
                             />
                             <NumberDisplay
                                 label="Total Supplied"
-                                value={`${numberFormatter.format(
-                                    assetData?.totalSupplied as any,
-                                )} ${asset}`}
+                                value={`${numberFormatter.format(assetData?.totalSupplied as any)}`}
                                 color="text-white"
                                 center
                             />
@@ -257,7 +257,7 @@ export const TrancheStatisticsCard = ({
                                     label="Total Borrowed"
                                     value={`${numberFormatter.format(
                                         assetData?.totalBorrowed as any,
-                                    )} ${asset}`}
+                                    )}`}
                                     color="text-white"
                                     center
                                 />

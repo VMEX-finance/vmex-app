@@ -3,10 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '@/store';
 import { BsCheck } from 'react-icons/bs';
 import { IoIosClose } from 'react-icons/io';
-import { AssetDisplay, SplitButton, Tooltip } from '@/ui/components';
+import { ApyToolitp, AssetDisplay, SplitButton, Tooltip } from '@/ui/components';
 import { useDialogController, useWindowSize } from '@/hooks';
-import { useApyData, IMarketsAsset } from '@/api';
-import { findInObjArr, percentFormatter, usdFormatter } from '@/utils';
+import { IMarketsAsset } from '@/api';
+import { percentFormatter, usdFormatter } from '@/utils';
 
 const MarketsCustomRow = (props: any) => {
     const {
@@ -28,7 +28,6 @@ const MarketsCustomRow = (props: any) => {
     const { width } = useWindowSize();
     const { updateTranche, setAsset } = useSelectedTrancheContext();
     const { openDialog } = useDialogController();
-    const { queryAssetApys } = useApyData();
 
     const route = (e: Event, market: IMarketsAsset, view = 'overview') => {
         e.stopPropagation();
@@ -56,34 +55,6 @@ const MarketsCustomRow = (props: any) => {
         }
     };
 
-    const renderApy = () => {
-        const rewardApy = findInObjArr('symbol', asset, queryAssetApys.data);
-        if (rewardApy) {
-            const { apysByToken, asset, assetType, name, symbol, totalApy } = rewardApy;
-            const percent = percentFormatter.format(Number(totalApy) / 100);
-            if (apysByToken?.length) {
-                return (
-                    <Tooltip id={asset} content={percent}>
-                        <div className="min-w-[120px]">
-                            <span className="font-bold">APY Breakdown</span>
-                            {apysByToken.map((x: any) => (
-                                <div
-                                    className="text-sm flex justify-between items-center gap-6"
-                                    key={`reward-apy-tooltip-${x.asset}`}
-                                >
-                                    <span>{x?.symbol || x.asset}</span>
-                                    <span>{percentFormatter.format(Number(x.apy) / 100)}</span>
-                                </div>
-                            ))}
-                        </div>
-                    </Tooltip>
-                );
-            }
-            return percent;
-        }
-        return supplyApy;
-    };
-
     // Mobile
     if (width < 900) {
         return (
@@ -103,11 +74,11 @@ const MarketsCustomRow = (props: any) => {
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Supply APY</span>
-                    <span>{renderApy()}</span>
+                    <ApyToolitp symbol={asset} oldApy={supplyApy} />
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Borrow APY</span>
-                    <span>{borrowable ? borrowApy : '-'}</span>
+                    <span>{borrowable ? percentFormatter.format(borrowApy) : '-'}</span>
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Your Amount</span>
@@ -167,8 +138,10 @@ const MarketsCustomRow = (props: any) => {
                     <AssetDisplay name={asset} />
                 </td>
                 <td className="min-w-[150px] pl-4 py-4">{tranche}</td>
-                <td className="pl-4">{renderApy()}</td>
-                <td className="pl-4">{borrowable ? borrowApy : '-'}</td>
+                <td className="pl-4">
+                    <ApyToolitp symbol={asset} oldApy={supplyApy} />
+                </td>
+                <td className="pl-4">{borrowable ? percentFormatter.format(borrowApy) : '-'}</td>
                 <td className={`pl-4 ${yourAmount.loading ? 'animate-pulse' : ''}`}>
                     {yourAmount.amount}
                 </td>

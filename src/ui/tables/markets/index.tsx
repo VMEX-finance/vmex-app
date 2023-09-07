@@ -6,13 +6,7 @@ import { MarketsCustomRow } from './custom-row';
 import MUIDataTable from 'mui-datatables';
 import { SpinnerLoader } from '@/ui/components';
 import { ThemeContext } from '@/store';
-import {
-    addFeaturedTranches,
-    bigNumberToUnformattedString,
-    numberFormatter,
-    percentFormatter,
-    usdFormatter,
-} from '@/utils';
+import { addFeaturedTranches, bigNumberToUnformattedString, numberFormatter } from '@/utils';
 import { UseQueryResult } from '@tanstack/react-query';
 import { IUserActivityDataProps, IMarketsAsset } from '@/api';
 
@@ -246,8 +240,8 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
                                 asset={asset}
                                 tranche={tranche}
                                 trancheId={trancheId}
-                                supplyApy={percentFormatter.format(supplyApy)}
-                                borrowApy={percentFormatter.format(borrowApy)}
+                                supplyApy={supplyApy}
+                                borrowApy={borrowApy}
                                 yourAmount={renderYourAmount(asset, trancheId)}
                                 available={available}
                                 borrowTotal={borrowTotal}

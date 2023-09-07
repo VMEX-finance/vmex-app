@@ -16,7 +16,9 @@ export const Tooltip = ({ text, size, children, position, content, id }: IToolti
         return (
             <>
                 <span data-tooltip-id={id}>{content}</span>
-                <ReactTooltip id={id}>{children}</ReactTooltip>
+                <ReactTooltip id={id} className="!z-[999999999]">
+                    {children}
+                </ReactTooltip>
             </>
         );
     }

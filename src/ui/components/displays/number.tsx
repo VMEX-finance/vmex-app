@@ -56,7 +56,7 @@ export const NumberDisplay = ({
                     width={valueSize().skeletonWidth}
                 />
             ) : (
-                <p className={`${valueSize().css} ${color}`}>{value}</p>
+                <span className={`${valueSize().css} ${color}`}>{value}</span>
             )}
             {/* TODO: calculate percentage changed */}
             {change && <PercentChangeDisplay value={change} />}
