@@ -41,7 +41,7 @@ export type IMarketsAsset = {
     trancheId: number;
     supplyApy: number | string;
     borrowApy: number | string;
-    available: string;
+    available: string | number;
     availableNative: BigNumber;
     supplyTotal: number | string;
     borrowTotal: number | string;

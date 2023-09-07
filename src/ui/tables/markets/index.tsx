@@ -12,6 +12,7 @@ import {
     bigNumberToUnformattedString,
     numberFormatter,
     percentFormatter,
+    usdFormatter,
 } from '../../../utils';
 import { UseQueryResult } from '@tanstack/react-query';
 import { IUserActivityDataProps } from '@app/api/user/types';
