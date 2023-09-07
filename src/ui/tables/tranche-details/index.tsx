@@ -16,7 +16,6 @@ interface ITableProps {
     type: 'supply' | 'borrow';
 }
 export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
-    console.log('data', data);
     const location = useLocation();
     const { width, breakpoints } = useWindowSize();
     const { address } = useAccount();
