@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { IDialogProps } from '../utils';
 import { ModalFooter, ModalHeader } from '../subcomponents';
-import { Button, TransactionStatus } from '../../components';
+import { Button, TransactionStatus } from '@/ui/components';
 
 export const ConfirmationDialog: React.FC<IDialogProps> = ({ name, isOpen, data, closeDialog }) => {
     const [isLoading, setIsLoading] = useState(false);

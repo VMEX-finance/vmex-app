@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { useSelectedTrancheContext } from '../../../store';
-import { NumberDisplay, DefaultDropdown, Card, ReLineChart, Tooltip } from '../../components';
-import { IGraphTrancheAssetProps, IGraphTrancheDataProps } from '../../../api/subgraph/types';
+import { useSelectedTrancheContext } from '@/store';
+import { NumberDisplay, DefaultDropdown, Card, ReLineChart } from '@/ui/components';
+import { IGraphTrancheAssetProps, IGraphTrancheDataProps } from '@/api';
 import {
     numberFormatter,
     percentFormatter,
     convertContractsPercent,
     MAX_UINT_AMOUNT,
-} from '../../../utils';
-import { useSubgraphMarketsData } from '../../../api/subgraph';
+} from '@/utils';
+import { useSubgraphMarketsData } from '@/api';
 import { TbInfinity } from 'react-icons/tb';
 import { ethers } from 'ethers';
 

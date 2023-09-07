@@ -15,8 +15,8 @@ import {
     PRICING_DECIMALS,
     NETWORKS,
     DEFAULT_NETWORK,
-} from '../../utils';
-import { ILineChartDataPointProps } from '../../ui/components';
+} from '@/utils';
+import { ILineChartDataPointProps } from '@/ui/components';
 import { getTrancheId } from './id-generation';
 import { getNetwork } from '@wagmi/core';
 

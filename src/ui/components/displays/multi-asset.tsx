@@ -1,8 +1,4 @@
-import {
-    determineCoinDescription,
-    determineCoinImg,
-    getRandomNumber,
-} from '../../../utils/helpers';
+import { determineCoinDescription, determineCoinImg, getRandomNumber } from '@/utils';
 import React from 'react';
 import { SkeletonLoader } from '../loaders';
 import { Tooltip } from '../tooltips';

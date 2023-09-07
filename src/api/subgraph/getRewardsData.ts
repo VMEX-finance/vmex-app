@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client';
-import { getApolloClient } from '../../utils';
+import { getApolloClient } from '@/utils';
 import { VmexRewardsData } from '../types';
 import { getTrancheIdFromTrancheEntity } from './id-generation';
 

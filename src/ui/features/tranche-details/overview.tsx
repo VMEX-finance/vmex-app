@@ -1,15 +1,14 @@
 import {
     Card,
-    SkeletonLoader,
     AssetDisplay,
     HealthFactor,
     MultipleAssetsDisplay,
     NumberDisplay,
-} from '../../components';
+} from '@/ui/components';
 import React from 'react';
-import { useWindowSize, useDialogController } from '../../../hooks';
-import { IYourBorrowsTableItemProps, IYourSuppliesTableItemProps } from '../../tables';
-import { makeCompact, usdFormatter } from '../../../utils/helpers';
+import { useWindowSize, useDialogController } from '@/hooks';
+import { IYourBorrowsTableItemProps, IYourSuppliesTableItemProps } from '@/ui/tables';
+import { makeCompact, usdFormatter } from '@/utils';
 
 export interface ITrancheOverviewProps {
     assets?: string[];

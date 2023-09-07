@@ -1,7 +1,7 @@
-import { IAvailableCoins } from '../../../utils/helpers';
+import { IAvailableCoins } from '@/utils';
 import React, { useEffect } from 'react';
-import { Checkbox, AssetDisplay, DefaultInput, InnerCard } from '../../components';
-import { useSubgraphAllAssetMappingsData } from '../../../api/subgraph/getAssetMappingsData';
+import { Checkbox, AssetDisplay, DefaultInput, InnerCard } from '@/ui/components';
+import { useSubgraphAllAssetMappingsData } from '@/api';
 
 type ICreateTrancheAssetsTableProps = {
     assets: IAvailableCoins[];

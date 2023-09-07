@@ -1,12 +1,12 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useWindowSize, useDialogController } from '../../hooks';
+import { useWindowSize, useDialogController } from '@/hooks';
 import { BiChevronLeft, BiPlus } from 'react-icons/bi';
 import { Tooltip, Button, LinkButton, SkeletonLoader, Label } from '../components';
 import { useAccount, useNetwork } from 'wagmi';
 import { Skeleton } from '@mui/material';
-import { useSubgraphUserData } from '../../api';
-import { useSelectedTrancheContext } from '../../store/selected-tranche';
+import { useSubgraphUserData } from '@/api';
+import { useSelectedTrancheContext } from '@/store';
 
 interface IDashboardTemplateProps {
     title?: string;

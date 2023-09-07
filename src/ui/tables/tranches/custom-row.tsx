@@ -1,10 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSelectedTrancheContext } from '../../../store';
-import { useWindowSize } from '../../../hooks';
-import { determineRatingColor } from '../../../utils/helpers';
+import { useSelectedTrancheContext } from '@/store';
+import { useWindowSize } from '@/hooks';
 import { BsArrowDownCircle, BsArrowUpCircle } from 'react-icons/bs';
-import { Tooltip, MultipleAssetsDisplay, Button, Label } from '../../components';
+import { Tooltip, MultipleAssetsDisplay, Button, Label } from '@/ui/components';
 
 type ITranchesCustomRowProps = {
     name: string[];

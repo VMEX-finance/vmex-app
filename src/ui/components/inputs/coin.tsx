@@ -1,10 +1,10 @@
 import { AssetDisplay } from '../displays/asset';
 import React from 'react';
-import { bigNumberToUSD, NETWORKS, DEFAULT_NETWORK } from '../../../utils';
+import { bigNumberToUSD, NETWORKS, DEFAULT_NETWORK } from '@/utils';
 import { useSigner } from 'wagmi';
 import { mintTokens } from '@vmexfinance/sdk';
 import { Button, SecondaryButton } from '../buttons';
-import { usePricesData } from '../../../api/prices';
+import { usePricesData } from '@/api';
 import { BigNumber, utils } from 'ethers';
 import { getNetwork } from '@wagmi/core';
 

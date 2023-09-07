@@ -6,7 +6,7 @@ import {
     HealthFactor,
     MultipleAssetsDisplay,
     InnerCard,
-} from '../../components';
+} from '@/ui/components';
 import {
     YourBorrowsTable,
     YourSuppliesTable,
@@ -14,7 +14,7 @@ import {
     IYourSuppliesTableItemProps,
 } from '.';
 import { useNavigate } from 'react-router-dom';
-import { ThemeContext } from '../../../store/theme';
+import { ThemeContext } from '@/store';
 
 interface IYourPositionsProps {
     type: 'borrows' | 'supplies';

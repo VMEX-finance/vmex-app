@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { NETWORKS, DEFAULT_NETWORK } from '../../utils';
+import { NETWORKS, DEFAULT_NETWORK } from '@/utils';
 import { getNetwork } from '@wagmi/core';
 import { ethers } from 'ethers';
 

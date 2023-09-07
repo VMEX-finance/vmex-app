@@ -1,8 +1,8 @@
 import React from 'react';
-import { useModal, useWindowSize } from '../../../hooks';
-import { Button, Card, AssetDisplay, NumberAndDollar } from '../../components';
+import { useModal, useWindowSize } from '@/hooks';
+import { Button, Card, AssetDisplay, NumberAndDollar } from '@/ui/components';
 import { useNetwork, useSigner } from 'wagmi';
-import { DEFAULT_NETWORK, NETWORKS } from '../../../utils';
+import { DEFAULT_NETWORK, NETWORKS } from '@/utils';
 import { claimExternalRewards } from '@vmexfinance/sdk';
 import { getNetwork } from '@wagmi/core';
 

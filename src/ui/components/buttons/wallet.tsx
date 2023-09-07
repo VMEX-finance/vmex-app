@@ -2,12 +2,12 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import React, { useEffect } from 'react';
 import { IButtonProps } from './default';
 import { useAccount, useDisconnect, useNetwork } from 'wagmi';
-import { useWindowSize, useDialogController } from '../../../hooks';
+import { useWindowSize, useDialogController } from '@/hooks';
 import { DefaultDropdown, IDropdownItemProps } from '../dropdowns';
-import { truncateAddress, truncate } from '../../../utils/helpers';
+import { truncateAddress, truncate } from '@/utils';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { useSubgraphUserData } from '../../../api';
+import { useSubgraphUserData } from '@/api';
 
 export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: IButtonProps) => {
     const { chain } = useNetwork();

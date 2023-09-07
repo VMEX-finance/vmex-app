@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { getAssetPrices, getAllAssetSymbols, convertAddressToSymbol } from '@vmexfinance/sdk';
-import { NETWORKS, DEFAULT_NETWORK, IAvailableCoins } from '../../utils';
+import { NETWORKS, DEFAULT_NETWORK, IAvailableCoins } from '@/utils';
 import { IAssetPricesProps, IPricesDataProps } from './types';
 import { getNetwork } from '@wagmi/core';
 

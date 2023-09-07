@@ -1,4 +1,4 @@
-import { IAvailableCoins } from '../../utils/helpers';
+import { IAvailableCoins } from '@/utils';
 import { BigNumber } from 'ethers';
 
 export type IAssetPricesProps = {

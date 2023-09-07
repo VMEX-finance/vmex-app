@@ -1,12 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import {
-    PillDisplay,
-    Card,
-    ILineChartDataPointProps,
-    ReLineChart,
-    DefaultDropdown,
-} from '../../components';
-import { ITrancheInteractedProps } from '../../../api/user/types';
+import { PillDisplay, Card, ILineChartDataPointProps, ReLineChart } from '@/ui/components';
+import { ITrancheInteractedProps } from '@/api';
 
 type ILoanedAssetProps = {
     asset: string;

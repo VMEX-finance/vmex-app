@@ -1,6 +1,5 @@
-import { determineHealthColor } from '../../../utils/helpers';
 import React from 'react';
-import { NumberDisplay, Card } from '../../components';
+import { NumberDisplay, Card } from '@/ui/components';
 
 export interface IPortfolioProps {
     networth?: string;

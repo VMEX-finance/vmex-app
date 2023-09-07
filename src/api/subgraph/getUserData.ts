@@ -4,13 +4,7 @@ import { IGraphUserDataProps, ISubgraphUserData, IGraphTrancheDataProps } from '
 import { ILineChartDataPointProps } from '@/ui/components';
 import { BigNumber, ethers } from 'ethers';
 import { getAllAssetPrices } from '../prices';
-import {
-    nativeAmountToUSD,
-    getApolloClient,
-    PRICING_DECIMALS,
-    NETWORKS,
-    DEFAULT_NETWORK,
-} from '../../utils';
+import { nativeAmountToUSD, getApolloClient, PRICING_DECIMALS, DEFAULT_NETWORK } from '@/utils';
 import { processTrancheData } from './getTrancheData';
 import { getNetwork } from '@wagmi/core';
 

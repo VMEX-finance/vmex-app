@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { AssetDisplay, BasicToggle, NumberAndDollar, HealthFactor } from '../../components';
+import { AssetDisplay, BasicToggle, NumberAndDollar, HealthFactor } from '@/ui/components';
 import { BigNumber } from 'ethers';
-import { useWindowSize, useDialogController } from '../../../hooks';
-import { bigNumberToNative } from '../../../utils';
+import { useWindowSize, useDialogController } from '@/hooks';
+import { bigNumberToNative } from '@/utils';
 
 export type IYourSuppliesTableItemProps = {
     asset: string;

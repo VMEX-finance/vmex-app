@@ -1,4 +1,4 @@
-import { truncate, NETWORKS, DEFAULT_NETWORK } from '../../../utils';
+import { truncate, NETWORKS, DEFAULT_NETWORK } from '@/utils';
 import React from 'react';
 import { getNetwork } from '@wagmi/core';
 

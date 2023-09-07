@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
-import { useDialogController, useModal, useSupply } from '../../../hooks';
+import { useDialogController, useModal, useSupply } from '@/hooks';
 import {
     unformattedStringToBigNumber,
     bigNumberToNative,
     bigNumberToUnformattedString,
-} from '../../../utils';
+} from '@/utils';
 import {
     HealthFactor,
     ActiveStatus,
@@ -18,11 +18,11 @@ import {
     SecondaryButton,
     DefaultAccordion,
     DefaultInput,
-} from '../../components';
+} from '@/ui/components';
 import { BigNumber } from 'ethers';
 import { ISupplyBorrowProps } from '../utils';
 import { useNavigate } from 'react-router-dom';
-import { useSelectedTrancheContext } from '../../../store';
+import { useSelectedTrancheContext } from '@/store';
 
 export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
     const modalProps = useModal('loan-asset-dialog');

@@ -11,6 +11,7 @@ module.exports = override(
         ['@/ui/components']: path.resolve(__dirname, 'src/ui/components'),
         ['@/ui/features']: path.resolve(__dirname, 'src/ui/features'),
         ['@/ui/tables']: path.resolve(__dirname, 'src/ui/tables'),
+        ['@/ui/modals']: path.resolve(__dirname, 'src/ui/modals'),
         ['@/ui/templates']: path.resolve(__dirname, 'src/ui/templates'),
         ['@/hooks']: path.resolve(__dirname, 'src/hooks'),
     }),

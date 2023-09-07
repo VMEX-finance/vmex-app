@@ -1,7 +1,7 @@
 import React from 'react';
-import { makeCompact, truncate } from '../../../utils/helpers';
-import { TrancheData } from '../../../api/types';
-import { SkeletonLoader } from '../../components';
+import { makeCompact, truncate } from '@/utils';
+import { TrancheData } from '@/api';
+import { SkeletonLoader } from '@/ui/components';
 
 interface ITableProps {
     data: TrancheData[];

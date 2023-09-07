@@ -1,8 +1,8 @@
 import React from 'react';
 import { TbInfinity } from 'react-icons/tb';
 import { BsArrowRight } from 'react-icons/bs';
-import { useUserTrancheData, useSubgraphTrancheData } from '../../../api';
-import { useSelectedTrancheContext } from '../../../store';
+import { useUserTrancheData, useSubgraphTrancheData } from '@/api';
+import { useSelectedTrancheContext } from '@/store';
 import {
     convertStringFormatToNumber,
     HFFormatter,
@@ -12,7 +12,7 @@ import {
     NETWORKS,
     DEFAULT_NETWORK,
     TESTING,
-} from '../../../utils';
+} from '@/utils';
 import { ethers } from 'ethers';
 import { useAccount } from 'wagmi';
 import { useLocation } from 'react-router-dom';

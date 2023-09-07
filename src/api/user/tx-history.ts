@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { getApolloClient, nativeTokenFormatter } from '../../utils';
-import { formatUnits } from 'ethers/lib/utils.js';
-import { NETWORKS, DEFAULT_NETWORK } from '../../utils';
+import { getApolloClient } from '@/utils';
+import { DEFAULT_NETWORK } from '@/utils';
 import { getNetwork } from '@wagmi/core';
 import { gql } from '@apollo/client';
 

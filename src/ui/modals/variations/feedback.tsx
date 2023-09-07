@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useLayoutEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { IDialogProps } from '../utils';
 import { ModalFooter, ModalHeader } from '../subcomponents';
-import { Button, DefaultInput, TransactionStatus } from '../../components';
+import { Button, DefaultInput, TransactionStatus } from '@/ui/components';
 import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from 'react-simple-captcha';
-import { ThemeContext } from '../../../store/theme';
+import { ThemeContext } from '@/store';
 
 export const FeedbackDialog: React.FC<IDialogProps> = ({ name, isOpen, data, closeDialog }) => {
     const { isDark } = useContext(ThemeContext);

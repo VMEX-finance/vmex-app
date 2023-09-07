@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { convertAddressToSymbol } from '@vmexfinance/sdk';
-import { NETWORKS, DEFAULT_NETWORK, getContractMetadata } from '../../utils';
+import { NETWORKS, DEFAULT_NETWORK, getContractMetadata } from '@/utils';
 import { IAssetApyProps, IAssetApyQueryProps } from './types';
 import { getNetwork } from '@wagmi/core';
 import { ethers } from 'ethers';

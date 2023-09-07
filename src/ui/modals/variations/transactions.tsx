@@ -1,10 +1,10 @@
 import React from 'react';
 import { IDialogProps } from '../utils';
 import { ModalFooter, ModalHeader } from '../subcomponents';
-import { Button, TransactionStatus } from '../../components';
-import { useTransactionsContext } from '../../../store';
-import { useDialogController } from '../../../hooks';
-import { DEFAULT_NETWORK, NETWORKS, truncate } from '../../../utils';
+import { Button } from '@/ui/components';
+import { useTransactionsContext } from '@/store';
+import { useDialogController } from '@/hooks';
+import { DEFAULT_NETWORK, NETWORKS, truncate } from '@/utils';
 import { getNetwork } from '@wagmi/core';
 import { useUserHistory } from '@/api';
 import { useAccount } from 'wagmi';

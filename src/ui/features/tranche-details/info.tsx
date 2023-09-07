@@ -1,8 +1,8 @@
-import { NETWORKS, DEFAULT_NETWORK, truncateAddress } from '../../../utils';
+import { NETWORKS, DEFAULT_NETWORK, truncateAddress } from '@/utils';
 import React from 'react';
-import { Card, MultipleAssetsDisplay, NumberDisplay } from '../../components';
-import { useSelectedTrancheContext } from '../../../store';
-import { IGraphTrancheDataProps } from '../../../api/subgraph/types';
+import { Card, MultipleAssetsDisplay, NumberDisplay } from '@/ui/components';
+import { useSelectedTrancheContext } from '@/store';
+import { IGraphTrancheDataProps } from '@/api';
 import { getNetwork } from '@wagmi/core';
 
 type ITrancheInfoCard = {

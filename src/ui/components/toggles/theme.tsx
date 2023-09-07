@@ -1,4 +1,4 @@
-import { ThemeContext } from '../../../store';
+import { ThemeContext } from '@/store';
 import React from 'react';
 import { FaMoon, FaSun } from 'react-icons/fa';
 import { BasicToggle } from './default';
