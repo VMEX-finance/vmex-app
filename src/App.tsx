@@ -10,13 +10,10 @@ import Construction from './pages/construction';
 import TrancheDetails from './pages/tranche-details';
 import Portfolio from './pages/portfolio';
 import MyTranches from './pages/my-tranches';
-import { useDialogController } from './hooks';
-import BetaLogin from './pages/beta-login';
 import { ProtectedRoute } from './store';
 
 function App() {
     const [showLoading, setShowLoading] = useState(true);
-    const { openDialog } = useDialogController();
 
     useEffect(() => {
         const timeout = setTimeout(() => setShowLoading(false), 2000);

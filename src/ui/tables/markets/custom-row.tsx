@@ -7,6 +7,7 @@ import { IoIosClose } from 'react-icons/io';
 import { AssetDisplay, SplitButton } from '../../components';
 import { useDialogController, useWindowSize } from '../../../hooks';
 import { useApyData, IMarketsAsset } from '../../../api';
+import { usdFormatter } from '../../../utils';
 
 const MarketsCustomRow = (props: any) => {
     const {
@@ -93,16 +94,16 @@ const MarketsCustomRow = (props: any) => {
                     </span>
                 </td>
                 <td className="flex justify-between">
-                    <span className="font-bold">Borrowing Power</span>
-                    <span>{borrowable ? available : '-'}</span>
+                    <span className="font-bold">Available Borrows</span>
+                    <span>{borrowable ? usdFormatter().format(available) : '-'}</span>
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Supply</span>
-                    <span>{supplyTotal}</span>
+                    <span>{usdFormatter().format(supplyTotal)}</span>
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Borrow</span>
-                    <span>{borrowable ? borrowTotal : '-'}</span>
+                    <span>{borrowable ? usdFormatter().format(borrowTotal) : '-'}</span>
                 </td>
                 {/* <td className="flex justify-between">
                     <span className="font-bold">Rating</span>
@@ -149,9 +150,9 @@ const MarketsCustomRow = (props: any) => {
                 <td className={`pl-4 ${yourAmount.loading ? 'animate-pulse' : ''}`}>
                     {yourAmount.amount}
                 </td>
-                <td className="pl-4">{borrowable ? available : '-'}</td>
-                <td className="pl-4">{supplyTotal}</td>
-                <td className="pl-4">{borrowable ? borrowTotal : '-'}</td>
+                <td className="pl-4">{borrowable ? usdFormatter().format(available) : '-'}</td>
+                <td className="pl-4">{usdFormatter().format(supplyTotal)}</td>
+                <td className="pl-4">{borrowable ? usdFormatter().format(borrowTotal) : '-'}</td>
                 {/* <td className="text-lg pl-4" style={{ color: determineRatingColor(rating) }}>
                     {rating}
                 </td> */}

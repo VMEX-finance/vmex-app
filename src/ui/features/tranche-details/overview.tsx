@@ -190,7 +190,6 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                                                 }
                                                 className={buttonClass}
                                             >
-                                                <> {console.log(el.asset)}</>
                                                 <AssetDisplay
                                                     className={assetDisplayClass}
                                                     name={el.asset}

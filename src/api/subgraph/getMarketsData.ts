@@ -135,31 +135,28 @@ export const getSubgraphAllMarketsData = async (): Promise<IMarketsAsset[]> => {
                         : reserve.tranche.id,
                 borrowApy: utils.formatUnits(reserve.variableBorrowRate, 27),
                 supplyApy: utils.formatUnits(reserve.liquidityRate, 27),
-                available: usdFormatter().format(
-                    nativeAmountToUSD(
-                        reserve.availableLiquidity,
-                        PRICING_DECIMALS[network],
-                        reserve.decimals,
-                        assetUSDPrice,
-                    ),
+                available: nativeAmountToUSD(
+                    reserve.availableLiquidity,
+                    PRICING_DECIMALS[network],
+                    reserve.decimals,
+                    assetUSDPrice,
                 ),
+
                 availableNative: reserve.availableLiquidity,
-                supplyTotal: usdFormatter().format(
-                    nativeAmountToUSD(
-                        reserve.totalDeposits,
-                        PRICING_DECIMALS[network],
-                        reserve.decimals,
-                        assetUSDPrice,
-                    ),
+                supplyTotal: nativeAmountToUSD(
+                    reserve.totalDeposits,
+                    PRICING_DECIMALS[network],
+                    reserve.decimals,
+                    assetUSDPrice,
                 ),
-                borrowTotal: usdFormatter().format(
-                    nativeAmountToUSD(
-                        reserve.totalCurrentVariableDebt,
-                        PRICING_DECIMALS[network],
-                        reserve.decimals,
-                        assetUSDPrice,
-                    ),
+
+                borrowTotal: nativeAmountToUSD(
+                    reserve.totalCurrentVariableDebt,
+                    PRICING_DECIMALS[network],
+                    reserve.decimals,
+                    assetUSDPrice,
                 ),
+
                 rating: '-',
                 canBeCollateral: reserve.usageAsCollateralEnabled,
                 canBeBorrowed: reserve.borrowingEnabled,
