@@ -45,7 +45,6 @@ export async function getAllAssetApys() {
             };
         }),
     );
-    console.log('formatted', formattedApy);
     return formattedApy;
 }
 
