@@ -3,13 +3,23 @@ import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { BsInfoCircle } from 'react-icons/bs';
 
 interface ITooltipProps {
-    text: string;
+    id?: string;
+    content?: ReactNode;
+    text?: string;
     size?: string;
     children?: ReactNode | string;
     position?: 'left' | 'right' | 'bottom' | 'top';
 }
 
-export const Tooltip = ({ text, size, children, position }: ITooltipProps) => {
+export const Tooltip = ({ text, size, children, position, content, id }: ITooltipProps) => {
+    if (content) {
+        return (
+            <>
+                <span data-tooltip-id={id}>{content}</span>
+                <ReactTooltip id={id}>{children}</ReactTooltip>
+            </>
+        );
+    }
     return (
         <>
             <span data-tooltip-id={text} data-tooltip-content={text}>

@@ -33,7 +33,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
     const { width, breakpoints } = useWindowSize();
     const { address } = useAccount();
     const { tranche } = useSelectedTrancheContext();
-    const { apys } = useApyData();
+    const { queryAssetApys } = useApyData();
     const { queryUserWallet, getTokenBalance } = useUserData(address);
     const {
         queryUserTrancheData,
@@ -154,10 +154,6 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
             </thead>
             <tbody className="divide-y divide-neutral-200 dark:divide-neutral-800">
                 {sortedList.map((el, i) => {
-                    const assetTotalApy = `${
-                        apys?.find((x) => x.assetSymbol?.toUpperCase() === el.asset.toUpperCase())
-                            ?.totalApy || (el.apy as string).replace('%', '')
-                    }%`;
                     return (
                         <tr
                             key={`${el.asset}-${i}`}
