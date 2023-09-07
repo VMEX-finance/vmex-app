@@ -119,7 +119,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                 {(location.pathname === `/tranches` || location.pathname === '/portfolio') &&
                     isConnected &&
                     !chain?.unsupported && (
-                        <div className="flex gap-2 xl:gap-3 md:justify-end mt-2">
+                        <div className="flex gap-2 xl:gap-3 md:justify-end">
                             {queryTrancheAdminData.data?.length &&
                             queryTrancheAdminData.data?.length > 0 ? (
                                 <Button
