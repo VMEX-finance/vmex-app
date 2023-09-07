@@ -312,3 +312,16 @@ export const getContractMetadata = async (
             return await contract.symbol();
     }
 };
+
+export function unixToDate(unix: string | number) {
+    const isSeconds = String(unix).length < 12 ? true : false;
+    const numberUnix = typeof unix === 'string' ? parseFloat(unix) : unix;
+    return new Date(numberUnix * (isSeconds ? 1000 : 1));
+}
+
+export function sortArrByDate(arr: any[], key = 'datetime', order?: 'asc' | 'desc') {
+    if (!arr) return [];
+    if (order === 'asc')
+        return arr.sort((a, b) => new Date(a[key]).valueOf() - new Date(b[key]).valueOf());
+    return arr.sort((a, b) => new Date(b[key]).valueOf() - new Date(a[key]).valueOf());
+}

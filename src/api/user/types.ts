@@ -85,3 +85,11 @@ export type IAvailableBorrowData = {
     amountUSD: string;
     amountNative: BigNumber;
 };
+
+export type IUserTxHistoryProps = {
+    datetime: Date;
+    type: 'Deposit' | 'Borrow';
+    asset: string;
+    amount: string;
+    txHash: string;
+};
