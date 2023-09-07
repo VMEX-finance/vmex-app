@@ -1,18 +1,11 @@
 import { gql } from '@apollo/client';
 import { useQuery } from '@tanstack/react-query';
 import { ISubgraphAllMarketsData, ISubgraphMarketsChart } from './types';
-import { ILineChartDataPointProps } from '@ui/components/charts';
+import { ILineChartDataPointProps } from '@/ui/components';
 import { utils } from 'ethers';
 import { IMarketsAsset } from '../types';
 import { getAllAssetPrices } from '../prices';
-import {
-    usdFormatter,
-    getApolloClient,
-    nativeAmountToUSD,
-    NETWORKS,
-    DEFAULT_NETWORK,
-    PRICING_DECIMALS,
-} from '../../utils';
+import { getApolloClient, nativeAmountToUSD, DEFAULT_NETWORK, PRICING_DECIMALS } from '@/utils';
 import { convertSymbolToAddress } from '@vmexfinance/sdk';
 import { getReserveId } from './id-generation';
 import { getNetwork } from '@wagmi/core';

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { AppTemplate } from '../ui/templates';
+import { AppTemplate } from '@/ui/templates';
 import {
     Button,
     Card,
@@ -10,12 +10,12 @@ import {
     SkeletonLoader,
     TransactionStatus,
     WalletButton,
-} from '../ui/components';
+} from '@/ui/components';
 import { useAccount, useSigner } from 'wagmi';
-import { useSubgraphUserData, IGraphAssetData, useSubgraphTrancheData } from '../api/subgraph';
-import { useModal, useWindowSize } from '../hooks';
-import { TrancheStatsCard } from '../ui/features';
-import { CreateTrancheAssetsTable } from '../ui/tables';
+import { useSubgraphUserData, IGraphAssetData, useSubgraphTrancheData, AssetBalance } from '@/api';
+import { useModal, useWindowSize } from '@/hooks';
+import { TrancheStatsCard } from '@/ui/features';
+import { CreateTrancheAssetsTable } from '@/ui/tables';
 import { ethers } from 'ethers';
 import { configureExistingTranche, SetAddress } from '@vmexfinance/sdk';
 import {
@@ -27,7 +27,6 @@ import {
     PRICING_DECIMALS,
 } from '../utils';
 import useAnalyticsEventTracker from '../utils/google-analytics';
-import { AssetBalance } from '@app/api/types';
 import { getNetwork } from '@wagmi/core';
 
 const MyTranches: React.FC = () => {

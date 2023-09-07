@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { IDialogProps } from '../utils';
 import { ModalFooter, ModalHeader } from '../subcomponents';
-import { Button } from '../../components';
-import { useDialogController } from '../../../hooks';
+import { Button } from '@/ui/components';
+import { useDialogController } from '@/hooks';
 import { RxCopy } from 'react-icons/rx';
 import { useAccount } from 'wagmi';
-import { truncate } from '../../../utils';
-import { useUserReferrals } from '../../../api';
+import { truncate } from '@/utils';
+import { useUserReferrals } from '@/api';
 
 export const ReferralsDialog: React.FC<IDialogProps> = ({ name, isOpen, data }) => {
     const { address } = useAccount();

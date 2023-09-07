@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Skeleton } from '@mui/material';
-import { ThemeContext } from '../../../store';
+import { ThemeContext } from '@/store';
 
 type ISkeletonLoaderProps = {
     variant?: 'text' | 'rectangular' | 'rounded' | 'circular';

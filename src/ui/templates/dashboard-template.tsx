@@ -1,12 +1,12 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useWindowSize, useDialogController } from '../../hooks';
+import { useWindowSize, useDialogController } from '@/hooks';
 import { BiChevronLeft, BiPlus } from 'react-icons/bi';
 import { Tooltip, Button, LinkButton, SkeletonLoader, Label } from '../components';
 import { useAccount, useNetwork } from 'wagmi';
 import { Skeleton } from '@mui/material';
-import { useSubgraphUserData } from '../../api';
-import { useSelectedTrancheContext } from '../../store/selected-tranche';
+import { useSubgraphUserData } from '@/api';
+import { useSelectedTrancheContext } from '@/store';
 
 interface IDashboardTemplateProps {
     title?: string;
@@ -116,33 +116,35 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                         </div>
                     </>
                 )}
-                {location.pathname === `/tranches` && isConnected && !chain?.unsupported && (
-                    <div className="flex gap-2 xl:gap-3 md:justify-end mt-2">
-                        {queryTrancheAdminData.data?.length &&
-                        queryTrancheAdminData.data?.length > 0 ? (
-                            <Button
-                                label={'My Tranches'}
-                                onClick={() => navigate(`/my-tranches`)}
-                                primary
-                                className="h-full sm:h-auto"
-                            />
-                        ) : (
-                            <Tooltip text="Create a tranche first" position="left">
+                {(location.pathname === `/tranches` || location.pathname === '/portfolio') &&
+                    isConnected &&
+                    !chain?.unsupported && (
+                        <div className="flex gap-2 xl:gap-3 md:justify-end">
+                            {queryTrancheAdminData.data?.length &&
+                            queryTrancheAdminData.data?.length > 0 ? (
                                 <Button
                                     label={'My Tranches'}
+                                    onClick={() => navigate(`/my-tranches`)}
                                     primary
-                                    disabled={queryTrancheAdminData?.data?.length === 0}
                                     className="h-full sm:h-auto"
                                 />
-                            </Tooltip>
-                        )}
-                        <Button
-                            label={width > 768 ? 'Create Tranche' : <BiPlus size="28px" />}
-                            onClick={() => openDialog('create-tranche-dialog')}
-                            primary
-                        />
-                    </div>
-                )}
+                            ) : (
+                                <Tooltip text="Create a tranche first" position="left">
+                                    <Button
+                                        label={'My Tranches'}
+                                        primary
+                                        disabled={queryTrancheAdminData?.data?.length === 0}
+                                        className="h-full sm:h-auto"
+                                    />
+                                </Tooltip>
+                            )}
+                            <Button
+                                label={width > 768 ? 'Create Tranche' : <BiPlus size="28px" />}
+                                onClick={() => openDialog('create-tranche-dialog')}
+                                primary
+                            />
+                        </div>
+                    )}
             </header>
             <main>
                 <div className="py-4 md:py-8 flex flex-col gap-4">

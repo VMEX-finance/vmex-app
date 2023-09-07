@@ -1,6 +1,5 @@
-import { SpinnerLoader } from '../../components/loaders';
 import React, { ReactNode } from 'react';
-import { Tooltip } from '../../components';
+import { Tooltip, SpinnerLoader } from '@/ui/components';
 
 type IModalTableItemProps = {
     label: string;

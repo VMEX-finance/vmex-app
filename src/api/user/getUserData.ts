@@ -15,7 +15,7 @@ import {
     averageOfArr,
     PRICING_DECIMALS,
     DEFAULT_NETWORK,
-} from '../../utils';
+} from '@/utils';
 import { IUserActivityDataProps, IUserDataProps, IUserWalletDataProps } from './types';
 import { BigNumber } from 'ethers';
 import { getSubgraphTranchesOverviewData } from '../subgraph';

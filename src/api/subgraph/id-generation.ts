@@ -1,6 +1,6 @@
 import { getContractAddress } from '@vmexfinance/sdk';
 import { getNetwork } from '@wagmi/core';
-import { DEFAULT_NETWORK } from '../../utils';
+import { DEFAULT_NETWORK } from '@/utils';
 
 export const getPoolId = (): string => {
     const network = getNetwork()?.chain?.unsupported

@@ -7,15 +7,15 @@ import {
     StepperChild,
     Button,
     MessageStatus,
-} from '../../components';
+} from '@/ui/components';
 import { IDialogProps } from '../utils';
-import { useStepper, useModal } from '../../../hooks';
-import { ModalFooter, ModalHeader } from '../../modals/subcomponents';
-import { CreateTrancheAssetsTable } from '../../tables';
-import { NETWORKS, DEFAULT_NETWORK, AVAILABLE_ASSETS, checkProfanity } from '../../../utils';
+import { useStepper, useModal } from '@/hooks';
+import { ModalFooter, ModalHeader } from '@/ui/modals';
+import { CreateTrancheAssetsTable } from '@/ui/tables';
+import { NETWORKS, DEFAULT_NETWORK, AVAILABLE_ASSETS, checkProfanity } from '@/utils';
 import { useAccount, useSigner } from 'wagmi';
 import { initTranche } from '@vmexfinance/sdk';
-import { useSubgraphTranchesOverviewData } from '../../../api';
+import { useSubgraphTranchesOverviewData } from '@/api';
 import { getNetwork } from '@wagmi/core';
 
 export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeDialog }) => {

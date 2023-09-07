@@ -1,8 +1,9 @@
-import { IMarketsAsset, ITrancheProps } from '@app/api/types';
+import { IMarketsAsset, ITrancheProps } from '@/api';
 import { Contract, ethers } from 'ethers';
 import { AVAILABLE_ASSETS, HEALTH } from './constants';
 import moment from 'moment';
-import { ILineChartDataPointProps } from '@ui/components';
+import { ILineChartDataPointProps } from '@/ui/components';
+import { NAME_CACHE, SYMBOL_CACHE } from './cache';
 
 const Filter = require('bad-words'),
     filter = new Filter();
@@ -293,22 +294,41 @@ export const getContractMetadata = async (
     provider: any,
     type: 'name' | 'symbol',
 ) => {
-    let abi;
+    const abi = [
+        'function name() view returns (string)',
+        'function symbol() view returns (string)',
+    ];
+    const contract = new Contract(contractAddress, abi, provider);
     switch (type.toLowerCase()) {
         case 'name': {
-            abi = 'function name() view returns (string)';
-            break;
+            if (NAME_CACHE[contractAddress]) return NAME_CACHE[contractAddress];
+            const name = await contract.name();
+            NAME_CACHE[contractAddress] = name;
+            return name;
         }
         default: {
-            abi = 'function symbol() view returns (string)';
-            break;
+            if (SYMBOL_CACHE[contractAddress]) return SYMBOL_CACHE[contractAddress];
+            const symbol = await contract.symbol();
+            SYMBOL_CACHE[contractAddress] = symbol;
+            return symbol;
         }
     }
-    const contract = new Contract(contractAddress, [abi], provider);
-    switch (type.toLowerCase()) {
-        case 'name':
-            return await contract.name();
-        default:
-            return await contract.symbol();
-    }
 };
+
+export function unixToDate(unix: string | number) {
+    const isSeconds = String(unix).length < 12 ? true : false;
+    const numberUnix = typeof unix === 'string' ? parseFloat(unix) : unix;
+    return new Date(numberUnix * (isSeconds ? 1000 : 1));
+}
+
+export function sortArrByDate(arr?: any[], key = 'datetime', order?: 'asc' | 'desc') {
+    if (!arr) return [];
+    if (order === 'asc')
+        return arr.sort((a, b) => new Date(a[key]).valueOf() - new Date(b[key]).valueOf());
+    return arr.sort((a, b) => new Date(b[key]).valueOf() - new Date(a[key]).valueOf());
+}
+
+export function findInObjArr(key: string, value: string | number, arr?: any[]) {
+    if (!arr) return undefined;
+    return arr.find((el) => el[key] === value);
+}

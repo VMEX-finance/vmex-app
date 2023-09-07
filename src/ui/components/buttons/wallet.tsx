@@ -1,20 +1,18 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { IButtonProps } from './default';
 import { useAccount, useDisconnect, useNetwork } from 'wagmi';
-import { ThemeContext } from '../../../store';
-import { useWindowSize, useDialogController } from '../../../hooks';
+import { useWindowSize, useDialogController } from '@/hooks';
 import { DefaultDropdown, IDropdownItemProps } from '../dropdowns';
-import { truncateAddress, truncate } from '../../../utils/helpers';
+import { truncateAddress, truncate } from '@/utils';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { useSubgraphUserData } from '../../../api';
+import { useSubgraphUserData } from '@/api';
 
 export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: IButtonProps) => {
     const { chain } = useNetwork();
     const navigate = useNavigate();
     const { disconnect } = useDisconnect();
-    const { theme, setTheme } = useContext(ThemeContext);
     const { openDialog } = useDialogController();
     const { width } = useWindowSize();
     const { address } = useAccount();
@@ -32,12 +30,8 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
                 onClick: () => openDialog('referrals-dialog'),
             },
             {
-                text: 'History',
+                text: 'TX History',
                 onClick: () => openDialog('transactions-dialog'),
-            },
-            {
-                text: 'My Portfolio',
-                onClick: () => navigate('/portfolio'),
             },
             {
                 text: 'Create Tranche',

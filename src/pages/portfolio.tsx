@@ -87,17 +87,7 @@ const Portfolio: React.FC = () => {
     // };
 
     return (
-        <AppTemplate
-            title="Portfolio"
-            right={
-                <Button
-                    primary
-                    label="My Tranches"
-                    disabled={queryTrancheAdminData.data?.length === 0}
-                    onClick={() => navigate(`/my-tranches`)}
-                />
-            }
-        >
+        <AppTemplate title="Portfolio">
             {address && !chain?.unsupported ? (
                 <GridView type="fixed">
                     <div className="col-span-2 flex flex-col gap-4 xl:gap-8">

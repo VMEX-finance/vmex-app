@@ -1,17 +1,17 @@
 import React from 'react';
 import { FaGasPump } from 'react-icons/fa';
 import { useMediatedState } from 'react-use';
-import { inputMediator } from '../../../utils/helpers';
+import { inputMediator } from '@/utils';
 import { IDialogProps } from '../utils';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
-import { useModal } from '../../../hooks';
+import { useModal } from '@/hooks';
 import {
     DefaultDropdown,
     Button,
     ActiveStatus,
     TransactionStatus,
     CoinInput,
-} from '../../components';
+} from '@/ui/components';
 
 export const StakeAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, closeDialog }) => {
     const { submitTx, isSuccess, isLoading, error } = useModal('stake-asset-dialog');

@@ -1,10 +1,10 @@
 import { AssetDisplay } from '../displays/asset';
 import React from 'react';
-import { bigNumberToUSD, NETWORKS, DEFAULT_NETWORK } from '../../../utils';
+import { bigNumberToUSD, NETWORKS, DEFAULT_NETWORK, TESTING } from '@/utils';
 import { useSigner } from 'wagmi';
 import { mintTokens } from '@vmexfinance/sdk';
 import { Button, SecondaryButton } from '../buttons';
-import { usePricesData } from '../../../api/prices';
+import { usePricesData } from '@/api';
 import { BigNumber, utils } from 'ethers';
 import { getNetwork } from '@wagmi/core';
 
@@ -73,7 +73,7 @@ export const CoinInput = ({
             usdBig = BigNumber.from('0');
         }
         const bigNumAmount = utils.parseUnits(amount || '0', decimals);
-        console.log('USD:', bigNumberToUSD(usdBig.mul(bigNumAmount), decimals));
+        if (TESTING) console.log('USD:', bigNumberToUSD(usdBig.mul(bigNumAmount), decimals));
         return bigNumberToUSD(usdBig.mul(bigNumAmount), decimals);
     };
 

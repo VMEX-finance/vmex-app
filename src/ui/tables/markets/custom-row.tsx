@@ -1,13 +1,12 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSelectedTrancheContext } from '../../../store';
-// import { determineRatingColor } from '../../../utils/helpers';
+import { useSelectedTrancheContext } from '@/store';
 import { BsCheck } from 'react-icons/bs';
 import { IoIosClose } from 'react-icons/io';
-import { AssetDisplay, SplitButton } from '../../components';
-import { useDialogController, useWindowSize } from '../../../hooks';
-import { useApyData, IMarketsAsset } from '../../../api';
-import { usdFormatter } from '../../../utils';
+import { ApyToolitp, AssetDisplay, SplitButton, Tooltip } from '@/ui/components';
+import { useDialogController, useWindowSize } from '@/hooks';
+import { IMarketsAsset } from '@/api';
+import { percentFormatter, usdFormatter } from '@/utils';
 
 const MarketsCustomRow = (props: any) => {
     const {
@@ -29,7 +28,6 @@ const MarketsCustomRow = (props: any) => {
     const { width } = useWindowSize();
     const { updateTranche, setAsset } = useSelectedTrancheContext();
     const { openDialog } = useDialogController();
-    const { apys } = useApyData();
 
     const route = (e: Event, market: IMarketsAsset, view = 'overview') => {
         e.stopPropagation();
@@ -57,11 +55,6 @@ const MarketsCustomRow = (props: any) => {
         }
     };
 
-    const assetTotalApy = `${
-        apys?.find((el) => el.assetSymbol?.toUpperCase() === asset.toUpperCase())?.totalApy ||
-        supplyApy.replace('%', '')
-    }%`;
-
     // Mobile
     if (width < 900) {
         return (
@@ -81,11 +74,11 @@ const MarketsCustomRow = (props: any) => {
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Supply APY</span>
-                    <span>{assetTotalApy}</span>
+                    <ApyToolitp symbol={asset} oldApy={supplyApy} />
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Borrow APY</span>
-                    <span>{borrowable ? borrowApy : '-'}</span>
+                    <span>{borrowable ? percentFormatter.format(borrowApy) : '-'}</span>
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Your Amount</span>
@@ -145,8 +138,10 @@ const MarketsCustomRow = (props: any) => {
                     <AssetDisplay name={asset} />
                 </td>
                 <td className="min-w-[150px] pl-4 py-4">{tranche}</td>
-                <td className="pl-4">{assetTotalApy}</td>
-                <td className="pl-4">{borrowable ? borrowApy : '-'}</td>
+                <td className="pl-4">
+                    <ApyToolitp symbol={asset} oldApy={supplyApy} />
+                </td>
+                <td className="pl-4">{borrowable ? percentFormatter.format(borrowApy) : '-'}</td>
                 <td className={`pl-4 ${yourAmount.loading ? 'animate-pulse' : ''}`}>
                     {yourAmount.amount}
                 </td>

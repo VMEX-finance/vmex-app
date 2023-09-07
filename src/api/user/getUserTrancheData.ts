@@ -16,7 +16,7 @@ import {
     bigNumberToUnformattedString,
     PRICING_DECIMALS,
     NETWORKS,
-} from '../../utils';
+} from '@/utils';
 import { IUserTrancheDataProps, IUserTrancheData } from './types';
 import { BigNumber, ethers } from 'ethers';
 import { getSubgraphRewardData } from '../subgraph/getRewardsData';

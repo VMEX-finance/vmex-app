@@ -2,7 +2,7 @@ import { gql } from '@apollo/client';
 import { useQuery } from '@tanstack/react-query';
 import { ISubgraphAllAssetMappingsData } from './types';
 import { IAssetMappings } from '../types';
-import { DEFAULT_NETWORK, getApolloClient } from '../../utils';
+import { DEFAULT_NETWORK, getApolloClient } from '@/utils';
 import { getAllAssetPrices } from '../prices';
 import { getNetwork } from '@wagmi/core';
 

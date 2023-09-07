@@ -4,12 +4,11 @@ import { ThemeProvider } from '@mui/material/styles';
 import { muiCache, options, vmexTheme } from '../utils';
 import { TranchesCustomRow } from './custom-row';
 import MUIDataTable from 'mui-datatables';
-import { SpinnerLoader } from '../../components/loaders';
-import { ITrancheProps } from '../../../api/types';
-import { ThemeContext } from '../../../store';
-import { addFeaturedTranches, usdFormatter } from '../../../utils/helpers';
+import { SpinnerLoader } from '@/ui/components';
+import { ThemeContext } from '@/store';
+import { addFeaturedTranches, usdFormatter } from '@/utils';
 import { UseQueryResult } from '@tanstack/react-query';
-import { IUserActivityDataProps } from '@app/api/user/types';
+import { IUserActivityDataProps, ITrancheProps } from '@/api';
 
 interface IDataTable {
     data?: ITrancheProps[];

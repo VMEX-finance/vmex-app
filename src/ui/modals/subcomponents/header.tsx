@@ -1,8 +1,8 @@
 import React from 'react';
 import { Dialog } from '@headlessui/react';
-import { useDialogController } from '../../../hooks';
+import { useDialogController } from '@/hooks';
 import { IoIosClose } from 'react-icons/io';
-import { IDialogNames } from '../../../store/modals';
+import { IDialogNames } from '@/store';
 
 type IModalHeaderProps = {
     dialog: IDialogNames;

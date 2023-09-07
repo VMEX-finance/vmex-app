@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navbar } from '../../ui/base';
+import { Navbar } from '@/ui/base';
 import { DashboardTemplate } from './dashboard-template';
 import { AllModalsInstance } from '../modals';
 import { ToastContainer } from 'react-toastify';

@@ -3,9 +3,9 @@ import { IoIosClose } from 'react-icons/io';
 import { AssetDisplay } from '../displays';
 import { BasicToggle } from '../toggles';
 import { ethers, utils } from 'ethers';
-import { AVAILABLE_ASSETS, DEFAULT_NETWORK, truncateAddress } from '../../../utils';
+import { AVAILABLE_ASSETS, DEFAULT_NETWORK, truncateAddress } from '@/utils';
 import { AutoCompleteInput } from '.';
-import { useSubgraphAllAssetMappingsData } from '../../../api';
+import { useSubgraphAllAssetMappingsData } from '@/api';
 import { getNetwork } from '@wagmi/core';
 
 export interface IListInput {

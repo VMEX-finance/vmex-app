@@ -15,7 +15,7 @@ import {
     bigNumberToUnformattedString,
     PRICING_DECIMALS,
     DEFAULT_NETWORK,
-} from '../../utils';
+} from '@/utils';
 import { IUserTrancheData, IUserTranchesDataProps } from './types';
 import { BigNumber } from 'ethers';
 import { getNetwork } from '@wagmi/core';

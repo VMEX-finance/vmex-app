@@ -1,4 +1,4 @@
-import { determineCoinDescription, determineCoinImg, getRandomNumber } from '../../../utils';
+import { determineCoinDescription, determineCoinImg, getRandomNumber } from '@/utils';
 import React from 'react';
 import { MultipleAssetsDisplayOverlapping } from './multi-asset';
 import { Tooltip } from '../tooltips';

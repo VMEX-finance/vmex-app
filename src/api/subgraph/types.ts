@@ -1,8 +1,8 @@
 import { UseQueryResult } from '@tanstack/react-query';
-import { ILineChartDataPointProps } from '../../ui/components/charts';
+import { ILineChartDataPointProps } from '@/ui/components';
 import { AssetBalance, IAssetMappings, IMarketsAsset, ITrancheProps, TrancheData } from '../types';
 import { BigNumber } from 'ethers';
-import { IAvailableCoins } from '@utils/helpers';
+import { IAvailableCoins } from '@/utils';
 import { IAssetPricesProps } from '../prices/types';
 
 export type IAssetData = {

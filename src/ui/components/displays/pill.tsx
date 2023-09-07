@@ -1,4 +1,4 @@
-import { determineCoinImg, numberFormatter, usdFormatter } from '../../../utils/helpers';
+import { determineCoinImg, numberFormatter, usdFormatter } from '@/utils';
 import React from 'react';
 
 type IPillDisplayProps = {

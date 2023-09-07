@@ -7,10 +7,9 @@ import {
     nativeAmountToUSD,
     getApolloClient,
     getTrancheCategory,
-    NETWORKS,
     DEFAULT_NETWORK,
     PRICING_DECIMALS,
-} from '../../utils';
+} from '@/utils';
 import { getTrancheIdFromTrancheEntity } from './id-generation';
 import { getNetwork } from '@wagmi/core';
 

@@ -6,16 +6,16 @@ import {
     TransactionStatus,
     MessageStatus,
     Tooltip,
-} from '../../components';
+} from '@/ui/components';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
 import { ISupplyBorrowProps } from '../utils';
-import { useBorrow, useDialogController, useModal } from '../../../hooks';
+import { useBorrow, useDialogController, useModal } from '@/hooks';
 import {
     unformattedStringToBigNumber,
     bigNumberToNative,
     bigNumberToUnformattedString,
-} from '../../../utils';
-import { useSelectedTrancheContext } from '../../../store';
+} from '@/utils';
+import { useSelectedTrancheContext } from '@/store';
 import { useNavigate } from 'react-router-dom';
 
 export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, data, tab }) => {

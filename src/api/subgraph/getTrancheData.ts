@@ -15,8 +15,8 @@ import {
     PRICING_DECIMALS,
     NETWORKS,
     DEFAULT_NETWORK,
-} from '../../utils';
-import { ILineChartDataPointProps } from '../../ui/components';
+} from '@/utils';
+import { ILineChartDataPointProps } from '@/ui/components';
 import { getTrancheId } from './id-generation';
 import { getNetwork } from '@wagmi/core';
 
@@ -44,12 +44,8 @@ export const processTrancheData = async (
                     reserveFactor: item.reserveFactor,
                     vmexReserveFactor: item.assetData.vmexReserveFactor,
                     utilityRate: `${item.utilizationRate}`,
-                    borrowRate: percentFormatter.format(
-                        Number(utils.formatUnits(item.variableBorrowRate, 27)),
-                    ),
-                    supplyRate: percentFormatter.format(
-                        Number(utils.formatUnits(item.liquidityRate, 27)),
-                    ),
+                    borrowRate: Number(utils.formatUnits(item.variableBorrowRate, 27)),
+                    supplyRate: Number(utils.formatUnits(item.liquidityRate, 27)),
                     collateral: item.usageAsCollateralEnabled,
                     canBeBorrowed: item.borrowingEnabled,
                     oracle: 'Chainlink', // TODO: map to human readable name // (prices as any)[item.assetData.underlyingAssetName].oracle
@@ -403,7 +399,7 @@ export function useSubgraphTrancheData(trancheId: number): ISubgraphTrancheData 
     const findAssetInMarketsData = (asset: string) => {
         if (queryTrancheData.isLoading || !queryTrancheData.data?.assetsData) return undefined;
         if (asset === 'ETH') {
-            console.log('Trying to get asset data for ETH, returning undefined');
+            console.warn('Trying to get asset data for ETH, returning undefined');
             return undefined;
         }
         return (queryTrancheData.data?.assetsData as any)[asset];

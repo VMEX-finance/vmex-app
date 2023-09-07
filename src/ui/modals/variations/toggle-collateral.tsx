@@ -1,12 +1,12 @@
 import React from 'react';
 import { IDialogProps } from '../utils';
 import { ModalFooter, ModalHeader } from '../subcomponents';
-import { Button, HealthFactor, TransactionStatus } from '../../components';
+import { Button, HealthFactor, TransactionStatus } from '@/ui/components';
 import { useSigner } from 'wagmi';
-import { useModal } from '../../../hooks/modal';
+import { useModal } from '@/hooks';
 import { markReserveAsCollateral } from '@vmexfinance/sdk';
 import { ethers } from 'ethers';
-import { DEFAULT_NETWORK, NETWORKS, TESTING, DECIMALS } from '../../../utils';
+import { DEFAULT_NETWORK, NETWORKS, TESTING, DECIMALS } from '@/utils';
 import { getNetwork } from '@wagmi/core';
 
 export const ToggleCollateralDialog: React.FC<IDialogProps> = ({

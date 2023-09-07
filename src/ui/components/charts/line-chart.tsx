@@ -1,7 +1,7 @@
 import React from 'react';
 import { LineChart, Line, Tooltip, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 import { CustomTooltip } from './custom-tooltip';
-import { addMissingDatesToTimeseries, getTimeseriesAvgByDay } from '../../../utils/helpers';
+import { addMissingDatesToTimeseries, getTimeseriesAvgByDay } from '@/utils';
 
 export type ILineChartDataPointProps = {
     xaxis: string | number; // x axis

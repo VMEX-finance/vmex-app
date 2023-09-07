@@ -1,77 +1,54 @@
 import { useQuery } from '@tanstack/react-query';
-import { convertAddressToSymbol } from '@vmexfinance/sdk';
-import { NETWORKS, DEFAULT_NETWORK, getContractMetadata } from '../../utils';
-import { IAssetApyProps, IAssetApyQueryProps } from './types';
+import { NETWORKS, DEFAULT_NETWORK, findInObjArr, getContractMetadata } from '@/utils';
+import { IAssetApyProps } from './types';
 import { getNetwork } from '@wagmi/core';
+import { convertAddressToSymbol } from '@vmexfinance/sdk';
 import { ethers } from 'ethers';
 
-export async function getAllAssetApys(): Promise<
-    { assetAddress: string; assetSymbol?: string; totalApy: number; rewards: IAssetApyProps[] }[]
-> {
+export async function getAllAssetApys() {
     const network = getNetwork()?.chain?.unsupported
         ? DEFAULT_NETWORK
         : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+    const provider = new ethers.providers.JsonRpcProvider(NETWORKS[network].rpc);
 
     const res = await fetch(`${NETWORKS[network].backend}/v1/reward/apy`);
     if (res.status !== 200) return [];
 
     const { apy, tokenDetails }: { apy: any[]; tokenDetails: any[] } = await res.json();
-    const returnObj: IAssetApyProps[] = [];
 
-    apy.forEach((el) => {
-        if (el?.vault) {
-            el.apysByToken.forEach((vt: any) => {
-                returnObj.push({
-                    assetAddress: vt.token,
-                    assetSymbol: convertAddressToSymbol(vt.token, network),
-                    vaultAddress: el.vault,
-                    vaultName: '',
-                    apy: vt.apy,
+    const formattedApy: IAssetApyProps[] = await Promise.all(
+        apy.map(async (a) => {
+            const found = findInObjArr('address', a.asset, tokenDetails);
+            const apysByToken: any[] = [];
+            if (a?.apysByToken) {
+                a.apysByToken.forEach(async (t: any) => {
+                    const foundVaultToken = findInObjArr('address', t.token, tokenDetails);
+                    apysByToken.push({
+                        asset: t.token,
+                        apy: t.apy,
+                        symbol: foundVaultToken
+                            ? foundVaultToken.symbol
+                            : convertAddressToSymbol(t.token, network) ||
+                              (await getContractMetadata(t.token, provider, 'symbol')),
+                        name: foundVaultToken?.name || '',
+                    });
                 });
-            });
-        }
-    });
-    const withVaultNames = await Promise.all(
-        returnObj.map(async (el) => {
-            const vaultName = await getContractMetadata(
-                el.vaultAddress,
-                new ethers.providers.JsonRpcProvider(NETWORKS[network].rpc),
-                'name',
-            );
-            const assetSymbol = el?.assetSymbol
-                ? el.assetSymbol
-                : await getContractMetadata(
-                      el.assetAddress,
-                      new ethers.providers.JsonRpcProvider(NETWORKS[network].rpc),
-                      'symbol',
-                  );
+            }
             return {
-                ...el,
-                assetSymbol,
-                vaultName,
+                ...a,
+                symbol: found
+                    ? found.symbol
+                    : convertAddressToSymbol(a.asset, network) ||
+                      (await getContractMetadata(a.asset, provider, 'symbol')),
+                name: found?.name || '',
+                apysByToken,
             };
         }),
     );
-    const tempObj = withVaultNames.reduce((acc: any, curr: any) => {
-        if (curr.assetAddress in acc) {
-            acc[curr.assetAddress].push(curr);
-        } else {
-            acc[curr.assetAddress] = [curr];
-        }
-        return acc;
-    }, {});
-    const reorganized = Object.keys(tempObj).map((key) => ({
-        assetSymbol: convertAddressToSymbol(key, network),
-        assetAddress: key,
-        totalApy: tempObj[key].reduce(
-            (a: any, b: any) => parseFloat(a?.apy || '0') + parseFloat(b?.apy || '0'),
-        ),
-        rewards: tempObj[key],
-    }));
-    return reorganized;
+    return formattedApy;
 }
 
-export function useApyData(): IAssetApyQueryProps {
+export function useApyData() {
     const network = getNetwork()?.chain?.unsupported
         ? DEFAULT_NETWORK
         : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
@@ -81,8 +58,5 @@ export function useApyData(): IAssetApyQueryProps {
         refetchInterval: 60000 * 2, // refetch prices every 2 minutes
     });
 
-    return {
-        apys: queryAssetApys.data,
-        ...queryAssetApys,
-    };
+    return { queryAssetApys };
 }

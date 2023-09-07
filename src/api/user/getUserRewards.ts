@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { nativeTokenFormatter } from '../../utils';
+import { nativeTokenFormatter, NETWORKS, DEFAULT_NETWORK } from '@/utils';
 import { formatUnits } from 'ethers/lib/utils.js';
-import { NETWORKS, DEFAULT_NETWORK } from '../../utils';
 import { getNetwork } from '@wagmi/core';
 
 // Gets
