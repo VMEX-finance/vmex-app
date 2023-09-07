@@ -11,7 +11,7 @@ import { useSubgraphUserData } from '../../api';
 import { renderNetworks } from '../../utils';
 import { getNetwork } from '@wagmi/core';
 
-const navItems = ['Overview', 'Tranches', 'Markets', 'Governance', 'Develop'];
+const navItems = ['Overview', 'Tranches', 'Markets', 'Portfolio', 'Governance'];
 
 export const Navbar: React.FC = () => {
     const { isDark } = useContext(ThemeContext);
