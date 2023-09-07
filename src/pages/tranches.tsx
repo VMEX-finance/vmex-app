@@ -1,9 +1,9 @@
 import React from 'react';
-import { AppTemplate } from '../ui/templates';
-import { TranchesTable } from '../ui/tables';
+import { AppTemplate } from '@/ui/templates';
+import { TranchesTable } from '@/ui/tables';
 import { useAccount } from 'wagmi';
-import { useSubgraphTranchesOverviewData, useUserData } from '../api';
-import { ITrancheProps } from '@app/api/types';
+import { useSubgraphTranchesOverviewData, useUserData } from '@/api';
+import { ITrancheProps } from '@/api';
 import useAnalyticsEventTracker from '../utils/google-analytics';
 
 const Tranches: React.FC = () => {

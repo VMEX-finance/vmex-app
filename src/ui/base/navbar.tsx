@@ -2,13 +2,12 @@ import { Menu, Transition } from '@headlessui/react';
 import React, { Fragment, useContext } from 'react';
 import { HiOutlineMenuAlt3 } from 'react-icons/hi';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { DefaultDropdown, MenuItemButton, WalletButton, ToggleThemeButton } from '../components';
-import { ThemeContext } from '../../store';
+import { DefaultDropdown, MenuItemButton, WalletButton, ToggleThemeButton } from '@/ui/components';
+import { ThemeContext, IDialogNames } from '@/store';
 import { useAccount, useSwitchNetwork } from 'wagmi';
-import { useDialogController, useWindowSize } from '../../hooks';
-import { IDialogNames } from '@store/modals';
-import { useSubgraphUserData } from '../../api';
-import { renderNetworks } from '../../utils';
+import { useDialogController, useWindowSize } from '@/hooks';
+import { useSubgraphUserData } from '@/api';
+import { renderNetworks } from '@/utils';
 import { getNetwork } from '@wagmi/core';
 
 const navItems = ['Overview', 'Tranches', 'Markets', 'Portfolio', 'Governance'];

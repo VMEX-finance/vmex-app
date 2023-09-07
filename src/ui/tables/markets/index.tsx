@@ -4,18 +4,17 @@ import { ThemeProvider } from '@mui/material/styles';
 import { muiCache, options, vmexTheme } from '../utils';
 import { MarketsCustomRow } from './custom-row';
 import MUIDataTable from 'mui-datatables';
-import { SpinnerLoader } from '../../components/loaders';
-import { IMarketsAsset } from '@app/api/types';
-import { ThemeContext } from '../../../store';
+import { SpinnerLoader } from '@/ui/components';
+import { ThemeContext } from '@/store';
 import {
     addFeaturedTranches,
     bigNumberToUnformattedString,
     numberFormatter,
     percentFormatter,
     usdFormatter,
-} from '../../../utils';
+} from '@/utils';
 import { UseQueryResult } from '@tanstack/react-query';
-import { IUserActivityDataProps } from '@app/api/user/types';
+import { IUserActivityDataProps, IMarketsAsset } from '@/api';
 
 interface ITableProps {
     data?: IMarketsAsset[];

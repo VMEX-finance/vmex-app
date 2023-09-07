@@ -1,6 +1,5 @@
 import { UseQueryResult } from '@tanstack/react-query';
-import { IUserPerformanceCardProps } from '@ui/features';
-import { IYourBorrowsTableItemProps, IYourSuppliesTableItemProps } from '@ui/tables';
+import { IYourBorrowsTableItemProps, IYourSuppliesTableItemProps } from '@/ui/tables';
 import { BigNumber } from 'ethers';
 import { UserRewards } from '@vmexfinance/sdk';
 import { VmexRewardsData } from '../types';

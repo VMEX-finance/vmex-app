@@ -1,16 +1,19 @@
 {
     "compilerOptions": {
+        "baseUrl": "./src",
         "paths": {
-            "@pages/*": ["pages/*"],
-            "@pages": ["pages/index.ts"],
-            "@store/*": ["store/*"],
-            "@hooks/*": ["hooks/*"],
-            "@utils/*": ["utils/*"],
-            "@models/*": ["models/*"],
-            "@ui/*": ["ui/*"],
-            "@app/*": ["./*"]
+            "@/api": ["api/index.ts"],
+            "@/pages": ["pages/index.ts"],
+            "@/store": ["store/index.ts"],
+            "@/utils": ["utils/index.ts"],
+            "@/ui/base": ["ui/base/index.ts"],
+            "@/ui/components": ["ui/components/index.ts"],
+            "@/ui/features": ["ui/features/index.ts"],
+            "@/ui/modals": ["ui/modals/index.ts"],
+            "@/ui/tables": ["ui/tables/index.ts"],
+            "@/ui/templates": ["ui/templates/index.ts"],
+            "@/hooks": ["hooks/index.ts"]
         },
-        "baseUrl": "src/",
         "target": "es5",
         "outDir": "lib",
         "lib": ["dom", "dom.iterable", "esnext"],

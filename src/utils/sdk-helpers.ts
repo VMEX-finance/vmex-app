@@ -1,7 +1,7 @@
 import { BigNumber, BigNumberish, ethers } from 'ethers';
 import { usdFormatter, nativeTokenFormatter } from './helpers';
 import { convertAddressToSymbol } from '@vmexfinance/sdk';
-import { ITrancheCategories } from '@app/api';
+import { ITrancheCategories } from '@/api';
 import { DECIMALS } from './constants';
 import { getNetwork } from '@wagmi/core';
 import { DEFAULT_NETWORK } from './network';

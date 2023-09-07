@@ -1,20 +1,18 @@
 import { gql } from '@apollo/client';
 import { useQuery } from '@tanstack/react-query';
-import { ILineChartDataPointProps } from '@ui/components/charts';
+import { ILineChartDataPointProps } from '@/ui/components';
 import {
     nativeAmountToUSD,
     IAvailableCoins,
     usdFormatter,
     getApolloClient,
     PRICING_DECIMALS,
-    NETWORKS,
     DEFAULT_NETWORK,
-} from '../../utils';
-import { getAllAssetPrices } from '../prices';
+} from '@/utils';
+import { getAllAssetPrices, IAssetPricesProps } from '../prices';
 import { AssetBalance, TrancheData } from '../types';
 import { IGraphProtocolDataProps, IGraphTrancheProps, ISubgraphProtocolData } from './types';
 import { getSubgraphTranchesOverviewData } from './getTranchesOverviewData';
-import { IAssetPricesProps } from '../prices/types';
 import { getNetwork } from '@wagmi/core';
 
 function subtractSeconds(date: Date, seconds: number): Date {

@@ -1,4 +1,4 @@
-import { AvailableAsset } from '@app/api/types';
+import { AvailableAsset } from '@/api';
 
 export const MOCK_STAKE_ASSET_DATA: AvailableAsset = {
     asset: 'USDC',

@@ -1,19 +1,24 @@
-import { useApyData, useSubgraphTrancheData, useUserData, useUserTrancheData } from '../../../api';
+import {
+    useApyData,
+    useSubgraphTrancheData,
+    useUserData,
+    useUserTrancheData,
+    AvailableAsset,
+} from '@/api';
 import { useAccount } from 'wagmi';
 import React, { useMemo } from 'react';
 import { BsCheck } from 'react-icons/bs';
 import { IoIosClose } from 'react-icons/io';
-import { useSelectedTrancheContext } from '../../../store';
-import { AssetDisplay, NumberAndDollar, Tooltip } from '../../components';
-import { useWindowSize, useDialogController } from '../../../hooks';
-import { AvailableAsset } from '@app/api/types';
+import { useSelectedTrancheContext } from '@/store';
+import { AssetDisplay, NumberAndDollar, Tooltip } from '@/ui/components';
+import { useWindowSize, useDialogController } from '@/hooks';
 import { BigNumber, ethers } from 'ethers';
 import {
     numberFormatter,
     bigNumberToNative,
     findAvailableAssetProps,
     DEFAULT_NETWORK,
-} from '../../../utils';
+} from '@/utils';
 import { useLocation } from 'react-router-dom';
 import { IYourSuppliesTableItemProps } from '../portfolio';
 import { getNetwork } from '@wagmi/core';

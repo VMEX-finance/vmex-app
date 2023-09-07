@@ -1,4 +1,4 @@
-import { IStepperItemProps } from '@ui/components/tabs';
+import { IStepperItemProps } from '@/ui/components';
 import { useState } from 'react';
 
 // Hook

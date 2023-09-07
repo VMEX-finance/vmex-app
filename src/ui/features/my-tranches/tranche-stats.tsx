@@ -1,8 +1,7 @@
 import React from 'react';
-import { TopTranchesTable } from '../../tables';
-import { useWindowSize } from '../../../hooks';
-import { makeCompact } from '../../../utils/helpers';
-import { AssetBalance, TrancheData } from '@app/api/types';
+import { useWindowSize } from '@/hooks';
+import { makeCompact } from '@/utils';
+import { AssetBalance, TrancheData } from '@/api';
 import {
     SkeletonLoader,
     ReLineChart,
@@ -10,7 +9,7 @@ import {
     PillDisplay,
     Card,
     ILineChartDataPointProps,
-} from '../../components';
+} from '@/ui/components';
 import { UseQueryResult } from '@tanstack/react-query';
 
 export interface ITrancheStatsCardProps {

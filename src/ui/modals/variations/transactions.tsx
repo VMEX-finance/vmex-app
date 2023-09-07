@@ -6,9 +6,13 @@ import { useTransactionsContext } from '../../../store';
 import { useDialogController } from '../../../hooks';
 import { DEFAULT_NETWORK, NETWORKS, truncate } from '../../../utils';
 import { getNetwork } from '@wagmi/core';
+import { useUserHistory } from '@/api';
+import { useAccount } from 'wagmi';
 
 export const TransactionsDialog: React.FC<IDialogProps> = ({ name, isOpen, data }) => {
+    const { address } = useAccount();
     const { transactions } = useTransactionsContext();
+    const { queryUserTxHistory } = useUserHistory(address);
     const { closeDialog } = useDialogController();
     const network = getNetwork()?.chain?.unsupported
         ? DEFAULT_NETWORK
