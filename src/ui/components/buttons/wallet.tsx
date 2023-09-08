@@ -33,10 +33,11 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
                 text: 'TX History',
                 onClick: () => openDialog('transactions-dialog'),
             },
-            {
-                text: 'Create Tranche',
-                onClick: () => openDialog('create-tranche-dialog'),
-            },
+            // TODO: uncomment when backend enables creating tranches
+            // {
+            //     text: 'Create Tranche',
+            //     onClick: () => openDialog('create-tranche-dialog'),
+            // },
         ];
 
         if (queryTrancheAdminData?.data && queryTrancheAdminData?.data?.length !== 0) {

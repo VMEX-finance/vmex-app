@@ -1,27 +1,29 @@
 import React from 'react';
-import { AppTemplate, GridView } from '../ui/templates';
-import { PortfolioStatsCard, UserPerformanceCard } from '../ui/features';
-import { YourPositionsTable, YourRewardsTable } from '../ui/tables';
-import { Button, WalletButton } from '../ui/components/buttons';
-import { useUserData, useUserRewards, useUserTranchesData } from '../api/user';
+import { AppTemplate, GridView } from '@/ui/templates';
+import { PortfolioStatsCard, UserPerformanceCard } from '@/ui/features';
+import { YourPositionsTable, YourRewardsTable, YourTransactionsTable } from '@/ui/tables';
+import { Card, WalletButton } from '@/ui/components';
+import { useUserData, useUserHistory, useUserRewards, useUserTranchesData } from '@/api';
 import { useAccount, useNetwork } from 'wagmi';
-import { addDollarAmounts, bigNumberToUnformattedString } from '../utils/sdk-helpers';
-import { useSubgraphUserData } from '../api/subgraph';
-import { averageOfArr, numberFormatter } from '../utils/helpers';
-import { useNavigate } from 'react-router-dom';
+import {
+    addDollarAmounts,
+    bigNumberToUnformattedString,
+    averageOfArr,
+    numberFormatter,
+} from '@/utils';
+import { useSubgraphUserData } from '@/api';
 import useAnalyticsEventTracker from '../utils/google-analytics';
 import { getNetwork } from '@wagmi/core';
 
 const Portfolio: React.FC = () => {
     const gaEventTracker = useAnalyticsEventTracker('Portfolio');
-    const navigate = useNavigate();
     const { address } = useAccount();
     const { chain } = useNetwork();
-    const { queryTrancheAdminData } = useSubgraphUserData(address || '');
     const { queryUserActivity } = useUserData(address);
     const { queryUserPnlChart } = useSubgraphUserData(address);
     const { queryUserTranchesData } = useUserTranchesData(address);
     const { queryUserRewards } = useUserRewards(address);
+    const { queryUserTxHistory } = useUserHistory(address);
 
     const calculateNetworth = () => {
         let sum = 0;
@@ -90,7 +92,7 @@ const Portfolio: React.FC = () => {
         <AppTemplate title="Portfolio">
             {address && !chain?.unsupported ? (
                 <GridView type="fixed">
-                    <div className="col-span-2 flex flex-col gap-4 xl:gap-8">
+                    <div className="col-span-2 flex flex-col gap-4">
                         <PortfolioStatsCard
                             isLoading={queryUserActivity.isLoading}
                             networth={calculateNetworth()}
@@ -104,7 +106,7 @@ const Portfolio: React.FC = () => {
                             healthLoading={queryUserTranchesData.isLoading}
                             avgApy={queryUserActivity.data?.avgApy.toString()}
                         />
-                        <div className="flex flex-col lg:flex-row lg:grow gap-4 xl:gap-8">
+                        <div className="flex flex-col lg:flex-row lg:grow gap-4">
                             <YourPositionsTable
                                 type="supplies"
                                 data={queryUserActivity.data?.supplies || []}
@@ -117,7 +119,7 @@ const Portfolio: React.FC = () => {
                             />
                         </div>
                     </div>
-                    <div className="flex flex-col gap-4 xl:gap-8 col-span-2 2xl:col-span-1">
+                    <div className="flex flex-col gap-4 col-span-2 2xl:col-span-1">
                         <UserPerformanceCard
                             isLoading={queryUserActivity.isLoading || queryUserPnlChart.isLoading}
                             loanedAssets={queryUserActivity.data?.supplies?.map((el) => ({
@@ -130,12 +132,18 @@ const Portfolio: React.FC = () => {
                             }))}
                             tranches={queryUserActivity.data?.tranchesInteractedWith}
                             profitLossChart={queryUserPnlChart.data || []}
+                            cardClass="h-full"
                         />
+                    </div>
+                    <div className="gap-4 col-span-3 flex flex-col lg:flex-row">
                         <YourRewardsTable
                             data={queryUserRewards.data || []}
                             isLoading={queryUserRewards.isLoading}
                             address={address}
                         />
+                        <Card title="Your Transactions" titleClass="text-lg mb-2">
+                            <YourTransactionsTable />
+                        </Card>
                     </div>
                 </GridView>
             ) : (
