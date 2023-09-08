@@ -5,10 +5,17 @@ import { ILineChartDataPointProps } from '@/ui/components';
 import { utils } from 'ethers';
 import { IMarketsAsset } from '../types';
 import { getAllAssetPrices } from '../prices';
-import { getApolloClient, nativeAmountToUSD, DEFAULT_NETWORK, PRICING_DECIMALS } from '@/utils';
+import {
+    getApolloClient,
+    nativeAmountToUSD,
+    DEFAULT_NETWORK,
+    PRICING_DECIMALS,
+    findInObjArr,
+} from '@/utils';
 import { convertSymbolToAddress } from '@vmexfinance/sdk';
 import { getReserveId } from './id-generation';
 import { getNetwork } from '@wagmi/core';
+import { IAssetApyProps, getAllAssetApys } from '..';
 
 export const getSubgraphMarketsChart = async (
     _trancheId: string | number,
@@ -110,6 +117,19 @@ export const getSubgraphAllMarketsData = async (): Promise<IMarketsAsset[]> => {
             ? DEFAULT_NETWORK
             : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
         const prices = await getAllAssetPrices();
+        const apyRes = await getAllAssetApys();
+
+        const replaceSubgraphApy = (reserve: any) => {
+            const found: IAssetApyProps = findInObjArr(
+                'symbol',
+                reserve.assetData.underlyingAssetName,
+                apyRes,
+            );
+            if (found) {
+                return (Number(found.totalApy) / 100).toString();
+            }
+            return utils.formatUnits(reserve.liquidityRate, 27);
+        };
 
         const returnObj: IMarketsAsset[] = [];
         data.reserves.map((reserve: any) => {
@@ -127,7 +147,7 @@ export const getSubgraphAllMarketsData = async (): Promise<IMarketsAsset[]> => {
                         ? reserve.tranche.id.split(':')[1]
                         : reserve.tranche.id,
                 borrowApy: utils.formatUnits(reserve.variableBorrowRate, 27),
-                supplyApy: utils.formatUnits(reserve.liquidityRate, 27),
+                supplyApy: replaceSubgraphApy(reserve),
                 available: nativeAmountToUSD(
                     reserve.availableLiquidity,
                     PRICING_DECIMALS[network],

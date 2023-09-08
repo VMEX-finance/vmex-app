@@ -42,6 +42,7 @@ export async function getAllAssetApys() {
                       (await getContractMetadata(a.asset, provider, 'symbol')),
                 name: found?.name || '',
                 apysByToken,
+                description: found?.description || '',
             };
         }),
     );

@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 import { useQuery } from '@tanstack/react-query';
-import { IGraphAssetData, IGraphTrancheDataProps, ISubgraphTrancheData } from './types';
+import { IGraphTrancheDataProps, ISubgraphTrancheData } from './types';
 import { utils } from 'ethers';
 import { getAllAssetPrices } from '../prices';
 import {
@@ -13,12 +13,13 @@ import {
     IAvailableCoins,
     getTrancheCategory,
     PRICING_DECIMALS,
-    NETWORKS,
     DEFAULT_NETWORK,
+    findInObjArr,
 } from '@/utils';
 import { ILineChartDataPointProps } from '@/ui/components';
 import { getTrancheId } from './id-generation';
 import { getNetwork } from '@wagmi/core';
+import { IAssetApyProps, getAllAssetApys } from '../rewards';
 
 const useCustomRiskParams = (isVerified: boolean, item: any) => {
     return isVerified && item.borrowFactor !== '0';
@@ -32,6 +33,7 @@ export const processTrancheData = async (
     const assets = data?.reserves;
     const isVerified = data?.isVerified || false;
     const prices = await getAllAssetPrices();
+    const apyRes = await getAllAssetApys();
     const assetsData = assets.reduce(
         (obj: any, item: any) =>
             Object.assign(obj, {
@@ -145,11 +147,23 @@ export const processTrancheData = async (
         },
     );
 
-    const calculateAvgApy = () => {
+    const replaceSubgraphApy = (reserve: any) => {
+        const found: IAssetApyProps = findInObjArr(
+            'symbol',
+            reserve.assetData.underlyingAssetName,
+            apyRes,
+        );
+        if (found) {
+            return Number(found.totalApy) / 100;
+        }
+        return Number(utils.formatUnits(reserve.liquidityRate, 27));
+    };
+
+    const calculateAvgApy = async () => {
         const supplyApys: number[] = [];
         const liquidities: number[] = [];
         assets.map((el: any) => {
-            supplyApys.push(Number(utils.formatUnits(el.liquidityRate, 27)));
+            supplyApys.push(replaceSubgraphApy(el));
             liquidities.push(Number(utils.formatUnits(el.availableLiquidity, el.decimals)));
         });
         return weightedAverageofArr(supplyApys, liquidities);
@@ -179,7 +193,7 @@ export const processTrancheData = async (
         poolUtilization: percentFormatter.format(
             1 - (summaryData.supplyTotal - summaryData.borrowTotal) / summaryData.supplyTotal,
         ),
-        avgApy: calculateAvgApy(),
+        avgApy: await calculateAvgApy(),
         whitelist: data.isUsingWhitelist,
         whitelistedUsers: data.whitelistedUsers.map((obj: any) => {
             return obj.id;

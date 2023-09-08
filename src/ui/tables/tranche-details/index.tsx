@@ -7,7 +7,7 @@ import { useSelectedTrancheContext } from '@/store';
 import { AssetDisplay, NumberAndDollar, ApyToolitp } from '@/ui/components';
 import { useWindowSize, useDialogController } from '@/hooks';
 import { BigNumber, ethers } from 'ethers';
-import { numberFormatter, bigNumberToNative } from '@/utils';
+import { numberFormatter, bigNumberToNative, percentFormatter, bigNumberToUSD } from '@/utils';
 import { useLocation } from 'react-router-dom';
 import { IYourSuppliesTableItemProps } from '../portfolio';
 
@@ -205,7 +205,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                 {type === 'supply' ? (
                                     <ApyToolitp symbol={el.asset} oldApy={el.apy} />
                                 ) : (
-                                    el.apy
+                                    percentFormatter.format(Number(el.apy) || 0)
                                 )}
                             </td>
                             <td>
@@ -230,14 +230,22 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                             /> */}
                                     </div>
                                 ) : (
-                                    `${numberFormatter.format(
-                                        parseFloat(
-                                            ethers.utils.formatUnits(
-                                                el.liquidity || '',
-                                                findAssetInMarketsData(el.asset).decimals,
-                                            ),
-                                        ) || 0,
-                                    )} ${el.asset}`
+                                    <NumberAndDollar
+                                        value={numberFormatter.format(
+                                            parseFloat(
+                                                ethers.utils.formatUnits(
+                                                    el.liquidity || '',
+                                                    findAssetInMarketsData(el.asset).decimals,
+                                                ),
+                                            ) || 0,
+                                        )}
+                                        dollar={bigNumberToUSD(
+                                            el.liquidity,
+                                            findAssetInMarketsData(el.asset).decimals,
+                                        )}
+                                        size="xs"
+                                        color="text-brand-black"
+                                    />
                                 )}
                             </td>
                         </tr>

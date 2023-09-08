@@ -8,7 +8,7 @@ import { DEFAULT_NETWORK } from './network';
 
 export const bigNumberToUSD = (
     number: BigNumberish | undefined,
-    decimals: number,
+    decimals: number | string,
     dollarSign = true,
 ): string => {
     if (!number) {
@@ -16,7 +16,7 @@ export const bigNumberToUSD = (
         return '$0';
     }
     const formatted = usdFormatter(false).format(
-        parseFloat(ethers.utils.formatUnits(number, decimals)),
+        parseFloat(ethers.utils.formatUnits(number, Number(decimals))),
     );
     return dollarSign ? formatted : formatted.slice(1).replaceAll(',', '');
 };

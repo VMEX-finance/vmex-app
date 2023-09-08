@@ -9,4 +9,6 @@ export type IAssetApyProps = {
     name: string;
     symbol: string;
     assetType: string;
+    description?: string;
+    totalApy: string;
 };

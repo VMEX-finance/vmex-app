@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '@/store';
 import { BsCheck } from 'react-icons/bs';
 import { IoIosClose } from 'react-icons/io';
-import { ApyToolitp, AssetDisplay, SplitButton, Tooltip } from '@/ui/components';
+import { ApyToolitp, AssetDisplay, SplitButton } from '@/ui/components';
 import { useDialogController, useWindowSize } from '@/hooks';
 import { IMarketsAsset } from '@/api';
 import { percentFormatter, usdFormatter } from '@/utils';
