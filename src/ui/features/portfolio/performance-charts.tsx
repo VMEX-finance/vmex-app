@@ -13,6 +13,7 @@ export type IUserPerformanceCardProps = {
     insuranceChart?: ILineChartDataPointProps[];
     loanedAssets?: ILoanedAssetProps[] | undefined;
     isLoading?: boolean;
+    cardClass?: string;
 };
 
 export const UserPerformanceCard: React.FC<IUserPerformanceCardProps> = ({
@@ -21,6 +22,7 @@ export const UserPerformanceCard: React.FC<IUserPerformanceCardProps> = ({
     insuranceChart,
     loanedAssets,
     isLoading,
+    cardClass,
 }) => {
     const [tranchesDropdown, setTranchesDropdown] = useState([]);
 
@@ -45,6 +47,7 @@ export const UserPerformanceCard: React.FC<IUserPerformanceCardProps> = ({
                     {/* <DefaultDropdown primary items={tranchesDropdown} /> */}
                 </div>
             }
+            className={cardClass}
         >
             {/* <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-1 gap-3 w-full px-3"> */}
             <div className="grid grid-cols-1 gap-3 w-full px-3">

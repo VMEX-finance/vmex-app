@@ -16,36 +16,38 @@ export async function getAllAssetApys() {
 
     const { apy, tokenDetails }: { apy: any[]; tokenDetails: any[] } = await res.json();
 
-    const formattedApy: IAssetApyProps[] = await Promise.all(
-        apy.map(async (a) => {
-            const found = findInObjArr('address', a.asset, tokenDetails);
-            const apysByToken: any[] = [];
-            if (a?.apysByToken) {
-                a.apysByToken.forEach(async (t: any) => {
-                    const foundVaultToken = findInObjArr('address', t.token, tokenDetails);
-                    apysByToken.push({
-                        asset: t.token,
-                        apy: t.apy,
-                        symbol: foundVaultToken
-                            ? foundVaultToken.symbol
-                            : convertAddressToSymbol(t.token, network) ||
-                              (await getContractMetadata(t.token, provider, 'symbol')),
-                        name: foundVaultToken?.name || '',
-                    });
-                });
-            }
-            return {
-                ...a,
-                symbol: found
-                    ? found.symbol
-                    : convertAddressToSymbol(a.asset, network) ||
-                      (await getContractMetadata(a.asset, provider, 'symbol')),
-                name: found?.name || '',
-                apysByToken,
-                description: found?.description || '',
-            };
-        }),
-    );
+    const formattedApy: IAssetApyProps[] = apy?.length
+        ? await Promise.all(
+              apy.map(async (a) => {
+                  const found = findInObjArr('address', a.asset, tokenDetails);
+                  const apysByToken: any[] = [];
+                  if (a?.apysByToken) {
+                      a.apysByToken.forEach(async (t: any) => {
+                          const foundVaultToken = findInObjArr('address', t.token, tokenDetails);
+                          apysByToken.push({
+                              asset: t.token,
+                              apy: t.apy,
+                              symbol: foundVaultToken
+                                  ? foundVaultToken.symbol
+                                  : convertAddressToSymbol(t.token, network) ||
+                                    (await getContractMetadata(t.token, provider, 'symbol')),
+                              name: foundVaultToken?.name || '',
+                          });
+                      });
+                  }
+                  return {
+                      ...a,
+                      symbol: found
+                          ? found.symbol
+                          : convertAddressToSymbol(a.asset, network) ||
+                            (await getContractMetadata(a.asset, provider, 'symbol')),
+                      name: found?.name || '',
+                      apysByToken,
+                      description: found?.description || '',
+                  };
+              }),
+          )
+        : [];
     return formattedApy;
 }
 

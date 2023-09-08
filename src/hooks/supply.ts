@@ -21,7 +21,7 @@ import {
     PRICING_DECIMALS,
     bigNumberToUSD,
 } from '../utils';
-import { BigNumber, BigNumberish, Wallet, ethers, utils } from 'ethers';
+import { BigNumber, BigNumberish, Wallet, utils } from 'ethers';
 import {
     claimIncentives,
     convertAddressToSymbol,

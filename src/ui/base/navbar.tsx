@@ -157,11 +157,12 @@ const MobileDropdownMenu = ({
                             {isConnected && (
                                 <>
                                     <MenuItemButton label={`Portfolio`} onClick={navigate} mobile />
-                                    <MenuItemButton
+                                    {/* TODO: uncomment when backend enables creating tranches */}
+                                    {/* <MenuItemButton
                                         label={`Create Tranche`}
                                         onClick={() => onClick('create-tranche-dialog')}
                                         mobile
-                                    />
+                                    /> */}
                                     <MenuItemButton
                                         label={`History`}
                                         onClick={() => onClick('transactions-dialog')}

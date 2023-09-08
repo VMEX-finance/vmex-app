@@ -7,6 +7,8 @@ import { useAccount, useNetwork } from 'wagmi';
 import { Skeleton } from '@mui/material';
 import { useSubgraphUserData } from '@/api';
 import { useSelectedTrancheContext } from '@/store';
+import { getNetwork } from '@wagmi/core';
+import { DEFAULT_NETWORK } from '@/utils';
 
 interface IDashboardTemplateProps {
     title?: string;
@@ -39,6 +41,10 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
     const { address } = useAccount();
     const { queryTrancheAdminData } = useSubgraphUserData(address || '');
     const { tranche } = useSelectedTrancheContext();
+
+    const network = getNetwork()?.chain?.unsupported
+        ? DEFAULT_NETWORK
+        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
 
     // TODO: cleanup / optimize
     return (
@@ -138,11 +144,15 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                                     />
                                 </Tooltip>
                             )}
-                            <Button
-                                label={width > 768 ? 'Create Tranche' : <BiPlus size="28px" />}
-                                onClick={() => openDialog('create-tranche-dialog')}
-                                primary
-                            />
+                            {/* TODO: enable for OP when backend enables creating tranches */}
+                            <Tooltip text="Coming soon">
+                                <Button
+                                    label={width > 768 ? 'Create Tranche' : <BiPlus size="28px" />}
+                                    onClick={() => openDialog('create-tranche-dialog')}
+                                    primary
+                                    disabled
+                                />
+                            </Tooltip>
                         </div>
                     )}
             </header>
