@@ -68,8 +68,8 @@ export const UserPerformanceCard: React.FC<IUserPerformanceCardProps> = ({
             {loanedAssets && loanedAssets.length > 0 && (
                 <div className="grid">
                     <h4 className="mb-2">Assets On Loan</h4>
-                    <div className="flex flex-wrap gap-3">
-                        {loanedAssets.map((el, i) => (
+                    <div className="flex flex-wrap gap-2">
+                        {loanedAssets?.slice(0, 6)?.map((el, i) => (
                             <PillDisplay
                                 key={`${el}-${i}`}
                                 asset={el.asset}
@@ -77,6 +77,12 @@ export const UserPerformanceCard: React.FC<IUserPerformanceCardProps> = ({
                                 formatter="basic"
                             />
                         ))}
+                        {loanedAssets?.length > 6 && (
+                            <PillDisplay
+                                asset={`+ ${loanedAssets.length - 6} more`}
+                                formatter="basic"
+                            />
+                        )}
                     </div>
                 </div>
             )}

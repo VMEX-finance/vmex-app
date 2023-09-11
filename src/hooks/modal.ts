@@ -35,6 +35,17 @@ export const useModal = (dialog?: IDialogNames): IUseModal => {
         }
     };
 
+    const determineTxType = () => {
+        switch (dialog) {
+            case 'loan-asset-dialog':
+                return 'Deposit';
+            case 'borrow-asset-dialog':
+                return 'Borrow';
+            default:
+                return undefined;
+        }
+    };
+
     const { newTransaction } = useTransactionsContext();
     const { closeDialog } = useDialogController();
 
@@ -52,7 +63,7 @@ export const useModal = (dialog?: IDialogNames): IUseModal => {
             try {
                 if (callback) {
                     const tx = await callback();
-                    newTransaction(tx);
+                    newTransaction(tx, determineTxType());
                 }
 
                 setIsLoading(false);
