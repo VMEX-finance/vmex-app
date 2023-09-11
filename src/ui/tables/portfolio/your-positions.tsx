@@ -77,7 +77,7 @@ export const YourPositionsTable: React.FC<IYourPositionsProps> = ({ type, data, 
                                     <MultipleAssetsDisplay
                                         assets={assetsPreview[i]}
                                         size="sm"
-                                        show="all"
+                                        show={4}
                                         gap="gap-1"
                                     />
                                 </span>
