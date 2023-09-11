@@ -32,21 +32,21 @@ export const YourTransactionsTable = () => {
     const headers = ['Hash', 'Date', 'Type', 'Asset', 'Status'];
     return (
         <div className="fix-table-head">
-            <table className="min-w-full divide-y-2 divide-gray-300 dark:divide-neutral-800 font-basefont">
-                <thead className="">
-                    <tr>
-                        {headers.map((el, i) => (
-                            <th
-                                key={`table-header-${i}`}
-                                scope="col"
-                                className={`bg-neutral-100 dark:bg-brand-black py-2 text-left text-sm font-semibold text-neutral900 first-of-type:pl-2 first-of-type:md:pl-6`}
-                            >
-                                {el}
-                            </th>
-                        ))}
-                    </tr>
-                </thead>
-                {queryUserTxHistory?.data?.length || transactions?.length ? (
+            {queryUserTxHistory?.data?.length || transactions?.length ? (
+                <table className="min-w-full divide-y-2 divide-gray-300 dark:divide-neutral-800 font-basefont">
+                    <thead className="">
+                        <tr>
+                            {headers.map((el, i) => (
+                                <th
+                                    key={`table-header-${i}`}
+                                    scope="col"
+                                    className={`bg-neutral-100 dark:bg-brand-black py-2 text-left text-sm font-semibold text-neutral900 first-of-type:pl-2 first-of-type:md:pl-6`}
+                                >
+                                    {el}
+                                </th>
+                            ))}
+                        </tr>
+                    </thead>
                     <tbody className="divide-y divide-gray-200 dark:divide-neutral-800">
                         {transactions?.map((el, i) => (
                             <tr
@@ -100,14 +100,14 @@ export const YourTransactionsTable = () => {
                             </tr>
                         ))}
                     </tbody>
-                ) : (
-                    <div className="flex justify-center items-center pt-12 pb-4">
-                        <span className="text-neutral-700 dark:text-neutral-400">
-                            No Transaction History Available
-                        </span>
-                    </div>
-                )}
-            </table>
+                </table>
+            ) : (
+                <div className="flex justify-center items-center pt-12 pb-4">
+                    <span className="text-neutral-700 dark:text-neutral-400">
+                        No Transaction History Available
+                    </span>
+                </div>
+            )}
         </div>
     );
 };
