@@ -83,3 +83,16 @@ input[type='checkbox']:checked:after {
 .Toastify__toast--success .Toastify__toast-icon svg {
   fill: #86efac;
 }
+
+.fix-table-head {
+      overflow-y: auto;
+      max-height: 300px;
+    }
+    .fix-table-head thead th {
+      position: sticky;
+      top: 0;
+    }
+    .fix-table-head table {
+      border-collapse: collapse;        
+      width: 100%;
+    }

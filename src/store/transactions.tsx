@@ -7,6 +7,10 @@ import { ToastStatus } from '../ui/components/statuses';
 // Types
 type ITransactionProps = {
     text: string;
+    date: string;
+    type?: string;
+    asset: string;
+    amount: string;
     status: 'pending' | 'complete' | 'error';
     onClick?: any;
 };
@@ -15,14 +19,14 @@ export type ITransactionsStoreProps = {
     transactions: Array<ITransactionProps>;
     setTransactions?: any;
     isAnyTransactionLoading: boolean;
-    newTransaction: (tx: Transaction) => void;
+    newTransaction: (tx: Transaction, type?: 'Deposit' | 'Borrow') => Promise<void>;
     updateTransaction: (hash: string, status: string) => void;
 };
 
 // Context
 const TransactionsContext = createContext<ITransactionsStoreProps>({
     transactions: [],
-    newTransaction(tx) {},
+    async newTransaction(tx, type) {},
     updateTransaction(hash, status) {},
     isAnyTransactionLoading: false,
 });
@@ -44,14 +48,21 @@ export function TransactionsStore(props: { children: ReactNode }) {
         return () => clearInterval(interval);
     }, [transactions]);
 
-    const newTransaction = async (tx: Transaction) => {
+    const newTransaction = async (tx: Transaction, type?: 'Deposit' | 'Borrow') => {
         if (!tx.hash) return;
         const { hash } = tx;
         setIsAnyTransactionLoading(true);
         const toastId = toast.loading(<ToastStatus status="pending" transaction={tx.hash} />);
 
         const shallow = [...transactions];
-        shallow.push({ text: hash, status: 'pending' });
+        shallow.push({
+            text: hash,
+            status: 'pending',
+            date: new Date().toLocaleDateString(),
+            type: type,
+            amount: '',
+            asset: '',
+        });
         setTransactions(shallow);
         const receipt = await (tx as any).wait();
         if (receipt?.blockHash || receipt?.transactionHash || receipt?.status === 1) {

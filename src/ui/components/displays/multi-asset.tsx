@@ -23,6 +23,17 @@ export const MultipleAssetsDisplay = ({ assets, show = 4, size, gap }: IMultiple
         }
     };
 
+    const determineMargin = () => {
+        switch (size) {
+            case 'lg':
+                return 'ml-1.5 md:ml-2.5';
+            case 'md':
+                return 'ml-1 md:ml-2';
+            default:
+                return 'ml-0.5 lg:ml-1';
+        }
+    };
+
     return (
         <div
             className={`flex flex-wrap items-center ${
@@ -52,7 +63,9 @@ export const MultipleAssetsDisplay = ({ assets, show = 4, size, gap }: IMultiple
                     text={assets.slice(show ? show : 4).join(', ')}
                     key={`tooltip-multi-asset-display-${getRandomNumber()}`}
                 >
-                    <span className="ml-1 md:ml-2">+{assets.slice(show ? show : 4).length}</span>
+                    <span className={`${determineMargin()}`}>
+                        +{assets.slice(show ? show : 4).length}
+                    </span>
                 </Tooltip>
             )}
         </div>
