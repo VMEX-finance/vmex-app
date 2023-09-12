@@ -46,6 +46,12 @@ export const renderAsset = (
             size,
             origAssetName: asset,
         })
+    ) : asset.substring(0, 5) == 'vAMM-' ? ( // may be velo in base
+        MultipleAssetsDisplayOverlapping({
+            assets: [asset.split('/')[0].substring(5), 'aero'],
+            size,
+            origAssetName: asset,
+        })
     ) : (
         <Tooltip
             text={determineCoinDescription(asset)}
