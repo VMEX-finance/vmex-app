@@ -1,4 +1,4 @@
-import { mainnet, optimism, sepolia, hardhat } from 'wagmi/chains';
+import { mainnet, optimism, sepolia, hardhat, Chain } from 'wagmi/chains';
 import { TESTING } from './constants';
 
 export const NETWORKS: Record<string, any> = {
@@ -42,27 +42,40 @@ export const NETWORKS: Record<string, any> = {
         testing: false,
         icon: '/coins/eth.svg',
     },
-    // base: {
-    //     name: 'Base',
-    //     rpc: 'https://mainnet.base.org',
-    //     subgraph: '',
-    //     chainId: 8453,
-    //     explorer: 'https://basescan.org',
-    //     backend: 'https://dolphin-app-ajfiy.ondigitalocean.app',
-    //     testing: false,
-    //     icon: ''
-    // }
+    base: {
+        name: 'base',
+        rpc: 'https://base-mainnet.public.blastapi.io',
+        subgraph: 'https://api.thegraph.com/subgraphs/name/vmex-finance/vmex-base',
+        chainId: 8453,
+        explorer: 'https://basescan.org',
+        backend: 'https://dolphin-app-ajfiy.ondigitalocean.app',
+        testing: false,
+        icon: '/networks/base.png',
+    },
+};
+
+const baseChain: Chain = {
+    id: NETWORKS.base.chainId,
+    name: NETWORKS.base.name,
+    network: 'base',
+    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+    rpcUrls: {
+        default: {
+            http: ['https://mainnet.base.org'],
+        },
+    },
 };
 
 export const DEFAULT_NETWORK = 'optimism';
 
 export const availableNetworks = (type: 'wagmi' | 'string') => {
     if (type === 'wagmi') {
-        if (TESTING) return [optimism, sepolia, hardhat];
-        return [optimism, sepolia];
+        if (TESTING) return [optimism, sepolia, hardhat, baseChain];
+        return [optimism, sepolia, baseChain];
     }
-    if (TESTING) return ['optimism', 'sepolia', 'hardhat'];
-    return ['optimism', 'sepolia'];
+    let networks = ['optimism', 'sepolia', 'base'];
+    if (TESTING) networks.push('hardhat');
+    return networks;
 };
 
 export const renderNetworks = (fx?: any) => {
