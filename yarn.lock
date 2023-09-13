@@ -3947,22 +3947,22 @@
   resolved "https://registry.yarnpkg.com/@vanilla-extract/sprinkles/-/sprinkles-1.5.0.tgz#c921183ae518bb484299c2dc81f2acefd91c3dbe"
   integrity sha512-W58f2Rzz5lLmk0jbhgStVlZl5wEiPB1Ur3fRvUaBM+MrifZ3qskmFq/CiH//fEYeG5Dh9vF1qRviMMH46cX9Nw==
 
-"@vmexfinance/contracts@^1.0.9":
-  version "1.0.9"
-  resolved "https://registry.yarnpkg.com/@vmexfinance/contracts/-/contracts-1.0.9.tgz#0528474832f2d0cc677534bcbaef2809b4f138a9"
-  integrity sha512-CxmIZaKEVgBgERi6OzJnNPTVdaENoQre54RXog2ex9QKau2mlTEiqrONmjb0jB4u+a/r/H7UqwcxoLUbmZJ/ZA==
+"@vmexfinance/contracts@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@vmexfinance/contracts/-/contracts-1.1.0.tgz#2002f001cba307295bbc95b1a5ede376a935e30b"
+  integrity sha512-q1vsNa331bojoPIl2SvyRBE3hibgx7pNWG60tiWDDooAVk7RxZmavHXufnbb29c9Jp4Yjb9yCXZNBABuOfsvrw==
   dependencies:
     "@openzeppelin/contracts" "^4.9.2"
     bignumber.js "9.0.0"
-    hardhat "^2.13.0"
+    hardhat "^2.17.2"
     mocha "^10.2.0"
 
-"@vmexfinance/sdk@^1.0.13":
-  version "1.0.13"
-  resolved "https://registry.yarnpkg.com/@vmexfinance/sdk/-/sdk-1.0.13.tgz#075673a868d1043a6a027cc96ee70ce2af787333"
-  integrity sha512-ZaksdLQCCr1x9yNPnCV7ROEy/0q+ePjO/t4/aJC9FTsB0AyeUZHu+obmuuw6SbLU5qp7X+0k2qGkQdyBeZMoAQ==
+"@vmexfinance/sdk@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@vmexfinance/sdk/-/sdk-1.1.0.tgz#e820b88cbaded59f87ffff065251089c43aa9593"
+  integrity sha512-SEZHP4X+Jq1Th65Kxldx/Wu+gPLKGh75EAOT6+EDi8zUlI+TsPo+N7H/Cf42I432eQ18K3M0pLvW9f+GHqziYw==
   dependencies:
-    "@vmexfinance/contracts" "^1.0.9"
+    "@vmexfinance/contracts" "^1.1.0"
     chai "^4.3.6"
     chai-bignumber "^3.1.0"
     cross-env "^7.0.3"
@@ -8168,10 +8168,10 @@ handle-thing@^2.0.0:
   resolved "https://registry.yarnpkg.com/handle-thing/-/handle-thing-2.0.1.tgz#857f79ce359580c340d43081cc648970d0bb234e"
   integrity sha512-9Qn4yBxelxoh2Ow62nP+Ka/kMnOXRi8BXnRaUwezLNhqelnN49xKz4F/dPP8OYLxLxq6JDtZb2i9XznUQbNPTg==
 
-hardhat@^2.13.0:
-  version "2.17.2"
-  resolved "https://registry.yarnpkg.com/hardhat/-/hardhat-2.17.2.tgz#250a8c8e76029e9bfbfb9b9abee68d5b350b5d4a"
-  integrity sha512-oUv40jBeHw0dKpbyQ+iH9cmNMziweLoTW3MnkNxJ2Gc0KGLrQR/1n4vV4xY60zn2LdmRgnwPqy3CgtY0mfwIIA==
+hardhat@^2.17.2:
+  version "2.17.3"
+  resolved "https://registry.yarnpkg.com/hardhat/-/hardhat-2.17.3.tgz#4cb15f2afdea5f108970ed72e5b81e6e53052cfb"
+  integrity sha512-SFZoYVXW1bWJZrIIKXOA+IgcctfuKXDwENywiYNT2dM3YQc4fXNaTbuk/vpPzHIF50upByx4zW5EqczKYQubsA==
   dependencies:
     "@ethersproject/abi" "^5.1.2"
     "@metamask/eth-sig-util" "^4.0.0"

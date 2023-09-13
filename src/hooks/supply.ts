@@ -116,9 +116,10 @@ export const useSupply = ({
                         ...defaultFunctionParams,
                         underlying: asset,
                         collateral:
-                            typeof collateral === 'boolean'
+                            typeof collateral === 'boolean' // true if user has supplied this asset before
                                 ? existingSupplyCollateral
                                 : asCollateral,
+                        collateralBefore: typeof collateral === 'boolean' ? collateral : true, // when user first deposits, collateral set to true
                         // referrer: number,
                         // collateral: boolean,
                     });

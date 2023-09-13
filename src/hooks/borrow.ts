@@ -24,7 +24,6 @@ export const useBorrow = ({
     isLoading,
     view,
     setView,
-    isMax,
     setIsMax,
     amount,
     setAmount,
@@ -63,7 +62,6 @@ export const useBorrow = ({
             ? signer
             : new Wallet('0xdf57089febbacf7ba0bc227dafbffa9fc08a93fdc68e1e42411a14efcf23656e'),
         network,
-        isMax: isMax,
         test: NETWORKS[network].testing,
         providerRpc: NETWORKS[network].rpc,
     };
@@ -75,7 +73,6 @@ export const useBorrow = ({
                     ? await borrow({
                           ...defaultFunctionParams,
                           underlying: asset,
-                          isMax: false, // TODO: fix in SDK as isMax: true breaks the app
                           //   interestRateMode: 2,
                           // referrer: number,
                           // collateral: boolean,
@@ -156,7 +153,7 @@ export const useBorrow = ({
         return (
             isSuccess ||
             error.length !== 0 ||
-            (!amount && !isMax) ||
+            !amount ||
             (view?.includes('Borrow') && amountBorrwable.amountNative.lt(10)) ||
             (view?.includes('Repay') && amountRepay.lt(10)) ||
             isViolatingBorrowCap() ||
@@ -200,7 +197,7 @@ export const useBorrow = ({
             }
         };
         getter();
-    }, [view, data, isMax, amount, signer]);
+    }, [view, data, amount, signer]);
 
     return {
         amountBorrwable,
@@ -217,7 +214,6 @@ export const useBorrow = ({
         isSuccess,
         amount,
         setAmount,
-        isMax,
         setIsMax,
         error,
         isLoading,
