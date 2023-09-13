@@ -90,10 +90,10 @@ export const DEFAULT_NETWORK = 'optimism';
 
 export const availableNetworks = (type: 'wagmi' | 'string') => {
     if (type === 'wagmi') {
-        if (TESTING) return [optimism, sepolia, hardhat]; // TODO: readd basechain
-        return [optimism, sepolia]; // TODO: readd basechain
+        if (TESTING) return [optimism, sepolia, hardhat, baseChain];
+        return [optimism, sepolia, baseChain];
     }
-    const networks = ['optimism', 'sepolia']; // TODO: readd base
+    const networks = ['optimism', 'sepolia', 'base'];
     if (TESTING) networks.push('hardhat');
     return networks;
 };
