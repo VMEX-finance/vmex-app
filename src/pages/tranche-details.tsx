@@ -174,6 +174,9 @@ const TrancheDetails: React.FC = () => {
                                               tranche: queryTrancheData.data?.name,
                                               trancheId: tranche?.id,
                                               signer: signer,
+                                              priceUSD: (queryTrancheData.data.assetsData as any)[
+                                                  asset
+                                              ].priceUSD,
                                           }))
                                     : []
                             }
