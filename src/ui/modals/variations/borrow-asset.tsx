@@ -35,7 +35,6 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
         isSuccess,
         amount,
         setAmount,
-        isMax,
         setIsMax,
         error,
         isLoading,
@@ -74,7 +73,6 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                                 asset,
                             )}
                             type="collateral"
-                            isMax={isMax}
                             setIsMax={setIsMax}
                             loading={amountBorrwable.loading}
                             customMaxClick={maxOnClick}
@@ -132,7 +130,6 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                         }}
                         balance={bigNumberToUnformattedString(amountRepay, asset)}
                         type="owed"
-                        isMax={isMax}
                         setIsMax={setIsMax}
                         loading={Number(bigNumberToNative(amountRepay, asset)) === 0}
                         customMaxClick={maxOnClick}

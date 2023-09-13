@@ -34,6 +34,7 @@ export const renderAsset = (
     custom?: string,
     key?: string,
 ) => {
+    if (asset.includes('BPT')) console.log('asset', asset);
     return asset.includes('moo') ? (
         MultipleAssetsDisplayOverlapping({
             assets: [asset.substring(3), 'beefy'],
@@ -43,6 +44,12 @@ export const renderAsset = (
     ) : asset.substring(0, 2) == 'yv' ? (
         MultipleAssetsDisplayOverlapping({
             assets: [asset.substring(2), 'yearn'],
+            size,
+            origAssetName: asset,
+        })
+    ) : asset.substring(0, 5) == 'vAMM-' ? ( // may be velo in base
+        MultipleAssetsDisplayOverlapping({
+            assets: [asset.split('/')[0].substring(5), 'aero'],
             size,
             origAssetName: asset,
         })

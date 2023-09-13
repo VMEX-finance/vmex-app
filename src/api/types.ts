@@ -95,6 +95,7 @@ export type AvailableAsset = {
     canBeCollat?: boolean;
     liquidity?: string;
     liquidityNative?: BigNumber;
+    priceUSD?: BigNumber;
 };
 
 export interface AssetBalance {

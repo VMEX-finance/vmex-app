@@ -1,4 +1,4 @@
-import { mainnet, optimism, sepolia, hardhat } from 'wagmi/chains';
+import { mainnet, optimism, sepolia, hardhat, Chain } from 'wagmi/chains';
 import { TESTING } from './constants';
 
 export const NETWORKS: Record<string, any> = {
@@ -42,27 +42,60 @@ export const NETWORKS: Record<string, any> = {
         testing: false,
         icon: '/coins/eth.svg',
     },
-    // base: {
-    //     name: 'Base',
-    //     rpc: 'https://mainnet.base.org',
-    //     subgraph: '',
-    //     chainId: 8453,
-    //     explorer: 'https://basescan.org',
-    //     backend: 'https://dolphin-app-ajfiy.ondigitalocean.app',
-    //     testing: false,
-    //     icon: ''
-    // }
+    base: {
+        name: 'base',
+        rpc: 'https://base-mainnet.public.blastapi.io',
+        subgraph: 'https://api.thegraph.com/subgraphs/name/vmex-finance/vmex-base',
+        chainId: 8453,
+        explorer: 'https://basescan.org',
+        backend: 'https://dolphin-app-ajfiy.ondigitalocean.app',
+        testing: false,
+        icon: '/networks/base.png',
+    },
+};
+
+const baseChain: Chain | any = {
+    id: NETWORKS.base.chainId,
+    name: 'Base',
+    network: NETWORKS.base.name,
+    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+    iconUrl:
+        'https://assets-global.website-files.com/5f973c97cf5aea614f93a26c/6451a34baee26f54b2419cf3_base-logo.png',
+    iconBackground: '#fff',
+    rpcUrls: {
+        default: {
+            http: ['https://mainnet.base.org'],
+        },
+        public: {
+            http: ['https://mainnet.base.org'],
+        },
+    },
+    blockExplorers: {
+        blockscout: {
+            name: 'Basescout',
+            url: 'https://base.blockscout.com',
+        },
+        default: {
+            name: 'Basescan',
+            url: 'https://basescan.org',
+        },
+        etherscan: {
+            name: 'Basescan',
+            url: 'https://basescan.org',
+        },
+    },
 };
 
 export const DEFAULT_NETWORK = 'optimism';
 
 export const availableNetworks = (type: 'wagmi' | 'string') => {
     if (type === 'wagmi') {
-        if (TESTING) return [optimism, sepolia, hardhat];
-        return [optimism, sepolia];
+        if (TESTING) return [optimism, sepolia, hardhat]; // TODO: readd basechain
+        return [optimism, sepolia]; // TODO: readd basechain
     }
-    if (TESTING) return ['optimism', 'sepolia', 'hardhat'];
-    return ['optimism', 'sepolia'];
+    const networks = ['optimism', 'sepolia']; // TODO: readd base
+    if (TESTING) networks.push('hardhat');
+    return networks;
 };
 
 export const renderNetworks = (fx?: any) => {

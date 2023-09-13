@@ -79,11 +79,19 @@ export const AVAILABLE_ASSETS: Record<string, { symbol: string; rewardSource?: s
         { symbol: 'BPT-WSTETH-WETH', rewardSource: 'Aura' },
         { symbol: 'BPT-rETH-ETH', rewardSource: 'Aura' },
     ],
+    base: [
+        { symbol: 'WETH' },
+        { symbol: 'USDbC' },
+        { symbol: 'cbETH' },
+        { symbol: 'vAMM-WETH/USDbC', rewardSource: 'Velo' },
+        { symbol: 'vAMM-cbETH/WETH', rewardSource: 'Velo' },
+    ],
 };
 
 // Decimals
 export const PRICING_DECIMALS: any = {
     optimism: 8,
+    base: 8,
     mainnet: 18,
     sepolia: 18,
 };
@@ -148,4 +156,8 @@ export const DECIMALS = new Map<string, number>([
     ['sAMMV2-USDC/LUSD', 18],
     ['BPT-WSTETH-WETH', 18],
     ['BPT-rETH-ETH', 18],
+    ['USDbC', 6],
+    ['cbETH', 18],
+    ['vAMM-WETH/USDbC', 18],
+    ['vAMM-cbETH/WETH', 18],
 ]);

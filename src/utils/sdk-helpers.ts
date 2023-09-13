@@ -30,10 +30,8 @@ export const nativeAmountToUSD = (
     return parseFloat(
         Number(
             ethers.utils.formatUnits(
-                BigNumber.from(amount)
-                    .mul(assetUSDPrice)
-                    .div(ethers.utils.parseUnits('1', priceDecimals)),
-                assetDecimals,
+                BigNumber.from(amount).mul(assetUSDPrice),
+                assetDecimals + priceDecimals,
             ),
         ).toFixed(2),
     );

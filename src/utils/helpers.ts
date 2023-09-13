@@ -55,10 +55,10 @@ export const determineCoinImg = (asset: string, custom?: string) => {
         const _asset = asset.trim();
         let url = '/coins/';
         if (_asset == 'beefy') return `${url}beefy.png`;
+        if (_asset?.toLowerCase().includes('bpt')) return `${url}${_asset?.toLowerCase()}.png`;
         if (
             _asset?.toLowerCase().includes('crv') ||
             _asset?.toLowerCase().includes('curve') ||
-            _asset?.toLowerCase().includes('bpt') ||
             _asset?.toLowerCase().includes('ammv2')
         ) {
             return `${url}${_asset?.toLowerCase()}.webp`;

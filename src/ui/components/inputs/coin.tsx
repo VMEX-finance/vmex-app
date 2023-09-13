@@ -17,7 +17,7 @@ export interface ICoinInput {
     };
     balance?: string;
     type?: 'collateral' | 'owed' | 'default';
-    isMax: boolean;
+    isMax?: boolean;
     setIsMax: React.Dispatch<React.SetStateAction<boolean>>;
     loading?: boolean;
     customMaxClick?: any;

@@ -7,9 +7,19 @@ import { useSelectedTrancheContext } from '@/store';
 import { AssetDisplay, NumberAndDollar, ApyToolitp } from '@/ui/components';
 import { useWindowSize, useDialogController } from '@/hooks';
 import { BigNumber, ethers } from 'ethers';
-import { numberFormatter, bigNumberToNative, percentFormatter, bigNumberToUSD } from '@/utils';
+import {
+    numberFormatter,
+    bigNumberToNative,
+    percentFormatter,
+    bigNumberToUSD,
+    nativeAmountToUSD,
+    PRICING_DECIMALS,
+    DEFAULT_NETWORK,
+    usdFormatter,
+} from '@/utils';
 import { useLocation } from 'react-router-dom';
 import { IYourSuppliesTableItemProps } from '../portfolio';
+import { getNetwork } from '@wagmi/core';
 
 interface ITableProps {
     data: AvailableAsset[];
@@ -87,6 +97,10 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
         if (data) return data.sort(compareListsSorter);
         return [];
     }, [data]);
+
+    const network = getNetwork()?.chain?.unsupported
+        ? DEFAULT_NETWORK
+        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
 
     // Uncomment if want to enable collateral toggle from the table
     // const handleCollateral = async (el: AvailableAsset, index: number) => {
@@ -239,9 +253,13 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                                 ),
                                             ) || 0,
                                         )}
-                                        dollar={bigNumberToUSD(
-                                            el.liquidity,
-                                            findAssetInMarketsData(el.asset).decimals,
+                                        dollar={usdFormatter(false).format(
+                                            nativeAmountToUSD(
+                                                el.liquidity || 0,
+                                                PRICING_DECIMALS[network],
+                                                Number(findAssetInMarketsData(el.asset).decimals),
+                                                el.priceUSD || 0,
+                                            ),
                                         )}
                                         size="xs"
                                         color="text-brand-black"
