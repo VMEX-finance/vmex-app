@@ -54,14 +54,34 @@ export const NETWORKS: Record<string, any> = {
     },
 };
 
-const baseChain: Chain = {
+const baseChain: Chain | any = {
     id: NETWORKS.base.chainId,
-    name: NETWORKS.base.name,
-    network: 'base',
+    name: 'Base',
+    network: NETWORKS.base.name,
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+    iconUrl:
+        'https://assets-global.website-files.com/5f973c97cf5aea614f93a26c/6451a34baee26f54b2419cf3_base-logo.png',
+    iconBackground: '#fff',
     rpcUrls: {
         default: {
             http: ['https://mainnet.base.org'],
+        },
+        public: {
+            http: ['https://mainnet.base.org'],
+        },
+    },
+    blockExplorers: {
+        blockscout: {
+            name: 'Basescout',
+            url: 'https://base.blockscout.com',
+        },
+        default: {
+            name: 'Basescan',
+            url: 'https://basescan.org',
+        },
+        etherscan: {
+            name: 'Basescan',
+            url: 'https://basescan.org',
         },
     },
 };
