@@ -34,6 +34,7 @@ export const renderAsset = (
     custom?: string,
     key?: string,
 ) => {
+    if (asset.includes('BPT')) console.log('asset', asset);
     return asset.includes('moo') ? (
         MultipleAssetsDisplayOverlapping({
             assets: [asset.substring(3), 'beefy'],
