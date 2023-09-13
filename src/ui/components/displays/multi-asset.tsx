@@ -7,7 +7,7 @@ import { renderAsset, iconSize, smallerIconSize, iconSizeClass, marginLeft } fro
 interface IMultipleAssetsProps {
     assets?: string[];
     show?: number | 'all';
-    size?: 'lg' | 'md' | 'sm';
+    size?: 'lg' | 'md' | 'sm' | 'pill';
     loading?: boolean;
     gap?: string;
     origAssetName?: string;
