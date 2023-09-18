@@ -105,7 +105,7 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
                         if (!connected) {
                             return { onClick: openConnectModal, render: title };
                         } else if (chain.unsupported) {
-                            return { onClick: openChainModal, render: 'Swtich Network' };
+                            return { onClick: openChainModal, render: 'Switch Network' };
                         } else {
                             return { onClick: openAccountModal, render: account.displayName };
                         }
