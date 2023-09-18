@@ -23,16 +23,28 @@ export async function getAllAssetApys() {
                   const apysByToken: any[] = [];
                   if (a?.apysByToken) {
                       a.apysByToken.forEach(async (t: any) => {
-                          const foundVaultToken = findInObjArr('address', t.token, tokenDetails);
-                          apysByToken.push({
-                              asset: t.token,
-                              apy: t.apy,
-                              symbol: foundVaultToken
-                                  ? foundVaultToken.symbol
-                                  : convertAddressToSymbol(t.token, network) ||
-                                    (await getContractMetadata(t.token, provider, 'symbol')),
-                              name: foundVaultToken?.name || '',
-                          });
+                          if (t.name) {
+                              apysByToken.push({
+                                  apy: t.apy,
+                                  symbol: t.name,
+                                  name: t.name,
+                              });
+                          } else {
+                              const foundVaultToken = findInObjArr(
+                                  'address',
+                                  t.token,
+                                  tokenDetails,
+                              );
+                              apysByToken.push({
+                                  asset: t.token,
+                                  apy: t.apy,
+                                  symbol: foundVaultToken
+                                      ? foundVaultToken.symbol
+                                      : convertAddressToSymbol(t.token, network) ||
+                                        (await getContractMetadata(t.token, provider, 'symbol')),
+                                  name: foundVaultToken?.name || '',
+                              });
+                          }
                       });
                   }
                   return {
