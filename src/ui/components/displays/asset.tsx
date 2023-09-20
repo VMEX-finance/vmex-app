@@ -7,7 +7,7 @@ type IAssetDisplayProps = {
     logo?: string;
     name: string;
     className?: string;
-    size?: 'lg' | 'md' | 'sm';
+    size?: 'lg' | 'md' | 'sm' | 'pill';
     value?: string;
     border?: boolean;
     noText?: boolean;
@@ -29,12 +29,11 @@ export const AssetDisplay = (props: IAssetDisplayProps) => {
 
 export const renderAsset = (
     asset: string,
-    size?: 'lg' | 'md' | 'sm',
+    size?: 'lg' | 'md' | 'sm' | 'pill',
     i?: number,
     custom?: string,
     key?: string,
 ) => {
-    if (asset.includes('BPT')) console.log('asset', asset);
     return asset.includes('moo') ? (
         MultipleAssetsDisplayOverlapping({
             assets: [asset.substring(3), 'beefy'],
@@ -47,7 +46,7 @@ export const renderAsset = (
             size,
             origAssetName: asset,
         })
-    ) : asset.substring(0, 5) == 'vAMM-' ? ( // may be velo in base
+    ) : asset.substring(0, 5).toUpperCase() == 'VAMM-' ? ( // may be velo in base
         MultipleAssetsDisplayOverlapping({
             assets: [asset.split('/')[0].substring(5), 'aero'],
             size,
@@ -68,17 +67,19 @@ export const renderAsset = (
     );
 };
 
-export const iconSize = (size?: 'lg' | 'md' | 'sm') => {
+export const iconSize = (size?: 'lg' | 'md' | 'sm' | 'pill') => {
     switch (size) {
         case 'lg':
             return '40';
+        case 'pill':
+            return '24';
         case 'sm':
             return '20';
         default:
             return '30';
     }
 };
-export const smallerIconSize = (size?: 'lg' | 'md' | 'sm') => {
+export const smallerIconSize = (size?: 'lg' | 'md' | 'sm' | 'pill') => {
     switch (size) {
         case 'lg':
             return 'h-4 w-4';
@@ -89,7 +90,7 @@ export const smallerIconSize = (size?: 'lg' | 'md' | 'sm') => {
     }
 };
 
-export const iconSizeClass = (size?: 'lg' | 'md' | 'sm') => {
+export const iconSizeClass = (size?: 'lg' | 'md' | 'sm' | 'pill') => {
     switch (size) {
         case 'lg':
             return 'h-8 w-8';
@@ -100,10 +101,12 @@ export const iconSizeClass = (size?: 'lg' | 'md' | 'sm') => {
     }
 };
 
-export const marginLeft = (size?: 'lg' | 'md' | 'sm') => {
+export const marginLeft = (size?: 'lg' | 'md' | 'sm' | 'pill') => {
     switch (size) {
         case 'lg':
             return '-1.5rem';
+        case 'pill':
+            return '-1rem';
         case 'sm':
             return '-1rem';
         default:

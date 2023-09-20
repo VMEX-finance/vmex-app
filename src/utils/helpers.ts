@@ -52,18 +52,15 @@ export const determineRatingColor = (s: string) => {
 export const determineCoinImg = (asset: string, custom?: string) => {
     if (custom) return custom;
     else {
-        const _asset = asset.trim();
+        const _asset = asset.trim().toLowerCase();
         let url = '/coins/';
+        if (_asset === 'velo') return `${url}0x9560e827aF36c94D2Ac33a39bCE1Fe78631088Db.svg`;
         if (_asset == 'beefy') return `${url}beefy.png`;
-        if (_asset?.toLowerCase().includes('bpt')) return `${url}${_asset?.toLowerCase()}.png`;
-        if (
-            _asset?.toLowerCase().includes('crv') ||
-            _asset?.toLowerCase().includes('curve') ||
-            _asset?.toLowerCase().includes('ammv2')
-        ) {
-            return `${url}${_asset?.toLowerCase()}.webp`;
+        if (_asset?.includes('bpt')) return `${url}${_asset}.png`;
+        if (_asset?.includes('crv') || _asset?.includes('curve') || _asset?.includes('ammv2')) {
+            return `${url}${_asset}.webp`;
         }
-        return `${url}${_asset?.toLowerCase()}.svg`;
+        return `${url}${_asset}.svg`;
     }
 };
 
@@ -294,6 +291,7 @@ export const getContractMetadata = async (
     provider: any,
     type: 'name' | 'symbol',
 ) => {
+    if (!contractAddress) return '';
     const abi = [
         'function name() view returns (string)',
         'function symbol() view returns (string)',

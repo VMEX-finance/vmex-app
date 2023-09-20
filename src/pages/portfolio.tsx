@@ -92,7 +92,7 @@ const Portfolio: React.FC = () => {
         <AppTemplate title="Portfolio">
             {address && !chain?.unsupported ? (
                 <GridView type="fixed">
-                    <div className="col-span-2 flex flex-col gap-4">
+                    <div className="col-span-3 2xl:col-span-2 flex flex-col gap-4">
                         <PortfolioStatsCard
                             isLoading={queryUserActivity.isLoading}
                             networth={calculateNetworth()}
@@ -119,7 +119,7 @@ const Portfolio: React.FC = () => {
                             />
                         </div>
                     </div>
-                    <div className="flex flex-col gap-4 col-span-2 2xl:col-span-1">
+                    <div className="flex flex-col gap-4 col-span-3 2xl:col-span-1">
                         <UserPerformanceCard
                             isLoading={queryUserActivity.isLoading || queryUserPnlChart.isLoading}
                             loanedAssets={queryUserActivity.data?.supplies?.map((el) => ({

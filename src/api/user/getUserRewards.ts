@@ -28,6 +28,7 @@ export async function getUserRewards(userAddress: string) {
             amountNative,
             proof: res[token].proof,
             amountWei: `0x${res[token].amount}`,
+            chainId: res[token].chainId,
         });
     }
     return formattedArr;

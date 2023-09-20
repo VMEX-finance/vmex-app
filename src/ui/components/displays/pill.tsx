@@ -1,5 +1,6 @@
 import { determineCoinImg, numberFormatter, usdFormatter } from '@/utils';
 import React from 'react';
+import { AssetDisplay } from './asset';
 
 type IPillDisplayProps = {
     asset: string;
@@ -27,7 +28,7 @@ export const PillDisplay = ({ asset, value, type, formatter = 'usd' }: IPillDisp
         return (
             <div className="bg-neutral-300 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 rounded-3xl flex items-center gap-4 w-fit px-3 py-1">
                 <div className="flex gap-1">
-                    <img src={determineCoinImg(asset)} alt={asset} height="24" width="24" />
+                    <AssetDisplay name={asset} size="pill" noText />
                     <span className="text-lg whitespace-nowrap truncate">{asset}</span>
                 </div>
                 {value && <span className="text-lg">{determineFormat(value)}</span>}
