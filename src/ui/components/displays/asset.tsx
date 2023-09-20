@@ -14,7 +14,6 @@ type IAssetDisplayProps = {
 };
 
 export const AssetDisplay = (props: IAssetDisplayProps) => {
-    console.log('asset', props);
     return (
         <div
             className={`flex items-center gap-1 rounded-lg w-max ${
@@ -35,7 +34,6 @@ export const renderAsset = (
     custom?: string,
     key?: string,
 ) => {
-    if (asset.includes('BPT')) console.log('asset', asset);
     return asset.includes('moo') ? (
         MultipleAssetsDisplayOverlapping({
             assets: [asset.substring(3), 'beefy'],

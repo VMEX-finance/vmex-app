@@ -1,7 +1,7 @@
 import React from 'react';
 import { useModal, useWindowSize } from '@/hooks';
 import { Button, Card, AssetDisplay, NumberAndDollar } from '@/ui/components';
-import { useNetwork, useSigner } from 'wagmi';
+import { useNetwork, useSigner, useSwitchNetwork } from 'wagmi';
 import { DEFAULT_NETWORK, NETWORKS } from '@/utils';
 import { claimExternalRewards } from '@vmexfinance/sdk';
 import { getNetwork } from '@wagmi/core';
@@ -13,6 +13,7 @@ export type IYourRewardsTableItemProps = {
     token: string;
     proof: string[];
     amountWei: string;
+    chainId?: number;
 };
 
 export type IYourRewardsTableProps = {
@@ -33,6 +34,7 @@ export const YourRewardsTable: React.FC<IYourRewardsTableProps> = ({
     const headers = ['Asset', 'Amount', ''];
     const { data: signer } = useSigner();
     const { chain } = useNetwork();
+    const { switchNetworkAsync } = useSwitchNetwork();
     const { submitTx } = useModal();
 
     const handleClaim = async (
@@ -40,8 +42,10 @@ export const YourRewardsTable: React.FC<IYourRewardsTableProps> = ({
         rewardToken: string,
         amountWei: string,
         proof: string[],
+        chainId?: number,
     ) => {
         if (data && signer) {
+            if (chainId !== chain?.id && switchNetworkAsync) await switchNetworkAsync(chainId);
             await submitTx(async () => {
                 const tx = await claimExternalRewards(
                     signer,
@@ -81,7 +85,7 @@ export const YourRewardsTable: React.FC<IYourRewardsTableProps> = ({
                                 return (
                                     <tr
                                         key={`reward-table-row-${reward.token}`}
-                                        className="text-left transition duration-200 hover:bg-neutral-200 dark:hover:bg-neutral-900 hover:cursor-pointer"
+                                        className="text-left transition duration-150 hover:bg-neutral-200 dark:hover:bg-neutral-900 hover:cursor-pointer"
                                         onClick={
                                             () => {}
                                             // openDialog('borrow-asset-dialog', {
@@ -90,7 +94,7 @@ export const YourRewardsTable: React.FC<IYourRewardsTableProps> = ({
                                             // })
                                         }
                                     >
-                                        <td className="whitespace-nowrap p-4 text-sm sm:pl-6">
+                                        <td className="whitespace-nowrap pl-4 py-2 text-sm sm:pl-6">
                                             <AssetDisplay
                                                 name={width > 600 ? reward.asset : ''}
                                                 logo={`/coins/${reward.token}.svg`}
@@ -105,18 +109,21 @@ export const YourRewardsTable: React.FC<IYourRewardsTableProps> = ({
                                             />
                                         </td>
                                         <td>
-                                            <Button
-                                                label="Claim"
-                                                primary
-                                                onClick={() =>
-                                                    handleClaim(
-                                                        address,
-                                                        reward.token,
-                                                        reward.amountWei,
-                                                        reward.proof,
-                                                    )
-                                                }
-                                            />
+                                            <div className="h-full w-full flex justify-end items-center">
+                                                <Button
+                                                    label="Claim"
+                                                    primary
+                                                    onClick={() =>
+                                                        handleClaim(
+                                                            address,
+                                                            reward.token,
+                                                            reward.amountWei,
+                                                            reward.proof,
+                                                            reward.chainId,
+                                                        )
+                                                    }
+                                                />
+                                            </div>
                                         </td>
                                     </tr>
                                 );
