@@ -4,7 +4,7 @@ import { TESTING } from './constants';
 export const NETWORKS: Record<string, any> = {
     optimism: {
         name: 'optimism',
-        rpc: 'https://mainnet.optimism.io',
+        rpc: 'https://optimism.llamarpc.com/rpc/01HAB77HZWAN9HN4HRT2HPT31S', // https://mainnet.optimism.io
         subgraph: 'https://api.thegraph.com/subgraphs/name/vmex-finance/vmex-optimism',
         chainId: 10,
         explorer: 'https://explorer.optimism.io',
