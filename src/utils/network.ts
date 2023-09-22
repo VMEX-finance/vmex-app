@@ -48,7 +48,7 @@ export const NETWORKS: Record<string, any> = {
         subgraph: 'https://api.thegraph.com/subgraphs/name/vmex-finance/vmex-base',
         chainId: 8453,
         explorer: 'https://basescan.org',
-        backend: 'https://dolphin-app-ajfiy.ondigitalocean.app',
+        backend: 'https://seal-app-bomfb.ondigitalocean.app',
         testing: false,
         icon: '/networks/base.png',
     },
