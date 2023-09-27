@@ -21,13 +21,18 @@ export async function getUserRewards(userAddress: string) {
         const amountNative = nativeTokenFormatter.format(
             parseFloat(formatUnits(`0x${res[token].amount}`, decimals)),
         );
+        const claimableAmountNative = nativeTokenFormatter.format(
+            parseFloat(formatUnits(`0x${res[token].claimable}`, decimals)),
+        );
 
         formattedArr.push({
             token,
             asset,
             amountNative,
+            claimableAmountNative,
             proof: res[token].proof,
             amountWei: `0x${res[token].amount}`,
+            claimableAmountWei: `0x${res[token].claimable}`,
             chainId: res[token].chainId,
         });
     }

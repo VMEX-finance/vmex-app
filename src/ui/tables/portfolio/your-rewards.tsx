@@ -10,9 +10,11 @@ export type IYourRewardsTableItemProps = {
     asset: string;
     amountUsd: string;
     amountNative: string;
+    claimableAmountNative: string;
     token: string;
     proof: string[];
     amountWei: string;
+    claimableAmountWei: string;
     chainId?: number;
 };
 
@@ -102,7 +104,7 @@ export const YourRewardsTable: React.FC<IYourRewardsTableProps> = ({
                                         </td>
                                         <td>
                                             <NumberAndDollar
-                                                value={reward.amountNative}
+                                                value={reward.claimableAmountNative}
                                                 dollar={reward.amountUsd}
                                                 size="xs"
                                                 color="text-brand-black"
@@ -113,6 +115,7 @@ export const YourRewardsTable: React.FC<IYourRewardsTableProps> = ({
                                                 <Button
                                                     label="Claim"
                                                     primary
+                                                    disabled={reward.claimableAmountWei === '0x0'}
                                                     onClick={() =>
                                                         handleClaim(
                                                             address,
