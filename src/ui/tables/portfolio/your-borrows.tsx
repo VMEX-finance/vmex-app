@@ -62,7 +62,7 @@ export const YourBorrowsTable: React.FC<IYourBorrowsTableProps> = ({
                             >
                                 <td className="whitespace-nowrap p-4 text-sm sm:pl-6">
                                     <AssetDisplay
-                                        name={width > 600 ? i.asset : ''}
+                                        name={i.asset}
                                         logo={`/coins/${i.asset?.toLowerCase()}.svg`}
                                     />{' '}
                                 </td>

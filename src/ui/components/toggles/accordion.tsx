@@ -21,6 +21,9 @@ const Accordion = styled((props: AccordionProps) => (
     '&:before': {
         display: 'none',
     },
+    '& .MuiButtonBase-root': {
+        padding: '0 16px 0 0',
+    },
 }));
 
 const AccordionSummary = styled((props: AccordionSummaryProps) => {
@@ -36,7 +39,8 @@ const AccordionSummary = styled((props: AccordionSummaryProps) => {
         transform: 'rotate(0deg)',
     },
     '& .MuiAccordionSummary-content': {
-        marginLeft: theme.spacing(1),
+        margin: '0',
+        padding: '0.5rem 0',
     },
 }));
 
@@ -71,7 +75,7 @@ export function DefaultAccordion({
                     noIcon ? (
                         <></>
                     ) : (
-                        <RiArrowDropDownLine fontSize="30px" color={isDark ? '#f5f5f5' : 'gray'} />
+                        <RiArrowDropDownLine fontSize="28px" color={isDark ? '#f5f5f5' : 'gray'} />
                     )
                 }
                 aria-controls={`${title}-content`}
