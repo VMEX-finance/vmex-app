@@ -58,8 +58,8 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                 <div className="max-w-[500px]">
                     {view ? (
                         <LinkButton onClick={routeChange}>
-                            <BiChevronLeft size="22px" />
-                            <p className="text-lg">Back</p>
+                            <BiChevronLeft size="20px" />
+                            <p className="text-lg leading-tight">Back</p>
                         </LinkButton>
                     ) : (
                         <>
@@ -93,7 +93,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                                         {tranche?.category && (
                                             <Label
                                                 tooltip
-                                                className="!py-0.5 !text-xs md:absolute md:left-1/2 md:-translate-x-1/2"
+                                                className="!py-0.5 !text-xs md:absolute md:left-1/2 md:-translate-x-1/2 mt-1 md:mt-3 xl:mt-4"
                                             >
                                                 {tranche?.category || 'Unknown'}
                                             </Label>
@@ -102,7 +102,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                                 </div>
                             )}
                         </div>
-                        <div className="flex gap-3 md:justify-end">
+                        <div className="flex gap-2 md:justify-end">
                             <LinkButton
                                 onClick={() => setView('tranche-overview')}
                                 disabled={!isConnected}
