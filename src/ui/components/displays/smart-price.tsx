@@ -2,6 +2,7 @@ import React from 'react';
 
 function SmartPrice({ price }: { price: string }) {
     if (price === 'N/A' && !price) return <>-</>;
+    if (Number(price) === 0) return <>0.0</>;
     const textClass = 'flex items-center';
 
     // The case where the price is not too small
