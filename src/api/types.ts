@@ -104,6 +104,7 @@ export interface AssetBalance {
 }
 
 export interface TrancheData {
+    id: string;
     name: string;
     totalSupplied: string;
     totalBorrowed: string;

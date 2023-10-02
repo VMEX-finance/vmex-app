@@ -1,6 +1,5 @@
 import React from 'react';
 import { TopTranchesTable } from '../tables';
-import { useWindowSize } from '@/hooks';
 import { makeCompact } from '@/utils';
 import { AssetBalance, TrancheData } from '@/api';
 import {
@@ -42,8 +41,6 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
     isLoading,
     tvlChart,
 }) => {
-    const { width } = useWindowSize();
-
     const renderTopAssetsList = (_arr: AssetBalance[] | undefined) => {
         if (!_arr) return [];
         else {
@@ -116,7 +113,7 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                     </div>
                 </div>
 
-                <div className="py-2 md:py-4 xl:py-0 xl:px-6 grid grid-cols-1 lg:grid-cols-3 gap-4 w-full">
+                <div className="py-2 md:py-4 xl:py-0 xl:px-6 grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4 w-full">
                     <div className="flex flex-col gap-2">
                         <NumberDisplay
                             size="xl"
@@ -173,7 +170,7 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                         </div>
                     </div>
 
-                    <div className="flex flex-col gap-1">
+                    <div className="flex flex-col gap-1 lg:col-span-2 2xl:col-span-1">
                         <span>Top Tranches</span>
                         <div className="flex flex-col">
                             <TopTranchesTable data={topTranches || []} loading={isLoading} />

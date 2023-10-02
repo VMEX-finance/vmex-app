@@ -240,6 +240,7 @@ export async function getSubgraphProtocolData(): Promise<IGraphProtocolDataProps
     allTrancheData.map((el) => {
         if (topTranches.length < 5) {
             topTranches.push({
+                id: String(el.id || ''),
                 name: el.name || '-',
                 totalBorrowed: el.borrowTotal?.toString() || '-',
                 totalSupplied: el.supplyTotal?.toString() || '-',
