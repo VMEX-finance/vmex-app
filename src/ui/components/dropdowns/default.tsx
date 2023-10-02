@@ -73,7 +73,7 @@ export const DefaultDropdown = ({
         : 'hover:bg-neutral-100';
 
     const textSize = size === 'lg' ? 'text-md' : 'text-sm';
-    const iconSize = size === 'lg' ? '30px' : '24px';
+    const iconSize = size === 'lg' ? '28px' : '20px';
     const paddingSize = size === 'lg' ? 'py-1 pl-4 pr-2' : 'pl-2';
     const withBorder = border ? 'border border-brand-black' : '';
     const roundedSize = size === 'lg' ? 'rounded-lg' : 'rounded-md';

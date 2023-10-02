@@ -26,9 +26,9 @@ export const BasicToggle = ({
         switch (size) {
             case 'large':
                 return [
-                    'h-7 w-14',
-                    'h-5 w-5',
-                    checked || enabled ? 'translate-x-8' : 'translate-x-1',
+                    'h-6 w-11 2xl:h-7 2xl:w-14',
+                    'h-4 w-4 2xl:h-5 2xl:w-5',
+                    checked || enabled ? 'translate-x-6 2xl:translate-x-8' : 'translate-x-1',
                 ];
             case 'small':
                 return [
@@ -38,9 +38,11 @@ export const BasicToggle = ({
                 ];
             default:
                 return [
-                    'h-6 w-11',
-                    'h-4 w-4',
-                    checked || enabled ? 'translate-x-6' : 'translate-x-1',
+                    'h-[18px] w-8 2xl:h-6 2xl:w-11',
+                    'h-3 w-3 2xl:h-4 2xl:w-4',
+                    checked || enabled
+                        ? 'translate-x-[1.1rem] 2xl:translate-x-6'
+                        : 'translate-x-[0.15rem] 2xl:translate-x-1',
                 ];
         }
     };

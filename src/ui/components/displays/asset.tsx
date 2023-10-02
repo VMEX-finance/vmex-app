@@ -59,7 +59,7 @@ export const renderAsset = (
         >
             <img
                 src={determineCoinImg(asset, custom)}
-                className={`${size ? iconSizeClass(size) : 'h-8 w-8'}`}
+                className={`${size ? iconSizeClass(size) : 'h-7 2xl:h-8 w-7 2xl:w-8'}`}
                 alt={asset}
                 key={`render-asset-${key || i || asset}-${getRandomNumber()}`}
             />
@@ -70,13 +70,13 @@ export const renderAsset = (
 export const iconSize = (size?: 'lg' | 'md' | 'sm' | 'pill') => {
     switch (size) {
         case 'lg':
-            return '40';
+            return '36';
         case 'pill':
             return '24';
         case 'sm':
-            return '20';
+            return '18';
         default:
-            return '30';
+            return '28';
     }
 };
 export const smallerIconSize = (size?: 'lg' | 'md' | 'sm' | 'pill') => {
@@ -93,7 +93,7 @@ export const smallerIconSize = (size?: 'lg' | 'md' | 'sm' | 'pill') => {
 export const iconSizeClass = (size?: 'lg' | 'md' | 'sm' | 'pill') => {
     switch (size) {
         case 'lg':
-            return 'h-8 w-8';
+            return 'h-7 2xl:h-8 w-7 2xl:w-8';
         case 'sm':
             return 'h-4 w-4';
         default:
