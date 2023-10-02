@@ -143,16 +143,16 @@ export const YourPositionsTable: React.FC<IYourPositionsProps> = ({ type, data, 
         <Card loading={isLoading} title={`Your ${determineTitle()}`} titleClass="text-lg mb-8">
             {data && data.length !== 0 ? (
                 <div>
-                    <div
-                        className={`grid items-center grid-cols-4 w-full text-sm font-semibold pr-4 pl-[52px] pb-1 border-b ${
+                    <ul
+                        className={`grid items-center grid-cols-4 w-full text-sm font-semibold pl-6 pr-3 pb-1 border-b ${
                             isDark ? 'border-neutral-800' : 'border-neutral-300'
                         }`}
                     >
-                        <span className="">ID</span>
-                        <span className="">Tranche</span>
-                        <span className="justify-self-end">Assets</span>
-                        <span className="justify-self-end">Health</span>
-                    </div>
+                        <li className="">ID</li>
+                        <li className="">Tranche</li>
+                        <li className="justify-self-end">Assets</li>
+                        <li className="justify-self-end">Health</li>
+                    </ul>
                     {determineTable()}
                 </div>
             ) : (

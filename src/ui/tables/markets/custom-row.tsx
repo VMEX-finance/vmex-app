@@ -137,7 +137,7 @@ const MarketsCustomRow = (props: any) => {
                 <td className="whitespace-nowrap pl-2 md:pl-4 pr-2 text-sm">
                     <AssetDisplay name={asset} />
                 </td>
-                <td className="min-w-[150px] pl-4 py-4">{tranche}</td>
+                <td className="min-w-[150px] pl-4 py-3 2xl:py-4">{tranche}</td>
                 <td className="pl-4">
                     <ApyToolitp symbol={asset} oldApy={supplyApy} />
                 </td>

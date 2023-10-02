@@ -60,7 +60,7 @@ export const Button = ({
                 'box-border',
                 'font-basefont',
                 `${typeof label === 'string' ? 'px-4' : 'px-2'} py-1`,
-                'transition duration-200',
+                'transition duration-150',
                 `${
                     type === 'delete'
                         ? '!bg-red-600 !text-white !border-red-600 hover:!bg-red-500 hover:!border-red-500 disabled:!text-white'

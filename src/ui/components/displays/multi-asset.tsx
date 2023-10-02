@@ -37,7 +37,7 @@ export const MultipleAssetsDisplay = ({ assets, show = 4, size, gap }: IMultiple
     return (
         <div
             className={`flex flex-wrap items-center ${
-                gap ? gap : `${show === 'all' ? 'gap-3' : 'xl:gap-2'}`
+                gap ? gap : `${show === 'all' ? 'gap-3' : 'gap-1 2xl:gap-1.5'}`
             }`}
             key={`multiple-assets-display-${getRandomNumber()}`}
         >
@@ -54,7 +54,9 @@ export const MultipleAssetsDisplay = ({ assets, show = 4, size, gap }: IMultiple
                 : [1, 2, 3, 4].map((el) => (
                       <SkeletonLoader
                           key={`${el}-${getRandomNumber()}`}
-                          className={`${size ? iconSizeClass(size) : '!h-8 !w-8'}`}
+                          className={`${
+                              size ? iconSizeClass(size) : '!h-7 2xl:!h-8 !w-7 2xl:!w-8'
+                          }`}
                           variant="circular"
                       />
                   ))}
@@ -108,7 +110,7 @@ export const MultipleAssetsDisplayOverlapping = ({
                                 key={`tranches-asset-${i}-${getRandomNumber()}`}
                                 src={determineCoinImg(el)}
                                 alt={el}
-                                className={`${size ? iconSizeClass(size) : 'h-8 w-8'}`}
+                                className={`${size ? iconSizeClass(size) : 'h-7 w-7'}`}
                                 style={{
                                     position: 'relative',
                                     zIndex: i, // Increase zIndex for overlapping effect
@@ -120,7 +122,7 @@ export const MultipleAssetsDisplayOverlapping = ({
                 ) : (
                     <SkeletonLoader
                         variant="circular"
-                        className={`${size ? iconSizeClass(size) : 'h-8 w-8'}`}
+                        className={`${size ? iconSizeClass(size) : 'h-7 w-7'}`}
                         key={`skeleton-loader-multiple-assets-${getRandomNumber()}`}
                     />
                 )}

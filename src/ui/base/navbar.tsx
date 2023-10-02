@@ -33,7 +33,7 @@ export const Navbar: React.FC = () => {
     }
 
     return (
-        <nav className="flex justify-center flex-row sticky h-fit items-center top-0 font-basefont px-3 md:px-4 py-2 lg:px-5 2xl:px-10 lg:py-4 bg-neutral-900 dark:bg-brand-black lg:bg-[#FFF] z-[1000] shadow-lg lg:shadow-md">
+        <nav className="flex justify-center flex-row sticky h-fit items-center top-0 font-basefont px-3 md:px-4 py-2 lg:px-5 2xl:px-10 lg:py-3 bg-neutral-900 dark:bg-brand-black lg:bg-[#FFF] z-[1000] shadow-lg lg:shadow-md">
             <div
                 className={`w-full max-w-[150rem]
                 ${
@@ -44,14 +44,15 @@ export const Navbar: React.FC = () => {
             `}
             >
                 {/* Desktop/Mobile Left Nav */}
-                <div className="flex items-center gap-6 xl:gap-8">
+                <div className="flex items-center gap-4 xl:gap-6">
                     <a id="nav-logo" className="flex items-center gap-2" href="/">
                         <img
                             src={
                                 isDark && width >= 1024 ? '/VMEX-logo-white.svg' : '/VMEX-logo.svg'
                             }
                             alt="VMEX Finance Logo"
-                            width="85"
+                            width="72"
+                            height="42.66"
                             className="invert lg:invert-0"
                         />
                     </a>
@@ -79,7 +80,7 @@ export const Navbar: React.FC = () => {
                 )}
 
                 {/* Desktop/Mobile Right Nav */}
-                <div className="flex items-center justify-end gap-2">
+                <div className="flex items-center justify-end gap-1.5">
                     {width <= breakpoints.lg && <ToggleThemeButton />}
                     <DefaultDropdown
                         selected={
@@ -92,9 +93,7 @@ export const Navbar: React.FC = () => {
                         }
                         items={renderNetworks(switchNetworkAsync)}
                         size="lg"
-                        className={`border border-1 border-brand-black ${
-                            width < 1400 ? '!py-[0.45rem]' : ''
-                        } bg-white hover:bg-neutral-100 !px-0 !pl-2 !py-[5px] lg:!py-1`}
+                        className={`border border-1 lg:border-brand-black lg:bg-white lg:hover:bg-neutral-100 !px-0 !pl-2 !py-1 lg:!py-1`}
                         icon
                     />
 
@@ -128,8 +127,8 @@ const MobileDropdownMenu = ({
     return (
         <Menu as="div" className="relative inline-block">
             <div>
-                <Menu.Button className="inline-flex justify-center w-full rounded-md border shadow-sm px-2 md:px-3 py-1 bg-neutral-100 text-sm font-medium text-neutral-900 focus:outline-none focus:ring-2 focus:ring-offset-2">
-                    <HiOutlineMenuAlt3 size="30px" />
+                <Menu.Button className="inline-flex justify-center w-full rounded-md border shadow-sm px-2 md:px-3 py-1 bg-neutral-900 text-sm font-medium text-neutral-100 focus:outline-none focus:ring-0">
+                    <HiOutlineMenuAlt3 size="26px" />
                 </Menu.Button>
             </div>
 
