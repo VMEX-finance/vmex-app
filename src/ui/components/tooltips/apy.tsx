@@ -13,7 +13,6 @@ export const ApyToolitp = ({ symbol, oldApy }: { symbol?: string; oldApy?: numbe
         const { apysByToken, asset, assetType, name, symbol, totalApy } = rewardApy;
         const percent = percentFormatter.format(Number(totalApy) / 100);
         if (apysByToken?.length) {
-            console.log('suppy apy', apysByToken);
             return (
                 <Tooltip id={`${asset}-${getRandomNumber()}`} content={percent}>
                     <div className="min-w-[120px]">

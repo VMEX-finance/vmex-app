@@ -125,14 +125,13 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                 {(location.pathname === `/tranches` || location.pathname === '/portfolio') &&
                     isConnected &&
                     !chain?.unsupported && (
-                        <div className="flex gap-2 xl:gap-3 md:justify-end">
+                        <div className="flex gap-1 xl:gap-2 items-center md:justify-end">
                             {queryTrancheAdminData.data?.length &&
                             queryTrancheAdminData.data?.length > 0 ? (
                                 <Button
                                     label={'My Tranches'}
                                     onClick={() => navigate(`/my-tranches`)}
                                     primary
-                                    className="h-full sm:h-auto"
                                 />
                             ) : (
                                 <Tooltip text="Create a tranche first" position="left">
@@ -140,14 +139,13 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                                         label={'My Tranches'}
                                         primary
                                         disabled={queryTrancheAdminData?.data?.length === 0}
-                                        className="h-full sm:h-auto"
                                     />
                                 </Tooltip>
                             )}
                             {/* TODO: enable for OP when backend enables creating tranches */}
                             <Tooltip text="Coming soon">
                                 <Button
-                                    label={width > 768 ? 'Create Tranche' : <BiPlus size="28px" />}
+                                    label={width > 768 ? 'Create Tranche' : <BiPlus size="24px" />}
                                     onClick={() => openDialog('create-tranche-dialog')}
                                     primary
                                     disabled

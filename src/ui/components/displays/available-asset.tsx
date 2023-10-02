@@ -1,5 +1,6 @@
 import React from 'react';
 import { AssetDisplay } from './asset';
+import { SmartPrice } from './smart-price';
 
 type IAvailableAssetDisplayProps = {
     asset: string;
@@ -37,7 +38,9 @@ export const AvailableAssetDisplay = ({
                 <span className="text-neutral-600 text-sm">
                     {amount || 0} {asset.toUpperCase()}
                 </span>
-                <span className="text-blue-700 text-sm">Balance: {balance || 0}</span>
+                <span className="text-blue-700 text-sm">
+                    Balance: {<SmartPrice price={String(balance) || '0'} />}
+                </span>
             </div>
         </div>
     );

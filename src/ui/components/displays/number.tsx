@@ -1,6 +1,7 @@
 import React from 'react';
 import { SkeletonLoader } from '../loaders';
 import { PercentChangeDisplay } from './percent-change';
+import { SmartPrice } from './smart-price';
 
 type INumberProps = {
     label?: string;
@@ -56,7 +57,9 @@ export const NumberDisplay = ({
                     width={valueSize().skeletonWidth}
                 />
             ) : (
-                <span className={`${valueSize().css} ${color}`}>{value}</span>
+                <span className={`${valueSize().css} ${color}`}>
+                    <SmartPrice price={String(value)} />
+                </span>
             )}
             {/* TODO: calculate percentage changed */}
             {change && <PercentChangeDisplay value={change} />}

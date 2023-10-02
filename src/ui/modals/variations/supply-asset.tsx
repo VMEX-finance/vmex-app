@@ -18,6 +18,7 @@ import {
     SecondaryButton,
     DefaultAccordion,
     DefaultInput,
+    SmartPrice,
 } from '@/ui/components';
 import { BigNumber } from 'ethers';
 import { ISupplyBorrowProps } from '../utils';
@@ -160,7 +161,11 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                             content={[
                                 {
                                     label: 'Supply APR',
-                                    value: `${apy || '0.00%'}`,
+                                    value: (
+                                        <span className="flex items-center">
+                                            <SmartPrice price={String(apy) || '0.00'} />%
+                                        </span>
+                                    ),
                                 },
                                 {
                                     label: 'Collateralization',

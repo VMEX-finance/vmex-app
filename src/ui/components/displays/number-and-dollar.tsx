@@ -1,4 +1,5 @@
 import React from 'react';
+import { SmartPrice } from './smart-price';
 
 type INumberAndDollarProps = {
     label?: string;
@@ -33,7 +34,9 @@ export const NumberAndDollar = ({
             className={`flex flex-col ${color ? color : 'text-brand-purple'} dark:text-neutral-300`}
         >
             {label && <span className="text-neutral-100">{label}</span>}
-            <span className={`${determineSize()[0]} leading-4`}>{value || '0.0'}</span>
+            <span className={`${determineSize()[0]} leading-4`}>
+                <SmartPrice price={String(value) || '0.0'} />
+            </span>
             {dollar && (
                 <span
                     className={`${determineSize()[1]} leading-4 ${color ? 'text-neutral-500' : ''}`}

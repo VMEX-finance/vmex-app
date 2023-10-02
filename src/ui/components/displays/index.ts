@@ -7,3 +7,4 @@ export * from './multi-asset';
 export * from './health';
 export * from './legend';
 export * from './label';
+export * from './smart-price';

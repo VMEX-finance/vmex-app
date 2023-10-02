@@ -7,6 +7,7 @@ import { Button, SecondaryButton } from '../buttons';
 import { usePricesData } from '@/api';
 import { BigNumber, utils } from 'ethers';
 import { getNetwork } from '@wagmi/core';
+import { SmartPrice } from '../displays';
 
 export interface ICoinInput {
     amount: string;
@@ -115,7 +116,7 @@ export const CoinInput = ({
                         disabled={disabled}
                     >
                         <span>MAX</span>
-                        <p>
+                        <p className="flex items-center gap-1">
                             {`${
                                 type === 'collateral'
                                     ? 'Amount Borrowable'
@@ -123,7 +124,7 @@ export const CoinInput = ({
                                     ? 'Amount Owed'
                                     : 'Balance'
                             }:`}{' '}
-                            {balance || 0}
+                            {<SmartPrice price={String(balance) || '0'} />}
                         </p>
                     </SecondaryButton>
                 </div>

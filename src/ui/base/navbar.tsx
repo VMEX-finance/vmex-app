@@ -93,7 +93,7 @@ export const Navbar: React.FC = () => {
                         }
                         items={renderNetworks(switchNetworkAsync)}
                         size="lg"
-                        className={`border border-1 border-brand-black bg-white hover:bg-neutral-100 !px-0 !pl-2 !py-1 lg:!py-1`}
+                        className={`border border-1 lg:border-brand-black lg:bg-white lg:hover:bg-neutral-100 !px-0 !pl-2 !py-1 lg:!py-1`}
                         icon
                     />
 
@@ -127,7 +127,7 @@ const MobileDropdownMenu = ({
     return (
         <Menu as="div" className="relative inline-block">
             <div>
-                <Menu.Button className="inline-flex justify-center w-full rounded-md border shadow-sm px-2 md:px-3 py-1 bg-neutral-100 text-sm font-medium text-neutral-900 focus:outline-none focus:ring-2 focus:ring-offset-2">
+                <Menu.Button className="inline-flex justify-center w-full rounded-md border shadow-sm px-2 md:px-3 py-1 bg-neutral-900 text-sm font-medium text-neutral-100 focus:outline-none focus:ring-0">
                     <HiOutlineMenuAlt3 size="26px" />
                 </Menu.Button>
             </div>
