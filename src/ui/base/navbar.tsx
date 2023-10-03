@@ -64,7 +64,7 @@ export const Navbar: React.FC = () => {
                     <div className="justify-self-center">
                         <div
                             className={
-                                'grid grid-flow-col auto-cols-max justify-between gap-2 2xl:gap-3 w-max p-2 shadow-neutral-500 shadow-inner dark:shadow-black bg-brand-black dark:bg-neutral-900 rounded-2xl'
+                                'grid grid-flow-col auto-cols-max justify-between gap-1 2xl:gap-1.5 w-max p-1.5 shadow-neutral-500 shadow-inner dark:shadow-black bg-brand-black dark:bg-neutral-900 rounded-2xl'
                             }
                         >
                             {navItems.map((item) => (
@@ -93,7 +93,7 @@ export const Navbar: React.FC = () => {
                         }
                         items={renderNetworks(switchNetworkAsync)}
                         size="lg"
-                        className={`border border-1 lg:border-brand-black lg:bg-white lg:hover:bg-neutral-100 !px-0 !pl-2 !py-1 lg:!py-1`}
+                        className={`border border-1 lg:border-brand-black lg:bg-white lg:hover:bg-neutral-100 !px-0 !pl-2 !py-1 lg:!py-[4px]`}
                         icon
                     />
 

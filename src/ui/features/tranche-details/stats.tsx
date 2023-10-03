@@ -76,16 +76,16 @@ export const TrancheStatisticsCard = ({
                             items={renderDropdown()}
                             selected={asset || 'Loading'}
                             setSelected={setAsset}
+                            className="!bg-neutral-100"
                         />
                     </div>
                 }
             >
+                <>{console.log('assetData', assetData)}</>
                 <div className="flex gap-6 mb-3 mt-1">
                     <NumberDisplay
                         label="Supply APY"
-                        value={
-                            <ApyToolitp symbol={asset} oldApy={assetData?.supplyRate as string} />
-                        }
+                        value={<ApyToolitp symbol={asset} oldApy={String(assetData?.supplyRate)} />}
                         color="text-brand-green"
                     />
                     <NumberDisplay
@@ -141,7 +141,7 @@ export const TrancheStatisticsCard = ({
                                     ),
                                 )}
                                 color="text-white"
-                                center
+                                align="center"
                             />
                             {assetData?.canBeBorrowed && (
                                 <NumberDisplay
@@ -155,7 +155,7 @@ export const TrancheStatisticsCard = ({
                                         ),
                                     )}
                                     color="text-white"
-                                    center
+                                    align="center"
                                 />
                             )}
                             <NumberDisplay
@@ -169,7 +169,7 @@ export const TrancheStatisticsCard = ({
                                     ),
                                 )}
                                 color="text-white"
-                                center
+                                align="center"
                             />
                             <NumberDisplay
                                 label="Liq. Bonus"
@@ -182,13 +182,13 @@ export const TrancheStatisticsCard = ({
                                     ),
                                 )}`}
                                 color="text-white"
-                                center
+                                align="center"
                             />
                             <NumberDisplay
                                 label="Collateral"
                                 value={`${assetData?.collateral ? 'Yes' : 'No'}`}
                                 color="text-white"
-                                center
+                                align="center"
                             />
                             <NumberDisplay
                                 label="Supply Cap"
@@ -209,7 +209,7 @@ export const TrancheStatisticsCard = ({
                                     )
                                 }
                                 color="text-white"
-                                center
+                                align="center"
                             />
                             {assetData?.canBeBorrowed && (
                                 <NumberDisplay
@@ -231,26 +231,26 @@ export const TrancheStatisticsCard = ({
                                         )
                                     }
                                     color="text-white"
-                                    center
+                                    align="center"
                                 />
                             )}
                             <NumberDisplay
                                 label="Oracle"
                                 value={assetData?.oracle as any}
                                 color="text-white"
-                                center
+                                align="center"
                             />
                             <NumberDisplay
                                 label="Total Supplied"
                                 value={`${numberFormatter.format(assetData?.totalSupplied as any)}`}
                                 color="text-white"
-                                center
+                                align="center"
                             />
                             <NumberDisplay
                                 label="Utilization"
                                 value={percentFormatter.format(assetData?.utilityRate as any)}
                                 color="text-white"
-                                center
+                                align="center"
                             />
                             {assetData?.canBeBorrowed && (
                                 <NumberDisplay
@@ -259,7 +259,7 @@ export const TrancheStatisticsCard = ({
                                         assetData?.totalBorrowed as any,
                                     )}`}
                                     color="text-white"
-                                    center
+                                    align="center"
                                 />
                             )}
                             <NumberDisplay
@@ -273,7 +273,7 @@ export const TrancheStatisticsCard = ({
                                     ),
                                 )}
                                 color="text-white"
-                                center
+                                align="center"
                             />
                             <NumberDisplay
                                 label="Platform Fee"
@@ -286,7 +286,7 @@ export const TrancheStatisticsCard = ({
                                     ),
                                 )}
                                 color="text-white"
-                                center
+                                align="center"
                             />
                         </div>
                     )}

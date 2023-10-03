@@ -87,6 +87,7 @@ const baseChain: Chain | any = {
 };
 
 export const DEFAULT_NETWORK = 'optimism';
+export const DEFAULT_CHAINID = 10;
 
 export const availableNetworks = (type: 'wagmi' | 'string') => {
     if (type === 'wagmi') {

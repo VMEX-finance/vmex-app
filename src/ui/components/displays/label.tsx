@@ -31,7 +31,7 @@ export const Label = ({ children, className = '', color = 'purple', tooltip }: I
             customClass = 'bg-gradient-to-r from-neutral-500 to-gray-400';
         }
         return {
-            class: `px-2 py-1 text-xs text-neutral-100 sm:text-sm font-semibold rounded-lg text-center ${customClass} ${color} ${className}`,
+            class: `px-1.5 2xl:px-2 py-0.5 text-xs text-neutral-100 sm:text-sm font-semibold rounded-lg text-center ${customClass} ${color} ${className}`,
             tooltip: _tooltip,
         };
     };

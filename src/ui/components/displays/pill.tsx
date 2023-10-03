@@ -29,9 +29,11 @@ export const PillDisplay = ({ asset, value, type, formatter = 'usd' }: IPillDisp
             <div className="bg-neutral-300 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 rounded-3xl flex items-center gap-4 w-fit pl-1.5 pr-2 2xl:pl-2 2xl:pr-2.5 py-1">
                 <div className="flex gap-1">
                     <AssetDisplay name={asset} size="pill" noText />
-                    <span className="text-lg whitespace-nowrap truncate">{asset}</span>
+                    <span className="2xl:text-lg whitespace-nowrap truncate max-w-[100px]">
+                        {asset}
+                    </span>
                 </div>
-                {value && <span className="text-lg">{determineFormat(value)}</span>}
+                {value && <span className="">{determineFormat(value)}</span>}
             </div>
         );
     } else {

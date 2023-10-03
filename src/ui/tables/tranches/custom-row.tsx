@@ -126,7 +126,7 @@ const TranchesCustomRow = (props: ITranchesCustomRowProps) => {
                 className="text-left transition duration-200 hover:bg-neutral-200 dark:hover:bg-neutral-900 hover:cursor-pointer border-y-[1px] dark:border-neutral-800"
                 onClick={(e: any) => route(e, props)}
             >
-                <td className="whitespace-nowrap py-3 2xl:py-4 pl-2 md:pl-4 pr-3">
+                <td className="whitespace-nowrap py-3 pl-2 md:pl-4 pr-3">
                     <span>{id}</span>
                 </td>
                 <td className="whitespace-nowrap pl-4">

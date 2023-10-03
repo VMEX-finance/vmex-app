@@ -134,7 +134,7 @@ export const DefaultDropdown = ({
 
             <Menu as="div" className={`relative inline-block ${full ? 'w-full' : ''}`}>
                 <Menu.Button
-                    className={`dark:bg-neutral-100 dark:hover:bg-neutral-200 dark:!text-neutral-900
+                    className={`
                         inline-flex items-center w-full focus:outline-none focus:ring-none transition duration-100
                         ${className ? className : ''} 
                         ${determineColor()} 
