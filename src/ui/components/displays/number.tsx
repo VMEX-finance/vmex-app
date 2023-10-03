@@ -58,7 +58,7 @@ export const NumberDisplay = ({
                 />
             ) : (
                 <span className={`${valueSize().css} ${color}`}>
-                    <SmartPrice price={String(value)} />
+                    {typeof value === 'string' ? <SmartPrice price={String(value)} /> : value}
                 </span>
             )}
             {/* TODO: calculate percentage changed */}

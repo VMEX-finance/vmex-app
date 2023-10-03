@@ -59,7 +59,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                     {view ? (
                         <LinkButton onClick={routeChange}>
                             <BiChevronLeft size="20px" />
-                            <p className="text-lg leading-tight">Back</p>
+                            <p className="2xl:text-lg leading-tight">Back</p>
                         </LinkButton>
                     ) : (
                         <>
@@ -102,11 +102,11 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                                 </div>
                             )}
                         </div>
-                        <div className="flex gap-2 md:justify-end">
+                        <div className="flex gap-1.5 2xl:gap-2 md:justify-end">
                             <LinkButton
                                 onClick={() => setView('tranche-overview')}
                                 disabled={!isConnected}
-                                className="text-lg px-1"
+                                className="2xl:text-lg px-1"
                                 highlight={view.includes('tranche-overview')}
                             >
                                 Supply/Borrow
@@ -114,7 +114,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                             <LinkButton
                                 onClick={() => setView('tranche-details')}
                                 disabled={!isConnected}
-                                className="text-lg px-1"
+                                className="2xl:text-lg px-1"
                                 highlight={view.includes('tranche-details')}
                             >
                                 Details
@@ -125,7 +125,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                 {(location.pathname === `/tranches` || location.pathname === '/portfolio') &&
                     isConnected &&
                     !chain?.unsupported && (
-                        <div className="flex gap-1 xl:gap-2 items-center md:justify-end">
+                        <div className="flex gap-1 2xl:gap-1.5 items-center md:justify-end">
                             {queryTrancheAdminData.data?.length &&
                             queryTrancheAdminData.data?.length > 0 ? (
                                 <Button

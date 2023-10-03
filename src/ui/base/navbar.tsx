@@ -64,7 +64,7 @@ export const Navbar: React.FC = () => {
                     <div className="justify-self-center">
                         <div
                             className={
-                                'grid grid-flow-col auto-cols-max justify-between gap-1.5 xl:gap-2 w-max p-1.5 shadow-neutral-500 shadow-inner dark:shadow-black bg-brand-black dark:bg-neutral-900 rounded-2xl'
+                                'grid grid-flow-col auto-cols-max justify-between gap-1 2xl:gap-1.5 w-max p-1.5 shadow-neutral-500 shadow-inner dark:shadow-black bg-brand-black dark:bg-neutral-900 rounded-2xl'
                             }
                         >
                             {navItems.map((item) => (

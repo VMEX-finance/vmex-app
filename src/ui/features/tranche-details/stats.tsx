@@ -76,16 +76,16 @@ export const TrancheStatisticsCard = ({
                             items={renderDropdown()}
                             selected={asset || 'Loading'}
                             setSelected={setAsset}
+                            className="!bg-neutral-100"
                         />
                     </div>
                 }
             >
+                <>{console.log('assetData', assetData)}</>
                 <div className="flex gap-6 mb-3 mt-1">
                     <NumberDisplay
                         label="Supply APY"
-                        value={
-                            <ApyToolitp symbol={asset} oldApy={assetData?.supplyRate as string} />
-                        }
+                        value={<ApyToolitp symbol={asset} oldApy={String(assetData?.supplyRate)} />}
                         color="text-brand-green"
                     />
                     <NumberDisplay
