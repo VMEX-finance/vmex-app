@@ -169,7 +169,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                 )
                             }
                         >
-                            <td className="whitespace-nowrap py-3 2xl:py-4 pl-4 pr-3 text-sm sm:pl-6">
+                            <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm sm:pl-6">
                                 <div className="flex items-center">
                                     <div className="flex flex-col justify-center gap-1 absolute -translate-x-4">
                                         {isSuppliedOrBorrowed(el.asset) && (
