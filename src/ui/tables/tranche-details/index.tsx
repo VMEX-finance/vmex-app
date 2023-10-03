@@ -1,5 +1,5 @@
 import { useSubgraphTrancheData, useUserData, useUserTrancheData, AvailableAsset } from '@/api';
-import { useAccount } from 'wagmi';
+import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
 import React, { useMemo } from 'react';
 import { BsCheck } from 'react-icons/bs';
 import { IoIosClose } from 'react-icons/io';
@@ -16,10 +16,13 @@ import {
     PRICING_DECIMALS,
     DEFAULT_NETWORK,
     usdFormatter,
+    NETWORKS,
+    DEFAULT_CHAINID,
 } from '@/utils';
 import { useLocation } from 'react-router-dom';
 import { IYourSuppliesTableItemProps } from '../portfolio';
 import { getNetwork } from '@wagmi/core';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 
 interface ITableProps {
     data: AvailableAsset[];
@@ -37,6 +40,8 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
         findAssetInUserSuppliesOrBorrows,
         findAssetInRewards,
     } = useUserTrancheData(address, location.state?.trancheId);
+    const { openConnectModal } = useConnectModal();
+    const { switchNetworkAsync } = useSwitchNetwork();
     const { findAssetInMarketsData } = useSubgraphTrancheData(location.state?.trancheId);
     const { openDialog } = useDialogController();
 
@@ -102,6 +107,20 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
         ? DEFAULT_NETWORK
         : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
 
+    const handleClick = (e: any, row: any) => {
+        if (!address && openConnectModal) {
+            return openConnectModal();
+        }
+        if (getNetwork()?.chain?.unsupported && switchNetworkAsync) {
+            return switchNetworkAsync(DEFAULT_CHAINID);
+        }
+        return openDialog(type === 'supply' ? 'loan-asset-dialog' : 'borrow-asset-dialog', {
+            asset: row.asset,
+            trancheId: tranche.id,
+            collateral: row.canBeCollat,
+        });
+    };
+
     // Uncomment if want to enable collateral toggle from the table
     // const handleCollateral = async (el: AvailableAsset, index: number) => {
     //     const { asset, canBeCollat } = el;
@@ -158,16 +177,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                         <tr
                             key={`${el.asset}-${i}`}
                             className="text-left transition duration-200 hover:bg-neutral-200 dark:hover:bg-neutral-900 hover:cursor-pointer"
-                            onClick={() =>
-                                openDialog(
-                                    type === 'supply' ? 'loan-asset-dialog' : 'borrow-asset-dialog',
-                                    {
-                                        asset: el.asset,
-                                        trancheId: tranche.id,
-                                        collateral: el.canBeCollat,
-                                    },
-                                )
-                            }
+                            onClick={(e) => handleClick(e, el)}
                         >
                             <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm sm:pl-6">
                                 <div className="flex items-center">
