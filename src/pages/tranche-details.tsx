@@ -107,7 +107,7 @@ const TrancheDetails: React.FC = () => {
                                             color: 'bg-brand-blue',
                                         },
                                         {
-                                            name: 'Rewards',
+                                            name: width < breakpoints.sm ? 'Reward' : 'Rewards',
                                             color: 'bg-brand-purple',
                                         },
                                     ]}
