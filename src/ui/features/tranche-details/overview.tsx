@@ -80,12 +80,12 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
         <>
             <Card>
                 <div
-                    className="flex flex-col flow md:flex-row justify-between font-basefont gap-4 xl:gap-8"
+                    className="flex flex-col flow md:flex-row justify-between font-basefont gap-3 xl:gap-6"
                     style={{ flexFlow: 'wrap' }}
                 >
                     <div className="flex flex-col justify-between order-1 min-w-[162px]">
                         <div className="flex flex-col gap-1">
-                            <h2 className="text-2xl">Assets</h2>
+                            <h2>Assets</h2>
                             <MultipleAssetsDisplay assets={assets} />
                         </div>
                     </div>
@@ -114,7 +114,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                             loading={loading}
                         /> */}
                         <NumberDisplay
-                            center
+                            align="center"
                             size="xl"
                             label="Supplied"
                             value={`${makeCompact(supplied, true)}`}
@@ -122,7 +122,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                             loading={loading}
                         />
                         <NumberDisplay
-                            center
+                            align="center"
                             size="xl"
                             label="Available"
                             value={`${makeCompact(tvl, true)}`}
@@ -130,7 +130,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                             loading={loading}
                         />
                         <NumberDisplay
-                            center
+                            align="center"
                             size="xl"
                             label="Borrowed"
                             value={`${makeCompact(borrowed, true)}`}
@@ -156,7 +156,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                                     <p className="text-3xl">{grade || '-'}</p>
                                 )} */}
                                 <NumberDisplay
-                                    center
+                                    align="right"
                                     size="xl"
                                     label="Avg. APY"
                                     value={`${(avgApy ? avgApy : 0).toFixed(2)}%`}

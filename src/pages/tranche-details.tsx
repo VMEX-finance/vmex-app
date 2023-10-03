@@ -1,23 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { AppTemplate, GridView } from '../ui/templates';
-import {
-    TrancheTVLDataCard,
-    TrancheInfoCard,
-    TrancheStatisticsCard,
-} from '../ui/features/tranche-details';
-import { Card, Legend } from '../ui/components';
-import { TrancheTable } from '../ui/tables';
+import { AppTemplate, GridView } from '@/ui/templates';
+import { TrancheTVLDataCard, TrancheInfoCard, TrancheStatisticsCard } from '@/ui/features';
+import { Card, Legend } from '@/ui/components';
+import { TrancheTable } from '@/ui/tables';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useSelectedTrancheContext } from '../store';
+import { useSelectedTrancheContext } from '@/store';
 import { useAccount, useSigner } from 'wagmi';
-import { useSubgraphTrancheData, useUserTrancheData } from '../api';
+import { useSubgraphTrancheData, useUserTrancheData } from '@/api';
 import useAnalyticsEventTracker from '../utils/google-analytics';
+import { useWindowSize } from '@/hooks';
 
 const TrancheDetails: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const { address } = useAccount();
     const { data: signer } = useSigner();
+    const { width, breakpoints } = useWindowSize();
     const { tranche, setTranche, asset } = useSelectedTrancheContext();
     const { queryTrancheData } = useSubgraphTrancheData(location.state?.trancheId);
     const { queryUserTrancheData } = useUserTrancheData(address, location.state?.trancheId);
@@ -98,11 +96,14 @@ const TrancheDetails: React.FC = () => {
                                 <Legend
                                     items={[
                                         {
-                                            name: 'Supplied',
+                                            name: width < breakpoints.sm ? 'Supply' : 'Supplied',
                                             color: 'bg-brand-green-neon',
                                         },
                                         {
-                                            name: 'Collateralized',
+                                            name:
+                                                width < breakpoints.sm
+                                                    ? 'Collateral'
+                                                    : 'Collateralized',
                                             color: 'bg-brand-blue',
                                         },
                                         {

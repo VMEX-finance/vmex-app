@@ -8,7 +8,7 @@ type INumberProps = {
     value?: number | string | React.ReactNode;
     color?: 'text-brand-purple' | 'text-brand-green' | 'text-brand-black' | 'text-white' | string;
     size?: 'lg' | 'xl' | 'md';
-    center?: boolean;
+    align?: 'left' | 'center' | 'right';
     change?: number;
     loading?: boolean;
     labelClass?: string;
@@ -19,7 +19,7 @@ export const NumberDisplay = ({
     label,
     size,
     color = 'text-brand-black dark:text-neutral-300',
-    center,
+    align,
     change,
     loading,
     labelClass,
@@ -47,8 +47,19 @@ export const NumberDisplay = ({
         }
     };
 
+    const alignClass = () => {
+        switch (align) {
+            case 'center':
+                return 'text-center items-center';
+            case 'right':
+                return 'text-right items-end';
+            default:
+                return '';
+        }
+    };
+
     return (
-        <div className={`flex flex-col ${center ? 'text-center items-center' : ''}`}>
+        <div className={`flex flex-col ${alignClass()}`}>
             <p className={`${labelSize()}`}>{label}</p>
             {loading ? (
                 <SkeletonLoader

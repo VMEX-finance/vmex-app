@@ -7,8 +7,6 @@ import { useAccount, useNetwork } from 'wagmi';
 import { Skeleton } from '@mui/material';
 import { useSubgraphUserData } from '@/api';
 import { useSelectedTrancheContext } from '@/store';
-import { getNetwork } from '@wagmi/core';
-import { DEFAULT_NETWORK } from '@/utils';
 
 interface IDashboardTemplateProps {
     title?: string;
@@ -42,25 +40,33 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
     const { queryTrancheAdminData } = useSubgraphUserData(address || '');
     const { tranche } = useSelectedTrancheContext();
 
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
-
     // TODO: cleanup / optimize
     return (
         <div className="max-w-[125rem] mx-auto p-3 md:p-4 lg:p-5 xl:p-6 2xl:px-10">
             <header
                 className={`
                     ${right ? 'flex justify-between w-full' : ''}
-                    ${view && !right ? 'grid grid-flow-dense md:grid-cols-3' : 'flex flex-row'}
+                    ${
+                        view && !right
+                            ? 'flex md:grid md:grid-flow-dense md:grid-cols-3'
+                            : 'flex flex-row'
+                    }
                 justify-between items-end`}
             >
-                <div className="max-w-[500px]">
+                <div className="flex flex-col">
                     {view ? (
-                        <LinkButton onClick={routeChange}>
-                            <BiChevronLeft size="20px" />
-                            <p className="2xl:text-lg leading-tight">Back</p>
-                        </LinkButton>
+                        <div className="flex flex-col justify-between md:block md:justify-end gap-3">
+                            <LinkButton onClick={routeChange}>
+                                <BiChevronLeft size="20px" />
+                                <p className="2xl:text-lg leading-tight">Back</p>
+                            </LinkButton>
+                            <Label
+                                tooltip
+                                className={`md:hidden ${!title ? 'animate-pulse' : ''} mb-1 ml-1`}
+                            >
+                                {tranche?.category || 'Loading'}
+                            </Label>
+                        </div>
                     ) : (
                         <>
                             <h1 className="text-3xl font-basefont capitalize leading-tight text-neutral-900 dark:text-neutral-300">
@@ -81,28 +87,48 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                 {right && right}
                 {view && !right && (
                     <>
-                        <div className="justify-center mx-auto">
-                            {titleLoading ? (
-                                <Skeleton variant="rounded" height={'36px'} width={'180px'} />
-                            ) : (
-                                <div className="flex flex-col items-center justify-center">
-                                    <div className="flex flex-row gap-3 items-center md:flex-col md:gap-0">
-                                        <h1 className="text-3xl font-basefont capitalize leading-tight text-neutral-900 dark:text-neutral-300 text-center">
-                                            {title}
-                                        </h1>
-                                        {tranche?.category && (
-                                            <Label
-                                                tooltip
-                                                className="!py-0.5 !text-xs md:absolute md:left-1/2 md:-translate-x-1/2 mt-1 md:mt-3 xl:mt-4"
-                                            >
-                                                {tranche?.category || 'Unknown'}
-                                            </Label>
-                                        )}
+                        <div className="flex flex-col items-end">
+                            <div className="justify-center mx-auto">
+                                {titleLoading ? (
+                                    <Skeleton variant="rounded" height={'36px'} width={'180px'} />
+                                ) : (
+                                    <div className="flex flex-col items-center justify-center">
+                                        <div className="flex flex-row-reverse gap-3 items-center justify-end md:flex-col md:gap-0">
+                                            <h1 className="text-3xl font-basefont capitalize leading-tight text-neutral-900 dark:text-neutral-300 text-right">
+                                                {title}
+                                            </h1>
+                                            {tranche?.category && (
+                                                <Label
+                                                    tooltip
+                                                    className="hidden md:block !py-0.5 !text-xs md:absolute md:left-1/2 md:-translate-x-1/2 mt-1 md:mt-3 xl:mt-4"
+                                                >
+                                                    {tranche?.category || 'Unknown'}
+                                                </Label>
+                                            )}
+                                        </div>
                                     </div>
-                                </div>
-                            )}
+                                )}
+                            </div>
+                            <div className="flex gap-1.5 2xl:gap-2 md:hidden">
+                                <LinkButton
+                                    onClick={() => setView('tranche-overview')}
+                                    disabled={!isConnected}
+                                    className="2xl:text-lg px-1"
+                                    highlight={view.includes('tranche-overview')}
+                                >
+                                    Supply/Borrow
+                                </LinkButton>
+                                <LinkButton
+                                    onClick={() => setView('tranche-details')}
+                                    disabled={!isConnected}
+                                    className="2xl:text-lg px-1"
+                                    highlight={view.includes('tranche-details')}
+                                >
+                                    Details
+                                </LinkButton>
+                            </div>
                         </div>
-                        <div className="flex gap-1.5 2xl:gap-2 md:justify-end">
+                        <div className="gap-1.5 2xl:gap-2 hidden md:flex justify-end">
                             <LinkButton
                                 onClick={() => setView('tranche-overview')}
                                 disabled={!isConnected}
