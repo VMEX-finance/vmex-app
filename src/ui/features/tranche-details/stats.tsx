@@ -11,6 +11,7 @@ import {
 import { useSubgraphMarketsData } from '@/api';
 import { TbInfinity } from 'react-icons/tb';
 import { ethers } from 'ethers';
+import { useWindowSize } from '@/hooks';
 
 type ITrancheStatisticsCardProps = {
     tranche?: IGraphTrancheDataProps;
@@ -26,6 +27,7 @@ export const TrancheStatisticsCard = ({
     loading,
 }: ITrancheStatisticsCardProps) => {
     const { asset, setAsset } = useSelectedTrancheContext();
+    const { width, breakpoints } = useWindowSize();
     const [rerender, setRerender] = useState(false);
     const { queryMarketsChart } = useSubgraphMarketsData(trancheId, asset);
 
@@ -57,9 +59,11 @@ export const TrancheStatisticsCard = ({
                 black
                 loading={(loading || !assetData || rerender) && !queryMarketsChart.isError}
                 header={
-                    <div className="flex justify-between items-center">
+                    <div className="flex justify-between items-center mb-2">
                         <div className="flex items-center gap-4">
-                            <h3 className="text-2xl">Asset Statistics</h3>
+                            <h3 className="text-2xl">
+                                {width < breakpoints.sm ? 'Asset Stats' : 'Asset Statistics'}
+                            </h3>
                             {asset?.toLowerCase().startsWith('yv') && (
                                 <div
                                     data-tip
