@@ -33,7 +33,7 @@ export const PillDisplay = ({ asset, value, type, formatter = 'usd' }: IPillDisp
                         {asset}
                     </span>
                 </div>
-                {value && <span className="text-lg">{determineFormat(value)}</span>}
+                {value && <span className="">{determineFormat(value)}</span>}
             </div>
         );
     } else {

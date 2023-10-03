@@ -15,7 +15,7 @@ export const Tooltip = ({ text, size, children, position, content, id }: IToolti
     if (content) {
         return (
             <>
-                <span data-tooltip-id={id} className="flex items-center">
+                <span data-tooltip-id={id} className="flex items-center w-fit">
                     {content}
                 </span>
                 <ReactTooltip id={id} className="!z-[999999999]">
@@ -26,7 +26,11 @@ export const Tooltip = ({ text, size, children, position, content, id }: IToolti
     }
     return (
         <>
-            <span data-tooltip-id={text} data-tooltip-content={text} className="flex items-center">
+            <span
+                data-tooltip-id={text}
+                data-tooltip-content={text}
+                className="flex items-center w-fit"
+            >
                 {children || <BsInfoCircle size={size || '18px'} />}
             </span>
             <ReactTooltip place={position || 'top'} id={text} className="!z-[999999999]" />
