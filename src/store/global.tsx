@@ -7,12 +7,14 @@ import { getNetwork } from '@wagmi/core';
 export type IGlobalStoreProps = {
     isAuthenticated?: boolean;
     currentNetwork: string;
+    firstLoad: boolean;
 };
 
 // Context
 const GlobalContext = createContext<IGlobalStoreProps>({
     isAuthenticated: false,
     currentNetwork: DEFAULT_NETWORK,
+    firstLoad: false,
 });
 
 // Wrapper
@@ -22,6 +24,7 @@ export function GlobalStore(props: { children: ReactNode }) {
         : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
     const { address } = useAccount();
     const [oldChain, setOldChain] = useState(network);
+    const [firstLoad, setFirstLoad] = useState(false);
     useSwitchNetwork(); // for some reason, it reloads page on chain change with this hook
 
     // useEffect(() => {
@@ -41,10 +44,15 @@ export function GlobalStore(props: { children: ReactNode }) {
         }
     }, [network]);
 
+    useEffect(() => {
+        if (!firstLoad) setFirstLoad(true);
+    }, []);
+
     return (
         <GlobalContext.Provider
             value={{
                 currentNetwork: network,
+                firstLoad,
             }}
         >
             {props.children}

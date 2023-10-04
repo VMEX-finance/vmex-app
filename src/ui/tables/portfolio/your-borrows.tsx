@@ -39,7 +39,7 @@ export const YourBorrowsTable: React.FC<IYourBorrowsTableProps> = ({
                         <th
                             key={`table-header-${i}`}
                             scope="col"
-                            className={`py-3 text-left text-sm font-semibold text-neutral900 first-of-type:pl-2 first-of-type:md:pl-6`}
+                            className={`py-2 text-left text-sm font-semibold text-neutral900 first-of-type:pl-2 first-of-type:md:pl-4`}
                         >
                             {el}
                         </th>
@@ -60,7 +60,7 @@ export const YourBorrowsTable: React.FC<IYourBorrowsTableProps> = ({
                                     })
                                 }
                             >
-                                <td className="whitespace-nowrap p-4 text-sm sm:pl-6">
+                                <td className="whitespace-nowrap py-2 text-sm sm:pl-4">
                                     <AssetDisplay
                                         name={i.asset}
                                         logo={`/coins/${i.asset?.toLowerCase()}.svg`}
