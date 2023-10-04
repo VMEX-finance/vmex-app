@@ -17,7 +17,7 @@ export const MenuItemButton = ({
 }: IMenuItemButtonProps) => {
     const mode =
         selected && !mobile
-            ? 'bg-neutral-100 text-neutral-900 !shadow-inner !shadow-neutral-500'
+            ? 'bg-neutral-100 text-neutral-900 !shadow-inner !shadow-neutral-400'
             : mobile
             ? 'hover:bg-neutral-200 text-neutral-900'
             : 'bg-brand-black dark:bg-neutral-900 text-white hover:bg-neutral-800 dark:hover:bg-neutral-800';

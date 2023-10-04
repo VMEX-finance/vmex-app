@@ -8,7 +8,7 @@ type IModalFooterProps = {
 export const ModalFooter: FC<IModalFooterProps> = ({ children, between }) => {
     return (
         <div
-            className={`w-full mt-6 flex gap-3 ${
+            className={`w-full mt-3 2xl:mt-4 flex gap-3 ${
                 between ? 'justify-between' : 'justify-end'
             } items-end`}
         >

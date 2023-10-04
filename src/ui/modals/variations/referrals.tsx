@@ -32,7 +32,7 @@ export const ReferralsDialog: React.FC<IDialogProps> = ({ name, isOpen, data }) 
         <>
             <ModalHeader dialog="referrals-dialog" tabs={['Referrals']} />
             {address ? (
-                <div className="flex flex-col pt-6 pb-2 px-2">
+                <div className="flex flex-col pt-4 pb-2 px-2">
                     <div className="flex items-center justify-between text-sm text-neutral-800 dark:text-neutral-300">
                         <span>My Address</span>
                         <span>Used</span>

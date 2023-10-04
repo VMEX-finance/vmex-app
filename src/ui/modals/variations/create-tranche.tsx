@@ -193,7 +193,7 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
                     </StepperChild>
                 </>
             ) : (
-                <div className="mt-10 mb-8">
+                <div className="mt-8 mb-6">
                     <TransactionStatus success={isSuccess} errorText={error} full />
                 </div>
             )}

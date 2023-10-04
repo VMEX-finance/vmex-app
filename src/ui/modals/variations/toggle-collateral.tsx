@@ -54,7 +54,7 @@ export const ToggleCollateralDialog: React.FC<IDialogProps> = ({
                 />
                 {!isSuccess ? (
                     // Default State
-                    <div className="py-8">
+                    <div className="py-6">
                         <p>
                             Are you sure you want to {data.collateral ? 'disable ' : 'enable '}
                             collateral for this asset? This will{' '}

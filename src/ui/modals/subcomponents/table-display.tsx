@@ -23,11 +23,11 @@ type IModalTableDisplayProps = {
 export const ModalTableDisplay = ({ title, content, noData, loading }: IModalTableDisplayProps) => {
     return (
         <>
-            {title && <h3 className="mt-6">{title}</h3>}
+            {title && <h3 className="mt-3 2xl:mt-4">{title}</h3>}
             <div
                 className={`${
                     content?.length ? 'justify-between' : 'justify-center'
-                } mt-2 flex rounded-lg border border-neutral-300 dark:border-neutral-700 p-4 lg:py-6`}
+                } mt-2 flex rounded-lg border border-neutral-300 dark:border-neutral-700 p-4`}
             >
                 {loading ? (
                     <>
