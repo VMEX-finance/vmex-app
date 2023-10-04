@@ -60,7 +60,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                 !isSuccess && !error ? (
                     // Default State
                     <>
-                        <h3 className="mt-5 text-neutral400">Amount</h3>
+                        <h3 className="mt-3 2xl:mt-4 text-neutral400">Amount</h3>
                         <CoinInput
                             amount={amount}
                             setAmount={setAmount}
@@ -113,14 +113,14 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                         />
                     </>
                 ) : (
-                    <div className="mt-10 mb-8">
+                    <div className="mt-8 mb-6">
                         <TransactionStatus success={isSuccess} errorText={error} full />
                     </div>
                 )
             ) : !isSuccess && !error ? (
                 // Default State
                 <>
-                    <h3 className="mt-5 text-neutral400">Amount</h3>
+                    <h3 className="mt-3 2xl:mt-4 text-neutral400">Amount</h3>
                     <CoinInput
                         amount={amount}
                         setAmount={setAmount}
@@ -145,7 +145,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                         message="Attempting to repay more than in wallet"
                     />
 
-                    <h3 className="mt-6 text-neutral400">Health Factor</h3>
+                    <h3 className="mt-3 2xl:mt-4 text-neutral400">Health Factor</h3>
                     <HealthFactor
                         asset={asset}
                         amount={amount}
@@ -180,7 +180,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                     />
                 </>
             ) : (
-                <div className="mt-10 mb-8">
+                <div className="mt-8 mb-6">
                     <TransactionStatus success={isSuccess} errorText={error} full />
                 </div>
             )}

@@ -1,7 +1,7 @@
 import { Transition } from '@headlessui/react';
 import React, { ReactNode } from 'react';
 import { useLocation } from 'react-router-dom';
-import { getNetwork } from '@wagmi/core';
+import { useGlobalContext } from '@/store';
 
 type IFullPageLoader = {
     loading?: boolean;
@@ -18,14 +18,12 @@ export const FullPageLoader = ({
     children,
     animation,
 }: IFullPageLoader) => {
-    const network = getNetwork()?.chain?.unsupported
-        ? 'Optimism'
-        : getNetwork()?.chain?.name || 'Optimism';
     const { pathname } = useLocation();
+    const { firstLoad } = useGlobalContext();
 
     const determineShow = () => {
         if (onlyHome) {
-            return loading && (pathname === '/' || pathname === '/overview');
+            return loading && (pathname === '/' || pathname === '/overview') && !firstLoad;
         } else {
             return loading;
         }
@@ -57,7 +55,6 @@ export const FullPageLoader = ({
                             rel="preload"
                         />
                         <p className="text-center font-medium dark:text-neutral-300 mt-6">{text}</p>
-                        <p className="text-sm font-light dark:text-neutral-300">{network}</p>
                     </Transition>
                 </div>
             </Transition>

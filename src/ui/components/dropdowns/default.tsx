@@ -156,8 +156,8 @@ export const DefaultDropdown = ({
                                     <img
                                         src={selected as string}
                                         alt={selected as string}
-                                        width={25}
-                                        height={25}
+                                        width={26}
+                                        height={26}
                                     />
                                 ) : (
                                     selected

@@ -76,7 +76,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                 !isSuccess && !error ? (
                     // Default State
                     <>
-                        <div className="mt-5 flex justify-between items-center">
+                        <div className="mt-3 2xl:mt-4 flex justify-between items-center">
                             <h3>Amount</h3>
                             {/* TODO: uncomment when ETH is ready */}
                             {asset?.toLowerCase() === 'weth' ||
@@ -114,7 +114,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                             message="WARNING: Attempting to supply more than the supply cap"
                         />
 
-                        <h3 className="mt-6">Collaterize</h3>
+                        <h3 className="mt-3 2xl:mt-4">Collaterize</h3>
                         <div className="mt-1">
                             {typeof collateral === 'boolean' ? (
                                 <Tooltip
@@ -147,7 +147,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                             )}
                         </div>
 
-                        <h3 className="mt-6 text-neutral400">Health Factor</h3>
+                        <h3 className="mt-4 text-neutral400">Health Factor</h3>
                         <HealthFactor
                             asset={asset || 'ETH'}
                             amount={amount}
@@ -210,7 +210,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                         />
                     </>
                 ) : (
-                    <div className="mt-10 mb-8">
+                    <div className="mt-8 mb-6">
                         <TransactionStatus success={isSuccess} errorText={error} full />
                     </div>
                 )
@@ -228,7 +228,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
             ) : !isSuccess && !error ? (
                 // Default State
                 <>
-                    <div className="mt-5 flex justify-between items-center">
+                    <div className="mt-4 flex justify-between items-center">
                         <h3>Amount</h3>
                         {/* TODO: uncomment when ETH wrapping ready */}
                         {/* {asset?.toLowerCase() === 'weth' && (
@@ -259,7 +259,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                         message="Input amount is over the max"
                     />
 
-                    <h3 className="mt-6 text-neutral400">Health Factor</h3>
+                    <h3 className="mt-3 2xl:mt-4 text-neutral400">Health Factor</h3>
                     <HealthFactor
                         asset={asset || 'ETH'}
                         amount={amount}
@@ -296,7 +296,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                     />
                 </>
             ) : (
-                <div className="mt-10 mb-8">
+                <div className="mt-8 mb-6">
                     <TransactionStatus full success={isSuccess} errorText={error} />
                 </div>
             )}

@@ -8,7 +8,7 @@ export const DisclaimerDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
         <>
             <ModalHeader dialog="disclaimer-dialog" tabs={['Disclaimer']} />
 
-            <div className="py-8 flex flex-col gap-4">
+            <div className="py-6 flex flex-col gap-4">
                 <div>
                     <p></p>
                 </div>
