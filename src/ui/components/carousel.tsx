@@ -8,6 +8,7 @@ import { capFirstLetter, findInObjArr, percentFormatter } from 'utils/helpers';
 import { ModalTableDisplay } from '../modals';
 import { Button } from './buttons';
 import { useApyData } from '@/api';
+import { Slider as MUISlider } from '@mui/material';
 
 type ICarousel = {
     items?: any[];
@@ -49,6 +50,7 @@ export const Carousel = ({ items, type }: ICarousel) => {
         slidesToScroll: 4,
         nextArrow: <NextArrow />,
         prevArrow: <PrevArrow />,
+        swipe: false,
         responsive: [
             {
                 breakpoint: breakpoints['2xl'],
@@ -108,9 +110,40 @@ export const Carousel = ({ items, type }: ICarousel) => {
                                                       </span>
                                                   </div>
                                               </div>
+                                              <div className="mt-2">
+                                                  <span className="text-xs">Leverage</span>
+                                                  <div className="px-2">
+                                                      <MUISlider
+                                                          aria-label="Small steps"
+                                                          defaultValue={1}
+                                                          step={1}
+                                                          marks
+                                                          min={1}
+                                                          max={10}
+                                                          valueLabelDisplay="auto"
+                                                          size="small"
+                                                      />
+                                                  </div>
+                                              </div>
                                               <div>
+                                                  <p className="text-xs leading-tight">
+                                                      Open this strategy by providing any of the
+                                                      assets as collateral:
+                                                  </p>
+                                                  <div className="flex gap-1 flex-wrap mt-1">
+                                                      {collateralAssets.map((el, i) => (
+                                                          <PillDisplay
+                                                              type="asset"
+                                                              asset={el}
+                                                              key={`collateral-asset-${el}-${i}`}
+                                                              size="sm"
+                                                          />
+                                                      ))}
+                                                  </div>
+                                              </div>
+                                              <div className="mt-3 2xl:mt-4 ">
+                                                  <span className="text-xs">APY Breakdown</span>
                                                   <ModalTableDisplay
-                                                      title="APY Breakdown"
                                                       content={apysByToken
                                                           .sort(
                                                               (a: any, b: any) =>
@@ -130,22 +163,6 @@ export const Carousel = ({ items, type }: ICarousel) => {
                                                       size="sm"
                                                   />
                                               </div>
-                                              <div className="mt-3 2xl:mt-4 ">
-                                                  <p className="text-xs leading-tight">
-                                                      Open this strategy by providing any of the
-                                                      assets as collateral:
-                                                  </p>
-                                                  <div className="flex gap-1 flex-wrap mt-1">
-                                                      {collateralAssets.map((el, i) => (
-                                                          <PillDisplay
-                                                              type="asset"
-                                                              asset={el}
-                                                              key={`collateral-asset-${el}-${i}`}
-                                                              size="sm"
-                                                          />
-                                                      ))}
-                                                  </div>
-                                              </div>
                                           </div>
                                           <div className="mt-3 2xl:mt-4 flex w-full">
                                               <Button label="Supply" className="w-full" primary />
@@ -154,7 +171,13 @@ export const Carousel = ({ items, type }: ICarousel) => {
                                   );
                               })
                             : [1, 2, 3, 4].map((el, i) => (
-                                  <Card key={`carousel-item-${i}`}>{i}</Card>
+                                  <Card
+                                      key={`carousel-item-${i}`}
+                                      className="min-h-[350px]"
+                                      loading={!items?.length}
+                                  >
+                                      {'Loading'}
+                                  </Card>
                               ))}
                     </Slider>
                 </div>

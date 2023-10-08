@@ -30,7 +30,7 @@ const Overview: React.FC = () => {
                 type="strategies"
                 items={queryAllMarketsData.data
                     ?.sort((a, b) => Number(b.supplyApy) - Number(a.supplyApy))
-                    .slice(0, 10)}
+                    .slice(0, 8)}
             />
         </AppTemplate>
     );
