@@ -34,7 +34,7 @@ export const renderAsset = (
     custom?: string,
     key?: string,
 ) => {
-    return asset.includes('moo') ? (
+    return asset?.includes('moo') ? (
         MultipleAssetsDisplayOverlapping({
             assets: [asset.substring(3), 'beefy'],
             size,

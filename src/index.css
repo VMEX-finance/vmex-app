@@ -17,6 +17,13 @@ a {
   margin: 0.5rem 0;
   gap: 0.5rem;
 }
+.slick-slide
+{
+    height: inherit !important;
+}
+.slick-slide > div:first-child {
+  height: 100%;
+}
 
 /* Checkbox */
 input[type='checkbox'] {
