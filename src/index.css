@@ -12,6 +12,12 @@ a {
   @apply text-brand-blue hover:text-brand-purple transition duration-100 underline;
 }
 
+.slick-track {
+  display: flex !important;
+  margin: 0.5rem 0;
+  gap: 0.5rem;
+}
+
 /* Checkbox */
 input[type='checkbox'] {
   background-color: #efefef;

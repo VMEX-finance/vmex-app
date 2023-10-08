@@ -9,3 +9,4 @@ export * from './statuses';
 export * from './tabs';
 export * from './toggles';
 export * from './tooltips';
+export * from './carousel';
