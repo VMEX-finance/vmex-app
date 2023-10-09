@@ -120,6 +120,10 @@ async function getTopAssets(
                     totalDeposits
                     totalCurrentVariableDebt
                     decimals
+                    tranche {
+                        id
+                        name
+                    }
                 }
             }
         `,
@@ -153,7 +157,12 @@ async function getTopAssets(
                 _assetUSDPrice,
             );
 
-            r[_asset] ??= { asset: _asset, amount: 0 };
+            r[_asset] ??= {
+                asset: _asset,
+                amount: 0,
+                trancheId: reserve.tranche.id.split(':')[1],
+                trancheName: reserve.tranche.name,
+            };
             r[_asset].amount += _usdAmount;
             return r;
         }, {}),
@@ -178,7 +187,12 @@ async function getTopAssets(
                 reserve.decimals,
                 _assetUSDPrice,
             );
-            r[_asset] ??= { asset: _asset, amount: 0 };
+            r[_asset] ??= {
+                asset: _asset,
+                amount: 0,
+                trancheId: reserve.tranche.id.split(':')[1],
+                trancheName: reserve.tranche.name,
+            };
             r[_asset].amount += _usdAmount;
             return r;
         }, {}),

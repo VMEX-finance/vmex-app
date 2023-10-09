@@ -90,7 +90,7 @@ export const StrategyCard = ({ asset, supplyApy, trancheId }: IStrategyCard) => 
                                 onClick={(e) => handleCollateralClick(el)}
                                 key={`collateral-asset-${el}-${i}`}
                             >
-                                <PillDisplay type="asset" asset={el} size="sm" />
+                                <PillDisplay type="asset" asset={el} size="sm" hoverable />
                             </button>
                         ))}
                     </div>

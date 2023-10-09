@@ -11,6 +11,8 @@ import {
     ILineChartDataPointProps,
 } from '@/ui/components';
 import { UseQueryResult } from '@tanstack/react-query';
+import { useSelectedTrancheContext } from '@/store';
+import { useNavigate } from 'react-router-dom';
 
 export interface IProtocolProps {
     isLoading?: boolean;
@@ -41,6 +43,8 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
     isLoading,
     tvlChart,
 }) => {
+    const { setAsset } = useSelectedTrancheContext();
+    const navigate = useNavigate();
     const renderTopAssetsList = (_arr: AssetBalance[] | undefined) => {
         if (!_arr) return [];
         else {
@@ -49,6 +53,13 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
             );
             return arr.slice(0, 5);
         }
+    };
+
+    const handlePillClick = (asset: string, trancheId?: string, trancheName?: string) => {
+        setAsset(asset);
+        navigate(`/tranches/${trancheName?.replaceAll(' ', '-').toLowerCase()}`, {
+            state: { trancheId, view: 'details' },
+        });
     };
 
     return (
@@ -113,6 +124,8 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                     </div>
                 </div>
 
+                <>{console.log(topSuppliedAssets)}</>
+
                 <div className="py-2 md:py-4 lg:py-0 lg:px-6 grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4 w-full">
                     <div className="flex flex-col gap-2">
                         <NumberDisplay
@@ -130,12 +143,23 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                                     </SkeletonLoader>
                                 ) : (
                                     renderTopAssetsList(topSuppliedAssets).map((el, i) => (
-                                        <PillDisplay
-                                            key={`top-asset-${i}`}
-                                            type="asset"
-                                            asset={el.asset}
-                                            value={makeCompact(el.amount)}
-                                        />
+                                        <button
+                                            key={`top-supplied-asset-${i}`}
+                                            onClick={(e) =>
+                                                handlePillClick(
+                                                    el.asset,
+                                                    el.trancheId,
+                                                    el.trancheName,
+                                                )
+                                            }
+                                        >
+                                            <PillDisplay
+                                                type="asset"
+                                                asset={el.asset}
+                                                value={makeCompact(el.amount)}
+                                                hoverable
+                                            />
+                                        </button>
                                     ))
                                 )}
                             </div>
@@ -158,12 +182,23 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                                     </SkeletonLoader>
                                 ) : (
                                     renderTopAssetsList(topBorrowedAssets).map((el, i) => (
-                                        <PillDisplay
-                                            key={`top-asset-${i}`}
-                                            type="asset"
-                                            asset={el.asset}
-                                            value={makeCompact(el.amount)}
-                                        />
+                                        <button
+                                            key={`top-borrowed-asset-${i}`}
+                                            onClick={(e) =>
+                                                handlePillClick(
+                                                    el.asset,
+                                                    el.trancheId,
+                                                    el.trancheName,
+                                                )
+                                            }
+                                        >
+                                            <PillDisplay
+                                                type="asset"
+                                                asset={el.asset}
+                                                value={makeCompact(el.amount)}
+                                                hoverable
+                                            />
+                                        </button>
                                     ))
                                 )}
                             </div>

@@ -101,6 +101,8 @@ export type AvailableAsset = {
 export interface AssetBalance {
     asset: string;
     amount: string;
+    trancheId?: string;
+    trancheName?: string;
 }
 
 export interface TrancheData {
