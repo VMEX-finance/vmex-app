@@ -81,11 +81,7 @@ export const Carousel = ({ items, type }: ICarousel) => {
                     <Slider {...settings}>
                         {items?.length
                             ? items.map((el, i) => (
-                                  <StrategyCard
-                                      key={`carousel-item-${i}-${el}`}
-                                      asset={el.asset}
-                                      supplyApy={el.supplyApy}
-                                  />
+                                  <StrategyCard key={`carousel-item-${i}-${el}`} {...el} />
                               ))
                             : [1, 2, 3, 4].map((el, i) => (
                                   <Card
