@@ -29,7 +29,7 @@ export const MenuItemButton = ({
     return (
         <button
             className={[
-                'w-full px-3 2xl:px-3.5 py-1.5 rounded-lg transition duration-200 whitespace-nowrap',
+                'w-full px-3 2xl:px-3.5 py-1.5 rounded-lg transition duration-200 whitespace-nowrap dark:text-neutral-100',
                 mode,
                 highlight,
             ].join(' ')}
