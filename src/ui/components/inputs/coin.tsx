@@ -96,12 +96,12 @@ export const CoinInput = ({
     return (
         <>
             <div className="w-full flex flex-col justify-between mt-1 rounded-xl border border-neutral-300 dark:border-neutral-700 p-2 gap-3">
-                <div className="flex flex-row justify-between gap-3">
+                <div className="flex flex-row justify-between gap-1.5">
                     <input
                         type="text"
                         value={amount}
                         onChange={onChange}
-                        className="text-2xl focus:outline-none max-w-[225px] dark:bg-brand-black overflow-auto dark:placeholder:text-neutral-700"
+                        className="text-2xl focus:outline-none max-w-[200px] sm:max-w-[250px] dark:bg-brand-black overflow-auto dark:placeholder:text-neutral-700"
                         placeholder="0.00"
                         disabled={disabled}
                     />

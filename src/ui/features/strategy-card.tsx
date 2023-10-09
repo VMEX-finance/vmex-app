@@ -25,32 +25,36 @@ export const StrategyCard = ({ asset, supplyApy, trancheId }: IStrategyCard) => 
     const rewardApy = findInObjArr('symbol', asset, queryAssetApys.data);
 
     const getCollateralAssets = () => {
-        return ['ETH', 'wstETH']; // TODO: get available assets to zap
+        // TODO: get available assets to zap
+        return ['ETH', 'wstETH'];
     };
 
-    const handleClick = (e: any) => {
+    const handleCollateralClick = (asset: string) => {
+        // TODO: handle asset zap asset
+        // access leverage multiplier through the "leverage" state
+        console.log('asset', asset);
+    };
+
+    const handleSupplyClick = (e: any) => {
         if (!chain && openConnectModal) return openConnectModal();
         else if (chain?.unsupported && switchNetwork) return switchNetwork(DEFAULT_CHAINID);
+        // TODO: implement supply with zapped asset
+        // edit supply modal props accordingly to have appropriate args passed
         return openDialog('loan-asset-dialog', {
             asset,
             trancheId,
-            collateral: false /* TODO: add zap and collateral here */,
+            collateral: true,
         });
     };
 
-    const handleBtnText = () => {
+    const renderBtnText = () => {
         if (!chain && openConnectModal) return 'Connect Wallet';
         else if (chain?.unsupported && switchNetwork) return 'Switch Network';
         return 'Supply';
     };
 
-    const handleCollateralClick = (asset: string) => {
-        console.log('asset', asset); // TODO: handle asset zap
-    };
-
     const handleSlide = (e: Event) => {
         e.stopPropagation();
-        e.preventDefault();
         setLeverage((e.target as any).value || 1);
     };
 
@@ -73,7 +77,7 @@ export const StrategyCard = ({ asset, supplyApy, trancheId }: IStrategyCard) => 
                     </span>
                     <div className="px-2">
                         <MUISlider
-                            aria-label="Small steps"
+                            aria-label="leverage slider steps"
                             defaultValue={1}
                             step={1}
                             marks
@@ -119,7 +123,12 @@ export const StrategyCard = ({ asset, supplyApy, trancheId }: IStrategyCard) => 
                 </div>
             </div>
             <div className="mt-3 2xl:mt-4 flex w-full">
-                <Button label={handleBtnText()} onClick={handleClick} className="w-full" primary />
+                <Button
+                    label={renderBtnText()}
+                    onClick={handleSupplyClick}
+                    className="w-full"
+                    primary
+                />
             </div>
         </Card>
     );

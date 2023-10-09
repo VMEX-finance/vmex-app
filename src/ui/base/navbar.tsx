@@ -56,7 +56,6 @@ export const Navbar: React.FC = () => {
                             className="invert lg:invert-0"
                         />
                     </a>
-                    {width > breakpoints.lg && <ToggleThemeButton switch />}
                 </div>
 
                 {/* Desktop Center Nav */}
@@ -80,8 +79,8 @@ export const Navbar: React.FC = () => {
                 )}
 
                 {/* Desktop/Mobile Right Nav */}
-                <div className="flex items-center justify-end gap-1.5">
-                    {width <= breakpoints.lg && <ToggleThemeButton />}
+                <div className="flex items-center justify-end gap-1">
+                    <ToggleThemeButton />
                     <DefaultDropdown
                         selected={
                             getNetwork()?.chain?.unsupported || !address

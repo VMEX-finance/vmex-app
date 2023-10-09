@@ -6,7 +6,9 @@ import { IoIosClose } from 'react-icons/io';
 import { ApyToolitp, AssetDisplay, SplitButton } from '@/ui/components';
 import { useDialogController, useWindowSize } from '@/hooks';
 import { IMarketsAsset } from '@/api';
-import { percentFormatter, usdFormatter } from '@/utils';
+import { DEFAULT_CHAINID, percentFormatter, usdFormatter } from '@/utils';
+import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 
 const MarketsCustomRow = (props: any) => {
     const {
@@ -28,6 +30,10 @@ const MarketsCustomRow = (props: any) => {
     const { width } = useWindowSize();
     const { updateTranche, setAsset } = useSelectedTrancheContext();
     const { openDialog } = useDialogController();
+    const { address } = useAccount();
+    const { chain } = useNetwork();
+    const { switchNetwork } = useSwitchNetwork();
+    const { openConnectModal } = useConnectModal();
 
     const route = (e: Event, market: IMarketsAsset, view = 'overview') => {
         e.stopPropagation();
@@ -40,6 +46,8 @@ const MarketsCustomRow = (props: any) => {
 
     const handleActionClick = (e: any) => {
         e.stopPropagation();
+        if (!address && openConnectModal) return openConnectModal();
+        if (chain?.unsupported && switchNetwork) return switchNetwork(DEFAULT_CHAINID);
         if (e.target.innerHTML === 'Supply') {
             openDialog('loan-asset-dialog', {
                 asset: asset,

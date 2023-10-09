@@ -135,7 +135,7 @@ export const DefaultDropdown = ({
             <Menu as="div" className={`relative inline-block ${full ? 'w-full' : ''}`}>
                 <Menu.Button
                     className={`
-                        inline-flex items-center w-full focus:outline-none focus:ring-none transition duration-100 dark:hover:bg-neutral-800
+                        inline-flex items-center w-full focus:outline-none focus:ring-none transition duration-100 dark:bg-neutral-900 lg:dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-900 dark:text-neutral-100
                         ${className ? className : ''} 
                         ${determineColor()} 
                         ${displayOnly} 
@@ -150,7 +150,7 @@ export const DefaultDropdown = ({
                     {label ? (
                         label
                     ) : (
-                        <span className="inline-flex items-center justify-between w-full text-neutral-900 dark:text-neutral-300">
+                        <span className="inline-flex items-center justify-between w-full">
                             {!multiselect ? (
                                 icon ? (
                                     <img
@@ -181,7 +181,7 @@ export const DefaultDropdown = ({
                         leaveTo="transform opacity-0 scale-95"
                     >
                         <Menu.Items
-                            className={`absolute max-h-72 overflow-y-scroll bg-white dark:bg-neutral-900 mt-2 
+                            className={`absolute max-h-72 overflow-y-scroll bg-white mt-2 
                             ${full ? 'w-full' : 'min-w-[180px]'} 
                             ${determineDirection()}
                             rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-[999999]`}
