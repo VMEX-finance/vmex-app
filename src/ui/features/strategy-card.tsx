@@ -48,6 +48,12 @@ export const StrategyCard = ({ asset, supplyApy, trancheId }: IStrategyCard) => 
         console.log('asset', asset); // TODO: handle asset zap
     };
 
+    const handleSlide = (e: Event) => {
+        e.stopPropagation();
+        e.preventDefault();
+        setLeverage((e.target as any).value || 1);
+    };
+
     return (
         <Card className="h-full flex flex-col justify-between">
             <div>
@@ -76,7 +82,7 @@ export const StrategyCard = ({ asset, supplyApy, trancheId }: IStrategyCard) => 
                             valueLabelDisplay="auto"
                             size="small"
                             value={leverage}
-                            onChange={(e) => setLeverage((e.target as any).value || 1)}
+                            onChange={handleSlide}
                         />
                     </div>
                 </div>

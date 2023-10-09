@@ -10,12 +10,12 @@ type ICarousel = {
     type?: 'strategies' | 'default';
 };
 
-const defaultStyle = `absolute top-1/2 -translate-y-1/2 h-full transition duration-150 rounded-sm hover:bg-neutral-300 min-w-[25px] flex items-center justify-center`;
+const defaultStyle = `absolute top-1/2 -translate-y-1/2 h-full transition duration-150 rounded-sm hover:bg-neutral-300 dark:hover:bg-neutral-800 min-w-[25px] flex items-center justify-center`;
 function PrevArrow(props: any) {
     const { className, style, onClick } = props;
     return (
         <button className={`${defaultStyle} -left-[30px]`} onClick={onClick}>
-            <HiOutlineChevronLeft />
+            <HiOutlineChevronLeft className="dark:text-neutral-400" />
         </button>
     );
 }
@@ -23,7 +23,7 @@ function NextArrow(props: any) {
     const { className, style, onClick } = props;
     return (
         <button className={`${defaultStyle} -right-[30px]`} onClick={onClick}>
-            <HiOutlineChevronRight />
+            <HiOutlineChevronRight className="dark:text-neutral-400" />
         </button>
     );
 }
@@ -75,7 +75,7 @@ export const Carousel = ({ items, type }: ICarousel) => {
     if (type === 'strategies') {
         return (
             <div className="mt-2">
-                <h2 className="text-2xl">Featured Strategies</h2>
+                <h2 className="text-2xl dark:text-neutral-100">Featured Strategies</h2>
 
                 <div className="px-6 lg:px-8">
                     <Slider {...settings}>
