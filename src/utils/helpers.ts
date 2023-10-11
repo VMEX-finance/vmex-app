@@ -60,6 +60,8 @@ export const determineCoinImg = (asset: string, custom?: string) => {
         if (_asset?.includes('crv') || _asset?.includes('curve') || _asset?.includes('ammv2')) {
             return `${url}${_asset}.webp`;
         }
+        if (_asset === 'bibta') return `${url}bibta.webp`;
+        if (_asset === 'bib01') return `${url}bib01.png`;
         return `${url}${_asset}.svg`;
     }
 };
