@@ -91,22 +91,24 @@ const MarketsCustomRow = (props: any) => {
                     <span className="font-bold">Borrow APY</span>
                     <span>{borrowable ? percentFormatter.format(borrowApy) : '-'}</span>
                 </td>
-                <td className="flex justify-between">
-                    <span className="font-bold">Wallet Balance</span>
-                    <span><NumberAndDollar
-                            value={`${bigNumberToNative(
-                                        BigNumber.from(
-                                            getTokenBalance(asset).amountNative,
-                                        ),
-                                        asset,
-                                    )}`
-                            }
-                            dollar={`${getTokenBalance(asset).amount}`
-                            }
-                            size="xs"
-                            color="text-brand-black"
-                        /></span>
-                </td>
+                { address ?
+                    <td className="flex justify-between">
+                        <span className="font-bold">Wallet Balance</span>
+                        <span><NumberAndDollar
+                                value={`${bigNumberToNative(
+                                            BigNumber.from(
+                                                getTokenBalance(asset).amountNative,
+                                            ),
+                                            asset,
+                                        )}`
+                                }
+                                dollar={`${getTokenBalance(asset).amount}`
+                                }
+                                size="xs"
+                                color="text-brand-black"
+                            /></span>
+                    </td> : null
+                }
                 <td className="flex justify-between">
                     <span className="font-bold">Available Borrows</span>
                     <span>{borrowable ? usdFormatter().format(available) : '-'}</span>
@@ -163,23 +165,25 @@ const MarketsCustomRow = (props: any) => {
                     <ApyToolitp symbol={asset} oldApy={supplyApy} />
                 </td>
                 <td className="pl-4">{borrowable ? percentFormatter.format(borrowApy) : '-'}</td>
-                <td className="pl-4">
-                    <NumberAndDollar
-                        value={
-                                `${bigNumberToNative(
-                                    BigNumber.from(
-                                        getTokenBalance(asset).amountNative,
-                                    ),
-                                    asset,
-                                )}`
-                        }
-                        dollar={`${getTokenBalance(asset).amount}`
-                        }
-                        size="xs"
-                        color="text-brand-black"
-                    />
-                </td>
-            <td className="pl-4">{borrowable ? usdFormatter().format(available) : '-'}</td>
+                { address ?
+                    <td className="pl-4">
+                        <NumberAndDollar
+                            value={
+                                    `${bigNumberToNative(
+                                        BigNumber.from(
+                                            getTokenBalance(asset).amountNative,
+                                        ),
+                                        asset,
+                                    )}`
+                            }
+                            dollar={`${getTokenBalance(asset).amount}`
+                            }
+                            size="xs"
+                            color="text-brand-black"
+                            />
+                        </td> : null
+                }
+                <td className="pl-4">{borrowable ? usdFormatter().format(available) : '-'}</td>
                 <td className="pl-4">{usdFormatter().format(supplyTotal)}</td>
                 <td className="pl-4">{borrowable ? usdFormatter().format(borrowTotal) : '-'}</td>
                 {/* <td className="text-lg pl-4" style={{ color: determineRatingColor(rating) }}>

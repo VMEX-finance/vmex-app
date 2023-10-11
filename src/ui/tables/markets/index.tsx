@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import { useAccount } from 'wagmi';
 import { CacheProvider } from '@emotion/react';
 import { ThemeProvider } from '@mui/material/styles';
 import { muiCache, options, vmexTheme } from '../utils';
@@ -18,6 +19,8 @@ interface ITableProps {
 
 export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivity }) => {
     const { isDark } = useContext(ThemeContext);
+
+    const { address } = useAccount();
 
     const columns = [
         {
@@ -85,6 +88,7 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
             name: 'walletBalance',
             label: 'Wallet Balance',
             options: {
+                display: address ? 'true' : 'excluded',
                 filter: false,
                 sort: true,
                 sortThirdClickReset: true,
