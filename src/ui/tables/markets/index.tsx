@@ -19,32 +19,6 @@ interface ITableProps {
 export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivity }) => {
     const { isDark } = useContext(ThemeContext);
 
-    const renderYourAmount = (asset: string, trancheId: number) => {
-        let amount = 0;
-        if (userActivity?.isLoading)
-            return {
-                amount,
-                loading: true,
-            };
-        userActivity?.data?.supplies.map((supply) => {
-            if (supply.asset === asset && supply.trancheId == trancheId) {
-                amount =
-                    amount +
-                    parseFloat(bigNumberToUnformattedString(supply.amountNative, supply.asset));
-            }
-        });
-        userActivity?.data?.borrows.map((borrow) => {
-            if (borrow.asset === asset && borrow.trancheId == trancheId)
-                amount =
-                    amount -
-                    parseFloat(bigNumberToUnformattedString(borrow.amountNative, borrow.asset));
-        });
-        return {
-            amount: numberFormatter.format(amount),
-            loading: false,
-        };
-    };
-
     const columns = [
         {
             name: 'asset',
@@ -108,8 +82,8 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
             },
         },
         {
-            name: 'yourAmount',
-            label: 'Your Amount',
+            name: 'walletBalance',
+            label: 'Wallet Balance',
             options: {
                 filter: false,
                 sort: true,
@@ -222,7 +196,7 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
                                 tranche,
                                 supplyApy,
                                 borrowApy,
-                                yourAmount,
+                                walletBalance,
                                 available,
                                 supplyTotal,
                                 borrowTotal,
@@ -242,7 +216,7 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
                                 trancheId={trancheId}
                                 supplyApy={supplyApy}
                                 borrowApy={borrowApy}
-                                yourAmount={renderYourAmount(asset, trancheId)}
+                                walletBalance={walletBalance}
                                 available={available}
                                 borrowTotal={borrowTotal}
                                 supplyTotal={supplyTotal}

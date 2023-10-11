@@ -1,14 +1,16 @@
 import React from 'react';
+import { useAccount } from 'wagmi';
 import { useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '@/store';
 import { BsCheck } from 'react-icons/bs';
 import { IoIosClose } from 'react-icons/io';
-import { ApyToolitp, AssetDisplay, SplitButton } from '@/ui/components';
+import { ApyToolitp, AssetDisplay, NumberAndDollar, SplitButton } from '@/ui/components';
 import { useDialogController, useWindowSize } from '@/hooks';
-import { IMarketsAsset } from '@/api';
-import { DEFAULT_CHAINID, percentFormatter, usdFormatter } from '@/utils';
-import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
+import { IMarketsAsset, useUserData } from '@/api';
+import { DEFAULT_CHAINID, bigNumberToNative, percentFormatter, usdFormatter } from '@/utils';
+import { useNetwork, useSwitchNetwork } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
+import { BigNumber } from 'ethers';
 
 const MarketsCustomRow = (props: any) => {
     const {
@@ -27,10 +29,11 @@ const MarketsCustomRow = (props: any) => {
         borrowable,
     } = props;
     const navigate = useNavigate();
+    const { address } = useAccount();
+    const { getTokenBalance } = useUserData(address);
     const { width } = useWindowSize();
     const { updateTranche, setAsset } = useSelectedTrancheContext();
     const { openDialog } = useDialogController();
-    const { address } = useAccount();
     const { chain } = useNetwork();
     const { switchNetwork } = useSwitchNetwork();
     const { openConnectModal } = useConnectModal();
@@ -89,10 +92,20 @@ const MarketsCustomRow = (props: any) => {
                     <span>{borrowable ? percentFormatter.format(borrowApy) : '-'}</span>
                 </td>
                 <td className="flex justify-between">
-                    <span className="font-bold">Your Amount</span>
-                    <span className={`${yourAmount.loading ? 'animate-pulse' : ''}`}>
-                        {yourAmount.amount}
-                    </span>
+                    <span className="font-bold">Wallet Balance</span>
+                    <span><NumberAndDollar
+                            value={`${bigNumberToNative(
+                                        BigNumber.from(
+                                            getTokenBalance(asset).amountNative,
+                                        ),
+                                        asset,
+                                    )}`
+                            }
+                            dollar={`${getTokenBalance(asset).amount}`
+                            }
+                            size="xs"
+                            color="text-brand-black"
+                        /></span>
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Available Borrows</span>
@@ -150,10 +163,23 @@ const MarketsCustomRow = (props: any) => {
                     <ApyToolitp symbol={asset} oldApy={supplyApy} />
                 </td>
                 <td className="pl-4">{borrowable ? percentFormatter.format(borrowApy) : '-'}</td>
-                <td className={`pl-4 ${yourAmount.loading ? 'animate-pulse' : ''}`}>
-                    {yourAmount.amount}
+                <td className="pl-4">
+                    <NumberAndDollar
+                        value={
+                                `${bigNumberToNative(
+                                    BigNumber.from(
+                                        getTokenBalance(asset).amountNative,
+                                    ),
+                                    asset,
+                                )}`
+                        }
+                        dollar={`${getTokenBalance(asset).amount}`
+                        }
+                        size="xs"
+                        color="text-brand-black"
+                    />
                 </td>
-                <td className="pl-4">{borrowable ? usdFormatter().format(available) : '-'}</td>
+            <td className="pl-4">{borrowable ? usdFormatter().format(available) : '-'}</td>
                 <td className="pl-4">{usdFormatter().format(supplyTotal)}</td>
                 <td className="pl-4">{borrowable ? usdFormatter().format(borrowTotal) : '-'}</td>
                 {/* <td className="text-lg pl-4" style={{ color: determineRatingColor(rating) }}>
