@@ -9,7 +9,7 @@ import { IUserTxHistoryProps } from './types';
 export async function getUserTxHistory(userAddress?: string) {
     const network = getNetwork()?.chain?.unsupported
         ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
     if (!userAddress) {
         return [];
     }
@@ -69,7 +69,7 @@ export async function getUserTxHistory(userAddress?: string) {
 export function useUserHistory(userAddress?: string) {
     const network = getNetwork()?.chain?.unsupported
         ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
 
     const queryUserTxHistory = useQuery({
         queryKey: [`user-tx-history`, userAddress, network],

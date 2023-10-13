@@ -32,6 +32,15 @@ export const Navbar: React.FC = () => {
         }
     }
 
+    function renderChainImg() {
+        if (getNetwork()?.chain?.unsupported || !address) return 'coins/op.svg';
+        else {
+            return renderNetworks().filter(
+                (network) => network.text === getNetwork()?.chain?.network,
+            )[0]?.icon;
+        }
+    }
+
     return (
         <nav className="flex justify-center flex-row sticky h-fit items-center top-0 font-basefont px-3 md:px-4 py-2 lg:px-5 2xl:px-10 lg:py-3 bg-neutral-900 dark:bg-brand-black lg:bg-[#FFF] z-[1000] shadow-lg lg:shadow-md">
             <div
@@ -82,14 +91,7 @@ export const Navbar: React.FC = () => {
                 <div className="flex items-center justify-end gap-1">
                     <ToggleThemeButton />
                     <DefaultDropdown
-                        selected={
-                            getNetwork()?.chain?.unsupported || !address
-                                ? 'coins/op.svg'
-                                : renderNetworks().filter(
-                                      (network) =>
-                                          network.text === getNetwork()?.chain?.name?.toLowerCase(),
-                                  )[0]?.icon
-                        }
+                        selected={renderChainImg()}
                         items={renderNetworks(switchNetworkAsync)}
                         size="lg"
                         className={`border border-1 lg:border-brand-black lg:bg-white lg:hover:bg-neutral-100 !px-0 !pl-2 !py-1 lg:!py-[4px]`}

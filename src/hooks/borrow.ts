@@ -30,7 +30,7 @@ export const useBorrow = ({
 }: ISupplyBorrowProps & IUseModal) => {
     const network = getNetwork()?.chain?.unsupported
         ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
     const { address } = useAccount();
     const { data: signer } = useSigner();
     const { findAssetInUserSuppliesOrBorrows, findAmountBorrowable } = useUserTrancheData(

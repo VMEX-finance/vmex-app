@@ -117,7 +117,7 @@ const calculateInterestProfit = (
 ): number => {
     const network = getNetwork()?.chain?.unsupported
         ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
     const incrementalInterestProfit = BigNumber.from(aTokenBalanceItem.index)
         .sub(BigNumber.from(prevATokenBalanceItem.index))
         .mul(BigNumber.from(prevATokenBalanceItem.scaledATokenBalance))
@@ -138,7 +138,7 @@ const calculateInterestLoss = (
 ): number => {
     const network = getNetwork()?.chain?.unsupported
         ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
     const incrementalInterestLoss = BigNumber.from(variableTokenBalanceItem.index)
         .sub(BigNumber.from(prevVariableTokenBalanceItem.index))
         .mul(BigNumber.from(prevVariableTokenBalanceItem.scaledVariableDebt))
@@ -405,7 +405,7 @@ export const getSubgraphUserData = async (address: string): Promise<IGraphUserDa
 export function useSubgraphUserData(address?: string): ISubgraphUserData {
     const network = getNetwork()?.chain?.unsupported
         ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
 
     const queryUserPnlChart = useQuery({
         queryKey: ['user-pnl-chart', network],

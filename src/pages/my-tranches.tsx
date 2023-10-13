@@ -32,7 +32,7 @@ import { getNetwork } from '@wagmi/core';
 const MyTranches: React.FC = () => {
     const network = getNetwork()?.chain?.unsupported
         ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
     const gaEventTracker = useAnalyticsEventTracker('My Tranches');
     const breakpoint = 1024;
     const { width } = useWindowSize();

@@ -8,7 +8,7 @@ import { ethers } from 'ethers';
 export async function getAllAssetApys() {
     const network = getNetwork()?.chain?.unsupported
         ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
     const provider = new ethers.providers.JsonRpcProvider(NETWORKS[network].rpc);
 
     const res = await fetch(`${NETWORKS[network].backend}/v1/reward/apy`);
@@ -66,7 +66,7 @@ export async function getAllAssetApys() {
 export function useApyData() {
     const network = getNetwork()?.chain?.unsupported
         ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
     const queryAssetApys = useQuery({
         queryKey: ['asset-apys', network],
         queryFn: getAllAssetApys,

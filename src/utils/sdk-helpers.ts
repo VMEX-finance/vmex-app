@@ -40,7 +40,7 @@ export const nativeAmountToUSD = (
 export const bigNumberToNative = (number: BigNumber | undefined, asset: string): string => {
     const network = getNetwork()?.chain?.unsupported
         ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
     if (!number) return '0';
     const decimals = DECIMALS.get(convertAddressToSymbol(asset, network) || asset) || 18;
     return nativeTokenFormatter.format(parseFloat(ethers.utils.formatUnits(number, decimals)));
@@ -52,7 +52,7 @@ export const bigNumberToUnformattedString = (
 ): string => {
     const network = getNetwork()?.chain?.unsupported
         ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
     if (!number) {
         console.error('given invalid bignumber');
         return '0';
@@ -74,7 +74,7 @@ export const unformattedStringToBigNumber = (
 ): BigNumber => {
     const network = getNetwork()?.chain?.unsupported
         ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
     if (!number) {
         console.error('given invalid number');
         return BigNumber.from('0');

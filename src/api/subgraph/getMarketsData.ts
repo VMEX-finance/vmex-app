@@ -115,7 +115,7 @@ export const getSubgraphAllMarketsData = async (): Promise<IMarketsAsset[]> => {
     else {
         const network = getNetwork()?.chain?.unsupported
             ? DEFAULT_NETWORK
-            : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+            : getNetwork()?.chain?.network || DEFAULT_NETWORK;
         const prices = await getAllAssetPrices();
         const apyRes = await getAllAssetApys();
 
@@ -187,7 +187,7 @@ export function useSubgraphMarketsData(
 ): ISubgraphMarketsChart {
     const network = getNetwork()?.chain?.unsupported
         ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
     let underlyingAsset: string = '';
     if (_underlyingAsset) {
         underlyingAsset = convertSymbolToAddress(_underlyingAsset || '', network)?.toLowerCase();
@@ -205,7 +205,7 @@ export function useSubgraphMarketsData(
 export function useSubgraphAllMarketsData(): ISubgraphAllMarketsData {
     const network = getNetwork()?.chain?.unsupported
         ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
 
     const queryAllMarketsData = useQuery({
         queryKey: [`all-markets-data`, network],
