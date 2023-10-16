@@ -52,6 +52,24 @@ export const renderAsset = (
             size,
             origAssetName: asset,
         })
+    ) : asset.toUpperCase().startsWith('CMLT-') ? ( // cmlt
+        MultipleAssetsDisplayOverlapping({
+            assets: [asset.substring(5).split('-')[0], 'grail'],
+            size,
+            origAssetName: asset,
+        })
+    ) : asset.toUpperCase().endsWith('-BPT') ? ( // balancer
+        MultipleAssetsDisplayOverlapping({
+            assets: [asset.split('-')[0], 'bal'],
+            size,
+            origAssetName: asset,
+        })
+    ) : asset.toUpperCase() == 'FRAXBPCRV-F' ? (
+        MultipleAssetsDisplayOverlapping({
+            assets: ['frax', 'crv'],
+            size,
+            origAssetName: asset,
+        })
     ) : (
         <Tooltip
             text={determineCoinDescription(asset)}

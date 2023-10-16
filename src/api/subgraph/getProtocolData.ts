@@ -51,8 +51,6 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
             }
         `,
     });
-    console.error('err', error);
-    console.log('data', data);
     if (error) return [];
 
     const network = getNetwork()?.chain?.unsupported

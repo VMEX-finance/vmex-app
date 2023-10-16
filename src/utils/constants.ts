@@ -86,12 +86,36 @@ export const AVAILABLE_ASSETS: Record<string, { symbol: string; rewardSource?: s
         { symbol: 'vAMM-WETH/USDbC', rewardSource: 'Velo' },
         { symbol: 'vAMM-cbETH/WETH', rewardSource: 'Velo' },
     ],
+    arbitrum: [
+        { symbol: 'USDC.e' },
+        { symbol: 'WETH' },
+        { symbol: 'wstETH' },
+        { symbol: 'WBTC' },
+        { symbol: 'USDT' },
+        { symbol: 'USDC' },
+        { symbol: 'DAI' },
+        { symbol: 'ARB' },
+        { symbol: 'rETH' },
+        { symbol: 'LUSD' },
+        { symbol: 'FRAX' },
+        { symbol: '2CRV' },
+        { symbol: 'wstETH-WETH-BPT' },
+        { symbol: 'rETH-WETH-BPT' },
+        { symbol: 'wstETHCRV' },
+        { symbol: 'FRAXBPCRV-f' },
+        { symbol: 'CMLT-ARB-ETH' },
+        { symbol: 'CMLT-ETH-USDC.e' },
+        { symbol: 'CMLT-USDT-USDC.e' },
+        { symbol: 'CMLT-wstETH-ETH' },
+        { symbol: 'CMLT-LUSD-USDC.e' },
+    ],
 };
 
 // Decimals
 export const PRICING_DECIMALS: any = {
     optimism: 8,
     base: 8,
+    arbitrum: 8,
     mainnet: 18,
     sepolia: 18,
 };

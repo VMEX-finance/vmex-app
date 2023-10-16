@@ -85,7 +85,6 @@ export const TrancheStatisticsCard = ({
                     </div>
                 }
             >
-                <>{console.log('assetData', assetData)}</>
                 <div className="flex gap-6 mb-3 mt-1">
                     <NumberDisplay
                         label="Supply APY"

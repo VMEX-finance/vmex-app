@@ -57,7 +57,12 @@ export const determineCoinImg = (asset: string, custom?: string) => {
         if (_asset === 'velo') return `${url}0x9560e827aF36c94D2Ac33a39bCE1Fe78631088Db.svg`;
         if (_asset == 'beefy') return `${url}beefy.png`;
         if (_asset?.includes('bpt')) return `${url}${_asset}.png`;
-        if (_asset?.includes('crv') || _asset?.includes('curve') || _asset?.includes('ammv2')) {
+        if (
+            (_asset?.includes('crv') && _asset != 'crv') ||
+            _asset?.includes('curve') ||
+            _asset?.includes('ammv2') ||
+            _asset == 'grail'
+        ) {
             return `${url}${_asset}.webp`;
         }
         if (_asset === 'bibta') return `${url}bibta.webp`;
@@ -71,15 +76,20 @@ export const determineCoinDescription = (asset: string, custom?: string) => {
     else {
         if (asset?.toLowerCase() == 'moocurvewsteth')
             return 'Beefy vault for the wstETH/ETH curve pool';
+        if (asset?.toLowerCase() == '2crv') return 'Curve stableswap pool between USDT and USDC';
         if (asset?.toLowerCase() == '3crv')
             return 'Curve stableswap pool between DAI, USDT, and USDC';
+        if (asset?.toLowerCase() == 'fraxbpcrv-f')
+            return 'Curve stableswap pool between FRAX and USDC.e';
         if (asset?.toLowerCase() == 'susd3crv-f')
             return 'Curve stableswap pool between sUSD, DAI, USDT, and USDC';
         if (asset?.toLowerCase() == 'wstethcrv')
             return 'Curve stableswap pool between wstETH and ETH';
         if (asset?.toLowerCase().startsWith('yv')) return `Yearn vault for ${asset.substring(2)}`;
         if (asset?.toLowerCase().includes('bpt')) {
-            return `Beethoven pool between ${asset.split('-')[1]} and ${asset.split('-')[2]}`;
+            return `Beethoven or balancer pool between ${asset.split('-')[1]} and ${
+                asset.split('-')[2]
+            }`;
         }
         if (asset?.toLowerCase().includes('ammv2')) {
             let stable = 'Stable';
@@ -88,6 +98,10 @@ export const determineCoinDescription = (asset: string, custom?: string) => {
             }
             const assets = asset.substring(7).split('/');
             return `${stable} Velodrome pool between ${assets[0]} and ${assets[1]}`;
+        }
+        if (asset?.toLowerCase().startsWith('cmlt')) {
+            const assets = asset.substring(5).split('-');
+            return `Camelot pool between ${assets[0]} and ${assets[1]}`;
         }
 
         return `Base ${asset}`;
@@ -308,7 +322,9 @@ export const getContractMetadata = async (
         }
         default: {
             if (SYMBOL_CACHE[contractAddress]) return SYMBOL_CACHE[contractAddress];
+            console.log('before symbol');
             const symbol = await contract.symbol();
+            console.log('after symbol');
             SYMBOL_CACHE[contractAddress] = symbol;
             return symbol;
         }
