@@ -58,7 +58,7 @@ export const NETWORKS: Record<string, any> = {
         subgraph: 'https://api.thegraph.com/subgraphs/name/vmex-finance/vmex-arbitrum',
         chainId: 42161,
         explorer: 'https://arbiscan.io/',
-        backend: 'https://seal-app-bomfb.ondigitalocean.app',
+        backend: 'https://seal-app-bomfb.ondigitalocean.app', // TODO: fico
         testing: false,
         icon: '/coins/arb.svg',
     },
