@@ -8,6 +8,7 @@ export type IGlobalStoreProps = {
     isAuthenticated?: boolean;
     currentNetwork: string;
     firstLoad: boolean;
+    setFirstLoad: any;
 };
 
 // Context
@@ -15,6 +16,7 @@ const GlobalContext = createContext<IGlobalStoreProps>({
     isAuthenticated: false,
     currentNetwork: DEFAULT_NETWORK,
     firstLoad: false,
+    setFirstLoad: () => {},
 });
 
 // Wrapper
@@ -24,7 +26,7 @@ export function GlobalStore(props: { children: ReactNode }) {
         : getNetwork()?.chain?.network || DEFAULT_NETWORK;
     const { address } = useAccount();
     const [oldChain, setOldChain] = useState(network);
-    const [firstLoad, setFirstLoad] = useState(false);
+    const [firstLoad, setFirstLoad] = useState(true);
     useSwitchNetwork(); // for some reason, it reloads page on chain change with this hook
 
     // useEffect(() => {
@@ -53,6 +55,7 @@ export function GlobalStore(props: { children: ReactNode }) {
             value={{
                 currentNetwork: network,
                 firstLoad,
+                setFirstLoad,
             }}
         >
             {props.children}

@@ -10,13 +10,17 @@ import Construction from './pages/construction';
 import TrancheDetails from './pages/tranche-details';
 import Portfolio from './pages/portfolio';
 import MyTranches from './pages/my-tranches';
-import { ProtectedRoute } from './store';
+import { ProtectedRoute, useGlobalContext } from './store';
 
 function App() {
     const [showLoading, setShowLoading] = useState(true);
+    const { setFirstLoad } = useGlobalContext();
 
     useEffect(() => {
-        const timeout = setTimeout(() => setShowLoading(false), 2000);
+        const timeout = setTimeout(() => {
+            setShowLoading(false);
+            setFirstLoad(false);
+        }, 2000);
         return () => clearTimeout(timeout);
     }, []);
 
