@@ -80,7 +80,7 @@ export const TrancheStatisticsCard = ({
                             items={renderDropdown()}
                             selected={asset || 'Loading'}
                             setSelected={setAsset}
-                            className="!text-neutral-100"
+                            className="!bg-neutral-100 hover:!bg-neutral-300 dark:!bg-neutral-800 dark:hover:!bg-neutral-700"
                         />
                     </div>
                 }

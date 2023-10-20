@@ -94,7 +94,7 @@ export const Navbar: React.FC = () => {
                         selected={renderChainImg()}
                         items={renderNetworks(switchNetworkAsync)}
                         size="lg"
-                        className={`border border-1 lg:border-brand-black lg:bg-white lg:hover:bg-neutral-100 !px-0 !pl-2 !py-1 lg:!py-[4px]`}
+                        className={`border border-1 lg:border-brand-black !px-0 !pl-2 !py-1 lg:!py-[4px]`}
                         icon
                     />
 

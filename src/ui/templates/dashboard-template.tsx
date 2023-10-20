@@ -88,7 +88,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                 {view && !right && (
                     <>
                         <div className="flex flex-col items-end">
-                            <div className="justify-center mx-auto">
+                            <div className="justify-center md:mx-auto">
                                 {titleLoading ? (
                                     <Skeleton variant="rounded" height={'36px'} width={'180px'} />
                                 ) : (
