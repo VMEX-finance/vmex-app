@@ -1,4 +1,4 @@
-import { mainnet, optimism, sepolia, hardhat, Chain } from 'wagmi/chains';
+import { mainnet, optimism, sepolia, hardhat, Chain, arbitrum } from 'wagmi/chains';
 import { TESTING } from './constants';
 
 export const NETWORKS: Record<string, any> = {
@@ -38,7 +38,7 @@ export const NETWORKS: Record<string, any> = {
         subgraph: '', // fill in
         chainId: 1,
         explorer: 'https://etherscan.io',
-        backend: 'https://dolphin-app-ajfiy.ondigitalocean.app', // replace later
+        backend: '', // fill in
         testing: false,
         icon: '/coins/eth.svg',
     },
@@ -51,6 +51,16 @@ export const NETWORKS: Record<string, any> = {
         backend: 'https://seal-app-bomfb.ondigitalocean.app',
         testing: false,
         icon: '/networks/base.png',
+    },
+    arbitrum: {
+        name: 'arbitrum',
+        rpc: 'https://arbitrum-one.public.blastapi.io',
+        subgraph: 'https://api.thegraph.com/subgraphs/name/vmex-finance/vmex-arbitrum',
+        chainId: 42161,
+        explorer: 'https://arbiscan.io/',
+        backend: 'https://seal-app-bomfb.ondigitalocean.app', // TODO: fico
+        testing: false,
+        icon: '/coins/arb.svg',
     },
 };
 
@@ -91,10 +101,10 @@ export const DEFAULT_CHAINID = 10;
 
 export const availableNetworks = (type: 'wagmi' | 'string') => {
     if (type === 'wagmi') {
-        if (TESTING) return [optimism, baseChain, sepolia, hardhat];
-        return [optimism, baseChain, sepolia];
+        if (TESTING) return [optimism, baseChain, arbitrum, sepolia, hardhat];
+        return [optimism, baseChain, arbitrum, sepolia];
     }
-    const networks = ['optimism', 'base', 'sepolia'];
+    const networks = ['optimism', 'base', 'arbitrum', 'sepolia'];
     if (TESTING) networks.push('hardhat');
     return networks;
 };

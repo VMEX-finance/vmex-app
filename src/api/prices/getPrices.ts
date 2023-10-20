@@ -4,35 +4,42 @@ import { NETWORKS, DEFAULT_NETWORK, IAvailableCoins } from '@/utils';
 import { IAssetPricesProps, IPricesDataProps } from './types';
 import { getNetwork } from '@wagmi/core';
 
-export async function getAllAssetPrices(): Promise<Record<IAvailableCoins, IAssetPricesProps>> {
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
-    const pricesMap = await getAssetPrices({
-        assets: getAllAssetSymbols(network),
-        network,
-        test: NETWORKS[network].testing,
-        providerRpc: NETWORKS[network].rpc,
-    });
-    const returnObj: Record<string, IAssetPricesProps> = {};
-    pricesMap &&
-        pricesMap.forEach(({ oracle, priceETH, priceUSD }, key) => {
-            let asset = convertAddressToSymbol(key, network);
-            asset = asset.toUpperCase();
-            (returnObj as any)[asset] = {
-                oracle,
-                ethPrice: priceETH,
-                usdPrice: priceUSD, //bignumber
-            };
+export async function getAllAssetPrices(): Promise<
+    Record<IAvailableCoins | any, IAssetPricesProps>
+> {
+    try {
+        const network = getNetwork()?.chain?.unsupported
+            ? DEFAULT_NETWORK
+            : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+        const pricesMap = await getAssetPrices({
+            assets: getAllAssetSymbols(network),
+            network,
+            test: NETWORKS[network].testing,
+            providerRpc: NETWORKS[network].rpc,
         });
+        const returnObj: Record<string, IAssetPricesProps> = {};
+        pricesMap &&
+            pricesMap.forEach(({ oracle, priceETH, priceUSD }, key) => {
+                let asset = convertAddressToSymbol(key, network);
+                asset = asset.toUpperCase();
+                (returnObj as any)[asset] = {
+                    oracle,
+                    ethPrice: priceETH,
+                    usdPrice: priceUSD, //bignumber
+                };
+            });
 
-    return returnObj;
+        return returnObj;
+    } catch (err) {
+        console.log('#getAllAssetPrices:', err);
+        return {};
+    }
 }
 
 export function usePricesData(): IPricesDataProps {
     const network = getNetwork()?.chain?.unsupported
         ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
     const queryAssetPrices = useQuery({
         queryKey: ['asset-prices', network],
         queryFn: getAllAssetPrices,

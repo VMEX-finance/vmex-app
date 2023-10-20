@@ -12,6 +12,19 @@ a {
   @apply text-brand-blue hover:text-brand-purple transition duration-100 underline;
 }
 
+.slick-track {
+  display: flex !important;
+  margin: 0.5rem 0;
+  gap: 0.5rem;
+}
+.slick-slide
+{
+    height: inherit !important;
+}
+.slick-slide > div:first-child {
+  height: 100%;
+}
+
 /* Checkbox */
 input[type='checkbox'] {
   background-color: #efefef;

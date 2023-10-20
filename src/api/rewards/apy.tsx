@@ -8,7 +8,7 @@ import { ethers } from 'ethers';
 export async function getAllAssetApys() {
     const network = getNetwork()?.chain?.unsupported
         ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
     const provider = new ethers.providers.JsonRpcProvider(NETWORKS[network].rpc);
 
     const res = await fetch(`${NETWORKS[network].backend}/v1/reward/apy`);
@@ -40,8 +40,7 @@ export async function getAllAssetApys() {
                                   apy: t.apy,
                                   symbol: foundVaultToken
                                       ? foundVaultToken.symbol
-                                      : convertAddressToSymbol(t.token, network) ||
-                                        (await getContractMetadata(t.token, provider, 'symbol')),
+                                      : convertAddressToSymbol(t.token, network),
                                   name: foundVaultToken?.name || '',
                               });
                           }
@@ -49,10 +48,7 @@ export async function getAllAssetApys() {
                   }
                   return {
                       ...a,
-                      symbol: found
-                          ? found.symbol
-                          : convertAddressToSymbol(a.asset, network) ||
-                            (await getContractMetadata(a.asset, provider, 'symbol')),
+                      symbol: found ? found.symbol : convertAddressToSymbol(a.asset, network),
                       name: found?.name || '',
                       apysByToken,
                       description: found?.description || '',
@@ -66,7 +62,7 @@ export async function getAllAssetApys() {
 export function useApyData() {
     const network = getNetwork()?.chain?.unsupported
         ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
     const queryAssetApys = useQuery({
         queryKey: ['asset-apys', network],
         queryFn: getAllAssetApys,

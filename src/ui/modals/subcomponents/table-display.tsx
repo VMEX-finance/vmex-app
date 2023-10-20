@@ -18,16 +18,35 @@ type IModalTableDisplayProps = {
         ctaLink?: string;
     };
     loading?: boolean;
+    valueClass?: string;
+    size?: 'sm' | 'md';
 };
 
-export const ModalTableDisplay = ({ title, content, noData, loading }: IModalTableDisplayProps) => {
+export const ModalTableDisplay = ({
+    title,
+    content,
+    noData,
+    loading,
+    valueClass,
+    size = 'md',
+}: IModalTableDisplayProps) => {
+    const determineSize = () => {
+        switch (size) {
+            case 'sm':
+                return ['text-sm', 'gap-0.5', 'mt-1'];
+            default:
+                return ['text-md', 'gap-1.5', 'mt-2'];
+        }
+    };
     return (
         <>
             {title && <h3 className="mt-3 2xl:mt-4">{title}</h3>}
             <div
-                className={`${
-                    content?.length ? 'justify-between' : 'justify-center'
-                } mt-2 flex rounded-lg border border-neutral-300 dark:border-neutral-700 p-4`}
+                className={`${content?.length ? 'justify-between' : 'justify-center'} ${
+                    determineSize()[2]
+                } flex rounded-lg border border-neutral-300 dark:border-neutral-700 px-4 py-2 ${
+                    determineSize()[0]
+                }`}
             >
                 {loading ? (
                     <>
@@ -37,17 +56,21 @@ export const ModalTableDisplay = ({ title, content, noData, loading }: IModalTab
                     <>
                         {content?.length ? (
                             <>
-                                <div className="flex flex-col gap-2">
+                                <div className={`flex flex-col ${determineSize()[1]}`}>
                                     {content.map((el, i) => (
                                         <span key={i}>{el.label}</span>
                                     ))}
                                 </div>
 
-                                <div className="min-w-[100px] flex flex-col gap-2">
+                                <div
+                                    className={`min-w-[100px] flex flex-col ${determineSize()[1]}`}
+                                >
                                     {content.map((el, i) => (
                                         <span
                                             key={i}
-                                            className={`${el.loading ? 'animate-pulse' : ''} ${
+                                            className={`${valueClass} ${
+                                                el.loading ? 'animate-pulse' : ''
+                                            } ${
                                                 el.baseLink
                                                     ? 'underline text-brand-purple hover:text-opacity-80 duration-200 transition cursor-pointer'
                                                     : ''

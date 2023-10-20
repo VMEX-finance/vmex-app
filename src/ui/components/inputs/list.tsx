@@ -77,7 +77,7 @@ export const ListInput = ({
     const [error, setError] = React.useState('');
     const network = getNetwork()?.chain?.unsupported
         ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
 
     const handleType = (e: any, val = '') => {
         const toBeSet = val ? val : value;

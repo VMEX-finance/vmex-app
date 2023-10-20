@@ -11,6 +11,8 @@ import {
     ILineChartDataPointProps,
 } from '@/ui/components';
 import { UseQueryResult } from '@tanstack/react-query';
+import { useSelectedTrancheContext } from '@/store';
+import { useNavigate } from 'react-router-dom';
 
 export interface IProtocolProps {
     isLoading?: boolean;
@@ -41,6 +43,8 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
     isLoading,
     tvlChart,
 }) => {
+    const { setAsset } = useSelectedTrancheContext();
+    const navigate = useNavigate();
     const renderTopAssetsList = (_arr: AssetBalance[] | undefined) => {
         if (!_arr) return [];
         else {
@@ -51,11 +55,18 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
         }
     };
 
+    const handlePillClick = (asset: string, trancheId?: string, trancheName?: string) => {
+        setAsset(asset);
+        navigate(`/tranches/${trancheName?.replaceAll(' ', '-').toLowerCase()}`, {
+            state: { trancheId, view: 'details' },
+        });
+    };
+
     return (
         <Card>
-            <div className="flex flex-col xl:flex-row gap-2 md:gap-4 divide-y-2 xl:divide-y-0 xl:divide-x-2 divide-neutral-300 dark:divide-neutral-800">
+            <div className="flex flex-col lg:flex-row gap-2 md:gap-4 divide-y-2 lg:divide-y-0 lg:divide-x-2 divide-neutral-300 dark:divide-neutral-800">
                 <div className="flex flex-col md:flex-row font-basefont gap-8">
-                    <div className="flex flex-col justify-between min-w-[90%] xl:min-w-[300px]">
+                    <div className="flex flex-col justify-between min-w-[90%] lg:min-w-[300px]">
                         <NumberDisplay
                             size="xl"
                             label="Total Available"
@@ -78,7 +89,7 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                                 </div>
                             </SkeletonLoader>
                         ) : (
-                            <div className="h-[100px] xl:h-full w-full">
+                            <div className="h-[100px] lg:h-full w-full">
                                 <ReLineChart
                                     data={tvlChart?.data || []}
                                     color="#3CB55E"
@@ -113,7 +124,7 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                     </div>
                 </div>
 
-                <div className="py-2 md:py-4 xl:py-0 xl:px-6 grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4 w-full">
+                <div className="py-2 md:py-4 lg:py-0 lg:px-6 grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4 w-full">
                     <div className="flex flex-col gap-2">
                         <NumberDisplay
                             size="xl"
@@ -130,12 +141,23 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                                     </SkeletonLoader>
                                 ) : (
                                     renderTopAssetsList(topSuppliedAssets).map((el, i) => (
-                                        <PillDisplay
-                                            key={`top-asset-${i}`}
-                                            type="asset"
-                                            asset={el.asset}
-                                            value={makeCompact(el.amount)}
-                                        />
+                                        <button
+                                            key={`top-supplied-asset-${i}`}
+                                            onClick={(e) =>
+                                                handlePillClick(
+                                                    el.asset,
+                                                    el.trancheId,
+                                                    el.trancheName,
+                                                )
+                                            }
+                                        >
+                                            <PillDisplay
+                                                type="asset"
+                                                asset={el.asset}
+                                                value={makeCompact(el.amount)}
+                                                hoverable
+                                            />
+                                        </button>
                                     ))
                                 )}
                             </div>
@@ -158,12 +180,23 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                                     </SkeletonLoader>
                                 ) : (
                                     renderTopAssetsList(topBorrowedAssets).map((el, i) => (
-                                        <PillDisplay
-                                            key={`top-asset-${i}`}
-                                            type="asset"
-                                            asset={el.asset}
-                                            value={makeCompact(el.amount)}
-                                        />
+                                        <button
+                                            key={`top-borrowed-asset-${i}`}
+                                            onClick={(e) =>
+                                                handlePillClick(
+                                                    el.asset,
+                                                    el.trancheId,
+                                                    el.trancheName,
+                                                )
+                                            }
+                                        >
+                                            <PillDisplay
+                                                type="asset"
+                                                asset={el.asset}
+                                                value={makeCompact(el.amount)}
+                                                hoverable
+                                            />
+                                        </button>
                                     ))
                                 )}
                             </div>

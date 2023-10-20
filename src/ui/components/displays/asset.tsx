@@ -21,7 +21,7 @@ export const AssetDisplay = (props: IAssetDisplayProps) => {
             } ${props.border ? 'border border-1 border-brand-black w-fit px-2' : ''}`}
         >
             {renderAsset(props.name, props.size)}
-            {!props.noText && <span>{props.name}</span>}
+            {!props.noText && <span className="truncate whitespace-nowrap">{props.name}</span>}
             {props.value && <span>{props.value}</span>}
         </div>
     );
@@ -34,7 +34,7 @@ export const renderAsset = (
     custom?: string,
     key?: string,
 ) => {
-    return asset.includes('moo') ? (
+    return asset?.includes('moo') ? (
         MultipleAssetsDisplayOverlapping({
             assets: [asset.substring(3), 'beefy'],
             size,
@@ -49,6 +49,24 @@ export const renderAsset = (
     ) : asset.substring(0, 5).toUpperCase() == 'VAMM-' ? ( // may be velo in base
         MultipleAssetsDisplayOverlapping({
             assets: [asset.split('/')[0].substring(5), 'aero'],
+            size,
+            origAssetName: asset,
+        })
+    ) : asset.toUpperCase().startsWith('CMLT-') ? ( // cmlt
+        MultipleAssetsDisplayOverlapping({
+            assets: [asset.substring(5).split('-')[0], 'grail'],
+            size,
+            origAssetName: asset,
+        })
+    ) : asset.toUpperCase().endsWith('-BPT') ? ( // balancer
+        MultipleAssetsDisplayOverlapping({
+            assets: [asset.split('-')[0], 'bal'],
+            size,
+            origAssetName: asset,
+        })
+    ) : asset.toUpperCase() == 'FRAXBPCRV-F' ? (
+        MultipleAssetsDisplayOverlapping({
+            assets: ['frax', 'crv'],
             size,
             origAssetName: asset,
         })

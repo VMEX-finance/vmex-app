@@ -13,6 +13,7 @@ type IAccordionProps = {
     noIcon?: boolean;
     className?: string;
     customHover?: string;
+    wrapperClass?: string;
 };
 
 const Accordion = styled((props: AccordionProps) => (
@@ -56,6 +57,7 @@ export function DefaultAccordion({
     noIcon,
     className,
     customHover,
+    wrapperClass,
 }: IAccordionProps) {
     const [expanded, setExpanded] = React.useState<string | false>('');
     const { isDark } = React.useContext(ThemeContext);
@@ -68,7 +70,9 @@ export function DefaultAccordion({
         <Accordion
             expanded={expanded === title}
             onChange={handleChange(title)}
-            className={`border-t ${isDark ? 'border-neutral-800' : 'border-neutral-300'}`}
+            className={`${wrapperClass || ''} border-t ${
+                isDark ? 'border-neutral-800' : 'border-neutral-300'
+            }`}
         >
             <AccordionSummary
                 expandIcon={

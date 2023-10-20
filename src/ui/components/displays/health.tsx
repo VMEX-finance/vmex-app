@@ -84,7 +84,7 @@ export const HealthFactor = ({
 }: IHealthFactorProps) => {
     const network = getNetwork()?.chain?.unsupported
         ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
     const location = useLocation();
     const { address } = useAccount();
     const { tranche } = useSelectedTrancheContext();

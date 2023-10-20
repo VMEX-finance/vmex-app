@@ -36,7 +36,7 @@ export async function getUserActivityData(userAddress: string): Promise<IUserAct
     }
     const network = getNetwork()?.chain?.unsupported
         ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
 
     const tranchesDat = await getSubgraphTranchesOverviewData();
     const summary = await getUserSummaryData({
@@ -106,7 +106,7 @@ export async function _getUserWalletData(
     }
     const network = getNetwork()?.chain?.unsupported
         ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
 
     const res = await getUserWalletData({
         user: userAddress,
@@ -131,7 +131,7 @@ export async function _getUserWalletData(
 export function useUserData(userAddress: any): IUserDataProps {
     const network = getNetwork()?.chain?.unsupported
         ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
 
     const queryUserActivity = useQuery({
         queryKey: ['user-activity', network],

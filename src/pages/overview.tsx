@@ -1,14 +1,18 @@
 import React from 'react';
-import { AppTemplate, GridView } from '../ui/templates';
-import { UserPerformanceCard, ProtocolStatsCard } from '../ui/features';
-import { YourPositionsTable } from '../ui/tables';
-import { WalletButton } from '../ui/components/buttons';
-import { useAccount, useNetwork } from 'wagmi';
-import { numberFormatter } from '../utils/helpers';
-import { bigNumberToUnformattedString } from '../utils/sdk-helpers';
-import { useSubgraphProtocolData, useSubgraphUserData, useUserData } from '../api';
+import { AppTemplate, GridView } from '@/ui/templates';
+import { ProtocolStatsCard, UserPerformanceCard } from '@/ui/features';
+import { Carousel, WalletButton } from '@/ui/components';
+import {
+    useSubgraphAllMarketsData,
+    useSubgraphProtocolData,
+    useSubgraphUserData,
+    useUserData,
+} from '@/api';
 import useAnalyticsEventTracker from '../utils/google-analytics';
 import { getNetwork } from '@wagmi/core';
+import { useAccount, useNetwork } from 'wagmi';
+import { bigNumberToUnformattedString, numberFormatter } from '@/utils';
+import { YourPositionsTable } from 'ui/tables/portfolio';
 
 const Overview: React.FC = () => {
     const gaEventTracker = useAnalyticsEventTracker('Overview');
@@ -17,6 +21,8 @@ const Overview: React.FC = () => {
     const { queryProtocolTVLChart, queryProtocolData } = useSubgraphProtocolData();
     const { queryUserActivity } = useUserData(address);
     const { queryUserPnlChart } = useSubgraphUserData(address);
+
+    console.log('', isConnected, chain?.unsupported);
 
     return (
         <AppTemplate title="overview">
@@ -72,6 +78,12 @@ const Overview: React.FC = () => {
                     <WalletButton primary className="!w-fit" />
                 </div>
             )}
+            {/* <Carousel
+                type="strategies"
+                items={queryAllMarketsData.data
+                    ?.sort((a, b) => Number(b.supplyApy) - Number(a.supplyApy))
+                    .slice(0, 8)}
+            /> */}
         </AppTemplate>
     );
 };

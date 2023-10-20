@@ -191,6 +191,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
 
                         <DefaultAccordion
                             noIcon
+                            wrapperClass="!border-0"
                             customHover="hover:!text-brand-purple"
                             className="!px-0 !hover:!bg-inherit !bg-white dark:!bg-brand-black"
                             title={`referral-code`}

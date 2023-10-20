@@ -55,7 +55,7 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
 
     const network = getNetwork()?.chain?.unsupported
         ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
     let graphData: ILineChartDataPointProps[] = [];
     const prices = await getAllAssetPrices();
     data.tranches.map((tranche: IGraphTrancheProps) => {
@@ -120,6 +120,10 @@ async function getTopAssets(
                     totalDeposits
                     totalCurrentVariableDebt
                     decimals
+                    tranche {
+                        id
+                        name
+                    }
                 }
             }
         `,
@@ -128,7 +132,7 @@ async function getTopAssets(
 
     const network = getNetwork()?.chain?.unsupported
         ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
     let prices: Record<IAvailableCoins, IAssetPricesProps>;
     if (_prices) prices = _prices;
     else prices = await getAllAssetPrices();
@@ -153,7 +157,12 @@ async function getTopAssets(
                 _assetUSDPrice,
             );
 
-            r[_asset] ??= { asset: _asset, amount: 0 };
+            r[_asset] ??= {
+                asset: _asset,
+                amount: 0,
+                trancheId: reserve.tranche.id.split(':')[1],
+                trancheName: reserve.tranche.name,
+            };
             r[_asset].amount += _usdAmount;
             return r;
         }, {}),
@@ -178,7 +187,12 @@ async function getTopAssets(
                 reserve.decimals,
                 _assetUSDPrice,
             );
-            r[_asset] ??= { asset: _asset, amount: 0 };
+            r[_asset] ??= {
+                asset: _asset,
+                amount: 0,
+                trancheId: reserve.tranche.id.split(':')[1],
+                trancheName: reserve.tranche.name,
+            };
             r[_asset].amount += _usdAmount;
             return r;
         }, {}),
@@ -274,7 +288,7 @@ export async function getSubgraphProtocolData(): Promise<IGraphProtocolDataProps
 export function useSubgraphProtocolData(): ISubgraphProtocolData {
     const network = getNetwork()?.chain?.unsupported
         ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
 
     const queryProtocolTVLChart = useQuery({
         queryKey: ['protocol-charts', network],

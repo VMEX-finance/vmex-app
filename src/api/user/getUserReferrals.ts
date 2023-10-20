@@ -7,7 +7,7 @@ import { ethers } from 'ethers';
 export async function getUserReferrals(userAddress: string) {
     const network = getNetwork()?.chain?.unsupported
         ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
     if (!userAddress) {
         return 0;
     }
@@ -30,7 +30,7 @@ export async function addUserReferral(userAddress?: string, referredAddress?: st
 
     const network = getNetwork()?.chain?.unsupported
         ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
 
     const res = await fetch(`${NETWORKS[network].backend}/v1/user/referrals/${referredAddress}`, {
         method: 'POST',
@@ -49,7 +49,7 @@ export async function addUserReferral(userAddress?: string, referredAddress?: st
 export function useUserReferrals(userAddress: any) {
     const network = getNetwork()?.chain?.unsupported
         ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.name?.toLowerCase() || DEFAULT_NETWORK;
+        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
 
     const queryUserReferrals = useQuery({
         queryKey: [`user-referrals`, userAddress, network],
