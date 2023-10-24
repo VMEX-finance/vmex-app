@@ -19,7 +19,7 @@ const MarketsCustomRow = (props: any) => {
         trancheId,
         supplyApy,
         borrowApy,
-        yourAmount,
+        walletBalance,
         available,
         borrowTotal,
         supplyTotal,
