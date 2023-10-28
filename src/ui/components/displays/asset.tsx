@@ -46,7 +46,7 @@ export const renderAsset = (
             size,
             origAssetName: asset,
         })
-    ) : asset.substring(0, 5).toUpperCase() == 'VAMM-' ? ( // may be velo in base
+    ) : asset.substring(1, 5).toUpperCase() == 'AMM-' ? ( // aero in base
         MultipleAssetsDisplayOverlapping({
             assets: [asset.split('/')[0].substring(5), 'aero'],
             size,
