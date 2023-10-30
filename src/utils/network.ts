@@ -11,6 +11,7 @@ export const NETWORKS: Record<string, any> = {
         backend: 'https://seal-app-bomfb.ondigitalocean.app',
         testing: false,
         icon: '/coins/op.svg',
+        veloRouterAddress: '0xa062aE8A9c5e11aaA026fc2670B0D65cCc8B2858',
     },
     localhost: {
         name: 'hardhat',
