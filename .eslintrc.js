@@ -3,6 +3,7 @@ module.exports = {
         browser: true,
         es6: true,
         node: true,
+        es2020: true,
     },
     extends: [
         'eslint:recommended',

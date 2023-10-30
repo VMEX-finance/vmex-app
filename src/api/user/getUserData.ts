@@ -119,6 +119,7 @@ export async function _getUserWalletData(
         assets: res.map((assetData: UserWalletData) => {
             return {
                 asset: convertAddressToSymbol(assetData.asset, network),
+                assetAddress: assetData.asset,
                 amount: bigNumberToUSD(assetData.amount, PRICING_DECIMALS[network]),
                 amountNative: assetData.amountNative,
                 currentPrice: assetData.currentPrice,

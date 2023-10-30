@@ -1,38 +1,100 @@
 import React, { useState } from 'react';
 import { Slider as MUISlider } from '@mui/material';
 import { AssetDisplay, Button, Card, PillDisplay } from '@/ui/components';
-import { DEFAULT_CHAINID, capFirstLetter, findInObjArr, percentFormatter } from '@/utils';
+import {
+    DEFAULT_CHAINID,
+    capFirstLetter,
+    findInObjArr,
+    getMaxBorrowableAmount,
+    percentFormatter,
+} from '@/utils';
 import { ModalTableDisplay } from '../modals';
-import { useApyData } from '@/api';
-import { useNetwork, useSwitchNetwork } from 'wagmi';
+import {
+    useApyData,
+    useSubgraphAllAssetMappingsData,
+    useSubgraphAllMarketsData,
+    useUserData,
+} from '@/api';
+import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { useDialogController } from '@/hooks';
+import { formatEther } from 'viem';
 
 type IStrategyCard = {
     asset: string;
     supplyApy: number;
     trancheId: number;
+    token0: string;
+    token1: string;
+    name: string;
 };
 
-export const StrategyCard = ({ asset, supplyApy, trancheId }: IStrategyCard) => {
+export const StrategyCard = ({
+    asset,
+    supplyApy,
+    trancheId,
+    token0,
+    token1,
+    name,
+}: IStrategyCard) => {
+    console.log('strategycard', token0, token1);
     const { chain } = useNetwork();
     const { openDialog } = useDialogController();
     const { switchNetwork } = useSwitchNetwork();
     const { openConnectModal } = useConnectModal();
+    const { address } = useAccount();
     const [leverage, setLeverage] = useState(1);
     const { queryAssetApys } = useApyData();
+    const { queryUserActivity, queryUserWallet } = useUserData(address);
+    const { queryAllMarketsData } = useSubgraphAllMarketsData();
+    const [borrowAsset, setBorrowAsset] = useState<string | null>(null);
+    const { queryAllAssetMappingsData } = useSubgraphAllAssetMappingsData();
+
+    console.log('assetdetaiils', queryAllAssetMappingsData.data?.get(name.toUpperCase()));
+    console.log('queryuserbla', queryUserActivity.data);
+
+    const assetDetails = queryAllAssetMappingsData.data?.get(name.toUpperCase());
+
+    let maxBorrowableAmount;
+    if (!queryUserActivity.data || !assetDetails) {
+        maxBorrowableAmount = 1;
+    } else {
+        maxBorrowableAmount = getMaxBorrowableAmount(
+            queryUserActivity.data?.availableBorrowsETH,
+            '50',
+            formatEther(BigInt(assetDetails.baseLTV.toString())),
+        );
+    }
+
+    console.log(maxBorrowableAmount);
 
     const rewardApy = findInObjArr('symbol', asset, queryAssetApys.data);
 
-    const getCollateralAssets = () => {
-        // TODO: get available assets to zap
-        return ['ETH', 'wstETH'];
+    const getCollateralAssets = (token0: string, token1: string) => {
+        const collateralAssets = [];
+        const token0ProtocolData = queryAllMarketsData.data?.find(
+            (x) =>
+                x.assetAddress.toLowerCase() === token0.toLowerCase() && x.trancheId === trancheId,
+        );
+        const token1ProtocolData = queryAllMarketsData.data?.find(
+            (x) =>
+                x.assetAddress.toLowerCase() === token1.toLowerCase() && x.trancheId === trancheId,
+        );
+        if (token0ProtocolData && token1ProtocolData) {
+            collateralAssets.push('BASIC');
+        }
+        if (token0ProtocolData) {
+            collateralAssets.push(token0ProtocolData.asset);
+        }
+        if (token1ProtocolData) {
+            collateralAssets.push(token1ProtocolData.asset);
+        }
+        return collateralAssets;
     };
 
     const handleCollateralClick = (asset: string) => {
-        // TODO: handle asset zap asset
-        // access leverage multiplier through the "leverage" state
-        console.log('asset', asset);
+        setBorrowAsset(asset);
+        // TODO visually select this button so user knows
     };
 
     const handleSupplyClick = (e: any) => {
@@ -95,7 +157,7 @@ export const StrategyCard = ({ asset, supplyApy, trancheId }: IStrategyCard) => 
                         Open this strategy by providing any of the assets as collateral:
                     </p>
                     <div className="flex gap-1 flex-wrap mt-1">
-                        {getCollateralAssets()?.map((el, i) => (
+                        {getCollateralAssets(token0, token1)?.map((el, i) => (
                             <button
                                 onClick={(e) => handleCollateralClick(el)}
                                 key={`collateral-asset-${el}-${i}`}

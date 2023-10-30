@@ -19,10 +19,13 @@ const Overview: React.FC = () => {
     const { address, isConnected } = useAccount();
     const { chain } = useNetwork();
     const { queryProtocolTVLChart, queryProtocolData } = useSubgraphProtocolData();
-    const { queryUserActivity } = useUserData(address);
+    const { queryUserActivity, queryUserWallet } = useUserData(address);
     const { queryUserPnlChart } = useSubgraphUserData(address);
+    const { queryAllMarketsData } = useSubgraphAllMarketsData();
 
-    console.log('', isConnected, chain?.unsupported);
+    console.log('queryUserActivity', queryUserActivity.data, queryUserWallet.data);
+    console.log('queryUserPnlChart', queryUserPnlChart.data);
+    console.log('queryAllMarketsData', queryAllMarketsData.data);
 
     return (
         <AppTemplate title="overview">
@@ -78,12 +81,12 @@ const Overview: React.FC = () => {
                     <WalletButton primary className="!w-fit" />
                 </div>
             )}
-            {/* <Carousel
+            <Carousel
                 type="strategies"
                 items={queryAllMarketsData.data
                     ?.sort((a, b) => Number(b.supplyApy) - Number(a.supplyApy))
                     .slice(0, 8)}
-            /> */}
+            />
         </AppTemplate>
     );
 };

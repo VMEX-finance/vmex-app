@@ -33,6 +33,7 @@ export type IUserActivityDataProps = {
 
 export type IWalletAssetProps = {
     asset: string;
+    assetAddress: string;
     amount: string;
     amountNative: BigNumber;
     currentPrice: BigNumber; //18 decimals
