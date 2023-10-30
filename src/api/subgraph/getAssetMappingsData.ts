@@ -12,6 +12,7 @@ export const getSubgraphAllAssetMappingsData = async (): Promise<Map<string, IAs
             query QueryAllAssetMappings {
                 assetDatas {
                     underlyingAssetName
+                    id
                     underlyingAssetDecimals
                     borrowingEnabled
                     baseLTV
