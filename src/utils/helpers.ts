@@ -4,6 +4,8 @@ import { AVAILABLE_ASSETS, HEALTH } from './constants';
 import moment from 'moment';
 import { ILineChartDataPointProps } from '@/ui/components';
 import { NAME_CACHE, SYMBOL_CACHE } from './cache';
+import { getNetwork } from '@wagmi/core';
+import { DEFAULT_NETWORK } from '@/utils';
 
 const Filter = require('bad-words'),
     filter = new Filter();
@@ -74,6 +76,9 @@ export const determineCoinImg = (asset: string, custom?: string) => {
 export const determineCoinDescription = (asset: string, custom?: string) => {
     if (custom) return custom;
     else {
+        const network = getNetwork()?.chain?.unsupported
+            ? DEFAULT_NETWORK
+            : getNetwork()?.chain?.network || DEFAULT_NETWORK;
         if (asset?.toLowerCase() == 'moocurvewsteth')
             return 'Beefy vault for the wstETH/ETH curve pool';
         if (asset?.toLowerCase() == '2crv') return 'Curve stableswap pool between USDT and USDC';
@@ -87,17 +92,24 @@ export const determineCoinDescription = (asset: string, custom?: string) => {
             return 'Curve stableswap pool between wstETH and ETH';
         if (asset?.toLowerCase().startsWith('yv')) return `Yearn vault for ${asset.substring(2)}`;
         if (asset?.toLowerCase().includes('bpt')) {
-            return `Beethoven or balancer pool between ${asset.split('-')[1]} and ${
-                asset.split('-')[2]
-            }`;
+            if (network == 'optimism') {
+                return `Beethoven pool between ${asset.split('-')[1]} and ${asset.split('-')[2]}`;
+            } else {
+                return `Balancer pool between ${asset.split('-')[0]} and ${asset.split('-')[1]}`;
+            }
         }
-        if (asset?.toLowerCase().includes('ammv2')) {
+        if (asset?.toLowerCase().includes('amm')) {
             let stable = 'Stable';
             if (asset.startsWith('v')) {
                 stable = 'Volatile';
             }
-            const assets = asset.substring(7).split('/');
-            return `${stable} Velodrome pool between ${assets[0]} and ${assets[1]}`;
+            if (network == 'base') {
+                const assets = asset.substring(5).split('/');
+                return `${stable} Aerodrome pool between ${assets[0]} and ${assets[1]}`;
+            } else {
+                const assets = asset.substring(7).split('/');
+                return `${stable} Velodrome pool between ${assets[0]} and ${assets[1]}`;
+            }
         }
         if (asset?.toLowerCase().startsWith('cmlt')) {
             const assets = asset.substring(5).split('-');
