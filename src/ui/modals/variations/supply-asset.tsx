@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
-import { useDialogController, useModal, useSupply } from '@/hooks';
+import { useDialogController, useModal, useSupply, useZap } from '@/hooks';
 import {
     unformattedStringToBigNumber,
     bigNumberToNative,
@@ -19,6 +19,8 @@ import {
     DefaultAccordion,
     DefaultInput,
     SmartPrice,
+    SkeletonLoader,
+    PillDisplay,
 } from '@/ui/components';
 import { BigNumber } from 'ethers';
 import { ISupplyBorrowProps } from '../utils';
@@ -62,6 +64,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
         referralAddress,
         setReferralAddress,
     } = useSupply({ data, ...modalProps });
+    const { zappableAssets, handleZap } = useZap(asset);
 
     return (
         <>
@@ -76,6 +79,33 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                 !isSuccess && !error ? (
                     // Default State
                     <>
+                        {zappableAssets.length !== 0 && (
+                            <>
+                                <div className="mt-3 2xl:mt-4 flex justify-between items-center">
+                                    <h3>Zap</h3>
+                                </div>
+                                <div className="flex flex-wrap gap-1">
+                                    {isLoading ? (
+                                        <SkeletonLoader variant="rounded" className="!rounded-3xl">
+                                            <PillDisplay type="asset" asset={'BTC'} value={0} />
+                                        </SkeletonLoader>
+                                    ) : (
+                                        zappableAssets.map((el, i) => (
+                                            <button
+                                                key={`top-supplied-asset-${i}`}
+                                                onClick={handleZap}
+                                            >
+                                                <PillDisplay
+                                                    type="asset"
+                                                    asset={el.symbol}
+                                                    hoverable
+                                                />
+                                            </button>
+                                        ))
+                                    )}
+                                </div>
+                            </>
+                        )}
                         <div className="mt-3 2xl:mt-4 flex justify-between items-center">
                             <h3>Amount</h3>
                             {/* TODO: uncomment when ETH is ready */}

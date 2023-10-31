@@ -52,9 +52,10 @@ export const StrategyCard = ({ asset, assetAddress, supplyApy, trancheId }: IStr
         });
     };
 
-    const renderBtnText = () => {
+    const renderBtnText = (isLeverage?: boolean) => {
         if (!chain && openConnectModal) return 'Connect Wallet';
         else if (chain?.unsupported && switchNetwork) return 'Switch Network';
+        if (isLeverage) return 'Leverage';
         return 'Supply';
     };
 
@@ -82,8 +83,6 @@ export const StrategyCard = ({ asset, assetAddress, supplyApy, trancheId }: IStr
             })().catch((err) => console.error(err));
         }
     }, [rewardApy]);
-
-    const renderContent = useMemo(async () => {}, [rewardApy]);
 
     return (
         <Card className="h-full flex flex-col justify-between">
@@ -137,7 +136,12 @@ export const StrategyCard = ({ asset, assetAddress, supplyApy, trancheId }: IStr
                     <ModalTableDisplay content={apyBreakdown} valueClass="text-right" size="sm" />
                 </div>
             </div>
-            <div className="mt-3 2xl:mt-4 flex w-full">
+            <div className="mt-3 2xl:mt-4 grid grid-cols-1 sm:grid-cols-2 items-center gap-1 w-full">
+                <Button
+                    label={renderBtnText(true)}
+                    onClick={handleCollateralClick}
+                    className="w-full"
+                />
                 <Button
                     label={renderBtnText()}
                     onClick={handleSupplyClick}
