@@ -98,6 +98,7 @@ export const getSubgraphAllMarketsData = async (): Promise<IMarketsAsset[]> => {
                     borrowingEnabled
                     # reserveLiquidationThreshold
                     assetData {
+                        id
                         underlyingAssetName
                         liquidationThreshold
                     }
@@ -141,6 +142,7 @@ export const getSubgraphAllMarketsData = async (): Promise<IMarketsAsset[]> => {
 
             returnObj.push({
                 asset: reserve.assetData.underlyingAssetName,
+                assetAddress: reserve.assetData.id,
                 tranche: reserve.tranche.name,
                 trancheId:
                     reserve.tranche.id && reserve.tranche.id.includes(':')

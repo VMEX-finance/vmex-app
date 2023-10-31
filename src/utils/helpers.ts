@@ -4,8 +4,9 @@ import { AVAILABLE_ASSETS, HEALTH } from './constants';
 import moment from 'moment';
 import { ILineChartDataPointProps } from '@/ui/components';
 import { NAME_CACHE, SYMBOL_CACHE } from './cache';
-import { getNetwork } from '@wagmi/core';
-import { DEFAULT_NETWORK } from '@/utils';
+import { getNetwork, Chain } from '@wagmi/core';
+import { DEFAULT_NETWORK, provider } from '@/utils';
+import { convertAddressToSymbol } from '@vmexfinance/sdk';
 
 const Filter = require('bad-words'),
     filter = new Filter();
@@ -358,5 +359,28 @@ export function sortArrByDate(arr?: any[], key = 'datetime', order?: 'asc' | 'de
 
 export function findInObjArr(key: string, value: string | number, arr?: any[]) {
     if (!arr) return undefined;
-    return arr.find((el) => el[key] === value);
+    return arr.find((el) => String(el[key])?.toLowerCase() === String(value)?.toLowerCase());
+}
+
+export async function toSymbol(symbolOrAddress: string, chain: Chain) {
+    if (!symbolOrAddress) return '';
+    try {
+        if (symbolOrAddress.startsWith('0x')) {
+            // Is address
+            const sdkTry = convertAddressToSymbol(symbolOrAddress, chain.network);
+            if (sdkTry) return sdkTry;
+            const contract = new Contract(
+                symbolOrAddress,
+                ['function symbol() view returns (string)'],
+                provider({ chainId: chain.id }),
+            );
+            const symbol: string = await contract?.symbol();
+            if (symbol) return symbol;
+            return '';
+        }
+        return symbolOrAddress;
+    } catch (err) {
+        console.error('#toSymbol', err);
+        return '';
+    }
 }

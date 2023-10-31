@@ -1,29 +1,30 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Slider as MUISlider } from '@mui/material';
 import { AssetDisplay, Button, Card, PillDisplay } from '@/ui/components';
-import { DEFAULT_CHAINID, capFirstLetter, findInObjArr, percentFormatter } from '@/utils';
+import { DEFAULT_CHAINID, capFirstLetter, findInObjArr, percentFormatter, toSymbol } from '@/utils';
 import { ModalTableDisplay } from '../modals';
 import { useApyData } from '@/api';
-import { useNetwork, useSwitchNetwork } from 'wagmi';
+import { Chain, useNetwork, useSwitchNetwork } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { useDialogController } from '@/hooks';
 
 type IStrategyCard = {
     asset: string;
+    assetAddress: string;
     supplyApy: number;
     trancheId: number;
 };
 
-export const StrategyCard = ({ asset, supplyApy, trancheId }: IStrategyCard) => {
+export const StrategyCard = ({ asset, assetAddress, supplyApy, trancheId }: IStrategyCard) => {
     const { chain } = useNetwork();
     const { openDialog } = useDialogController();
     const { switchNetwork } = useSwitchNetwork();
     const { openConnectModal } = useConnectModal();
     const [leverage, setLeverage] = useState(1);
     const { queryAssetApys } = useApyData();
+    const [apyBreakdown, setApyBreakdown] = useState<any[]>([]);
 
-    const rewardApy = findInObjArr('symbol', asset, queryAssetApys.data);
-
+    const rewardApy = findInObjArr('asset', assetAddress, queryAssetApys.data);
     const getCollateralAssets = () => {
         // TODO: get available assets to zap
         return ['ETH', 'wstETH'];
@@ -57,6 +58,28 @@ export const StrategyCard = ({ asset, supplyApy, trancheId }: IStrategyCard) => 
         e.stopPropagation();
         setLeverage((e.target as any).value || 1);
     };
+
+    useEffect(() => {
+        if (rewardApy) {
+            (async () => {
+                const promises = await Promise.all(
+                    rewardApy?.apysByToken
+                        .sort((a: any, b: any) => a.symbol.length - b.symbol.length)
+                        .map(async (x: any) => ({
+                            label:
+                                x?.symbol?.length >= 5
+                                    ? capFirstLetter(x?.symbol) ||
+                                      (await toSymbol(x.asset, chain as Chain))
+                                    : await toSymbol(x?.symbol || x.asset, chain as Chain),
+                            value: percentFormatter.format(Number(x.apy) / 100),
+                        })),
+                );
+                setApyBreakdown(promises);
+            })().catch((err) => console.error(err));
+        }
+    }, [rewardApy]);
+
+    const renderContent = useMemo(async () => {}, [rewardApy]);
 
     return (
         <Card className="h-full flex flex-col justify-between">
@@ -107,19 +130,7 @@ export const StrategyCard = ({ asset, supplyApy, trancheId }: IStrategyCard) => 
                 </div>
                 <div className="mt-3 2xl:mt-4 ">
                     <span className="text-xs">APY Breakdown</span>
-                    <ModalTableDisplay
-                        content={rewardApy?.apysByToken
-                            .sort((a: any, b: any) => a.symbol.length - b.symbol.length)
-                            .map((x: any) => ({
-                                label:
-                                    x?.symbol?.length >= 5
-                                        ? capFirstLetter(x?.symbol) || x.asset
-                                        : x?.symbol || x.asset,
-                                value: percentFormatter.format(Number(x.apy) / 100),
-                            }))}
-                        valueClass="text-right"
-                        size="sm"
-                    />
+                    <ModalTableDisplay content={apyBreakdown} valueClass="text-right" size="sm" />
                 </div>
             </div>
             <div className="mt-3 2xl:mt-4 flex w-full">
