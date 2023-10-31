@@ -98,6 +98,7 @@ export const getSubgraphAllMarketsData = async (): Promise<IMarketsAsset[]> => {
                     borrowingEnabled
                     # reserveLiquidationThreshold
                     assetData {
+                        id
                         underlyingAssetName
                         liquidationThreshold
                         id
