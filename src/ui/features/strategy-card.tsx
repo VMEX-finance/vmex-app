@@ -101,10 +101,10 @@ export const StrategyCard = ({ asset, assetAddress, supplyApy, trancheId }: IStr
                         <MUISlider
                             aria-label="leverage slider steps"
                             defaultValue={1}
-                            step={1}
+                            step={0.5}
                             marks
                             min={1}
-                            max={10}
+                            max={5}
                             valueLabelDisplay="auto"
                             size="small"
                             value={leverage}
