@@ -21,8 +21,7 @@ const Overview: React.FC = () => {
     const { queryProtocolTVLChart, queryProtocolData } = useSubgraphProtocolData();
     const { queryUserActivity } = useUserData(address);
     const { queryUserPnlChart } = useSubgraphUserData(address);
-
-    console.log('', isConnected, chain?.unsupported);
+    const { queryAllMarketsData } = useSubgraphAllMarketsData();
 
     return (
         <AppTemplate title="overview">
@@ -40,7 +39,7 @@ const Overview: React.FC = () => {
                 topTranches={queryProtocolData.data?.topTranches}
                 isLoading={queryProtocolData.isLoading}
             />
-            {isConnected && !chain?.unsupported ? (
+            {/* {isConnected && !chain?.unsupported ? (
                 <GridView type="fixed">
                     <UserPerformanceCard
                         isLoading={queryUserActivity.isLoading || queryUserPnlChart.isLoading}
@@ -77,13 +76,13 @@ const Overview: React.FC = () => {
                     </div>
                     <WalletButton primary className="!w-fit" />
                 </div>
-            )}
-            {/* <Carousel
+            )} */}
+            <Carousel
                 type="strategies"
                 items={queryAllMarketsData.data
                     ?.sort((a, b) => Number(b.supplyApy) - Number(a.supplyApy))
                     .slice(0, 8)}
-            /> */}
+            />
         </AppTemplate>
     );
 };
