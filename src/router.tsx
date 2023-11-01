@@ -12,7 +12,7 @@ import Portfolio from './pages/portfolio';
 import MyTranches from './pages/my-tranches';
 import { ProtectedRoute, useGlobalContext } from './store';
 
-function App() {
+function Router() {
     const [showLoading, setShowLoading] = useState(true);
     const { setFirstLoad } = useGlobalContext();
 
@@ -103,15 +103,8 @@ function App() {
                     }
                 />
             </Routes>
-
-            {/* <button
-                onClick={() => openDialog('feedback-dialog')}
-                className="fixed bottom-2 right-3 bg-brand-purple text-neutral-100 hover:opacity-95 transition duration-100 rounded-lg py-2 px-4 shadow-lg"
-            >
-                Send Feedback
-            </button> */}
         </FullPageLoader>
     );
 }
 
-export default App;
+export default Router;

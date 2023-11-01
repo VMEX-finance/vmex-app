@@ -3,66 +3,30 @@
     "author": "VMEX Finance",
     "description": "React frontend for the VMEX Finance protocol enabling secure crypto lending and borrowing.",
     "version": "1.0.0",
+    "private": true,
+    "homepage": "https://app.vmex.finance",
+    "license": "MIT",
     "keywords": [
         "vmex",
         "finance",
         "defi",
         "app"
     ],
-    "homepage": "https://app.vmex.finance",
     "bugs": {
         "url": "https://github.com/vmexfinance/vmex-app/issues",
         "email": "issues@vmex.finance"
     },
-    "license": "MIT",
     "repository": {
         "type": "git",
         "url": "https://github.com/VMEX-finance/vmex-app"
     },
-    "private": true,
     "scripts": {
         "start": "react-app-rewired start",
-        "dev": "REACT_APP_TEST=1 react-app-rewired start",
+        "dev": "REACT_APP_TEST=1 GENERATE_SOURCEMAP=false BROWSER=none react-app-rewired start",
         "build": "react-app-rewired build",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
         "prepare": "husky install"
-    },
-    "eslintConfig": {
-        "extends": [
-            "react-app",
-            "react-app/jest"
-        ],
-        "overrides": [
-            {
-                "files": [
-                    "**/*.stories.*"
-                ],
-                "rules": {
-                    "import/no-anonymous-default-export": "off"
-                }
-            }
-        ]
-    },
-    "browserslist": {
-        "production": [
-            ">0.2%",
-            "not dead",
-            "not op_mini all"
-        ],
-        "development": [
-            "last 1 chrome version",
-            "last 1 firefox version",
-            "last 1 safari version"
-        ]
-    },
-    "lint-staged": {
-        "*.{js,ts,tsx}": [
-            "eslint --quiet --fix"
-        ],
-        "*.{json,js,ts,jsx,tsx,html}": [
-            "prettier --check --write"
-        ]
     },
     "dependencies": {
         "@apollo/client": "^3.7.2",
@@ -128,5 +92,41 @@
         "husky": "^7.0.0",
         "lint-staged": "^13.0.3",
         "prettier": "^2.7.1"
+    },
+    "eslintConfig": {
+        "extends": [
+            "react-app",
+            "react-app/jest"
+        ],
+        "overrides": [
+            {
+                "files": [
+                    "**/*.stories.*"
+                ],
+                "rules": {
+                    "import/no-anonymous-default-export": "off"
+                }
+            }
+        ]
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    },
+    "lint-staged": {
+        "*.{js,ts,tsx}": [
+            "eslint --quiet --fix"
+        ],
+        "*.{json,js,ts,jsx,tsx,html}": [
+            "prettier --check --write"
+        ]
     }
 }

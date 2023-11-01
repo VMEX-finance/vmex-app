@@ -1,5 +1,6 @@
 import { mainnet, optimism, sepolia, hardhat, Chain, arbitrum } from 'wagmi/chains';
 import { TESTING } from './constants';
+import { getNetwork } from '@wagmi/core';
 
 export const NETWORKS: Record<string, any> = {
     optimism: {
@@ -118,4 +119,10 @@ export const renderNetworks = (fx?: any) => {
         onClick: () => (fx ? fx(network.chainId) : {}),
         icon: network.icon,
     }));
+};
+
+export const getNetworkName = () => {
+    return getNetwork()?.chain?.unsupported
+        ? DEFAULT_NETWORK
+        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
 };

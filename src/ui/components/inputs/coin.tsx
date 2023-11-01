@@ -1,12 +1,11 @@
 import { AssetDisplay } from '../displays/asset';
 import React from 'react';
-import { bigNumberToUSD, NETWORKS, DEFAULT_NETWORK, TESTING } from '@/utils';
+import { bigNumberToUSD, NETWORKS, TESTING, getNetworkName } from '@/utils';
 import { useSigner } from 'wagmi';
 import { mintTokens } from '@vmexfinance/sdk';
 import { Button, SecondaryButton } from '../buttons';
 import { usePricesData } from '@/api';
 import { BigNumber, utils } from 'ethers';
-import { getNetwork } from '@wagmi/core';
 import { SmartPrice } from '../displays';
 
 export interface ICoinInput {
@@ -37,9 +36,7 @@ export const CoinInput = ({
     customMaxClick,
     disabled,
 }: ICoinInput) => {
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetworkName();
     const { data: signer } = useSigner();
     const { prices } = usePricesData();
     const onChange = (e: any) => {

@@ -1,10 +1,9 @@
 import React from 'react';
-import { AppTemplate } from '../ui/templates';
-import { MarketsTable } from '../ui/tables';
-import { useSubgraphAllMarketsData } from '../api/subgraph';
+import { AppTemplate } from '@/ui/templates';
+import { MarketsTable } from '@/ui/tables';
+import { useSubgraphAllMarketsData, useUserData } from '@/api';
 import { useAccount } from 'wagmi';
-import { useUserData } from '../api';
-import useAnalyticsEventTracker from '../utils/google-analytics';
+import { useAnalyticsEventTracker } from '@/config';
 
 const Markets: React.FC = () => {
     const gaEventTracker = useAnalyticsEventTracker('Markets');

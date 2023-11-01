@@ -5,7 +5,8 @@ import moment from 'moment';
 import { ILineChartDataPointProps } from '@/ui/components';
 import { NAME_CACHE, SYMBOL_CACHE } from './cache';
 import { getNetwork, Chain } from '@wagmi/core';
-import { DEFAULT_NETWORK, provider } from '@/utils';
+import { DEFAULT_NETWORK, getNetworkName } from '@/utils';
+import { provider } from '@/config';
 import { convertAddressToSymbol } from '@vmexfinance/sdk';
 
 const Filter = require('bad-words'),
@@ -77,9 +78,7 @@ export const determineCoinImg = (asset: string, custom?: string) => {
 export const determineCoinDescription = (asset: string, custom?: string) => {
     if (custom) return custom;
     else {
-        const network = getNetwork()?.chain?.unsupported
-            ? DEFAULT_NETWORK
-            : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+        const network = getNetworkName();
         if (asset?.toLowerCase() == 'moocurvewsteth')
             return 'Beefy vault for the wstETH/ETH curve pool';
         if (asset?.toLowerCase() == '2crv') return 'Curve stableswap pool between USDT and USDC';

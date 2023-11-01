@@ -1,13 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
-import { NETWORKS, DEFAULT_NETWORK } from '@/utils';
+import { NETWORKS, getNetworkName } from '@/utils';
 import { getNetwork } from '@wagmi/core';
 import { ethers } from 'ethers';
 
 // Gets
 export async function getUserReferrals(userAddress: string) {
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetworkName();
     if (!userAddress) {
         return 0;
     }
@@ -28,9 +26,7 @@ export async function addUserReferral(userAddress?: string, referredAddress?: st
     if (!ethers.utils.isAddress(referredAddress))
         return { isSuccess: false, message: 'Referral address is not a valid address' };
 
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetworkName();
 
     const res = await fetch(`${NETWORKS[network].backend}/v1/user/referrals/${referredAddress}`, {
         method: 'POST',
@@ -47,9 +43,7 @@ export async function addUserReferral(userAddress?: string, referredAddress?: st
 
 // Master
 export function useUserReferrals(userAddress: any) {
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetwork();
 
     const queryUserReferrals = useQuery({
         queryKey: [`user-referrals`, userAddress, network],

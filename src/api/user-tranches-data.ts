@@ -14,19 +14,16 @@ import {
     NETWORKS,
     bigNumberToUnformattedString,
     PRICING_DECIMALS,
-    DEFAULT_NETWORK,
+    getNetworkName,
 } from '@/utils';
 import { IUserTrancheData, IUserTranchesDataProps } from './types';
 import { BigNumber } from 'ethers';
-import { getNetwork } from '@wagmi/core';
 
 export async function _getUserTranchesData(
     userAddress: string,
     trancheIds: number[],
 ): Promise<IUserTrancheData[]> {
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetworkName();
     if (!userAddress) return [];
     let _trancheIds;
     if (trancheIds?.length === 0) {
@@ -112,9 +109,7 @@ export function useUserTranchesData(
     userAddress: any,
     trancheIds?: number[],
 ): IUserTranchesDataProps {
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetworkName();
 
     const queryUserTranchesData = useQuery({
         queryKey: ['user-tranches', network],

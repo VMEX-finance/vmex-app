@@ -1,15 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { NETWORKS, DEFAULT_NETWORK, findInObjArr, getContractMetadata } from '@/utils';
+import { NETWORKS, getNetworkName } from '@/utils';
 import { IAssetApyProps } from './types';
-import { getNetwork } from '@wagmi/core';
 import { convertAddressToSymbol } from '@vmexfinance/sdk';
-import { ethers } from 'ethers';
 
 export async function getAllAssetApys(): Promise<IAssetApyProps[]> {
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
-    const provider = new ethers.providers.JsonRpcProvider(NETWORKS[network].rpc);
+    const network = getNetworkName();
 
     const res = await fetch(`${NETWORKS[network].backend}/v1/reward/apy`);
     if (res.status !== 200) return [];
@@ -59,11 +54,8 @@ export async function getAllAssetApys(): Promise<IAssetApyProps[]> {
 }
 
 export function useApyData() {
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
     const queryAssetApys = useQuery({
-        queryKey: ['asset-apys', network],
+        queryKey: ['asset-apys', getNetworkName()],
         queryFn: getAllAssetApys,
         refetchInterval: 60000 * 2, // refetch prices every 2 minutes
     });

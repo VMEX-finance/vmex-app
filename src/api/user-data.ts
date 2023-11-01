@@ -14,12 +14,11 @@ import {
     bigNumberToNative,
     averageOfArr,
     PRICING_DECIMALS,
-    DEFAULT_NETWORK,
+    getNetworkName,
 } from '@/utils';
 import { IUserActivityDataProps, IUserDataProps, IUserWalletDataProps } from './types';
 import { BigNumber } from 'ethers';
-import { getSubgraphTranchesOverviewData } from '../subgraph';
-import { getNetwork } from '@wagmi/core';
+import { getSubgraphTranchesOverviewData } from './subgraph-tranches-overview';
 
 // Gets
 export async function getUserActivityData(userAddress: string): Promise<IUserActivityDataProps> {
@@ -34,9 +33,7 @@ export async function getUserActivityData(userAddress: string): Promise<IUserAct
             avgApy: 0,
         };
     }
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetworkName();
 
     const tranchesDat = await getSubgraphTranchesOverviewData();
     const summary = await getUserSummaryData({
@@ -104,9 +101,7 @@ export async function _getUserWalletData(
             assets: [],
         };
     }
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetworkName();
 
     const res = await getUserWalletData({
         user: userAddress,
@@ -129,9 +124,7 @@ export async function _getUserWalletData(
 
 // Master
 export function useUserData(userAddress: any): IUserDataProps {
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetworkName();
 
     const queryUserActivity = useQuery({
         queryKey: ['user-activity', network],

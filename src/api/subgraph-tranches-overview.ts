@@ -1,22 +1,14 @@
 import { gql } from '@apollo/client';
 import { useQuery } from '@tanstack/react-query';
 import { ISubgraphTranchesDataProps } from './types';
-import { ITrancheProps } from '../types';
-import { getAllAssetPrices } from '../prices';
-import {
-    nativeAmountToUSD,
-    getApolloClient,
-    getTrancheCategory,
-    DEFAULT_NETWORK,
-    PRICING_DECIMALS,
-} from '@/utils';
+import { ITrancheProps } from './types';
+import { getAllAssetPrices } from './asset-prices';
+import { nativeAmountToUSD, getTrancheCategory, PRICING_DECIMALS, getNetworkName } from '@/utils';
+import { getApolloClient } from '@/config';
 import { getTrancheIdFromTrancheEntity } from './id-generation';
-import { getNetwork } from '@wagmi/core';
 
 export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]> => {
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetworkName();
     const { data, error } = await getApolloClient().query({
         query: gql`
             query queryAllTranches {
@@ -144,9 +136,7 @@ export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]
 };
 
 export function useSubgraphTranchesOverviewData(): ISubgraphTranchesDataProps {
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetworkName();
 
     const queryAllTranches = useQuery({
         queryKey: ['tranches-overview-data', network],

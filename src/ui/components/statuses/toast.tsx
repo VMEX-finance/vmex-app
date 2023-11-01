@@ -1,6 +1,5 @@
-import { truncate, NETWORKS, DEFAULT_NETWORK } from '@/utils';
+import { truncate, NETWORKS, getNetworkName } from '@/utils';
 import React from 'react';
-import { getNetwork } from '@wagmi/core';
 
 type IToastStatusProps = {
     status: 'error' | 'success' | 'pending';
@@ -8,9 +7,7 @@ type IToastStatusProps = {
 };
 
 export const ToastStatus = ({ status, transaction }: IToastStatusProps) => {
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetworkName();
     const determineText = () => {
         switch (status) {
             case 'error':

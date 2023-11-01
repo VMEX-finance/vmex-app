@@ -3,19 +3,13 @@ import { useQuery } from '@tanstack/react-query';
 import { ISubgraphAllMarketsData, ISubgraphMarketsChart } from './types';
 import { ILineChartDataPointProps } from '@/ui/components';
 import { utils } from 'ethers';
-import { IMarketsAsset } from '../types';
-import { getAllAssetPrices } from '../prices';
-import {
-    getApolloClient,
-    nativeAmountToUSD,
-    DEFAULT_NETWORK,
-    PRICING_DECIMALS,
-    findInObjArr,
-} from '@/utils';
+import { IMarketsAsset } from './types';
+import { getAllAssetPrices } from './asset-prices';
+import { nativeAmountToUSD, PRICING_DECIMALS, findInObjArr, getNetworkName } from '@/utils';
+import { getApolloClient } from '@/config';
 import { convertSymbolToAddress } from '@vmexfinance/sdk';
 import { getReserveId } from './id-generation';
-import { getNetwork } from '@wagmi/core';
-import { IAssetApyProps, getAllAssetApys } from '..';
+import { IAssetApyProps, getAllAssetApys } from '.';
 
 export const getSubgraphMarketsChart = async (
     _trancheId: string | number,
@@ -114,9 +108,7 @@ export const getSubgraphAllMarketsData = async (): Promise<IMarketsAsset[]> => {
 
     if (error) return [];
     else {
-        const network = getNetwork()?.chain?.unsupported
-            ? DEFAULT_NETWORK
-            : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+        const network = getNetworkName();
         const prices = await getAllAssetPrices();
         const apyRes = await getAllAssetApys();
 
@@ -187,9 +179,7 @@ export function useSubgraphMarketsData(
     _trancheId: string | number,
     _underlyingAsset: string | undefined,
 ): ISubgraphMarketsChart {
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetworkName();
     let underlyingAsset: string = '';
     if (_underlyingAsset) {
         underlyingAsset = convertSymbolToAddress(_underlyingAsset || '', network)?.toLowerCase();
@@ -205,9 +195,7 @@ export function useSubgraphMarketsData(
 }
 
 export function useSubgraphAllMarketsData(): ISubgraphAllMarketsData {
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetworkName();
 
     const queryAllMarketsData = useQuery({
         queryKey: [`all-markets-data`, network],

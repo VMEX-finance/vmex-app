@@ -1,6 +1,6 @@
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { useAccount, useSwitchNetwork } from 'wagmi';
-import { DEFAULT_NETWORK } from '../utils/network';
+import { DEFAULT_NETWORK, getNetworkName } from '../utils/network';
 import { getNetwork } from '@wagmi/core';
 
 // Types
@@ -21,9 +21,7 @@ const GlobalContext = createContext<IGlobalStoreProps>({
 
 // Wrapper
 export function GlobalStore(props: { children: ReactNode }) {
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetworkName();
     const { address } = useAccount();
     const [oldChain, setOldChain] = useState(network);
     const [firstLoad, setFirstLoad] = useState(true);

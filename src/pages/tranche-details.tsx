@@ -7,7 +7,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '@/store';
 import { useAccount, useSigner } from 'wagmi';
 import { useSubgraphTrancheData, useUserTrancheData } from '@/api';
-import useAnalyticsEventTracker from '../utils/google-analytics';
+import { useAnalyticsEventTracker } from '@/config';
 import { useWindowSize } from '@/hooks';
 
 const TrancheDetails: React.FC = () => {
