@@ -3,7 +3,7 @@ import { Menu, Transition } from '@headlessui/react';
 import { RiArrowDropDownLine } from 'react-icons/ri';
 import { CgSpinner } from 'react-icons/cg';
 import { IoMdCheckmarkCircle } from 'react-icons/io';
-import { MenuItemButton } from '../buttons/menu-item';
+import { MenuItemButton } from './button-menu-item';
 import { truncate as _truncate, capFirstLetter } from '@/utils';
 
 export interface IDropdownItemProps {

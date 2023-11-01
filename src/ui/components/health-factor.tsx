@@ -5,17 +5,17 @@ import { useUserTrancheData, useSubgraphTrancheData } from '@/api';
 import { useSelectedTrancheContext } from '@/store';
 import {
     convertStringFormatToNumber,
-    HFFormatter,
     calculateHealthFactorFromBalances,
     determineHealthColor,
     PRICING_DECIMALS,
     TESTING,
     getNetworkName,
+    HFFormatter,
 } from '@/utils';
 import { ethers } from 'ethers';
 import { useAccount } from 'wagmi';
 import { useLocation } from 'react-router-dom';
-import { SkeletonLoader } from '../loaders';
+import { SkeletonLoader } from './loader-skeleton';
 
 interface IHealthFactorProps {
     asset?: string;

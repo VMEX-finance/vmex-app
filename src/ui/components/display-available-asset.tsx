@@ -1,5 +1,5 @@
 import React from 'react';
-import { AssetDisplay } from './asset';
+import { AssetDisplay } from './display-asset';
 import { SmartPrice } from './smart-price';
 
 type IAvailableAssetDisplayProps = {

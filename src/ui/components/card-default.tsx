@@ -1,5 +1,5 @@
 import React from 'react';
-import { SpinnerLoader } from '../loaders';
+import { SpinnerLoader } from './loader-spinner';
 
 type ICardProps = {
     children: React.ReactNode | React.ReactNode[];

@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { toSymbol } from '@/utils';
 import { Chain, useNetwork } from 'wagmi';
 
+const ZAPPABLE_MAPPINGS = new Map();
+
 export const useZap = (symbolOrAddress: string) => {
     const { chain } = useNetwork();
     const [assets, setAssets] = useState<{ symbol: string; address: string }[]>([]);
@@ -14,7 +16,9 @@ export const useZap = (symbolOrAddress: string) => {
 
     useEffect(() => {
         if (symbolOrAddress) {
-            // TODO: handle finding zappable assets for symbolOrAddress
+            (async () => {
+                // TODO: handle finding zappable assets for symbolOrAddress
+            })().catch((err) => console.error(err));
         }
     }, [symbolOrAddress]);
 

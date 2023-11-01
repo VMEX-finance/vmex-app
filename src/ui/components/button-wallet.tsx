@@ -1,9 +1,9 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import React, { useEffect } from 'react';
-import { IButtonProps } from './default';
+import { IButtonProps } from './button-default';
 import { useAccount, useDisconnect, useNetwork } from 'wagmi';
 import { useWindowSize, useDialogController } from '@/hooks';
-import { DefaultDropdown, IDropdownItemProps } from '../dropdowns';
+import { DefaultDropdown, IDropdownItemProps } from './dropdown';
 import { truncateAddress, truncate } from '@/utils';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';

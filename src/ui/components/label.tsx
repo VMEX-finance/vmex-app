@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { Tooltip } from '../tooltips';
+import { Tooltip } from './tooltip-default';
 
 type ILabelProps = {
     children: string | ReactNode;

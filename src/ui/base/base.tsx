@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navbar } from '@/ui/base';
-import { DashboardTemplate } from './dashboard-template';
+import { DashboardTemplate } from '../templates/dashboard-template';
 import { AllModalsInstance } from '../modals';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -16,7 +16,7 @@ interface IAppTemplateProps {
     descriptionLoading?: boolean;
 }
 
-const AppTemplate: React.FC<IAppTemplateProps> = ({
+const Base: React.FC<IAppTemplateProps> = ({
     children,
     title,
     description,
@@ -55,4 +55,4 @@ const AppTemplate: React.FC<IAppTemplateProps> = ({
         </div>
     );
 };
-export { AppTemplate };
+export { Base };

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useApyData } from '@/api';
 import { capFirstLetter, findInObjArr, getRandomNumber, percentFormatter } from '@/utils';
-import { Tooltip } from './default';
+import { Tooltip } from './tooltip-default';
 
 export const ApyToolitp = ({ symbol, oldApy }: { symbol?: string; oldApy?: number | string }) => {
     const { queryAssetApys } = useApyData();

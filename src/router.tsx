@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
-import { FullPageLoader } from './ui/components/loaders';
+import { FullPageLoader } from '@/ui/components';
 import Overview from './pages/overview';
 import Tranches from './pages/tranches';
 import Staking from './pages/staking';
@@ -10,7 +10,7 @@ import Construction from './pages/construction';
 import TrancheDetails from './pages/tranche-details';
 import Portfolio from './pages/portfolio';
 import MyTranches from './pages/my-tranches';
-import { ProtectedRoute, useGlobalContext } from './store';
+import { ProtectedRoute, useGlobalContext } from '@/store';
 
 function Router() {
     const [showLoading, setShowLoading] = useState(true);

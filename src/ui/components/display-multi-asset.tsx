@@ -1,8 +1,8 @@
 import { determineCoinDescription, determineCoinImg, getRandomNumber } from '@/utils';
 import React from 'react';
-import { SkeletonLoader } from '../loaders';
-import { Tooltip } from '../tooltips';
-import { renderAsset, iconSize, smallerIconSize, iconSizeClass, marginLeft } from './asset';
+import { SkeletonLoader } from './loader-skeleton';
+import { Tooltip } from './tooltip-default';
+import { renderAsset, smallerIconSize, iconSizeClass, marginLeft } from './display-asset';
 
 interface IMultipleAssetsProps {
     assets?: string[];

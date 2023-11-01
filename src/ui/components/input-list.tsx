@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { IoIosClose } from 'react-icons/io';
-import { AssetDisplay } from '../displays';
-import { BasicToggle } from '../toggles';
+import { AssetDisplay } from './display-asset';
+import { BasicToggle } from './toggle-default';
 import { ethers, utils } from 'ethers';
 import { AVAILABLE_ASSETS, getNetworkName, truncateAddress } from '@/utils';
-import { AutoCompleteInput } from '.';
+import { AutoCompleteInput } from './input-autocomplete';
 import { useSubgraphAllAssetMappingsData } from '@/api';
 
 export interface IListInput {

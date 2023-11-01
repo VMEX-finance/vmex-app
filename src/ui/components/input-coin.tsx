@@ -1,12 +1,10 @@
-import { AssetDisplay } from '../displays/asset';
 import React from 'react';
 import { bigNumberToUSD, NETWORKS, TESTING, getNetworkName } from '@/utils';
 import { useSigner } from 'wagmi';
 import { mintTokens } from '@vmexfinance/sdk';
-import { Button, SecondaryButton } from '../buttons';
+import { Button, SecondaryButton, SmartPrice, AssetDisplay } from '@/ui/components';
 import { usePricesData } from '@/api';
 import { BigNumber, utils } from 'ethers';
-import { SmartPrice } from '../displays';
 
 export interface ICoinInput {
     amount: string;

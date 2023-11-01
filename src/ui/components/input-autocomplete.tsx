@@ -1,6 +1,6 @@
 import React, { FC, Fragment, useState } from 'react';
 import { Transition } from '@headlessui/react';
-import { AssetDisplay } from '../displays';
+import { AssetDisplay } from '@/ui/components';
 
 type IAutoCompleteInputProps = {
     value: string;

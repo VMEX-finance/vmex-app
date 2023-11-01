@@ -1,11 +1,11 @@
 import React from 'react';
-import { AppTemplate } from '../ui/templates';
+import { Base } from '@/ui/base';
 
 const Construction: React.FC = () => {
     return (
-        <AppTemplate title="Under Construction">
+        <Base title="Under Construction">
             <span className="dark:text-neutral-300">{"We're working on it!"}</span>
-        </AppTemplate>
+        </Base>
     );
 };
 export default Construction;
