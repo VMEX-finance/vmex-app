@@ -5,15 +5,19 @@ import {
     nativeAmountToUSD,
     IAvailableCoins,
     usdFormatter,
-    getApolloClient,
     PRICING_DECIMALS,
-    DEFAULT_NETWORK,
+    getNetworkName,
 } from '@/utils';
-import { getAllAssetPrices, IAssetPricesProps } from '../prices';
-import { AssetBalance, TrancheData } from '../types';
-import { IGraphProtocolDataProps, IGraphTrancheProps, ISubgraphProtocolData } from './types';
-import { getSubgraphTranchesOverviewData } from './getTranchesOverviewData';
-import { getNetwork } from '@wagmi/core';
+import { getApolloClient } from '@/config';
+import { getAllAssetPrices } from './asset-prices';
+import { AssetBalance, TrancheData } from './types';
+import {
+    IGraphProtocolDataProps,
+    IGraphTrancheProps,
+    ISubgraphProtocolData,
+    IAssetPricesProps,
+} from './types';
+import { getSubgraphTranchesOverviewData } from './subgraph-tranches-overview';
 
 function subtractSeconds(date: Date, seconds: number): Date {
     date.setSeconds(date.getSeconds() - seconds);
@@ -53,9 +57,7 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
     });
     if (error) return [];
 
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetworkName();
     let graphData: ILineChartDataPointProps[] = [];
     const prices = await getAllAssetPrices();
     data.tranches.map((tranche: IGraphTrancheProps) => {
@@ -130,9 +132,7 @@ async function getTopAssets(
     });
     if (error) return [];
 
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetworkName();
     let prices: Record<IAvailableCoins, IAssetPricesProps>;
     if (_prices) prices = _prices;
     else prices = await getAllAssetPrices();
@@ -286,9 +286,7 @@ export async function getSubgraphProtocolData(): Promise<IGraphProtocolDataProps
 }
 
 export function useSubgraphProtocolData(): ISubgraphProtocolData {
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetworkName();
 
     const queryProtocolTVLChart = useQuery({
         queryKey: ['protocol-charts', network],

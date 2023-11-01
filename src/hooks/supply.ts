@@ -14,12 +14,12 @@ import {
     DECIMALS,
     IAvailableCoins,
     NETWORKS,
-    DEFAULT_NETWORK,
     bigNumberToUnformattedString,
     convertStringFormatToNumber,
     nativeAmountToUSD,
     PRICING_DECIMALS,
     bigNumberToUSD,
+    getNetworkName,
 } from '../utils';
 import { BigNumber, BigNumberish, Wallet, utils } from 'ethers';
 import {
@@ -29,7 +29,6 @@ import {
     supply,
     withdraw,
 } from '@vmexfinance/sdk';
-import { getNetwork } from '@wagmi/core';
 import { toast } from 'react-toastify';
 
 export const useSupply = ({
@@ -45,9 +44,7 @@ export const useSupply = ({
     amount,
     setAmount,
 }: ISupplyBorrowProps & IUseModal) => {
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetworkName();
     const { findAssetInMarketsData } = useSubgraphTrancheData(data?.trancheId || 0);
     const { data: signer } = useSigner();
     const { address } = useAccount();

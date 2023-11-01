@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
-import { getApolloClient } from '@/utils';
-import { VmexRewardsData } from '../types';
+import { getApolloClient } from '@/config';
+import { VmexRewardsData } from './types';
 import { getTrancheIdFromTrancheEntity } from './id-generation';
 
 export const getSubgraphRewardData = async (): Promise<VmexRewardsData[]> => {

@@ -8,11 +8,11 @@ import {
     useSubgraphUserData,
     useUserData,
 } from '@/api';
-import useAnalyticsEventTracker from '../utils/google-analytics';
+import { useAnalyticsEventTracker } from '@/config';
 import { getNetwork } from '@wagmi/core';
 import { useAccount, useNetwork } from 'wagmi';
 import { bigNumberToUnformattedString, numberFormatter } from '@/utils';
-import { YourPositionsTable } from 'ui/tables/portfolio';
+import { YourPositionsTable } from '@/ui/tables';
 
 const Overview: React.FC = () => {
     const gaEventTracker = useAnalyticsEventTracker('Overview');

@@ -14,7 +14,7 @@ import {
     braveWallet,
 } from '@rainbow-me/rainbowkit/wallets';
 import merge from 'lodash.merge';
-import { availableNetworks } from './network';
+import { availableNetworks } from '../utils/network';
 
 export const { chains, provider } = configureChains(availableNetworks('wagmi') as Chain[], [
     publicProvider(),

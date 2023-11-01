@@ -12,24 +12,21 @@ import { useQuery } from '@tanstack/react-query';
 import {
     bigNumberToUSD,
     rayToPercent,
-    DEFAULT_NETWORK,
     bigNumberToUnformattedString,
     PRICING_DECIMALS,
     NETWORKS,
+    getNetworkName,
 } from '@/utils';
 import { IUserTrancheDataProps, IUserTrancheData } from './types';
 import { BigNumber, ethers } from 'ethers';
-import { getSubgraphRewardData } from '../subgraph/getRewardsData';
-import { VmexRewardsData } from '../types';
-import { getNetwork } from '@wagmi/core';
+import { getSubgraphRewardData } from './subgraph-rewards-data';
+import { VmexRewardsData } from './types';
 
 export async function _getUserTrancheData(
     userAddress: string,
     _trancheId: number | string,
 ): Promise<IUserTrancheData> {
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetworkName();
     const trancheId = String(_trancheId);
     if (!userAddress || !trancheId) {
         return {
@@ -44,7 +41,6 @@ export async function _getUserTrancheData(
             trancheId: 0,
         };
     }
-    console.log('before getUserTrancheData ');
 
     const userTrancheData: UserTrancheData = await getUserTrancheData({
         tranche: trancheId,
@@ -53,7 +49,6 @@ export async function _getUserTrancheData(
         test: NETWORKS[network].testing,
         providerRpc: NETWORKS[network].rpc,
     });
-    console.log('after getUserTrancheData');
 
     const returnObj = {
         trancheId: Number(trancheId),
@@ -101,9 +96,7 @@ export function useUserTrancheData(
     userAddress: any,
     trancheId: number | string,
 ): IUserTrancheDataProps {
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetworkName();
     const queryUserTrancheData = useQuery({
         queryKey: ['user-tranche', Number(trancheId), network],
         queryFn: () => _getUserTrancheData(userAddress, trancheId),

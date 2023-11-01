@@ -1,9 +1,8 @@
-import { NETWORKS, DEFAULT_NETWORK, truncateAddress } from '@/utils';
+import { NETWORKS, truncateAddress, getNetworkName } from '@/utils';
 import React from 'react';
 import { Card, MultipleAssetsDisplay, NumberDisplay } from '@/ui/components';
 import { useSelectedTrancheContext } from '@/store';
 import { IGraphTrancheDataProps } from '@/api';
-import { getNetwork } from '@wagmi/core';
 
 type ITrancheInfoCard = {
     tranche?: IGraphTrancheDataProps;
@@ -11,9 +10,7 @@ type ITrancheInfoCard = {
 };
 
 export const TrancheInfoCard = ({ tranche, loading }: ITrancheInfoCard) => {
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetworkName();
     const { tranche: _tranche } = useSelectedTrancheContext();
 
     return (

@@ -1,16 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 import { getAssetPrices, getAllAssetSymbols, convertAddressToSymbol } from '@vmexfinance/sdk';
-import { NETWORKS, DEFAULT_NETWORK, IAvailableCoins } from '@/utils';
+import { NETWORKS, IAvailableCoins, getNetworkName } from '@/utils';
 import { IAssetPricesProps, IPricesDataProps } from './types';
-import { getNetwork } from '@wagmi/core';
 
 export async function getAllAssetPrices(): Promise<
     Record<IAvailableCoins | any, IAssetPricesProps>
 > {
     try {
-        const network = getNetwork()?.chain?.unsupported
-            ? DEFAULT_NETWORK
-            : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+        const network = getNetworkName();
         const pricesMap = await getAssetPrices({
             assets: getAllAssetSymbols(network),
             network,
@@ -37,11 +34,8 @@ export async function getAllAssetPrices(): Promise<
 }
 
 export function usePricesData(): IPricesDataProps {
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
     const queryAssetPrices = useQuery({
-        queryKey: ['asset-prices', network],
+        queryKey: ['asset-prices', getNetworkName()],
         queryFn: getAllAssetPrices,
         refetchInterval: 60000, // refetch prices every minute
     });

@@ -1,9 +1,8 @@
 import React from 'react';
 import { useUserHistory } from '@/api';
 import { useTransactionsContext } from '@/store';
-import { DEFAULT_NETWORK, NETWORKS, truncate } from '@/utils';
+import { NETWORKS, getNetworkName, truncate } from '@/utils';
 import { useAccount } from 'wagmi';
-import { getNetwork } from '@wagmi/core';
 import { AssetDisplay } from '@/ui/components';
 
 export const YourTransactionsTable = () => {
@@ -11,9 +10,7 @@ export const YourTransactionsTable = () => {
     const { transactions } = useTransactionsContext();
     const { queryUserTxHistory } = useUserHistory(address);
 
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetworkName();
 
     const renderStatus = (status: 'error' | 'pending' | 'complete') => {
         switch (status) {

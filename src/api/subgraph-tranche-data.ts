@@ -1,25 +1,24 @@
 import { gql } from '@apollo/client';
 import { useQuery } from '@tanstack/react-query';
-import { IGraphTrancheDataProps, ISubgraphTrancheData } from './types';
+import { IGraphTrancheDataProps, ISubgraphTrancheData, IAssetApyProps } from './types';
 import { utils } from 'ethers';
-import { getAllAssetPrices } from '../prices';
+import { getAllAssetPrices } from './asset-prices';
 import {
     usdFormatter,
     percentFormatter,
-    getApolloClient,
     nativeAmountToUSD,
     weightedAverageofArr,
     MAX_UINT_AMOUNT,
     IAvailableCoins,
     getTrancheCategory,
     PRICING_DECIMALS,
-    DEFAULT_NETWORK,
     findInObjArr,
+    getNetworkName,
 } from '@/utils';
+import { getApolloClient } from '@/config';
 import { ILineChartDataPointProps } from '@/ui/components';
 import { getTrancheId } from './id-generation';
-import { getNetwork } from '@wagmi/core';
-import { IAssetApyProps, getAllAssetApys } from '../rewards';
+import { getAllAssetApys } from './asset-apy';
 
 const useCustomRiskParams = (isVerified: boolean, item: any) => {
     return isVerified && item.borrowFactor !== '0';
@@ -88,9 +87,7 @@ export const processTrancheData = async (
         {},
     );
 
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetworkName();
     const summaryData = assets.reduce(
         (obj: any, item: any) => {
             const asset = item.assetData.underlyingAssetName.toUpperCase();
@@ -323,9 +320,7 @@ export const getSubgraphTrancheChart = async (
 
     if (error) return [];
     else {
-        const network = getNetwork()?.chain?.unsupported
-            ? DEFAULT_NETWORK
-            : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+        const network = getNetworkName();
         let graphData: ILineChartDataPointProps[] = [];
         const prices = await getAllAssetPrices();
         data.tranche?.depositHistory?.map((el: any) => {
@@ -394,9 +389,7 @@ export const getSubgraphTrancheChart = async (
 };
 
 export function useSubgraphTrancheData(trancheId: number): ISubgraphTrancheData {
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetworkName();
 
     const queryTrancheData = useQuery({
         queryKey: ['tranche-data', Number(trancheId), network],

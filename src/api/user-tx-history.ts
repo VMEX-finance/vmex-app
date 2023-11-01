@@ -1,15 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
-import { getApolloClient, DEFAULT_NETWORK, unixToDate, sortArrByDate } from '@/utils';
-import { getNetwork } from '@wagmi/core';
+import { unixToDate, sortArrByDate, getNetworkName } from '@/utils';
+import { getApolloClient } from '@/config';
 import { gql } from '@apollo/client';
 import { ethers } from 'ethers';
 import { IUserTxHistoryProps } from './types';
 
 // Gets
 export async function getUserTxHistory(userAddress?: string) {
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
     if (!userAddress) {
         return [];
     }
@@ -67,12 +64,8 @@ export async function getUserTxHistory(userAddress?: string) {
 
 // Master
 export function useUserHistory(userAddress?: string) {
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
-
     const queryUserTxHistory = useQuery({
-        queryKey: [`user-tx-history`, userAddress, network],
+        queryKey: [`user-tx-history`, userAddress, getNetworkName()],
         queryFn: () => getUserTxHistory(userAddress?.toLowerCase()),
         enabled: !!userAddress,
     });

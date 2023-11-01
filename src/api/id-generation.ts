@@ -1,11 +1,8 @@
 import { getContractAddress } from '@vmexfinance/sdk';
-import { getNetwork } from '@wagmi/core';
-import { DEFAULT_NETWORK } from '@/utils';
+import { getNetworkName } from '@/utils';
 
 export const getPoolId = (): string => {
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetworkName();
     return `${getContractAddress('LendingPoolAddressesProvider', network)?.toLowerCase()}`;
 };
 

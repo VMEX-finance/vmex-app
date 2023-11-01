@@ -3,10 +3,10 @@ import { useQuery } from '@tanstack/react-query';
 import { IGraphUserDataProps, ISubgraphUserData, IGraphTrancheDataProps } from './types';
 import { ILineChartDataPointProps } from '@/ui/components';
 import { BigNumber, ethers } from 'ethers';
-import { getAllAssetPrices } from '../prices';
-import { nativeAmountToUSD, getApolloClient, PRICING_DECIMALS, DEFAULT_NETWORK } from '@/utils';
-import { processTrancheData } from './getTrancheData';
-import { getNetwork } from '@wagmi/core';
+import { getAllAssetPrices } from './asset-prices';
+import { nativeAmountToUSD, PRICING_DECIMALS, getNetworkName } from '@/utils';
+import { getApolloClient } from '@/config';
+import { processTrancheData } from './subgraph-tranche-data';
 
 type IncrementalChangeItem = {
     timestamp: number;
@@ -115,9 +115,7 @@ const calculateInterestProfit = (
     decimals: number,
     assetUSDPrice: BigNumber,
 ): number => {
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetworkName();
     const incrementalInterestProfit = BigNumber.from(aTokenBalanceItem.index)
         .sub(BigNumber.from(prevATokenBalanceItem.index))
         .mul(BigNumber.from(prevATokenBalanceItem.scaledATokenBalance))
@@ -136,9 +134,7 @@ const calculateInterestLoss = (
     decimals: number,
     assetUSDPrice: BigNumber,
 ): number => {
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetworkName();
     const incrementalInterestLoss = BigNumber.from(variableTokenBalanceItem.index)
         .sub(BigNumber.from(prevVariableTokenBalanceItem.index))
         .mul(BigNumber.from(prevVariableTokenBalanceItem.scaledVariableDebt))
@@ -403,9 +399,7 @@ export const getSubgraphUserData = async (address: string): Promise<IGraphUserDa
 };
 
 export function useSubgraphUserData(address?: string): ISubgraphUserData {
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetworkName();
 
     const queryUserPnlChart = useQuery({
         queryKey: ['user-pnl-chart', network],

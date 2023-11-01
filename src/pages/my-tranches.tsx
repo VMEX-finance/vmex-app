@@ -20,19 +20,17 @@ import { ethers } from 'ethers';
 import { configureExistingTranche, SetAddress } from '@vmexfinance/sdk';
 import {
     NETWORKS,
-    DEFAULT_NETWORK,
     AVAILABLE_ASSETS,
     checkProfanity,
     nativeAmountToUSD,
     PRICING_DECIMALS,
+    getNetworkName,
 } from '../utils';
-import useAnalyticsEventTracker from '../utils/google-analytics';
+import { useAnalyticsEventTracker } from '@/config';
 import { getNetwork } from '@wagmi/core';
 
 const MyTranches: React.FC = () => {
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetworkName();
     const gaEventTracker = useAnalyticsEventTracker('My Tranches');
     const breakpoint = 1024;
     const { width } = useWindowSize();

@@ -6,4 +6,4 @@ const useAnalyticsEventTracker = (category = 'Overview') => {
     };
     return eventTracker;
 };
-export default useAnalyticsEventTracker;
+export { useAnalyticsEventTracker };

@@ -9,15 +9,13 @@ import {
     calculateHealthFactorFromBalances,
     determineHealthColor,
     PRICING_DECIMALS,
-    NETWORKS,
-    DEFAULT_NETWORK,
     TESTING,
+    getNetworkName,
 } from '@/utils';
 import { ethers } from 'ethers';
 import { useAccount } from 'wagmi';
 import { useLocation } from 'react-router-dom';
 import { SkeletonLoader } from '../loaders';
-import { getNetwork } from '@wagmi/core';
 
 interface IHealthFactorProps {
     asset?: string;
@@ -82,9 +80,7 @@ export const HealthFactor = ({
     showInfo = true,
     loader = 'default',
 }: IHealthFactorProps) => {
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetworkName();
     const location = useLocation();
     const { address } = useAccount();
     const { tranche } = useSelectedTrancheContext();

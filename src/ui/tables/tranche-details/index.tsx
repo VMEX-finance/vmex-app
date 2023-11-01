@@ -18,6 +18,7 @@ import {
     usdFormatter,
     NETWORKS,
     DEFAULT_CHAINID,
+    getNetworkName,
 } from '@/utils';
 import { useLocation } from 'react-router-dom';
 import { IYourSuppliesTableItemProps } from '../portfolio';
@@ -103,9 +104,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
         return [];
     }, [data]);
 
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetworkName();
 
     const handleClick = (e: any, row: any) => {
         if (!address && openConnectModal) {

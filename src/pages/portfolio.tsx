@@ -12,7 +12,7 @@ import {
     numberFormatter,
 } from '@/utils';
 import { useSubgraphUserData } from '@/api';
-import useAnalyticsEventTracker from '../utils/google-analytics';
+import { useAnalyticsEventTracker } from '@/config';
 import { getNetwork } from '@wagmi/core';
 
 const Portfolio: React.FC = () => {
