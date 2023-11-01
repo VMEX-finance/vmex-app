@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppTemplate } from '@/ui/templates';
+import { Base } from '@/ui/base';
 import { MarketsTable } from '@/ui/tables';
 import { useSubgraphAllMarketsData, useUserData } from '@/api';
 import { useAccount } from 'wagmi';
@@ -12,13 +12,13 @@ const Markets: React.FC = () => {
     const { queryAllMarketsData } = useSubgraphAllMarketsData();
 
     return (
-        <AppTemplate title="markets">
+        <Base title="markets">
             <MarketsTable
                 data={queryAllMarketsData.data}
                 loading={queryAllMarketsData.isLoading}
                 userActivity={queryUserActivity}
             />
-        </AppTemplate>
+        </Base>
     );
 };
 export default Markets;

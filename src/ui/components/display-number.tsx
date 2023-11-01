@@ -1,6 +1,6 @@
 import React from 'react';
-import { SkeletonLoader } from '../loaders';
-import { PercentChangeDisplay } from './percent-change';
+import { SkeletonLoader } from './loader-skeleton';
+import { PercentChangeDisplay } from './display-percent-change';
 import { SmartPrice } from './smart-price';
 
 type INumberProps = {

@@ -1,5 +1,6 @@
 import React from 'react';
-import { AppTemplate, GridView } from '@/ui/templates';
+import { GridView } from '@/ui/templates';
+import { Base } from '@/ui/base';
 import { PortfolioStatsCard, UserPerformanceCard } from '@/ui/features';
 import { YourPositionsTable, YourRewardsTable, YourTransactionsTable } from '@/ui/tables';
 import { Card, WalletButton } from '@/ui/components';
@@ -89,7 +90,7 @@ const Portfolio: React.FC = () => {
     // };
 
     return (
-        <AppTemplate title="Portfolio">
+        <Base title="Portfolio">
             {address && !chain?.unsupported ? (
                 <GridView type="fixed">
                     <div className="col-span-3 2xl:col-span-2 flex flex-col gap-4">
@@ -158,7 +159,7 @@ const Portfolio: React.FC = () => {
                     <WalletButton primary className="!w-fit" />
                 </div>
             )}
-        </AppTemplate>
+        </Base>
     );
 };
 export default Portfolio;

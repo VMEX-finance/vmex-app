@@ -1,6 +1,6 @@
 import React from 'react';
 import { LineChart, Line, Tooltip, ResponsiveContainer, XAxis, YAxis } from 'recharts';
-import { CustomTooltip } from './custom-tooltip';
+import { CustomTooltip } from './tooltip-chart';
 import { addMissingDatesToTimeseries, getTimeseriesAvgByDay } from '@/utils';
 
 export type ILineChartDataPointProps = {

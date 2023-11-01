@@ -4,8 +4,8 @@ import { AVAILABLE_ASSETS, HEALTH } from './constants';
 import moment from 'moment';
 import { ILineChartDataPointProps } from '@/ui/components';
 import { NAME_CACHE, SYMBOL_CACHE } from './cache';
-import { getNetwork, Chain } from '@wagmi/core';
-import { DEFAULT_NETWORK, getNetworkName } from '@/utils';
+import { Chain } from '@wagmi/core';
+import { getNetworkName } from '@/utils';
 import { provider } from '@/config';
 import { convertAddressToSymbol } from '@vmexfinance/sdk';
 
@@ -197,15 +197,15 @@ export const makeCompact = (amount: string | number | undefined, decimalsOnly = 
     return usdFormatter().format(parseFloat(_amount));
 };
 
-export const numberFormatter = new Intl.NumberFormat('en-US', {
-    notation: 'compact',
-});
-
 export const HFFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
     maximumSignificantDigits: 4, //since percentages only have this many sig figs
+});
+
+export const numberFormatter = new Intl.NumberFormat('en-US', {
+    notation: 'compact',
 });
 
 export const nativeTokenFormatter = new Intl.NumberFormat('en-US', {

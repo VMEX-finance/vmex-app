@@ -1,9 +1,9 @@
 import React from 'react';
 import Slider from 'react-slick';
-import { Card } from './cards';
+import { Card } from './card-default';
 import { useWindowSize } from '@/hooks';
 import { HiOutlineChevronLeft, HiOutlineChevronRight } from 'react-icons/hi';
-import { StrategyCard } from '../features';
+import { StrategyCard } from '@/ui/components';
 
 type ICarousel = {
     items?: any[];

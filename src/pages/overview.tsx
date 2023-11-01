@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppTemplate, GridView } from '@/ui/templates';
+import { Base } from '@/ui/base';
 import { ProtocolStatsCard, UserPerformanceCard } from '@/ui/features';
 import { Carousel, WalletButton } from '@/ui/components';
 import {
@@ -24,7 +24,7 @@ const Overview: React.FC = () => {
     const { queryAllMarketsData } = useSubgraphAllMarketsData();
 
     return (
-        <AppTemplate title="overview">
+        <Base title="overview">
             <ProtocolStatsCard
                 tvl={queryProtocolData.data?.tvl}
                 tvlChart={queryProtocolTVLChart}
@@ -83,7 +83,7 @@ const Overview: React.FC = () => {
                     ?.sort((a, b) => Number(b.supplyApy) - Number(a.supplyApy))
                     .slice(0, 8)}
             />
-        </AppTemplate>
+        </Base>
     );
 };
 export default Overview;

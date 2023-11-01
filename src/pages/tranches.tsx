@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppTemplate } from '@/ui/templates';
+import { Base } from '@/ui/base';
 import { TranchesTable } from '@/ui/tables';
 import { useAccount } from 'wagmi';
 import { useSubgraphTranchesOverviewData, useUserData } from '@/api';
@@ -13,7 +13,7 @@ const Tranches: React.FC = () => {
     const { queryUserActivity } = useUserData(address);
 
     return (
-        <AppTemplate title="tranches">
+        <Base title="tranches">
             <TranchesTable
                 data={queryAllTranches.data?.filter(
                     (el: ITrancheProps) => el.assets && el.assets.length > 0,
@@ -21,7 +21,7 @@ const Tranches: React.FC = () => {
                 loading={queryAllTranches.isLoading}
                 userActivity={queryUserActivity}
             />
-        </AppTemplate>
+        </Base>
     );
 };
 export default Tranches;

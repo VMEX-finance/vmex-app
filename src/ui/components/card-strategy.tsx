@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Slider as MUISlider } from '@mui/material';
 import { AssetDisplay, Button, Card, PillDisplay } from '@/ui/components';
 import { DEFAULT_CHAINID, capFirstLetter, findInObjArr, percentFormatter, toSymbol } from '@/utils';

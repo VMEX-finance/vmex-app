@@ -1,7 +1,7 @@
 import { determineCoinDescription, determineCoinImg, getRandomNumber } from '@/utils';
 import React from 'react';
-import { MultipleAssetsDisplayOverlapping } from './multi-asset';
-import { Tooltip } from '../tooltips';
+import { Tooltip } from './tooltip-default';
+import { MultipleAssetsDisplayOverlapping } from './display-multi-asset';
 
 type IAssetDisplayProps = {
     logo?: string;

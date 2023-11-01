@@ -1,6 +1,6 @@
 import { determineCoinImg, numberFormatter, usdFormatter } from '@/utils';
 import React from 'react';
-import { AssetDisplay } from './asset';
+import { AssetDisplay } from './display-asset';
 
 type IPillDisplayProps = {
     asset: string;

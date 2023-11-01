@@ -1,10 +1,11 @@
 import React from 'react';
-import { AppTemplate, GridView } from '../ui/templates';
-import { StakingAsset, StakingOverview } from '../ui/features/stake';
+import { GridView } from '@/ui/templates';
+import { Base } from '@/ui/base';
+import { StakingAsset, StakingOverview } from '@/ui/features';
 
 const Staking: React.FC = () => {
     return (
-        <AppTemplate
+        <Base
             title="staking"
             description={
                 <>
@@ -69,7 +70,7 @@ const Staking: React.FC = () => {
                     }}
                 />
             </GridView>
-        </AppTemplate>
+        </Base>
     );
 };
 export default Staking;

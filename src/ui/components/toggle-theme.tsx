@@ -1,7 +1,7 @@
 import { ThemeContext } from '@/store';
 import React from 'react';
 import { FaMoon, FaSun } from 'react-icons/fa';
-import { BasicToggle } from './default';
+import { BasicToggle } from './toggle-default';
 import { useWindowSize } from '@/hooks';
 
 type IToggleThemeButton = {

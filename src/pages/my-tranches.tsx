@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { AppTemplate } from '@/ui/templates';
+import { Base } from '@/ui/base';
 import {
     Button,
     Card,
@@ -252,7 +252,7 @@ const MyTranches: React.FC = () => {
     }, [queryTrancheAdminData.isLoading]);
 
     return (
-        <AppTemplate
+        <Base
             title="My Tranches"
             description={selectedTranche.name && `${selectedTranche.name}`}
             descriptionLoading={queryTrancheAdminData.isLoading}
@@ -465,7 +465,7 @@ const MyTranches: React.FC = () => {
                     <WalletButton primary className="w-fit" />
                 </div>
             )}
-        </AppTemplate>
+        </Base>
     );
 };
 export default MyTranches;
