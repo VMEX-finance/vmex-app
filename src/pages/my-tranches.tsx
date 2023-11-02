@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { AppTemplate } from '@/ui/templates';
+import { Base } from '@/ui/base';
 import {
     Button,
     Card,
@@ -20,19 +20,17 @@ import { ethers } from 'ethers';
 import { configureExistingTranche, SetAddress } from '@vmexfinance/sdk';
 import {
     NETWORKS,
-    DEFAULT_NETWORK,
     AVAILABLE_ASSETS,
     checkProfanity,
     nativeAmountToUSD,
     PRICING_DECIMALS,
+    getNetworkName,
 } from '../utils';
-import useAnalyticsEventTracker from '../utils/google-analytics';
+import { useAnalyticsEventTracker } from '@/config';
 import { getNetwork } from '@wagmi/core';
 
 const MyTranches: React.FC = () => {
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetworkName();
     const gaEventTracker = useAnalyticsEventTracker('My Tranches');
     const breakpoint = 1024;
     const { width } = useWindowSize();
@@ -254,7 +252,7 @@ const MyTranches: React.FC = () => {
     }, [queryTrancheAdminData.isLoading]);
 
     return (
-        <AppTemplate
+        <Base
             title="My Tranches"
             description={selectedTranche.name && `${selectedTranche.name}`}
             descriptionLoading={queryTrancheAdminData.isLoading}
@@ -467,7 +465,7 @@ const MyTranches: React.FC = () => {
                     <WalletButton primary className="w-fit" />
                 </div>
             )}
-        </AppTemplate>
+        </Base>
     );
 };
 export default MyTranches;

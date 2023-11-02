@@ -5,16 +5,15 @@ import { BigNumber, Wallet, utils } from 'ethers';
 import {
     DECIMALS,
     NETWORKS,
-    DEFAULT_NETWORK,
     bigNumberToUSD,
     bigNumberToUnformattedString,
     convertStringFormatToNumber,
     PRICING_DECIMALS,
+    getNetworkName,
 } from '../utils';
 import { borrow, estimateGas, repay } from '@vmexfinance/sdk';
 import { useAccount, useSigner } from 'wagmi';
 import { useSubgraphTrancheData, useUserTrancheData, useUserData } from '../api';
-import { getNetwork } from '@wagmi/core';
 
 export const useBorrow = ({
     data,
@@ -28,9 +27,7 @@ export const useBorrow = ({
     amount,
     setAmount,
 }: ISupplyBorrowProps & IUseModal) => {
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetworkName();
     const { address } = useAccount();
     const { data: signer } = useSigner();
     const { findAssetInUserSuppliesOrBorrows, findAmountBorrowable } = useUserTrancheData(

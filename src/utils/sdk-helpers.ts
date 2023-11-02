@@ -4,7 +4,7 @@ import { convertAddressToSymbol } from '@vmexfinance/sdk';
 import { ITrancheCategories } from '@/api';
 import { DECIMALS } from './constants';
 import { getNetwork } from '@wagmi/core';
-import { DEFAULT_NETWORK } from './network';
+import { DEFAULT_NETWORK, getNetworkName } from './network';
 
 export const bigNumberToUSD = (
     number: BigNumberish | undefined,
@@ -38,9 +38,7 @@ export const nativeAmountToUSD = (
 };
 
 export const bigNumberToNative = (number: BigNumber | undefined, asset: string): string => {
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetworkName();
     if (!number) return '0';
     const decimals = DECIMALS.get(convertAddressToSymbol(asset, network) || asset) || 18;
     return nativeTokenFormatter.format(parseFloat(ethers.utils.formatUnits(number, decimals)));
@@ -50,9 +48,7 @@ export const bigNumberToUnformattedString = (
     number: BigNumber | undefined,
     asset: string,
 ): string => {
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetworkName();
     if (!number) {
         console.error('given invalid bignumber');
         return '0';
@@ -72,9 +68,7 @@ export const unformattedStringToBigNumber = (
     number: string | undefined,
     asset: string,
 ): BigNumber => {
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetworkName();
     if (!number) {
         console.error('given invalid number');
         return BigNumber.from('0');

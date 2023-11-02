@@ -37,21 +37,10 @@ When adding new features, create a new branch based on `origin/develop`. Upon co
 ```
 src
 ├── api
-│   ├── prices              # Getting asset price data
-│   ├── subgraph            # Querying protocol data including tranches, markets, and overview
-│   ├── user                # Querying user data
-│   ├── index.ts
-│   └── types.ts
+├── config
 ├── hooks
-│   ├── borrow.ts           # Borrowing or repaying an asset
-│   ├── dialog.ts           # Dialog state
-│   ├── ...
-│   └── window-size.ts      # Get browser/window dimensions
 ├── pages
 ├── store
-│   ├── auth.ts             # Whitelist for beta auth global store
-│   ├── ...
-│   └── transactions.tsx    # User transactions global store
 ├── ui
 │   ├── base                # Includes navbar, footer, and base layout
 │   ├── components          # Includes subcomponents to be used in larger UI components

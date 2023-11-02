@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppTemplate, GridView } from '@/ui/templates';
+import { Base } from '@/ui/base';
 import { ProtocolStatsCard, UserPerformanceCard } from '@/ui/features';
 import { Carousel, WalletButton } from '@/ui/components';
 import {
@@ -8,11 +8,11 @@ import {
     useSubgraphUserData,
     useUserData,
 } from '@/api';
-import useAnalyticsEventTracker from '../utils/google-analytics';
+import { useAnalyticsEventTracker } from '@/config';
 import { getNetwork } from '@wagmi/core';
 import { useAccount, useNetwork } from 'wagmi';
 import { bigNumberToUnformattedString, numberFormatter } from '@/utils';
-import { YourPositionsTable } from 'ui/tables/portfolio';
+import { YourPositionsTable } from '@/ui/tables';
 
 const Overview: React.FC = () => {
     const gaEventTracker = useAnalyticsEventTracker('Overview');
@@ -23,12 +23,8 @@ const Overview: React.FC = () => {
     const { queryUserPnlChart } = useSubgraphUserData(address);
     const { queryAllMarketsData } = useSubgraphAllMarketsData();
 
-    console.log('queryUserActivity', queryUserActivity.data, queryUserWallet.data);
-    console.log('queryUserPnlChart', queryUserPnlChart.data);
-    console.log('queryAllMarketsData', queryAllMarketsData.data);
-
     return (
-        <AppTemplate title="overview">
+        <Base title="overview">
             <ProtocolStatsCard
                 tvl={queryProtocolData.data?.tvl}
                 tvlChart={queryProtocolTVLChart}
@@ -43,7 +39,7 @@ const Overview: React.FC = () => {
                 topTranches={queryProtocolData.data?.topTranches}
                 isLoading={queryProtocolData.isLoading}
             />
-            {isConnected && !chain?.unsupported ? (
+            {/* {isConnected && !chain?.unsupported ? (
                 <GridView type="fixed">
                     <UserPerformanceCard
                         isLoading={queryUserActivity.isLoading || queryUserPnlChart.isLoading}
@@ -80,14 +76,14 @@ const Overview: React.FC = () => {
                     </div>
                     <WalletButton primary className="!w-fit" />
                 </div>
-            )}
+            )} */}
             <Carousel
                 type="strategies"
                 items={queryAllMarketsData.data
                     ?.sort((a, b) => Number(b.supplyApy) - Number(a.supplyApy))
                     .slice(0, 8)}
             />
-        </AppTemplate>
+        </Base>
     );
 };
 export default Overview;

@@ -4,6 +4,10 @@ import { AVAILABLE_ASSETS, HEALTH } from './constants';
 import moment from 'moment';
 import { ILineChartDataPointProps } from '@/ui/components';
 import { NAME_CACHE, SYMBOL_CACHE } from './cache';
+import { Chain } from '@wagmi/core';
+import { getNetworkName } from './network';
+import { provider } from '@/config';
+import { convertAddressToSymbol } from '@vmexfinance/sdk';
 
 const Filter = require('bad-words'),
     filter = new Filter();
@@ -74,6 +78,7 @@ export const determineCoinImg = (asset: string, custom?: string) => {
 export const determineCoinDescription = (asset: string, custom?: string) => {
     if (custom) return custom;
     else {
+        const network = getNetworkName();
         if (asset?.toLowerCase() == 'moocurvewsteth')
             return 'Beefy vault for the wstETH/ETH curve pool';
         if (asset?.toLowerCase() == '2crv') return 'Curve stableswap pool between USDT and USDC';
@@ -87,17 +92,24 @@ export const determineCoinDescription = (asset: string, custom?: string) => {
             return 'Curve stableswap pool between wstETH and ETH';
         if (asset?.toLowerCase().startsWith('yv')) return `Yearn vault for ${asset.substring(2)}`;
         if (asset?.toLowerCase().includes('bpt')) {
-            return `Beethoven or balancer pool between ${asset.split('-')[1]} and ${
-                asset.split('-')[2]
-            }`;
+            if (network == 'optimism') {
+                return `Beethoven pool between ${asset.split('-')[1]} and ${asset.split('-')[2]}`;
+            } else {
+                return `Balancer pool between ${asset.split('-')[0]} and ${asset.split('-')[1]}`;
+            }
         }
-        if (asset?.toLowerCase().includes('ammv2')) {
+        if (asset?.toLowerCase().includes('amm')) {
             let stable = 'Stable';
             if (asset.startsWith('v')) {
                 stable = 'Volatile';
             }
-            const assets = asset.substring(7).split('/');
-            return `${stable} Velodrome pool between ${assets[0]} and ${assets[1]}`;
+            if (network == 'base') {
+                const assets = asset.substring(5).split('/');
+                return `${stable} Aerodrome pool between ${assets[0]} and ${assets[1]}`;
+            } else {
+                const assets = asset.substring(7).split('/');
+                return `${stable} Velodrome pool between ${assets[0]} and ${assets[1]}`;
+            }
         }
         if (asset?.toLowerCase().startsWith('cmlt')) {
             const assets = asset.substring(5).split('-');
@@ -185,15 +197,15 @@ export const makeCompact = (amount: string | number | undefined, decimalsOnly = 
     return usdFormatter().format(parseFloat(_amount));
 };
 
-export const numberFormatter = new Intl.NumberFormat('en-US', {
-    notation: 'compact',
-});
-
 export const HFFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
     maximumSignificantDigits: 4, //since percentages only have this many sig figs
+});
+
+export const numberFormatter = new Intl.NumberFormat('en-US', {
+    notation: 'compact',
 });
 
 export const nativeTokenFormatter = new Intl.NumberFormat('en-US', {
@@ -346,5 +358,28 @@ export function sortArrByDate(arr?: any[], key = 'datetime', order?: 'asc' | 'de
 
 export function findInObjArr(key: string, value: string | number, arr?: any[]) {
     if (!arr) return undefined;
-    return arr.find((el) => el[key] === value);
+    return arr.find((el) => String(el[key])?.toLowerCase() === String(value)?.toLowerCase());
+}
+
+export async function toSymbol(symbolOrAddress: string, chain: Chain) {
+    if (!symbolOrAddress) return '';
+    try {
+        if (symbolOrAddress.startsWith('0x')) {
+            // Is address
+            const sdkTry = convertAddressToSymbol(symbolOrAddress, chain.network);
+            if (sdkTry) return sdkTry;
+            const contract = new Contract(
+                symbolOrAddress,
+                ['function symbol() view returns (string)'],
+                provider({ chainId: chain.id }),
+            );
+            const symbol: string = await contract?.symbol();
+            if (symbol) return symbol;
+            return '';
+        }
+        return symbolOrAddress;
+    } catch (err) {
+        console.error('#toSymbol', err);
+        return '';
+    }
 }

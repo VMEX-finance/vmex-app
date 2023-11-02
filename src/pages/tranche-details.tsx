@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { AppTemplate, GridView } from '@/ui/templates';
+import { GridView } from '@/ui/templates';
+import { Base } from '@/ui/base';
 import { TrancheTVLDataCard, TrancheInfoCard, TrancheStatisticsCard } from '@/ui/features';
 import { Card, Legend } from '@/ui/components';
 import { TrancheTable } from '@/ui/tables';
@@ -7,7 +8,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '@/store';
 import { useAccount, useSigner } from 'wagmi';
 import { useSubgraphTrancheData, useUserTrancheData } from '@/api';
-import useAnalyticsEventTracker from '../utils/google-analytics';
+import { useAnalyticsEventTracker } from '@/config';
 import { useWindowSize } from '@/hooks';
 
 const TrancheDetails: React.FC = () => {
@@ -46,7 +47,7 @@ const TrancheDetails: React.FC = () => {
     }, [navigate, tranche, location]);
 
     return (
-        <AppTemplate
+        <Base
             title={tranche?.name}
             description="Tranche"
             view={view}
@@ -186,7 +187,7 @@ const TrancheDetails: React.FC = () => {
                     </Card>
                 </GridView>
             )}
-        </AppTemplate>
+        </Base>
     );
 };
 export default TrancheDetails;
