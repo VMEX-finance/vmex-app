@@ -101,8 +101,10 @@ export const StrategyCard = ({ asset, assetAddress, supplyApy, trancheId }: IStr
 
     useEffect(() => {
         if (assetAddress) {
-            const found = queryUserActivity.data?.supplies[0];
-            // const found = queryUserActivity.data?.supplies.find(el => utils.getAddress(el.assetAddress) === utils.getAddress(assetAddress))
+            // const found = queryUserActivity.data?.supplies[0];
+            const found = queryUserActivity.data?.supplies.find(
+                (el) => utils.getAddress(el.assetAddress) === utils.getAddress(assetAddress),
+            );
             if (found && supplied?.assetAddress !== found.assetAddress) setSupplied(found);
         }
     }, [assetAddress]);
