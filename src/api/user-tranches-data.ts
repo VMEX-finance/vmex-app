@@ -73,6 +73,7 @@ export async function _getUserTranchesData(
                         apy: rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0)),
                         tranche: assetData.tranche.toString(),
                         trancheId: assetData.tranche.toNumber(),
+                        assetAddress: assetData.asset,
                     };
                 }),
                 borrows: userTrancheData.borrowedAssetData.map((assetData: BorrowedAssetData) => {
@@ -83,13 +84,14 @@ export async function _getUserTranchesData(
                         apy: rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0)),
                         tranche: assetData.tranche.toString(),
                         trancheId: assetData.tranche.toNumber(),
+                        assetAddress: assetData.asset,
                     };
                 }),
                 assetBorrowingPower: userTrancheData.assetBorrowingPower.map(
                     (marketData: AvailableBorrowData) => {
-                        let asset = convertAddressToSymbol(marketData.asset, network);
+                        const asset = convertAddressToSymbol(marketData.asset, network);
                         return {
-                            asset: asset,
+                            asset,
                             amountUSD: bigNumberToUSD(
                                 marketData.amountUSD,
                                 PRICING_DECIMALS[network],

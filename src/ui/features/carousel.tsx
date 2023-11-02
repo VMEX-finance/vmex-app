@@ -1,6 +1,6 @@
 import React from 'react';
 import Slider from 'react-slick';
-import { Card } from './card-default';
+import { Card } from '../components/card-default';
 import { useWindowSize } from '@/hooks';
 import { HiOutlineChevronLeft, HiOutlineChevronRight } from 'react-icons/hi';
 import { StrategyCard } from '@/ui/components';

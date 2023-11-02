@@ -6,6 +6,7 @@ import { bigNumberToNative } from '@/utils';
 
 export type IYourSuppliesTableItemProps = {
     asset: string;
+    assetAddress: string;
     amount: string;
     amountNative: BigNumber;
     collateral: boolean;

@@ -59,6 +59,7 @@ export async function _getUserTrancheData(
         avgBorrowFactor: userTrancheData.avgBorrowFactor,
         supplies: userTrancheData.suppliedAssetData.map((assetData: SuppliedAssetData) => {
             return {
+                assetAddress: assetData.asset,
                 asset: convertAddressToSymbol(assetData.asset, network),
                 amount: bigNumberToUSD(assetData.amount, PRICING_DECIMALS[network]),
                 amountNative: assetData.amountNative,
@@ -70,6 +71,7 @@ export async function _getUserTrancheData(
         }),
         borrows: userTrancheData.borrowedAssetData.map((assetData: BorrowedAssetData) => {
             return {
+                assetAddress: assetData.asset,
                 asset: convertAddressToSymbol(assetData.asset, network),
                 amount: bigNumberToUSD(assetData.amount, PRICING_DECIMALS[network]),
                 amountNative: assetData.amountNative,

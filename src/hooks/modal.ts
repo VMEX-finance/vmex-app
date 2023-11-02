@@ -26,6 +26,8 @@ export type IUseModal = {
 export const useModal = (dialog?: IDialogNames): IUseModal => {
     const determineDefaultView = () => {
         switch (dialog) {
+            case 'leverage-asset-dialog':
+                return 'Leverage';
             case 'loan-asset-dialog':
                 return 'Supply';
             case 'borrow-asset-dialog':

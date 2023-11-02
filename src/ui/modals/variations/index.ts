@@ -7,3 +7,4 @@ export * from './feedback';
 export * from './transactions';
 export * from './toggle-collateral';
 export * from './referrals';
+export * from './leverage-asset';
