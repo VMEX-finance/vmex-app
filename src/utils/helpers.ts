@@ -5,7 +5,7 @@ import moment from 'moment';
 import { ILineChartDataPointProps } from '@/ui/components';
 import { NAME_CACHE, SYMBOL_CACHE } from './cache';
 import { Chain } from '@wagmi/core';
-import { getNetworkName } from '@/utils';
+import { getNetworkName } from './network';
 import { provider } from '@/config';
 import { convertAddressToSymbol } from '@vmexfinance/sdk';
 
