@@ -46,7 +46,7 @@ export const StrategyCard = ({ asset, assetAddress, supplyApy, trancheId }: IStr
     };
 
     const leverageDisabled = () => {
-        if (supplied) return false;
+        if (supplied) return true;
         return false;
     };
 
