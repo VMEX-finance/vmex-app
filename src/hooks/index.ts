@@ -8,3 +8,4 @@ export * from './local-storage';
 export * from './supply';
 export * from './borrow';
 export * from './zap';
+export * from './leverage';

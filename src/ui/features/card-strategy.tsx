@@ -4,10 +4,12 @@ import { AssetDisplay, Button, Card, PillDisplay } from '@/ui/components';
 import { DEFAULT_CHAINID, capFirstLetter, findInObjArr, percentFormatter, toSymbol } from '@/utils';
 import { ModalTableDisplay } from '../modals';
 import { useApyData } from '@/api';
-import { Chain, useNetwork, useSwitchNetwork } from 'wagmi';
+import { Chain, useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { useDialogController } from '@/hooks';
-import { formatEther } from 'viem';
+import { useUserData } from '@/api/user-data';
+import { utils } from 'ethers';
+import { IYourSuppliesTableItemProps } from '../tables';
 
 type IStrategyCard = {
     asset: string;
@@ -21,6 +23,7 @@ type IStrategyCard = {
 
 export const StrategyCard = ({ asset, assetAddress, supplyApy, trancheId }: IStrategyCard) => {
     const { chain } = useNetwork();
+    const { address } = useAccount();
     const { openDialog } = useDialogController();
     const { switchNetwork } = useSwitchNetwork();
     const { openConnectModal } = useConnectModal();
@@ -28,6 +31,9 @@ export const StrategyCard = ({ asset, assetAddress, supplyApy, trancheId }: IStr
     const [leverage, setLeverage] = useState(1);
     const { queryAssetApys } = useApyData();
     const [apyBreakdown, setApyBreakdown] = useState<any[]>([]);
+    const { queryUserActivity } = useUserData(address);
+    const [supplied, setSupplied] = useState<IYourSuppliesTableItemProps>();
+    const [collateral, setCollateral] = useState('');
 
     const rewardApy = findInObjArr('asset', assetAddress, queryAssetApys.data);
     const getCollateralAssets = () => {
@@ -36,9 +42,22 @@ export const StrategyCard = ({ asset, assetAddress, supplyApy, trancheId }: IStr
     };
 
     const handleCollateralClick = (asset: string) => {
-        setBorrowAsset(asset);
-        // TODO visually select this button so user knows
+        setCollateral(asset);
     };
+
+    const leverageDisabled = () => {
+        if (supplied) return false;
+        return false;
+    };
+
+    const openLeverageDialog = () =>
+        openDialog('leverage-asset-dialog', {
+            ...supplied,
+            ...rewardApy,
+            apyBreakdown,
+            leverage,
+            collateral,
+        });
 
     const handleSupplyClick = (e: any) => {
         if (!chain && openConnectModal) return openConnectModal();
@@ -83,6 +102,14 @@ export const StrategyCard = ({ asset, assetAddress, supplyApy, trancheId }: IStr
             })().catch((err) => console.error(err));
         }
     }, [rewardApy]);
+
+    useEffect(() => {
+        if (assetAddress) {
+            const found = queryUserActivity.data?.supplies[0];
+            // const found = queryUserActivity.data?.supplies.find(el => utils.getAddress(el.assetAddress) === utils.getAddress(assetAddress))
+            if (found && supplied?.assetAddress !== found.assetAddress) setSupplied(found);
+        }
+    }, [assetAddress]);
 
     return (
         <Card className="h-full flex flex-col justify-between">
@@ -139,8 +166,9 @@ export const StrategyCard = ({ asset, assetAddress, supplyApy, trancheId }: IStr
             <div className="mt-3 2xl:mt-4 grid grid-cols-1 sm:grid-cols-2 items-center gap-1 w-full">
                 <Button
                     label={renderBtnText(true)}
-                    onClick={handleCollateralClick}
+                    onClick={openLeverageDialog}
                     className="w-full"
+                    disabled={leverageDisabled()}
                 />
                 <Button
                     label={renderBtnText()}

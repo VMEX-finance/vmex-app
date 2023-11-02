@@ -1,5 +1,5 @@
-export * from './carousel';
-export * from './card-strategy';
+export * from '../features/carousel';
+export * from '../features/card-strategy';
 export * from './accordion';
 export * from './button-default';
 export * from './button-link';
@@ -9,8 +9,7 @@ export * from './button-split';
 export * from './button-wallet';
 export * from './card-default';
 export * from './card-inner';
-export * from './card-strategy';
-export * from './carousel';
+export * from '../features/carousel';
 export * from './checkbox';
 export * from './display-asset';
 export * from './display-available-asset';

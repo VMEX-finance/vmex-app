@@ -42,7 +42,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
 
     // TODO: cleanup / optimize
     return (
-        <div className="max-w-[125rem] mx-auto p-3 md:p-4 lg:p-5 xl:p-6 2xl:px-10">
+        <div className="max-w-[125rem] mx-auto p-3 md:p-4 xl:p-5 2xl:px-10">
             <header
                 className={`
                     ${right ? 'flex justify-between w-full' : ''}
@@ -69,7 +69,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                         </div>
                     ) : (
                         <>
-                            <h1 className="text-3xl font-basefont capitalize leading-tight text-neutral-900 dark:text-neutral-300">
+                            <h1 className="text-[28px] leading-tight capitalize text-neutral-900 dark:text-neutral-300">
                                 {title}
                             </h1>
                             {(description || descriptionLoading) && (
@@ -181,7 +181,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                     )}
             </header>
             <main>
-                <div className="py-4 md:py-8 flex flex-col gap-4">
+                <div className="py-3 flex flex-col gap-4">
                     {children ? (
                         children
                     ) : (

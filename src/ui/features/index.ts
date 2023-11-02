@@ -8,4 +8,4 @@ export * from './tranche-admin-stats';
 export * from './tranche-info';
 export * from './tranche-overview';
 export * from './tranche-stats';
-export * from './tranche-info';
+export * from './card-strategy';

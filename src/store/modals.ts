@@ -26,10 +26,22 @@ export type IDialogNames =
     | 'disclaimer-dialog'
     | 'toggle-collateral-dialog'
     | 'transactions-dialog'
-    | 'referrals-dialog';
+    | 'referrals-dialog'
+    | 'leverage-asset-dialog';
 
 const DialogControllerState: IDialogState = {
     dialogs: new Map<string, DialogType>([
+        [
+            'leverage-asset-dialog',
+            {
+                name: 'Leverage',
+                tab: '',
+                isOpen: false,
+                data: {},
+                isSuccess: false,
+                isError: false,
+            },
+        ],
         [
             'loan-asset-dialog',
             {

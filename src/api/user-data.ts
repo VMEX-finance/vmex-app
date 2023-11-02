@@ -58,6 +58,7 @@ export async function getUserActivityData(userAddress: string): Promise<IUserAct
         const apy = rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0));
         apys.push(apy);
         return {
+            assetAddress: assetData.asset,
             asset: convertAddressToSymbol(assetData.asset, network),
             amount: bigNumberToUSD(assetData.amount, PRICING_DECIMALS[network]),
             amountNative: assetData.amountNative,
@@ -73,6 +74,7 @@ export async function getUserActivityData(userAddress: string): Promise<IUserAct
         const apy = rayToPercent(assetData.apy ? assetData.apy : BigNumber.from(0));
         apys.push(apy);
         return {
+            assetAddress: assetData.asset,
             asset: convertAddressToSymbol(assetData.asset, network),
             amount: bigNumberToUSD(assetData.amount, PRICING_DECIMALS[network]),
             amountNative: assetData.amountNative,

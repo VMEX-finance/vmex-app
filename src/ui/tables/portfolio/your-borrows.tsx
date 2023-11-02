@@ -5,6 +5,7 @@ import { bigNumberToNative, determineHealthColor } from '@/utils';
 import { useWindowSize, useDialogController } from '@/hooks';
 
 export type IYourBorrowsTableItemProps = {
+    assetAddress: string;
     asset: string;
     amount: string;
     amountNative: BigNumber;
