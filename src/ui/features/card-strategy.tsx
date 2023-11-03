@@ -75,10 +75,16 @@ export const StrategyCard = ({
                 x.assetAddress.toLowerCase() === token1.toLowerCase() && x.trancheId === trancheId,
         );
         if (token0ProtocolData) {
-            collateralAssets.push(token0ProtocolData.asset);
+            collateralAssets.push({
+                assetName: token0ProtocolData.asset,
+                assetAddress: token0ProtocolData.assetAddress,
+            });
         }
         if (token1ProtocolData) {
-            collateralAssets.push(token1ProtocolData.asset);
+            collateralAssets.push({
+                assetName: token1ProtocolData.asset,
+                assetAddress: token1ProtocolData.assetAddress,
+            });
         }
         return collateralAssets;
     };
@@ -118,6 +124,10 @@ export const StrategyCard = ({
     const handleSlide = (e: Event) => {
         e.stopPropagation();
         setLeverage((e.target as any).value || 1);
+    };
+
+    const leverageDisabled = () => {
+        return !suppliedAssetDetails || suppliedAssetDetails.amountNative.eq(0) || !collateral;
     };
 
     useEffect(() => {
@@ -177,12 +187,17 @@ export const StrategyCard = ({
                         Open this strategy by providing any of the assets as collateral:
                     </p>
                     <div className="flex gap-1 flex-wrap mt-1">
-                        {getCollateralAssets(token0, token1)?.map((el, i) => (
+                        {getCollateralAssets(token0, token1).map((el, i) => (
                             <button
-                                onClick={(e) => handleCollateralClick(el)}
+                                onClick={(e) => handleCollateralClick(el.assetAddress)}
                                 key={`collateral-asset-${el}-${i}`}
                             >
-                                <PillDisplay type="asset" asset={el} size="sm" hoverable />
+                                <PillDisplay
+                                    type="asset"
+                                    asset={el.assetName}
+                                    size="sm"
+                                    hoverable
+                                />
                             </button>
                         ))}
                     </div>
@@ -197,7 +212,7 @@ export const StrategyCard = ({
                     label={renderBtnText(true)}
                     onClick={openLeverageDialog}
                     className="w-full"
-                    disabled={!suppliedAssetDetails || suppliedAssetDetails.amountNative.eq(0)}
+                    disabled={leverageDisabled()}
                 />
                 <Button
                     label={renderBtnText()}

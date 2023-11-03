@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
 import { useDialogController, useLeverage, useModal, useZap } from '@/hooks';
 import {
@@ -7,13 +7,40 @@ import {
     SkeletonLoader,
     PillDisplay,
     AssetDisplay,
-    NumberDisplay,
 } from '@/ui/components';
-import { ISupplyBorrowProps } from '../utils';
+import { ILeverageProps } from '../utils';
 import { useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '@/store';
+import {
+    Address,
+    erc20ABI,
+    multicall,
+    prepareWriteContract,
+    readContract,
+    writeContract,
+} from '@wagmi/core';
+import { VeloPoolABI } from 'abis/VeloPool';
+import { LendingPoolABI } from 'abis/LendingPool';
+import { NETWORKS } from '@/utils';
+import { useAccount, useNetwork } from 'wagmi';
+import { getAddress } from 'ethers/lib/utils.js';
+import { BigNumber, constants } from 'ethers';
+import { VariableDebtTokenABI } from 'abis/VariableDebtToken';
+import { LeverageControllerABI } from 'abis/LeverageController';
+import { parseUnits } from 'ethers/lib/utils.js';
 
-export const LeverageAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
+const VERY_BIG_ALLOWANCE = BigNumber.from(2).pow(128); // big enough
+
+type LeverageDetails = {
+    token0: Address;
+    decimals0: BigNumber;
+    token1: Address;
+    decimals1: BigNumber;
+    stable: boolean;
+    variableDebtTokenAddress: Address;
+};
+
+export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
     const modalProps = useModal('leverage-asset-dialog');
     const navigate = useNavigate();
     const { setAsset } = useSelectedTrancheContext();
@@ -24,13 +51,147 @@ export const LeverageAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
         isLoading,
         isSuccess,
         error,
-        asset,
         estimatedGasCost,
         isButtonDisabled,
         handleSubmit,
     } = useLeverage({ data, ...modalProps });
+    const { chain } = useNetwork();
+    console.log('chain', chain);
+    if (!data) {
+        throw new Error('Cant initialize without data'); // TODO alo
+    }
+
+    const { asset, trancheId, collateral, amount, leverage } = data; // TODO alo
+    console.log('hereiam', data);
     const { zappableAssets, handleZap } = useZap(asset);
-    console.log('data', data, modalProps);
+    const { address: wallet } = useAccount();
+
+    const [borrowAllowance, setBorrowAllowance] = useState(BigNumber.from(0));
+    const [leverageDetails, setLeverageDetails] = useState<LeverageDetails>();
+
+    const approveBorrowDelegation = async () => {
+        if (!leverageDetails || !chain) return; // TODO alo
+
+        const CHAIN_CONFIG = NETWORKS[chain.network];
+
+        const config = await prepareWriteContract({
+            address: leverageDetails.variableDebtTokenAddress,
+            abi: VariableDebtTokenABI,
+            functionName: 'approveDelegation',
+            args: [CHAIN_CONFIG.leverageControllerAddress, constants.MaxUint256],
+        });
+        const data = await writeContract(config);
+
+        await data.wait();
+
+        setBorrowAllowance(constants.MaxUint256);
+    };
+
+    const leverageVeloZap = async () => {
+        if (!leverageDetails || !chain || !amount) return; // TODO alo
+        const CHAIN_CONFIG = NETWORKS[chain.network];
+
+        const { token0, decimals0, token1, decimals1, stable } = leverageDetails;
+
+        const params = {
+            lpToken: getAddress(asset),
+            trancheId: BigNumber.from(trancheId),
+            token0,
+            decimals0,
+            token1,
+            decimals1,
+            stable,
+        };
+        const totalBorrowAmount = parseUnits(amount.replace('$', ''), 8)
+            .mul((leverage * 100).toFixed(0))
+            .div(100);
+        const isBorrowToken0 = getAddress(collateral) === getAddress(token0);
+
+        console.log('totalborrowamount', totalBorrowAmount.toString());
+
+        const config = await prepareWriteContract({
+            address: CHAIN_CONFIG.leverageControllerAddress,
+            abi: LeverageControllerABI,
+            functionName: 'leverageVeloLpZap',
+            args: [params, totalBorrowAmount, isBorrowToken0],
+        });
+
+        const data = await writeContract(config);
+
+        await data.wait();
+    };
+
+    useEffect(() => {
+        if (!chain || !wallet) return;
+
+        const fetchLeverageDetails = async () => {
+            const CHAIN_CONFIG = NETWORKS[chain.network];
+
+            const veloPoolContract = {
+                address: getAddress(asset),
+                abi: VeloPoolABI,
+            };
+            const lendingPoolContract = {
+                address: CHAIN_CONFIG.lendingPoolAddress,
+                abi: LendingPoolABI,
+            };
+
+            const [token0, token1, stable, { variableDebtTokenAddress }] = await multicall({
+                contracts: [
+                    {
+                        ...veloPoolContract,
+                        functionName: 'token0',
+                    },
+                    {
+                        ...veloPoolContract,
+                        functionName: 'token1',
+                    },
+                    {
+                        ...veloPoolContract,
+                        functionName: 'stable',
+                    },
+                    {
+                        ...lendingPoolContract,
+                        functionName: 'getReserveData',
+                        args: [getAddress(collateral), BigNumber.from(trancheId)],
+                    },
+                ],
+            });
+
+            const [decimals0, decimals1, borrowAllowance] = await multicall({
+                contracts: [
+                    {
+                        address: token0,
+                        abi: erc20ABI,
+                        functionName: 'decimals',
+                    },
+                    {
+                        address: token1,
+                        abi: erc20ABI,
+                        functionName: 'decimals',
+                    },
+                    {
+                        address: variableDebtTokenAddress,
+                        abi: VariableDebtTokenABI,
+                        functionName: 'borrowAllowance',
+                        args: [wallet, CHAIN_CONFIG.leverageControllerAddress],
+                    },
+                ],
+            });
+
+            setBorrowAllowance(borrowAllowance);
+            setLeverageDetails({
+                token0,
+                decimals0: BigNumber.from(decimals0),
+                token1,
+                decimals1: BigNumber.from(decimals1),
+                stable,
+                variableDebtTokenAddress,
+            });
+        };
+
+        fetchLeverageDetails();
+    }, [chain, wallet]);
     return (
         <>
             <ModalHeader
@@ -147,11 +308,18 @@ export const LeverageAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                         }}
                     />
                 )}
+                {borrowAllowance.lt(VERY_BIG_ALLOWANCE) && (
+                    <Button
+                        primary
+                        label={'Approve delegation'}
+                        onClick={approveBorrowDelegation}
+                    />
+                )}
                 <Button
                     primary
                     disabled={isButtonDisabled()}
-                    onClick={handleSubmit}
-                    label={view?.includes('Claim') ? 'Claim Rewards' : 'Submit Transaction'}
+                    onClick={leverageVeloZap}
+                    label={'Submit Transaction'}
                     loading={isLoading}
                     loadingText="Submitting"
                 />
