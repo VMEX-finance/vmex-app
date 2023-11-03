@@ -14,7 +14,6 @@ export const getMaxBorrowableAmount = (
     ltv: BigNumber | undefined,
     assetAmountUsd: string | undefined, // $108.12 -> need to remove $
 ) => {
-    console.log('getmaxborrowable', availableBorrows, minBorrow, ltv, assetAmountUsd);
     if (!availableBorrows || !ltv) {
         return { maxBorrowableAmountUsd: '0', maxLeverage: DEFAULT_MAX_LEVERAGE };
     }

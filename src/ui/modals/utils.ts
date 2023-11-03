@@ -25,3 +25,21 @@ export type IDialogProps = {
     tab?: string;
     closeDialog?(e: any): void;
 };
+
+export type LeverageDetails = {
+    asset: string;
+    trancheId: number;
+    tranche?: string;
+    amountNative?: BigNumber;
+    amount?: string;
+    collateral: string;
+    suppliedAssetDetails: any;
+    leverage: number;
+};
+
+export type ILeverageProps = {
+    name?: string;
+    data?: LeverageDetails;
+    tab?: string;
+    closeDialog?(e: any): void;
+};

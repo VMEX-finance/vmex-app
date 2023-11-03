@@ -73,7 +73,6 @@ export const Carousel = ({ items, type }: ICarousel) => {
     const supportedItems = items?.filter(
         (x) => !!hardcodedStrategies[x.assetAddress.toLowerCase()],
     );
-    console.log('supportedItems', supportedItems);
 
     const settings = {
         ...defaultSettings,
