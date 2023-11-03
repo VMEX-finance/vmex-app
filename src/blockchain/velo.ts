@@ -24,13 +24,13 @@ import { VeloRouterABI } from 'abis/VeloRouter';
 //     amountBMin: 1
 // });
 
-export const zapIn = (signer: Signer, chainName: string, tokenIn: string, supplyAmount) => {
-    const chainConfig = NETWORKS[chainName];
-    if (!chainConfig?.veloRouterAddress) {
-        throw new Error(`Velo doesnt exist on chain ${chainName}`);
-    }
+// export const zapIn = (signer: Signer, chainName: string, tokenIn: string, supplyAmount) => {
+//     const chainConfig = NETWORKS[chainName];
+//     if (!chainConfig?.veloRouterAddress) {
+//         throw new Error(`Velo doesnt exist on chain ${chainName}`);
+//     }
 
-    const router = new ethers.Contract(chainConfig.veloRouterAddress, VeloRouterABI, signer);
+//     const router = new ethers.Contract(chainConfig.veloRouterAddress, VeloRouterABI, signer);
 
-    return router.zapIn(tokenIn, supplyAmount.div(2), supplyAmount.div(2));
-};
+//     return router.zapIn(tokenIn, supplyAmount.div(2), supplyAmount.div(2));
+// };

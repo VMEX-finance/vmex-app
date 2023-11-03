@@ -79,9 +79,9 @@ const Overview: React.FC = () => {
             )} */}
             <Carousel
                 type="strategies"
-                items={queryAllMarketsData.data
-                    ?.sort((a, b) => Number(b.supplyApy) - Number(a.supplyApy))
-                    .slice(0, 8)}
+                items={queryAllMarketsData.data?.sort(
+                    (a, b) => Number(b.supplyApy) - Number(a.supplyApy),
+                )}
             />
         </Base>
     );
