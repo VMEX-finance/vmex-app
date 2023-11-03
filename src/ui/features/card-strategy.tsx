@@ -1,15 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { Slider as MUISlider } from '@mui/material';
 import { AssetDisplay, Button, Card, PillDisplay } from '@/ui/components';
-import { DEFAULT_CHAINID, capFirstLetter, findInObjArr, percentFormatter, toSymbol } from '@/utils';
+import {
+    DEFAULT_CHAINID,
+    capFirstLetter,
+    findInObjArr,
+    getMaxBorrowableAmount,
+    percentFormatter,
+    toSymbol,
+} from '@/utils';
 import { ModalTableDisplay } from '../modals';
-import { useApyData } from '@/api';
+import { useApyData, useSubgraphAllAssetMappingsData, useSubgraphAllMarketsData } from '@/api';
 import { Chain, useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { useDialogController } from '@/hooks';
 import { useUserData } from '@/api/user-data';
-import { utils } from 'ethers';
 import { IYourSuppliesTableItemProps } from '../tables';
+import { getAddress } from 'ethers/lib/utils.js';
 
 type IStrategyCard = {
     asset: string;
@@ -31,28 +38,51 @@ export const StrategyCard = ({ asset, assetAddress, supplyApy, trancheId }: IStr
     const [leverage, setLeverage] = useState(1);
     const { queryAssetApys } = useApyData();
     const [apyBreakdown, setApyBreakdown] = useState<any[]>([]);
-    const { queryUserActivity } = useUserData(address);
-    const [supplied, setSupplied] = useState<IYourSuppliesTableItemProps>();
     const [collateral, setCollateral] = useState('');
+    const { queryUserActivity } = useUserData(address);
+    const { queryAllMarketsData } = useSubgraphAllMarketsData();
+    const { queryAllAssetMappingsData } = useSubgraphAllAssetMappingsData();
+
+    const suppliedAssetDetails = queryUserActivity.data?.supplies.find(
+        (el) => getAddress(el.assetAddress) === getAddress(assetAddress),
+    );
+
+    const assetDetails = queryAllAssetMappingsData.data?.get(name.toUpperCase());
+    const { maxBorrowableAmountUsd, maxLeverage } = getMaxBorrowableAmount(
+        queryUserActivity.data?.availableBorrowsETH,
+        '50',
+        assetDetails?.baseLTV,
+        suppliedAssetDetails?.amount,
+    );
 
     const rewardApy = findInObjArr('asset', assetAddress, queryAssetApys.data);
-    const getCollateralAssets = () => {
-        // TODO: get available assets to zap
-        return ['ETH', 'wstETH'];
+
+    const getCollateralAssets = (token0: string, token1: string) => {
+        const collateralAssets = [];
+        const token0ProtocolData = queryAllMarketsData.data?.find(
+            (x) =>
+                x.assetAddress.toLowerCase() === token0.toLowerCase() && x.trancheId === trancheId,
+        );
+        const token1ProtocolData = queryAllMarketsData.data?.find(
+            (x) =>
+                x.assetAddress.toLowerCase() === token1.toLowerCase() && x.trancheId === trancheId,
+        );
+        if (token0ProtocolData) {
+            collateralAssets.push(token0ProtocolData.asset);
+        }
+        if (token1ProtocolData) {
+            collateralAssets.push(token1ProtocolData.asset);
+        }
+        return collateralAssets;
     };
 
     const handleCollateralClick = (asset: string) => {
         setCollateral(asset);
     };
 
-    const leverageDisabled = () => {
-        if (supplied) return true;
-        return false;
-    };
-
     const openLeverageDialog = () =>
         openDialog('leverage-asset-dialog', {
-            ...supplied,
+            ...suppliedAssetDetails,
             ...rewardApy,
             apyBreakdown,
             leverage,
@@ -103,16 +133,6 @@ export const StrategyCard = ({ asset, assetAddress, supplyApy, trancheId }: IStr
         }
     }, [rewardApy]);
 
-    useEffect(() => {
-        if (assetAddress) {
-            // const found = queryUserActivity.data?.supplies[0];
-            const found = queryUserActivity.data?.supplies.find(
-                (el) => utils.getAddress(el.assetAddress) === utils.getAddress(assetAddress),
-            );
-            if (found && supplied?.assetAddress !== found.assetAddress) setSupplied(found);
-        }
-    }, [assetAddress]);
-
     return (
         <Card className="h-full flex flex-col justify-between">
             <div>
@@ -134,10 +154,10 @@ export const StrategyCard = ({ asset, assetAddress, supplyApy, trancheId }: IStr
                         <MUISlider
                             aria-label="leverage slider steps"
                             defaultValue={1}
-                            step={0.5}
+                            step={0.25}
                             marks
                             min={1}
-                            max={5}
+                            max={maxLeverage}
                             valueLabelDisplay="auto"
                             size="small"
                             value={leverage}
@@ -170,7 +190,7 @@ export const StrategyCard = ({ asset, assetAddress, supplyApy, trancheId }: IStr
                     label={renderBtnText(true)}
                     onClick={openLeverageDialog}
                     className="w-full"
-                    disabled={leverageDisabled()}
+                    disabled={!suppliedAssetDetails || suppliedAssetDetails.amountNative.eq(0)}
                 />
                 <Button
                     label={renderBtnText()}
