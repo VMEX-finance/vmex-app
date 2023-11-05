@@ -11,23 +11,16 @@ import {
 import { ILeverageProps } from '../utils';
 import { useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '@/store';
+import { Address, erc20ABI, multicall, prepareWriteContract, writeContract } from '@wagmi/core';
 import {
-    Address,
-    erc20ABI,
-    multicall,
-    prepareWriteContract,
-    readContract,
-    writeContract,
-} from '@wagmi/core';
-import { VeloPoolABI } from 'abis/VeloPool';
-import { LendingPoolABI } from 'abis/LendingPool';
+    LendingPoolABI,
+    VeloPoolABI,
+    VariableDebtTokenABI,
+    LeverageControllerABI,
+} from '@/utils/abis';
 import { NETWORKS } from '@/utils';
 import { useAccount, useNetwork } from 'wagmi';
-import { getAddress } from 'ethers/lib/utils.js';
-import { BigNumber, constants } from 'ethers';
-import { VariableDebtTokenABI } from 'abis/VariableDebtToken';
-import { LeverageControllerABI } from 'abis/LeverageController';
-import { parseUnits } from 'ethers/lib/utils.js';
+import { BigNumber, constants, utils } from 'ethers';
 
 const VERY_BIG_ALLOWANCE = BigNumber.from(2).pow(128); // big enough
 
@@ -94,7 +87,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
         const { token0, decimals0, token1, decimals1, stable } = leverageDetails;
 
         const params = {
-            lpToken: getAddress(asset),
+            lpToken: utils.getAddress(asset),
             trancheId: BigNumber.from(trancheId),
             token0,
             decimals0,
@@ -102,10 +95,11 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
             decimals1,
             stable,
         };
-        const totalBorrowAmount = parseUnits(amount.replace('$', ''), 8)
+        const totalBorrowAmount = utils
+            .parseUnits(amount.replace('$', ''), 8)
             .mul((leverage * 100).toFixed(0))
             .div(100);
-        const isBorrowToken0 = getAddress(collateral) === getAddress(token0);
+        const isBorrowToken0 = utils.getAddress(collateral) === utils.getAddress(token0);
 
         console.log('totalborrowamount', totalBorrowAmount.toString());
 
@@ -128,7 +122,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
             const CHAIN_CONFIG = NETWORKS[chain.network];
 
             const veloPoolContract = {
-                address: getAddress(asset),
+                address: utils.getAddress(asset),
                 abi: VeloPoolABI,
             };
             const lendingPoolContract = {
@@ -153,7 +147,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                     {
                         ...lendingPoolContract,
                         functionName: 'getReserveData',
-                        args: [getAddress(collateral), BigNumber.from(trancheId)],
+                        args: [utils.getAddress(collateral), BigNumber.from(trancheId)],
                     },
                 ],
             });
