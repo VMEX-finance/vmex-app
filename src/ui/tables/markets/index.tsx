@@ -96,6 +96,7 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
                 filter: false,
                 sort: true,
                 sortThirdClickReset: true,
+                sortDirection: 'desc',
             },
         },
         {

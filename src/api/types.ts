@@ -36,6 +36,7 @@ export type IAssetMappings = {
 };
 
 export type IMarketsAsset = {
+    assetAddress?: string;
     asset: string;
     tranche: string;
     trancheId: number;

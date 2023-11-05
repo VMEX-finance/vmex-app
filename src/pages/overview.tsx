@@ -22,8 +22,6 @@ const Overview: React.FC = () => {
     const { queryUserActivity } = useUserData(address);
     const { queryUserPnlChart } = useSubgraphUserData(address);
 
-    console.log('', isConnected, chain?.unsupported);
-
     return (
         <AppTemplate title="overview">
             <ProtocolStatsCard
