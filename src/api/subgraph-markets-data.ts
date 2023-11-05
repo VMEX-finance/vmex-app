@@ -114,10 +114,8 @@ export const getSubgraphAllMarketsData = async (): Promise<IMarketsAsset[]> => {
         const apyRes = await getAllAssetApys();
 
         const replaceSubgraphApy = (reserve: any) => {
-            const found: IAssetApyProps = findInObjArr(
-                'symbol',
-                reserve.assetData.underlyingAssetName,
-                apyRes,
+            const found = apyRes.find(
+                (el) => el.asset?.toLowerCase() === reserve.assetData.id?.toLowerCase(),
             );
             if (found) {
                 return (Number(found.totalApy) / 100).toString();
@@ -134,8 +132,8 @@ export const getSubgraphAllMarketsData = async (): Promise<IMarketsAsset[]> => {
             const assetUSDPrice = (prices as any)[asset].usdPrice;
 
             returnObj.push({
-                asset: reserve.assetData.underlyingAssetName,
                 assetAddress: reserve.assetData.id,
+                asset: reserve.assetData.underlyingAssetName,
                 tranche: reserve.tranche.name,
                 trancheId:
                     reserve.tranche.id && reserve.tranche.id.includes(':')
