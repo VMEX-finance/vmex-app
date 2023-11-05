@@ -50,7 +50,6 @@ export type IAssetMappings = {
 };
 
 export type IMarketsAsset = {
-    assetAddress?: string;
     asset: string;
     assetAddress: string;
     tranche: string;
