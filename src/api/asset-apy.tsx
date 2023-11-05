@@ -10,7 +10,6 @@ export async function getAllAssetApys(): Promise<IAssetApyProps[]> {
     if (res.status !== 200) return [];
 
     const { apy, tokenDetails }: { apy: any[]; tokenDetails: any[] } = await res.json();
-
     if (!apy?.length) return [];
 
     return await Promise.all(
