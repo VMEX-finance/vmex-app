@@ -190,7 +190,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
         <>
             <ModalHeader
                 dialog="leverage-asset-dialog"
-                tabs={['Leverage']}
+                tabs={['Looping']}
                 onClick={setView}
                 active={view}
                 disabled={isLoading}
@@ -246,7 +246,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                                 (data as any)?.leverage || 0
                             }x`}</span>
                             <span className="text-xs font-light text-neutral-600 dark:text-neutral-400">
-                                Leverage
+                                Looping
                             </span>
                         </div>
                     </div>
@@ -272,9 +272,9 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                         content={[
                             {
                                 label: 'Estimated Gas',
-                                value: estimatedGasCost.cost,
-                                loading: estimatedGasCost.loading,
-                                error: estimatedGasCost.errorMessage,
+                                value: estimatedGasCost?.cost,
+                                loading: estimatedGasCost?.loading,
+                                error: estimatedGasCost?.errorMessage,
                             },
                         ]}
                     />
@@ -302,7 +302,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                         }}
                     />
                 )}
-                {borrowAllowance.lt(VERY_BIG_ALLOWANCE) && (
+                {borrowAllowance?.lt(VERY_BIG_ALLOWANCE) && (
                     <Button
                         primary
                         label={'Approve delegation'}

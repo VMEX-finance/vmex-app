@@ -9,13 +9,22 @@ interface ITooltipProps {
     size?: string;
     children?: ReactNode | string;
     position?: 'left' | 'right' | 'bottom' | 'top';
+    className?: string;
 }
 
-export const Tooltip = ({ text, size, children, position, content, id }: ITooltipProps) => {
+export const Tooltip = ({
+    text,
+    size,
+    children,
+    position,
+    content,
+    id,
+    className,
+}: ITooltipProps) => {
     if (content) {
         return (
             <>
-                <span data-tooltip-id={id} className="flex items-center w-fit">
+                <span data-tooltip-id={id} className={`flex items-center w-fit ${className}`}>
                     {content}
                 </span>
                 <ReactTooltip id={id} className="!z-[999999999]">
@@ -29,7 +38,7 @@ export const Tooltip = ({ text, size, children, position, content, id }: IToolti
             <span
                 data-tooltip-id={text}
                 data-tooltip-content={text}
-                className="flex items-center w-fit"
+                className={`flex items-center w-fit ${className}`}
             >
                 {children || <BsInfoCircle size={size || '18px'} />}
             </span>

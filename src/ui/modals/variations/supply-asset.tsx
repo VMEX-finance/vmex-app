@@ -70,7 +70,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
         <>
             <ModalHeader
                 dialog="loan-asset-dialog"
-                tabs={['Supply', 'Withdraw', 'Zap']}
+                tabs={['Supply', 'Withdraw']}
                 onClick={setView}
                 active={view}
                 disabled={isLoading}

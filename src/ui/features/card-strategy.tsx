@@ -1,14 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Slider as MUISlider } from '@mui/material';
-import { AssetDisplay, Button, Card, PillDisplay } from '@/ui/components';
-import {
-    DEFAULT_CHAINID,
-    capFirstLetter,
-    findInObjArr,
-    getMaxBorrowableAmount,
-    percentFormatter,
-    toSymbol,
-} from '@/utils';
+import { AssetDisplay, Button, Card, PillDisplay, Tooltip } from '@/ui/components';
+import { DEFAULT_CHAINID, capFirstLetter, findInObjArr, percentFormatter, toSymbol } from '@/utils';
 import { ModalTableDisplay } from '../modals';
 import { useApyData, useSubgraphAllAssetMappingsData, useSubgraphAllMarketsData } from '@/api';
 import { Chain, useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
@@ -17,6 +10,7 @@ import { useDialogController } from '@/hooks';
 import { useUserData } from '@/api/user-data';
 import { IYourSuppliesTableItemProps } from '../tables';
 import { getAddress } from 'ethers/lib/utils.js';
+import { useMaxBorrowableAmount } from '@/hooks/max-borrowable';
 
 type IStrategyCard = {
     asset: string;
@@ -48,7 +42,7 @@ export const StrategyCard = ({ asset, assetAddress, supplyApy, trancheId }: IStr
     );
 
     const assetDetails = queryAllAssetMappingsData.data?.get(name.toUpperCase());
-    const { maxBorrowableAmountUsd, maxLeverage } = getMaxBorrowableAmount(
+    const { maxBorrowableAmountUsd, maxLeverage } = useMaxBorrowableAmount(
         queryUserActivity.data?.availableBorrowsETH,
         '50',
         assetDetails?.baseLTV,
@@ -110,7 +104,7 @@ export const StrategyCard = ({ asset, assetAddress, supplyApy, trancheId }: IStr
     const renderBtnText = (isLeverage?: boolean) => {
         if (!chain && openConnectModal) return 'Connect Wallet';
         else if (chain?.unsupported && switchNetwork) return 'Switch Network';
-        if (isLeverage) return 'Leverage';
+        if (isLeverage) return 'Looping';
         return 'Supply';
     };
 
@@ -157,12 +151,12 @@ export const StrategyCard = ({ asset, assetAddress, supplyApy, trancheId }: IStr
                 </div>
                 <div className="mt-2">
                     <span className="text-xs flex items-center gap-1">
-                        <span>Leverage:</span>
+                        <span>Looping:</span>
                         <span className="font-medium">{leverage}x</span>
                     </span>
                     <div className="px-2">
                         <MUISlider
-                            aria-label="leverage slider steps"
+                            aria-label="looping slider steps"
                             defaultValue={1}
                             step={0.25}
                             marks
@@ -201,12 +195,28 @@ export const StrategyCard = ({ asset, assetAddress, supplyApy, trancheId }: IStr
                 </div>
             </div>
             <div className="mt-3 2xl:mt-4 grid grid-cols-1 sm:grid-cols-2 items-center gap-1 w-full">
-                <Button
-                    label={renderBtnText(true)}
-                    onClick={openLeverageDialog}
-                    className="w-full"
-                    disabled={leverageDisabled()}
-                />
+                {leverageDisabled() ? (
+                    <Tooltip
+                        className={'!w-full'}
+                        id={`looping-btn-tooltip-${asset}`}
+                        text="Must supply first"
+                    >
+                        <Button
+                            label={renderBtnText(true)}
+                            onClick={openLeverageDialog}
+                            className="w-full"
+                            disabled={leverageDisabled()}
+                        />
+                    </Tooltip>
+                ) : (
+                    <Button
+                        label={renderBtnText(true)}
+                        onClick={openLeverageDialog}
+                        className="w-full"
+                        disabled={leverageDisabled()}
+                    />
+                )}
+
                 <Button
                     label={renderBtnText()}
                     onClick={handleSupplyClick}
