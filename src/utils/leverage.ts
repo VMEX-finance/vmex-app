@@ -7,6 +7,7 @@ const DECIMALS = 8;
 const DECIMAL_ONE = new Decimal(1);
 const DEFAULT_MAX_LEVERAGE = 2.5;
 const LEVERAGE_DECIMAL_PLACES = 2;
+const defaultReturn = { maxBorrowableAmountUsd: '0', maxLeverage: DEFAULT_MAX_LEVERAGE };
 
 export const getMaxBorrowableAmount = (
     availableBorrows: string | undefined,
@@ -15,7 +16,7 @@ export const getMaxBorrowableAmount = (
     assetAmountUsd: string | undefined, // $108.12 -> need to remove $
 ) => {
     if (!availableBorrows || !ltv) {
-        return { maxBorrowableAmountUsd: '0', maxLeverage: DEFAULT_MAX_LEVERAGE };
+        return defaultReturn;
     }
 
     const minBorrowBN = parseUnits(minBorrow, DECIMALS);
@@ -23,7 +24,8 @@ export const getMaxBorrowableAmount = (
     const ltvDec = new Decimal(formatEther(ltv));
 
     if (minBorrowBN.gt(availableBorrowsBN)) {
-        throw new Error('getMaxBorrowableAmount -> minBorrow greater than availableBorrows');
+        console.error('getMaxBorrowableAmount -> minBorrow greater than availableBorrows');
+        return defaultReturn;
     }
 
     const N = new Decimal(minBorrowBN.toString())
