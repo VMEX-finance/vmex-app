@@ -55,7 +55,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
     }
 
     const { asset, trancheId, collateral, amount, leverage } = data; // TODO alo
-    console.log('hereiam', data);
+    console.log('DATA:', data);
     const { zappableAssets, handleZap } = useZap(asset);
     const { address: wallet } = useAccount();
 
@@ -116,75 +116,73 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
     };
 
     useEffect(() => {
-        if (!chain || !wallet) return;
+        if (chain && wallet) {
+            (async () => {
+                const CHAIN_CONFIG = NETWORKS[chain.network];
 
-        const fetchLeverageDetails = async () => {
-            const CHAIN_CONFIG = NETWORKS[chain.network];
+                const veloPoolContract = {
+                    address: utils.getAddress(asset),
+                    abi: VeloPoolABI,
+                };
+                const lendingPoolContract = {
+                    address: CHAIN_CONFIG.lendingPoolAddress,
+                    abi: LendingPoolABI,
+                };
 
-            const veloPoolContract = {
-                address: utils.getAddress(asset),
-                abi: VeloPoolABI,
-            };
-            const lendingPoolContract = {
-                address: CHAIN_CONFIG.lendingPoolAddress,
-                abi: LendingPoolABI,
-            };
+                const [token0, token1, stable, { variableDebtTokenAddress }] = await multicall({
+                    contracts: [
+                        {
+                            ...veloPoolContract,
+                            functionName: 'token0',
+                        },
+                        {
+                            ...veloPoolContract,
+                            functionName: 'token1',
+                        },
+                        {
+                            ...veloPoolContract,
+                            functionName: 'stable',
+                        },
+                        {
+                            ...lendingPoolContract,
+                            functionName: 'getReserveData',
+                            args: [utils.getAddress(collateral), BigNumber.from(trancheId)],
+                        },
+                    ],
+                });
 
-            const [token0, token1, stable, { variableDebtTokenAddress }] = await multicall({
-                contracts: [
-                    {
-                        ...veloPoolContract,
-                        functionName: 'token0',
-                    },
-                    {
-                        ...veloPoolContract,
-                        functionName: 'token1',
-                    },
-                    {
-                        ...veloPoolContract,
-                        functionName: 'stable',
-                    },
-                    {
-                        ...lendingPoolContract,
-                        functionName: 'getReserveData',
-                        args: [utils.getAddress(collateral), BigNumber.from(trancheId)],
-                    },
-                ],
-            });
+                const [decimals0, decimals1, borrowAllowance] = await multicall({
+                    contracts: [
+                        {
+                            address: token0,
+                            abi: erc20ABI,
+                            functionName: 'decimals',
+                        },
+                        {
+                            address: token1,
+                            abi: erc20ABI,
+                            functionName: 'decimals',
+                        },
+                        {
+                            address: variableDebtTokenAddress,
+                            abi: VariableDebtTokenABI,
+                            functionName: 'borrowAllowance',
+                            args: [wallet, CHAIN_CONFIG.leverageControllerAddress],
+                        },
+                    ],
+                });
 
-            const [decimals0, decimals1, borrowAllowance] = await multicall({
-                contracts: [
-                    {
-                        address: token0,
-                        abi: erc20ABI,
-                        functionName: 'decimals',
-                    },
-                    {
-                        address: token1,
-                        abi: erc20ABI,
-                        functionName: 'decimals',
-                    },
-                    {
-                        address: variableDebtTokenAddress,
-                        abi: VariableDebtTokenABI,
-                        functionName: 'borrowAllowance',
-                        args: [wallet, CHAIN_CONFIG.leverageControllerAddress],
-                    },
-                ],
-            });
-
-            setBorrowAllowance(borrowAllowance);
-            setLeverageDetails({
-                token0,
-                decimals0: BigNumber.from(decimals0),
-                token1,
-                decimals1: BigNumber.from(decimals1),
-                stable,
-                variableDebtTokenAddress,
-            });
-        };
-
-        fetchLeverageDetails();
+                setBorrowAllowance(borrowAllowance);
+                setLeverageDetails({
+                    token0,
+                    decimals0: BigNumber.from(decimals0),
+                    token1,
+                    decimals1: BigNumber.from(decimals1),
+                    stable,
+                    variableDebtTokenAddress,
+                });
+            })().catch((err) => console.error(err));
+        }
     }, [chain, wallet]);
     return (
         <>
