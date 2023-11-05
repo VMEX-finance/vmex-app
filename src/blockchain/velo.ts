@@ -1,6 +1,6 @@
 import { Signer, ethers } from 'ethers';
 import { NETWORKS } from '../utils/network';
-import { VeloRouterABI } from 'abis/VeloRouter';
+import { VeloRouterABI } from '@/utils/abis/VeloRouter';
 
 // function zapIn(
 //     address tokenIn,
