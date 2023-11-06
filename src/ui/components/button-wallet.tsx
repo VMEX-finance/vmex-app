@@ -133,7 +133,7 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
                                             'font-basefont',
                                             `${typeof label === 'string' ? 'px-4' : 'px-2'} py-1`,
                                             'transition duration-200',
-                                            '!py-[5px] ',
+                                            '!py-[6px]',
                                             mode,
                                             !address
                                                 ? 'text-neutral-100 hover:bg-neutral-800 dark:text-neutral-900'

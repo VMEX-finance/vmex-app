@@ -9,6 +9,7 @@ import { ThemeContext } from '@/store';
 import { addFeaturedTranches, bigNumberToUnformattedString, numberFormatter } from '@/utils';
 import { UseQueryResult } from '@tanstack/react-query';
 import { IUserActivityDataProps, IMarketsAsset } from '@/api';
+import { useAccount } from 'wagmi';
 
 interface ITableProps {
     data?: IMarketsAsset[];
@@ -17,6 +18,7 @@ interface ITableProps {
 }
 
 export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivity }) => {
+    const { address } = useAccount();
     const { isDark } = useContext(ThemeContext);
 
     const renderYourAmount = (asset: string, trancheId: number) => {
@@ -109,15 +111,6 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
             },
         },
         {
-            name: 'yourAmount',
-            label: 'Your Amount',
-            options: {
-                filter: false,
-                sort: true,
-                sortThirdClickReset: true,
-            },
-        },
-        {
             name: 'available',
             label: 'Available Borrows',
             options: {
@@ -199,14 +192,36 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
                 filterType: 'dropdown',
             },
         },
-        {
+    ];
+
+    if (address) {
+        columns.push(
+            {
+                name: 'yourAmount',
+                label: 'Wallet Amount',
+                options: {
+                    filter: false,
+                    sort: true,
+                    sortThirdClickReset: true,
+                },
+            },
+            {
+                name: '',
+                label: '',
+                options: {
+                    filter: false,
+                },
+            } as any,
+        );
+    } else {
+        columns.push({
             name: '',
             label: '',
             options: {
                 filter: false,
             },
-        },
-    ];
+        } as any);
+    }
 
     return (
         <CacheProvider value={muiCache}>
