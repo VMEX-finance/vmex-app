@@ -90,7 +90,7 @@ const MarketsCustomRow = (props: any) => {
                 </td>
                 {address && (
                     <td className="flex justify-between">
-                        <span className="font-bold">Wallet Amount</span>
+                        <span className="font-bold">Your Amount</span>
                         <span className={`${yourAmount.loading ? 'animate-pulse' : ''}`}>
                             {yourAmount.amount}
                         </span>
@@ -152,6 +152,11 @@ const MarketsCustomRow = (props: any) => {
                     <ApyToolitp symbol={asset} oldApy={supplyApy} />
                 </td>
                 <td className="pl-4">{borrowable ? percentFormatter.format(borrowApy) : '-'}</td>
+                {address && (
+                    <td className={`pl-4 ${yourAmount.loading ? 'animate-pulse' : ''}`}>
+                        {yourAmount.amount}
+                    </td>
+                )}
                 <td className="pl-4">{borrowable ? usdFormatter().format(available) : '-'}</td>
                 <td className="pl-4">{usdFormatter().format(supplyTotal)}</td>
                 <td className="pl-4">{borrowable ? usdFormatter().format(borrowTotal) : '-'}</td>
@@ -167,11 +172,6 @@ const MarketsCustomRow = (props: any) => {
                         )}
                     </div>
                 </td>
-                {address && (
-                    <td className={`pl-4 ${yourAmount.loading ? 'animate-pulse' : ''}`}>
-                        {yourAmount.amount}
-                    </td>
-                )}
                 <td className="text-right pr-3.5">
                     <SplitButton
                         content={{

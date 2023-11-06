@@ -18,8 +18,8 @@ interface ITableProps {
 }
 
 export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivity }) => {
-    const { address } = useAccount();
     const { isDark } = useContext(ThemeContext);
+    const { address } = useAccount();
 
     const renderYourAmount = (asset: string, trancheId: number) => {
         let amount = 0;
@@ -111,6 +111,16 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
             },
         },
         {
+            name: 'yourAmount',
+            label: 'Wallet Amount',
+            options: {
+                filter: false,
+                sort: true,
+                sortThirdClickReset: true,
+                display: address ? true : false,
+            },
+        },
+        {
             name: 'available',
             label: 'Available Borrows',
             options: {
@@ -137,15 +147,6 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
                 sortThirdClickReset: true,
             },
         },
-        // {
-        //     name: 'rating',
-        //     label: 'Rating',
-        //     options: {
-        //         filter: true,
-        //         sort: true,
-        //         sortThirdClickReset: true,
-        //     },
-        // },
         {
             name: 'strategies',
             label: 'Strategies',
@@ -192,36 +193,14 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
                 filterType: 'dropdown',
             },
         },
-    ];
-
-    if (address) {
-        columns.push(
-            {
-                name: 'yourAmount',
-                label: 'Wallet Amount',
-                options: {
-                    filter: false,
-                    sort: true,
-                    sortThirdClickReset: true,
-                },
-            },
-            {
-                name: '',
-                label: '',
-                options: {
-                    filter: false,
-                },
-            } as any,
-        );
-    } else {
-        columns.push({
+        {
             name: '',
             label: '',
             options: {
                 filter: false,
             },
-        } as any);
-    }
+        },
+    ];
 
     return (
         <CacheProvider value={muiCache}>
