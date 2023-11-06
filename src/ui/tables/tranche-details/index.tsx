@@ -48,7 +48,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
 
     const mode1 =
         type === 'supply'
-            ? width > breakpoints.md
+            ? width > breakpoints['2xl']
                 ? 'Wallet Balance'
                 : 'Balance'
             : width > breakpoints.md
@@ -57,10 +57,10 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
 
     const mode2 =
         type === 'supply'
-            ? width > breakpoints.md
+            ? width > breakpoints['2xl']
                 ? 'Can Collateralize'
                 : 'Collateral'
-            : width > breakpoints.md
+            : width > breakpoints['2xl']
             ? 'Total liquidity'
             : 'Liquidity';
 

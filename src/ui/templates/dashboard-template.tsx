@@ -100,7 +100,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                                             {tranche?.category && (
                                                 <Label
                                                     tooltip
-                                                    className="hidden md:block !py-0.5 !text-xs md:absolute md:left-1/2 md:-translate-x-1/2 mt-1 md:mt-3 xl:mt-4"
+                                                    className="hidden md:block !py-[0.5px] md:absolute md:left-1/2 md:-translate-x-1/2 mt-1 md:mt-[50px] xl:mt-14"
                                                 >
                                                     {tranche?.category || 'Unknown'}
                                                 </Label>
