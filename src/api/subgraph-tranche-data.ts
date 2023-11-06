@@ -28,11 +28,23 @@ export const processTrancheData = async (
     data: any,
     trancheId?: string,
     globalAdmin?: string,
+    backendApys?: IAssetApyProps[],
 ): Promise<IGraphTrancheDataProps> => {
+    const replaceSubgraphApy = (reserve: any) => {
+        if (backendApys?.length) {
+            const found = backendApys.find(
+                (el) => el.asset?.toLowerCase() === reserve.assetData.id?.toLowerCase(),
+            );
+            if (found) {
+                return (Number(found.totalApy) / 100).toString();
+            }
+        }
+        return utils.formatUnits(reserve.liquidityRate, 27);
+    };
+
     const assets = data?.reserves;
     const isVerified = data?.isVerified || false;
     const prices = await getAllAssetPrices();
-    const apyRes = await getAllAssetApys();
     const assetsData = assets.reduce(
         (obj: any, item: any) =>
             Object.assign(obj, {
@@ -46,7 +58,7 @@ export const processTrancheData = async (
                     vmexReserveFactor: item.assetData.vmexReserveFactor,
                     utilityRate: `${item.utilizationRate}`,
                     borrowRate: Number(utils.formatUnits(item.variableBorrowRate, 27)),
-                    supplyRate: Number(utils.formatUnits(item.liquidityRate, 27)),
+                    supplyRate: replaceSubgraphApy(item),
                     collateral: item.usageAsCollateralEnabled,
                     canBeBorrowed: item.borrowingEnabled,
                     oracle: 'Chainlink', // TODO: map to human readable name // (prices as any)[item.assetData.underlyingAssetName].oracle
@@ -144,23 +156,11 @@ export const processTrancheData = async (
         },
     );
 
-    const replaceSubgraphApy = (reserve: any) => {
-        const found: IAssetApyProps = findInObjArr(
-            'symbol',
-            reserve.assetData.underlyingAssetName,
-            apyRes,
-        );
-        if (found) {
-            return Number(found.totalApy) / 100;
-        }
-        return Number(utils.formatUnits(reserve.liquidityRate, 27));
-    };
-
     const calculateAvgApy = async () => {
         const supplyApys: number[] = [];
         const liquidities: number[] = [];
         assets.map((el: any) => {
-            supplyApys.push(replaceSubgraphApy(el));
+            supplyApys.push(Number(replaceSubgraphApy(el)));
             liquidities.push(Number(utils.formatUnits(el.availableLiquidity, el.decimals)));
         });
         return weightedAverageofArr(supplyApys, liquidities);
@@ -213,6 +213,7 @@ export const getSubgraphTrancheData = async (
     if (!_trancheId) return {};
 
     const trancheId = getTrancheId(String(_trancheId));
+    const apyRes = await getAllAssetApys();
     const { data, error } = await getApolloClient().query({
         query: gql`
             query QueryTranche($trancheId: String!) {
@@ -245,6 +246,7 @@ export const getSubgraphTrancheData = async (
                         usageAsCollateralEnabled
                         borrowingEnabled
                         assetData {
+                            id
                             underlyingAssetName
                             baseLTV
                             liquidationThreshold
@@ -280,7 +282,13 @@ export const getSubgraphTrancheData = async (
     });
 
     if (error || !data.tranche) return {};
-    else return processTrancheData(data.tranche, String(_trancheId), data.protocol.globalAdmin);
+    else
+        return processTrancheData(
+            data.tranche,
+            String(_trancheId),
+            data.protocol.globalAdmin,
+            apyRes,
+        );
 };
 
 export const getSubgraphTrancheChart = async (
