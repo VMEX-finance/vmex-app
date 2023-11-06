@@ -1,5 +1,5 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { IButtonProps } from './button-default';
 import { useAccount, useDisconnect, useNetwork } from 'wagmi';
 import { useWindowSize, useDialogController } from '@/hooks';
@@ -8,11 +8,13 @@ import { truncateAddress, truncate } from '@/utils';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSubgraphUserData } from '@/api';
+import { ThemeContext } from '@/store';
 
 export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: IButtonProps) => {
     const { chain } = useNetwork();
     const navigate = useNavigate();
     const { disconnect } = useDisconnect();
+    const { isDark } = useContext(ThemeContext);
     const { openDialog } = useDialogController();
     const { width } = useWindowSize();
     const { address } = useAccount();
@@ -133,7 +135,7 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
                                             'font-basefont',
                                             `${typeof label === 'string' ? 'px-4' : 'px-2'} py-1`,
                                             'transition duration-200',
-                                            '!py-[6px]',
+                                            isDark ? '!py-[4.5px]' : '!py-[6px]',
                                             mode,
                                             !address
                                                 ? 'text-neutral-100 hover:bg-neutral-800 dark:text-neutral-900'
