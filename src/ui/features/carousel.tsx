@@ -35,7 +35,7 @@ const defaultSettings = {
 };
 
 const hardcodedStrategies: { [key: string]: { token0: string; token1: string; name: string } } = {
-    '0xf04458f7B21265b80FC340dE7Ee598e24485c5bB': {
+    '0xf04458f7b21265b80fc340de7ee598e24485c5bb': {
         name: 'sAMMV2-USDC/LUSD',
         token0: '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
         token1: '0xc40F949F8a4e094D1b49a23ea9241D289B7b2819',
@@ -73,6 +73,8 @@ export const Carousel = ({ items, type }: ICarousel) => {
     const supportedItems = items?.filter(
         (x) => !!hardcodedStrategies[x.assetAddress.toLowerCase()],
     );
+
+    console.log(items);
 
     const settings = {
         ...defaultSettings,
