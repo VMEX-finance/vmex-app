@@ -54,7 +54,7 @@ export const Button = ({
                     primary
                         ? 'dark:bg-neutral-200 dark:text-neutral-900 dark:hover:bg-neutral-300'
                         : 'dark:bg-brand-black dark:text-neutral-200 dark:hover:bg-neutral-900'
-                } ${disabled || loading ? 'dark:border-transparent' : 'dark:border-neutral-200'}`,
+                } dark:border-neutral-200`,
                 'h-fit',
                 determineSize(),
                 'box-border',

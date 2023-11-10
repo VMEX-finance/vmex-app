@@ -76,16 +76,12 @@ const Overview: React.FC = () => {
                     <WalletButton primary className="!w-fit" />
                 </div>
             )} */}
-            {!!chain && isAddress(NETWORKS[chain.network].leverageControllerAddress) ? (
-                <Carousel
-                    type="strategies"
-                    items={queryAllMarketsData.data?.sort(
-                        (a, b) => Number(b.supplyApy) - Number(a.supplyApy),
-                    )}
-                />
-            ) : (
-                <></>
-            )}
+            <Carousel
+                type="strategies"
+                items={queryAllMarketsData.data?.sort(
+                    (a, b) => Number(b.supplyApy) - Number(a.supplyApy),
+                )}
+            />
         </Base>
     );
 };

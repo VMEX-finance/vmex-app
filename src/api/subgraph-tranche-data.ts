@@ -185,7 +185,7 @@ export const processTrancheData = async (
         availableLiquidity: usdFormatter().format(summaryData.tvl),
         totalSupplied: usdFormatter().format(summaryData.supplyTotal),
         totalBorrowed: usdFormatter().format(summaryData.borrowTotal),
-        totalCollateral: usdFormatter().format(summaryData.collateralTotal), // TODO: is this right for total collateral since subgraph only provides collateral liquidity?
+        totalCollateral: usdFormatter().format(summaryData.collateralTotal),
         tvl: usdFormatter().format(summaryData.tvl),
         poolUtilization: percentFormatter.format(
             1 - (summaryData.supplyTotal - summaryData.borrowTotal) / summaryData.supplyTotal,
@@ -198,7 +198,7 @@ export const processTrancheData = async (
         blacklistedUsers: data.blacklistedUsers.map((obj: any) => {
             return obj.id;
         }),
-        isPaused: false, // TODO
+        isPaused: false, // WEN
         treasury: data.treasury,
         uniqueBorrowers: uniqueBorrowers.size,
         uniqueLenders: uniqueLenders.size,

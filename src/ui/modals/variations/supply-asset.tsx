@@ -108,7 +108,6 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                         )}
                         <div className="mt-3 2xl:mt-4 flex justify-between items-center">
                             <h3>Amount</h3>
-                            {/* TODO: uncomment when ETH is ready */}
                             {asset?.toLowerCase() === 'weth' ||
                                 (asset?.toLowerCase() === 'eth' && (
                                     <SecondaryButton className="p-1" onClick={toggleEthWeth}>
@@ -261,12 +260,12 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                 <>
                     <div className="mt-4 flex justify-between items-center">
                         <h3>Amount</h3>
-                        {/* TODO: uncomment when ETH wrapping ready */}
-                        {/* {asset?.toLowerCase() === 'weth' && (
-                            <SecondaryButton className="p-1" onClick={toggleEthWeth}>
-                                Use ETH
-                            </SecondaryButton>
-                        )} */}
+                        {asset?.toLowerCase() === 'weth' ||
+                            (asset?.toLowerCase() === 'eth' && (
+                                <SecondaryButton className="p-1" onClick={toggleEthWeth}>
+                                    Use {isEth ? 'WETH' : 'ETH'}
+                                </SecondaryButton>
+                            ))}
                     </div>
                     <CoinInput
                         amount={amount}

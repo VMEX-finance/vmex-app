@@ -78,7 +78,6 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
         (findAssetInUserSuppliesOrBorrows(asset || '', 'supply') as IYourSuppliesTableItemProps)
             ?.collateral;
 
-    // TODO: check to see if user has rewards
     const hasRewards = (asset: string) =>
         findAssetInRewards(asset || '', tranche?.id || '', 'supply');
 

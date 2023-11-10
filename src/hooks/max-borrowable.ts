@@ -28,7 +28,7 @@ export const useMaxBorrowableAmount = (
         const ltvDec = new Decimal(formatEther(ltv));
 
         if (minBorrowBN.gt(availableBorrowsBN)) {
-            console.error('getMaxBorrowableAmount -> minBorrow greater than availableBorrows');
+            console.warn('getMaxBorrowableAmount -> minBorrow greater than availableBorrows');
             return;
         }
 

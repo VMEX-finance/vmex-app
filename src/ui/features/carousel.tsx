@@ -74,8 +74,6 @@ export const Carousel = ({ items, type }: ICarousel) => {
         (x) => !!hardcodedStrategies[x.assetAddress.toLowerCase()],
     );
 
-    console.log(items);
-
     const settings = {
         ...defaultSettings,
         slidesToShow: 4,

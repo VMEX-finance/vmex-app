@@ -9,6 +9,7 @@ type IPillDisplayProps = {
     formatter?: 'usd' | 'basic' | 'none';
     size?: 'sm' | 'md';
     hoverable?: boolean;
+    selected?: boolean;
 };
 
 export const PillDisplay = ({
@@ -18,6 +19,7 @@ export const PillDisplay = ({
     formatter = 'usd',
     size = 'md',
     hoverable,
+    selected,
 }: IPillDisplayProps) => {
     const determineFormat = (val: number | string) => {
         if (typeof val === 'string') {
@@ -47,7 +49,11 @@ export const PillDisplay = ({
             <div
                 className={`transition duration-150 bg-neutral-300 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 rounded-3xl flex items-center gap-4 w-fit pl-1.5 pr-2 py-1 ${
                     determineSize()[1]
-                } ${hoverable ? 'hover:bg-[rgb(200,200,200)] dark:hover:bg-neutral-700' : ''}`}
+                } ${hoverable ? 'hover:bg-[rgb(200,200,200)] dark:hover:bg-neutral-700' : ''} ${
+                    selected
+                        ? 'bg-[rgb(200,200,200)] outline outline-2 outline-brand-purple dark:bg-neutral-700 dark:outline-white'
+                        : ''
+                }`}
             >
                 <div className="flex gap-1">
                     <AssetDisplay name={asset} size="pill" noText />

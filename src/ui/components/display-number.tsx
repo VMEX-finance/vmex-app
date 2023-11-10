@@ -72,7 +72,6 @@ export const NumberDisplay = ({
                     {typeof value === 'string' ? <SmartPrice price={String(value)} /> : value}
                 </span>
             )}
-            {/* TODO: calculate percentage changed */}
             {change && <PercentChangeDisplay value={change} />}
         </div>
     );

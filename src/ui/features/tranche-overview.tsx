@@ -104,7 +104,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                             change={tvlChange}
                             loading={loading}
                         /> */}
-                        {/* TODO: uncomment when collateral is fixed, or just keep it removed */}
+                        {/* WEN: uncomment when collateral is fixed, or just keep it removed */}
                         {/* <NumberDisplay
                             center
                             size="xl"

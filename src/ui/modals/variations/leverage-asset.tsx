@@ -280,146 +280,156 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
             })().catch((err) => console.error(err));
         }
     }, [chain, wallet]);
-    return (
-        <>
-            <ModalHeader
-                dialog="leverage-asset-dialog"
-                tabs={['Looping']}
-                onClick={setView}
-                active={view}
-                disabled={isLoading}
-            />
-            {!isSuccess && !error ? (
-                // Default State
-                <>
-                    {zappableAssets.length !== 0 && (
-                        <>
-                            <div className="mt-3 2xl:mt-4 flex justify-between items-center">
-                                <h3>Zap</h3>
+    if (data)
+        return (
+            <>
+                <ModalHeader
+                    dialog="leverage-asset-dialog"
+                    tabs={['Looping']}
+                    onClick={setView}
+                    active={view}
+                    disabled={isLoading}
+                />
+                {!isSuccess && !error ? (
+                    // Default State
+                    <>
+                        {zappableAssets.length !== 0 && (
+                            <>
+                                <div className="mt-3 2xl:mt-4 flex justify-between items-center">
+                                    <h3>Zap</h3>
+                                </div>
+                                <div className="flex flex-wrap gap-1">
+                                    {isLoading ? (
+                                        <SkeletonLoader variant="rounded" className="!rounded-3xl">
+                                            <PillDisplay type="asset" asset={'BTC'} value={0} />
+                                        </SkeletonLoader>
+                                    ) : (
+                                        zappableAssets.map((el, i) => (
+                                            <button
+                                                key={`top-supplied-asset-${i}`}
+                                                onClick={handleZap}
+                                            >
+                                                <PillDisplay
+                                                    type="asset"
+                                                    asset={el.symbol}
+                                                    hoverable
+                                                />
+                                            </button>
+                                        ))
+                                    )}
+                                </div>
+                            </>
+                        )}
+
+                        <div className="flex items-start justify-between mt-4 px-1">
+                            <AssetDisplay name={(data as any)?.symbol} size={'lg'} />
+                            <div className="flex flex-col items-end">
+                                <span className="text-xl leading-none">{`${
+                                    (data as any)?.tranche || ''
+                                }`}</span>
+                                <span className="text-xs font-light text-neutral-600 dark:text-neutral-400">
+                                    Tranche
+                                </span>
                             </div>
-                            <div className="flex flex-wrap gap-1">
-                                {isLoading ? (
-                                    <SkeletonLoader variant="rounded" className="!rounded-3xl">
-                                        <PillDisplay type="asset" asset={'BTC'} value={0} />
-                                    </SkeletonLoader>
-                                ) : (
-                                    zappableAssets.map((el, i) => (
-                                        <button key={`top-supplied-asset-${i}`} onClick={handleZap}>
-                                            <PillDisplay type="asset" asset={el.symbol} hoverable />
-                                        </button>
-                                    ))
-                                )}
+                        </div>
+
+                        <div className="flex items-start justify-between mt-4 px-2">
+                            <div className="flex flex-col items-start">
+                                <span className="text-2xl leading-none">{`${
+                                    (data as any)?.totalApy || 0
+                                }%`}</span>
+                                <span className="text-xs font-light text-neutral-600 dark:text-neutral-400">
+                                    Asset APY
+                                </span>
                             </div>
-                        </>
-                    )}
 
-                    <div className="flex items-start justify-between mt-4 px-1">
-                        <AssetDisplay name={(data as any)?.symbol} size={'lg'} />
-                        <div className="flex flex-col items-end">
-                            <span className="text-xl leading-none">{`${
-                                (data as any)?.tranche || ''
-                            }`}</span>
-                            <span className="text-xs font-light text-neutral-600 dark:text-neutral-400">
-                                Tranche
-                            </span>
-                        </div>
-                    </div>
-
-                    <div className="flex items-start justify-between mt-4 px-2">
-                        <div className="flex flex-col items-start">
-                            <span className="text-2xl leading-none">{`${
-                                (data as any)?.totalApy || 0
-                            }%`}</span>
-                            <span className="text-xs font-light text-neutral-600 dark:text-neutral-400">
-                                Asset APY
-                            </span>
+                            <div className="flex flex-col items-end">
+                                <span className="text-2xl leading-none">{`${
+                                    (data as any)?.leverage || 0
+                                }x`}</span>
+                                <span className="text-xs font-light text-neutral-600 dark:text-neutral-400">
+                                    Looping
+                                </span>
+                            </div>
                         </div>
 
-                        <div className="flex flex-col items-end">
-                            <span className="text-2xl leading-none">{`${
-                                (data as any)?.leverage || 0
-                            }x`}</span>
-                            <span className="text-xs font-light text-neutral-600 dark:text-neutral-400">
-                                Looping
-                            </span>
+                        <ModalTableDisplay
+                            title="APY Breakdown"
+                            content={(data as any)?.apyBreakdown || []}
+                        />
+
+                        <div className="mt-4">
+                            <span>How it works</span>
+                            <ol className="list-decimal mx-6">
+                                {populateHowItWorks().map((v, i) => (
+                                    <li key={i.toString()}>{v}</li>
+                                ))}
+                            </ol>
                         </div>
-                    </div>
 
-                    <ModalTableDisplay
-                        title="APY Breakdown"
-                        content={(data as any)?.apyBreakdown || []}
-                    />
+                        <div className="mt-4">
+                            <span>Summary</span>
+                            <ol className="list-decimal mx-6">
+                                {populateSummary().map((v, i) => (
+                                    <li key={i.toString()}>{v}</li>
+                                ))}
+                            </ol>
+                        </div>
 
-                    <div className="mt-4">
-                        <span>How it works</span>
-                        <ol className="list-decimal mx-6">
-                            {populateHowItWorks().map((v, i) => (
-                                <li key={i.toString()}>{v}</li>
-                            ))}
-                        </ol>
-                    </div>
-
-                    <div className="mt-4">
-                        <span>Summary</span>
-                        <ol className="list-decimal mx-6">
-                            {populateSummary().map((v, i) => (
-                                <li key={i.toString()}>{v}</li>
-                            ))}
-                        </ol>
-                    </div>
-
-                    <ModalTableDisplay
-                        title="Transaction Overview"
-                        content={[
-                            {
-                                label: 'Estimated Gas',
-                                value: estimatedGasCost?.cost,
-                                loading: estimatedGasCost?.loading,
-                                error: estimatedGasCost?.errorMessage,
-                            },
-                        ]}
-                    />
-                </>
-            ) : (
-                <div className="mt-8 mb-6">
-                    <TransactionStatus full success={isSuccess} errorText={error} />
-                </div>
-            )}
-
-            <ModalFooter between={!location.hash.includes('tranches')}>
-                {!location.hash.includes('tranches') && (
-                    <Button
-                        label={`View Tranche`}
-                        onClick={() => {
-                            // TODO alo -> crashes on close modal
-                            setAsset(asset);
-                            closeDialog('leverage-asset-dialog');
-                            window.scroll(0, 0);
-                            navigate(
-                                `/tranches/${data?.tranche?.toLowerCase().replace(/\s+/g, '-')}`,
+                        <ModalTableDisplay
+                            title="Transaction Overview"
+                            content={[
                                 {
-                                    state: { view: 'details', trancheId: data?.trancheId },
+                                    label: 'Estimated Gas',
+                                    value: estimatedGasCost?.cost,
+                                    loading: estimatedGasCost?.loading,
+                                    error: estimatedGasCost?.errorMessage,
                                 },
-                            );
-                        }}
-                    />
+                            ]}
+                        />
+                    </>
+                ) : (
+                    <div className="mt-8 mb-6">
+                        <TransactionStatus full success={isSuccess} errorText={error} />
+                    </div>
                 )}
-                {borrowAllowance?.lt(VERY_BIG_ALLOWANCE) && (
+
+                <ModalFooter between={!location.hash.includes('tranches')}>
+                    {!location.hash.includes('tranches') && (
+                        <Button
+                            label={`View Tranche`}
+                            onClick={() => {
+                                setAsset(asset);
+                                closeDialog('leverage-asset-dialog');
+                                window.scroll(0, 0);
+                                navigate(
+                                    `/tranches/${data?.tranche
+                                        ?.toLowerCase()
+                                        .replace(/\s+/g, '-')}`,
+                                    {
+                                        state: { view: 'details', trancheId: data?.trancheId },
+                                    },
+                                );
+                            }}
+                        />
+                    )}
+                    {borrowAllowance?.lt(VERY_BIG_ALLOWANCE) && (
+                        <Button
+                            primary
+                            label={'Approve delegation'}
+                            onClick={approveBorrowDelegation}
+                        />
+                    )}
                     <Button
                         primary
-                        label={'Approve delegation'}
-                        onClick={approveBorrowDelegation}
+                        disabled={isButtonDisabled()}
+                        onClick={leverageVeloZap}
+                        label={'Submit Transaction'}
+                        loading={isLoading}
+                        loadingText="Submitting"
                     />
-                )}
-                <Button
-                    primary
-                    disabled={isButtonDisabled()}
-                    onClick={leverageVeloZap}
-                    label={'Submit Transaction'}
-                    loading={isLoading}
-                    loadingText="Submitting"
-                />
-            </ModalFooter>
-        </>
-    );
+                </ModalFooter>
+            </>
+        );
+    return <></>;
 };

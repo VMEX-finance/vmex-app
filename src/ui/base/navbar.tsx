@@ -42,7 +42,7 @@ export const Navbar: React.FC = () => {
     }
 
     return (
-        <nav className="flex justify-center flex-row sticky h-fit items-center top-0 font-basefont px-3 md:px-4 py-2 lg:px-5 2xl:px-10 lg:py-3 bg-neutral-900 dark:bg-brand-black lg:bg-[#FFF] z-[1000] shadow-lg lg:shadow-md">
+        <nav className="flex justify-center flex-row sticky h-fit items-center top-0 font-basefont px-3 md:px-4 py-2 lg:px-5 2xl:px-10 lg:py-2.5 2xl:py-3 bg-neutral-900 dark:bg-brand-black lg:bg-[#FFF] z-[1000] shadow-lg lg:shadow-md">
             <div
                 className={`w-full max-w-[150rem]
                 ${
@@ -157,7 +157,7 @@ const MobileDropdownMenu = ({
                             {isConnected && (
                                 <>
                                     <MenuItemButton label={`Portfolio`} onClick={navigate} mobile />
-                                    {/* TODO: uncomment when backend enables creating tranches */}
+                                    {/* WEN: uncomment when backend enables creating tranches */}
                                     {/* <MenuItemButton
                                         label={`Create Tranche`}
                                         onClick={() => onClick('create-tranche-dialog')}

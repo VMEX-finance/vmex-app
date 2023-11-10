@@ -80,11 +80,7 @@ export const StrategyCard = ({
 
         const borrowableAssets = queryAllMarketsData.data.filter((x) => {
             if (x.trancheId !== trancheId.toString() || !x.canBeBorrowed) return false;
-
-            const available =
-                typeof x.available === 'string' ? x.available : x.available.toString(); // TODO why is available string | number?
-
-            return AVAILABLE_COLLATERAL_TRESHOLD.lt(parseUnits(available, 8));
+            return AVAILABLE_COLLATERAL_TRESHOLD.lt(parseUnits(String(x.available), 8));
         });
         // if both underyling tokens for LP are borrowable, show Underyling
         if (
@@ -119,7 +115,7 @@ export const StrategyCard = ({
     };
 
     const handleCollateralClick = (asset: string) => {
-        // TODO alo -> show that collateral is selected, only one selectable button
+        if (getLeverageDisabled()) return;
         setCollateral(asset);
     };
 
@@ -223,7 +219,10 @@ export const StrategyCard = ({
                                     type="asset"
                                     asset={el.assetName}
                                     size="sm"
-                                    hoverable
+                                    hoverable={!getLeverageDisabled()}
+                                    selected={
+                                        el.assetAddress.toLowerCase() === collateral.toLowerCase()
+                                    }
                                 />
                             </button>
                         ))}
@@ -234,35 +233,46 @@ export const StrategyCard = ({
                     <ModalTableDisplay content={apyBreakdown} valueClass="text-right" size="sm" />
                 </div>
             </div>
-            <div className="mt-3 2xl:mt-4 grid grid-cols-1 sm:grid-cols-2 items-center gap-1 w-full">
-                {getLeverageDisabled() ? (
-                    <Tooltip
-                        className={'!w-full'}
-                        id={`looping-btn-tooltip-${asset}`}
-                        text={getLeverageDisabledMessage()}
-                    >
+            {address ? (
+                <div className="mt-3 2xl:mt-4 grid grid-cols-1 sm:grid-cols-2 items-center gap-1 w-full">
+                    {getLeverageDisabled() ? (
+                        <Tooltip
+                            className={'!w-full'}
+                            id={`looping-btn-tooltip-${asset}`}
+                            text={getLeverageDisabledMessage()}
+                        >
+                            <Button
+                                label={renderBtnText(true)}
+                                onClick={openLeverageDialog}
+                                className="w-full"
+                                disabled
+                            />
+                        </Tooltip>
+                    ) : (
                         <Button
                             label={renderBtnText(true)}
                             onClick={openLeverageDialog}
                             className="w-full"
-                            disabled
                         />
-                    </Tooltip>
-                ) : (
-                    <Button
-                        label={renderBtnText(true)}
-                        onClick={openLeverageDialog}
-                        className="w-full"
-                    />
-                )}
+                    )}
 
-                <Button
-                    label={renderBtnText()}
-                    onClick={handleSupplyClick}
-                    className="w-full"
-                    primary
-                />
-            </div>
+                    <Button
+                        label={renderBtnText()}
+                        onClick={handleSupplyClick}
+                        className="w-full"
+                        primary
+                    />
+                </div>
+            ) : (
+                <div className="flex">
+                    <Button
+                        label={renderBtnText()}
+                        onClick={handleSupplyClick}
+                        className="w-full"
+                        primary
+                    />
+                </div>
+            )}
         </Card>
     );
 };

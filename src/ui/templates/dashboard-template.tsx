@@ -40,7 +40,6 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
     const { queryTrancheAdminData } = useSubgraphUserData(address || '');
     const { tranche } = useSelectedTrancheContext();
 
-    // TODO: cleanup / optimize
     return (
         <div className="max-w-[125rem] mx-auto p-3 md:p-4 xl:p-5 2xl:px-10">
             <header
@@ -168,7 +167,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                                     />
                                 </Tooltip>
                             )}
-                            {/* TODO: enable for OP when backend enables creating tranches */}
+                            {/* WEN: enable for OP when backend enables creating tranches */}
                             <Tooltip text="Coming soon">
                                 <Button
                                     label={width > 768 ? 'Create Tranche' : <BiPlus size="24px" />}
