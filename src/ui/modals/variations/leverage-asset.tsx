@@ -75,7 +75,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
     const [leverageDetails, setLeverageDetails] = useState<LeverageDetails>();
 
     const approveBorrowDelegation = async () => {
-        if (!leverageDetails || !chain) return; // TODO alo
+        if (!leverageDetails || !chain) return; // TODO alo - show message or something
 
         const CHAIN_CONFIG = NETWORKS[chain.network];
 
@@ -93,7 +93,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
     };
 
     const leverageVeloZap = async () => {
-        if (!leverageDetails || !chain || !amount) return; // TODO alo
+        if (!leverageDetails || !chain || !amount) return; // TODO alo - show error or something
         const CHAIN_CONFIG = NETWORKS[chain.network];
 
         const { token0, decimals0, token1, decimals1, stable } = leverageDetails;
@@ -391,6 +391,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                     <Button
                         label={`View Tranche`}
                         onClick={() => {
+                            // TODO alo -> crashes on close modal
                             setAsset(asset);
                             closeDialog('leverage-asset-dialog');
                             window.scroll(0, 0);

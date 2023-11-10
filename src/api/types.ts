@@ -53,9 +53,9 @@ export type IMarketsAsset = {
     asset: string;
     assetAddress: string;
     tranche: string;
-    trancheId: string; // TODO alo why?
+    trancheId: string;
     supplyApy: number | string;
-    borrowApy: string; // TODO alo why?
+    borrowApy: string;
     available: string | number;
     availableNative: BigNumber;
     supplyTotal: number | string;

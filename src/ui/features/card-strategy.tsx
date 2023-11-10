@@ -119,6 +119,7 @@ export const StrategyCard = ({
     };
 
     const handleCollateralClick = (asset: string) => {
+        // TODO alo -> show that collateral is selected, only one selectable button
         setCollateral(asset);
     };
 
