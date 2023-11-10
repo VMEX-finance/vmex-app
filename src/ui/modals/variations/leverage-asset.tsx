@@ -52,7 +52,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
         throw new Error('Cant initialize without data'); // TODO alo
     }
 
-    const { asset, trancheId, collateral, amount, leverage, totalApy } = data; // TODO alo
+    const { asset, trancheId, collateral, amount, leverage, totalApy } = data; // TODO alo and move functionality to leverage and zap hooks
 
     const collaterals = collateral.split(':');
     const collateralSymbols = convertAddressListToSymbol(collaterals, chain?.network);
