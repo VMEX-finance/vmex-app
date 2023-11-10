@@ -572,6 +572,81 @@ export const LeverageControllerABI = [
                 type: 'uint256',
             },
             {
+                internalType: 'address',
+                name: 'borrowToken',
+                type: 'address',
+            },
+            {
+                internalType: 'uint256',
+                name: 'borrowTokenDecimals',
+                type: 'uint256',
+            },
+            {
+                internalType: 'bool',
+                name: 'stable0',
+                type: 'bool',
+            },
+            {
+                internalType: 'bool',
+                name: 'stable1',
+                type: 'bool',
+            },
+        ],
+        name: 'leverageVeloLpBorrowOther',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
+    },
+    {
+        inputs: [
+            {
+                components: [
+                    {
+                        internalType: 'address',
+                        name: 'lpToken',
+                        type: 'address',
+                    },
+                    {
+                        internalType: 'uint64',
+                        name: 'trancheId',
+                        type: 'uint64',
+                    },
+                    {
+                        internalType: 'address',
+                        name: 'token0',
+                        type: 'address',
+                    },
+                    {
+                        internalType: 'uint256',
+                        name: 'decimals0',
+                        type: 'uint256',
+                    },
+                    {
+                        internalType: 'address',
+                        name: 'token1',
+                        type: 'address',
+                    },
+                    {
+                        internalType: 'uint256',
+                        name: 'decimals1',
+                        type: 'uint256',
+                    },
+                    {
+                        internalType: 'bool',
+                        name: 'stable',
+                        type: 'bool',
+                    },
+                ],
+                internalType: 'struct LeverageController.LeverageDetails',
+                name: 'params',
+                type: 'tuple',
+            },
+            {
+                internalType: 'uint256',
+                name: 'totalBorrowAmount',
+                type: 'uint256',
+            },
+            {
                 internalType: 'bool',
                 name: 'isBorrowToken0',
                 type: 'bool',

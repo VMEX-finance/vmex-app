@@ -31,10 +31,11 @@ export type LeverageDetails = {
     trancheId: number;
     tranche?: string;
     amountNative?: BigNumber;
-    amount?: string;
+    amount: string;
     collateral: string;
     suppliedAssetDetails: any;
     leverage: number;
+    totalApy: string;
 };
 
 export type ILeverageProps = {

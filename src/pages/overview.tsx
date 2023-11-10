@@ -9,10 +9,9 @@ import {
     useUserData,
 } from '@/api';
 import { useAnalyticsEventTracker } from '@/config';
-import { getNetwork } from '@wagmi/core';
 import { useAccount, useNetwork } from 'wagmi';
-import { bigNumberToUnformattedString, numberFormatter } from '@/utils';
-import { YourPositionsTable } from '@/ui/tables';
+import { NETWORKS } from '@/utils';
+import { isAddress } from 'ethers/lib/utils.js';
 
 const Overview: React.FC = () => {
     const gaEventTracker = useAnalyticsEventTracker('Overview');
@@ -77,12 +76,16 @@ const Overview: React.FC = () => {
                     <WalletButton primary className="!w-fit" />
                 </div>
             )} */}
-            <Carousel
-                type="strategies"
-                items={queryAllMarketsData.data?.sort(
-                    (a, b) => Number(b.supplyApy) - Number(a.supplyApy),
-                )}
-            />
+            {!!chain && isAddress(NETWORKS[chain.network].leverageControllerAddress) ? (
+                <Carousel
+                    type="strategies"
+                    items={queryAllMarketsData.data?.sort(
+                        (a, b) => Number(b.supplyApy) - Number(a.supplyApy),
+                    )}
+                />
+            ) : (
+                <></>
+            )}
         </Base>
     );
 };

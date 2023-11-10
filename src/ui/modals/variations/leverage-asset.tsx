@@ -21,6 +21,9 @@ import {
 import { NETWORKS } from '@/utils';
 import { useAccount, useNetwork } from 'wagmi';
 import { BigNumber, constants, utils } from 'ethers';
+import { useSubgraphAllMarketsData, useUserData } from '@/api';
+import { formatUnits, parseUnits } from 'ethers/lib/utils.js';
+import { convertAddressListToSymbol, convertAddressToSymbol } from '@vmexfinance/sdk';
 
 const VERY_BIG_ALLOWANCE = BigNumber.from(2).pow(128); // big enough
 
@@ -37,27 +40,36 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
     const modalProps = useModal('leverage-asset-dialog');
     const navigate = useNavigate();
     const { setAsset } = useSelectedTrancheContext();
-    const { closeDialog, openDialog } = useDialogController();
-    const {
-        view,
-        setView,
-        isLoading,
-        isSuccess,
-        error,
-        estimatedGasCost,
-        isButtonDisabled,
-        handleSubmit,
-    } = useLeverage({ data, ...modalProps });
+    const { closeDialog } = useDialogController();
+    const { address: wallet } = useAccount();
+    const { queryUserActivity } = useUserData(wallet);
+    const { queryAllMarketsData } = useSubgraphAllMarketsData();
+    const { view, setView, isLoading, isSuccess, error, estimatedGasCost, isButtonDisabled } =
+        useLeverage({ data, ...modalProps });
     const { chain } = useNetwork();
-    console.log('chain', chain);
-    if (!data) {
+
+    if (!data || !queryUserActivity.data || !chain) {
         throw new Error('Cant initialize without data'); // TODO alo
     }
 
-    const { asset, trancheId, collateral, amount, leverage } = data; // TODO alo
-    console.log('DATA:', data);
+    const { asset, trancheId, collateral, amount, leverage, totalApy } = data; // TODO alo
+
+    const collaterals = collateral.split(':');
+    const collateralSymbols = convertAddressListToSymbol(collaterals, chain?.network);
+    const assetSymbol = convertAddressToSymbol(asset, chain?.network);
+    let collateralMarketData = collaterals.map((x) => {
+        const marketData = queryAllMarketsData.data?.find(
+            (y) =>
+                y.trancheId === trancheId.toString() &&
+                y.assetAddress.toLowerCase() === x.toLowerCase(),
+        );
+        if (!marketData) {
+            throw new Error('Cant get collateral market data - this should never happen');
+        }
+        return marketData;
+    });
+
     const { zappableAssets, handleZap } = useZap(asset);
-    const { address: wallet } = useAccount();
 
     const [borrowAllowance, setBorrowAllowance] = useState(BigNumber.from(0));
     const [leverageDetails, setLeverageDetails] = useState<LeverageDetails>();
@@ -95,13 +107,8 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
             decimals1,
             stable,
         };
-        const totalBorrowAmount = utils
-            .parseUnits(amount.replace('$', ''), 8)
-            .mul((leverage * 100).toFixed(0))
-            .div(100);
+        const totalBorrowAmount = calculateTotalBorrowAmount(amount, leverage);
         const isBorrowToken0 = utils.getAddress(collateral) === utils.getAddress(token0);
-
-        console.log('totalborrowamount', totalBorrowAmount.toString());
 
         const config = await prepareWriteContract({
             address: CHAIN_CONFIG.leverageControllerAddress,
@@ -113,6 +120,95 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
         const data = await writeContract(config);
 
         await data.wait();
+    };
+
+    const calculateTotalBorrowAmount = (amountHumanReadable: string, leverage: number) => {
+        return utils
+            .parseUnits(amountHumanReadable.replace('$', ''), 8)
+            .mul((leverage * 100).toFixed(0))
+            .div(100);
+    };
+
+    const populateHowItWorks = () => {
+        let totalBorrowAmount = calculateTotalBorrowAmount(amount, leverage);
+        const userBorrowableAmount = queryUserActivity.data.availableBorrowsETH;
+        const availableBorrowUsd = parseUnits(userBorrowableAmount, 18).mul(9).div(10);
+
+        const steps: string[] = [];
+        while (totalBorrowAmount.gt(0)) {
+            const borrowAmountUsd = availableBorrowUsd.lt(totalBorrowAmount)
+                ? availableBorrowUsd
+                : totalBorrowAmount;
+            if (collateralSymbols.length === 1) {
+                steps.push(
+                    `Borrow $${formatUnits(borrowAmountUsd, 8)} worth of ${collateralSymbols[0]}.`,
+                );
+                steps.push(
+                    `Sell 50% of the borrowed tokens, add liquidity in Velo pool, get LP tokens.`,
+                );
+            } else {
+                steps.push(
+                    `Borrow $${formatUnits(borrowAmountUsd.div(2), 8)} worth of ${
+                        collateralSymbols[0]
+                    }.`,
+                );
+                steps.push(
+                    `Borrow $${formatUnits(borrowAmountUsd.div(2), 8)} worth of ${
+                        collateralSymbols[1]
+                    }.`,
+                );
+                steps.push(`Add liquidity in Velo pool, get LP tokens.`);
+            }
+            steps.push(`Desposit ${formatUnits(borrowAmountUsd, 8)} worth of Velo LP tokens`);
+            totalBorrowAmount = totalBorrowAmount.sub(borrowAmountUsd);
+        }
+
+        return steps;
+    };
+
+    const populateSummary = () => {
+        const totalBorrowAmount = calculateTotalBorrowAmount(amount, leverage);
+        const summary = [];
+        // const depositAssetApy =
+        if (collaterals.length === 1) {
+            summary.push(
+                `Borrow total $${formatUnits(totalBorrowAmount, 8)} worth of ${
+                    collateralSymbols[0]
+                }, with interest rate ${(
+                    parseFloat(collateralMarketData[0].borrowApy) * 100
+                ).toFixed(4)} %`,
+            );
+        } else {
+            summary.push(
+                `Borrow total ${formatUnits(totalBorrowAmount.div(2), 8)} worth of ${
+                    collateralSymbols[0]
+                }, with interest rate ${(
+                    parseFloat(collateralMarketData[0].borrowApy) * 100
+                ).toFixed(4)} %`,
+            );
+            summary.push(
+                `Borrow total ${formatUnits(totalBorrowAmount.div(2), 8)} worth of ${
+                    collateralSymbols[1]
+                }, with interest rate ${(
+                    parseFloat(collateralMarketData[1].borrowApy) * 100
+                ).toFixed(4)} %`,
+            );
+        }
+
+        summary.push(
+            `Deposit total ${formatUnits(
+                totalBorrowAmount,
+                8,
+            )} worth of ${assetSymbol} with apy ${totalApy} %`,
+        );
+        summary.push(
+            `Total apy ${(
+                parseFloat(totalApy) -
+                parseFloat(collateralMarketData[0].borrowApy) * 100
+            ).toFixed(4)} %`,
+        );
+
+        return summary;
     };
 
     useEffect(() => {
@@ -235,7 +331,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                                 (data as any)?.totalApy || 0
                             }%`}</span>
                             <span className="text-xs font-light text-neutral-600 dark:text-neutral-400">
-                                APY
+                                Asset APY
                             </span>
                         </div>
 
@@ -257,11 +353,18 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                     <div className="mt-4">
                         <span>How it works</span>
                         <ol className="list-decimal mx-6">
-                            <li>Lorem ipsum</li>
-                            <li>Lorem ipsum</li>
-                            <li>Lorem ipsum</li>
-                            <li>Lorem ipsum</li>
-                            <li>Lorem ipsum</li>
+                            {populateHowItWorks().map((v, i) => (
+                                <li key={i.toString()}>{v}</li>
+                            ))}
+                        </ol>
+                    </div>
+
+                    <div className="mt-4">
+                        <span>Summary</span>
+                        <ol className="list-decimal mx-6">
+                            {populateSummary().map((v, i) => (
+                                <li key={i.toString()}>{v}</li>
+                            ))}
                         </ol>
                     </div>
 

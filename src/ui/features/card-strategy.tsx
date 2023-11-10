@@ -8,9 +8,9 @@ import { Chain, useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { useDialogController } from '@/hooks';
 import { useUserData } from '@/api/user-data';
-import { IYourSuppliesTableItemProps } from '../tables';
 import { getAddress } from 'ethers/lib/utils.js';
 import { useMaxBorrowableAmount } from '@/hooks/max-borrowable';
+import { parseUnits } from 'ethers/lib/utils.js';
 
 type IStrategyCard = {
     asset: string;
@@ -21,6 +21,8 @@ type IStrategyCard = {
     token1: string;
     name: string;
 };
+
+const AVAILABLE_COLLATERAL_TRESHOLD = parseUnits('5000', 8);
 
 export const StrategyCard = ({
     asset,
@@ -43,13 +45,14 @@ export const StrategyCard = ({
     const { queryUserActivity } = useUserData(address);
     const { queryAllMarketsData } = useSubgraphAllMarketsData();
     const { queryAllAssetMappingsData } = useSubgraphAllAssetMappingsData();
+    const { queryAssetPrices } = useSubgraphAllAssetMappingsData();
 
     const suppliedAssetDetails = queryUserActivity.data?.supplies.find(
         (el) => getAddress(el.assetAddress) === getAddress(assetAddress),
     );
 
     const assetDetails = queryAllAssetMappingsData.data?.get(name.toUpperCase());
-    const { maxBorrowableAmountUsd, maxLeverage } = useMaxBorrowableAmount(
+    const { maxLeverage } = useMaxBorrowableAmount(
         queryUserActivity.data?.availableBorrowsETH,
         '50',
         assetDetails?.baseLTV,
@@ -58,28 +61,60 @@ export const StrategyCard = ({
 
     const rewardApy = findInObjArr('asset', assetAddress, queryAssetApys.data);
 
+    const getLeverageDisabledMessage = () => {
+        if (!suppliedAssetDetails?.amountNative.gt(0)) return 'Must supply first';
+        if (!collateral) return 'Must select collateral';
+
+        return '';
+    };
+
+    const getLeverageDisabled = () => {
+        return !suppliedAssetDetails?.amountNative.gt(0) || !collateral;
+    };
+
     const getCollateralAssets = (token0: string, token1: string) => {
+        if (!queryAllMarketsData.data || !queryAssetPrices.data) {
+            return [];
+        }
         const collateralAssets = [];
-        const token0ProtocolData = queryAllMarketsData.data?.find(
-            (x) =>
-                x.assetAddress.toLowerCase() === token0.toLowerCase() && x.trancheId === trancheId,
-        );
-        const token1ProtocolData = queryAllMarketsData.data?.find(
-            (x) =>
-                x.assetAddress.toLowerCase() === token1.toLowerCase() && x.trancheId === trancheId,
-        );
-        if (token0ProtocolData) {
+
+        const borrowableAssets = queryAllMarketsData.data.filter((x) => {
+            if (x.trancheId !== trancheId.toString() || !x.canBeBorrowed) return false;
+
+            const available =
+                typeof x.available === 'string' ? x.available : x.available.toString(); // TODO why is available string | number?
+
+            return AVAILABLE_COLLATERAL_TRESHOLD.lt(parseUnits(available, 8));
+        });
+        // if both underyling tokens for LP are borrowable, show Underyling
+        if (
+            borrowableAssets.filter(
+                (x) =>
+                    x.assetAddress.toLowerCase() === token0.toLowerCase() ||
+                    x.assetAddress.toLowerCase() === token1.toLowerCase(),
+            ).length === 2
+        ) {
             collateralAssets.push({
-                assetName: token0ProtocolData.asset,
-                assetAddress: token0ProtocolData.assetAddress,
+                assetName: 'Underlying',
+                assetAddress: `${token0}:${token1}`,
             });
         }
-        if (token1ProtocolData) {
-            collateralAssets.push({
-                assetName: token1ProtocolData.asset,
-                assetAddress: token1ProtocolData.assetAddress,
-            });
-        }
+        collateralAssets.push(
+            ...borrowableAssets.map((x) => {
+                return { assetName: x.asset, assetAddress: x.assetAddress };
+            }),
+        );
+
+        collateralAssets.sort((a, b) => {
+            if (a.assetName === 'Underlying') return -1;
+            if (b.assetName === 'Underyling') return 1;
+            if ([token0.toLowerCase(), token1.toLowerCase()].includes(a.assetAddress.toLowerCase()))
+                return -1;
+            if ([token0.toLowerCase(), token1.toLowerCase()].includes(b.assetAddress.toLowerCase()))
+                return 1;
+            return 0;
+        });
+
         return collateralAssets;
     };
 
@@ -118,10 +153,6 @@ export const StrategyCard = ({
     const handleSlide = (e: Event) => {
         e.stopPropagation();
         setLeverage((e.target as any).value || 1);
-    };
-
-    const leverageDisabled = () => {
-        return !suppliedAssetDetails || suppliedAssetDetails.amountNative.eq(0) || !collateral;
     };
 
     useEffect(() => {
@@ -185,6 +216,7 @@ export const StrategyCard = ({
                             <button
                                 onClick={(e) => handleCollateralClick(el.assetAddress)}
                                 key={`collateral-asset-${el}-${i}`}
+                                // TODO alo show selected
                             >
                                 <PillDisplay
                                     type="asset"
@@ -202,17 +234,17 @@ export const StrategyCard = ({
                 </div>
             </div>
             <div className="mt-3 2xl:mt-4 grid grid-cols-1 sm:grid-cols-2 items-center gap-1 w-full">
-                {leverageDisabled() ? (
+                {getLeverageDisabled() ? (
                     <Tooltip
                         className={'!w-full'}
                         id={`looping-btn-tooltip-${asset}`}
-                        text="Must supply first"
+                        text={getLeverageDisabledMessage()}
                     >
                         <Button
                             label={renderBtnText(true)}
                             onClick={openLeverageDialog}
                             className="w-full"
-                            disabled={leverageDisabled()}
+                            disabled
                         />
                     </Tooltip>
                 ) : (
@@ -220,7 +252,6 @@ export const StrategyCard = ({
                         label={renderBtnText(true)}
                         onClick={openLeverageDialog}
                         className="w-full"
-                        disabled={leverageDisabled()}
                     />
                 )}
 

@@ -14,7 +14,7 @@ export const NETWORKS: Record<string, any> = {
         icon: '/coins/op.svg',
         veloRouterAddress: '0xa062aE8A9c5e11aaA026fc2670B0D65cCc8B2858',
         lendingPoolAddress: '0x60F015F66F3647168831d31C7048ca95bb4FeaF9',
-        leverageControllerAddress: '0x68Be02321f887B3245792FF1A3d9ad1b90b64032',
+        leverageControllerAddress: '0x8c2EBB3b1cCAc295D1EC1887e0E729961F026127',
     },
     localhost: {
         name: 'hardhat',
