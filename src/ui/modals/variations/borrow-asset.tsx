@@ -17,6 +17,7 @@ import {
 } from '@/utils';
 import { useSelectedTrancheContext } from '@/store';
 import { useNavigate } from 'react-router-dom';
+import { usePricesData } from 'api/prices';
 
 export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, data, tab }) => {
     const modalProps = useModal('borrow-asset-dialog');

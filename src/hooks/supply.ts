@@ -7,6 +7,7 @@ import {
     useUserData,
     useUserTrancheData,
     addUserReferral,
+    usePricesData,
 } from '../api';
 import { useAccount, useSigner } from 'wagmi';
 import { IYourSuppliesTableItemProps } from '../ui/tables';
@@ -45,6 +46,7 @@ export const useSupply = ({
     amount,
     setAmount,
 }: ISupplyBorrowProps & IUseModal) => {
+    const { isError } = usePricesData();
     const network = getNetwork()?.chain?.unsupported
         ? DEFAULT_NETWORK
         : getNetwork()?.chain?.network || DEFAULT_NETWORK;
@@ -215,6 +217,7 @@ export const useSupply = ({
             if (!queryUserRewardsData?.data?.rewardTokens?.length) return true;
             return false;
         } else {
+            if (isError) return true;
             return (
                 isSuccess ||
                 error.length !== 0 ||

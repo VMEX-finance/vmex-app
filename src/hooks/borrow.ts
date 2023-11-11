@@ -13,7 +13,7 @@ import {
 } from '../utils';
 import { borrow, estimateGas, repay } from '@vmexfinance/sdk';
 import { useAccount, useSigner } from 'wagmi';
-import { useSubgraphTrancheData, useUserTrancheData, useUserData } from '../api';
+import { useSubgraphTrancheData, useUserTrancheData, useUserData, usePricesData } from '../api';
 import { getNetwork } from '@wagmi/core';
 
 export const useBorrow = ({
@@ -28,6 +28,7 @@ export const useBorrow = ({
     amount,
     setAmount,
 }: ISupplyBorrowProps & IUseModal) => {
+    const { isError } = usePricesData();
     const network = getNetwork()?.chain?.unsupported
         ? DEFAULT_NETWORK
         : getNetwork()?.chain?.network || DEFAULT_NETWORK;
@@ -150,6 +151,7 @@ export const useBorrow = ({
     };
 
     const isButtonDisabled = () => {
+        if (isError) return true;
         return (
             isSuccess ||
             error.length !== 0 ||
