@@ -31,7 +31,7 @@ export async function getAllAssetPrices(): Promise<
 
         return returnObj;
     } catch (err) {
-        console.log('#getAllAssetPrices:', err);
+        console.error('#getAllAssetPrices:', err);
         return {};
     }
 }
@@ -49,6 +49,6 @@ export function usePricesData(): IPricesDataProps {
     return {
         prices: queryAssetPrices.data,
         isLoading: queryAssetPrices.isLoading,
-        isError: queryAssetPrices.isError,
+        isError: queryAssetPrices.isError || JSON.stringify(queryAssetPrices.data) === '{}',
     };
 }
