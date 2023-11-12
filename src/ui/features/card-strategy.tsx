@@ -222,7 +222,6 @@ export const StrategyCard = ({
                                     <button
                                         onClick={(e) => handleCollateralClick(el.assetAddress)}
                                         key={`collateral-asset-${el}-${i}`}
-                                        // TODO alo show selected
                                     >
                                         <PillDisplay
                                             type="asset"

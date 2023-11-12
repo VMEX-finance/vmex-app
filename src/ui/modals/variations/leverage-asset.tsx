@@ -18,12 +18,13 @@ import {
     VariableDebtTokenABI,
     LeverageControllerABI,
 } from '@/utils/abis';
-import { NETWORKS } from '@/utils';
+import { NETWORKS, getNetworkName } from '@/utils';
 import { useAccount, useNetwork } from 'wagmi';
 import { BigNumber, constants, utils } from 'ethers';
 import { useSubgraphAllMarketsData, useUserData } from '@/api';
 import { formatUnits, parseUnits } from 'ethers/lib/utils.js';
 import { convertAddressListToSymbol, convertAddressToSymbol } from '@vmexfinance/sdk';
+import { toast } from 'react-toastify';
 
 const VERY_BIG_ALLOWANCE = BigNumber.from(2).pow(128); // big enough
 
@@ -46,17 +47,16 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
     const { queryAllMarketsData } = useSubgraphAllMarketsData();
     const { view, setView, isLoading, isSuccess, error, estimatedGasCost, isButtonDisabled } =
         useLeverage({ data, ...modalProps });
-    const { chain } = useNetwork();
+    const network = getNetworkName();
+    const _data = data
+        ? data
+        : { asset: '', trancheId: '', collateral: '', amount: '', leverage: 0, totalApy: '' };
 
-    if (!data || !queryUserActivity.data || !chain) {
-        throw new Error('Cant initialize without data'); // TODO alo
-    }
-
-    const { asset, trancheId, collateral, amount, leverage, totalApy } = data; // TODO alo and move functionality to leverage and zap hooks
+    const { asset, trancheId, collateral, amount, leverage, totalApy } = _data; // TODO: move functionality to leverage and zap hooks
 
     const collaterals = collateral.split(':');
-    const collateralSymbols = convertAddressListToSymbol(collaterals, chain?.network);
-    const assetSymbol = convertAddressToSymbol(asset, chain?.network);
+    const collateralSymbols = convertAddressListToSymbol(collaterals, network);
+    const assetSymbol = convertAddressToSymbol(asset, network);
     let collateralMarketData = collaterals.map((x) => {
         const marketData = queryAllMarketsData.data?.find(
             (y) =>
@@ -75,9 +75,12 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
     const [leverageDetails, setLeverageDetails] = useState<LeverageDetails>();
 
     const approveBorrowDelegation = async () => {
-        if (!leverageDetails || !chain) return; // TODO alo - show message or something
+        if (!leverageDetails || !network) {
+            toast.error('Error getting leverage details');
+            return;
+        } // TODO: better error handling
 
-        const CHAIN_CONFIG = NETWORKS[chain.network];
+        const CHAIN_CONFIG = NETWORKS[network];
 
         const config = await prepareWriteContract({
             address: leverageDetails.variableDebtTokenAddress,
@@ -93,8 +96,11 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
     };
 
     const leverageVeloZap = async () => {
-        if (!leverageDetails || !chain || !amount) return; // TODO alo - show error or something
-        const CHAIN_CONFIG = NETWORKS[chain.network];
+        if (!leverageDetails || !network || !amount) {
+            toast.error('Please enter an amount');
+            return;
+        } // TODO: better error handling
+        const CHAIN_CONFIG = NETWORKS[network];
 
         const { token0, decimals0, token1, decimals1, stable } = leverageDetails;
 
@@ -131,38 +137,40 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
 
     const populateHowItWorks = () => {
         let totalBorrowAmount = calculateTotalBorrowAmount(amount, leverage);
-        const userBorrowableAmount = queryUserActivity.data.availableBorrowsETH;
-        const availableBorrowUsd = parseUnits(userBorrowableAmount, 18).mul(9).div(10);
-
+        const userBorrowableAmount = queryUserActivity?.data?.availableBorrowsETH;
         const steps: string[] = [];
-        while (totalBorrowAmount.gt(0)) {
-            const borrowAmountUsd = availableBorrowUsd.lt(totalBorrowAmount)
-                ? availableBorrowUsd
-                : totalBorrowAmount;
-            if (collateralSymbols.length === 1) {
-                steps.push(
-                    `Borrow $${formatUnits(borrowAmountUsd, 8)} worth of ${collateralSymbols[0]}.`,
-                );
-                steps.push(
-                    `Sell 50% of the borrowed tokens, add liquidity in Velo pool, get LP tokens.`,
-                );
-            } else {
-                steps.push(
-                    `Borrow $${formatUnits(borrowAmountUsd.div(2), 8)} worth of ${
-                        collateralSymbols[0]
-                    }.`,
-                );
-                steps.push(
-                    `Borrow $${formatUnits(borrowAmountUsd.div(2), 8)} worth of ${
-                        collateralSymbols[1]
-                    }.`,
-                );
-                steps.push(`Add liquidity in Velo pool, get LP tokens.`);
+        if (userBorrowableAmount) {
+            const availableBorrowUsd = parseUnits(userBorrowableAmount, 18).mul(9).div(10);
+            while (totalBorrowAmount.gt(0)) {
+                const borrowAmountUsd = availableBorrowUsd.lt(totalBorrowAmount)
+                    ? availableBorrowUsd
+                    : totalBorrowAmount;
+                if (collateralSymbols.length === 1) {
+                    steps.push(
+                        `Borrow $${formatUnits(borrowAmountUsd, 8)} worth of ${
+                            collateralSymbols[0]
+                        }.`,
+                    );
+                    steps.push(
+                        `Sell 50% of the borrowed tokens, add liquidity in Velo pool, get LP tokens.`,
+                    );
+                } else {
+                    steps.push(
+                        `Borrow $${formatUnits(borrowAmountUsd.div(2), 8)} worth of ${
+                            collateralSymbols[0]
+                        }.`,
+                    );
+                    steps.push(
+                        `Borrow $${formatUnits(borrowAmountUsd.div(2), 8)} worth of ${
+                            collateralSymbols[1]
+                        }.`,
+                    );
+                    steps.push(`Add liquidity in Velo pool, get LP tokens.`);
+                }
+                steps.push(`Desposit ${formatUnits(borrowAmountUsd, 8)} worth of Velo LP tokens`);
+                totalBorrowAmount = totalBorrowAmount.sub(borrowAmountUsd);
             }
-            steps.push(`Desposit ${formatUnits(borrowAmountUsd, 8)} worth of Velo LP tokens`);
-            totalBorrowAmount = totalBorrowAmount.sub(borrowAmountUsd);
         }
-
         return steps;
     };
 
@@ -212,9 +220,9 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
     };
 
     useEffect(() => {
-        if (chain && wallet) {
+        if (network && wallet) {
             (async () => {
-                const CHAIN_CONFIG = NETWORKS[chain.network];
+                const CHAIN_CONFIG = NETWORKS[network];
 
                 const veloPoolContract = {
                     address: utils.getAddress(asset),
@@ -279,7 +287,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                 });
             })().catch((err) => console.error(err));
         }
-    }, [chain, wallet]);
+    }, [network, wallet]);
     if (data)
         return (
             <>
