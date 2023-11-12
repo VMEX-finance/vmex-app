@@ -1,5 +1,6 @@
 import { Transition } from '@headlessui/react';
 import React from 'react';
+import { IoIosWarning } from 'react-icons/io';
 
 interface IMessageStatus {
     type?: 'success' | 'error' | 'warning';
@@ -7,9 +8,17 @@ interface IMessageStatus {
     show?: boolean;
     className?: string;
     size?: 'sm' | 'md' | 'lg';
+    icon?: boolean;
 }
 
-export const MessageStatus = ({ message, type, className, size, show = true }: IMessageStatus) => {
+export const MessageStatus = ({
+    message,
+    type,
+    className,
+    size = 'sm',
+    show = true,
+    icon,
+}: IMessageStatus) => {
     const determineColor = () => {
         switch (type) {
             case 'error':
@@ -37,14 +46,16 @@ export const MessageStatus = ({ message, type, className, size, show = true }: I
     return (
         <Transition
             show={show}
-            enter="transition-opacity duration-75"
+            enter="transition-opacity duration-100"
             enterFrom="opacity-0"
             enterTo="opacity-100"
             leave="transition-opacity duration-100"
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
+            className={`leading-tight flex items-center gap-1 ${determineColor()}`}
         >
-            <span className={`${determineColor()} ${determineSize()} ${className}`}>{message}</span>
+            {icon && <IoIosWarning />}
+            <span className={`${determineSize()} ${className}`}>{message}</span>
         </Transition>
     );
 };

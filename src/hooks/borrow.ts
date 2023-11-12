@@ -28,7 +28,6 @@ export const useBorrow = ({
     amount,
     setAmount,
 }: ISupplyBorrowProps & IUseModal) => {
-    const { isError } = usePricesData();
     const network = getNetwork()?.chain?.unsupported
         ? DEFAULT_NETWORK
         : getNetwork()?.chain?.network || DEFAULT_NETWORK;
@@ -151,7 +150,6 @@ export const useBorrow = ({
     };
 
     const isButtonDisabled = () => {
-        if (isError) return true;
         return (
             isSuccess ||
             error.length !== 0 ||

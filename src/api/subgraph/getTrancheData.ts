@@ -364,7 +364,7 @@ export const getSubgraphTrancheChart = async (
             }
         });
 
-        data.tranche.borrowHistory.map((el: any) => {
+        data?.tranche?.borrowHistory?.map((el: any) => {
             const asset = el.reserve.assetData.underlyingAssetName.toUpperCase();
             if (!(prices as any)[asset]) {
                 console.warn(

@@ -46,7 +46,6 @@ export const useSupply = ({
     amount,
     setAmount,
 }: ISupplyBorrowProps & IUseModal) => {
-    const { isError } = usePricesData();
     const network = getNetwork()?.chain?.unsupported
         ? DEFAULT_NETWORK
         : getNetwork()?.chain?.network || DEFAULT_NETWORK;
@@ -55,7 +54,7 @@ export const useSupply = ({
     const { address } = useAccount();
     const { findAssetInUserSuppliesOrBorrows, queryUserRewardsData, queryRewardsData } =
         useUserTrancheData(address, data?.trancheId || 0);
-    const { queryAssetPrices } = useSubgraphAllAssetMappingsData();
+    const { prices } = usePricesData();
     const { getTokenBalance } = useUserData(address);
 
     const [asCollateral, setAsCollateral] = useState<any>(data?.collateral);
@@ -157,12 +156,12 @@ export const useSupply = ({
 
     const isViolatingSupplyCap = function () {
         if (!amount || !view?.includes('Supply')) return false;
-        const supplyCap = Number(findAssetInMarketsData(asset || '')?.supplyCap);
-        const currentSupplied = Number(findAssetInMarketsData(asset || '')?.totalSupplied); //already considers decimals
+        const foundAsset = findAssetInMarketsData(asset || '');
+        if (!foundAsset) return false;
+        const supplyCap = Number(foundAsset?.supplyCap);
+        const currentSupplied = Number(foundAsset?.totalSupplied); //already considers decimals
         const newTotalSupply = Number(amount) + currentSupplied;
-        if (newTotalSupply > supplyCap) {
-            return true;
-        }
+        if (newTotalSupply > supplyCap) return true;
         return false;
     };
 
@@ -189,10 +188,9 @@ export const useSupply = ({
             const assetDecimals = DECIMALS.get(assetSymbol);
             let assetAmount: BigNumberish =
                 queryUserRewardsData.data?.rewardAmounts[idx] || 'unable to get reward amount';
-            if (assetDecimals && queryAssetPrices.data) {
+            if (assetDecimals && prices) {
                 // if the asset decimals mapping exists
-                const assetUSDPrice =
-                    queryAssetPrices.data[assetSymbol as IAvailableCoins]?.usdPrice;
+                const assetUSDPrice = prices[assetSymbol as IAvailableCoins]?.usdPrice;
                 assetAmount = '$'.concat(
                     String(
                         nativeAmountToUSD(
@@ -217,7 +215,6 @@ export const useSupply = ({
             if (!queryUserRewardsData?.data?.rewardTokens?.length) return true;
             return false;
         } else {
-            if (isError) return true;
             return (
                 isSuccess ||
                 error.length !== 0 ||

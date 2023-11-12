@@ -28,7 +28,6 @@ export async function getAllAssetPrices(): Promise<
                     usdPrice: priceUSD, //bignumber
                 };
             });
-
         return returnObj;
     } catch (err) {
         console.error('#getAllAssetPrices:', err);
@@ -45,10 +44,19 @@ export function usePricesData(): IPricesDataProps {
         queryFn: getAllAssetPrices,
         refetchInterval: 60000, // refetch prices every minute
     });
+    const getErroredAssets = () => {
+        const returnArr: string[] = [];
+        Object.entries(queryAssetPrices.data || {}).forEach(([key, val]) => {
+            if (val.ethPrice.toString() === '0' && val.ethPrice.toString() === '0')
+                returnArr.push(key);
+        });
+        return returnArr;
+    };
 
     return {
         prices: queryAssetPrices.data,
         isLoading: queryAssetPrices.isLoading,
         isError: queryAssetPrices.isError || JSON.stringify(queryAssetPrices.data) === '{}',
+        errorAssets: getErroredAssets(),
     };
 }

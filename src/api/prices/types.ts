@@ -11,4 +11,5 @@ export type IPricesDataProps = {
     prices: Record<IAvailableCoins, IAssetPricesProps> | undefined;
     isLoading: boolean;
     isError: boolean;
+    errorAssets?: string[];
 };

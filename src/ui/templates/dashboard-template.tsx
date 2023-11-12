@@ -221,9 +221,9 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                 leaveTo="opacity-0"
                 className="fixed left-0 bottom-0 z-[9999999] w-full"
             >
-                <div className="flex justify-center w-full bg-white py-1 lg:py-1.5 border-t-2 border-red-400">
+                <div className="flex justify-center w-full bg-white py-1 lg:py-1.5 border-t-2 border-yellow-400">
                     <MessageStatus
-                        type="error"
+                        type="warning"
                         message="Error getting oracle prices. Proceed with caution."
                     />
                 </div>

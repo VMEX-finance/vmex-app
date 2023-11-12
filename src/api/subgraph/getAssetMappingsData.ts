@@ -3,7 +3,6 @@ import { useQuery } from '@tanstack/react-query';
 import { ISubgraphAllAssetMappingsData } from './types';
 import { IAssetMappings } from '../types';
 import { DEFAULT_NETWORK, getApolloClient } from '@/utils';
-import { getAllAssetPrices } from '../prices';
 import { getNetwork } from '@wagmi/core';
 
 export const getSubgraphAllAssetMappingsData = async (): Promise<Map<string, IAssetMappings>> => {
@@ -60,11 +59,6 @@ export function useSubgraphAllAssetMappingsData(): ISubgraphAllAssetMappingsData
         queryFn: () => getSubgraphAllAssetMappingsData(),
     });
 
-    const queryAssetPrices = useQuery({
-        queryKey: ['all-asset-prices', network],
-        queryFn: () => getAllAssetPrices(),
-    });
-
     const findAssetInMappings = (asset: string) => {
         if (queryAllAssetMappingsData.isLoading) return undefined;
         else {
@@ -74,7 +68,6 @@ export function useSubgraphAllAssetMappingsData(): ISubgraphAllAssetMappingsData
 
     return {
         queryAllAssetMappingsData,
-        queryAssetPrices,
         findAssetInMappings,
     };
 }

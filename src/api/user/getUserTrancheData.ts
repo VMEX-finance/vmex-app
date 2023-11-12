@@ -44,7 +44,6 @@ export async function _getUserTrancheData(
             trancheId: 0,
         };
     }
-    console.log('before getUserTrancheData ');
 
     const userTrancheData: UserTrancheData = await getUserTrancheData({
         tranche: trancheId,
@@ -53,7 +52,6 @@ export async function _getUserTrancheData(
         test: NETWORKS[network].testing,
         providerRpc: NETWORKS[network].rpc,
     });
-    console.log('after getUserTrancheData');
 
     const returnObj = {
         trancheId: Number(trancheId),
