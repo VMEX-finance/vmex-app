@@ -3360,9 +3360,15 @@
     "@types/node" "*"
 
 "@types/bn.js@^5.1.0":
+<<<<<<< HEAD
   version "5.1.4"
   resolved "https://registry.yarnpkg.com/@types/bn.js/-/bn.js-5.1.4.tgz#0853d5f92dfdbc8fe1ae60700411a60845fa7d27"
   integrity sha512-ZtBd9L8hVtoBpPMSWfbwjC4dhQtJdlPS+e1A0Rydb7vg7bDcUwiRklPx24sMYtXcmAMST/k0Wze7JLbNU/5SkA==
+=======
+  version "5.1.5"
+  resolved "https://registry.yarnpkg.com/@types/bn.js/-/bn.js-5.1.5.tgz#2e0dacdcce2c0f16b905d20ff87aedbc6f7b4bf0"
+  integrity sha512-V46N0zwKRF5Q00AZ6hWtN0T8gGmDUaUzLWQvHFo5yThtVwK/VCenFY3wXVbOvNfajEpsTfQM4IN9k/d6gUVX3A==
+>>>>>>> origin/master
   dependencies:
     "@types/node" "*"
 
@@ -3642,9 +3648,9 @@
   integrity sha512-3YmXzzPAdOTVljVMkTMBdBEvlOLg2cDQaDhnnhT3nT9uDbnJzjWhKlzb+desT12Y7tGqaN6d+AbozcKzyL36Ng==
 
 "@types/pbkdf2@^3.0.0":
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/@types/pbkdf2/-/pbkdf2-3.1.1.tgz#c290c1f0d3dc364af94c2c5ee92046a13b7f89fd"
-  integrity sha512-4HCoGwR3221nOc7G0Z/6KgTNGgaaFGkbGrtUJsB+zlKX2LBVjFHHIUkieMBgHHXgBH5Gq6dZHJKdBYdtlhBQvw==
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@types/pbkdf2/-/pbkdf2-3.1.2.tgz#2dc43808e9985a2c69ff02e2d2027bd4fe33e8dc"
+  integrity sha512-uRwJqmiXmh9++aSu1VNEn3iIxWOhd8AHXNSdlaLfdAAdSTY9jYVeGWnzejM3dvrkbqE3/hyQkQQ29IFATEGlew==
   dependencies:
     "@types/node" "*"
 
@@ -3736,9 +3742,9 @@
   integrity sha512-s/FPdYRmZR8SjLWGMCuax7r3qCWQw9QKHzXVukAuuIJkXkDRwp+Pu5LMIVFi0Fxbav35WURicYr8u1QsoybnQw==
 
 "@types/secp256k1@^4.0.1":
-  version "4.0.5"
-  resolved "https://registry.yarnpkg.com/@types/secp256k1/-/secp256k1-4.0.5.tgz#14b1766b4fbc198b0af5599d9fd21c89056633ce"
-  integrity sha512-aIonTBMErtE3T9MxDvTZRzcrT/mCqpEZBw3CCY/i+oG9n57N/+7obBkhFgavUAIrX21bU0LHg1XRgtaLdelBhA==
+  version "4.0.6"
+  resolved "https://registry.yarnpkg.com/@types/secp256k1/-/secp256k1-4.0.6.tgz#d60ba2349a51c2cbc5e816dcd831a42029d376bf"
+  integrity sha512-hHxJU6PAEUn0TP4S/ZOzuTUvJWuZ6eIKeNKb5RBpODvSl6hp1Wrw4s7ATY50rklRCScUDpHzVA/DQdSjJ3UoYQ==
   dependencies:
     "@types/node" "*"
 
@@ -3963,22 +3969,22 @@
   resolved "https://registry.yarnpkg.com/@vanilla-extract/sprinkles/-/sprinkles-1.5.0.tgz#c921183ae518bb484299c2dc81f2acefd91c3dbe"
   integrity sha512-W58f2Rzz5lLmk0jbhgStVlZl5wEiPB1Ur3fRvUaBM+MrifZ3qskmFq/CiH//fEYeG5Dh9vF1qRviMMH46cX9Nw==
 
-"@vmexfinance/contracts@^1.3.0":
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/@vmexfinance/contracts/-/contracts-1.3.0.tgz#15d3dbebf2b6cbb9f580ad0f6c9ce8051d638233"
-  integrity sha512-8+h1dKMOI0ph6ct8SXkyd4DfKO/MLTQfDD9X9DjHSTFdx4dlfCqAozViQI5FcmP3vKaZzUkpJMSrsrd49IRKMQ==
+"@vmexfinance/contracts@^1.3.1":
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/@vmexfinance/contracts/-/contracts-1.3.1.tgz#9fae47a3f73eed79d9ecb07dbea8f2a8e304a21e"
+  integrity sha512-xFPyzDlREBa9dfOFGCvRTny2CDbsOY5+i32H1C/1EdkrKXpS+MbwV4dYFzSoL+bwpjzfMZsUYo9/nnU6Ayd+MA==
   dependencies:
     "@openzeppelin/contracts" "^4.9.2"
     bignumber.js "9.0.0"
     hardhat "^2.17.2"
     mocha "^10.2.0"
 
-"@vmexfinance/sdk@^1.3.1":
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/@vmexfinance/sdk/-/sdk-1.3.1.tgz#d4a4d3fff74568b01c52d5c7228aac2a03adc272"
-  integrity sha512-dHIx97YKAdL1i83Rn82L0+Y/dhBtBRn+sgqzz4rv8DOCZmE+SxacvysarUJMfaNR0hq+BZNoYJn7HHy1Yow0zA==
+"@vmexfinance/sdk@^1.3.2":
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/@vmexfinance/sdk/-/sdk-1.3.2.tgz#337474c5f7e408e7d8d60cc2250ddfffd2be0482"
+  integrity sha512-gAIUQ2JWF5KuUJBGDJyKhRF/Zcp0sySXZn0M2ycP9D+OobG46D6YBgitu9mKh8c7YL84l9ohfhx3rNjw7jQRhw==
   dependencies:
-    "@vmexfinance/contracts" "^1.3.0"
+    "@vmexfinance/contracts" "^1.3.1"
     chai "^4.3.6"
     chai-bignumber "^3.1.0"
     cross-env "^7.0.3"
@@ -8197,9 +8203,9 @@ handle-thing@^2.0.0:
   integrity sha512-9Qn4yBxelxoh2Ow62nP+Ka/kMnOXRi8BXnRaUwezLNhqelnN49xKz4F/dPP8OYLxLxq6JDtZb2i9XznUQbNPTg==
 
 hardhat@^2.17.2:
-  version "2.18.3"
-  resolved "https://registry.yarnpkg.com/hardhat/-/hardhat-2.18.3.tgz#8fd01348795c77086fff417a4d13c521dce28fcf"
-  integrity sha512-JuYaTG+4ZHVjEHCW5Hn6jCHH3LpO75dtgznZpM/dLv12RcSlw/xHbeQh3FAsGahQr1epKryZcZEMHvztVZHe0g==
+  version "2.19.0"
+  resolved "https://registry.yarnpkg.com/hardhat/-/hardhat-2.19.0.tgz#1e08658863550ba351788ea128e544ff80584a31"
+  integrity sha512-kMpwovOEfrFRQXEopCP+JTcKVwSYVj8rnXE0LynxDqnh06yvyKCQknmXL6IVYTHQL6Csysc/yNbCHQbjSeJGpA==
   dependencies:
     "@ethersproject/abi" "^5.1.2"
     "@metamask/eth-sig-util" "^4.0.0"
@@ -13991,9 +13997,9 @@ undici-types@~5.26.4:
   integrity sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==
 
 undici@^5.14.0:
-  version "5.27.0"
-  resolved "https://registry.yarnpkg.com/undici/-/undici-5.27.0.tgz#789f2e40ce982b5507899abc2c2ddeb2712b4554"
-  integrity sha512-l3ydWhlhOJzMVOYkymLykcRRXqbUaQriERtR70B9LzNkZ4bX52Fc8wbTDneMiwo8T+AemZXvXaTx+9o5ROxrXg==
+  version "5.27.2"
+  resolved "https://registry.yarnpkg.com/undici/-/undici-5.27.2.tgz#a270c563aea5b46cc0df2550523638c95c5d4411"
+  integrity sha512-iS857PdOEy/y3wlM3yRp+6SNQQ6xU0mmZcwRSriqk+et/cwWAtwmIGf6WkoDN2EK/AMdCO/dfXzIwi+rFMrjjQ==
   dependencies:
     "@fastify/busboy" "^2.0.0"
 

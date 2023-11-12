@@ -264,6 +264,7 @@ export type IPricesDataProps = {
     prices: Record<IAvailableCoins, IAssetPricesProps> | undefined;
     isLoading: boolean;
     isError: boolean;
+    errorAssets: string[];
 };
 
 /**
@@ -386,7 +387,6 @@ export type ISubgraphAllMarketsData = {
 
 export type ISubgraphAllAssetMappingsData = {
     queryAllAssetMappingsData: UseQueryResult<Map<string, IAssetMappings>, unknown>;
-    queryAssetPrices: UseQueryResult<Record<IAvailableCoins, IAssetPricesProps>, unknown>;
     findAssetInMappings: (asset: string) => IAssetMappings | undefined;
 };
 
