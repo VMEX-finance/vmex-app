@@ -15,6 +15,38 @@ export const NETWORKS: Record<string, any> = {
         veloRouterAddress: '0xa062aE8A9c5e11aaA026fc2670B0D65cCc8B2858',
         lendingPoolAddress: '0x60F015F66F3647168831d31C7048ca95bb4FeaF9',
         leverageControllerAddress: '0x8c2EBB3b1cCAc295D1EC1887e0E729961F026127',
+        strategies: {
+            '0xf04458f7b21265b80fc340de7ee598e24485c5bb': {
+                name: 'sAMMV2-USDC/LUSD',
+                token0: '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
+                token1: '0xc40F949F8a4e094D1b49a23ea9241D289B7b2819',
+            },
+            '0x6387765ffa609ab9a1da1b16c455548bfed7cbea': {
+                name: 'vAMMV2-WETH/LUSD',
+                token0: '0x4200000000000000000000000000000000000006',
+                token1: '0xc40F949F8a4e094D1b49a23ea9241D289B7b2819',
+            },
+            '0x6d5ba400640226e24b50214d2bbb3d4db8e6e15a': {
+                name: 'sAMMV2-USDC/sUSD',
+                token0: '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
+                token1: '0x8c6f28f2F1A3C87F0f938b96d27520d9751ec8d9',
+            },
+            '0x19715771e30c93915a5bbda134d782b81a820076': {
+                name: 'sAMMV2-USDC/DAI',
+                token0: '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
+                token1: '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
+            },
+            '0x6da98bde0068d10ddd11b468b197ea97d96f96bc': {
+                name: 'vAMMV2-wstETH/WETH',
+                token0: '0x1F32b1c2345538c0c6f582fCB022739c4A194Ebb',
+                token1: '0x4200000000000000000000000000000000000006',
+            },
+            '0x0493bf8b6dbb159ce2db2e0e8403e753abd1235b': {
+                name: 'vAMMV2-WETH/USDC',
+                token0: '0x4200000000000000000000000000000000000006',
+                token1: '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
+            },
+        },
     },
     localhost: {
         name: 'hardhat',
