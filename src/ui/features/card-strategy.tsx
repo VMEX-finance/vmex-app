@@ -8,6 +8,7 @@ import {
     usePricesData,
     useSubgraphAllAssetMappingsData,
     useSubgraphAllMarketsData,
+    useSubgraphTrancheData,
 } from '@/api';
 import { Chain, useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
@@ -50,6 +51,7 @@ export const StrategyCard = ({
     const { queryUserActivity } = useUserData(address);
     const { queryAllMarketsData } = useSubgraphAllMarketsData();
     const { queryAllAssetMappingsData } = useSubgraphAllAssetMappingsData();
+    const { queryTrancheData } = useSubgraphTrancheData(trancheId);
     const { prices } = usePricesData();
 
     const isLoopable = token0 && token1 && name;
@@ -133,6 +135,8 @@ export const StrategyCard = ({
             apyBreakdown,
             leverage,
             collateral,
+            trancheId,
+            tranche: queryTrancheData?.data?.name || '',
         });
 
     const handleSupplyClick = (e: any) => {
@@ -143,6 +147,7 @@ export const StrategyCard = ({
         return openDialog('loan-asset-dialog', {
             asset,
             trancheId,
+            tranche: queryTrancheData?.data?.name || '',
             collateral: true,
         });
     };

@@ -20,8 +20,10 @@ export const AssetDisplay = (props: IAssetDisplayProps) => {
                 props.className ? props.className : ''
             } ${props.border ? 'border border-1 border-brand-black w-fit px-2' : ''}`}
         >
-            {renderAsset(props.name, props.size)}
-            {!props.noText && <span className="truncate whitespace-nowrap">{props.name}</span>}
+            {renderAsset(props.name || '', props.size)}
+            {!props.noText && (
+                <span className="truncate whitespace-nowrap">{props.name || ''}</span>
+            )}
             {props.value && <span>{props.value}</span>}
         </div>
     );

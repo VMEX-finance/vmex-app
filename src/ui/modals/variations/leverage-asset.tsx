@@ -19,8 +19,8 @@ import {
     LeverageControllerABI,
 } from '@/utils/abis';
 import { NETWORKS, getNetworkName } from '@/utils';
-import { useAccount, useNetwork } from 'wagmi';
-import { BigNumber, constants, utils } from 'ethers';
+import { useAccount } from 'wagmi';
+import { BigNumber, constants, ethers, utils } from 'ethers';
 import { useSubgraphAllMarketsData, useUserData } from '@/api';
 import { formatUnits, parseUnits } from 'ethers/lib/utils.js';
 import { convertAddressListToSymbol, convertAddressToSymbol } from '@vmexfinance/sdk';
@@ -54,9 +54,10 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
 
     const { asset, trancheId, collateral, amount, leverage, totalApy } = _data; // TODO: move functionality to leverage and zap hooks
 
-    const collaterals = collateral.split(':');
-    const collateralSymbols = convertAddressListToSymbol(collaterals, network);
-    const assetSymbol = convertAddressToSymbol(asset, network);
+    const collaterals = collateral ? collateral.split(':') : [];
+    const collateralSymbols =
+        collaterals.length && asset ? convertAddressListToSymbol(collaterals, network) : [];
+    const assetSymbol = asset ? convertAddressToSymbol(asset, network) : '';
     let collateralMarketData = collaterals.map((x) => {
         const marketData = queryAllMarketsData.data?.find(
             (y) =>
@@ -81,7 +82,6 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
         } // TODO: better error handling
 
         const CHAIN_CONFIG = NETWORKS[network];
-
         const config = await prepareWriteContract({
             address: leverageDetails.variableDebtTokenAddress,
             abi: VariableDebtTokenABI,
@@ -89,9 +89,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
             args: [CHAIN_CONFIG.leverageControllerAddress, constants.MaxUint256],
         });
         const data = await writeContract(config);
-
         await data.wait();
-
         setBorrowAllowance(constants.MaxUint256);
     };
 
@@ -101,9 +99,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
             return;
         } // TODO: better error handling
         const CHAIN_CONFIG = NETWORKS[network];
-
         const { token0, decimals0, token1, decimals1, stable } = leverageDetails;
-
         const params = {
             lpToken: utils.getAddress(asset),
             trancheId: BigNumber.from(trancheId),
@@ -115,7 +111,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
         };
         const totalBorrowAmount = calculateTotalBorrowAmount(amount, leverage);
         const isBorrowToken0 = utils.getAddress(collateral) === utils.getAddress(token0);
-
+        if (!totalBorrowAmount) return;
         const config = await prepareWriteContract({
             address: CHAIN_CONFIG.leverageControllerAddress,
             abi: LeverageControllerABI,
@@ -124,11 +120,11 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
         });
 
         const data = await writeContract(config);
-
         await data.wait();
     };
 
     const calculateTotalBorrowAmount = (amountHumanReadable: string, leverage: number) => {
+        if (!amountHumanReadable || !leverage) return ethers.BigNumber.from(0);
         return utils
             .parseUnits(amountHumanReadable.replace('$', ''), 8)
             .mul((leverage * 100).toFixed(0))
@@ -175,9 +171,9 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
     };
 
     const populateSummary = () => {
+        if (!collateralMarketData.length) return [];
         const totalBorrowAmount = calculateTotalBorrowAmount(amount, leverage);
         const summary = [];
-        // const depositAssetApy =
         if (collaterals.length === 1) {
             summary.push(
                 `Borrow total $${formatUnits(totalBorrowAmount, 8)} worth of ${
@@ -295,7 +291,6 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                     dialog="leverage-asset-dialog"
                     tabs={['Looping']}
                     onClick={setView}
-                    active={view}
                     disabled={isLoading}
                 />
                 {!isSuccess && !error ? (
@@ -368,7 +363,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
 
                         <div className="mt-4">
                             <span>How it works</span>
-                            <ol className="list-decimal mx-6">
+                            <ol className="list-decimal mx-6 text-sm">
                                 {populateHowItWorks().map((v, i) => (
                                     <li key={i.toString()}>{v}</li>
                                 ))}
@@ -377,7 +372,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
 
                         <div className="mt-4">
                             <span>Summary</span>
-                            <ol className="list-decimal mx-6">
+                            <ol className="list-decimal mx-6 text-sm">
                                 {populateSummary().map((v, i) => (
                                     <li key={i.toString()}>{v}</li>
                                 ))}
@@ -421,20 +416,23 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                             }}
                         />
                     )}
-                    {borrowAllowance?.lt(VERY_BIG_ALLOWANCE) && (
-                        <Button
-                            primary
-                            label={'Approve delegation'}
-                            onClick={approveBorrowDelegation}
-                        />
-                    )}
                     <Button
                         primary
                         disabled={isButtonDisabled()}
-                        onClick={leverageVeloZap}
-                        label={'Submit Transaction'}
+                        onClick={
+                            borrowAllowance?.lt(VERY_BIG_ALLOWANCE)
+                                ? approveBorrowDelegation
+                                : leverageVeloZap
+                        }
+                        label={
+                            borrowAllowance?.lt(VERY_BIG_ALLOWANCE)
+                                ? 'Approve Delegation'
+                                : 'Submit Transaction'
+                        }
                         loading={isLoading}
-                        loadingText="Submitting"
+                        loadingText={
+                            borrowAllowance?.lt(VERY_BIG_ALLOWANCE) ? 'Approving' : 'Submitting'
+                        }
                     />
                 </ModalFooter>
             </>
