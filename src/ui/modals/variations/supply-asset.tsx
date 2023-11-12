@@ -26,12 +26,14 @@ import { BigNumber } from 'ethers';
 import { ISupplyBorrowProps } from '../utils';
 import { useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '@/store';
+import { usePricesData } from '@/api';
 
 export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
     const modalProps = useModal('loan-asset-dialog');
     const navigate = useNavigate();
     const { setAsset } = useSelectedTrancheContext();
     const { closeDialog, openDialog } = useDialogController();
+    const { errorAssets } = usePricesData();
     const {
         amountWalletNative,
         maxOnClick,
@@ -135,16 +137,25 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                         <MessageStatus
                             type="error"
                             show={isViolatingMax()}
-                            message="Input amount is over the max"
+                            message="Input amount is over the max."
+                            icon
                         />
+                        <></>
                         <MessageStatus
                             type="warning"
-                            show={isViolatingSupplyCap()}
-                            message="WARNING: Attempting to supply more than the supply cap"
+                            show={!amount ? false : isViolatingSupplyCap()}
+                            message="Attempting to supply more than the supply cap. Proceed with caution."
+                            icon
+                        />
+                        <MessageStatus
+                            type="error"
+                            show={errorAssets?.includes(asset.toUpperCase())}
+                            message="Error getting an oracle price for this asset. Please try again later."
+                            icon
                         />
 
                         <h3 className="mt-3 2xl:mt-4">Collaterize</h3>
-                        <div className="mt-1">
+                        <div>
                             {typeof collateral === 'boolean' ? (
                                 <Tooltip
                                     text={`Your previous supply is ${
@@ -286,7 +297,14 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                     <MessageStatus
                         type="error"
                         show={isViolatingMax()}
-                        message="Input amount is over the max"
+                        message="Input amount is over the max."
+                        icon
+                    />
+                    <MessageStatus
+                        type="error"
+                        show={errorAssets?.includes(asset.toUpperCase())}
+                        message="Error getting an oracle price for this asset. Please try again later."
+                        icon
                     />
 
                     <h3 className="mt-3 2xl:mt-4 text-neutral400">Health Factor</h3>
@@ -355,7 +373,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                 ) : (
                     <Button
                         primary
-                        disabled={isButtonDisabled()}
+                        disabled={isButtonDisabled() || errorAssets?.includes(asset.toUpperCase())}
                         onClick={handleSubmit}
                         label={view?.includes('Claim') ? 'Claim Rewards' : 'Submit Transaction'}
                         loading={isLoading}

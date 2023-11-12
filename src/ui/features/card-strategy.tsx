@@ -3,7 +3,12 @@ import { Slider as MUISlider } from '@mui/material';
 import { AssetDisplay, Button, Card, PillDisplay, Tooltip } from '@/ui/components';
 import { DEFAULT_CHAINID, capFirstLetter, findInObjArr, percentFormatter, toSymbol } from '@/utils';
 import { ModalTableDisplay } from '../modals';
-import { useApyData, useSubgraphAllAssetMappingsData, useSubgraphAllMarketsData } from '@/api';
+import {
+    useApyData,
+    usePricesData,
+    useSubgraphAllAssetMappingsData,
+    useSubgraphAllMarketsData,
+} from '@/api';
 import { Chain, useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { useDialogController } from '@/hooks';
@@ -17,9 +22,9 @@ type IStrategyCard = {
     assetAddress: string;
     supplyApy: number;
     trancheId: number;
-    token0: string;
-    token1: string;
-    name: string;
+    token0?: string;
+    token1?: string;
+    name?: string;
 };
 
 const AVAILABLE_COLLATERAL_TRESHOLD = parseUnits('5000', 8);
@@ -45,13 +50,15 @@ export const StrategyCard = ({
     const { queryUserActivity } = useUserData(address);
     const { queryAllMarketsData } = useSubgraphAllMarketsData();
     const { queryAllAssetMappingsData } = useSubgraphAllAssetMappingsData();
-    const { queryAssetPrices } = useSubgraphAllAssetMappingsData();
+    const { prices } = usePricesData();
+
+    const isLoopable = token0 && token1 && name;
 
     const suppliedAssetDetails = queryUserActivity.data?.supplies.find(
         (el) => getAddress(el.assetAddress) === getAddress(assetAddress),
     );
 
-    const assetDetails = queryAllAssetMappingsData.data?.get(name.toUpperCase());
+    const assetDetails = queryAllAssetMappingsData.data?.get(name?.toUpperCase() || '');
     const { maxLeverage } = useMaxBorrowableAmount(
         queryUserActivity.data?.availableBorrowsETH,
         '50',
@@ -73,7 +80,7 @@ export const StrategyCard = ({
     };
 
     const getCollateralAssets = (token0: string, token1: string) => {
-        if (!queryAllMarketsData.data || !queryAssetPrices.data) {
+        if (!queryAllMarketsData.data || !prices) {
             return [];
         }
         const collateralAssets = [];
@@ -184,76 +191,89 @@ export const StrategyCard = ({
                         </span>
                     </div>
                 </div>
-                <div className="mt-2">
-                    <span className="text-xs flex items-center gap-1">
-                        <span>Looping:</span>
-                        <span className="font-medium">{leverage}x</span>
-                    </span>
-                    <div className="px-2">
-                        <MUISlider
-                            aria-label="looping slider steps"
-                            defaultValue={1}
-                            step={0.25}
-                            marks
-                            min={1}
-                            max={maxLeverage}
-                            valueLabelDisplay="auto"
-                            size="small"
-                            value={leverage}
-                            onChange={handleSlide}
-                        />
-                    </div>
-                </div>
-                <div>
-                    <p className="text-xs leading-tight">
-                        Open this strategy by providing any of the assets as collateral:
-                    </p>
-                    <div className="flex gap-1 flex-wrap mt-1">
-                        {getCollateralAssets(token0, token1).map((el, i) => (
-                            <button
-                                onClick={(e) => handleCollateralClick(el.assetAddress)}
-                                key={`collateral-asset-${el}-${i}`}
-                                // TODO alo show selected
-                            >
-                                <PillDisplay
-                                    type="asset"
-                                    asset={el.assetName}
-                                    size="sm"
-                                    hoverable={!getLeverageDisabled()}
-                                    selected={
-                                        el.assetAddress.toLowerCase() === collateral.toLowerCase()
-                                    }
+                {isLoopable && (
+                    <>
+                        <div className="mt-2">
+                            <span className="text-xs flex items-center gap-1">
+                                <span>Looping:</span>
+                                <span className="font-medium">{leverage}x</span>
+                            </span>
+                            <div className="px-2">
+                                <MUISlider
+                                    aria-label="looping slider steps"
+                                    defaultValue={1}
+                                    step={0.25}
+                                    marks
+                                    min={1}
+                                    max={maxLeverage}
+                                    valueLabelDisplay="auto"
+                                    size="small"
+                                    value={leverage}
+                                    onChange={handleSlide}
                                 />
-                            </button>
-                        ))}
-                    </div>
-                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <p className="text-xs leading-tight">
+                                Open this strategy by providing any of the assets as collateral:
+                            </p>
+                            <div className="flex gap-1 flex-wrap mt-1">
+                                {getCollateralAssets(token0 || '', token1 || '').map((el, i) => (
+                                    <button
+                                        onClick={(e) => handleCollateralClick(el.assetAddress)}
+                                        key={`collateral-asset-${el}-${i}`}
+                                        // TODO alo show selected
+                                    >
+                                        <PillDisplay
+                                            type="asset"
+                                            asset={el.assetName}
+                                            size="sm"
+                                            hoverable={!getLeverageDisabled()}
+                                            selected={
+                                                el.assetAddress.toLowerCase() ===
+                                                collateral.toLowerCase()
+                                            }
+                                        />
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    </>
+                )}
                 <div className="mt-3 2xl:mt-4 ">
                     <span className="text-xs">APY Breakdown</span>
                     <ModalTableDisplay content={apyBreakdown} valueClass="text-right" size="sm" />
                 </div>
             </div>
             {address ? (
-                <div className="mt-3 2xl:mt-4 grid grid-cols-1 sm:grid-cols-2 items-center gap-1 w-full">
-                    {getLeverageDisabled() ? (
-                        <Tooltip
-                            className={'!w-full'}
-                            id={`looping-btn-tooltip-${asset}`}
-                            text={getLeverageDisabledMessage()}
-                        >
-                            <Button
-                                label={renderBtnText(true)}
-                                onClick={openLeverageDialog}
-                                className="w-full"
-                                disabled
-                            />
-                        </Tooltip>
-                    ) : (
-                        <Button
-                            label={renderBtnText(true)}
-                            onClick={openLeverageDialog}
-                            className="w-full"
-                        />
+                <div
+                    className={`mt-3 2xl:mt-4 grid grid-cols-1 items-center gap-1 w-full ${
+                        isLoopable ? 'sm:grid-cols-2' : ''
+                    }`}
+                >
+                    {isLoopable && (
+                        <>
+                            {getLeverageDisabled() ? (
+                                <Tooltip
+                                    className={'!w-full'}
+                                    id={`looping-btn-tooltip-${asset}`}
+                                    text={getLeverageDisabledMessage()}
+                                >
+                                    <Button
+                                        label={renderBtnText(true)}
+                                        onClick={openLeverageDialog}
+                                        className="w-full"
+                                        disabled
+                                    />
+                                </Tooltip>
+                            ) : (
+                                <Button
+                                    label={renderBtnText(true)}
+                                    onClick={openLeverageDialog}
+                                    className="w-full"
+                                />
+                            )}
+                        </>
                     )}
 
                     <Button

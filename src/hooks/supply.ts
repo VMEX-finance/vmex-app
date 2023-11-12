@@ -2,11 +2,11 @@ import { ISupplyBorrowProps } from '../ui/modals';
 import { useEffect, useState } from 'react';
 import { IUseModal } from './modal';
 import {
-    useSubgraphAllAssetMappingsData,
     useSubgraphTrancheData,
     useUserData,
     useUserTrancheData,
     addUserReferral,
+    usePricesData,
 } from '../api';
 import { useAccount, useSigner } from 'wagmi';
 import { IYourSuppliesTableItemProps } from '../ui/tables';
@@ -50,7 +50,7 @@ export const useSupply = ({
     const { address } = useAccount();
     const { findAssetInUserSuppliesOrBorrows, queryUserRewardsData, queryRewardsData } =
         useUserTrancheData(address, data?.trancheId || 0);
-    const { queryAssetPrices } = useSubgraphAllAssetMappingsData();
+    const { prices } = usePricesData();
     const { getTokenBalance } = useUserData(address);
 
     const [asCollateral, setAsCollateral] = useState<any>(data?.collateral);
@@ -152,12 +152,12 @@ export const useSupply = ({
 
     const isViolatingSupplyCap = function () {
         if (!amount || !view?.includes('Supply')) return false;
-        const supplyCap = Number(findAssetInMarketsData(asset || '')?.supplyCap);
-        const currentSupplied = Number(findAssetInMarketsData(asset || '')?.totalSupplied); //already considers decimals
+        const foundAsset = findAssetInMarketsData(asset || '');
+        if (!foundAsset) return false;
+        const supplyCap = Number(foundAsset?.supplyCap);
+        const currentSupplied = Number(foundAsset?.totalSupplied); //already considers decimals
         const newTotalSupply = Number(amount) + currentSupplied;
-        if (newTotalSupply > supplyCap) {
-            return true;
-        }
+        if (newTotalSupply > supplyCap) return true;
         return false;
     };
 
@@ -184,10 +184,9 @@ export const useSupply = ({
             const assetDecimals = DECIMALS.get(assetSymbol);
             let assetAmount: BigNumberish =
                 queryUserRewardsData.data?.rewardAmounts[idx] || 'unable to get reward amount';
-            if (assetDecimals && queryAssetPrices.data) {
+            if (assetDecimals && prices) {
                 // if the asset decimals mapping exists
-                const assetUSDPrice =
-                    queryAssetPrices.data[assetSymbol as IAvailableCoins]?.usdPrice;
+                const assetUSDPrice = prices[assetSymbol as IAvailableCoins]?.usdPrice;
                 assetAmount = '$'.concat(
                     String(
                         nativeAmountToUSD(

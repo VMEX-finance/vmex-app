@@ -17,6 +17,7 @@ import {
 } from '@/utils';
 import { useSelectedTrancheContext } from '@/store';
 import { useNavigate } from 'react-router-dom';
+import { usePricesData } from '@/api';
 
 export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, data, tab }) => {
     const modalProps = useModal('borrow-asset-dialog');
@@ -43,6 +44,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
         isEth,
         asset,
     } = useBorrow({ data, ...modalProps });
+    const { errorAssets } = usePricesData();
     const { setAsset } = useSelectedTrancheContext();
     const navigate = useNavigate();
     const { closeDialog } = useDialogController();
@@ -81,12 +83,20 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                         <MessageStatus
                             type="error"
                             show={isViolatingMax()}
-                            message="Input amount is over the max"
+                            message="Input amount is over the max."
+                            icon
+                        />
+                        <MessageStatus
+                            type="warning"
+                            show={isViolatingBorrowCap()}
+                            message="Attempting to borrow more than borrow cap. Proceed with caution."
+                            icon
                         />
                         <MessageStatus
                             type="error"
-                            show={isViolatingBorrowCap()}
-                            message="Attempting to borrow more than borrow cap"
+                            show={errorAssets?.includes(asset.toUpperCase())}
+                            message="Error getting an oracle price for this asset. Please try again later."
+                            icon
                         />
 
                         <h3 className="mt-6 text-neutral400">Health Factor</h3>
@@ -208,7 +218,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                 ) : (
                     <Button
                         primary
-                        disabled={isButtonDisabled()}
+                        disabled={isButtonDisabled() || errorAssets?.includes(asset.toUpperCase())}
                         onClick={handleClick}
                         label={'Submit Transaction'}
                         loading={isLoading}

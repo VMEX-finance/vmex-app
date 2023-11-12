@@ -4,7 +4,6 @@ import { ISubgraphAllAssetMappingsData } from './types';
 import { IAssetMappings } from './types';
 import { getNetworkName } from '@/utils';
 import { getApolloClient } from '@/config';
-import { getAllAssetPrices } from './asset-prices';
 
 export const getSubgraphAllAssetMappingsData = async (): Promise<Map<string, IAssetMappings>> => {
     const { data, error } = await getApolloClient().query({
@@ -59,11 +58,6 @@ export function useSubgraphAllAssetMappingsData(): ISubgraphAllAssetMappingsData
         queryFn: () => getSubgraphAllAssetMappingsData(),
     });
 
-    const queryAssetPrices = useQuery({
-        queryKey: ['all-asset-prices', network],
-        queryFn: () => getAllAssetPrices(),
-    });
-
     const findAssetInMappings = (asset: string) => {
         if (queryAllAssetMappingsData.isLoading) return undefined;
         else {
@@ -73,7 +67,6 @@ export function useSubgraphAllAssetMappingsData(): ISubgraphAllAssetMappingsData
 
     return {
         queryAllAssetMappingsData,
-        queryAssetPrices,
         findAssetInMappings,
     };
 }
