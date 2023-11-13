@@ -51,7 +51,7 @@ export const PillDisplay = ({
                     determineSize()[1]
                 } ${hoverable ? 'hover:bg-[rgb(200,200,200)] dark:hover:bg-neutral-700' : ''} ${
                     selected
-                        ? 'bg-[rgb(200,200,200)] outline outline-2 outline-brand-purple dark:bg-neutral-700 dark:outline-white'
+                        ? '!bg-[rgb(200,200,200)] outline outline-2 outline-brand-purple dark:!bg-neutral-700'
                         : ''
                 }`}
             >

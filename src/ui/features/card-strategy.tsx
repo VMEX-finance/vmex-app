@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Slider as MUISlider } from '@mui/material';
 import { AssetDisplay, Button, Card, PillDisplay, Tooltip } from '@/ui/components';
 import {
@@ -74,13 +74,6 @@ export const StrategyCard = ({
     );
 
     const rewardApy = findInObjArr('asset', assetAddress, queryAssetApys.data);
-
-    const getLeverageDisabledMessage = () => {
-        if (!suppliedAssetDetails?.amountNative.gt(0)) return 'Must supply first';
-        if (!collateral) return 'Must select collateral';
-
-        return '';
-    };
 
     const getLeverageDisabled = () => {
         return !suppliedAssetDetails?.amountNative.gt(0) || !collateral;
@@ -278,7 +271,7 @@ export const StrategyCard = ({
                         </div>
                     </>
                 )}
-                <div className="mt-3 2xl:mt-4 ">
+                <div className="mt-2.5">
                     <span className="text-xs">APY Breakdown</span>
                     <ModalTableDisplay content={apyBreakdown} valueClass="text-right" size="sm" />
                 </div>

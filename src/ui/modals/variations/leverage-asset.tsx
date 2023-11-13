@@ -8,7 +8,6 @@ import {
     PillDisplay,
     AssetDisplay,
     DefaultAccordion,
-    MessageStatus,
 } from '@/ui/components';
 import { ILeverageProps } from '../utils';
 import { useNavigate } from 'react-router-dom';
@@ -73,6 +72,12 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
     });
 
     const { zappableAssets, handleZap } = useZap(asset);
+
+    const suppliedAssetDetails =
+        asset &&
+        queryUserActivity.data?.supplies.find(
+            (el) => utils.getAddress(el?.assetAddress) === utils.getAddress(asset),
+        );
 
     const [borrowAllowance, setBorrowAllowance] = useState(BigNumber.from(0));
     const [leverageDetails, setLeverageDetails] = useState<LeverageDetails>();
@@ -450,9 +455,10 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                         <div className="mt-2">
                             <DefaultAccordion
                                 wrapperClass="!border-0"
+                                disabled={!_collateral}
                                 customHover="hover:!text-brand-purple"
-                                detailsClass="!bg-white !border-0"
-                                className="!px-0 !hover:!bg-inherit !bg-white dark:!bg-brand-black"
+                                detailsClass="!bg-white dark:!bg-brand-black !border-0"
+                                className="!px-0 !hover:!bg-inherit !bg-white dark:!bg-brand-black dark:disabled:!opacity-100"
                                 title={`how-it-works-summary`}
                                 summary={<span>How it works</span>}
                                 details={
@@ -468,8 +474,9 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                         <DefaultAccordion
                             wrapperClass="!border-0"
                             customHover="hover:!text-brand-purple"
-                            detailsClass="!bg-white !border-0"
-                            className="!px-0 !hover:!bg-inherit !bg-white dark:!bg-brand-black"
+                            detailsClass="!bg-white !border-0 dark:!bg-brand-black"
+                            disabled={!_collateral}
+                            className="!px-0 !hover:!bg-inherit !bg-white dark:!bg-brand-black disabled:!opacity-100"
                             title={`strategy-summary`}
                             summary={<span>Summary</span>}
                             details={
@@ -484,6 +491,10 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                         <ModalTableDisplay
                             title="Transaction Overview"
                             content={[
+                                {
+                                    label: 'Your Supply',
+                                    value: (suppliedAssetDetails as any)?.amount || '$0',
+                                },
                                 {
                                     label: 'Estimated Gas',
                                     value: estimatedGasCost?.cost,

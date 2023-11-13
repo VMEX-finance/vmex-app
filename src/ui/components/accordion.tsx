@@ -15,6 +15,7 @@ type IAccordionProps = {
     customHover?: string;
     wrapperClass?: string;
     detailsClass?: string;
+    disabled?: boolean;
 };
 
 const Accordion = styled((props: AccordionProps) => (
@@ -31,7 +32,7 @@ const Accordion = styled((props: AccordionProps) => (
 const AccordionSummary = styled((props: AccordionSummaryProps) => {
     const { isDark } = React.useContext(ThemeContext);
 
-    return <MuiAccordionSummary {...props} />;
+    return <MuiAccordionSummary {...props} style={{ opacity: '100' }} />;
 })(({ theme }) => ({
     flexDirection: 'row-reverse',
     '& .MuiAccordionSummary-expandIconWrapper': {
@@ -60,6 +61,7 @@ export function DefaultAccordion({
     customHover,
     wrapperClass,
     detailsClass,
+    disabled,
 }: IAccordionProps) {
     const [expanded, setExpanded] = React.useState<string | false>('');
     const { isDark } = React.useContext(ThemeContext);
@@ -84,6 +86,7 @@ export function DefaultAccordion({
                         <RiArrowDropDownLine fontSize="20px" color={isDark ? '#f5f5f5' : 'gray'} />
                     )
                 }
+                disabled={disabled}
                 aria-controls={`${title}-content`}
                 id={`${title}-header`}
                 className={`${className || ''} !min-h-0 !h-auto !py-0 ${
