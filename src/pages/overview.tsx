@@ -10,8 +10,10 @@ import {
 } from '@/api';
 import { useAnalyticsEventTracker } from '@/config';
 import { useAccount, useNetwork } from 'wagmi';
-import { NETWORKS } from '@/utils';
+import { NETWORKS, bigNumberToUnformattedString, numberFormatter } from '@/utils';
 import { isAddress } from 'ethers/lib/utils.js';
+import { YourPositionsTable } from '@/ui/tables';
+import { GridView } from '@/ui/templates';
 
 const Overview: React.FC = () => {
     const gaEventTracker = useAnalyticsEventTracker('Overview');
@@ -38,8 +40,14 @@ const Overview: React.FC = () => {
                 topTranches={queryProtocolData.data?.topTranches}
                 isLoading={queryProtocolData.isLoading}
             />
+            <Carousel
+                type="strategies"
+                items={queryAllMarketsData.data?.sort(
+                    (a, b) => Number(b.supplyApy) - Number(a.supplyApy),
+                )}
+            />
             {/* {isConnected && !chain?.unsupported ? (
-                <GridView type="fixed">
+                <GridView type="fixed" className='mt-8'>
                     <UserPerformanceCard
                         isLoading={queryUserActivity.isLoading || queryUserPnlChart.isLoading}
                         loanedAssets={queryUserActivity.data?.supplies?.map((el: any) => ({
@@ -68,7 +76,7 @@ const Overview: React.FC = () => {
                 <div className="mt-10 text-center flex-col">
                     <div className="mb-4">
                         <span className="text-lg dark:text-neutral-200">
-                            {getNetwork()?.chain?.unsupported
+                            {chain?.unsupported
                                 ? 'Please switch networks'
                                 : 'Please connect your wallet'}
                         </span>
@@ -76,12 +84,6 @@ const Overview: React.FC = () => {
                     <WalletButton primary className="!w-fit" />
                 </div>
             )} */}
-            <Carousel
-                type="strategies"
-                items={queryAllMarketsData.data?.sort(
-                    (a, b) => Number(b.supplyApy) - Number(a.supplyApy),
-                )}
-            />
         </Base>
     );
 };

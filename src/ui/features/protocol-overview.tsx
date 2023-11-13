@@ -13,6 +13,7 @@ import {
 import { UseQueryResult } from '@tanstack/react-query';
 import { useSelectedTrancheContext } from '@/store';
 import { useNavigate } from 'react-router-dom';
+import { ReAreaChart } from '@/ui/charts';
 
 export interface IProtocolProps {
     isLoading?: boolean;
@@ -81,7 +82,7 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                                 className="min-w-full"
                             >
                                 <div className="h-[100px] w-full">
-                                    <ReLineChart
+                                    <ReAreaChart
                                         data={tvlChart?.data || []}
                                         color="#3CB55E"
                                         type="usd"
@@ -90,7 +91,7 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                             </SkeletonLoader>
                         ) : (
                             <div className="h-[100px] lg:h-full w-full">
-                                <ReLineChart
+                                <ReAreaChart
                                     data={tvlChart?.data || []}
                                     color="#3CB55E"
                                     type="usd"

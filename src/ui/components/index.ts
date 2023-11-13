@@ -26,7 +26,7 @@ export * from './input-default';
 export * from './input-list';
 export * from './label';
 export * from './legend';
-export * from '../charts/line-chart';
+export * from '../charts/line-chart'; // TODO
 export * from './loader-full-page';
 export * from './loader-skeleton';
 export * from './loader-spinner';
@@ -39,5 +39,5 @@ export * from './tabs-steps';
 export * from './toggle-default';
 export * from './toggle-theme';
 export * from './tooltip-apy';
-export * from '../charts/tooltip';
+export * from '../charts/tooltip'; // TODO
 export * from './tooltip-default';

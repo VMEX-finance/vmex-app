@@ -22,6 +22,8 @@
             "@/ui/tables/*": ["ui/tables/*"],
             "@/ui/templates": ["ui/templates/index.ts"],
             "@/ui/templates/*": ["ui/templates/*"],
+            "@/ui/charts": ["ui/charts/index.ts"],
+            "@/ui/charts/*": ["ui/charts/*"],
             "@/hooks": ["hooks/index.ts"],
             "@/hooks/*": ["hooks/*"],
             "@/config": ["config/index.ts"],
