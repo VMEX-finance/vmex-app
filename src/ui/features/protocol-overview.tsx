@@ -82,20 +82,12 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                                 className="min-w-full"
                             >
                                 <div className="h-[100px] w-full">
-                                    <ReAreaChart
-                                        data={tvlChart?.data || []}
-                                        color="#3CB55E"
-                                        type="usd"
-                                    />
+                                    <ReAreaChart data={tvlChart?.data || []} type="usd" />
                                 </div>
                             </SkeletonLoader>
                         ) : (
                             <div className="h-[100px] lg:h-full w-full">
-                                <ReAreaChart
-                                    data={tvlChart?.data || []}
-                                    color="#3CB55E"
-                                    type="usd"
-                                />
+                                <ReAreaChart data={tvlChart?.data || []} type="usd" />
                             </div>
                         )}
                     </div>

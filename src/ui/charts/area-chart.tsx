@@ -20,7 +20,6 @@ type IAreaChartProps = {
     dataKey3?: string;
     loading?: boolean;
     error?: boolean;
-    color?: string;
     color2?: string;
     color3?: string;
     timeseries?: boolean;
@@ -121,7 +120,7 @@ export const ReAreaChart = (props: IAreaChartProps) => {
 
                         <defs>
                             <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="#8884d8" stopOpacity={0.6} />
+                                <stop offset="5%" stopColor="#8884d8" stopOpacity={0.5} />
                                 <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
                             </linearGradient>
                             <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
