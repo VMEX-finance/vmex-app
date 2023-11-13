@@ -69,12 +69,13 @@ export const DefaultDropdown = ({
     };
 
     const mode = primary
-        ? '!text-neutral-100 bg-neutral-800 shadow-lg hover:bg-neutral-700'
-        : 'hover:bg-neutral-100';
-
+        ? '!text-neutral-100 bg-neutral-800 hover:bg-neutral-700 hover:bg-neutral-700 text-neutral-900'
+        : 'bg-neutral-300 hover:bg-[rgb(200,200,200)] ';
+    const dark = `dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-neutral-100`;
+    const shadow = 'shadow-md hover:shadow-sm';
     const textSize = size === 'lg' ? 'text-md' : 'text-sm';
     const iconSize = size === 'lg' ? '22px' : '18px';
-    const paddingSize = size === 'lg' ? 'py-1 pl-3 pr-2' : 'pl-2';
+    const paddingSize = size === 'lg' ? 'py-1.5 pl-3 pr-2' : 'pl-2';
     const withBorder = border ? 'border border-brand-black' : '';
     const roundedSize = size === 'lg' ? 'rounded-lg' : 'rounded-md';
     const displayOnly = label
@@ -132,32 +133,34 @@ export const DefaultDropdown = ({
                 </div>
             )}
 
-            <Menu as="div" className={`relative inline-block ${full ? 'w-full' : ''}`}>
+            <Menu as="div" className={`inline-block my-auto relative ${full ? 'w-full' : ''}`}>
                 <Menu.Button
-                    className={`
-                        inline-flex items-center w-full focus:outline-none focus:ring-none transition duration-100 dark:bg-neutral-900 hover:bg-neutral-700 dark:hover:bg-neutral-700 text-neutral-900 dark:text-neutral-100
-                        ${className ? className : ''} 
-                        ${determineColor()} 
-                        ${displayOnly} 
-                        ${mode} 
-                        ${textSize} 
-                        ${paddingSize} 
-                        ${withBorder} 
-                        ${full ? 'w-full' : ''}
-                        ${roundedSize}
-                    `}
+                    className={[
+                        'inline-flex items-center w-full focus:outline-none focus:ring-none transition duration-100',
+                        className,
+                        determineColor(),
+                        displayOnly,
+                        mode,
+                        textSize,
+                        paddingSize,
+                        withBorder,
+                        full ? 'w-full' : '',
+                        roundedSize,
+                        dark,
+                        shadow,
+                    ].join(' ')}
                 >
                     {label ? (
                         label
                     ) : (
-                        <span className="inline-flex items-center justify-between w-full text-neutral-100">
+                        <span className="inline-flex items-center justify-between w-full">
                             {!multiselect ? (
                                 icon ? (
                                     <img
                                         src={selected as string}
                                         alt={selected as string}
-                                        width={26}
-                                        height={26}
+                                        width={24}
+                                        height={24}
                                     />
                                 ) : (
                                     selected

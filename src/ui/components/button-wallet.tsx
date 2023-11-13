@@ -19,9 +19,7 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
     const { width } = useWindowSize();
     const { address } = useAccount();
     const title = address ? truncateAddress(address) : label;
-    const mode = `transition duration-100 ${
-        primary && !address ? '' : 'bg-white text-brand-black hover:bg-neutral-200'
-    }`;
+    const mode = `transition duration-100 bg-neutral-300 shadow-md hover:shadow-sm text-brand-black hover:bg-[rgb(200,200,200)]`;
     const queryClient = useQueryClient();
     const { queryTrancheAdminData } = useSubgraphUserData(address || '');
 
@@ -72,11 +70,7 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
     if (address && width > 1024 && !chain?.unsupported) {
         return (
             <DefaultDropdown
-                className={[
-                    'min-h-[36px] border-1 border border-brand-black',
-                    mode,
-                    className,
-                ].join(' ')}
+                className={['', mode, className].join(' ')}
                 selected={width > 1400 ? truncateAddress(address) : truncate(address, 3)}
                 items={renderDropdownItems()}
                 size="lg"
@@ -135,10 +129,10 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
                                             'font-basefont',
                                             `${typeof label === 'string' ? 'px-4' : 'px-2'} py-1`,
                                             'transition duration-200',
-                                            isDark ? '!py-[4.5px]' : '!py-[5px]',
+                                            'py-1.5',
                                             mode,
                                             className,
-                                            'bg-brand-black dark:bg-neutral-800 rounded-lg text-neutral-900 border border-neutral-900 dark:text-white dark:border-transparent dark:hover:bg-neutral-700',
+                                            'bg-brand-black dark:bg-neutral-800 rounded-lg text-neutral-900 dark:text-white dark:border-transparent dark:hover:bg-neutral-700',
                                         ].join(' ')}
                                     >
                                         {determineConnection().render}

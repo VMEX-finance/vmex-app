@@ -44,7 +44,7 @@ export const Navbar: React.FC = () => {
     }
 
     return (
-        <nav className="flex justify-center flex-row sticky h-fit items-center top-0 font-basefont px-2 lg:px-4 py-2 xl:py-2.5 2xl:px-6 bg-neutral-900 dark:bg-brand-black lg:bg-white z-[1000] shadow-md shadow-gray-300 dark:shadow-neutral-950">
+        <nav className="flex justify-center flex-row sticky h-fit items-center top-0 font-basefont px-2 lg:px-4 py-2 2xl:py-2.5 2xl:px-6 bg-neutral-900 dark:bg-brand-black lg:bg-white z-[1000] shadow-md shadow-gray-300 dark:shadow-neutral-950">
             <div
                 className={`w-full max-w-[125rem]
                 ${
@@ -96,7 +96,6 @@ export const Navbar: React.FC = () => {
                         selected={renderChainImg()}
                         items={renderNetworks(switchNetworkAsync)}
                         size="lg"
-                        className={`border border-1 lg:border-brand-black !px-0 !pl-2 !py-1 lg:!py-[4px]`}
                         icon
                     />
 
