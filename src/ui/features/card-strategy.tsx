@@ -1,7 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Slider as MUISlider } from '@mui/material';
 import { AssetDisplay, Button, Card, PillDisplay, Tooltip } from '@/ui/components';
-import { DEFAULT_CHAINID, capFirstLetter, findInObjArr, percentFormatter, toSymbol } from '@/utils';
+import {
+    AVAILABLE_COLLATERAL_TRESHOLD,
+    DEFAULT_CHAINID,
+    capFirstLetter,
+    findInObjArr,
+    percentFormatter,
+    toSymbol,
+} from '@/utils';
 import { ModalTableDisplay } from '../modals';
 import {
     useApyData,
@@ -27,8 +34,6 @@ type IStrategyCard = {
     token1?: string;
     name?: string;
 };
-
-const AVAILABLE_COLLATERAL_TRESHOLD = parseUnits('5000', 8);
 
 export const StrategyCard = ({
     asset,
@@ -124,11 +129,11 @@ export const StrategyCard = ({
     };
 
     const handleCollateralClick = (asset: string) => {
-        if (getLeverageDisabled()) return;
+        if (!suppliedAssetDetails) return;
         setCollateral(asset);
     };
 
-    const openLeverageDialog = () =>
+    const openLeverageDialog = () => {
         openDialog('leverage-asset-dialog', {
             ...suppliedAssetDetails,
             ...rewardApy,
@@ -136,8 +141,12 @@ export const StrategyCard = ({
             leverage,
             collateral,
             trancheId,
+            token0,
+            token1,
             tranche: queryTrancheData?.data?.name || '',
         });
+        setTimeout(() => setCollateral(''), 2000);
+    };
 
     const handleSupplyClick = (e: any) => {
         if (!chain && openConnectModal) return openConnectModal();
@@ -174,7 +183,7 @@ export const StrategyCard = ({
                                     ? capFirstLetter(x?.symbol) ||
                                       (await toSymbol(x.asset, chain as Chain))
                                     : await toSymbol(x?.symbol || x.asset, chain as Chain),
-                            value: percentFormatter.format(Number(x.apy) / 100),
+                            value: percentFormatter.format(Number(x.apy || '0') / 100),
                         })),
                 );
                 setApyBreakdown(promises);
@@ -221,23 +230,50 @@ export const StrategyCard = ({
                                 Open this strategy by providing any of the assets as collateral:
                             </p>
                             <div className="flex gap-1 flex-wrap mt-1">
-                                {getCollateralAssets(token0 || '', token1 || '').map((el, i) => (
-                                    <button
-                                        onClick={(e) => handleCollateralClick(el.assetAddress)}
-                                        key={`collateral-asset-${el}-${i}`}
-                                    >
-                                        <PillDisplay
-                                            type="asset"
-                                            asset={el.assetName}
-                                            size="sm"
-                                            hoverable={!getLeverageDisabled()}
-                                            selected={
-                                                el.assetAddress.toLowerCase() ===
-                                                collateral.toLowerCase()
-                                            }
-                                        />
-                                    </button>
-                                ))}
+                                {getCollateralAssets(token0 || '', token1 || '').map((el, i) =>
+                                    suppliedAssetDetails ? (
+                                        <button
+                                            onClick={(e) => handleCollateralClick(el.assetAddress)}
+                                            key={`collateral-asset-${el}-${i}`}
+                                        >
+                                            <PillDisplay
+                                                type="asset"
+                                                asset={el.assetName}
+                                                size="sm"
+                                                hoverable={!!suppliedAssetDetails}
+                                                selected={
+                                                    el.assetAddress.toLowerCase() ===
+                                                    collateral.toLowerCase()
+                                                }
+                                            />
+                                        </button>
+                                    ) : (
+                                        <Tooltip
+                                            id={`collateral-tooltip-${i}-${el.assetAddress}-${asset}`}
+                                            text="Supply first to start looping"
+                                            key={`collateral-tooltip-${i}-${el}-${asset}`}
+                                        >
+                                            <button
+                                                onClick={(e) =>
+                                                    handleCollateralClick(el.assetAddress)
+                                                }
+                                                key={`collateral-asset-${el}-${i}`}
+                                                disabled
+                                            >
+                                                <PillDisplay
+                                                    type="asset"
+                                                    asset={el.assetName}
+                                                    size="sm"
+                                                    hoverable={!getLeverageDisabled()}
+                                                    selected={
+                                                        el.assetAddress.toLowerCase() ===
+                                                        collateral.toLowerCase()
+                                                    }
+                                                />
+                                            </button>
+                                        </Tooltip>
+                                    ),
+                                )}
                             </div>
                         </div>
                     </>
@@ -247,54 +283,14 @@ export const StrategyCard = ({
                     <ModalTableDisplay content={apyBreakdown} valueClass="text-right" size="sm" />
                 </div>
             </div>
-            {address ? (
-                <div
-                    className={`mt-3 2xl:mt-4 grid items-center gap-1 w-full ${
-                        isLoopable && !chain?.unsupported ? 'grid-cols-2' : 'grid-cols-1'
-                    }`}
-                >
-                    {!chain?.unsupported && isLoopable && (
-                        <>
-                            {getLeverageDisabled() ? (
-                                <Tooltip
-                                    className={'!w-full'}
-                                    id={`looping-btn-tooltip-${asset}`}
-                                    text={getLeverageDisabledMessage()}
-                                >
-                                    <Button
-                                        label={renderBtnText(true)}
-                                        onClick={openLeverageDialog}
-                                        className="w-full"
-                                        disabled
-                                    />
-                                </Tooltip>
-                            ) : (
-                                <Button
-                                    label={renderBtnText(true)}
-                                    onClick={openLeverageDialog}
-                                    className="w-full"
-                                />
-                            )}
-                        </>
-                    )}
-
-                    <Button
-                        label={renderBtnText()}
-                        onClick={handleSupplyClick}
-                        className="w-full"
-                        primary
-                    />
-                </div>
-            ) : (
-                <div className="flex">
-                    <Button
-                        label={renderBtnText()}
-                        onClick={handleSupplyClick}
-                        className="w-full"
-                        primary
-                    />
-                </div>
-            )}
+            <div className={`mt-3 2xl:mt-4 grid items-center gap-1 w-full grid-cols-1`}>
+                <Button
+                    label={renderBtnText(!!suppliedAssetDetails)}
+                    onClick={suppliedAssetDetails ? openLeverageDialog : handleSupplyClick}
+                    className="w-full"
+                    primary
+                />
+            </div>
         </Card>
     );
 };

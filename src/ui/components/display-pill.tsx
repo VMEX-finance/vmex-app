@@ -55,7 +55,7 @@ export const PillDisplay = ({
                         : ''
                 }`}
             >
-                <div className="flex gap-1">
+                <div className="flex items-center gap-1">
                     <AssetDisplay name={asset} size="pill" noText />
                     <span
                         className={`whitespace-nowrap truncate max-w-[100px] ${determineSize()[0]}`}

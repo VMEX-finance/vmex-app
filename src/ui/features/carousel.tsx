@@ -39,7 +39,7 @@ const defaultSettings = {
 };
 
 export const Carousel = ({ items, type }: ICarousel) => {
-    const { breakpoints } = useWindowSize();
+    const { breakpoints, width } = useWindowSize();
     const network = getNetworkName();
 
     const renderStrategy = (address: string) => {
@@ -64,14 +64,22 @@ export const Carousel = ({ items, type }: ICarousel) => {
 
     const settings = {
         ...defaultSettings,
-        slidesToShow: 4,
-        slidesToScroll: 4,
+        slidesToShow: 5,
+        slidesToScroll: 5,
         nextArrow: <NextArrow />,
         prevArrow: <PrevArrow />,
         swipe: false,
         responsive: [
             {
                 breakpoint: breakpoints['2xl'],
+                settings: {
+                    ...defaultSettings,
+                    slidesToShow: 4,
+                    slidesToScroll: 4,
+                },
+            },
+            {
+                breakpoint: breakpoints['xl'],
                 settings: {
                     ...defaultSettings,
                     slidesToShow: 3,
@@ -114,7 +122,7 @@ export const Carousel = ({ items, type }: ICarousel) => {
                                       {...renderStrategy(el.assetAddress?.toLowerCase())}
                                   />
                               ))
-                            : [1, 2, 3, 4].map((el, i) => (
+                            : [1, 2, 3, 4, 5].map((el, i) => (
                                   <Card
                                       key={`carousel-item-${i}`}
                                       className="min-h-[225px]"

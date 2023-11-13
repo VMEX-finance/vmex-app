@@ -7,6 +7,8 @@ import {
     SkeletonLoader,
     PillDisplay,
     AssetDisplay,
+    DefaultAccordion,
+    MessageStatus,
 } from '@/ui/components';
 import { ILeverageProps } from '../utils';
 import { useNavigate } from 'react-router-dom';
@@ -18,7 +20,7 @@ import {
     VariableDebtTokenABI,
     LeverageControllerABI,
 } from '@/utils/abis';
-import { NETWORKS, getNetworkName } from '@/utils';
+import { AVAILABLE_COLLATERAL_TRESHOLD, NETWORKS, getNetworkName } from '@/utils';
 import { useAccount } from 'wagmi';
 import { BigNumber, constants, ethers, utils } from 'ethers';
 import { useSubgraphAllMarketsData, useUserData } from '@/api';
@@ -51,22 +53,22 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
     const _data = data
         ? data
         : { asset: '', trancheId: '', collateral: '', amount: '', leverage: 0, totalApy: '' };
-
+    const [errMsg, setErrMsg] = useState('');
     const { asset, trancheId, collateral, amount, leverage, totalApy } = _data; // TODO: move functionality to leverage and zap hooks
 
-    const collaterals = collateral ? collateral.split(':') : [];
+    const [_collateral, _setCollateral] = useState(collateral);
+
+    const collaterals = _collateral ? _collateral.split(':') : [];
     const collateralSymbols =
         collaterals.length && asset ? convertAddressListToSymbol(collaterals, network) : [];
     const assetSymbol = asset ? convertAddressToSymbol(asset, network) : '';
     let collateralMarketData = collaterals.map((x) => {
         const marketData = queryAllMarketsData.data?.find(
             (y) =>
-                y.trancheId === trancheId.toString() &&
+                y.trancheId === trancheId?.toString() &&
                 y.assetAddress.toLowerCase() === x.toLowerCase(),
         );
-        if (!marketData) {
-            throw new Error('Cant get collateral market data - this should never happen');
-        }
+        if (!marketData) return { borrowApy: '' };
         return marketData;
     });
 
@@ -75,7 +77,16 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
     const [borrowAllowance, setBorrowAllowance] = useState(BigNumber.from(0));
     const [leverageDetails, setLeverageDetails] = useState<LeverageDetails>();
 
+    const handleCollateralClick = (address: string) => {
+        if (errMsg) setErrMsg('');
+        _setCollateral(address);
+    };
+
     const approveBorrowDelegation = async () => {
+        if (!collateral) {
+            setErrMsg('Must provide collateral first');
+            return;
+        }
         if (!leverageDetails || !network) {
             toast.error('Error getting leverage details');
             return;
@@ -110,7 +121,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
             stable,
         };
         const totalBorrowAmount = calculateTotalBorrowAmount(amount, leverage);
-        const isBorrowToken0 = utils.getAddress(collateral) === utils.getAddress(token0);
+        const isBorrowToken0 = utils.getAddress(_collateral) === utils.getAddress(token0);
         if (!totalBorrowAmount) return;
         const config = await prepareWriteContract({
             address: CHAIN_CONFIG.leverageControllerAddress,
@@ -121,6 +132,48 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
 
         const data = await writeContract(config);
         await data.wait();
+    };
+
+    const getCollateralAssets = (token0: string, token1: string) => {
+        if (!queryAllMarketsData.data) {
+            return [];
+        }
+        const collateralAssets = [];
+
+        const borrowableAssets = queryAllMarketsData.data.filter((x) => {
+            if (x.trancheId !== trancheId?.toString() || !x.canBeBorrowed) return false;
+            return AVAILABLE_COLLATERAL_TRESHOLD.lt(parseUnits(String(x.available), 8));
+        });
+        // if both underyling tokens for LP are borrowable, show Underyling
+        if (
+            borrowableAssets.filter(
+                (x) =>
+                    x.assetAddress.toLowerCase() === token0.toLowerCase() ||
+                    x.assetAddress.toLowerCase() === token1.toLowerCase(),
+            ).length === 2
+        ) {
+            collateralAssets.push({
+                assetName: 'Underlying',
+                assetAddress: `${token0}:${token1}`,
+            });
+        }
+        collateralAssets.push(
+            ...borrowableAssets.map((x) => {
+                return { assetName: x.asset, assetAddress: x.assetAddress };
+            }),
+        );
+
+        collateralAssets.sort((a, b) => {
+            if (a.assetName === 'Underlying') return -1;
+            if (b.assetName === 'Underyling') return 1;
+            if ([token0.toLowerCase(), token1.toLowerCase()].includes(a.assetAddress.toLowerCase()))
+                return -1;
+            if ([token0.toLowerCase(), token1.toLowerCase()].includes(b.assetAddress.toLowerCase()))
+                return 1;
+            return 0;
+        });
+
+        return collateralAssets;
     };
 
     const calculateTotalBorrowAmount = (amountHumanReadable: string, leverage: number) => {
@@ -179,7 +232,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                 `Borrow total $${formatUnits(totalBorrowAmount, 8)} worth of ${
                     collateralSymbols[0]
                 }, with interest rate ${(
-                    parseFloat(collateralMarketData[0].borrowApy) * 100
+                    parseFloat(collateralMarketData[0]?.borrowApy) * 100
                 ).toFixed(4)} %`,
             );
         } else {
@@ -246,7 +299,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                         {
                             ...lendingPoolContract,
                             functionName: 'getReserveData',
-                            args: [utils.getAddress(collateral), BigNumber.from(trancheId)],
+                            args: [utils.getAddress(_collateral), BigNumber.from(trancheId)],
                         },
                     ],
                 });
@@ -284,6 +337,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
             })().catch((err) => console.error(err));
         }
     }, [network, wallet]);
+
     if (data)
         return (
             <>
@@ -361,23 +415,71 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                             content={(data as any)?.apyBreakdown || []}
                         />
 
-                        <div className="mt-4">
-                            <span>How it works</span>
-                            <ol className="list-decimal mx-6 text-sm">
-                                {populateHowItWorks().map((v, i) => (
-                                    <li key={i.toString()}>{v}</li>
+                        <div>
+                            <p
+                                className={`text-xs leading-tight mt-4 ${
+                                    errMsg ? 'text-red-600' : ''
+                                }`}
+                            >
+                                Provide any of the assets as collateral:
+                            </p>
+                            <div className="flex gap-1 flex-wrap mt-1">
+                                {getCollateralAssets(
+                                    (data as any)?.token0 || '',
+                                    (data as any)?.token1 || '',
+                                ).map((el, i) => (
+                                    <button
+                                        onClick={(e) => handleCollateralClick(el.assetAddress)}
+                                        key={`collateral-asset-${el}-${i}`}
+                                    >
+                                        <PillDisplay
+                                            type="asset"
+                                            asset={el.assetName}
+                                            size="sm"
+                                            hoverable
+                                            selected={
+                                                el.assetAddress.toLowerCase() ===
+                                                _collateral.toLowerCase()
+                                            }
+                                        />
+                                    </button>
                                 ))}
-                            </ol>
+                            </div>
                         </div>
 
-                        <div className="mt-4">
-                            <span>Summary</span>
-                            <ol className="list-decimal mx-6 text-sm">
-                                {populateSummary().map((v, i) => (
-                                    <li key={i.toString()}>{v}</li>
-                                ))}
-                            </ol>
+                        <div className="mt-2">
+                            <DefaultAccordion
+                                wrapperClass="!border-0"
+                                customHover="hover:!text-brand-purple"
+                                detailsClass="!bg-white !border-0"
+                                className="!px-0 !hover:!bg-inherit !bg-white dark:!bg-brand-black"
+                                title={`how-it-works-summary`}
+                                summary={<span>How it works</span>}
+                                details={
+                                    <ol className="list-decimal mx-6 text-sm">
+                                        {populateHowItWorks().map((v, i) => (
+                                            <li key={i?.toString()}>{v}</li>
+                                        ))}
+                                    </ol>
+                                }
+                            />
                         </div>
+
+                        <DefaultAccordion
+                            wrapperClass="!border-0"
+                            customHover="hover:!text-brand-purple"
+                            detailsClass="!bg-white !border-0"
+                            className="!px-0 !hover:!bg-inherit !bg-white dark:!bg-brand-black"
+                            title={`strategy-summary`}
+                            summary={<span>Summary</span>}
+                            details={
+                                <ol className="list-decimal mx-6 text-sm">
+                                    {populateSummary().map((v, i) => (
+                                        <li key={i?.toString()}>{v}</li>
+                                    ))}
+                                </ol>
+                            }
+                        />
 
                         <ModalTableDisplay
                             title="Transaction Overview"

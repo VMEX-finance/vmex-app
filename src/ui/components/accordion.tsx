@@ -14,6 +14,7 @@ type IAccordionProps = {
     className?: string;
     customHover?: string;
     wrapperClass?: string;
+    detailsClass?: string;
 };
 
 const Accordion = styled((props: AccordionProps) => (
@@ -58,6 +59,7 @@ export function DefaultAccordion({
     className,
     customHover,
     wrapperClass,
+    detailsClass,
 }: IAccordionProps) {
     const [expanded, setExpanded] = React.useState<string | false>('');
     const { isDark } = React.useContext(ThemeContext);
@@ -79,12 +81,12 @@ export function DefaultAccordion({
                     noIcon ? (
                         <></>
                     ) : (
-                        <RiArrowDropDownLine fontSize="28px" color={isDark ? '#f5f5f5' : 'gray'} />
+                        <RiArrowDropDownLine fontSize="20px" color={isDark ? '#f5f5f5' : 'gray'} />
                     )
                 }
                 aria-controls={`${title}-content`}
                 id={`${title}-header`}
-                className={`${className || ''} ${
+                className={`${className || ''} !min-h-0 !h-auto !py-0 ${
                     isDark
                         ? `!bg-brand-black !text-neutral-200 ${
                               customHover ? customHover : 'hover:!bg-neutral-900'
@@ -95,7 +97,9 @@ export function DefaultAccordion({
                 {summary}
             </AccordionSummary>
             <AccordionDetails
-                className={isDark ? '!bg-brand-black !text-neutral-200' : '!bg-neutral-100'}
+                className={`${detailsClass || ''} ${
+                    isDark ? '!bg-brand-black !text-neutral-200' : '!bg-neutral-100'
+                }`}
             >
                 {details}
             </AccordionDetails>
