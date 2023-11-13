@@ -19,7 +19,7 @@ import {
 } from '@/utils';
 import { IUserTrancheDataProps, IUserTrancheData } from './types';
 import { BigNumber, ethers } from 'ethers';
-import { getSubgraphRewardData } from './subgraph-rewards-data';
+import { getSubgraphRewardData } from './rewards-data';
 import { VmexRewardsData } from './types';
 
 export async function _getUserTrancheData(

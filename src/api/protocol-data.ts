@@ -17,7 +17,7 @@ import {
     ISubgraphProtocolData,
     IAssetPricesProps,
 } from './types';
-import { getSubgraphTranchesOverviewData } from './subgraph-tranches-overview';
+import { getSubgraphTranchesOverviewData } from './tranches-data';
 
 function subtractSeconds(date: Date, seconds: number): Date {
     date.setSeconds(date.getSeconds() - seconds);

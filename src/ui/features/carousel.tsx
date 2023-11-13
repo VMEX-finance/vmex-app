@@ -97,9 +97,11 @@ export const Carousel = ({ items, type }: ICarousel) => {
     if (type === 'strategies') {
         return (
             <div className="mt-2">
-                <h2 className="text-2xl dark:text-neutral-100">Featured Strategies</h2>
+                <h2 className="text-[22px] 2xl:text-2xl dark:text-neutral-100">
+                    Featured Strategies
+                </h2>
 
-                <div className="px-6 lg:px-8">
+                <div className="px-6">
                     <Slider {...settings}>
                         {items?.length
                             ? renderStrategyItems().map((el, i) => (

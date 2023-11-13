@@ -18,7 +18,7 @@ import {
 } from '@/utils';
 import { IUserActivityDataProps, IUserDataProps, IUserWalletDataProps } from './types';
 import { BigNumber } from 'ethers';
-import { getSubgraphTranchesOverviewData } from './subgraph-tranches-overview';
+import { getSubgraphTranchesOverviewData } from './tranches-data';
 
 // Gets
 export async function getUserActivityData(userAddress: string): Promise<IUserActivityDataProps> {

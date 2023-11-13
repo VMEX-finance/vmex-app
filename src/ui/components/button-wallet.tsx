@@ -20,7 +20,7 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
     const { address } = useAccount();
     const title = address ? truncateAddress(address) : label;
     const mode = `transition duration-100 ${
-        primary && !address ? '' : 'bg-white text-brand-black hover:bg-neutral-100'
+        primary && !address ? '' : 'bg-white text-brand-black hover:bg-neutral-200'
     }`;
     const queryClient = useQueryClient();
     const { queryTrancheAdminData } = useSubgraphUserData(address || '');
@@ -135,13 +135,10 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
                                             'font-basefont',
                                             `${typeof label === 'string' ? 'px-4' : 'px-2'} py-1`,
                                             'transition duration-200',
-                                            isDark ? '!py-[4.5px]' : '!py-[6px]',
+                                            isDark ? '!py-[4.5px]' : '!py-[5px]',
                                             mode,
-                                            !address
-                                                ? 'text-neutral-100 hover:bg-neutral-800 dark:text-neutral-900'
-                                                : 'text-neutral-900 border border-neutral-900',
                                             className,
-                                            'bg-brand-black dark:bg-neutral-200 dark:hover:bg-neutral-300 rounded-lg',
+                                            'bg-brand-black dark:bg-neutral-800 rounded-lg text-neutral-900 border border-neutral-900 dark:text-white dark:border-transparent dark:hover:bg-neutral-700',
                                         ].join(' ')}
                                     >
                                         {determineConnection().render}

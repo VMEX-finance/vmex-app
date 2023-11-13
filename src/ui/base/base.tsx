@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navbar } from '@/ui/base';
+import { Footer, Navbar } from '@/ui/base';
 import { DashboardTemplate } from '../templates/dashboard-template';
 import { AllModalsInstance } from '../modals';
 import { ToastContainer } from 'react-toastify';
@@ -40,6 +40,7 @@ const Base: React.FC<IAppTemplateProps> = ({
             >
                 {children}
             </DashboardTemplate>
+            {/* <Footer /> */}
 
             <AllModalsInstance />
             <ToastContainer

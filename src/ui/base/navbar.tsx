@@ -42,9 +42,9 @@ export const Navbar: React.FC = () => {
     }
 
     return (
-        <nav className="flex justify-center flex-row sticky h-fit items-center top-0 font-basefont px-3 md:px-4 py-2 lg:px-5 2xl:px-10 lg:py-2.5 2xl:py-3 bg-neutral-900 dark:bg-brand-black lg:bg-[#FFF] z-[1000] shadow-lg lg:shadow-md">
+        <nav className="flex justify-center flex-row sticky h-fit items-center top-0 font-basefont px-2 lg:px-4 py-2 xl:py-2.5 2xl:px-6 bg-neutral-900 dark:bg-brand-black lg:bg-white z-[1000] shadow-md shadow-gray-300 dark:shadow-neutral-950">
             <div
-                className={`w-full max-w-[150rem]
+                className={`w-full max-w-[125rem]
                 ${
                     width <= breakpoints.lg
                         ? 'flex flex-row items-center justify-between'
@@ -72,7 +72,7 @@ export const Navbar: React.FC = () => {
                     <div className="justify-self-center">
                         <div
                             className={
-                                'grid grid-flow-col auto-cols-max justify-between gap-1 2xl:gap-1.5 w-max p-1.5 shadow-neutral-500 shadow-inner dark:shadow-black bg-brand-black dark:bg-neutral-900 rounded-xl'
+                                'grid grid-flow-col auto-cols-max justify-between gap-1 w-max p-1 shadow-[0px_0px_4px_0px_rgba(0,0,0,0.75)_inset] shadow-neutral-400 dark:shadow-black bg-[rgb(230,230,230)] dark:bg-[rgba(32,32,32)] rounded-xl'
                             }
                         >
                             {navItems.map((item) => (

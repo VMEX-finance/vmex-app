@@ -2,20 +2,11 @@ import React, { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useWindowSize, useDialogController } from '@/hooks';
 import { BiChevronLeft, BiPlus } from 'react-icons/bi';
-import {
-    Tooltip,
-    Button,
-    LinkButton,
-    SkeletonLoader,
-    Label,
-    ToastStatus,
-    MessageStatus,
-} from '../components';
+import { Tooltip, Button, LinkButton, SkeletonLoader, Label, MessageStatus } from '../components';
 import { useAccount, useNetwork } from 'wagmi';
 import { Skeleton } from '@mui/material';
 import { usePricesData, useSubgraphUserData } from '@/api';
 import { useSelectedTrancheContext } from '@/store';
-import { toast } from 'react-toastify';
 import { Transition } from '@headlessui/react';
 
 interface IDashboardTemplateProps {
@@ -53,7 +44,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
 
     return (
         <>
-            <div className="max-w-[125rem] mx-auto p-3 md:p-4 lg:p-5 xl:p-6 2xl:px-10">
+            <div className="max-w-[125rem] mx-auto p-2 pt-3 pb-6 md:p-4 md:pb-6 2xl:pt-5 2xl:px-6">
                 <header
                     className={`
                     ${right ? 'flex justify-between w-full' : ''}
@@ -66,23 +57,21 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                 >
                     <div className="flex flex-col">
                         {view ? (
-                            <div className="flex flex-col justify-between md:block md:justify-end gap-3">
+                            <div className="flex flex-col md:flex-row justify-between md:justify-start md:items-center gap-3">
                                 <LinkButton onClick={routeChange}>
                                     <BiChevronLeft size="20px" />
                                     <p className="2xl:text-lg leading-tight">Back</p>
                                 </LinkButton>
                                 <Label
                                     tooltip
-                                    className={`md:hidden ${
-                                        !title ? 'animate-pulse' : ''
-                                    } mb-1 ml-1`}
+                                    className={`${!title ? 'animate-pulse' : ''} mb-1 ml-1 md:m-0`}
                                 >
                                     {tranche?.category || 'Loading'}
                                 </Label>
                             </div>
                         ) : (
                             <>
-                                <h1 className="text-3xl font-basefont capitalize leading-tight text-neutral-900 dark:text-neutral-300">
+                                <h1 className="text-[26px] 2xl:text-3xl font-basefont capitalize leading-tight text-neutral-900 dark:text-neutral-300">
                                     {title}
                                 </h1>
                                 {(description || descriptionLoading) && (
@@ -111,17 +100,9 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                                     ) : (
                                         <div className="flex flex-col items-center justify-center">
                                             <div className="flex flex-row-reverse gap-3 items-center justify-end md:flex-col md:gap-0">
-                                                <h1 className="text-3xl font-basefont capitalize leading-tight text-neutral-900 dark:text-neutral-300 text-right">
+                                                <h1 className="text-2xl font-basefont capitalize leading-tight text-neutral-900 dark:text-neutral-300 text-right">
                                                     {title}
                                                 </h1>
-                                                {tranche?.category && (
-                                                    <Label
-                                                        tooltip
-                                                        className="hidden md:block !py-0.5 !text-xs md:absolute md:left-1/2 md:-translate-x-1/2 mt-1 md:mt-3 xl:mt-4"
-                                                    >
-                                                        {tranche?.category || 'Unknown'}
-                                                    </Label>
-                                                )}
                                             </div>
                                         </div>
                                     )}
@@ -200,7 +181,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                         )}
                 </header>
                 <main>
-                    <div className="py-4 md:py-8 flex flex-col gap-4">
+                    <div className="pb-3 pt-1.5 md:pt-2 flex flex-col gap-2 2xl:gap-3">
                         {children ? (
                             children
                         ) : (

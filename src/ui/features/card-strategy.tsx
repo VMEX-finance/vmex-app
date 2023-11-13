@@ -142,8 +142,6 @@ export const StrategyCard = ({
     const handleSupplyClick = (e: any) => {
         if (!chain && openConnectModal) return openConnectModal();
         else if (chain?.unsupported && switchNetwork) return switchNetwork(DEFAULT_CHAINID);
-        // TODO: implement supply with zapped asset
-        // edit supply modal props accordingly to have appropriate args passed
         return openDialog('loan-asset-dialog', {
             asset,
             trancheId,
@@ -252,10 +250,10 @@ export const StrategyCard = ({
             {address ? (
                 <div
                     className={`mt-3 2xl:mt-4 grid grid-cols-1 items-center gap-1 w-full ${
-                        isLoopable ? 'sm:grid-cols-2' : ''
+                        isLoopable && !chain?.unsupported ? 'sm:grid-cols-2' : ''
                     }`}
                 >
-                    {isLoopable && (
+                    {!chain?.unsupported && isLoopable && (
                         <>
                             {getLeverageDisabled() ? (
                                 <Tooltip

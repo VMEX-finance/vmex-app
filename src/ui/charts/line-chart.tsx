@@ -1,6 +1,6 @@
 import React from 'react';
 import { LineChart, Line, Tooltip, ResponsiveContainer, XAxis, YAxis } from 'recharts';
-import { CustomTooltip } from './tooltip-chart';
+import { CustomTooltip } from './tooltip';
 import { addMissingDatesToTimeseries, getTimeseriesAvgByDay } from '@/utils';
 
 export type ILineChartDataPointProps = {
@@ -123,6 +123,7 @@ export const ReLineChart = (props: ILineChartProps) => {
                             stroke={props.color || '#8884d8'}
                             activeDot={{ r: 3 }}
                             connectNulls={true}
+                            strokeWidth={2}
                         />
                         {props.data.length > 0 &&
                             (props.data[0].value2 || props.data[0].value2 === 0) && (

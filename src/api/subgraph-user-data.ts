@@ -6,7 +6,7 @@ import { BigNumber, ethers } from 'ethers';
 import { getAllAssetPrices } from './asset-prices';
 import { nativeAmountToUSD, PRICING_DECIMALS, getNetworkName } from '@/utils';
 import { getApolloClient } from '@/config';
-import { processTrancheData } from './subgraph-tranche-data';
+import { processTrancheData } from './tranche-data';
 
 type IncrementalChangeItem = {
     timestamp: number;
