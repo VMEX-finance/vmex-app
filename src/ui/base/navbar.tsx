@@ -127,10 +127,10 @@ const MobileDropdownMenu = ({
     tranches?: any[];
 }) => {
     return (
-        <Menu as="div" className="relative inline-block">
+        <Menu as="div" className="relative inline-block my-auto">
             <div>
-                <Menu.Button className="inline-flex justify-center w-full rounded-md border shadow-sm px-2 md:px-3 py-1 bg-neutral-900 text-sm font-medium text-neutral-100 focus:outline-none focus:ring-0">
-                    <HiOutlineMenuAlt3 size="26px" />
+                <Menu.Button className="flex my-auto justify-center w-full rounded-md shadow-sm px-2 md:px-3 py-1 text-sm font-medium focus:outline-none focus:ring-0 bg-neutral-300 hover:bg-[rgb(200,200,200)] text-neutral dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-neutral-100">
+                    <HiOutlineMenuAlt3 size="27px" />
                 </Menu.Button>
             </div>
 

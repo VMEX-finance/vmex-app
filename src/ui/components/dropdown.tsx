@@ -72,7 +72,7 @@ export const DefaultDropdown = ({
         ? '!text-neutral-100 bg-neutral-800 hover:bg-neutral-700 hover:bg-neutral-700 text-neutral-900'
         : 'bg-neutral-300 hover:bg-[rgb(200,200,200)] ';
     const dark = `dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-neutral-100`;
-    const shadow = 'shadow-md hover:shadow-sm';
+    const shadow = 'shadow-sm hover:shadow-none';
     const textSize = size === 'lg' ? 'text-md' : 'text-sm';
     const iconSize = size === 'lg' ? '22px' : '18px';
     const paddingSize = size === 'lg' ? 'py-1.5 pl-3 pr-2' : 'pl-2';

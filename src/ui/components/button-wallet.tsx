@@ -19,7 +19,7 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
     const { width } = useWindowSize();
     const { address } = useAccount();
     const title = address ? truncateAddress(address) : label;
-    const mode = `transition duration-100 bg-neutral-300 shadow-md hover:shadow-sm text-brand-black hover:bg-[rgb(200,200,200)]`;
+    const mode = `transition duration-100 bg-neutral-300 shadow-sm hover:shadow-none text-brand-black hover:bg-[rgb(200,200,200)]`;
     const queryClient = useQueryClient();
     const { queryTrancheAdminData } = useSubgraphUserData(address || '');
 

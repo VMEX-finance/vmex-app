@@ -153,7 +153,7 @@ export const StrategyCard = ({
     const renderBtnText = (isLeverage?: boolean) => {
         if (!chain && openConnectModal) return 'Connect Wallet';
         else if (chain?.unsupported && switchNetwork) return 'Switch Network';
-        if (isLeverage) return 'Looping';
+        if (isLeverage) return 'Loop';
         return 'Supply';
     };
 
@@ -249,8 +249,8 @@ export const StrategyCard = ({
             </div>
             {address ? (
                 <div
-                    className={`mt-3 2xl:mt-4 grid grid-cols-1 items-center gap-1 w-full ${
-                        isLoopable && !chain?.unsupported ? 'sm:grid-cols-2' : ''
+                    className={`mt-3 2xl:mt-4 grid items-center gap-1 w-full ${
+                        isLoopable && !chain?.unsupported ? 'grid-cols-2' : 'grid-cols-1'
                     }`}
                 >
                     {!chain?.unsupported && isLoopable && (
