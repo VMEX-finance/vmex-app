@@ -4,7 +4,7 @@ import { HiOutlineMenuAlt3 } from 'react-icons/hi';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { DefaultDropdown, MenuItemButton, WalletButton, ToggleThemeButton } from '@/ui/components';
 import { ThemeContext, IDialogNames } from '@/store';
-import { useAccount, useSwitchNetwork } from 'wagmi';
+import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
 import { useDialogController, useWindowSize } from '@/hooks';
 import { useSubgraphUserData } from '@/api';
 import { renderNetworks } from '@/utils';
@@ -21,9 +21,11 @@ export const Navbar: React.FC = () => {
     const { openDialog } = useDialogController();
     const { address } = useAccount();
     const { queryTrancheAdminData } = useSubgraphUserData(address || '');
-    const { switchNetworkAsync } = useSwitchNetwork();
+    const { switchNetworkAsync, switchNetwork } = useSwitchNetwork();
+    const { chain } = useNetwork();
 
-    function navigateTo(e: any) {
+    function navigateTo(e: any, text: string) {
+        if (text === 'Portfolio' && switchNetwork && chain?.unsupported) switchNetwork();
         if (typeof e === 'string') navigate(`../${e}`, { replace: false });
         else {
             e.preventDefault();
