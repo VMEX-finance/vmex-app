@@ -33,9 +33,9 @@ export const ModalTableDisplay = ({
     const determineSize = () => {
         switch (size) {
             case 'sm':
-                return ['text-sm', 'gap-0.5', 'mt-1'];
+                return ['text-sm', 'gap-0.5', 'mt-0.5'];
             default:
-                return ['text-md', 'gap-1.5', 'mt-2'];
+                return ['text-md', 'gap-0.5', 'mt-1'];
         }
     };
     return (
@@ -44,7 +44,7 @@ export const ModalTableDisplay = ({
             <div
                 className={`${content?.length ? 'justify-between' : 'justify-center'} ${
                     determineSize()[2]
-                } flex rounded-lg border border-neutral-300 dark:border-neutral-700 px-4 py-2 ${
+                } flex rounded-lg border border-neutral-300 dark:border-neutral-700 px-3 py-1.5 ${
                     determineSize()[0]
                 }`}
             >

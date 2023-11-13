@@ -385,7 +385,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
 
                         <div className="flex items-start justify-between mt-4 px-1">
                             <AssetDisplay name={(data as any)?.symbol} size={'lg'} />
-                            <div className="flex flex-col items-end">
+                            <div className="flex-col items-end hidden sm:flex">
                                 <span className="text-xl leading-none">{`${
                                     (data as any)?.tranche || ''
                                 }`}</span>
@@ -462,7 +462,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                                 title={`how-it-works-summary`}
                                 summary={<span>How it works</span>}
                                 details={
-                                    <ol className="list-decimal mx-6 text-sm">
+                                    <ol className="list-decimal mx-7 text-sm">
                                         {populateHowItWorks().map((v, i) => (
                                             <li key={i?.toString()}>{v}</li>
                                         ))}
@@ -480,7 +480,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                             title={`strategy-summary`}
                             summary={<span>Summary</span>}
                             details={
-                                <ol className="list-decimal mx-6 text-sm">
+                                <ol className="list-decimal mx-7 text-sm">
                                     {populateSummary().map((v, i) => (
                                         <li key={i?.toString()}>{v}</li>
                                     ))}
