@@ -44,7 +44,7 @@ export const Navbar: React.FC = () => {
     }
 
     return (
-        <nav className="flex justify-center flex-row sticky h-fit items-center top-0 font-basefont px-2 lg:px-4 py-2 2xl:py-2.5 2xl:px-6 bg-neutral-900 dark:bg-brand-black lg:bg-white z-[1000] shadow-md shadow-gray-300 dark:shadow-neutral-950">
+        <nav className="flex justify-center flex-row sticky h-fit items-center top-0 font-basefont px-2 lg:px-4 py-1.5 md:py-2 2xl:py-2.5 2xl:px-6 bg-neutral-900 dark:bg-brand-black lg:bg-white z-[1000] shadow-md shadow-gray-300 dark:shadow-neutral-950">
             <div
                 className={`w-full max-w-[125rem]
                 ${
@@ -97,6 +97,7 @@ export const Navbar: React.FC = () => {
                         items={renderNetworks(switchNetworkAsync)}
                         size="lg"
                         icon
+                        className="!bg-neutral-800 hover:!bg-neutral-700 !text-neutral-100 lg:!bg-neutral-300 lg:hover:!bg-neutral-400 lg:!text-black"
                     />
 
                     {width >= breakpoints.lg ? (
@@ -129,7 +130,14 @@ const MobileDropdownMenu = ({
     return (
         <Menu as="div" className="relative inline-block my-auto">
             <div>
-                <Menu.Button className="flex my-auto justify-center w-full rounded-md shadow-sm px-2 md:px-3 py-1 text-sm font-medium focus:outline-none focus:ring-0 bg-neutral-300 hover:bg-[rgb(200,200,200)] text-neutral dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-neutral-100">
+                <Menu.Button
+                    className={[
+                        'dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-neutral-100',
+                        'px-2 md:px-3 py-1',
+                        'flex my-auto justify-center w-full rounded-md shadow-sm text-sm font-medium focus:outline-none focus:ring-0',
+                        'bg-neutral-800 hover:bg-neutral-700 text-neutral-100 lg:bg-neutral-300 lg:hover:bg-[rgb(200,200,200)]',
+                    ].join(' ')}
+                >
                     <HiOutlineMenuAlt3 size="27px" />
                 </Menu.Button>
             </div>

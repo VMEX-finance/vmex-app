@@ -75,7 +75,7 @@ export const DefaultDropdown = ({
     const shadow = 'shadow-sm hover:shadow-none';
     const textSize = size === 'lg' ? 'text-md' : 'text-sm';
     const iconSize = size === 'lg' ? '22px' : '18px';
-    const paddingSize = size === 'lg' ? 'py-1.5 pl-3 pr-2' : 'pl-2';
+    const paddingSize = icon ? 'py-1.5 pr-1 pl-2.5' : size === 'lg' ? 'py-1.5 pl-3 pr-2' : 'pl-2';
     const withBorder = border ? 'border border-brand-black' : '';
     const roundedSize = size === 'lg' ? 'rounded-lg' : 'rounded-md';
     const displayOnly = label

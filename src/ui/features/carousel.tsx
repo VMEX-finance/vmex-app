@@ -11,11 +11,11 @@ type ICarousel = {
     type?: 'strategies' | 'default';
 };
 
-const defaultStyle = `absolute top-1/2 -translate-y-1/2 h-full transition duration-150 rounded-sm hover:from-transparent hover:to-gray-300 dark:hover:bg-neutral-800 min-w-[36px] flex items-center justify-center`;
+const defaultStyle = `absolute top-1/2 -translate-y-1/2 h-full transition duration-150 rounded-sm hover:from-transparent hover:to-[rgb(200,200,200)] dark:hover:to-neutral-950 dark:hover:bg-neutral-800 min-w-[36px] flex items-center justify-center`;
 function PrevArrow(props: any) {
     const { className, style, onClick } = props;
     return (
-        <button className={`${defaultStyle} -left-[36px] hover:bg-gradient-to-l`} onClick={onClick}>
+        <button className={`${defaultStyle} -left-[30px] hover:bg-gradient-to-l`} onClick={onClick}>
             <HiOutlineChevronLeft className="dark:text-neutral-400" />
         </button>
     );
@@ -24,7 +24,7 @@ function NextArrow(props: any) {
     const { className, style, onClick } = props;
     return (
         <button
-            className={`${defaultStyle} -right-[36px] hover:bg-gradient-to-r`}
+            className={`${defaultStyle} -right-[30px] hover:bg-gradient-to-r`}
             onClick={onClick}
         >
             <HiOutlineChevronRight className="dark:text-neutral-400" />
