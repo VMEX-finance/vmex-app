@@ -6,6 +6,7 @@ import {
     DEFAULT_CHAINID,
     capFirstLetter,
     findInObjArr,
+    isAddressEqual,
     percentFormatter,
     toSymbol,
 } from '@/utils';
@@ -90,16 +91,14 @@ export const StrategyCard = ({
             return AVAILABLE_COLLATERAL_TRESHOLD.lt(parseUnits(String(x.available), 8));
         });
         // if both underyling tokens for LP are borrowable, show Underyling
-        if (
-            borrowableAssets.filter(
-                (x) =>
-                    x.assetAddress.toLowerCase() === token0.toLowerCase() ||
-                    x.assetAddress.toLowerCase() === token1.toLowerCase(),
-            ).length === 2
-        ) {
+        const underylingTokensBorrowable = borrowableAssets.filter(
+            (x) => isAddressEqual(x.assetAddress, token0) || isAddressEqual(x.assetAddress, token1),
+        );
+        if (underylingTokensBorrowable.length === 2) {
+            borrowableAssets.sort((a, b) => a.assetAddress.localeCompare(b.assetAddress));
             collateralAssets.push({
-                assetName: 'Underlying',
-                assetAddress: `${token0}:${token1}`,
+                assetName: borrowableAssets.map((x) => x.asset).join('/'),
+                assetAddress: borrowableAssets.map((x) => x.assetAddress).join(':'),
             });
         }
         collateralAssets.push(
@@ -111,9 +110,9 @@ export const StrategyCard = ({
         collateralAssets.sort((a, b) => {
             if (a.assetName === 'Underlying') return -1;
             if (b.assetName === 'Underyling') return 1;
-            if ([token0.toLowerCase(), token1.toLowerCase()].includes(a.assetAddress.toLowerCase()))
+            if (isAddressEqual(token0, a.assetAddress) || isAddressEqual(token1, a.assetAddress))
                 return -1;
-            if ([token0.toLowerCase(), token1.toLowerCase()].includes(b.assetAddress.toLowerCase()))
+            if (isAddressEqual(token0, b.assetAddress) || isAddressEqual(token1, b.assetAddress))
                 return 1;
             return 0;
         });
@@ -122,7 +121,6 @@ export const StrategyCard = ({
     };
 
     const handleCollateralClick = (asset: string) => {
-        if (!suppliedAssetDetails) return;
         setCollateral(asset);
     };
 

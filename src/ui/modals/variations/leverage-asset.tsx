@@ -29,11 +29,20 @@ import {
     bigNumberToUnformattedString,
     getNetworkName,
     unformattedStringToBigNumber,
+    calculateHealthFactorAfterLeverage,
+    calculateTotalBorrowAmount,
+    formatUsdUnits,
+    isAddressEqual,
 } from '@/utils';
 import { useAccount } from 'wagmi';
 import { BigNumber, constants, ethers, utils } from 'ethers';
-import { useSubgraphAllMarketsData, useUserData } from '@/api';
-import { formatUnits, parseUnits } from 'ethers/lib/utils.js';
+import {
+    useSubgraphAllMarketsData,
+    useSubgraphTrancheData,
+    useUserData,
+    useUserTrancheData,
+} from '@/api';
+import { parseUnits } from 'ethers/lib/utils.js';
 import { convertAddressListToSymbol, convertAddressToSymbol } from '@vmexfinance/sdk';
 import { toast } from 'react-toastify';
 
@@ -80,22 +89,34 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
     console.log('data', _data);
     const [errMsg, setErrMsg] = useState('');
     const { asset, trancheId, collateral, amount, leverage, totalApy } = _data; // TODO: move functionality to leverage and zap hooks
+    const { queryUserTrancheData } = useUserTrancheData(wallet, trancheId);
+    const { findAssetInMarketsData } = useSubgraphTrancheData(trancheId as number);
+    // console.log('here', trancheId, queryUserTrancheData.data, findAssetInMarketsData(asset))
 
     const [_collateral, _setCollateral] = useState(collateral);
 
     const collaterals = _collateral ? _collateral.split(':') : [];
+
     const collateralSymbols =
         collaterals.length && asset ? convertAddressListToSymbol(collaterals, network) : [];
     const assetSymbol = asset ? convertAddressToSymbol(asset, network) : '';
     let collateralMarketData = collaterals.map((x) => {
         const marketData = queryAllMarketsData.data?.find(
-            (y) =>
-                y.trancheId === trancheId?.toString() &&
-                y.assetAddress.toLowerCase() === x.toLowerCase(),
+            (y) => y.trancheId === trancheId.toString() && isAddressEqual(y.assetAddress, x),
         );
         if (!marketData) return { borrowApy: '' };
         return marketData;
     });
+
+    const depositAsset = findAssetInMarketsData(assetSymbol);
+    const borrowAssets = collateralSymbols.map((x) => findAssetInMarketsData(x));
+    const x = calculateHealthFactorAfterLeverage(
+        depositAsset,
+        borrowAssets,
+        calculateTotalBorrowAmount(amount, leverage),
+        queryUserTrancheData.data,
+    );
+    console.log(x?.toString());
 
     const { zappableAssets, handleZap } = useZap(asset);
 
@@ -207,14 +228,6 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
         return collateralAssets;
     };
 
-    const calculateTotalBorrowAmount = (amountHumanReadable: string, leverage: number) => {
-        if (!amountHumanReadable || !leverage) return ethers.BigNumber.from(0);
-        return utils
-            .parseUnits(amountHumanReadable.replace('$', ''), 8)
-            .mul((leverage * 100).toFixed(0))
-            .div(100);
-    };
-
     const populateHowItWorks = () => {
         let totalBorrowAmount = calculateTotalBorrowAmount(amount, leverage);
         const userBorrowableAmount = queryUserActivity?.data?.availableBorrowsETH;
@@ -227,7 +240,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                     : totalBorrowAmount;
                 if (collateralSymbols.length === 1) {
                     steps.push(
-                        `Borrow $${formatUnits(borrowAmountUsd, 8)} worth of ${
+                        `Borrow ${formatUsdUnits(borrowAmountUsd)} worth of ${
                             collateralSymbols[0]
                         }.`,
                     );
@@ -236,18 +249,18 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                     );
                 } else {
                     steps.push(
-                        `Borrow $${formatUnits(borrowAmountUsd.div(2), 8)} worth of ${
+                        `Borrow ${formatUsdUnits(borrowAmountUsd.div(2))} worth of ${
                             collateralSymbols[0]
                         }.`,
                     );
                     steps.push(
-                        `Borrow $${formatUnits(borrowAmountUsd.div(2), 8)} worth of ${
+                        `Borrow ${formatUsdUnits(borrowAmountUsd.div(2))} worth of ${
                             collateralSymbols[1]
                         }.`,
                     );
                     steps.push(`Add liquidity in Velo pool, get LP tokens.`);
                 }
-                steps.push(`Desposit ${formatUnits(borrowAmountUsd, 8)} worth of Velo LP tokens`);
+                steps.push(`Desposit ${formatUsdUnits(borrowAmountUsd)} worth of Velo LP tokens`);
                 totalBorrowAmount = totalBorrowAmount.sub(borrowAmountUsd);
             }
         }
@@ -260,7 +273,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
         const summary = [];
         if (collaterals.length === 1) {
             summary.push(
-                `Borrow total $${formatUnits(totalBorrowAmount, 8)} worth of ${
+                `Borrow total ${formatUsdUnits(totalBorrowAmount)} worth of ${
                     collateralSymbols[0]
                 }, with interest rate ${(
                     parseFloat(collateralMarketData[0]?.borrowApy) * 100
@@ -268,14 +281,14 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
             );
         } else {
             summary.push(
-                `Borrow total ${formatUnits(totalBorrowAmount.div(2), 8)} worth of ${
+                `Borrow total ${formatUsdUnits(totalBorrowAmount.div(2))} worth of ${
                     collateralSymbols[0]
                 }, with interest rate ${(
                     parseFloat(collateralMarketData[0].borrowApy) * 100
                 ).toFixed(4)} %`,
             );
             summary.push(
-                `Borrow total ${formatUnits(totalBorrowAmount.div(2), 8)} worth of ${
+                `Borrow total ${formatUsdUnits(totalBorrowAmount.div(2))} worth of ${
                     collateralSymbols[1]
                 }, with interest rate ${(
                     parseFloat(collateralMarketData[1].borrowApy) * 100
@@ -284,9 +297,8 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
         }
 
         summary.push(
-            `Deposit total ${formatUnits(
+            `Deposit total ${formatUsdUnits(
                 totalBorrowAmount,
-                8,
             )} worth of ${assetSymbol} with apy ${totalApy} %`,
         );
         summary.push(

@@ -412,6 +412,11 @@ export function useSubgraphTrancheData(trancheId: number): ISubgraphTrancheData 
     });
 
     const findAssetInMarketsData = (asset: string) => {
+        console.log(
+            'findassets in bla',
+            asset,
+            Object.keys(queryTrancheData.data?.assetsData || {}),
+        );
         if (queryTrancheData.isLoading || !queryTrancheData.data?.assetsData) return undefined;
         if (asset === 'ETH') {
             console.warn('Trying to get asset data for ETH, returning undefined');
