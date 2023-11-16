@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import React, { Dispatch, SetStateAction, useContext } from 'react';
 
 type IThemeProps = {
     theme: string;
@@ -57,4 +57,6 @@ export const ThemeProvider = ({ initialTheme, children }: any) => {
     );
 };
 
-export const themeContext = React.createContext<any>(ThemeContext);
+export function useThemeContext() {
+    return useContext(ThemeContext);
+}
