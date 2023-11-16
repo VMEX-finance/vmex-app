@@ -299,6 +299,26 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
         return summary;
     };
 
+    const renderButtonLabel = () => {
+        if (view === 'Loop') {
+            return borrowAllowance?.lt(VERY_BIG_ALLOWANCE)
+                ? 'Approve Delegation'
+                : 'Submit Transaction';
+        } else {
+            return 'Unwind';
+        }
+    };
+
+    const determineClick = () => {
+        if (view === 'Loop') {
+            return borrowAllowance?.lt(VERY_BIG_ALLOWANCE)
+                ? approveBorrowDelegation
+                : leverageVeloZap;
+        } else {
+            return () => console.log('TODO');
+        }
+    };
+
     useEffect(() => {
         if (network && wallet) {
             (async () => {
@@ -650,16 +670,8 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                     <Button
                         primary
                         disabled={isButtonDisabled()}
-                        onClick={
-                            borrowAllowance?.lt(VERY_BIG_ALLOWANCE)
-                                ? approveBorrowDelegation
-                                : leverageVeloZap
-                        }
-                        label={
-                            borrowAllowance?.lt(VERY_BIG_ALLOWANCE)
-                                ? 'Approve Delegation'
-                                : 'Submit Transaction'
-                        }
+                        onClick={determineClick()}
+                        label={renderButtonLabel()}
                         loading={isLoading}
                         loadingText={
                             borrowAllowance?.lt(VERY_BIG_ALLOWANCE) ? 'Approving' : 'Submitting'
