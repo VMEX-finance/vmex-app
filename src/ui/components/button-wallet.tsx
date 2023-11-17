@@ -14,7 +14,7 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
     const { chain } = useNetwork();
     const navigate = useNavigate();
     const { disconnect } = useDisconnect();
-    const { isDark } = useContext(ThemeContext);
+    const { isDark } = useContext(ThemeContext); // TODO make a context hook for this
     const { openDialog } = useDialogController();
     const { width } = useWindowSize();
     const { address } = useAccount();
