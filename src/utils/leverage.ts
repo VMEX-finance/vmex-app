@@ -3,6 +3,7 @@ import { BigNumber } from 'ethers';
 import { formatEther, parseEther } from 'ethers/lib/utils.js';
 import { formatUnits, parseUnits } from 'ethers/lib/utils.js';
 import { IGraphAssetData, IUserTrancheData } from '@/api';
+import { convertAddressToSymbol } from '@vmexfinance/sdk';
 
 const DECIMALS = 8;
 const DECIMAL_ONE = new Decimal(1);
@@ -109,4 +110,20 @@ export const calculateTotalBorrowAmount = (amountHumanReadable: string, leverage
     return parseUnits(amountHumanReadable.replace('$', ''), 8)
         .mul((leverage * 100).toFixed(0))
         .div(100);
+};
+
+export const isPoolStable = (network: string, token0: string, token1: string) => {
+    const token0Symbol = convertAddressToSymbol(token0, network);
+    const token1Symbol = convertAddressToSymbol(token1, network);
+    const stablecoins = ['usdc', 'usdt', 'susd', 'dai', 'lusd'];
+    if (
+        stablecoins.includes(token0Symbol.toLowerCase()) &&
+        stablecoins.includes(token1Symbol.toLowerCase())
+    )
+        return true;
+
+    if (token0Symbol.toLowerCase().includes('eth') && token1Symbol.toLowerCase().includes('eth'))
+        return true;
+
+    return false;
 };

@@ -13,6 +13,7 @@ export const NETWORKS: Record<string, any> = {
         testing: false,
         icon: '/coins/op.svg',
         veloRouterAddress: '0xa062aE8A9c5e11aaA026fc2670B0D65cCc8B2858',
+        veloFactoryAddress: '0xF1046053aa5682b4F9a81b5481394DA16BE5FF5a',
         lendingPoolAddress: '0x60F015F66F3647168831d31C7048ca95bb4FeaF9',
         leverageControllerAddress: '0xFb17bFAbA4345930ed48a8161df09f6fa141462C',
         strategies: {
