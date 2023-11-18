@@ -77,6 +77,7 @@ export function DefaultAccordion({
             className={`${wrapperClass || ''} border-t ${
                 isDark ? 'border-neutral-800' : 'border-neutral-300'
             }`}
+            disableGutters
         >
             <AccordionSummary
                 expandIcon={

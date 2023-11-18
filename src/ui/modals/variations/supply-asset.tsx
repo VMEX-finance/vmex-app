@@ -5,6 +5,7 @@ import {
     unformattedStringToBigNumber,
     bigNumberToNative,
     bigNumberToUnformattedString,
+    getNetworkName,
 } from '@/utils';
 import {
     HealthFactor,
@@ -27,6 +28,8 @@ import { ISupplyBorrowProps } from '../utils';
 import { useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '@/store';
 import { usePricesData } from '@/api';
+import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
+import { convertAddressToSymbol } from '@vmexfinance/sdk';
 
 export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
     const modalProps = useModal('loan-asset-dialog');
@@ -66,7 +69,9 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
         referralAddress,
         setReferralAddress,
     } = useSupply({ data, ...modalProps });
-    const { zappableAssets, handleZap } = useZap(asset);
+    const { zappableAssets, handleZap, setIsMaxZap, setZapAmount, zapAmount, zapAsset, submitZap } =
+        useZap(asset);
+    const network = getNetworkName();
 
     return (
         <>
@@ -86,169 +91,225 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                                 <div className="mt-3 2xl:mt-4 flex justify-between items-center">
                                     <h3>Zap</h3>
                                 </div>
-                                <div className="flex flex-wrap gap-1">
-                                    {isLoading ? (
-                                        <SkeletonLoader variant="rounded" className="!rounded-3xl">
-                                            <PillDisplay type="asset" asset={'BTC'} value={0} />
-                                        </SkeletonLoader>
-                                    ) : (
-                                        zappableAssets.map((el, i) => (
-                                            <button
-                                                key={`top-supplied-asset-${i}`}
-                                                onClick={handleZap}
-                                            >
-                                                <PillDisplay
-                                                    type="asset"
-                                                    asset={el.symbol}
-                                                    hoverable
+                                <div className="flex flex-wrap gap-1 mt-1">
+                                    <Accordion
+                                        className="w-full"
+                                        TransitionProps={{ unmountOnExit: true }}
+                                        expanded={!!zapAsset.address}
+                                        disableGutters
+                                        sx={{ boxShadow: 'none' }}
+                                    >
+                                        <AccordionSummary
+                                            className="!cursor-default !shadow-none"
+                                            classes={{ content: 'margin: 0 !important;' }}
+                                            sx={{ minHeight: 'auto', padding: '0px' }}
+                                        >
+                                            {isLoading ? (
+                                                <SkeletonLoader
+                                                    variant="rounded"
+                                                    className="!rounded-3xl"
+                                                >
+                                                    <PillDisplay
+                                                        type="asset"
+                                                        asset={'BTC'}
+                                                        value={0}
+                                                    />
+                                                </SkeletonLoader>
+                                            ) : (
+                                                zappableAssets.map((el, i) => (
+                                                    <button
+                                                        key={`top-supplied-asset-${i}`}
+                                                        onClick={(e) => handleZap(e, el)}
+                                                    >
+                                                        <PillDisplay
+                                                            type="asset"
+                                                            asset={el.symbol}
+                                                            hoverable
+                                                            selected={
+                                                                el.address?.toLowerCase() ===
+                                                                zapAsset?.address.toLowerCase()
+                                                            }
+                                                        />
+                                                    </button>
+                                                ))
+                                            )}
+                                        </AccordionSummary>
+                                        <AccordionDetails>
+                                            <div className="flex flex-col gap-1.5 items-end">
+                                                <CoinInput
+                                                    amount={zapAmount}
+                                                    setAmount={setZapAmount}
+                                                    coin={{
+                                                        logo: `/coins/${zapAsset.symbol?.toLowerCase()}.svg`,
+                                                        name: zapAsset.symbol,
+                                                    }}
+                                                    setIsMax={setIsMaxZap}
+                                                    balance={
+                                                        // TODO: fico - get max zappable
+                                                        '0.00'
+                                                    }
                                                 />
-                                            </button>
-                                        ))
-                                    )}
+                                                <Button
+                                                    label={`Zap to ${asset ? asset : ''}`}
+                                                    onClick={submitZap}
+                                                    className="w-fit"
+                                                    primary
+                                                />
+                                            </div>
+                                        </AccordionDetails>
+                                    </Accordion>
                                 </div>
                             </>
                         )}
-                        <div className="mt-3 2xl:mt-4 flex justify-between items-center">
-                            <h3>Amount</h3>
-                            {asset?.toLowerCase() === 'weth' ||
-                                (asset?.toLowerCase() === 'eth' && (
-                                    <SecondaryButton className="p-1" onClick={toggleEthWeth}>
-                                        Use {isEth ? 'WETH' : 'ETH'}
-                                    </SecondaryButton>
-                                ))}
-                        </div>
-                        <CoinInput
-                            amount={amount}
-                            setAmount={setAmount}
-                            coin={{
-                                logo: `/coins/${asset?.toLowerCase() || 'eth'}.svg`,
-                                name: asset || 'ETH',
-                            }}
-                            balance={bigNumberToUnformattedString(
-                                amountWalletNative.amountNative,
-                                asset || 'eth',
-                            )}
-                            isMax={isMax}
-                            setIsMax={setIsMax}
-                            loading={amountWalletNative.loading}
-                            customMaxClick={maxOnClick}
-                            disabled={isLoading}
-                        />
-                        <MessageStatus
-                            type="error"
-                            show={isViolatingMax()}
-                            message="Input amount is over the max."
-                            icon
-                        />
-                        <></>
-                        <MessageStatus
-                            type="warning"
-                            show={!amount ? false : isViolatingSupplyCap()}
-                            message="Attempting to supply more than the supply cap. Proceed with caution."
-                            icon
-                        />
-                        <MessageStatus
-                            type="error"
-                            show={errorAssets?.includes(asset.toUpperCase())}
-                            message="Error getting an oracle price for this asset. Please try again later."
-                            icon
-                        />
+                        <div
+                            className={`${
+                                zapAsset.address
+                                    ? ' blur-[1px] relative z-[99] opacity-80 pointer-events-none'
+                                    : ''
+                            }`}
+                        >
+                            <div className="mt-3 2xl:mt-4 flex justify-between items-center">
+                                <h3>Amount</h3>
+                                {asset?.toLowerCase() === 'weth' ||
+                                    (asset?.toLowerCase() === 'eth' && (
+                                        <SecondaryButton className="p-1" onClick={toggleEthWeth}>
+                                            Use {isEth ? 'WETH' : 'ETH'}
+                                        </SecondaryButton>
+                                    ))}
+                            </div>
+                            <CoinInput
+                                amount={amount}
+                                setAmount={setAmount}
+                                coin={{
+                                    logo: `/coins/${asset?.toLowerCase() || 'eth'}.svg`,
+                                    name: asset || 'ETH',
+                                }}
+                                balance={bigNumberToUnformattedString(
+                                    amountWalletNative.amountNative,
+                                    asset || 'eth',
+                                )}
+                                isMax={isMax}
+                                setIsMax={setIsMax}
+                                loading={amountWalletNative.loading}
+                                customMaxClick={maxOnClick}
+                                disabled={isLoading}
+                            />
+                            <MessageStatus
+                                type="error"
+                                show={isViolatingMax()}
+                                message="Input amount is over the max."
+                                icon
+                            />
+                            <></>
+                            <MessageStatus
+                                type="warning"
+                                show={!amount ? false : isViolatingSupplyCap()}
+                                message="Attempting to supply more than the supply cap. Proceed with caution."
+                                icon
+                            />
+                            <MessageStatus
+                                type="error"
+                                show={errorAssets?.includes(asset.toUpperCase())}
+                                message="Error getting an oracle price for this asset. Please try again later."
+                                icon
+                            />
 
-                        <h3 className="mt-3 2xl:mt-4">Collaterize</h3>
-                        <div>
-                            {typeof collateral === 'boolean' ? (
-                                <Tooltip
-                                    text={`Your previous supply is ${
-                                        collateral === false ? 'not' : ''
-                                    } collateralized.`}
-                                    position="right"
-                                >
-                                    <BasicToggle
-                                        checked={existingSupplyCollateral}
-                                        disabled={!data?.collateral || isLoading}
-                                        onClick={(e: any) => {
-                                            e.preventDefault();
-                                            openDialog('toggle-collateral-dialog', {
-                                                ...data,
-                                                collateral: collateral,
-                                                setCollateral: setExistingSupplyCollateral,
-                                                amountNative: amountWithdraw,
-                                            });
-                                            e.stopPropagation();
-                                        }}
-                                    />
-                                </Tooltip>
-                            ) : (
-                                <BasicToggle
-                                    checked={asCollateral}
-                                    onChange={() => setAsCollateral(!asCollateral)}
-                                    disabled={!data?.collateral || isLoading}
-                                />
-                            )}
-                        </div>
-
-                        <h3 className="mt-4 text-neutral400">Health Factor</h3>
-                        <HealthFactor
-                            asset={asset || 'ETH'}
-                            amount={amount}
-                            type={'supply'}
-                            trancheId={String(data?.trancheId)}
-                            withChange={asCollateral}
-                        />
-
-                        <ModalTableDisplay
-                            title="Transaction Overview"
-                            content={[
-                                {
-                                    label: 'Supply APR',
-                                    value: (
-                                        <span className="flex items-center">
-                                            <SmartPrice price={String(apy) || '0.00'} />%
-                                        </span>
-                                    ),
-                                },
-                                {
-                                    label: 'Collateralization',
-                                    value: (
-                                        <ActiveStatus
-                                            active={
-                                                typeof collateral === 'boolean'
-                                                    ? existingSupplyCollateral
-                                                    : asCollateral
-                                            }
-                                            size="sm"
+                            <h3 className="mt-3 2xl:mt-4">Collaterize</h3>
+                            <div>
+                                {typeof collateral === 'boolean' ? (
+                                    <Tooltip
+                                        text={`Your previous supply is ${
+                                            collateral === false ? 'not' : ''
+                                        } collateralized.`}
+                                        position="right"
+                                    >
+                                        <BasicToggle
+                                            checked={existingSupplyCollateral}
+                                            disabled={!data?.collateral || isLoading}
+                                            onClick={(e: any) => {
+                                                e.preventDefault();
+                                                openDialog('toggle-collateral-dialog', {
+                                                    ...data,
+                                                    collateral: collateral,
+                                                    setCollateral: setExistingSupplyCollateral,
+                                                    amountNative: amountWithdraw,
+                                                });
+                                                e.stopPropagation();
+                                            }}
                                         />
-                                    ),
-                                },
-                                {
-                                    label: 'Estimated Gas',
-                                    value: estimatedGasCost.cost,
-                                    loading: estimatedGasCost.loading,
-                                    error: estimatedGasCost.errorMessage,
-                                },
-                            ]}
-                        />
-
-                        <DefaultAccordion
-                            noIcon
-                            wrapperClass="!border-0"
-                            customHover="hover:!text-brand-purple"
-                            className="!px-0 !hover:!bg-inherit !bg-white dark:!bg-brand-black"
-                            title={`referral-code`}
-                            summary={<span>Did someone refer you?</span>}
-                            details={
-                                <div className="px-2">
-                                    <DefaultInput
-                                        value={referralAddress}
-                                        onType={(e: string) => setReferralAddress(e)}
-                                        size="lg"
-                                        placeholder="Paste address here"
-                                        required
-                                        className="flex w-full flex-col py-2"
+                                    </Tooltip>
+                                ) : (
+                                    <BasicToggle
+                                        checked={asCollateral}
+                                        onChange={() => setAsCollateral(!asCollateral)}
+                                        disabled={!data?.collateral || isLoading}
                                     />
-                                </div>
-                            }
-                        />
+                                )}
+                            </div>
+
+                            <h3 className="mt-4 text-neutral400">Health Factor</h3>
+                            <HealthFactor
+                                asset={asset || 'ETH'}
+                                amount={amount}
+                                type={'supply'}
+                                trancheId={String(data?.trancheId)}
+                                withChange={asCollateral}
+                            />
+
+                            <ModalTableDisplay
+                                title="Transaction Overview"
+                                content={[
+                                    {
+                                        label: 'Supply APR',
+                                        value: (
+                                            <span className="flex items-center">
+                                                <SmartPrice price={String(apy) || '0.00'} />%
+                                            </span>
+                                        ),
+                                    },
+                                    {
+                                        label: 'Collateralization',
+                                        value: (
+                                            <ActiveStatus
+                                                active={
+                                                    typeof collateral === 'boolean'
+                                                        ? existingSupplyCollateral
+                                                        : asCollateral
+                                                }
+                                                size="sm"
+                                            />
+                                        ),
+                                    },
+                                    {
+                                        label: 'Estimated Gas',
+                                        value: estimatedGasCost.cost,
+                                        loading: estimatedGasCost.loading,
+                                        error: estimatedGasCost.errorMessage,
+                                    },
+                                ]}
+                            />
+
+                            <DefaultAccordion
+                                noIcon
+                                wrapperClass="!border-0"
+                                customHover="hover:!text-brand-purple"
+                                className="!px-0 !hover:!bg-inherit !bg-white dark:!bg-brand-black"
+                                title={`referral-code`}
+                                summary={<span>Did someone refer you?</span>}
+                                details={
+                                    <div className="px-2">
+                                        <DefaultInput
+                                            value={referralAddress}
+                                            onType={(e: string) => setReferralAddress(e)}
+                                            size="lg"
+                                            placeholder="Paste address here"
+                                            required
+                                            className="flex w-full flex-col py-2"
+                                        />
+                                    </div>
+                                }
+                            />
+                        </div>
                     </>
                 ) : (
                     <div className="mt-8 mb-6">
@@ -349,38 +410,50 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                 </div>
             )}
 
-            <ModalFooter between={!location.hash.includes('tranches')}>
-                {!location.hash.includes('tranches') && (
-                    <Button
-                        label={`View Tranche`}
-                        onClick={() => {
-                            setAsset(asset);
-                            closeDialog('loan-asset-dialog');
-                            window.scroll(0, 0);
-                            navigate(
-                                `/tranches/${data?.tranche?.toLowerCase().replace(/\s+/g, '-')}`,
-                                {
-                                    state: { view: 'details', trancheId: data?.trancheId },
-                                },
-                            );
-                        }}
-                    />
-                )}
-                {Number(amount) === 0 && !view?.includes('Claim') ? (
-                    <Tooltip text="Please enter an amount">
-                        <Button primary label={'Submit Transaction'} disabled />
-                    </Tooltip>
-                ) : (
-                    <Button
-                        primary
-                        disabled={isButtonDisabled() || errorAssets?.includes(asset.toUpperCase())}
-                        onClick={handleSubmit}
-                        label={view?.includes('Claim') ? 'Claim Rewards' : 'Submit Transaction'}
-                        loading={isLoading}
-                        loadingText="Submitting"
-                    />
-                )}
-            </ModalFooter>
+            <div
+                className={`${
+                    zapAsset.address
+                        ? ' blur-[1px] relative z-[99] opacity-80 pointer-events-none'
+                        : ''
+                }`}
+            >
+                <ModalFooter between={!location.hash.includes('tranches')}>
+                    {!location.hash.includes('tranches') && (
+                        <Button
+                            label={`View Tranche`}
+                            onClick={() => {
+                                setAsset(asset);
+                                closeDialog('loan-asset-dialog');
+                                window.scroll(0, 0);
+                                navigate(
+                                    `/tranches/${data?.tranche
+                                        ?.toLowerCase()
+                                        .replace(/\s+/g, '-')}`,
+                                    {
+                                        state: { view: 'details', trancheId: data?.trancheId },
+                                    },
+                                );
+                            }}
+                        />
+                    )}
+                    {Number(amount) === 0 && !view?.includes('Claim') ? (
+                        <Tooltip text="Please enter an amount">
+                            <Button primary label={'Submit Transaction'} disabled />
+                        </Tooltip>
+                    ) : (
+                        <Button
+                            primary
+                            disabled={
+                                isButtonDisabled() || errorAssets?.includes(asset.toUpperCase())
+                            }
+                            onClick={handleSubmit}
+                            label={view?.includes('Claim') ? 'Claim Rewards' : 'Submit Transaction'}
+                            loading={isLoading}
+                            loadingText="Submitting"
+                        />
+                    )}
+                </ModalFooter>
+            </div>
         </>
     );
 };
