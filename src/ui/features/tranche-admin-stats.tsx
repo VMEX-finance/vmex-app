@@ -1,9 +1,9 @@
 import React from 'react';
 import { useWindowSize } from '@/hooks';
 import { makeCompact } from '@/utils';
-import { AssetBalance, TrancheData } from '@/api';
+import { AssetBalance } from '@/api';
 import {
-    SkeletonLoader,
+    Loader,
     ReLineChart,
     NumberDisplay,
     PillDisplay,
@@ -66,11 +66,7 @@ export const TrancheStatsCard: React.FC<ITrancheStatsCardProps> = ({
                             loading={isLoading}
                         />
                         {tvlChart?.isLoading ? (
-                            <SkeletonLoader
-                                variant="rounded"
-                                animtion="wave"
-                                className="min-w-full"
-                            >
+                            <Loader variant="rounded" animation="wave" className="min-w-full">
                                 <div className="h-[100px] w-full">
                                     <ReLineChart
                                         data={tvlChart?.data || []}
@@ -78,7 +74,7 @@ export const TrancheStatsCard: React.FC<ITrancheStatsCardProps> = ({
                                         type="usd"
                                     />
                                 </div>
-                            </SkeletonLoader>
+                            </Loader>
                         ) : (
                             <div className="h-[100px] w-full">
                                 <ReLineChart
@@ -122,9 +118,9 @@ export const TrancheStatsCard: React.FC<ITrancheStatsCardProps> = ({
                             <span>Top Supplied Assets</span>
                             <div className="flex flex-wrap gap-1">
                                 {isLoading ? (
-                                    <SkeletonLoader variant="rounded" className="!rounded-3xl">
+                                    <Loader variant="rounded" className="!rounded-3xl">
                                         <PillDisplay type="asset" asset={'BTC'} value={0} />
-                                    </SkeletonLoader>
+                                    </Loader>
                                 ) : (
                                     renderTopAssetsList(topSuppliedAssets).map((el, i) => (
                                         <PillDisplay
@@ -150,9 +146,9 @@ export const TrancheStatsCard: React.FC<ITrancheStatsCardProps> = ({
                             <span>Top Borrowed Assets</span>
                             <div className="flex flex-wrap gap-1">
                                 {isLoading ? (
-                                    <SkeletonLoader variant="rounded" className="!rounded-3xl">
+                                    <Loader variant="rounded" className="!rounded-3xl">
                                         <PillDisplay type="asset" asset={'BTC'} value={0} />
-                                    </SkeletonLoader>
+                                    </Loader>
                                 ) : (
                                     renderTopAssetsList(topBorrowedAssets).map((el, i) => (
                                         <PillDisplay

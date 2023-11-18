@@ -15,7 +15,7 @@ import {
 import { ethers } from 'ethers';
 import { useAccount } from 'wagmi';
 import { useLocation } from 'react-router-dom';
-import { SkeletonLoader } from './loader-skeleton';
+import { Loader } from './loader';
 
 interface IHealthFactorProps {
     asset?: string;
@@ -48,7 +48,7 @@ export const renderHealth = (
     const isInf = Number(hf) > 1.15e59;
     return !hf ? (
         isLoading ? (
-            <SkeletonLoader
+            <Loader
                 variant="rounded"
                 width={size === 'sm' ? '50px' : '60px'}
                 height={size === 'sm' ? '28px' : '30px'}

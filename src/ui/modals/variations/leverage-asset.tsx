@@ -4,7 +4,7 @@ import { useDialogController, useLeverage, useModal, useZap } from '@/hooks';
 import {
     TransactionStatus,
     Button,
-    SkeletonLoader,
+    Loader,
     PillDisplay,
     AssetDisplay,
     DefaultAccordion,
@@ -436,7 +436,8 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                                                     sx={{ minHeight: 'auto', padding: '0px' }}
                                                 >
                                                     {isLoading ? (
-                                                        <SkeletonLoader
+                                                        <Loader
+                                                            type="skeleton"
                                                             variant="rounded"
                                                             className="!rounded-3xl"
                                                         >
@@ -445,7 +446,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                                                                 asset={'BTC'}
                                                                 value={0}
                                                             />
-                                                        </SkeletonLoader>
+                                                        </Loader>
                                                     ) : (
                                                         zappableAssets.map((el, i) => (
                                                             <button

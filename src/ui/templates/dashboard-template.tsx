@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useWindowSize, useDialogController } from '@/hooks';
 import { BiChevronLeft, BiPlus } from 'react-icons/bi';
-import { Tooltip, Button, SkeletonLoader, Label, MessageStatus } from '../components';
+import { Tooltip, Button, Loader, Label, MessageStatus } from '../components';
 import { useAccount, useNetwork } from 'wagmi';
 import { Skeleton } from '@mui/material';
 import { usePricesData, useSubgraphUserData } from '@/api';
@@ -80,7 +80,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                                 {(description || descriptionLoading) && (
                                     <div className="mt-1">
                                         {descriptionLoading ? (
-                                            <SkeletonLoader height="24px" />
+                                            <Loader height="24px" type="skeleton" />
                                         ) : (
                                             <p className="dark:text-neutral-300">{description}</p>
                                         )}

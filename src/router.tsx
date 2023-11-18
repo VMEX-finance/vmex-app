@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
-import { FullPageLoader } from '@/ui/components';
+import { Loader } from '@/ui/components';
 import Overview from './pages/overview';
 import Tranches from './pages/tranches';
 import Staking from './pages/staking';
@@ -25,7 +25,7 @@ function Router() {
     }, []);
 
     return (
-        <FullPageLoader loading={showLoading} onlyHome>
+        <Loader type="full-page" loading={showLoading} onlyHome>
             <Routes>
                 <Route index element={<Navigate to="/overview" />} />
                 <Route
@@ -103,7 +103,7 @@ function Router() {
                     }
                 />
             </Routes>
-        </FullPageLoader>
+        </Loader>
     );
 }
 

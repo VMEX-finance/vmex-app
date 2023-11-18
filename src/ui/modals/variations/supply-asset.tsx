@@ -19,7 +19,7 @@ import {
     DefaultAccordion,
     DefaultInput,
     SmartPrice,
-    SkeletonLoader,
+    Loader,
     PillDisplay,
 } from '@/ui/components';
 import { BigNumber } from 'ethers';
@@ -112,16 +112,17 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                                             sx={{ minHeight: 'auto', padding: '0px' }}
                                         >
                                             {isLoading ? (
-                                                <SkeletonLoader
+                                                <Loader
                                                     variant="rounded"
                                                     className="!rounded-3xl"
+                                                    type="skeleton"
                                                 >
                                                     <PillDisplay
                                                         type="asset"
                                                         asset={'BTC'}
                                                         value={0}
                                                     />
-                                                </SkeletonLoader>
+                                                </Loader>
                                             ) : (
                                                 zappableAssets.map((el, i) => (
                                                     <button

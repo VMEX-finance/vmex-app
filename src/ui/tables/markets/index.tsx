@@ -4,7 +4,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { muiCache, options, vmexTheme } from '../utils';
 import { MarketsCustomRow } from './custom-row';
 import MUIDataTable from 'mui-datatables';
-import { SpinnerLoader } from '@/ui/components';
+import { Loader } from '@/ui/components';
 import { ThemeContext } from '@/store';
 import { addFeaturedTranches, bigNumberToUnformattedString, numberFormatter } from '@/utils';
 import { UseQueryResult } from '@tanstack/react-query';
@@ -253,7 +253,7 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
                         textLabels: {
                             body: {
                                 noMatch: loading ? (
-                                    <SpinnerLoader />
+                                    <Loader type="spinner" />
                                 ) : (
                                     'An error has occured while fetching tranches. Please refresh the page.'
                                 ),

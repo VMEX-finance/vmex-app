@@ -4,7 +4,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { muiCache, options, vmexTheme } from '../utils';
 import { TranchesCustomRow } from './custom-row';
 import MUIDataTable from 'mui-datatables';
-import { SpinnerLoader } from '@/ui/components';
+import { Loader } from '@/ui/components';
 import { ThemeContext } from '@/store';
 import { addFeaturedTranches, usdFormatter } from '@/utils';
 import { UseQueryResult } from '@tanstack/react-query';
@@ -178,7 +178,7 @@ export const TranchesTable: React.FC<IDataTable> = ({ data, loading, userActivit
                         textLabels: {
                             body: {
                                 noMatch: loading ? (
-                                    <SpinnerLoader />
+                                    <Loader type="spinner" />
                                 ) : (
                                     'An error has occured while fetching tranches. Please refresh the page.'
                                 ),

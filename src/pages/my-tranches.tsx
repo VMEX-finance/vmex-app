@@ -7,7 +7,7 @@ import {
     DefaultInput,
     ListInput,
     MessageStatus,
-    SkeletonLoader,
+    Loader,
     TransactionStatus,
     WalletButton,
 } from '@/ui/components';
@@ -307,7 +307,7 @@ const MyTranches: React.FC = () => {
                                             </button>
                                         ))
                                     ) : (
-                                        <SkeletonLoader height="42px" />
+                                        <Loader height="42px" />
                                     )}
                                 </Card>
                             )}

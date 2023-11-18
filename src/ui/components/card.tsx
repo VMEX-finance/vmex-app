@@ -1,5 +1,5 @@
 import React from 'react';
-import { SpinnerLoader } from './loader-spinner';
+import { Loader } from './loader';
 
 type ICardProps = {
     children: React.ReactNode | React.ReactNode[];
@@ -53,7 +53,7 @@ export const Card = ({
         >
             {header && header}
             {title && <h3 className={titleClass ? titleClass : 'text-2xl'}>{title}</h3>}
-            {loading ? <SpinnerLoader height={loadingHeight} /> : <>{children}</>}
+            {loading ? <Loader type="spinner" height={loadingHeight} /> : <>{children}</>}
         </div>
     );
 };

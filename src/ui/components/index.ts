@@ -22,9 +22,7 @@ export * from './input-list';
 export * from './label';
 export * from './legend';
 export * from '../charts/line-chart'; // TODO
-export * from './loader-full-page';
-export * from './loader-skeleton';
-export * from './loader-spinner';
+export * from './loader';
 export * from './smart-price';
 export * from './status-active';
 export * from './status-message';

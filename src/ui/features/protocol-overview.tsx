@@ -3,8 +3,7 @@ import { TopTranchesTable } from '../tables';
 import { makeCompact } from '@/utils';
 import { AssetBalance, TrancheData } from '@/api';
 import {
-    SkeletonLoader,
-    ReLineChart,
+    Loader,
     NumberDisplay,
     PillDisplay,
     Card,
@@ -76,15 +75,11 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                             loading={isLoading}
                         />
                         {tvlChart?.isLoading ? (
-                            <SkeletonLoader
-                                variant="rounded"
-                                animtion="wave"
-                                className="min-w-full"
-                            >
+                            <Loader variant="rounded" animation="wave" className="min-w-full">
                                 <div className="h-[100px] w-full">
                                     <ReAreaChart data={tvlChart?.data || []} type="usd" />
                                 </div>
-                            </SkeletonLoader>
+                            </Loader>
                         ) : (
                             <div className="h-[100px] lg:h-full w-full">
                                 <ReAreaChart data={tvlChart?.data || []} type="usd" />
@@ -129,9 +124,9 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                             <span>Top Supplied Assets</span>
                             <div className="flex flex-wrap gap-1">
                                 {isLoading ? (
-                                    <SkeletonLoader variant="rounded" className="!rounded-3xl">
+                                    <Loader variant="rounded" className="!rounded-3xl">
                                         <PillDisplay type="asset" asset={'BTC'} value={0} />
-                                    </SkeletonLoader>
+                                    </Loader>
                                 ) : (
                                     renderTopAssetsList(topSuppliedAssets).map((el, i) => (
                                         <button
@@ -168,9 +163,9 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                             <span>Top Borrowed Assets</span>
                             <div className="flex flex-wrap gap-1">
                                 {isLoading ? (
-                                    <SkeletonLoader variant="rounded" className="!rounded-3xl">
+                                    <Loader variant="rounded" className="!rounded-3xl">
                                         <PillDisplay type="asset" asset={'BTC'} value={0} />
-                                    </SkeletonLoader>
+                                    </Loader>
                                 ) : (
                                     renderTopAssetsList(topBorrowedAssets).map((el, i) => (
                                         <button
