@@ -12,7 +12,7 @@ export type IButtonProps = {
     onClick?: (e: any) => void | { left: (e: any) => void; right: (e: any) => void };
     className?: string;
     disabled?: boolean;
-    type?: 'danger' | 'link' | 'primary' | 'secondary' | 'wallet' | 'outline';
+    type?: 'danger' | 'link' | 'default' | 'accent' | 'outline';
     icon?: React.ReactNode;
     loading?: boolean;
     loadingText?: string;
@@ -27,7 +27,7 @@ export const Button = ({
     onClick,
     className,
     disabled,
-    type = 'primary',
+    type = 'default',
     icon,
     loading,
     loadingText,
@@ -38,16 +38,17 @@ export const Button = ({
 }: IButtonProps) => {
     const { address } = useAccount();
     const { chain } = useNetwork();
-    const { isDark } = useThemeContext();
     const { width, breakpoints } = useWindowSize();
     const navigate = useNavigate();
-    const { disconnect } = useDisconnect();
     const { openConnectModal } = useConnectModal();
     const { switchNetwork } = useSwitchNetwork();
 
     // CSS
     const baseClass =
-        'flex items-center gap-1 transition duration-150 cursor-pointer disabled:cursor-not-allowed border';
+        'flex items-center justify-center gap-1 font-basefont cursor-pointer disabled:cursor-not-allowed';
+    const borderClass = 'border border-transparent';
+    const shadowClass = 'shadow shadow-sm hover:shadow-none dark:shadow-black';
+    const transitionClass = 'transition duration-150';
     const underlineClass = underline ? 'underline' : '';
     const paddingClass = padding ? padding : 'px-3 py-1';
     const roundingClass = 'rounded-lg';
@@ -59,7 +60,7 @@ export const Button = ({
             case 'lg':
                 return 'text-lg';
             default:
-                return 'text-sm';
+                return 'text-md';
         }
     }
 
@@ -68,21 +69,19 @@ export const Button = ({
             case 'danger':
                 return '!bg-red-600 !text-white !border-red-600 hover:!bg-red-500 hover:!border-red-500 disabled:!text-white';
             case 'link':
-                return 'text-brand-purple hover:text-indigo-500';
+                return 'text-brand-purple hover:text-indigo-500 !shadow-none';
             case 'outline':
-                return '';
-            case 'wallet':
-                return '';
-            case 'secondary':
-                return '';
+                return '!border-gray-500 dark:!border-gray-500 dark:text-white hover:bg-gray-100  dark:hover:bg-neutral-800';
+            case 'accent':
+                return 'hover:bg-indigo-200 bg-[rgb(214,222,255)] dark:text-neutral-900 dark:bg-indigo-300 dark:hover:bg-indigo-200';
             default:
-                return '';
+                return 'bg-gray-300 hover:bg-[rgb(199,207,219)] dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-white';
         }
     }
 
     // Render text and clicks
     function renderButtonText() {
-        if (web3 || type === 'wallet') {
+        if (web3) {
             if (!address) return width > breakpoints.md ? 'Connect Wallet' : 'Connect';
             if (chain?.unsupported) return 'Switch Networks';
             return children;
@@ -93,7 +92,7 @@ export const Button = ({
     }
 
     function renderClick() {
-        if (web3 || type === 'wallet') {
+        if (web3) {
             if (!address && openConnectModal) () => openConnectModal();
             if (chain?.unsupported && switchNetwork) () => switchNetwork();
             return onClick;
@@ -118,6 +117,9 @@ export const Button = ({
                         className,
                         underlineClass,
                         paddingClass,
+                        shadowClass,
+                        transitionClass,
+                        borderClass,
                     ].join(' ')}
                 >
                     {_children.left}
@@ -133,35 +135,14 @@ export const Button = ({
                         className,
                         underlineClass,
                         paddingClass,
+                        shadowClass,
+                        transitionClass,
+                        borderClass,
                     ].join(' ')}
                 >
                     {_children.left}
                 </button>
             </div>
-        );
-    }
-
-    // Wallet button
-    if (type === 'wallet') {
-        return (
-            <button
-                type="button"
-                disabled={disabled || loading}
-                onClick={renderClick()}
-                className={[
-                    baseClass,
-                    renderSize(),
-                    renderCustomClass(),
-                    className,
-                    underlineClass,
-                    paddingClass,
-                    roundingClass,
-                ].join(' ')}
-            >
-                {loading && <CgSpinner className="animate-spin" />}
-                {address ? truncate(address) : renderButtonText()}
-                {icon && icon}
-            </button>
         );
     }
 
@@ -179,6 +160,9 @@ export const Button = ({
                 underlineClass,
                 paddingClass,
                 roundingClass,
+                shadowClass,
+                transitionClass,
+                borderClass,
             ].join(' ')}
         >
             {loading && <CgSpinner className="animate-spin" />}

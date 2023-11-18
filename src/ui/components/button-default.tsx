@@ -15,6 +15,9 @@ export interface IButtonProps {
     size?: 'sm' | 'lg';
 }
 
+/**
+ * @deprecated use new button.tsx
+ */
 export const Button = ({
     label,
     onClick,

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Slider as MUISlider } from '@mui/material';
-import { AssetDisplay, Button, Card, PillDisplay, Tooltip } from '@/ui/components';
+import { AssetDisplay, Card, PillDisplay, Tooltip } from '@/ui/components';
+import { Button } from '@/ui/components/button';
 import {
     AVAILABLE_COLLATERAL_TRESHOLD,
     DEFAULT_CHAINID,
@@ -278,11 +279,12 @@ export const StrategyCard = ({
             </div>
             <div className={`mt-3 2xl:mt-4 grid items-center gap-1 w-full grid-cols-1`}>
                 <Button
-                    label={renderBtnText(!!suppliedAssetDetails)}
                     onClick={suppliedAssetDetails ? openLeverageDialog : handleSupplyClick}
                     className="w-full"
-                    primary
-                />
+                    type="accent"
+                >
+                    {renderBtnText(!!suppliedAssetDetails)}
+                </Button>
             </div>
         </Card>
     );
