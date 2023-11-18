@@ -2,13 +2,14 @@ import { Menu, Transition } from '@headlessui/react';
 import React, { Fragment, useContext } from 'react';
 import { HiOutlineMenuAlt3 } from 'react-icons/hi';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { DefaultDropdown, MenuItemButton, WalletButton, ToggleThemeButton } from '@/ui/components';
+import { DefaultDropdown, WalletButton, ToggleThemeButton } from '@/ui/components';
 import { ThemeContext, IDialogNames } from '@/store';
 import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
 import { useDialogController, useWindowSize } from '@/hooks';
 import { useSubgraphUserData } from '@/api';
 import { renderNetworks } from '@/utils';
 import { getNetwork } from '@wagmi/core';
+import { NavItem } from './nav-item';
 
 const navItems = ['Overview', 'Tranches', 'Markets', 'Portfolio', 'Governance'];
 
@@ -78,7 +79,7 @@ export const Navbar: React.FC = () => {
                             }
                         >
                             {navItems.map((item) => (
-                                <MenuItemButton
+                                <NavItem
                                     key={item}
                                     label={item}
                                     selected={location.pathname === `/${item?.toLowerCase()}`}
@@ -155,27 +156,27 @@ const MobileDropdownMenu = ({
                     <div className="p-2">
                         {navItems.map((item: string, i: number) => (
                             <Menu.Item key={`${item}-${i}`}>
-                                <MenuItemButton key={item} label={item} onClick={navigate} mobile />
+                                <NavItem key={item} label={item} onClick={navigate} mobile />
                             </Menu.Item>
                         ))}
                         <div className="flex flex-col justify-center gap-1 border-2 border-neutral-800 rounded-xl mt-1">
                             <WalletButton className="border-0 !bg-neutral-900 !rounded-b-none !text-white hover:!bg-neutral-800" />
                             {isConnected && (
                                 <>
-                                    <MenuItemButton label={`Portfolio`} onClick={navigate} mobile />
+                                    <NavItem label={`Portfolio`} onClick={navigate} mobile />
                                     {/* WEN: uncomment when backend enables creating tranches */}
                                     {/* <MenuItemButton
                                         label={`Create Tranche`}
                                         onClick={() => onClick('create-tranche-dialog')}
                                         mobile
                                     /> */}
-                                    <MenuItemButton
+                                    <NavItem
                                         label={`History`}
                                         onClick={() => onClick('transactions-dialog')}
                                         mobile
                                     />
                                     {tranches?.length !== 0 && (
-                                        <MenuItemButton
+                                        <NavItem
                                             label={`My Tranches`}
                                             onClick={() => navigate('my-tranches')}
                                             mobile

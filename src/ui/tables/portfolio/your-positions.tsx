@@ -5,7 +5,6 @@ import {
     DefaultAccordion,
     HealthFactor,
     MultipleAssetsDisplay,
-    InnerCard,
 } from '@/ui/components';
 import {
     YourBorrowsTable,

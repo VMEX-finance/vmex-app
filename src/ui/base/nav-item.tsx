@@ -1,6 +1,6 @@
 import React from 'react';
 
-type IMenuItemButtonProps = {
+type INavItemProps = {
     label: string | React.ReactNode;
     selected?: any;
     onClick?: any;
@@ -8,13 +8,7 @@ type IMenuItemButtonProps = {
     highlighted?: boolean;
 };
 
-export const MenuItemButton = ({
-    label,
-    selected,
-    onClick,
-    mobile,
-    highlighted,
-}: IMenuItemButtonProps) => {
+export const NavItem = ({ label, selected, onClick, mobile, highlighted }: INavItemProps) => {
     const mode =
         selected && !mobile
             ? 'bg-brand-black text-white'
