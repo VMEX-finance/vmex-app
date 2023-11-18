@@ -82,13 +82,14 @@ export const ToggleCollateralDialog: React.FC<IDialogProps> = ({
 
                 <ModalFooter>
                     <Button
-                        primary
+                        type="accent"
                         disabled={isSuccess || isLoading}
-                        onClick={() => handleCollateral()}
-                        label="Submit Transaction"
+                        onClick={() => handleCollateral() as any}
                         loading={isLoading}
                         loadingText="Submitting"
-                    />
+                    >
+                        Submit Transaction
+                    </Button>
                 </ModalFooter>
             </>
         )

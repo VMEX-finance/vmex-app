@@ -197,7 +197,6 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
             <ModalFooter between={!location.hash.includes('tranches')}>
                 {!location.hash.includes('tranches') && (
                     <Button
-                        label={`View Tranche`}
                         onClick={() => {
                             setAsset(asset);
                             closeDialog('borrow-asset-dialog');
@@ -209,21 +208,26 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                                 },
                             );
                         }}
-                    />
+                    >
+                        View Tranche
+                    </Button>
                 )}
                 {Number(amount) === 0 ? (
                     <Tooltip text="Please enter an amount">
-                        <Button primary label={'Submit Transaction'} disabled />
+                        <Button type="accent" disabled>
+                            Submit Transaction
+                        </Button>
                     </Tooltip>
                 ) : (
                     <Button
-                        primary
+                        type="accent"
                         disabled={isButtonDisabled() || errorAssets?.includes(asset.toUpperCase())}
                         onClick={handleClick}
-                        label={'Submit Transaction'}
                         loading={isLoading}
                         loadingText="Submitting"
-                    />
+                    >
+                        Submit Transaction
+                    </Button>
                 )}
             </ModalFooter>
         </>

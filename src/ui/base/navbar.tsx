@@ -101,7 +101,7 @@ export const Navbar: React.FC = () => {
                     />
 
                     {width >= breakpoints.lg ? (
-                        <WalletButton primary label={width > 1200 ? 'Connect Wallet' : 'Connect'} />
+                        <WalletButton>{width > 1200 ? 'Connect Wallet' : 'Connect'}</WalletButton>
                     ) : (
                         <MobileDropdownMenu
                             onClick={openDialog}
@@ -159,10 +159,7 @@ const MobileDropdownMenu = ({
                             </Menu.Item>
                         ))}
                         <div className="flex flex-col justify-center gap-1 border-2 border-neutral-800 rounded-xl mt-1">
-                            <WalletButton
-                                primary
-                                className="border-0 !bg-neutral-900 !rounded-b-none !text-white hover:!bg-neutral-800"
-                            />
+                            <WalletButton className="border-0 !bg-neutral-900 !rounded-b-none !text-white hover:!bg-neutral-800" />
                             {isConnected && (
                                 <>
                                     <MenuItemButton label={`Portfolio`} onClick={navigate} mobile />

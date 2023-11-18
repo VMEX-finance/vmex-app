@@ -49,11 +49,10 @@ export const StakingAsset = (props: IStakingAsset) => {
                                 />
                                 <div className="h-fit">
                                     <Button
-                                        label={`Stake ${props.asset}`}
                                         onClick={() =>
                                             openDialog('stake-asset-dialog', { ...props.data })
                                         }
-                                    />
+                                    >{`Stake ${props.asset}`}</Button>
                                 </div>
                             </div>
                         </div>
@@ -69,7 +68,7 @@ export const StakingAsset = (props: IStakingAsset) => {
                                 dollar={0.0}
                             />
                             <div className="w-fit">
-                                <Button label="Claim VMEX" primary />
+                                <Button type="accent">Claim VMEX</Button>
                             </div>
                         </div>
 
@@ -81,7 +80,7 @@ export const StakingAsset = (props: IStakingAsset) => {
                                 dollar={0.0}
                             />
                             <div className="w-fit">
-                                <Button label="Unstake VMEX" primary />
+                                <Button type="accent">Unstake VMEX</Button>
                             </div>
                         </div>
                     </div>

@@ -160,11 +160,11 @@ export const YourPositionsTable: React.FC<IYourPositionsProps> = ({ type, data, 
                     <div className="mb-5">
                         <span>No Assets {determineNoDataMsg()}</span>
                     </div>
-                    <Button
-                        primary
-                        label="See Available Markets"
-                        onClick={() => navigate('/markets')}
-                    />
+                    <div className="flex justify-center items-center">
+                        <Button type="accent" onClick={() => navigate('/markets')}>
+                            See Available Markets
+                        </Button>
+                    </div>
                 </div>
             )}
         </Card>

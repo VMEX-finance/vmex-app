@@ -488,7 +488,11 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                                                                 />
                                                             </p>
                                                             <Button
-                                                                label={`Zap to ${
+                                                                onClick={submitZap as any}
+                                                                className="w-fit"
+                                                                type="accent"
+                                                            >
+                                                                {`Zap to ${
                                                                     asset
                                                                         ? convertAddressToSymbol(
                                                                               asset,
@@ -496,10 +500,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                                                                           )
                                                                         : ''
                                                                 }`}
-                                                                onClick={submitZap}
-                                                                className="w-fit"
-                                                                primary
-                                                            />
+                                                            </Button>
                                                         </div>
                                                     </div>
                                                 </AccordionDetails>
@@ -735,7 +736,6 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                     <ModalFooter between={!location.hash.includes('tranches')}>
                         {!location.hash.includes('tranches') && (
                             <Button
-                                label={`View Tranche`}
                                 onClick={() => {
                                     setAsset(asset);
                                     closeDialog('leverage-asset-dialog');
@@ -749,18 +749,21 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                                         },
                                     );
                                 }}
-                            />
+                            >
+                                View Tranche
+                            </Button>
                         )}
                         <Button
-                            primary
+                            type="accent"
                             disabled={isButtonDisabled()}
                             onClick={determineClick()}
-                            label={renderButtonLabel()}
                             loading={isLoading}
                             loadingText={
                                 borrowAllowance?.lt(VERY_BIG_ALLOWANCE) ? 'Approving' : 'Submitting'
                             }
-                        />
+                        >
+                            {renderButtonLabel()}
+                        </Button>
                     </ModalFooter>
                 </div>
             </>

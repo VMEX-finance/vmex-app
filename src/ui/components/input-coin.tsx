@@ -1,14 +1,8 @@
 import React from 'react';
-import {
-    bigNumberToUSD,
-    NETWORKS,
-    TESTING,
-    getNetworkName,
-    bigNumberToUnformattedString,
-} from '@/utils';
+import { bigNumberToUSD, NETWORKS, getNetworkName } from '@/utils';
 import { useSigner } from 'wagmi';
 import { mintTokens } from '@vmexfinance/sdk';
-import { Button, SecondaryButton, SmartPrice, AssetDisplay } from '@/ui/components';
+import { Button, SmartPrice, AssetDisplay } from '@/ui/components';
 import { usePricesData, useSubgraphAllAssetMappingsData } from '@/api';
 import { BigNumber, utils } from 'ethers';
 
@@ -114,10 +108,11 @@ export const CoinInput = ({
                 <div className="flex flex-row justify-end items-end gap-3">
                     {/* TODO: add usd value */}
                     {/* <div className="text-neutral-400">{calculateUsd()} USD</div> */}
-                    <SecondaryButton
+                    <Button
                         onClick={onMaxButtonClick}
                         loading={loading}
                         disabled={disabled}
+                        type="link"
                     >
                         <span>MAX</span>
                         <p className="flex items-center gap-1">
@@ -130,12 +125,16 @@ export const CoinInput = ({
                             }:`}{' '}
                             {<SmartPrice price={String(balance) || '0'} />}
                         </p>
-                    </SecondaryButton>
+                    </Button>
                 </div>
             </div>
             {NETWORKS[network].testing && (
                 <div className="mt-2 flex justify-end">
-                    <Button primary onClick={mint} label={`Mint ${coin.name}`} className="w-fit" />
+                    <Button
+                        type="accent"
+                        onClick={mint}
+                        className="w-fit"
+                    >{`Mint ${coin.name}`}</Button>
                 </div>
             )}
         </>

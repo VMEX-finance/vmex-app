@@ -227,12 +227,9 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
             )}
 
             <ModalFooter>
-                <Button
-                    disabled={isSuccess || activeStep === 0}
-                    onClick={prevStep}
-                    label="Back"
-                    primary
-                />
+                <Button disabled={isSuccess || activeStep === 0} onClick={prevStep} type="accent">
+                    Back
+                </Button>
 
                 <Button
                     disabled={
@@ -244,10 +241,11 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
                         !treasuryAddress
                     }
                     onClick={activeStep === steps.length - 1 ? handleSubmit : nextStep}
-                    label={activeStep === steps.length - 1 ? 'Save' : 'Next'}
-                    primary
+                    type="accent"
                     loading={isLoading}
-                />
+                >
+                    {activeStep === steps.length - 1 ? 'Save' : 'Next'}
+                </Button>
             </ModalFooter>
         </>
     );

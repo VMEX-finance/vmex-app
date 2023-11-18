@@ -16,7 +16,6 @@ import {
     MessageStatus,
     Tooltip,
     BasicToggle,
-    SecondaryButton,
     DefaultAccordion,
     DefaultInput,
     SmartPrice,
@@ -163,11 +162,12 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                                                         <SmartPrice price={getZapOutput()} />
                                                     </p>
                                                     <Button
-                                                        label={`Zap to ${asset ? asset : ''}`}
-                                                        onClick={submitZap}
+                                                        onClick={submitZap as any}
                                                         className="w-fit"
-                                                        primary
-                                                    />
+                                                        type="accent"
+                                                    >
+                                                        {`Zap to ${asset ? asset : ''}`}
+                                                    </Button>
                                                 </div>
                                             </div>
                                         </AccordionDetails>
@@ -186,9 +186,9 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                                 <h3>Amount</h3>
                                 {asset?.toLowerCase() === 'weth' ||
                                     (asset?.toLowerCase() === 'eth' && (
-                                        <SecondaryButton className="p-1" onClick={toggleEthWeth}>
+                                        <Button className="p-1" onClick={toggleEthWeth} type="link">
                                             Use {isEth ? 'WETH' : 'ETH'}
-                                        </SecondaryButton>
+                                        </Button>
                                     ))}
                             </div>
                             <CoinInput
@@ -348,9 +348,9 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                         <h3>Amount</h3>
                         {asset?.toLowerCase() === 'weth' ||
                             (asset?.toLowerCase() === 'eth' && (
-                                <SecondaryButton className="p-1" onClick={toggleEthWeth}>
+                                <Button className="p-1" onClick={toggleEthWeth} type="link">
                                     Use {isEth ? 'WETH' : 'ETH'}
-                                </SecondaryButton>
+                                </Button>
                             ))}
                     </div>
                     <CoinInput
@@ -434,7 +434,6 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                 <ModalFooter between={!location.hash.includes('tranches')}>
                     {!location.hash.includes('tranches') && (
                         <Button
-                            label={`View Tranche`}
                             onClick={() => {
                                 setAsset(asset);
                                 closeDialog('loan-asset-dialog');
@@ -448,23 +447,28 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                                     },
                                 );
                             }}
-                        />
+                        >
+                            View Tranche
+                        </Button>
                     )}
                     {Number(amount) === 0 && !view?.includes('Claim') ? (
                         <Tooltip text="Please enter an amount">
-                            <Button primary label={'Submit Transaction'} disabled />
+                            <Button type="accent" disabled>
+                                Submit Transaction
+                            </Button>
                         </Tooltip>
                     ) : (
                         <Button
-                            primary
+                            type="accent"
                             disabled={
                                 isButtonDisabled() || errorAssets?.includes(asset.toUpperCase())
                             }
-                            onClick={handleSubmit}
-                            label={view?.includes('Claim') ? 'Claim Rewards' : 'Submit Transaction'}
+                            onClick={handleSubmit as any}
                             loading={isLoading}
                             loadingText="Submitting"
-                        />
+                        >
+                            {view?.includes('Claim') ? 'Claim Rewards' : 'Submit Transaction'}
+                        </Button>
                     )}
                 </ModalFooter>
             </div>

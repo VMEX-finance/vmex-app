@@ -1,6 +1,6 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import React, { useContext, useEffect } from 'react';
-import { IButtonProps } from './button-default';
+import { IButtonProps } from './button';
 import { useAccount, useDisconnect, useNetwork } from 'wagmi';
 import { useWindowSize, useDialogController } from '@/hooks';
 import { DefaultDropdown, IDropdownItemProps } from './dropdown';
@@ -10,7 +10,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useSubgraphUserData } from '@/api';
 import { ThemeContext } from '@/store';
 
-export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: IButtonProps) => {
+export const WalletButton = ({ className, children = 'Connect Wallet' }: IButtonProps) => {
     const { chain } = useNetwork();
     const navigate = useNavigate();
     const { disconnect } = useDisconnect();
@@ -18,7 +18,7 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
     const { openDialog } = useDialogController();
     const { width } = useWindowSize();
     const { address } = useAccount();
-    const title = address ? truncateAddress(address) : label;
+    const title = address ? truncateAddress(address) : children;
     const mode = `transition duration-100 bg-neutral-300 shadow-sm hover:shadow-none text-brand-black hover:bg-[rgb(200,200,200)]`;
     const queryClient = useQueryClient();
     const { queryTrancheAdminData } = useSubgraphUserData(address || '');
@@ -127,7 +127,9 @@ export const WalletButton = ({ primary, className, label = 'Connect Wallet' }: I
                                             'h-fit w-full',
                                             'box-border',
                                             'font-basefont',
-                                            `${typeof label === 'string' ? 'px-4' : 'px-2'} py-1`,
+                                            `${
+                                                typeof children === 'string' ? 'px-4' : 'px-2'
+                                            } py-1`,
                                             'transition duration-200',
                                             'py-1.5',
                                             mode,
