@@ -69,8 +69,16 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
         referralAddress,
         setReferralAddress,
     } = useSupply({ data, ...modalProps });
-    const { zappableAssets, handleZap, setIsMaxZap, setZapAmount, zapAmount, zapAsset, submitZap } =
-        useZap(asset);
+    const {
+        zappableAssets,
+        handleZap,
+        setIsMaxZap,
+        setZapAmount,
+        zapAmount,
+        zapAsset,
+        submitZap,
+        getZapOutput,
+    } = useZap(asset);
     const network = getNetworkName();
 
     return (
@@ -149,12 +157,18 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                                                         '0.00'
                                                     }
                                                 />
-                                                <Button
-                                                    label={`Zap to ${asset ? asset : ''}`}
-                                                    onClick={submitZap}
-                                                    className="w-fit"
-                                                    primary
-                                                />
+                                                <div className="flex justify-between items-start pl-1 w-full">
+                                                    <p className="text-sm flex items-center gap-0.5">
+                                                        Output amount:{' '}
+                                                        <SmartPrice price={getZapOutput()} />
+                                                    </p>
+                                                    <Button
+                                                        label={`Zap to ${asset ? asset : ''}`}
+                                                        onClick={submitZap}
+                                                        className="w-fit"
+                                                        primary
+                                                    />
+                                                </div>
                                             </div>
                                         </AccordionDetails>
                                     </Accordion>

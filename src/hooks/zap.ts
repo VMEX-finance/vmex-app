@@ -13,6 +13,7 @@ export const useZap = (symbolOrAddress: string) => {
     const [zapAsset, setZapAsset] = useState({ address: '', symbol: '' });
     const [zapAmount, setZapAmount] = useState('');
     const [isMaxZap, setIsMaxZap] = useState(false);
+    const [zapOutput, setZapOutput] = useState('');
 
     function handleZap(e: any, token: IZapAssetProps) {
         e?.preventDefault();
@@ -24,6 +25,14 @@ export const useZap = (symbolOrAddress: string) => {
         e.preventDefault();
         // TODO: fico - handle zap sumbit
         console.log(`Zapping ${zapAsset.symbol}`);
+    }
+
+    function getZapOutput() {
+        if (zapAmount && zapAsset) {
+            // TODO: fico - get zap output to render before submitting
+            return zapAmount;
+        }
+        return '0.00';
     }
 
     useEffect(() => {
@@ -43,5 +52,6 @@ export const useZap = (symbolOrAddress: string) => {
         setZapAmount,
         setIsMaxZap,
         submitZap,
+        getZapOutput,
     };
 };

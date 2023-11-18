@@ -12,6 +12,7 @@ import {
     HealthFactor,
     MessageStatus,
     DefaultInput,
+    SmartPrice,
 } from '@/ui/components';
 import { ILeverageProps } from '../utils';
 import { useNavigate } from 'react-router-dom';
@@ -84,8 +85,16 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
     const [errMsg, setErrMsg] = useState('');
     const { asset, trancheId, collateral, amount, leverage, totalApy } = _data; // TODO: move functionality to leverage and zap hooks
 
-    const { zappableAssets, handleZap, zapAsset, zapAmount, submitZap, setZapAmount, setIsMaxZap } =
-        useZap(asset);
+    const {
+        zappableAssets,
+        handleZap,
+        zapAsset,
+        zapAmount,
+        submitZap,
+        setZapAmount,
+        setIsMaxZap,
+        getZapOutput,
+    } = useZap(asset);
 
     const [_collateral, _setCollateral] = useState(collateral);
 
@@ -471,19 +480,27 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                                                                 '0.00'
                                                             }
                                                         />
-                                                        <Button
-                                                            label={`Zap to ${
-                                                                asset
-                                                                    ? convertAddressToSymbol(
-                                                                          asset,
-                                                                          network,
-                                                                      )
-                                                                    : ''
-                                                            }`}
-                                                            onClick={submitZap}
-                                                            className="w-fit"
-                                                            primary
-                                                        />
+                                                        <div className="flex justify-between items-start pl-1 w-full">
+                                                            <p className="text-sm flex items-center gap-0.5">
+                                                                Output amount:{' '}
+                                                                <SmartPrice
+                                                                    price={getZapOutput()}
+                                                                />
+                                                            </p>
+                                                            <Button
+                                                                label={`Zap to ${
+                                                                    asset
+                                                                        ? convertAddressToSymbol(
+                                                                              asset,
+                                                                              network,
+                                                                          )
+                                                                        : ''
+                                                                }`}
+                                                                onClick={submitZap}
+                                                                className="w-fit"
+                                                                primary
+                                                            />
+                                                        </div>
                                                     </div>
                                                 </AccordionDetails>
                                             </Accordion>
