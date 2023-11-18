@@ -197,6 +197,7 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
             <ModalFooter between={!location.hash.includes('tranches')}>
                 {!location.hash.includes('tranches') && (
                     <Button
+                        type="outline"
                         onClick={() => {
                             setAsset(asset);
                             closeDialog('borrow-asset-dialog');

@@ -434,6 +434,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                 <ModalFooter between={!location.hash.includes('tranches')}>
                     {!location.hash.includes('tranches') && (
                         <Button
+                            type="outline"
                             onClick={() => {
                                 setAsset(asset);
                                 closeDialog('loan-asset-dialog');

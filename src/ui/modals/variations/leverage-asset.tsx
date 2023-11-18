@@ -736,6 +736,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                     <ModalFooter between={!location.hash.includes('tranches')}>
                         {!location.hash.includes('tranches') && (
                             <Button
+                                type="outline"
                                 onClick={() => {
                                     setAsset(asset);
                                     closeDialog('leverage-asset-dialog');
