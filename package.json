@@ -133,5 +133,8 @@
         "*.{json,js,ts,jsx,tsx,html}": [
             "prettier --check --write"
         ]
+    },
+    "engines": {
+        "node": ">=18.16"
     }
 }

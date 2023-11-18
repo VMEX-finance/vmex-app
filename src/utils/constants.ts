@@ -17,7 +17,7 @@ export const AVAILABLE_COLLATERAL_TRESHOLD = utils.parseUnits('5000', 8);
 export const MAX_UINT_AMOUNT =
     '115792089237316195423570985008687907853269984665640564039457584007913129639935';
 
-// Network Assets
+// Network Assets, TODO: Remove these since they are on sdk
 export const AVAILABLE_ASSETS: Record<string, { symbol: string; rewardSource?: string }[]> = {
     sepolia: [
         { symbol: 'AAVE' },
