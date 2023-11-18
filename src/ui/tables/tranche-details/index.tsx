@@ -68,7 +68,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
         type === 'supply'
             ? width > breakpoints['2xl']
                 ? 'Supplied Amount'
-                : 'Suppied'
+                : 'Supplied'
             : width > breakpoints['2xl']
             ? 'Borrowed Amount'
             : 'Borrowed';

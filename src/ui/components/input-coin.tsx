@@ -1,9 +1,15 @@
 import React from 'react';
-import { bigNumberToUSD, NETWORKS, TESTING, getNetworkName } from '@/utils';
+import {
+    bigNumberToUSD,
+    NETWORKS,
+    TESTING,
+    getNetworkName,
+    bigNumberToUnformattedString,
+} from '@/utils';
 import { useSigner } from 'wagmi';
 import { mintTokens } from '@vmexfinance/sdk';
 import { Button, SecondaryButton, SmartPrice, AssetDisplay } from '@/ui/components';
-import { usePricesData } from '@/api';
+import { usePricesData, useSubgraphAllAssetMappingsData } from '@/api';
 import { BigNumber, utils } from 'ethers';
 
 export interface ICoinInput {
@@ -37,6 +43,8 @@ export const CoinInput = ({
     const network = getNetworkName();
     const { data: signer } = useSigner();
     const { prices } = usePricesData();
+    const { findAssetInMappings } = useSubgraphAllAssetMappingsData();
+
     const onChange = (e: any) => {
         const myamount = e.target.value;
         const isFirstDecimal = amount.length === 0 && myamount === '.';
@@ -61,16 +69,17 @@ export const CoinInput = ({
     };
 
     const calculateUsd = () => {
-        const decimals = 18;
-        let usdBig;
-        if (prices) {
-            usdBig = (prices as any)[coin.name].usdPrice;
+        // TODO: improve
+        const decimals = findAssetInMappings(coin?.name)?.decimals || 18;
+        let usdBig: BigNumber;
+        if (prices && coin?.name) {
+            usdBig = (prices as any)[coin?.name?.toUpperCase()]?.usdPrice;
         } else {
             usdBig = BigNumber.from('0');
         }
-        const bigNumAmount = utils.parseUnits(amount || '0', decimals);
-        if (TESTING) console.log('USD:', bigNumberToUSD(usdBig.mul(bigNumAmount), decimals));
-        return bigNumberToUSD(usdBig.mul(bigNumAmount), decimals);
+        return usdBig
+            ? bigNumberToUSD(usdBig.mul(utils.parseUnits(amount || '0', decimals)), 26)
+            : `$${amount || '0.00'}`;
     };
 
     const mint = async () => {

@@ -97,7 +97,7 @@ export const Navbar: React.FC = () => {
                         items={renderNetworks(switchNetworkAsync)}
                         size="lg"
                         icon
-                        className="!bg-neutral-800 hover:!bg-neutral-700 !text-neutral-100 lg:!bg-neutral-300 lg:hover:!bg-neutral-400 lg:!text-black dark:lg:!bg-neutral-800 dark:lg:hover:!bg-neutral-700 dark:lg:!text-neutral-100"
+                        className="!bg-neutral-800 hover:!bg-neutral-700 !text-neutral-100 lg:!bg-neutral-300 lg:hover:!bg-[rgb(200,200,200)] lg:!text-black dark:lg:!bg-neutral-800 dark:lg:hover:!bg-neutral-700 dark:lg:!text-neutral-100"
                     />
 
                     {width >= breakpoints.lg ? (

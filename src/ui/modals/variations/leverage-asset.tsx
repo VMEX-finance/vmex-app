@@ -77,7 +77,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
     const _data = data
         ? data
         : { asset: '', trancheId: '', collateral: '', amount: '', leverage: 0, totalApy: '' };
-    console.log('data', _data);
+
     const [errMsg, setErrMsg] = useState('');
     const { asset, trancheId, collateral, amount, leverage, totalApy } = _data; // TODO: move functionality to leverage and zap hooks
 
