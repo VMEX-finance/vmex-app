@@ -76,12 +76,12 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                         />
                         {tvlChart?.isLoading ? (
                             <Loader variant="rounded" animation="wave" className="min-w-full">
-                                <div className="h-[100px] w-full">
+                                <div className="h-[100px] lg:min-w-[360px] 2xl:min-w-0 w-full">
                                     <ReAreaChart data={tvlChart?.data || []} type="usd" />
                                 </div>
                             </Loader>
                         ) : (
-                            <div className="h-[100px] lg:h-full w-full">
+                            <div className="h-[100px] lg:h-full lg:min-w-[360px] 2xl:min-w-0 w-full">
                                 <ReAreaChart data={tvlChart?.data || []} type="usd" />
                             </div>
                         )}
@@ -191,12 +191,18 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                         </div>
                     </div>
 
-                    <div className="flex flex-col gap-1 lg:col-span-2 2xl:col-span-1">
+                    <div className="flex flex-col gap-1 lg:col-span-2 2xl:col-span-1 lg:hidden 2xl:flex">
                         <span>Top Tranches</span>
                         <div className="flex flex-col">
                             <TopTranchesTable data={topTranches || []} loading={isLoading} />
                         </div>
                     </div>
+                </div>
+            </div>
+            <div className="flex-col gap-1 lg:col-span-2 2xl:col-span-1 hidden lg:flex 2xl:hidden mt-4">
+                <span>Top Tranches</span>
+                <div className="flex flex-col">
+                    <TopTranchesTable data={topTranches || []} loading={isLoading} />
                 </div>
             </div>
         </Card>

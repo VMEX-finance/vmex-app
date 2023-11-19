@@ -11,12 +11,11 @@ import {
     CoinInput,
     HealthFactor,
     MessageStatus,
-    DefaultInput,
     SmartPrice,
 } from '@/ui/components';
 import { ILeverageProps } from '../utils';
 import { useNavigate } from 'react-router-dom';
-import { useSelectedTrancheContext } from '@/store';
+import { useSelectedTrancheContext, useThemeContext } from '@/store';
 import { Address, erc20ABI, multicall, prepareWriteContract, writeContract } from '@wagmi/core';
 import {
     LendingPoolABI,
@@ -55,6 +54,7 @@ type LeverageDetails = {
 export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
     const modalProps = useModal('leverage-asset-dialog');
     const navigate = useNavigate();
+    const { isDark } = useThemeContext();
     const { setAsset } = useSelectedTrancheContext();
     const { closeDialog } = useDialogController();
     const { address: wallet } = useAccount();
