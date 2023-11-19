@@ -12,7 +12,7 @@ export type IButtonProps = {
     ) => void | Promise<void> | (() => Promise<void>) | ((e: any) => Promise<void>);
     className?: string;
     disabled?: boolean;
-    type?: 'danger' | 'link' | 'default' | 'accent' | 'outline';
+    type?: 'danger' | 'link' | 'default' | 'accent' | 'outline' | 'selected';
     icon?: React.ReactNode;
     loading?: boolean;
     loadingText?: string;
@@ -30,6 +30,7 @@ export type IButtonProps = {
         onClick: any;
         disabled?: boolean;
     };
+    highlight?: boolean;
 };
 
 export const Button = ({
@@ -47,6 +48,7 @@ export const Button = ({
     web3,
     left,
     right,
+    highlight,
 }: IButtonProps) => {
     const { address } = useAccount();
     const { chain } = useNetwork();
@@ -57,12 +59,13 @@ export const Button = ({
 
     // CSS
     const baseClass =
-        'flex items-center justify-center gap-1 font-basefont cursor-pointer disabled:cursor-not-allowed disabled:opacity-70';
+        'flex items-center justify-center gap-0.5 font-basefont cursor-pointer disabled:cursor-not-allowed disabled:opacity-70';
     const borderClass = 'border border-transparent';
     const shadowClass = 'shadow shadow-sm hover:shadow-none dark:shadow-black';
     const transitionClass = 'transition duration-150';
     const underlineClass = underline ? 'underline' : '';
     const paddingClass = padding ? padding : 'px-3 py-1';
+    const highlightedClass = highlight ? '!text-brand-purple' : '';
     const roundingClass = 'rounded-lg';
 
     function renderSize() {
@@ -80,8 +83,10 @@ export const Button = ({
         switch (type) {
             case 'danger':
                 return '!bg-red-600 !text-white !border-red-600 hover:!bg-red-500 hover:!border-red-500 disabled:!text-white';
+            case 'selected':
+                return 'text-black dark:text-neutral-100 hover:text-indigo-500 !shadow-none !p-0';
             case 'link':
-                return 'text-brand-purple hover:text-indigo-500 !shadow-none';
+                return 'text-brand-purple hover:text-indigo-500 !shadow-none !p-0';
             case 'outline':
                 return '!border-gray-500 dark:!border-gray-500 dark:text-white hover:bg-gray-100  dark:hover:bg-neutral-800';
             case 'accent':
@@ -172,6 +177,7 @@ export const Button = ({
                 shadowClass,
                 transitionClass,
                 borderClass,
+                highlightedClass,
             ].join(' ')}
         >
             {loading && <CgSpinner className="animate-spin" />}

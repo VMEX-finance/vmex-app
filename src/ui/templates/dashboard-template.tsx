@@ -58,11 +58,8 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                     <div className="flex flex-col">
                         {view ? (
                             <div className="flex flex-col md:flex-row justify-between md:justify-start md:items-center gap-3">
-                                <Button
-                                    onClick={routeChange}
-                                    type="link"
-                                    icon={<BiChevronLeft size="20px" />}
-                                >
+                                <Button onClick={routeChange} type="selected">
+                                    <BiChevronLeft size="20px" />
                                     <p className="2xl:text-lg leading-tight">Back</p>
                                 </Button>
                                 <Label
@@ -112,7 +109,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                                 </div>
                                 <div className="flex gap-1.5 2xl:gap-2 md:hidden">
                                     <Button
-                                        type="link"
+                                        type="selected"
                                         onClick={() => setView('tranche-overview')}
                                         disabled={!isConnected}
                                         className="2xl:text-lg px-1"
@@ -121,7 +118,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                                         Supply/Borrow
                                     </Button>
                                     <Button
-                                        type="link"
+                                        type="selected"
                                         onClick={() => setView('tranche-details')}
                                         disabled={!isConnected}
                                         className="2xl:text-lg px-1"
@@ -133,20 +130,20 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                             </div>
                             <div className="gap-1.5 2xl:gap-2 hidden md:flex justify-end">
                                 <Button
-                                    type="link"
+                                    type="selected"
                                     onClick={() => setView('tranche-overview')}
                                     disabled={!isConnected}
                                     className="2xl:text-lg px-1"
-                                    // highlight={view.includes('tranche-overview')}
+                                    highlight={view.includes('tranche-overview')}
                                 >
                                     Supply/Borrow
                                 </Button>
                                 <Button
-                                    type="link"
+                                    type="selected"
                                     onClick={() => setView('tranche-details')}
                                     disabled={!isConnected}
                                     className="2xl:text-lg px-1"
-                                    // highlight={view.includes('tranche-details')}
+                                    highlight={view.includes('tranche-details')}
                                 >
                                     Details
                                 </Button>

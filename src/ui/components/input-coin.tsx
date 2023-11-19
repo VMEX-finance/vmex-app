@@ -108,23 +108,20 @@ export const CoinInput = ({
                 <div className="flex flex-row justify-end items-end gap-3">
                     {/* TODO: add usd value */}
                     {/* <div className="text-neutral-400">{calculateUsd()} USD</div> */}
-                    <Button
-                        onClick={onMaxButtonClick}
-                        loading={loading}
-                        disabled={disabled}
-                        type="link"
-                    >
-                        <span>MAX</span>
-                        <p className="flex items-center gap-1">
-                            {`${
-                                type === 'collateral'
-                                    ? 'Amount Borrowable'
-                                    : type === 'owed'
-                                    ? 'Amount Owed'
-                                    : 'Balance'
-                            }:`}{' '}
-                            {<SmartPrice price={String(balance) || '0'} />}
-                        </p>
+                    <Button onClick={onMaxButtonClick} disabled={disabled} type="link" size="sm">
+                        <div className="leading-none flex flex-col justify-end items-end">
+                            <span>MAX</span>
+                            <span className="flex items-center gap-1">
+                                {`${
+                                    type === 'collateral'
+                                        ? 'Amount Borrowable'
+                                        : type === 'owed'
+                                        ? 'Amount Owed'
+                                        : 'Balance'
+                                }:`}{' '}
+                                {<SmartPrice price={String(balance) || '0'} />}
+                            </span>
+                        </div>
                     </Button>
                 </div>
             </div>
