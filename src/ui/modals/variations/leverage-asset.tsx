@@ -431,7 +431,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                                                 sx={{ boxShadow: 'none' }}
                                             >
                                                 <AccordionSummary
-                                                    className="!cursor-default !shadow-none"
+                                                    className="!cursor-default !shadow-none "
                                                     classes={{ content: 'margin: 0 !important;' }}
                                                     sx={{ minHeight: 'auto', padding: '0px' }}
                                                 >
