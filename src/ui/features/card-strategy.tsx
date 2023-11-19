@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Slider as MUISlider } from '@mui/material';
-import { AssetDisplay, Card, PillDisplay, Tooltip } from '@/ui/components';
-import { Button } from '@/ui/components/button';
+import { AssetDisplay, Button, Card, Label, PillDisplay, Tooltip } from '@/ui/components';
 import {
     AVAILABLE_COLLATERAL_TRESHOLD,
     DEFAULT_CHAINID,
@@ -34,6 +33,7 @@ type IStrategyCard = {
     token0?: string;
     token1?: string;
     name?: string;
+    tranche?: string;
 };
 
 export const StrategyCard = ({
@@ -41,6 +41,7 @@ export const StrategyCard = ({
     assetAddress,
     supplyApy,
     trancheId,
+    tranche,
     token0,
     token1,
     name,
@@ -191,8 +192,10 @@ export const StrategyCard = ({
                 <div className="flex justify-between">
                     <AssetDisplay name={asset || ''} />
                     <div className="flex flex-col items-end">
-                        <span className="text-xs">Max APY</span>
-                        <span className="font-medium text-lg">
+                        <span className="text-xs text-neutral-600 dark:text-neutral-400">
+                            Max APY
+                        </span>
+                        <span className="font-medium text-lg leading-none">
                             {percentFormatter.format(Number(supplyApy) * leverage)}
                         </span>
                     </div>
@@ -273,7 +276,18 @@ export const StrategyCard = ({
                     </>
                 )}
                 <div className="mt-2.5">
-                    <span className="text-xs">APY Breakdown</span>
+                    <div className="flex justify-between items-end mx-0.5">
+                        <span className="text-xs">APY Breakdown</span>
+                        {tranche?.includes('LSD') && (
+                            <Label
+                                color="blue"
+                                tooltip="This asset is effectively used liquid staking derivatives."
+                                className="!text-[11px]"
+                            >
+                                LSD Efficient
+                            </Label>
+                        )}
+                    </div>
                     <ModalTableDisplay content={apyBreakdown} valueClass="text-right" size="sm" />
                 </div>
             </div>
