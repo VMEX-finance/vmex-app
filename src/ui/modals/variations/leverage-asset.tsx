@@ -494,14 +494,14 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                                                                 className="w-fit"
                                                                 type="accent"
                                                             >
-                                                                {`Zap to ${
+                                                                {width > breakpoints.md ? `Zap to ${
                                                                     asset
                                                                         ? convertAddressToSymbol(
                                                                               asset,
                                                                               network,
                                                                           )
                                                                         : ''
-                                                                }`}
+                                                                }` : "Zap"}
                                                             </Button>
                                                         </div>
                                                     </div>
