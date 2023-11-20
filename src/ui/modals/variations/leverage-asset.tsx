@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
-import { useDialogController, useLeverage, useModal } from '@/hooks';
+import { useDialogController, useLeverage, useModal, useZap } from '@/hooks';
 import {
     TransactionStatus,
     Button,
@@ -75,6 +75,12 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
     const { queryUserActivity } = useUserData(wallet);
     const { queryAllMarketsData } = useSubgraphAllMarketsData();
     const network = getNetworkName();
+
+    const _data = data
+        ? data
+        : { asset: '', trancheId: '', collateral: '', amount: '', leverage: 0, totalApy: '' };
+    const { asset, trancheId, collateral, amount, leverage, totalApy } = _data; // TODO: move functionality to leverage and zap hooks
+
     const {
         view,
         setView,
@@ -91,13 +97,19 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
         maxOnClick,
         amount: withdrawAmount,
     } = useLeverage({ data, ...modalProps });
-
-    const _data = data
-        ? data
-        : { asset: '', trancheId: '', collateral: '', amount: '', leverage: 0, totalApy: '' };
+    const {
+        zappableAssets,
+        handleZap,
+        setIsMaxZap,
+        setZapAmount,
+        zapAmount,
+        zapBalance,
+        zapAsset,
+        submitZap,
+        getZapOutput,
+    } = useZap(asset);
 
     const [errMsg, setErrMsg] = useState('');
-    const { asset, trancheId, collateral, amount, leverage, totalApy } = _data; // TODO: move functionality to leverage and zap hooks
     const { queryUserTrancheData } = useUserTrancheData(wallet, trancheId);
     const { findAssetInMarketsData } = useSubgraphTrancheData(trancheId as number);
 
@@ -493,7 +505,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
         <>
             <ModalHeader
                 dialog="leverage-asset-dialog"
-                tabs={['Loop', 'Unwind', 'Supply']}
+                tabs={['Loop', 'Unwind']}
                 onClick={setView}
                 disabled={isLoading}
                 active={view}
@@ -746,12 +758,16 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                                         ?.toLowerCase()
                                         .replace(/\s+/g, '-')}`,
                                     {
-                                        state: { view: 'details', trancheId: data?.trancheId },
+                                        state: {
+                                            action: 'supply',
+                                            trancheId: data?.trancheId,
+                                            asset: assetSymbol,
+                                        },
                                     },
                                 );
                             }}
                         >
-                            View Tranche
+                            Supply More
                         </Button>
                     )}
                     <Button

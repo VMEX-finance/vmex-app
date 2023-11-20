@@ -79,7 +79,6 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
         submitZap,
         getZapOutput,
     } = useZap(asset);
-    const network = getNetworkName();
 
     return (
         <>

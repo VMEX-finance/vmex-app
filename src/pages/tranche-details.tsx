@@ -9,21 +9,57 @@ import { useSelectedTrancheContext } from '@/store';
 import { useAccount, useSigner } from 'wagmi';
 import { useSubgraphTrancheData, useUserTrancheData } from '@/api';
 import { useAnalyticsEventTracker } from '@/config';
-import { useWindowSize } from '@/hooks';
+import { useDialogController, useWindowSize } from '@/hooks';
+import { convertSymbolToAddress } from '@vmexfinance/sdk';
+import { getNetworkName } from '@/utils';
 
 const TrancheDetails: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
+    const { openDialog } = useDialogController();
     const { address } = useAccount();
     const { data: signer } = useSigner();
     const { width, breakpoints } = useWindowSize();
     const { tranche, setTranche, asset } = useSelectedTrancheContext();
     const { queryTrancheData } = useSubgraphTrancheData(location.state?.trancheId);
     const { queryUserTrancheData } = useUserTrancheData(address, location.state?.trancheId);
+    const network = getNetworkName();
     const [view, setView] = useState('tranche-overview');
     const gaEventTracker = useAnalyticsEventTracker(
         `Tranche Details - ${tranche?.id || location.state?.trancheId}`,
     );
+
+    const renderSupplyList =
+        queryTrancheData.data && queryTrancheData.data.assetsData
+            ? Object.keys(queryTrancheData.data.assetsData).map((asset) => ({
+                  asset: asset,
+                  canBeCollat: (queryTrancheData.data.assetsData as any)[asset].collateral,
+                  apy: (queryTrancheData.data.assetsData as any)[asset].supplyRate,
+                  tranche: queryTrancheData.data?.name,
+                  trancheId: tranche?.id,
+                  signer: signer,
+              }))
+            : [];
+
+    const renderBorrowList =
+        queryTrancheData.data && queryTrancheData.data.assetsData
+            ? Object.keys(queryTrancheData.data.assetsData)
+                  .filter((asset) => {
+                      if ((queryTrancheData.data.assetsData as any)[asset].canBeBorrowed) {
+                          return true;
+                      }
+                      return false;
+                  })
+                  .map((asset) => ({
+                      asset: asset,
+                      liquidity: (queryTrancheData.data.assetsData as any)[asset].liquidity,
+                      apy: (queryTrancheData.data.assetsData as any)[asset].borrowRate,
+                      tranche: queryTrancheData.data?.name,
+                      trancheId: tranche?.id,
+                      signer: signer,
+                      priceUSD: (queryTrancheData.data.assetsData as any)[asset].priceUSD,
+                  }))
+            : [];
 
     useEffect(() => {
         if (!address) setView('tranche-details');
@@ -44,7 +80,23 @@ const TrancheDetails: React.FC = () => {
             console.warn('Not set tranche and location');
             navigate('/tranches');
         }
-    }, [navigate, tranche, location]);
+        if (
+            location.state?.trancheId &&
+            location.state?.action === 'supply' &&
+            location.state?.asset
+        ) {
+            const found = renderSupplyList.find(
+                (el) => el.asset?.toLowerCase() === location?.state?.asset?.toLowerCase(),
+            );
+            if (found) {
+                openDialog('loan-asset-dialog', {
+                    asset: found.asset,
+                    trancheId: tranche.id,
+                    collateral: found.canBeCollat,
+                });
+            }
+        }
+    }, [navigate, tranche, location.state]);
 
     return (
         <Base
@@ -116,26 +168,7 @@ const TrancheDetails: React.FC = () => {
                             </div>
                         }
                     >
-                        <TrancheTable
-                            data={
-                                queryTrancheData.data && queryTrancheData.data.assetsData
-                                    ? Object.keys(queryTrancheData.data.assetsData).map(
-                                          (asset) => ({
-                                              asset: asset,
-                                              canBeCollat: (
-                                                  queryTrancheData.data.assetsData as any
-                                              )[asset].collateral,
-                                              apy: (queryTrancheData.data.assetsData as any)[asset]
-                                                  .supplyRate,
-                                              tranche: queryTrancheData.data?.name,
-                                              trancheId: tranche?.id,
-                                              signer: signer,
-                                          }),
-                                      )
-                                    : []
-                            }
-                            type="supply"
-                        />
+                        <TrancheTable data={renderSupplyList} type="supply" />
                     </Card>
                     <Card
                         loading={queryTrancheData.isLoading}
@@ -153,37 +186,7 @@ const TrancheDetails: React.FC = () => {
                             </div>
                         }
                     >
-                        <TrancheTable
-                            data={
-                                queryTrancheData.data && queryTrancheData.data.assetsData
-                                    ? Object.keys(queryTrancheData.data.assetsData)
-                                          .filter((asset) => {
-                                              if (
-                                                  (queryTrancheData.data.assetsData as any)[asset]
-                                                      .canBeBorrowed
-                                              ) {
-                                                  return true;
-                                              }
-                                              return false;
-                                          })
-                                          .map((asset) => ({
-                                              asset: asset,
-                                              liquidity: (queryTrancheData.data.assetsData as any)[
-                                                  asset
-                                              ].liquidity,
-                                              apy: (queryTrancheData.data.assetsData as any)[asset]
-                                                  .borrowRate,
-                                              tranche: queryTrancheData.data?.name,
-                                              trancheId: tranche?.id,
-                                              signer: signer,
-                                              priceUSD: (queryTrancheData.data.assetsData as any)[
-                                                  asset
-                                              ].priceUSD,
-                                          }))
-                                    : []
-                            }
-                            type="borrow"
-                        />
+                        <TrancheTable data={renderBorrowList} type="borrow" />
                     </Card>
                 </GridView>
             )}
