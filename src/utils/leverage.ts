@@ -2,6 +2,8 @@ import { Decimal } from 'decimal.js';
 import { BigNumber } from 'ethers';
 import { formatEther, parseEther } from 'ethers/lib/utils.js';
 import { formatUnits, parseUnits } from 'ethers/lib/utils.js';
+import { IGraphAssetData, IUserTrancheData } from '@/api';
+import { convertAddressToSymbol } from '@vmexfinance/sdk';
 
 const DECIMALS = 8;
 const DECIMAL_ONE = new Decimal(1);
@@ -54,123 +56,74 @@ export const getMaxBorrowableAmount = (
     return { maxBorrowableAmountUsd, maxLeverage };
 };
 
-// export const determineHFFinal = () => {
-//     if (!asset || !amount) {
-//         return undefined;
-//     }
-//     let a = findAssetInMarketsData(asset);
-//     let d = a?.decimals;
-//     if (!a || !d || amount == '' || !parseFloat(amount)) {
-//         return undefined;
-//     }
+export const calculateHealthFactorAfterLeverage = (
+    depositAsset: IGraphAssetData,
+    borrowAssets: IGraphAssetData[],
+    borrowAmountUsd: BigNumber,
+    userTrancheData?: IUserTrancheData,
+) => {
+    console.log(
+        'calculateHealthFactorAfterLeverage',
+        depositAsset,
+        borrowAssets,
+        borrowAmountUsd,
+        userTrancheData,
+    );
+    if (
+        !depositAsset ||
+        !borrowAmountUsd ||
+        ![1, 2].includes(borrowAssets.length) ||
+        !userTrancheData
+    ) {
+        return;
+    }
 
-//     try {
-//         let ethAmount;
-//         if (PRICING_DECIMALS[network] == 8) {
-//             ethAmount = ethers.utils
-//                 .parseUnits(convertStringFormatToNumber(amount), d)
-//                 .mul(a.priceUSD)
-//                 .div(ethers.utils.parseUnits('1', d)); //18 decimals or 8 decimals
-//         } else {
-//             ethAmount = ethers.utils
-//                 .parseUnits(convertStringFormatToNumber(amount), d)
-//                 .mul(a.priceETH)
-//                 .div(ethers.utils.parseUnits('1', d)); //18 decimals or 8 decimals
-//         }
-//         if (TESTING) {
-//             console.log('amount: ', amount);
-//             console.log('ethAmount: ', ethAmount);
-//         }
+    let { totalCollateralETH, totalDebtETH, currentLiquidationThreshold, avgBorrowFactor } =
+        userTrancheData;
 
-//         let totalCollateralETH = queryUserTrancheData.data?.totalCollateralETH;
-//         let totalDebtInETH = queryUserTrancheData.data?.totalDebtETH; //ETH or USD, depending on underlying chainlink decimals
-//         let currentLiquidationThreshold =
-//             queryUserTrancheData.data?.currentLiquidationThreshold;
-//         let currentAvgBorrowFactor = queryUserTrancheData.data?.avgBorrowFactor;
+    if (!totalCollateralETH || !currentLiquidationThreshold || !totalDebtETH || !avgBorrowFactor) {
+        return;
+    }
 
-//         if (
-//             !totalCollateralETH ||
-//             !currentLiquidationThreshold ||
-//             !totalDebtInETH ||
-//             !currentAvgBorrowFactor
-//         ) {
-//             return undefined;
-//         }
+    const liquidationThresholdTimesCollateralAfter = currentLiquidationThreshold
+        .mul(totalCollateralETH)
+        .add(borrowAmountUsd.mul(depositAsset.liquidationThreshold));
 
-//         let collateralAfter = totalCollateralETH;
-//         let debtAfter = totalDebtInETH;
-//         let liquidationThresholdTimesCollateralAfter =
-//             currentLiquidationThreshold.mul(totalCollateralETH);
-//         let borrowFactorTimesDebtAfter = currentAvgBorrowFactor.mul(totalDebtInETH);
-//         if (type === 'supply') {
-//             collateralAfter = totalCollateralETH.add(ethAmount);
-//             liquidationThresholdTimesCollateralAfter =
-//                 liquidationThresholdTimesCollateralAfter.add(
-//                     ethAmount.mul(a.liquidationThreshold),
-//                 );
-//         }
+    let borrowFactorTimesDebtAfter = avgBorrowFactor.mul(totalDebtETH);
+    if (borrowAssets.length === 1) {
+        borrowFactorTimesDebtAfter = borrowFactorTimesDebtAfter.add(
+            borrowAmountUsd.mul(borrowAssets[0].borrowFactor),
+        );
+    } else {
+        borrowFactorTimesDebtAfter = borrowFactorTimesDebtAfter
+            .add(borrowAmountUsd.mul(borrowAssets[0].borrowFactor).div(2))
+            .add(borrowAmountUsd.mul(borrowAssets[1].borrowFactor).div(2));
+    }
 
-//         if (type === 'withdraw') {
-//             collateralAfter = totalCollateralETH.sub(ethAmount);
-//             liquidationThresholdTimesCollateralAfter =
-//                 liquidationThresholdTimesCollateralAfter.sub(
-//                     ethAmount.mul(a.liquidationThreshold),
-//                 );
-//         }
+    return liquidationThresholdTimesCollateralAfter
+        .mul(parseUnits('1', 18))
+        .div(borrowFactorTimesDebtAfter);
+};
 
-//         if (type === 'borrow') {
-//             debtAfter = totalDebtInETH.add(ethAmount);
-//             borrowFactorTimesDebtAfter = borrowFactorTimesDebtAfter.add(
-//                 ethAmount.mul(a.borrowFactor),
-//             );
-//         }
+export const calculateTotalBorrowAmount = (amountHumanReadable: string, leverage: number) => {
+    if (!amountHumanReadable || !leverage) return BigNumber.from(0);
+    return parseUnits(amountHumanReadable.replace('$', ''), 8)
+        .mul((leverage * 100).toFixed(0))
+        .div(100);
+};
 
-//         if (type === 'repay') {
-//             debtAfter = totalDebtInETH.sub(ethAmount);
-//             borrowFactorTimesDebtAfter = borrowFactorTimesDebtAfter.sub(
-//                 ethAmount.mul(a.borrowFactor),
-//             );
-//         }
-//         if (TESTING) {
-//             console.log('total collateral after calc: ', collateralAfter);
-//             console.log('total debtAfter after calc: ', debtAfter);
-//             console.log(
-//                 'total liquidationThresholdTimesCollateralAfter after calc: ',
-//                 liquidationThresholdTimesCollateralAfter,
-//             );
-//             console.log(
-//                 'total borrowFactorTimesDebtAfter after calc: ',
-//                 borrowFactorTimesDebtAfter,
-//             );
-//         }
+export const isPoolStable = (network: string, token0: string, token1: string) => {
+    const token0Symbol = convertAddressToSymbol(token0, network);
+    const token1Symbol = convertAddressToSymbol(token1, network);
+    const stablecoins = ['usdc', 'usdt', 'susd', 'dai', 'lusd'];
+    if (
+        stablecoins.includes(token0Symbol.toLowerCase()) &&
+        stablecoins.includes(token1Symbol.toLowerCase())
+    )
+        return true;
 
-//         if (type === 'disable collateral') {
-//             collateralAfter = totalCollateralETH.sub(ethAmount);
-//             liquidationThresholdTimesCollateralAfter =
-//                 liquidationThresholdTimesCollateralAfter.sub(
-//                     ethAmount.mul(a.liquidationThreshold),
-//                 );
-//         }
+    if (token0Symbol.toLowerCase().includes('eth') && token1Symbol.toLowerCase().includes('eth'))
+        return true;
 
-//         if (type === 'enable collateral') {
-//             collateralAfter = totalCollateralETH.add(ethAmount);
-//             liquidationThresholdTimesCollateralAfter =
-//                 liquidationThresholdTimesCollateralAfter.add(
-//                     ethAmount.mul(a.liquidationThreshold),
-//                 );
-//         }
-//         let healthFactorAfterDecrease = calculateHealthFactorFromBalances(
-//             borrowFactorTimesDebtAfter,
-//             liquidationThresholdTimesCollateralAfter, //they both have the same number of decimals
-//         );
-
-//         return renderHealth(
-//             healthFactorAfterDecrease &&
-//                 ethers.utils.formatUnits(healthFactorAfterDecrease, 18), //HF always has 18 decimals
-//             size,
-//             queryUserTrancheData.isLoading,
-//         );
-//     } catch {
-//         return undefined;
-//     }
-// };
+    return false;
+};

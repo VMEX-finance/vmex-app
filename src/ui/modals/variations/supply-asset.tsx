@@ -74,6 +74,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
         setIsMaxZap,
         setZapAmount,
         zapAmount,
+        zapBalance,
         zapAsset,
         submitZap,
         getZapOutput,
@@ -152,15 +153,11 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                                                         name: zapAsset.symbol,
                                                     }}
                                                     setIsMax={setIsMaxZap}
-                                                    balance={
-                                                        // TODO: fico - get max zappable
-                                                        '0.00'
-                                                    }
+                                                    balance={zapBalance}
                                                 />
                                                 <div className="flex justify-between items-start pl-1 w-full">
                                                     <p className="text-sm flex items-center gap-0.5">
-                                                        Output amount:{' '}
-                                                        <SmartPrice price={getZapOutput()} />
+                                                        Output amount: <SmartPrice price={''} />
                                                     </p>
                                                     <Button
                                                         onClick={submitZap as any}

@@ -1,5 +1,5 @@
 import { IMarketsAsset, ITrancheProps } from '@/api';
-import { Contract, ethers } from 'ethers';
+import { BigNumber, Contract, ethers } from 'ethers';
 import { AVAILABLE_ASSETS, HEALTH } from './constants';
 import moment from 'moment';
 import { ILineChartDataPointProps } from '@/ui/components';
@@ -8,6 +8,7 @@ import { Chain } from '@wagmi/core';
 import { getNetworkName } from './network';
 import { provider } from '@/config';
 import { convertAddressToSymbol } from '@vmexfinance/sdk';
+import { formatUnits } from 'ethers/lib/utils.js';
 
 const Filter = require('bad-words'),
     filter = new Filter();
@@ -383,3 +384,11 @@ export async function toSymbol(symbolOrAddress: string, chain: Chain) {
         return '';
     }
 }
+
+export const isAddressEqual = (address1: string, address2: string) => {
+    return address1.toLowerCase() === address2.toLowerCase();
+};
+
+export const formatUsdUnits = (amount: BigNumber, precion: number = 2) => {
+    return `$${parseFloat(formatUnits(amount, 8)).toFixed(precion)}`;
+};
