@@ -39,7 +39,9 @@ export const useZap = (symbolOrAddress: string) => {
     const { address: wallet } = useAccount();
     const { queryUserWallet } = useUserData(wallet);
 
-    const lpAddress = convertSymbolToAddress(symbolOrAddress, chain?.network || '');
+    const lpAddress = symbolOrAddress
+        ? convertSymbolToAddress(symbolOrAddress, chain?.network || '')
+        : undefined;
     const zapAmountNative =
         zapAmount !== ''
             ? parseUnits(zapAmount, DECIMALS.get(zapAsset.symbol) || 18)
@@ -265,11 +267,13 @@ export const useZap = (symbolOrAddress: string) => {
     }
 
     useEffect(() => {
+        if (!lpAddress) return;
+
         (async () => {
             const [token0, token1, stable] = await readVeloPoolDetails(lpAddress);
             setVeloPoolDetails({ token0, token1, stable });
         })();
-    }, []);
+    }, [lpAddress]);
 
     useEffect(() => {
         if (!symbolOrAddress || !queryUserWallet?.data || !veloPoolDetails) return;
