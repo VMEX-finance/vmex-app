@@ -137,6 +137,7 @@ export const StrategyCard = ({
             token0,
             token1,
             tranche: queryTrancheData?.data?.name || '',
+            maxLeverage,
         });
         setTimeout(() => setCollateral(''), 2000);
     };

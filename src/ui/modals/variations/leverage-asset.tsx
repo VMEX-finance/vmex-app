@@ -1,21 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
-import { useDialogController, useLeverage, useModal, useZap, useWindowSize } from '@/hooks';
+import { useDialogController, useLeverage, useModal } from '@/hooks';
 import {
     TransactionStatus,
     Button,
-    Loader,
     PillDisplay,
     AssetDisplay,
     DefaultAccordion,
     CoinInput,
     HealthFactor,
     MessageStatus,
-    SmartPrice,
 } from '@/ui/components';
 import { ILeverageProps } from '../utils';
 import { useNavigate } from 'react-router-dom';
-import { useSelectedTrancheContext, useThemeContext } from '@/store';
+import { useSelectedTrancheContext } from '@/store';
+import { Slider as MUISlider } from '@mui/material';
 import {
     Address,
     erc20ABI,
@@ -44,7 +43,7 @@ import {
     calculateHealthFactorAfterUnwind,
 } from '@/utils';
 import { useAccount } from 'wagmi';
-import { BigNumber, constants, ethers, utils } from 'ethers';
+import { BigNumber, constants, utils } from 'ethers';
 import {
     useSubgraphAllMarketsData,
     useSubgraphTrancheData,
@@ -54,7 +53,7 @@ import {
 import { getAddress, parseUnits } from 'ethers/lib/utils.js';
 import { convertAddressListToSymbol, convertAddressToSymbol } from '@vmexfinance/sdk';
 import { toast } from 'react-toastify';
-import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
+import { useMaxBorrowableAmount } from '@/hooks/max-borrowable';
 
 const VERY_BIG_ALLOWANCE = BigNumber.from(2).pow(128); // big enough
 
@@ -68,10 +67,8 @@ type LeverageDetails = {
 };
 
 export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
-    const { width, breakpoints } = useWindowSize();
     const modalProps = useModal('leverage-asset-dialog');
     const navigate = useNavigate();
-    const { isDark } = useThemeContext();
     const { setAsset } = useSelectedTrancheContext();
     const { closeDialog } = useDialogController();
     const { address: wallet } = useAccount();
@@ -104,56 +101,25 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
     const { queryUserTrancheData } = useUserTrancheData(wallet, trancheId);
     const { findAssetInMarketsData } = useSubgraphTrancheData(trancheId as number);
 
-    const {
-        zappableAssets,
-        handleZap,
-        zapAsset,
-        zapAmount,
-        submitZap,
-        setZapAmount,
-        setIsMaxZap,
-        getZapOutput,
-    } = useZap(asset);
-
     const [_collateral, _setCollateral] = useState(collateral);
+    const [_leverage, _setLeverage] = useState(leverage);
 
     const collaterals = _collateral ? _collateral.split(':') : [];
 
     const collateralSymbols =
         collaterals.length && asset ? convertAddressListToSymbol(collaterals, network) : [];
     const assetSymbol = asset ? convertAddressToSymbol(asset, network) : '';
-    let collateralMarketData = collaterals.map((x) => {
+    const collateralMarketData = collaterals.map((x) => {
         const marketData = queryAllMarketsData.data?.find(
-            (y) => y.trancheId === trancheId.toString() && isAddressEqual(y.assetAddress, x),
+            (y) => y.trancheId === trancheId?.toString() && isAddressEqual(y.assetAddress, x),
         );
         if (!marketData) return { borrowApy: '' };
         return marketData;
     });
 
-    const depositAsset = findAssetInMarketsData(assetSymbol);
-    const borrowAssets = collateralSymbols.map((x) => findAssetInMarketsData(x));
-    const x = calculateHealthFactorAfterLeverage(
-        depositAsset,
-        borrowAssets,
-        calculateTotalBorrowAmount(amount, leverage),
-        queryUserTrancheData.data,
-    );
-    console.log('HF after leverage', x?.toString()); // TODO alo show on UI
-
     const mostBorrowedToken = queryUserTrancheData.data?.borrows.sort((a, b) =>
         b.amount.localeCompare(a.amount),
     )[0];
-    const y = calculateHealthFactorAfterUnwind(
-        depositAsset,
-        findAssetInMarketsData(mostBorrowedToken?.asset || ''),
-        withdrawAmount
-            ? parseUnits(withdrawAmount, 18)
-                  .mul(depositAsset.priceUSD)
-                  .div(BigNumber.from(10).pow(18))
-            : undefined,
-        queryUserTrancheData.data,
-    );
-    console.log('HF after unwind', y?.toString()); // TODO alo show on UI
 
     const suppliedAssetDetails =
         asset &&
@@ -167,6 +133,11 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
     const handleCollateralClick = (address: string) => {
         if (errMsg) setErrMsg('');
         _setCollateral(address);
+    };
+
+    const handleSlide = (e: Event) => {
+        e.stopPropagation();
+        _setLeverage((e.target as any).value || 1);
     };
 
     const approveBorrowDelegation = async () => {
@@ -207,7 +178,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
             decimals1,
             stable,
         };
-        const totalBorrowAmount = calculateTotalBorrowAmount(amount, leverage);
+        const totalBorrowAmount = calculateTotalBorrowAmount(amount, _leverage);
         const isBorrowToken0 = utils.getAddress(_collateral) === utils.getAddress(token0);
         if (!totalBorrowAmount) return;
         const config = await prepareWriteContract({
@@ -264,7 +235,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
     };
 
     const populateHowItWorks = () => {
-        let totalBorrowAmount = calculateTotalBorrowAmount(amount, leverage);
+        let totalBorrowAmount = calculateTotalBorrowAmount(amount, _leverage);
         const userBorrowableAmount = queryUserActivity?.data?.availableBorrowsETH;
         const steps: string[] = [];
         if (userBorrowableAmount) {
@@ -304,7 +275,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
 
     const populateSummary = () => {
         if (!collateralMarketData.length) return [];
-        const totalBorrowAmount = calculateTotalBorrowAmount(amount, leverage);
+        const totalBorrowAmount = calculateTotalBorrowAmount(amount, _leverage);
         const summary = [];
         if (collaterals.length === 1) {
             summary.push(
@@ -449,7 +420,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
     };
 
     useEffect(() => {
-        if (!network || !wallet) return;
+        if (!network || !wallet || !asset || !_collateral || !trancheId) return;
 
         (async () => {
             const CHAIN_CONFIG = NETWORKS[network];
@@ -518,375 +489,284 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
         })().catch((err) => console.error(err));
     }, [network, wallet]);
 
-    if (data)
-        return (
-            <>
-                <ModalHeader
-                    dialog="leverage-asset-dialog"
-                    tabs={['Loop', 'Unwind']}
-                    onClick={setView}
-                    disabled={isLoading}
-                    active={view}
-                />
-                {!isSuccess && !error ? (
-                    // Default State
-                    <>
-                        {view === 'Loop' ? (
-                            <>
-                                {zappableAssets.length !== 0 && (
-                                    <>
-                                        <div className="mt-3 2xl:mt-4 flex justify-between items-center">
-                                            <h3>Zap</h3>
-                                        </div>
-                                        <div className="flex flex-wrap gap-1 mt-1 w-full">
-                                            <Accordion
-                                                className="w-full"
-                                                TransitionProps={{ unmountOnExit: true }}
-                                                expanded={!!zapAsset.address}
-                                                disableGutters
-                                                sx={{ boxShadow: 'none' }}
-                                            >
-                                                <AccordionSummary
-                                                    className="!cursor-default !shadow-none "
-                                                    classes={{ content: 'margin: 0 !important;' }}
-                                                    sx={{ minHeight: 'auto', padding: '0px' }}
-                                                >
-                                                    {isLoading ? (
-                                                        <Loader
-                                                            type="skeleton"
-                                                            variant="rounded"
-                                                            className="!rounded-3xl"
-                                                        >
-                                                            <PillDisplay
-                                                                type="asset"
-                                                                asset={'BTC'}
-                                                                value={0}
-                                                            />
-                                                        </Loader>
-                                                    ) : (
-                                                        zappableAssets.map((el, i) => (
-                                                            <button
-                                                                key={`top-supplied-asset-${i}`}
-                                                                onClick={(e) => handleZap(e, el)}
-                                                            >
-                                                                <PillDisplay
-                                                                    type="asset"
-                                                                    asset={el.symbol}
-                                                                    hoverable
-                                                                    selected={
-                                                                        el.address?.toLowerCase() ===
-                                                                        zapAsset?.address.toLowerCase()
-                                                                    }
-                                                                />
-                                                            </button>
-                                                        ))
-                                                    )}
-                                                </AccordionSummary>
-                                                <AccordionDetails>
-                                                    <div className="flex flex-col gap-1.5 items-end">
-                                                        <CoinInput
-                                                            amount={zapAmount}
-                                                            setAmount={setZapAmount}
-                                                            coin={{
-                                                                logo: `/coins/${zapAsset.symbol?.toLowerCase()}.svg`,
-                                                                name: zapAsset.symbol,
-                                                            }}
-                                                            setIsMax={setIsMaxZap}
-                                                            balance={
-                                                                // TODO: fico - get max zappable
-                                                                '0.00'
-                                                            }
-                                                        />
-                                                        <div className="flex justify-between items-start pl-1 w-full">
-                                                            <p className="text-sm flex items-center gap-0.5">
-                                                                Output amount:{' '}
-                                                                <SmartPrice
-                                                                    price={''} // TODO fico
-                                                                />
-                                                            </p>
-                                                            <Button
-                                                                onClick={submitZap as any}
-                                                                className="w-fit"
-                                                                type="accent"
-                                                            >
-                                                                {width > breakpoints.md
-                                                                    ? `Zap to ${
-                                                                          asset
-                                                                              ? convertAddressToSymbol(
-                                                                                    asset,
-                                                                                    network,
-                                                                                )
-                                                                              : ''
-                                                                      }`
-                                                                    : 'Zap'}
-                                                            </Button>
-                                                        </div>
-                                                    </div>
-                                                </AccordionDetails>
-                                            </Accordion>
-                                        </div>
-                                    </>
-                                )}
-                                <div
-                                    className={`${
-                                        zapAsset.address
-                                            ? ' blur-[1px] relative z-[99] opacity-80 pointer-events-none'
-                                            : ''
-                                    }`}
-                                >
-                                    <div className="flex items-start justify-between mt-5 px-1">
-                                        <AssetDisplay name={(data as any)?.symbol} size={'lg'} />
-                                        <div className="flex-col items-end hidden sm:flex">
-                                            <span className="text-xl leading-none">{`${
-                                                (data as any)?.tranche || ''
-                                            }`}</span>
-                                            <span className="text-xs font-light text-neutral-600 dark:text-neutral-400">
-                                                Tranche
-                                            </span>
-                                        </div>
+    return (
+        <>
+            <ModalHeader
+                dialog="leverage-asset-dialog"
+                tabs={['Loop', 'Unwind', 'Supply']}
+                onClick={setView}
+                disabled={isLoading}
+                active={view}
+            />
+            {!isSuccess && !error ? (
+                // Default State
+                <>
+                    {view === 'Loop' ? (
+                        <>
+                            <div className={``}>
+                                <div className="flex items-start justify-between mt-5 px-1">
+                                    <AssetDisplay name={(data as any)?.symbol} size={'lg'} />
+                                    <div className="flex-col items-end hidden sm:flex">
+                                        <span className="text-xl leading-none">{`${
+                                            (data as any)?.tranche || ''
+                                        }`}</span>
+                                        <span className="text-xs font-light text-neutral-600 dark:text-neutral-400">
+                                            Tranche
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-start justify-between mt-4 px-2">
+                                    <div className="flex flex-col items-start">
+                                        <span className="text-2xl leading-none">{`${
+                                            (data as any)?.totalApy || 0
+                                        }%`}</span>
+                                        <span className="text-xs font-light text-neutral-600 dark:text-neutral-400">
+                                            Asset APY
+                                        </span>
                                     </div>
 
-                                    <div className="flex items-start justify-between mt-4 px-2">
-                                        <div className="flex flex-col items-start">
-                                            <span className="text-2xl leading-none">{`${
-                                                (data as any)?.totalApy || 0
-                                            }%`}</span>
-                                            <span className="text-xs font-light text-neutral-600 dark:text-neutral-400">
-                                                Asset APY
-                                            </span>
-                                        </div>
-
-                                        <div className="flex flex-col items-end">
-                                            <span className="text-2xl leading-none">{`${
-                                                (data as any)?.leverage || 0
-                                            }x`}</span>
-                                            <span className="text-xs font-light text-neutral-600 dark:text-neutral-400">
-                                                Looping
-                                            </span>
-                                        </div>
+                                    <div className="flex flex-col items-end">
+                                        <span className="text-2xl leading-none">{`${_leverage}x`}</span>
+                                        <span className="text-xs font-light text-neutral-600 dark:text-neutral-400">
+                                            Looping
+                                        </span>
                                     </div>
+                                </div>
 
-                                    <ModalTableDisplay
-                                        title="APY Breakdown"
-                                        content={(data as any)?.apyBreakdown || []}
+                                <div className="px-2 mt-4">
+                                    <MUISlider
+                                        aria-label="looping slider steps"
+                                        defaultValue={1}
+                                        step={0.25}
+                                        marks
+                                        min={1}
+                                        max={(data as any)?.maxLeverage || 5}
+                                        valueLabelDisplay="auto"
+                                        size="small"
+                                        value={_leverage}
+                                        onChange={handleSlide}
                                     />
+                                </div>
 
-                                    <div>
-                                        <p
-                                            className={`text-xs leading-tight mt-4 ${
-                                                errMsg ? 'text-red-600' : ''
-                                            }`}
-                                        >
-                                            Provide any of the assets as collateral:
-                                        </p>
-                                        <div className="flex gap-1 flex-wrap mt-1">
-                                            {getCollateralAssets(
-                                                (data as any)?.token0 || '',
-                                                (data as any)?.token1 || '',
-                                            ).map((el, i) => (
-                                                <button
-                                                    onClick={(e) =>
-                                                        handleCollateralClick(el.assetAddress)
+                                <ModalTableDisplay
+                                    title="APY Breakdown"
+                                    content={(data as any)?.apyBreakdown || []}
+                                />
+
+                                <div>
+                                    <p
+                                        className={`text-xs leading-tight mt-4 ${
+                                            errMsg ? 'text-red-600' : ''
+                                        }`}
+                                    >
+                                        Provide any of the assets as collateral:
+                                    </p>
+                                    <div className="flex gap-1 flex-wrap mt-1">
+                                        {getCollateralAssets(
+                                            (data as any)?.token0 || '',
+                                            (data as any)?.token1 || '',
+                                        ).map((el, i) => (
+                                            <button
+                                                onClick={(e) =>
+                                                    handleCollateralClick(el.assetAddress)
+                                                }
+                                                key={`collateral-asset-${el}-${i}`}
+                                            >
+                                                <PillDisplay
+                                                    type="asset"
+                                                    asset={el.assetName}
+                                                    size="sm"
+                                                    hoverable
+                                                    selected={
+                                                        el.assetAddress.toLowerCase() ===
+                                                        _collateral.toLowerCase()
                                                     }
-                                                    key={`collateral-asset-${el}-${i}`}
-                                                >
-                                                    <PillDisplay
-                                                        type="asset"
-                                                        asset={el.assetName}
-                                                        size="sm"
-                                                        hoverable
-                                                        selected={
-                                                            el.assetAddress.toLowerCase() ===
-                                                            _collateral.toLowerCase()
-                                                        }
-                                                    />
-                                                </button>
-                                            ))}
-                                        </div>
+                                                />
+                                            </button>
+                                        ))}
                                     </div>
+                                </div>
 
-                                    <div className="mt-2">
-                                        <DefaultAccordion
-                                            wrapperClass="!border-0 "
-                                            disabled={!_collateral}
-                                            customHover="hover:!text-brand-purple"
-                                            detailsClass="!bg-white dark:!bg-brand-black !border-0"
-                                            className="!px-0 !hover:!bg-inherit !bg-white dark:!bg-brand-black dark:disabled:!opacity-100 "
-                                            title={`how-it-works-summary`}
-                                            summary={<span>How it works</span>}
-                                            details={
-                                                <ol className="list-decimal mx-7 text-sm">
-                                                    {populateHowItWorks().map((v, i) => (
-                                                        <li key={i?.toString()}>{v}</li>
-                                                    ))}
-                                                </ol>
-                                            }
-                                        />
-                                    </div>
-
+                                <div className="mt-2">
                                     <DefaultAccordion
-                                        wrapperClass="!border-0"
-                                        customHover="hover:!text-brand-purple"
-                                        detailsClass="!bg-white !border-0 dark:!bg-brand-black"
+                                        wrapperClass="!border-0 "
                                         disabled={!_collateral}
-                                        className="!px-0 !hover:!bg-inherit !bg-white dark:!bg-brand-black disabled:!opacity-100"
-                                        title={`strategy-summary`}
-                                        summary={<span>Summary</span>}
+                                        customHover="hover:!text-brand-purple"
+                                        detailsClass="!bg-white dark:!bg-brand-black !border-0"
+                                        className="!px-0 !hover:!bg-inherit !bg-white dark:!bg-brand-black dark:disabled:!opacity-100 "
+                                        title={`how-it-works-summary`}
+                                        summary={<span>How it works</span>}
                                         details={
                                             <ol className="list-decimal mx-7 text-sm">
-                                                {populateSummary().map((v, i) => (
+                                                {populateHowItWorks().map((v, i) => (
                                                     <li key={i?.toString()}>{v}</li>
                                                 ))}
                                             </ol>
                                         }
                                     />
+                                </div>
 
-                                    <ModalTableDisplay
-                                        title="Transaction Overview"
-                                        content={[
-                                            {
-                                                label: 'Your Supply',
-                                                value:
-                                                    (suppliedAssetDetails as any)?.amount || '$0',
-                                            },
-                                            {
-                                                label: 'Estimated Gas',
-                                                value: estimatedGasCost?.cost,
-                                                loading: estimatedGasCost?.loading,
-                                                error: estimatedGasCost?.errorMessage,
-                                            },
-                                        ]}
-                                    />
-                                </div>
-                            </>
-                        ) : (
-                            <>
-                                <div className="mt-4 flex justify-between items-center">
-                                    <h3>Amount</h3>
-                                </div>
-                                <CoinInput
-                                    amount={withdrawAmount}
-                                    setAmount={setAmount}
-                                    coin={{
-                                        logo: `/coins/${
-                                            (_data as any)?.symbol?.toLowerCase() || 'eth'
-                                        }.svg`,
-                                        name: (_data as any)?.symbol || 'ETH',
-                                    }}
-                                    balance={bigNumberToUnformattedString(
-                                        amountWithdraw || BigNumber.from('0'),
-                                        asset || 'ETH',
-                                    )}
-                                    isMax={isMax}
-                                    setIsMax={setIsMax}
-                                    loading={
-                                        Number(
-                                            bigNumberToNative(amountWithdraw, asset || 'ETH'),
-                                        ) === 0
+                                <DefaultAccordion
+                                    wrapperClass="!border-0"
+                                    customHover="hover:!text-brand-purple"
+                                    detailsClass="!bg-white !border-0 dark:!bg-brand-black"
+                                    disabled={!_collateral}
+                                    className="!px-0 !hover:!bg-inherit !bg-white dark:!bg-brand-black disabled:!opacity-100"
+                                    title={`strategy-summary`}
+                                    summary={<span>Summary</span>}
+                                    details={
+                                        <ol className="list-decimal mx-7 text-sm">
+                                            {populateSummary().map((v, i) => (
+                                                <li key={i?.toString()}>{v}</li>
+                                            ))}
+                                        </ol>
                                     }
-                                    customMaxClick={maxOnClick}
-                                />
-                                <MessageStatus
-                                    type="error"
-                                    show={isViolatingMax()}
-                                    message="Input amount is over the max."
-                                    icon
                                 />
 
-                                <h3 className="mt-3 2xl:mt-4 text-neutral400">Health Factor</h3>
+                                <h3 className="mt-4 text-neutral400">Health Factor</h3>
                                 <HealthFactor
                                     asset={asset || 'ETH'}
                                     amount={amount}
-                                    type={'withdraw'}
-                                    trancheId={String(data?.trancheId)}
+                                    type={'loop'}
+                                    trancheId={String(trancheId)}
+                                    collateral={_collateral}
+                                    leverage={_leverage}
                                 />
 
                                 <ModalTableDisplay
                                     title="Transaction Overview"
                                     content={[
                                         {
-                                            label: 'Remaining Supply',
-                                            value:
-                                                amount && amountWithdraw
-                                                    ? bigNumberToNative(
-                                                          amountWithdraw.sub(
-                                                              unformattedStringToBigNumber(
-                                                                  amount,
-                                                                  asset || 'ETH',
-                                                              ),
-                                                          ),
-                                                          asset || 'ETH',
-                                                      )
-                                                    : bigNumberToNative(
-                                                          amountWithdraw,
-                                                          asset || 'ETH',
-                                                      ),
-                                            loading:
-                                                Number(
-                                                    bigNumberToNative(
-                                                        amountWithdraw,
-                                                        asset || 'ETH',
-                                                    ),
-                                                ) === 0,
+                                            label: 'Your Supply',
+                                            value: (suppliedAssetDetails as any)?.amount || '$0',
                                         },
                                         {
                                             label: 'Estimated Gas',
-                                            value: estimatedGasCost.cost,
-                                            loading: estimatedGasCost.loading,
+                                            value: estimatedGasCost?.cost,
+                                            loading: estimatedGasCost?.loading,
+                                            error: estimatedGasCost?.errorMessage,
                                         },
                                     ]}
                                 />
-                            </>
-                        )}
-                    </>
-                ) : (
-                    <div className="mt-8 mb-6">
-                        <TransactionStatus full success={isSuccess} errorText={error} />
-                    </div>
-                )}
-
-                <div
-                    className={`${
-                        zapAsset.address
-                            ? ' blur-[1px] relative z-[99] opacity-90 pointer-events-none'
-                            : ''
-                    }`}
-                >
-                    <ModalFooter between={!location.hash.includes('tranches')}>
-                        {!location.hash.includes('tranches') && (
-                            <Button
-                                type="outline"
-                                onClick={() => {
-                                    setAsset(asset);
-                                    closeDialog('leverage-asset-dialog');
-                                    window.scroll(0, 0);
-                                    navigate(
-                                        `/tranches/${data?.tranche
-                                            ?.toLowerCase()
-                                            .replace(/\s+/g, '-')}`,
-                                        {
-                                            state: { view: 'details', trancheId: data?.trancheId },
-                                        },
-                                    );
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <div className="mt-4 flex justify-between items-center">
+                                <h3>Amount</h3>
+                            </div>
+                            <CoinInput
+                                amount={withdrawAmount}
+                                setAmount={setAmount}
+                                coin={{
+                                    logo: `/coins/${
+                                        (_data as any)?.symbol?.toLowerCase() || 'eth'
+                                    }.svg`,
+                                    name: (_data as any)?.symbol || 'ETH',
                                 }}
-                            >
-                                View Tranche
-                            </Button>
-                        )}
-                        <Button
-                            type="accent"
-                            disabled={isButtonDisabled()}
-                            onClick={determineClick}
-                            loading={isLoading}
-                            loadingText={
-                                borrowAllowance?.lt(VERY_BIG_ALLOWANCE) ? 'Approving' : 'Submitting'
-                            }
-                        >
-                            {renderButtonLabel()}
-                        </Button>
-                    </ModalFooter>
+                                balance={bigNumberToUnformattedString(
+                                    amountWithdraw || BigNumber.from('0'),
+                                    asset || 'ETH',
+                                )}
+                                isMax={isMax}
+                                setIsMax={setIsMax}
+                                loading={
+                                    Number(bigNumberToNative(amountWithdraw, asset || 'ETH')) === 0
+                                }
+                                customMaxClick={maxOnClick}
+                            />
+                            <MessageStatus
+                                type="error"
+                                show={isViolatingMax()}
+                                message="Input amount is over the max."
+                                icon
+                            />
+
+                            <h3 className="mt-3 2xl:mt-4 text-neutral400">Health Factor</h3>
+                            <HealthFactor
+                                asset={asset || 'ETH'}
+                                amount={amountWithdraw}
+                                type={'unwind'}
+                                trancheId={String(trancheId)}
+                                collateral={_collateral}
+                                leverage={_leverage}
+                                withChange
+                            />
+
+                            <ModalTableDisplay
+                                title="Transaction Overview"
+                                content={[
+                                    {
+                                        label: 'Remaining Supply',
+                                        value:
+                                            amount && amountWithdraw
+                                                ? bigNumberToNative(
+                                                      amountWithdraw.sub(
+                                                          unformattedStringToBigNumber(
+                                                              amount,
+                                                              asset || 'ETH',
+                                                          ),
+                                                      ),
+                                                      asset || 'ETH',
+                                                  )
+                                                : bigNumberToNative(amountWithdraw, asset || 'ETH'),
+                                        loading:
+                                            Number(
+                                                bigNumberToNative(amountWithdraw, asset || 'ETH'),
+                                            ) === 0,
+                                    },
+                                    {
+                                        label: 'Estimated Gas',
+                                        value: estimatedGasCost.cost,
+                                        loading: estimatedGasCost.loading,
+                                    },
+                                ]}
+                            />
+                        </>
+                    )}
+                </>
+            ) : (
+                <div className="mt-8 mb-6">
+                    <TransactionStatus full success={isSuccess} errorText={error} />
                 </div>
-            </>
-        );
-    return <></>;
+            )}
+
+            <div className={``}>
+                <ModalFooter between={!location.hash.includes('tranches')}>
+                    {!location.hash.includes('tranches') && (
+                        <Button
+                            type="outline"
+                            onClick={() => {
+                                setAsset(asset);
+                                closeDialog('leverage-asset-dialog');
+                                window.scroll(0, 0);
+                                navigate(
+                                    `/tranches/${data?.tranche
+                                        ?.toLowerCase()
+                                        .replace(/\s+/g, '-')}`,
+                                    {
+                                        state: { view: 'details', trancheId: data?.trancheId },
+                                    },
+                                );
+                            }}
+                        >
+                            View Tranche
+                        </Button>
+                    )}
+                    <Button
+                        type="accent"
+                        disabled={isButtonDisabled()}
+                        onClick={determineClick}
+                        loading={isLoading}
+                        loadingText={
+                            borrowAllowance?.lt(VERY_BIG_ALLOWANCE) ? 'Approving' : 'Submitting'
+                        }
+                    >
+                        {renderButtonLabel()}
+                    </Button>
+                </ModalFooter>
+            </div>
+        </>
+    );
 };
