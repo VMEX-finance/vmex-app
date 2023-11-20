@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
-import { useDialogController, useLeverage, useModal, useZap } from '@/hooks';
+import { useDialogController, useLeverage, useModal, useZap, useWindowSize } from '@/hooks';
 import {
     TransactionStatus,
     Button,
@@ -52,6 +52,7 @@ type LeverageDetails = {
 };
 
 export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
+    const { width, breakpoints } = useWindowSize();
     const modalProps = useModal('leverage-asset-dialog');
     const navigate = useNavigate();
     const { isDark } = useThemeContext();
