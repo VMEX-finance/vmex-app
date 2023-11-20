@@ -41,6 +41,7 @@ import {
     calculateTotalBorrowAmount,
     formatUsdUnits,
     isAddressEqual,
+    calculateHealthFactorAfterUnwind,
 } from '@/utils';
 import { useAccount } from 'wagmi';
 import { BigNumber, constants, ethers, utils } from 'ethers';
@@ -137,7 +138,22 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
         calculateTotalBorrowAmount(amount, leverage),
         queryUserTrancheData.data,
     );
-    console.log(x?.toString());
+    console.log('HF after leverage', x?.toString()); // TODO alo show on UI
+
+    const mostBorrowedToken = queryUserTrancheData.data?.borrows.sort((a, b) =>
+        b.amount.localeCompare(a.amount),
+    )[0];
+    const y = calculateHealthFactorAfterUnwind(
+        depositAsset,
+        findAssetInMarketsData(mostBorrowedToken?.asset || ''),
+        withdrawAmount
+            ? parseUnits(withdrawAmount, 18)
+                  .mul(depositAsset.priceUSD)
+                  .div(BigNumber.from(10).pow(18))
+            : undefined,
+        queryUserTrancheData.data,
+    );
+    console.log('HF after unwind', y?.toString()); // TODO alo show on UI
 
     const suppliedAssetDetails =
         asset &&
@@ -344,10 +360,6 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
         if (!wallet) return;
         if (!NETWORKS[network].leverageControllerAddress) return;
 
-        const mostBorrowedToken = queryUserTrancheData.data?.borrows.sort((a, b) =>
-            b.amount.localeCompare(a.amount),
-        )[0];
-
         if (!mostBorrowedToken) return;
 
         const leverageControllerAddress = getAddress(NETWORKS[network].leverageControllerAddress);
@@ -418,11 +430,19 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
         await tx.wait();
     };
 
+    const doLooping = async () => {
+        console.log('do loping');
+        if (borrowAllowance?.lt(VERY_BIG_ALLOWANCE)) {
+            console.log('approve');
+            await approveBorrowDelegation();
+            return;
+        }
+        await leverageVeloZap();
+    };
+
     const determineClick = () => {
         if (view === 'Loop') {
-            return borrowAllowance?.lt(VERY_BIG_ALLOWANCE)
-                ? approveBorrowDelegation
-                : leverageVeloZap;
+            doLooping();
         } else {
             unwind();
         }

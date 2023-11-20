@@ -62,13 +62,6 @@ export const calculateHealthFactorAfterLeverage = (
     borrowAmountUsd: BigNumber,
     userTrancheData?: IUserTrancheData,
 ) => {
-    console.log(
-        'calculateHealthFactorAfterLeverage',
-        depositAsset,
-        borrowAssets,
-        borrowAmountUsd,
-        userTrancheData,
-    );
     if (
         !depositAsset ||
         !borrowAmountUsd ||
@@ -99,6 +92,43 @@ export const calculateHealthFactorAfterLeverage = (
             .add(borrowAmountUsd.mul(borrowAssets[0].borrowFactor).div(2))
             .add(borrowAmountUsd.mul(borrowAssets[1].borrowFactor).div(2));
     }
+
+    return liquidationThresholdTimesCollateralAfter
+        .mul(parseUnits('1', 18))
+        .div(borrowFactorTimesDebtAfter);
+};
+
+export const calculateHealthFactorAfterUnwind = (
+    depositAsset: IGraphAssetData,
+    borrowAsset: IGraphAssetData,
+    unwindAmountUsd: BigNumber | undefined,
+    userTrancheData?: IUserTrancheData,
+) => {
+    if (!depositAsset || !unwindAmountUsd || !userTrancheData) {
+        return;
+    }
+
+    console.log('calculate HF unwind', unwindAmountUsd.toString());
+
+    let { totalCollateralETH, totalDebtETH, currentLiquidationThreshold, avgBorrowFactor } =
+        userTrancheData;
+
+    if (!totalCollateralETH || !currentLiquidationThreshold || !totalDebtETH || !avgBorrowFactor) {
+        return;
+    }
+
+    console.log('old liq tres', currentLiquidationThreshold.mul(totalCollateralETH).toString());
+    const liquidationThresholdTimesCollateralAfter = currentLiquidationThreshold
+        .mul(totalCollateralETH)
+        .sub(unwindAmountUsd.mul(depositAsset.liquidationThreshold));
+    console.log('new liq tres', liquidationThresholdTimesCollateralAfter.toString());
+
+    let borrowFactorTimesDebtAfter = avgBorrowFactor.mul(totalDebtETH);
+    console.log('old borrow factor times debt', borrowFactorTimesDebtAfter.toString());
+    borrowFactorTimesDebtAfter = borrowFactorTimesDebtAfter.sub(
+        unwindAmountUsd.mul(borrowAsset.borrowFactor),
+    );
+    console.log('new borrow factor times debt', borrowFactorTimesDebtAfter.toString());
 
     return liquidationThresholdTimesCollateralAfter
         .mul(parseUnits('1', 18))
