@@ -109,7 +109,7 @@ export const CoinInput = ({
                     {/* TODO: add usd value */}
                     {/* <div className="text-neutral-400">{calculateUsd()} USD</div> */}
                     <Button onClick={onMaxButtonClick} disabled={disabled} type="link" size="sm">
-                        <div className="leading-none flex flex-col justify-end items-end">
+                        <div className="leading-none flex flex-col justify-end items-end text-xs">
                             <span>MAX</span>
                             <span className="flex items-center gap-1">
                                 {`${

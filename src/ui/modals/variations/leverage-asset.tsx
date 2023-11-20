@@ -589,11 +589,11 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
 
                                     <div className="mt-2">
                                         <DefaultAccordion
-                                            wrapperClass="!border-0"
+                                            wrapperClass="!border-0 "
                                             disabled={!_collateral}
                                             customHover="hover:!text-brand-purple"
                                             detailsClass="!bg-white dark:!bg-brand-black !border-0"
-                                            className="!px-0 !hover:!bg-inherit !bg-white dark:!bg-brand-black dark:disabled:!opacity-100"
+                                            className="!px-0 !hover:!bg-inherit !bg-white dark:!bg-brand-black dark:disabled:!opacity-100 "
                                             title={`how-it-works-summary`}
                                             summary={<span>How it works</span>}
                                             details={

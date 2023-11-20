@@ -191,7 +191,7 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                         </div>
                     </div>
 
-                    <div className="flex flex-col gap-1 lg:col-span-2 2xl:col-span-1 lg:hidden 2xl:flex">
+                    <div className="flex flex-col lg:col-span-2 2xl:col-span-1 lg:hidden 2xl:flex">
                         <span>Top Tranches</span>
                         <div className="flex flex-col">
                             <TopTranchesTable data={topTranches || []} loading={isLoading} />
@@ -199,7 +199,7 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                     </div>
                 </div>
             </div>
-            <div className="flex-col gap-1 lg:col-span-2 2xl:col-span-1 hidden lg:flex 2xl:hidden mt-4">
+            <div className="flex-col lg:col-span-2 2xl:col-span-1 hidden lg:flex 2xl:hidden mt-4">
                 <span>Top Tranches</span>
                 <div className="flex flex-col">
                     <TopTranchesTable data={topTranches || []} loading={isLoading} />
