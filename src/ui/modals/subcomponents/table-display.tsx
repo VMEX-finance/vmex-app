@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { Tooltip, SpinnerLoader } from '@/ui/components';
+import { Tooltip, Loader } from '@/ui/components';
 
 type IModalTableItemProps = {
     label: string;
@@ -50,7 +50,7 @@ export const ModalTableDisplay = ({
             >
                 {loading ? (
                     <>
-                        <SpinnerLoader height="auto" size="sm" />
+                        <Loader height="auto" size="sm" type="spinner" />
                     </>
                 ) : (
                     <>

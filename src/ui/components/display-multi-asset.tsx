@@ -1,6 +1,6 @@
 import { determineCoinDescription, determineCoinImg, getRandomNumber } from '@/utils';
 import React from 'react';
-import { SkeletonLoader } from './loader-skeleton';
+import { Loader } from './loader';
 import { Tooltip } from './tooltip-default';
 import { renderAsset, smallerIconSize, iconSizeClass, marginLeft } from './display-asset';
 
@@ -52,7 +52,7 @@ export const MultipleAssetsDisplay = ({ assets, show = 4, size, gap }: IMultiple
                       ),
                   )
                 : [1, 2, 3, 4].map((el) => (
-                      <SkeletonLoader
+                      <Loader
                           key={`${el}-${getRandomNumber()}`}
                           className={`${
                               size ? iconSizeClass(size) : '!h-7 2xl:!h-8 !w-7 2xl:!w-8'
@@ -120,7 +120,7 @@ export const MultipleAssetsDisplayOverlapping = ({
                         ),
                     )
                 ) : (
-                    <SkeletonLoader
+                    <Loader
                         variant="circular"
                         className={`${size ? iconSizeClass(size) : 'h-7 w-7'}`}
                         key={`skeleton-loader-multiple-assets-${getRandomNumber()}`}

@@ -149,11 +149,14 @@ const TranchesCustomRow = (props: ITranchesCustomRowProps) => {
                 <td className="pl-4">{supplyTotal}</td>
                 <td className="pl-4">{borrowTotal}</td>
                 <td className="text-right pr-3.5">
-                    <Button
-                        primary
-                        label={width < 1080 ? 'Details' : 'View Details'}
-                        onClick={(e: any) => route(e, { id, name }, 'details')}
-                    />
+                    <div className="flex h-full w-full items-center justify-end">
+                        <Button
+                            type="accent"
+                            onClick={(e: any) => route(e, { id, name }, 'details')}
+                        >
+                            {width < 1080 ? 'Details' : 'View Details'}
+                        </Button>
+                    </div>
                 </td>
             </tr>
         );

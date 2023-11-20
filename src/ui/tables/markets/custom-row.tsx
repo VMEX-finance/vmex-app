@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '@/store';
 import { BsCheck } from 'react-icons/bs';
 import { IoIosClose } from 'react-icons/io';
-import { ApyToolitp, AssetDisplay, SplitButton } from '@/ui/components';
+import { ApyToolitp, AssetDisplay, Button } from '@/ui/components';
 import { useDialogController, useWindowSize } from '@/hooks';
 import { IMarketsAsset } from '@/api';
 import { DEFAULT_CHAINID, percentFormatter, usdFormatter } from '@/utils';
@@ -121,18 +121,19 @@ const MarketsCustomRow = (props: any) => {
                     )}
                 </td>
                 <td>
-                    <SplitButton
-                        full
+                    <Button
                         className="mt-1 mb-2"
-                        content={{
-                            left: 'Supply',
-                            right: 'Borrow',
+                        type="accent"
+                        left={{
+                            text: 'Supply',
+                            disabled: false,
+                            onClick: handleActionClick,
                         }}
-                        onClick={{
-                            left: handleActionClick,
-                            right: handleActionClick,
+                        right={{
+                            text: 'Borrow',
+                            disabled: !borrowable,
+                            onClick: handleActionClick,
                         }}
-                        disabled={{ right: !borrowable }}
                     />
                 </td>
             </tr>
@@ -173,16 +174,18 @@ const MarketsCustomRow = (props: any) => {
                     </div>
                 </td>
                 <td className="text-right pr-3.5">
-                    <SplitButton
-                        content={{
-                            left: 'Supply',
-                            right: 'Borrow',
+                    <Button
+                        type="accent"
+                        left={{
+                            text: 'Supply',
+                            disabled: false,
+                            onClick: handleActionClick,
                         }}
-                        onClick={{
-                            left: handleActionClick,
-                            right: handleActionClick,
+                        right={{
+                            text: 'Borrow',
+                            disabled: !borrowable,
+                            onClick: handleActionClick,
                         }}
-                        disabled={{ right: !borrowable }}
                     />
                 </td>
             </tr>

@@ -7,7 +7,7 @@ import {
     DefaultInput,
     ListInput,
     MessageStatus,
-    SkeletonLoader,
+    Loader,
     TransactionStatus,
     WalletButton,
 } from '@/ui/components';
@@ -307,7 +307,7 @@ const MyTranches: React.FC = () => {
                                             </button>
                                         ))
                                     ) : (
-                                        <SkeletonLoader height="42px" />
+                                        <Loader height="42px" />
                                     )}
                                 </Card>
                             )}
@@ -431,21 +431,21 @@ const MyTranches: React.FC = () => {
                                             <Button
                                                 disabled={isSuccess}
                                                 onClick={handlePause}
-                                                label={
-                                                    selectedTranche.isPaused
-                                                        ? 'Unpause Tranche'
-                                                        : 'Pause Tranche'
-                                                }
-                                                type="delete"
+                                                type="danger"
                                                 loading={isLoading}
-                                            />
+                                            >
+                                                {selectedTranche.isPaused
+                                                    ? 'Unpause Tranche'
+                                                    : 'Pause Tranche'}
+                                            </Button>
                                             <Button
                                                 disabled={isSuccess}
                                                 onClick={handleSave}
-                                                label="Save"
                                                 loading={isLoading}
-                                                primary
-                                            />
+                                                type="accent"
+                                            >
+                                                Save
+                                            </Button>
                                         </div>
                                     </Card>
                                 )}
@@ -462,7 +462,7 @@ const MyTranches: React.FC = () => {
                                 : 'Please connect your wallet'}
                         </span>
                     </div>
-                    <WalletButton primary className="w-fit" />
+                    <WalletButton className="w-fit" />
                 </div>
             )}
         </Base>

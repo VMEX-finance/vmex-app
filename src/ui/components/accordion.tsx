@@ -74,7 +74,7 @@ export function DefaultAccordion({
         <Accordion
             expanded={expanded === title}
             onChange={handleChange(title)}
-            className={`${wrapperClass || ''} border-t ${
+            className={`${wrapperClass || ''} !shadow-none border-t ${
                 isDark ? 'border-neutral-800' : 'border-neutral-300'
             }`}
             disableGutters

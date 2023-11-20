@@ -3,7 +3,7 @@ import { Menu, Transition } from '@headlessui/react';
 import { RiArrowDropDownLine } from 'react-icons/ri';
 import { CgSpinner } from 'react-icons/cg';
 import { IoMdCheckmarkCircle } from 'react-icons/io';
-import { MenuItemButton } from './button-menu-item';
+import { NavItem } from '@/ui/base';
 import { truncate as _truncate, capFirstLetter } from '@/utils';
 
 export interface IDropdownItemProps {
@@ -199,7 +199,7 @@ export const DefaultDropdown = ({
                                                         className={`flex items-center gap-2`}
                                                         key={`dropdown-${i}`}
                                                     >
-                                                        <MenuItemButton
+                                                        <NavItem
                                                             label={
                                                                 <span
                                                                     className={`flex justify-between ${
@@ -265,7 +265,7 @@ export const DefaultDropdown = ({
                                                         />
                                                     </div>
                                                 ) : (
-                                                    <MenuItemButton
+                                                    <NavItem
                                                         key={`dropdown-${i}`}
                                                         label={
                                                             uppercase ? item.toUpperCase() : item

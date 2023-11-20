@@ -110,8 +110,7 @@ export const YourRewardsTable: React.FC<IYourRewardsTableProps> = ({
                                         <td>
                                             <div className="h-full w-full flex justify-end items-center">
                                                 <Button
-                                                    label="Claim"
-                                                    primary
+                                                    type="accent"
                                                     disabled={reward.claimableAmountWei === '0x0'}
                                                     onClick={() =>
                                                         handleClaim(
@@ -120,9 +119,11 @@ export const YourRewardsTable: React.FC<IYourRewardsTableProps> = ({
                                                             reward.amountWei,
                                                             reward.proof,
                                                             reward.chainId,
-                                                        )
+                                                        ) as any
                                                     }
-                                                />
+                                                >
+                                                    Claim
+                                                </Button>
                                             </div>
                                         </td>
                                     </tr>

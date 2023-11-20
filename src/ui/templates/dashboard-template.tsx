@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useWindowSize, useDialogController } from '@/hooks';
 import { BiChevronLeft, BiPlus } from 'react-icons/bi';
-import { Tooltip, Button, LinkButton, SkeletonLoader, Label, MessageStatus } from '../components';
+import { Tooltip, Button, Loader, Label, MessageStatus } from '../components';
 import { useAccount, useNetwork } from 'wagmi';
 import { Skeleton } from '@mui/material';
 import { usePricesData, useSubgraphUserData } from '@/api';
@@ -58,10 +58,10 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                     <div className="flex flex-col">
                         {view ? (
                             <div className="flex flex-col md:flex-row justify-between md:justify-start md:items-center gap-3">
-                                <LinkButton onClick={routeChange}>
+                                <Button onClick={routeChange} type="selected">
                                     <BiChevronLeft size="20px" />
                                     <p className="2xl:text-lg leading-tight">Back</p>
-                                </LinkButton>
+                                </Button>
                                 <Label
                                     tooltip
                                     className={`${!title ? 'animate-pulse' : ''} mb-1 ml-1 md:m-0`}
@@ -77,7 +77,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                                 {(description || descriptionLoading) && (
                                     <div className="mt-1">
                                         {descriptionLoading ? (
-                                            <SkeletonLoader height="24px" />
+                                            <Loader height="24px" type="skeleton" />
                                         ) : (
                                             <p className="dark:text-neutral-300">{description}</p>
                                         )}
@@ -108,41 +108,45 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                                     )}
                                 </div>
                                 <div className="flex gap-1.5 2xl:gap-2 md:hidden">
-                                    <LinkButton
+                                    <Button
+                                        type="selected"
                                         onClick={() => setView('tranche-overview')}
                                         disabled={!isConnected}
                                         className="2xl:text-lg px-1"
-                                        highlight={view.includes('tranche-overview')}
+                                        // highlight={view.includes('tranche-overview')}
                                     >
                                         Supply/Borrow
-                                    </LinkButton>
-                                    <LinkButton
+                                    </Button>
+                                    <Button
+                                        type="selected"
                                         onClick={() => setView('tranche-details')}
                                         disabled={!isConnected}
                                         className="2xl:text-lg px-1"
-                                        highlight={view.includes('tranche-details')}
+                                        // highlight={view.includes('tranche-details')}
                                     >
                                         Details
-                                    </LinkButton>
+                                    </Button>
                                 </div>
                             </div>
                             <div className="gap-1.5 2xl:gap-2 hidden md:flex justify-end">
-                                <LinkButton
+                                <Button
+                                    type="selected"
                                     onClick={() => setView('tranche-overview')}
                                     disabled={!isConnected}
                                     className="2xl:text-lg px-1"
                                     highlight={view.includes('tranche-overview')}
                                 >
                                     Supply/Borrow
-                                </LinkButton>
-                                <LinkButton
+                                </Button>
+                                <Button
+                                    type="selected"
                                     onClick={() => setView('tranche-details')}
                                     disabled={!isConnected}
                                     className="2xl:text-lg px-1"
                                     highlight={view.includes('tranche-details')}
                                 >
                                     Details
-                                </LinkButton>
+                                </Button>
                             </div>
                         </>
                     )}
@@ -152,30 +156,27 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                             <div className="flex gap-1 2xl:gap-1.5 items-center md:justify-end">
                                 {queryTrancheAdminData.data?.length &&
                                 queryTrancheAdminData.data?.length > 0 ? (
-                                    <Button
-                                        label={'My Tranches'}
-                                        onClick={() => navigate(`/my-tranches`)}
-                                        primary
-                                    />
+                                    <Button onClick={() => navigate(`/my-tranches`)}>
+                                        My Tranches
+                                    </Button>
                                 ) : (
                                     <Tooltip text="Create a tranche first" position="left">
                                         <Button
-                                            label={'My Tranches'}
-                                            primary
                                             disabled={queryTrancheAdminData?.data?.length === 0}
-                                        />
+                                        >
+                                            My Tranches
+                                        </Button>
                                     </Tooltip>
                                 )}
                                 {/* TODO: enable for OP when backend enables creating tranches */}
                                 <Tooltip text="Coming soon">
                                     <Button
-                                        label={
-                                            width > 768 ? 'Create Tranche' : <BiPlus size="24px" />
-                                        }
                                         onClick={() => openDialog('create-tranche-dialog')}
-                                        primary
                                         disabled
-                                    />
+                                        icon={<BiPlus />}
+                                    >
+                                        {width > 768 ? 'Create Tranche' : 'Create'}
+                                    </Button>
                                 </Tooltip>
                             </div>
                         )}

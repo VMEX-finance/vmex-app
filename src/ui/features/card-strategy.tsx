@@ -282,7 +282,7 @@ export const StrategyCard = ({
                             <Label
                                 color="blue"
                                 tooltip="This asset is effectively used liquid staking derivatives."
-                                className="!pb-[0.8px] pt-[1px] !text-[11px]"
+                                className="!text-[11px]"
                             >
                                 LSD Efficient
                             </Label>
@@ -293,11 +293,12 @@ export const StrategyCard = ({
             </div>
             <div className={`mt-3 2xl:mt-4 grid items-center gap-1 w-full grid-cols-1`}>
                 <Button
-                    label={renderBtnText(!!suppliedAssetDetails)}
                     onClick={suppliedAssetDetails ? openLeverageDialog : handleSupplyClick}
                     className="w-full"
-                    primary
-                />
+                    type="accent"
+                >
+                    {renderBtnText(!!suppliedAssetDetails)}
+                </Button>
             </div>
         </Card>
     );

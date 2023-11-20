@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeCompact, truncate } from '@/utils';
 import { TrancheData } from '@/api';
-import { SkeletonLoader } from '@/ui/components';
+import { Loader } from '@/ui/components';
 import { useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '@/store';
 
@@ -58,7 +58,7 @@ export const TopTranchesTable: React.FC<ITableProps> = ({ data, loading }) => {
                           <tr key={`table-skeleton-row-${el}`} className="text-left">
                               {[1, 2, 3].map((subEl) => (
                                   <td key={`table-skeleton-cell-${el}-${subEl}`}>
-                                      <SkeletonLoader variant="rectangular" />
+                                      <Loader type="skeleton" variant="rectangular" />
                                   </td>
                               ))}
                           </tr>

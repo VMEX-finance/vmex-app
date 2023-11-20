@@ -3,8 +3,7 @@ import { TopTranchesTable } from '../tables';
 import { makeCompact } from '@/utils';
 import { AssetBalance, TrancheData } from '@/api';
 import {
-    SkeletonLoader,
-    ReLineChart,
+    Loader,
     NumberDisplay,
     PillDisplay,
     Card,
@@ -76,17 +75,13 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                             loading={isLoading}
                         />
                         {tvlChart?.isLoading ? (
-                            <SkeletonLoader
-                                variant="rounded"
-                                animtion="wave"
-                                className="min-w-full"
-                            >
-                                <div className="h-[100px] w-full">
+                            <Loader variant="rounded" animation="wave" className="min-w-full">
+                                <div className="h-[100px] lg:min-w-[360px] 2xl:min-w-0 w-full">
                                     <ReAreaChart data={tvlChart?.data || []} type="usd" />
                                 </div>
-                            </SkeletonLoader>
+                            </Loader>
                         ) : (
-                            <div className="h-[100px] lg:h-full w-full">
+                            <div className="h-[100px] lg:h-full lg:min-w-[360px] 2xl:min-w-0 w-full">
                                 <ReAreaChart data={tvlChart?.data || []} type="usd" />
                             </div>
                         )}
@@ -129,9 +124,9 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                             <span>Top Supplied Assets</span>
                             <div className="flex flex-wrap gap-1">
                                 {isLoading ? (
-                                    <SkeletonLoader variant="rounded" className="!rounded-3xl">
+                                    <Loader variant="rounded" className="!rounded-3xl">
                                         <PillDisplay type="asset" asset={'BTC'} value={0} />
-                                    </SkeletonLoader>
+                                    </Loader>
                                 ) : (
                                     renderTopAssetsList(topSuppliedAssets).map((el, i) => (
                                         <button
@@ -168,9 +163,9 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                             <span>Top Borrowed Assets</span>
                             <div className="flex flex-wrap gap-1">
                                 {isLoading ? (
-                                    <SkeletonLoader variant="rounded" className="!rounded-3xl">
+                                    <Loader variant="rounded" className="!rounded-3xl">
                                         <PillDisplay type="asset" asset={'BTC'} value={0} />
-                                    </SkeletonLoader>
+                                    </Loader>
                                 ) : (
                                     renderTopAssetsList(topBorrowedAssets).map((el, i) => (
                                         <button
@@ -196,12 +191,18 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                         </div>
                     </div>
 
-                    <div className="flex flex-col gap-1 lg:col-span-2 2xl:col-span-1">
+                    <div className="flex flex-col lg:col-span-2 2xl:col-span-1 lg:hidden 2xl:flex">
                         <span>Top Tranches</span>
                         <div className="flex flex-col">
                             <TopTranchesTable data={topTranches || []} loading={isLoading} />
                         </div>
                     </div>
+                </div>
+            </div>
+            <div className="flex-col lg:col-span-2 2xl:col-span-1 hidden lg:flex 2xl:hidden mt-4">
+                <span>Top Tranches</span>
+                <div className="flex flex-col">
+                    <TopTranchesTable data={topTranches || []} loading={isLoading} />
                 </div>
             </div>
         </Card>

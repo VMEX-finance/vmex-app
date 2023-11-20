@@ -41,7 +41,7 @@ export const ModalWrapper: React.FC<IModalWrapperProps> = ({
                             leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                         >
-                            <Dialog.Panel className="relative overflow-[inherit] bg-white dark:bg-brand-black dark:text-neutral-300 rounded-lg text-left shadow-xl transform transition-all sm:my-4 max-w-md lg:max-w-xl w-full px-3 py-4 sm:p-4 2xl:p-6 font-basefont">
+                            <Dialog.Panel className="relative overflow-[inherit] bg-white dark:bg-brand-black dark:text-neutral-300 rounded-lg text-left shadow-xl transform transition-all sm:my-4 max-w-md lg:max-w-xl w-full px-3 py-4 sm:p-4 font-basefont">
                                 {children}
                             </Dialog.Panel>
                         </Transition.Child>

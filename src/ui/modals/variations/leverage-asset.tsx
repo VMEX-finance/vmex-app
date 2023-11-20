@@ -4,19 +4,18 @@ import { useDialogController, useLeverage, useModal, useZap } from '@/hooks';
 import {
     TransactionStatus,
     Button,
-    SkeletonLoader,
+    Loader,
     PillDisplay,
     AssetDisplay,
     DefaultAccordion,
     CoinInput,
     HealthFactor,
     MessageStatus,
-    DefaultInput,
     SmartPrice,
 } from '@/ui/components';
 import { ILeverageProps } from '../utils';
 import { useNavigate } from 'react-router-dom';
-import { useSelectedTrancheContext } from '@/store';
+import { useSelectedTrancheContext, useThemeContext } from '@/store';
 import { Address, erc20ABI, multicall, prepareWriteContract, writeContract } from '@wagmi/core';
 import {
     LendingPoolABI,
@@ -55,6 +54,7 @@ type LeverageDetails = {
 export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
     const modalProps = useModal('leverage-asset-dialog');
     const navigate = useNavigate();
+    const { isDark } = useThemeContext();
     const { setAsset } = useSelectedTrancheContext();
     const { closeDialog } = useDialogController();
     const { address: wallet } = useAccount();
@@ -431,12 +431,13 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                                                 sx={{ boxShadow: 'none' }}
                                             >
                                                 <AccordionSummary
-                                                    className="!cursor-default !shadow-none"
+                                                    className="!cursor-default !shadow-none "
                                                     classes={{ content: 'margin: 0 !important;' }}
                                                     sx={{ minHeight: 'auto', padding: '0px' }}
                                                 >
                                                     {isLoading ? (
-                                                        <SkeletonLoader
+                                                        <Loader
+                                                            type="skeleton"
                                                             variant="rounded"
                                                             className="!rounded-3xl"
                                                         >
@@ -445,7 +446,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                                                                 asset={'BTC'}
                                                                 value={0}
                                                             />
-                                                        </SkeletonLoader>
+                                                        </Loader>
                                                     ) : (
                                                         zappableAssets.map((el, i) => (
                                                             <button
@@ -488,7 +489,11 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                                                                 />
                                                             </p>
                                                             <Button
-                                                                label={`Zap to ${
+                                                                onClick={submitZap as any}
+                                                                className="w-fit"
+                                                                type="accent"
+                                                            >
+                                                                {`Zap to ${
                                                                     asset
                                                                         ? convertAddressToSymbol(
                                                                               asset,
@@ -496,10 +501,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                                                                           )
                                                                         : ''
                                                                 }`}
-                                                                onClick={submitZap}
-                                                                className="w-fit"
-                                                                primary
-                                                            />
+                                                            </Button>
                                                         </div>
                                                     </div>
                                                 </AccordionDetails>
@@ -587,11 +589,11 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
 
                                     <div className="mt-2">
                                         <DefaultAccordion
-                                            wrapperClass="!border-0"
+                                            wrapperClass="!border-0 "
                                             disabled={!_collateral}
                                             customHover="hover:!text-brand-purple"
                                             detailsClass="!bg-white dark:!bg-brand-black !border-0"
-                                            className="!px-0 !hover:!bg-inherit !bg-white dark:!bg-brand-black dark:disabled:!opacity-100"
+                                            className="!px-0 !hover:!bg-inherit !bg-white dark:!bg-brand-black dark:disabled:!opacity-100 "
                                             title={`how-it-works-summary`}
                                             summary={<span>How it works</span>}
                                             details={
@@ -735,7 +737,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                     <ModalFooter between={!location.hash.includes('tranches')}>
                         {!location.hash.includes('tranches') && (
                             <Button
-                                label={`View Tranche`}
+                                type="outline"
                                 onClick={() => {
                                     setAsset(asset);
                                     closeDialog('leverage-asset-dialog');
@@ -749,18 +751,21 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                                         },
                                     );
                                 }}
-                            />
+                            >
+                                View Tranche
+                            </Button>
                         )}
                         <Button
-                            primary
+                            type="accent"
                             disabled={isButtonDisabled()}
                             onClick={determineClick()}
-                            label={renderButtonLabel()}
                             loading={isLoading}
                             loadingText={
                                 borrowAllowance?.lt(VERY_BIG_ALLOWANCE) ? 'Approving' : 'Submitting'
                             }
-                        />
+                        >
+                            {renderButtonLabel()}
+                        </Button>
                     </ModalFooter>
                 </div>
             </>

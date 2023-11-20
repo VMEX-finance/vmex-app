@@ -1,5 +1,5 @@
 import React from 'react';
-import { SkeletonLoader } from './loader-skeleton';
+import { Loader } from './loader';
 import { PercentChangeDisplay } from './display-percent-change';
 import { SmartPrice } from './smart-price';
 
@@ -62,7 +62,7 @@ export const NumberDisplay = ({
         <div className={`flex flex-col ${alignClass()}`}>
             <p className={`${labelSize()}`}>{label}</p>
             {loading ? (
-                <SkeletonLoader
+                <Loader
                     variant="rounded"
                     height={valueSize().skeletonHeight}
                     width={valueSize().skeletonWidth}

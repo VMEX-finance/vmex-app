@@ -1,11 +1,9 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { CacheProvider } from '@emotion/react';
-import { ThemeProvider } from '@mui/material/styles';
-import { muiCache, options, vmexTheme } from '../utils';
+import { muiCache, options } from '../utils';
 import { TranchesCustomRow } from './custom-row';
 import MUIDataTable from 'mui-datatables';
-import { SpinnerLoader } from '@/ui/components';
-import { ThemeContext } from '@/store';
+import { Loader } from '@/ui/components';
 import { addFeaturedTranches, usdFormatter } from '@/utils';
 import { UseQueryResult } from '@tanstack/react-query';
 import { IUserActivityDataProps, ITrancheProps } from '@/api';
@@ -17,8 +15,6 @@ interface IDataTable {
 }
 
 export const TranchesTable: React.FC<IDataTable> = ({ data, loading, userActivity }) => {
-    const { isDark } = useContext(ThemeContext);
-
     const renderActivity = (trancheId: string) => {
         let activity: string = '';
         if (!trancheId || userActivity?.isLoading) activity = 'loading';
@@ -139,54 +135,50 @@ export const TranchesTable: React.FC<IDataTable> = ({ data, loading, userActivit
     ];
 
     return (
-        <CacheProvider value={muiCache}>
-            <ThemeProvider theme={vmexTheme(isDark)}>
-                <MUIDataTable
-                    title={'All Available Tranches'}
-                    columns={columns as any}
-                    data={addFeaturedTranches(data, 'tranches')}
-                    options={{
-                        ...options,
-                        customRowRender: (
-                            [
-                                id,
-                                name,
-                                assets,
-                                category,
-                                // aggregateRating,
-                                yourActivity,
-                                supplyTotal,
-                                borrowTotal,
-                            ],
-                            dataIndex,
-                            rowIndex,
-                        ) => (
-                            <TranchesCustomRow
-                                name={name}
-                                assets={assets}
-                                // aggregateRating={aggregateRating}
-                                yourActivity={renderActivity(id)}
-                                supplyTotal={usdFormatter().format(supplyTotal)}
-                                borrowTotal={usdFormatter().format(borrowTotal)}
-                                category={category}
-                                id={id}
-                                key={`tranches-table-${
-                                    rowIndex || Math.floor(Math.random() * 10000)
-                                }`}
-                            />
-                        ),
-                        textLabels: {
-                            body: {
-                                noMatch: loading ? (
-                                    <SpinnerLoader />
-                                ) : (
-                                    'An error has occured while fetching tranches. Please refresh the page.'
-                                ),
-                            },
+        <CacheProvider value={muiCache('tranches')}>
+            <MUIDataTable
+                title={'All Available Tranches'}
+                columns={columns as any}
+                data={addFeaturedTranches(data, 'tranches')}
+                options={{
+                    ...options,
+                    customRowRender: (
+                        [
+                            id,
+                            name,
+                            assets,
+                            category,
+                            // aggregateRating,
+                            yourActivity,
+                            supplyTotal,
+                            borrowTotal,
+                        ],
+                        dataIndex,
+                        rowIndex,
+                    ) => (
+                        <TranchesCustomRow
+                            name={name}
+                            assets={assets}
+                            // aggregateRating={aggregateRating}
+                            yourActivity={renderActivity(id)}
+                            supplyTotal={usdFormatter().format(supplyTotal)}
+                            borrowTotal={usdFormatter().format(borrowTotal)}
+                            category={category}
+                            id={id}
+                            key={`tranches-table-${rowIndex || Math.floor(Math.random() * 10000)}`}
+                        />
+                    ),
+                    textLabels: {
+                        body: {
+                            noMatch: loading ? (
+                                <Loader type="spinner" />
+                            ) : (
+                                'An error has occured while fetching tranches. Please refresh the page.'
+                            ),
                         },
-                    }}
-                />
-            </ThemeProvider>
+                    },
+                }}
+            />
         </CacheProvider>
     );
 };

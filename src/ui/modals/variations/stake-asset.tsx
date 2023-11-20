@@ -82,10 +82,11 @@ export const StakeAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
                     <div>
                         <Button
                             disabled={isSuccess}
-                            onClick={handleSubmit}
-                            label="Submit Transaction"
+                            onClick={handleSubmit as any}
                             loading={isLoading}
-                        />
+                        >
+                            Submit Transaction
+                        </Button>
                     </div>
                 </ModalFooter>
             </>

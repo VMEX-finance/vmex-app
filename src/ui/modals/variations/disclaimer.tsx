@@ -15,7 +15,9 @@ export const DisclaimerDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
             </div>
 
             <ModalFooter>
-                <Button primary disabled={false} onClick={() => {}} label="I Agree" />
+                <Button type="accent" disabled={false} onClick={() => {}}>
+                    I Agree
+                </Button>
             </ModalFooter>
         </>
     );
