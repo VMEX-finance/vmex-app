@@ -54,6 +54,7 @@ export const processTrancheData = async (
                     optimalUtilityRate: percentFormatter.format(
                         parseFloat(utils.formatUnits(item.optimalUtilisationRate, 27)),
                     ),
+                    aTokenAddress: item.aToken.id,
                     reserveFactor: item.reserveFactor,
                     vmexReserveFactor: item.assetData.vmexReserveFactor,
                     utilityRate: `${item.utilizationRate}`,
@@ -255,6 +256,9 @@ export const getSubgraphTrancheData = async (
                             borrowCap
                             supplyCap
                             vmexReserveFactor
+                        }
+                        aToken {
+                            id
                         }
                         isFrozen
                         baseLTV

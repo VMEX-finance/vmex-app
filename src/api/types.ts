@@ -318,6 +318,7 @@ export type IGraphAssetData = {
     priceETH: BigNumber;
     yieldStrategy: string;
     isFrozen?: boolean;
+    aTokenAddress: string;
 };
 
 export type IGraphTrancheAssetProps = IGraphAssetData | Record<string, IGraphAssetData>;

@@ -16,7 +16,14 @@ import {
 import { ILeverageProps } from '../utils';
 import { useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext, useThemeContext } from '@/store';
-import { Address, erc20ABI, multicall, prepareWriteContract, writeContract } from '@wagmi/core';
+import {
+    Address,
+    erc20ABI,
+    multicall,
+    prepareWriteContract,
+    readContract,
+    writeContract,
+} from '@wagmi/core';
 import {
     LendingPoolABI,
     VeloPoolABI,
@@ -43,11 +50,10 @@ import {
     useUserData,
     useUserTrancheData,
 } from '@/api';
-import { parseUnits } from 'ethers/lib/utils.js';
+import { getAddress, parseUnits } from 'ethers/lib/utils.js';
 import { convertAddressListToSymbol, convertAddressToSymbol } from '@vmexfinance/sdk';
 import { toast } from 'react-toastify';
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
-import { Transition } from '@headlessui/react';
 
 const VERY_BIG_ALLOWANCE = BigNumber.from(2).pow(128); // big enough
 
@@ -334,84 +340,162 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
         }
     };
 
+    const unwind = async () => {
+        if (!wallet) return;
+        if (!NETWORKS[network].leverageControllerAddress) return;
+
+        const mostBorrowedToken = queryUserTrancheData.data?.borrows.sort((a, b) =>
+            b.amount.localeCompare(a.amount),
+        )[0];
+
+        if (!mostBorrowedToken) return;
+
+        const leverageControllerAddress = getAddress(NETWORKS[network].leverageControllerAddress);
+
+        const withdrawAmountNative = parseUnits(withdrawAmount, 18);
+
+        const reserveData = findAssetInMarketsData(assetSymbol);
+
+        const allowance = await readContract({
+            address: getAddress(reserveData.aTokenAddress),
+            abi: erc20ABI,
+            functionName: 'allowance',
+            args: [wallet, leverageControllerAddress],
+        });
+        if (allowance.lt(withdrawAmountNative)) {
+            const config = await prepareWriteContract({
+                address: getAddress(reserveData.aTokenAddress),
+                abi: erc20ABI,
+                functionName: 'approve',
+                args: [leverageControllerAddress, constants.MaxUint256],
+            });
+            const tx = await writeContract(config);
+            await tx.wait();
+        }
+
+        const veloPoolContract = {
+            address: utils.getAddress(asset),
+            abi: VeloPoolABI,
+        };
+
+        const [token0, token1, stable] = await multicall({
+            contracts: [
+                {
+                    ...veloPoolContract,
+                    functionName: 'token0',
+                },
+                {
+                    ...veloPoolContract,
+                    functionName: 'token1',
+                },
+                {
+                    ...veloPoolContract,
+                    functionName: 'stable',
+                },
+            ],
+        });
+
+        const isBorrowToken0 = isAddressEqual(mostBorrowedToken.assetAddress, token0);
+
+        const config = await prepareWriteContract({
+            address: leverageControllerAddress,
+            abi: LeverageControllerABI,
+            functionName: 'unwindVeloLeverageOneBorrow',
+            args: [
+                {
+                    trancheId: BigNumber.from(trancheId),
+                    lpToken: getAddress(asset),
+                    tokenA: isBorrowToken0 ? token0 : token1,
+                    tokenB: isBorrowToken0 ? token1 : token0,
+                    stable: stable,
+                    aToken: getAddress(reserveData.aTokenAddress),
+                },
+                withdrawAmountNative.mul(reserveData.priceUSD).div(BigNumber.from(10).pow(18)),
+            ],
+        });
+
+        const tx = await writeContract(config);
+        await tx.wait();
+    };
+
     const determineClick = () => {
         if (view === 'Loop') {
             return borrowAllowance?.lt(VERY_BIG_ALLOWANCE)
                 ? approveBorrowDelegation
                 : leverageVeloZap;
         } else {
-            return () => console.log('TODO');
+            unwind();
         }
     };
 
     useEffect(() => {
-        if (network && wallet) {
-            (async () => {
-                const CHAIN_CONFIG = NETWORKS[network];
+        if (!network || !wallet) return;
 
-                const veloPoolContract = {
-                    address: utils.getAddress(asset),
-                    abi: VeloPoolABI,
-                };
-                const lendingPoolContract = {
-                    address: CHAIN_CONFIG.lendingPoolAddress,
-                    abi: LendingPoolABI,
-                };
+        (async () => {
+            const CHAIN_CONFIG = NETWORKS[network];
 
-                const [token0, token1, stable, { variableDebtTokenAddress }] = await multicall({
-                    contracts: [
-                        {
-                            ...veloPoolContract,
-                            functionName: 'token0',
-                        },
-                        {
-                            ...veloPoolContract,
-                            functionName: 'token1',
-                        },
-                        {
-                            ...veloPoolContract,
-                            functionName: 'stable',
-                        },
-                        {
-                            ...lendingPoolContract,
-                            functionName: 'getReserveData',
-                            args: [utils.getAddress(_collateral), BigNumber.from(trancheId)],
-                        },
-                    ],
-                });
+            const veloPoolContract = {
+                address: utils.getAddress(asset),
+                abi: VeloPoolABI,
+            };
+            const lendingPoolContract = {
+                address: CHAIN_CONFIG.lendingPoolAddress,
+                abi: LendingPoolABI,
+            };
 
-                const [decimals0, decimals1, borrowAllowance] = await multicall({
-                    contracts: [
-                        {
-                            address: token0,
-                            abi: erc20ABI,
-                            functionName: 'decimals',
-                        },
-                        {
-                            address: token1,
-                            abi: erc20ABI,
-                            functionName: 'decimals',
-                        },
-                        {
-                            address: variableDebtTokenAddress,
-                            abi: VariableDebtTokenABI,
-                            functionName: 'borrowAllowance',
-                            args: [wallet, CHAIN_CONFIG.leverageControllerAddress],
-                        },
-                    ],
-                });
+            const [token0, token1, stable, { variableDebtTokenAddress }] = await multicall({
+                contracts: [
+                    {
+                        ...veloPoolContract,
+                        functionName: 'token0',
+                    },
+                    {
+                        ...veloPoolContract,
+                        functionName: 'token1',
+                    },
+                    {
+                        ...veloPoolContract,
+                        functionName: 'stable',
+                    },
+                    {
+                        ...lendingPoolContract,
+                        functionName: 'getReserveData',
+                        args: [utils.getAddress(_collateral), BigNumber.from(trancheId)],
+                    },
+                ],
+            });
 
-                setBorrowAllowance(borrowAllowance);
-                setLeverageDetails({
-                    token0,
-                    decimals0: BigNumber.from(decimals0),
-                    token1,
-                    decimals1: BigNumber.from(decimals1),
-                    stable,
-                    variableDebtTokenAddress,
-                });
-            })().catch((err) => console.error(err));
-        }
+            const [decimals0, decimals1, borrowAllowance] = await multicall({
+                contracts: [
+                    {
+                        address: token0,
+                        abi: erc20ABI,
+                        functionName: 'decimals',
+                    },
+                    {
+                        address: token1,
+                        abi: erc20ABI,
+                        functionName: 'decimals',
+                    },
+                    {
+                        address: variableDebtTokenAddress,
+                        abi: VariableDebtTokenABI,
+                        functionName: 'borrowAllowance',
+                        args: [wallet, CHAIN_CONFIG.leverageControllerAddress],
+                    },
+                ],
+            });
+
+            setBorrowAllowance(borrowAllowance);
+            setLeverageDetails({
+                token0,
+                decimals0: BigNumber.from(decimals0),
+                token1,
+                decimals1: BigNumber.from(decimals1),
+                stable,
+                variableDebtTokenAddress,
+            });
+        })().catch((err) => console.error(err));
     }, [network, wallet]);
 
     if (data)
@@ -772,7 +856,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                         <Button
                             type="accent"
                             disabled={isButtonDisabled()}
-                            onClick={determineClick()}
+                            onClick={determineClick}
                             loading={isLoading}
                             loadingText={
                                 borrowAllowance?.lt(VERY_BIG_ALLOWANCE) ? 'Approving' : 'Submitting'
