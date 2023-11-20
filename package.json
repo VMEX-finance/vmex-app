@@ -21,7 +21,7 @@
         "url": "https://github.com/VMEX-finance/vmex-app"
     },
     "engines": {
-        "node": ">=18.17.0"
+        "node": ">=18.13.0"
     },
     "scripts": {
         "start": "react-app-rewired start",
