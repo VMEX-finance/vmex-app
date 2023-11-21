@@ -37,11 +37,6 @@ export const NETWORKS: Record<string, any> = {
                 token0: '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
                 token1: '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
             },
-            '0x6da98bde0068d10ddd11b468b197ea97d96f96bc': {
-                name: 'vAMMV2-wstETH/WETH',
-                token0: '0x1F32b1c2345538c0c6f582fCB022739c4A194Ebb',
-                token1: '0x4200000000000000000000000000000000000006',
-            },
             '0x0493bf8b6dbb159ce2db2e0e8403e753abd1235b': {
                 name: 'vAMMV2-WETH/USDC',
                 token0: '0x4200000000000000000000000000000000000006',
