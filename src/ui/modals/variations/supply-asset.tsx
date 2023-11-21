@@ -6,6 +6,7 @@ import {
     bigNumberToNative,
     bigNumberToUnformattedString,
     getNetworkName,
+    redirectToPool,
 } from '@/utils';
 import {
     HealthFactor,
@@ -28,7 +29,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '@/store';
 import { usePricesData } from '@/api';
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
-import { convertAddressToSymbol } from '@vmexfinance/sdk';
+import { convertSymbolToAddress } from '@vmexfinance/sdk';
 
 export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
     const modalProps = useModal('loan-asset-dialog');
@@ -36,6 +37,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
     const { setAsset } = useSelectedTrancheContext();
     const { closeDialog, openDialog } = useDialogController();
     const { errorAssets } = usePricesData();
+    const networkName = getNetworkName();
     const {
         amountWalletNative,
         maxOnClick,
@@ -80,6 +82,8 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
         getZapOutput,
     } = useZap(asset);
 
+    const poolLink = redirectToPool(convertSymbolToAddress(asset, networkName));
+
     return (
         <>
             <ModalHeader
@@ -107,40 +111,42 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                                         sx={{ boxShadow: 'none' }}
                                     >
                                         <AccordionSummary
-                                            className="!cursor-default !shadow-none"
+                                            className="!cursor-default"
                                             classes={{ content: 'margin: 0 !important;' }}
                                             sx={{ minHeight: 'auto', padding: '0px' }}
                                         >
-                                            {isLoading ? (
-                                                <Loader
-                                                    variant="rounded"
-                                                    className="!rounded-3xl"
-                                                    type="skeleton"
-                                                >
-                                                    <PillDisplay
-                                                        type="asset"
-                                                        asset={'BTC'}
-                                                        value={0}
-                                                    />
-                                                </Loader>
-                                            ) : (
-                                                zappableAssets.map((el, i) => (
-                                                    <button
-                                                        key={`top-supplied-asset-${i}`}
-                                                        onClick={(e) => handleZap(e, el)}
+                                            <div className="flex items-center gap-1">
+                                                {isLoading ? (
+                                                    <Loader
+                                                        variant="rounded"
+                                                        className="!rounded-3xl"
+                                                        type="skeleton"
                                                     >
                                                         <PillDisplay
                                                             type="asset"
-                                                            asset={el.symbol}
-                                                            hoverable
-                                                            selected={
-                                                                el.address?.toLowerCase() ===
-                                                                zapAsset?.address.toLowerCase()
-                                                            }
+                                                            asset={'BTC'}
+                                                            value={0}
                                                         />
-                                                    </button>
-                                                ))
-                                            )}
+                                                    </Loader>
+                                                ) : (
+                                                    zappableAssets.map((el, i) => (
+                                                        <button
+                                                            key={`top-supplied-asset-${i}`}
+                                                            onClick={(e) => handleZap(e, el)}
+                                                        >
+                                                            <PillDisplay
+                                                                type="asset"
+                                                                asset={el.symbol}
+                                                                hoverable
+                                                                selected={
+                                                                    el.address?.toLowerCase() ===
+                                                                    zapAsset?.address.toLowerCase()
+                                                                }
+                                                            />
+                                                        </button>
+                                                    ))
+                                                )}
+                                            </div>
                                         </AccordionSummary>
                                         <AccordionDetails>
                                             <div className="flex flex-col gap-1.5 items-end">
@@ -428,8 +434,8 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                         : ''
                 }`}
             >
-                <ModalFooter between={!location.hash.includes('tranches')}>
-                    {!location.hash.includes('tranches') && (
+                <ModalFooter between={!location.hash.includes('tranches') || !!poolLink}>
+                    {!location.hash.includes('tranches') ? (
                         <Button
                             type="outline"
                             onClick={() => {
@@ -448,7 +454,21 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                         >
                             View Tranche
                         </Button>
+                    ) : poolLink ? (
+                        <a
+                            href={poolLink}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="!no-underline"
+                        >
+                            <Button type="outline" className="text-black">
+                                View Pool
+                            </Button>
+                        </a>
+                    ) : (
+                        <></>
                     )}
+
                     {Number(amount) === 0 && !view?.includes('Claim') ? (
                         <Tooltip text="Please enter an amount">
                             <Button type="accent" disabled>
