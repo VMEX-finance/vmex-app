@@ -4,6 +4,8 @@ import { formatEther, parseEther } from 'ethers/lib/utils.js';
 import { formatUnits, parseUnits } from 'ethers/lib/utils.js';
 import { IGraphAssetData, IUserTrancheData } from '@/api';
 import { convertAddressToSymbol } from '@vmexfinance/sdk';
+import { IYourBorrowsTableItemProps } from '@/ui/tables';
+import { isAddressEqual } from '.';
 
 const DECIMALS = 8;
 const DECIMAL_ONE = new Decimal(1);
@@ -156,4 +158,28 @@ export const isPoolStable = (network: string, token0: string, token1: string) =>
         return true;
 
     return false;
+};
+
+export const isUnwindTwoBorrow = (
+    mostBorrowedTokens: IYourBorrowsTableItemProps[],
+    token0: string,
+    token1: string,
+) => {
+    const borrowedToken0 = mostBorrowedTokens.find((x) => isAddressEqual(x.asset, token0));
+    const borrowedToken1 = mostBorrowedTokens.find((x) => isAddressEqual(x.asset, token1));
+
+    if (!borrowedToken0 || !borrowedToken1) return false;
+    if (borrowedToken0.amount === '$0.00' || borrowedToken0.amount === '$0.00') return false;
+
+    if (borrowedToken0.amount.localeCompare(borrowedToken1.amount)) {
+        return (
+            parseFloat(borrowedToken1.amount.replace('$', '')) * 2 >
+            parseFloat(borrowedToken0.amount.replace('$', ''))
+        );
+    } else {
+        return (
+            parseFloat(borrowedToken0.amount.replace('$', '')) * 2 >
+            parseFloat(borrowedToken1.amount.replace('$', ''))
+        );
+    }
 };

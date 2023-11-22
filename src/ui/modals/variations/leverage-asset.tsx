@@ -41,6 +41,7 @@ import {
     formatUsdUnits,
     isAddressEqual,
     calculateHealthFactorAfterUnwind,
+    isUnwindTwoBorrow,
 } from '@/utils';
 import { useAccount } from 'wagmi';
 import { BigNumber, constants, utils } from 'ethers';
@@ -129,9 +130,9 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
         return marketData;
     });
 
-    const mostBorrowedToken = queryUserTrancheData.data?.borrows.sort((a, b) =>
+    const mostBorrowedTokens = queryUserTrancheData.data?.borrows.sort((a, b) =>
         b.amount.localeCompare(a.amount),
-    )[0];
+    );
 
     const suppliedAssetDetails =
         asset &&
@@ -343,7 +344,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
         if (!wallet) return;
         if (!NETWORKS[network].leverageControllerAddress) return;
 
-        if (!mostBorrowedToken) return;
+        if (!mostBorrowedTokens) return;
 
         const leverageControllerAddress = getAddress(NETWORKS[network].leverageControllerAddress);
 
@@ -390,27 +391,49 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
             ],
         });
 
-        const isBorrowToken0 = isAddressEqual(mostBorrowedToken.assetAddress, token0);
+        // TODO fico -> make better decision on whether to repay just one token or two
+        if (isUnwindTwoBorrow(mostBorrowedTokens, token0, token1)) {
+            const config = await prepareWriteContract({
+                address: leverageControllerAddress,
+                abi: LeverageControllerABI,
+                functionName: 'unwindVeloLeverageTwoBorrow',
+                args: [
+                    {
+                        trancheId: BigNumber.from(trancheId),
+                        lpToken: getAddress(asset),
+                        tokenA: token0,
+                        tokenB: token1,
+                        stable: stable,
+                        aToken: getAddress(reserveData.aTokenAddress),
+                    },
+                    withdrawAmountNative.mul(reserveData.priceUSD).div(BigNumber.from(10).pow(18)),
+                ],
+            });
 
-        const config = await prepareWriteContract({
-            address: leverageControllerAddress,
-            abi: LeverageControllerABI,
-            functionName: 'unwindVeloLeverageOneBorrow',
-            args: [
-                {
-                    trancheId: BigNumber.from(trancheId),
-                    lpToken: getAddress(asset),
-                    tokenA: isBorrowToken0 ? token0 : token1,
-                    tokenB: isBorrowToken0 ? token1 : token0,
-                    stable: stable,
-                    aToken: getAddress(reserveData.aTokenAddress),
-                },
-                withdrawAmountNative.mul(reserveData.priceUSD).div(BigNumber.from(10).pow(18)),
-            ],
-        });
+            const tx = await writeContract(config);
+            await tx.wait();
+        } else {
+            const isBorrowToken0 = isAddressEqual(mostBorrowedTokens[0].assetAddress, token0);
+            const config = await prepareWriteContract({
+                address: leverageControllerAddress,
+                abi: LeverageControllerABI,
+                functionName: 'unwindVeloLeverageOneBorrow',
+                args: [
+                    {
+                        trancheId: BigNumber.from(trancheId),
+                        lpToken: getAddress(asset),
+                        tokenA: isBorrowToken0 ? token0 : token1,
+                        tokenB: isBorrowToken0 ? token1 : token0,
+                        stable: stable,
+                        aToken: getAddress(reserveData.aTokenAddress),
+                    },
+                    withdrawAmountNative.mul(reserveData.priceUSD).div(BigNumber.from(10).pow(18)),
+                ],
+            });
 
-        const tx = await writeContract(config);
-        await tx.wait();
+            const tx = await writeContract(config);
+            await tx.wait();
+        }
     };
 
     const doLooping = async () => {

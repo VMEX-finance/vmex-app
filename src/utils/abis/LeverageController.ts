@@ -161,24 +161,31 @@ export const LeverageControllerABI = [
                 type: 'uint256',
             },
             {
-                internalType: 'address',
-                name: 'borrowToken',
-                type: 'address',
-            },
-            {
-                internalType: 'uint256',
-                name: 'borrowTokenDecimals',
-                type: 'uint256',
-            },
-            {
-                internalType: 'bool',
-                name: 'stable0',
-                type: 'bool',
-            },
-            {
-                internalType: 'bool',
-                name: 'stable1',
-                type: 'bool',
+                components: [
+                    {
+                        internalType: 'address',
+                        name: 'token',
+                        type: 'address',
+                    },
+                    {
+                        internalType: 'uint256',
+                        name: 'decimals',
+                        type: 'uint256',
+                    },
+                    {
+                        internalType: 'bool',
+                        name: 'stable0',
+                        type: 'bool',
+                    },
+                    {
+                        internalType: 'bool',
+                        name: 'stable1',
+                        type: 'bool',
+                    },
+                ],
+                internalType: 'struct LeverageController.BorrowTokenDetails',
+                name: 'borrowParams',
+                type: 'tuple',
             },
         ],
         name: 'leverageVeloLpBorrowOther',
@@ -292,6 +299,56 @@ export const LeverageControllerABI = [
             },
         ],
         name: 'unwindVeloLeverageOneBorrow',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
+    },
+    {
+        inputs: [
+            {
+                components: [
+                    {
+                        internalType: 'uint64',
+                        name: 'trancheId',
+                        type: 'uint64',
+                    },
+                    {
+                        internalType: 'address',
+                        name: 'lpToken',
+                        type: 'address',
+                    },
+                    {
+                        internalType: 'address',
+                        name: 'tokenA',
+                        type: 'address',
+                    },
+                    {
+                        internalType: 'address',
+                        name: 'tokenB',
+                        type: 'address',
+                    },
+                    {
+                        internalType: 'bool',
+                        name: 'stable',
+                        type: 'bool',
+                    },
+                    {
+                        internalType: 'address',
+                        name: 'aToken',
+                        type: 'address',
+                    },
+                ],
+                internalType: 'struct LeverageController.UnwindVeloDetails',
+                name: 'params',
+                type: 'tuple',
+            },
+            {
+                internalType: 'uint256',
+                name: 'totalUnwindAmountUsd',
+                type: 'uint256',
+            },
+        ],
+        name: 'unwindVeloLeverageTwoBorrow',
         outputs: [],
         stateMutability: 'nonpayable',
         type: 'function',
