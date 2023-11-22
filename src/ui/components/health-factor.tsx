@@ -118,13 +118,15 @@ export const HealthFactor = ({
 
     const determineHFFinal = () => {
         // For loop and unwind
-        if ((type === 'loop' || type === 'unwind') && collateral && amount) {
-            const collaterals = collateral ? collateral.split(':') : [];
-            const collateralSymbols =
-                collaterals.length && asset ? convertAddressListToSymbol(collaterals, network) : [];
+        if ((type === 'loop' || type === 'unwind') && amount) {
             const assetSymbol = asset ? convertAddressToSymbol(asset, network) : '';
             const depositAsset = findAssetInMarketsData(assetSymbol);
             if (type === 'loop' && leverage) {
+                const collaterals = collateral ? collateral.split(':') : [];
+                const collateralSymbols =
+                    collaterals.length && asset
+                        ? convertAddressListToSymbol(collaterals, network)
+                        : [];
                 const borrowAssets = collateralSymbols.map((x) => findAssetInMarketsData(x));
                 const afterLoop = calculateHealthFactorAfterLeverage(
                     depositAsset,
@@ -132,7 +134,6 @@ export const HealthFactor = ({
                     calculateTotalBorrowAmount(amount, leverage),
                     queryUserTrancheData.data,
                 );
-                console.log('afterLooping', afterLoop?.toString());
                 return renderHealth(
                     afterLoop && ethers.utils.formatUnits(afterLoop, 18), //HF always has 18 decimals
                     size,
@@ -154,7 +155,6 @@ export const HealthFactor = ({
                         : undefined,
                     queryUserTrancheData.data,
                 );
-                console.log('afterUnwinding', afterUnwind?.toString());
                 return renderHealth(
                     afterUnwind && ethers.utils.formatUnits(afterUnwind, 18), //HF always has 18 decimals
                     size,
