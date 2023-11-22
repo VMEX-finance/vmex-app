@@ -52,11 +52,19 @@ export const Carousel = ({ items, type }: ICarousel) => {
 
     const renderStrategyItems = () => {
         if (NETWORKS[network]['strategies']) {
-            return (
-                items?.filter(
-                    (x) => !!NETWORKS[network]['strategies'][x.assetAddress.toLowerCase()],
-                ) || []
+            const displayItems = items?.filter(
+                (x) => !!NETWORKS[network]['strategies'][x.assetAddress.toLowerCase()],
             );
+            // Remove duplicates
+            const filteredArr = displayItems?.reduce((acc, current) => {
+                const x = acc.find((item: any) => item.assetAddress === current.assetAddress);
+                if (!x) {
+                    return acc.concat([current]);
+                } else {
+                    return acc;
+                }
+            }, []);
+            return filteredArr || [];
         } else {
             return items || [];
         }
@@ -115,7 +123,7 @@ export const Carousel = ({ items, type }: ICarousel) => {
                 <div className="px-6">
                     <Slider {...settings}>
                         {items?.length
-                            ? renderStrategyItems().map((el, i) => (
+                            ? renderStrategyItems().map((el: any, i: number) => (
                                   <StrategyCard
                                       key={`carousel-item-${i}-${el}`}
                                       {...el}

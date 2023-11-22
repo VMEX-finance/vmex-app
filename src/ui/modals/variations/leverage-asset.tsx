@@ -703,7 +703,6 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                                 trancheId={String(trancheId)}
                                 collateral={_collateral}
                                 leverage={_leverage}
-                                withChange
                             />
 
                             <ModalTableDisplay
