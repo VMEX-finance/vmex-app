@@ -1,5 +1,5 @@
 import { useSubgraphTrancheData, useUserData, useUserTrancheData, AvailableAsset } from '@/api';
-import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
+import { useAccount, useSwitchNetwork } from 'wagmi';
 import React, { useMemo } from 'react';
 import { BsCheck } from 'react-icons/bs';
 import { IoIosClose } from 'react-icons/io';
@@ -11,12 +11,9 @@ import {
     numberFormatter,
     bigNumberToNative,
     percentFormatter,
-    bigNumberToUSD,
     nativeAmountToUSD,
     PRICING_DECIMALS,
-    DEFAULT_NETWORK,
     usdFormatter,
-    NETWORKS,
     DEFAULT_CHAINID,
     getNetworkName,
 } from '@/utils';

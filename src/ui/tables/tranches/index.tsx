@@ -7,6 +7,7 @@ import { Loader } from '@/ui/components';
 import { addFeaturedTranches, usdFormatter } from '@/utils';
 import { UseQueryResult } from '@tanstack/react-query';
 import { IUserActivityDataProps, ITrancheProps } from '@/api';
+import { useAccount } from 'wagmi';
 
 interface IDataTable {
     data?: ITrancheProps[];
@@ -15,6 +16,7 @@ interface IDataTable {
 }
 
 export const TranchesTable: React.FC<IDataTable> = ({ data, loading, userActivity }) => {
+    const { address } = useAccount();
     const renderActivity = (trancheId: string) => {
         let activity: string = '';
         if (!trancheId || userActivity?.isLoading) activity = 'loading';
@@ -94,6 +96,7 @@ export const TranchesTable: React.FC<IDataTable> = ({ data, loading, userActivit
                 filter: true,
                 sort: true,
                 sortThirdClickReset: true,
+                display: address ? true : false,
             },
         },
         {

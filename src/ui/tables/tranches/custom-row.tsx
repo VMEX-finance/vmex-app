@@ -4,6 +4,7 @@ import { useSelectedTrancheContext } from '@/store';
 import { useWindowSize } from '@/hooks';
 import { BsArrowDownCircle, BsArrowUpCircle } from 'react-icons/bs';
 import { Tooltip, MultipleAssetsDisplay, Button, Label } from '@/ui/components';
+import { useAccount } from 'wagmi';
 
 type ITranchesCustomRowProps = {
     name: string[];
@@ -19,6 +20,7 @@ type ITranchesCustomRowProps = {
 const TranchesCustomRow = (props: ITranchesCustomRowProps) => {
     const { name, assets, yourActivity, supplyTotal, borrowTotal, id, category } = props;
 
+    const { address } = useAccount();
     const navigate = useNavigate();
     const { width } = useWindowSize();
     const { updateTranche } = useSelectedTrancheContext();
@@ -105,10 +107,12 @@ const TranchesCustomRow = (props: ITranchesCustomRowProps) => {
                         {aggregateRating || '-'}
                     </span>
                 </td> */}
-                <td className="flex justify-between">
-                    <span className="font-bold">Activity</span>
-                    <span>{renderActivity(yourActivity)}</span>
-                </td>
+                {address && (
+                    <td className="flex justify-between">
+                        <span className="font-bold">Activity</span>
+                        <span>{renderActivity(yourActivity)}</span>
+                    </td>
+                )}
                 <td className="flex justify-between">
                     <span className="font-bold">Supplied</span>
                     <span>{supplyTotal}</span>
@@ -143,9 +147,11 @@ const TranchesCustomRow = (props: ITranchesCustomRowProps) => {
                 >
                     {aggregateRating}
                 </td> */}
-                <td className="pl-4">
-                    {<div className="max-w-fit">{renderActivity(yourActivity)}</div>}
-                </td>
+                {address && (
+                    <td className="pl-4">
+                        {<div className="max-w-fit">{renderActivity(yourActivity)}</div>}
+                    </td>
+                )}
                 <td className="pl-4">{supplyTotal}</td>
                 <td className="pl-4">{borrowTotal}</td>
                 <td className="text-right pr-3.5">

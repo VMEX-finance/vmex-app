@@ -19,7 +19,7 @@ export const ApyToolitp = ({ symbol, oldApy }: { symbol?: string; oldApy?: numbe
                         <span className="font-bold">APY Breakdown</span>
                         <ul>
                             {apysByToken
-                                .sort((a: any, b: any) => a.symbol.length - b.symbol.length)
+                                .sort((a: any, b: any) => a?.symbol?.length - b?.symbol?.length)
                                 .map((x: any) => (
                                     <li
                                         className={`text-sm flex justify-between items-center gap-6 ${

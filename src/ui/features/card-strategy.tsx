@@ -279,8 +279,8 @@ export const StrategyCard = ({
                         <span className="text-xs">APY Breakdown</span>
                         {tranche?.includes('LSD') && (
                             <Label
-                                color="blue"
-                                tooltip="This asset is effectively used liquid staking derivatives."
+                                color="pink"
+                                tooltip="Risk parameters specially tuned for optimal borrow / lend use of LSDs."
                                 className="!text-[11px]"
                             >
                                 LSD Efficient
