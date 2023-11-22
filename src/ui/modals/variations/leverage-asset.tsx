@@ -531,7 +531,9 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                                 <div className="flex items-start justify-between mt-4 px-2">
                                     <div className="flex flex-col items-start">
                                         <span className="text-2xl leading-none">{`${
-                                            (data as any)?.totalApy || 0
+                                            (Number((data as any)?.totalApy) * _leverage).toFixed(
+                                                2,
+                                            ) || 0
                                         }%`}</span>
                                         <span className="text-xs font-light text-neutral-600 dark:text-neutral-400">
                                             Asset APY

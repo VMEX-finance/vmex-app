@@ -25,9 +25,7 @@ const ONE_BN = BigNumber.from(1);
 const ZERO_BN = BigNumber.from(0);
 
 export const useZap = (symbolOrAddress: string) => {
-    const [assets, setAssets] = useState<IZapAssetProps[]>([
-        { symbol: 'ETH', address: constants.AddressZero, amount: '0' },
-    ]); // for testing
+    const [assets, setAssets] = useState<IZapAssetProps[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [zapAsset, setZapAsset] = useState({ address: '', symbol: '' });
     const [zapAmount, setZapAmount] = useState('');
