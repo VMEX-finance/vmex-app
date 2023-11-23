@@ -98,7 +98,6 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
         amount: withdrawAmount,
     } = useLeverage({ data, ...modalProps });
 
-    console.log('asset', asset, amountWithdraw);
     const [errMsg, setErrMsg] = useState('');
     const { queryUserTrancheData } = useUserTrancheData(wallet, trancheId);
     const { findAssetInMarketsData } = useSubgraphTrancheData(trancheId as number);

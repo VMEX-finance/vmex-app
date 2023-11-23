@@ -122,7 +122,10 @@ export const HealthFactor = ({
         if ((type === 'loop' || type === 'unwind') && amount) {
             const assetSymbol = toSymbol(asset);
             const depositAsset = findAssetInMarketsData(assetSymbol);
-            console.log('assetSymbol', assetSymbol, 'depositAsset', depositAsset);
+            if (!depositAsset) {
+                console.error('#determineHFFinal: depositAsset not found');
+                return;
+            }
             if (type === 'loop' && leverage) {
                 const collaterals = collateral ? collateral.split(':') : [];
                 const collateralSymbols =
@@ -152,7 +155,7 @@ export const HealthFactor = ({
                     amount
                         ? utils
                               .parseUnits(amount, 18)
-                              .mul(depositAsset.priceUSD)
+                              .mul(depositAsset?.priceUSD)
                               .div(BigNumber.from(10).pow(18))
                         : undefined,
                     queryUserTrancheData.data,
