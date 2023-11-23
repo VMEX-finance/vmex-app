@@ -362,29 +362,6 @@ export function findInObjArr(key: string, value: string | number, arr?: any[]) {
     return arr.find((el) => String(el[key])?.toLowerCase() === String(value)?.toLowerCase());
 }
 
-export async function toSymbol(symbolOrAddress: string, chain: Chain) {
-    if (!symbolOrAddress) return '';
-    try {
-        if (symbolOrAddress.startsWith('0x')) {
-            // Is address
-            const sdkTry = convertAddressToSymbol(symbolOrAddress, chain.network);
-            if (sdkTry) return sdkTry;
-            const contract = new Contract(
-                symbolOrAddress,
-                ['function symbol() view returns (string)'],
-                provider({ chainId: chain.id }),
-            );
-            const symbol: string = await contract?.symbol();
-            if (symbol) return symbol;
-            return '';
-        }
-        return symbolOrAddress;
-    } catch (err) {
-        console.error('#toSymbol', err);
-        return '';
-    }
-}
-
 export const isAddressEqual = (address1: string, address2: string) => {
     return address1.toLowerCase() === address2.toLowerCase();
 };

@@ -174,9 +174,8 @@ export const StrategyCard = ({
                         .map(async (x: any) => ({
                             label:
                                 x?.symbol?.length >= 5
-                                    ? capFirstLetter(x?.symbol) ||
-                                      (await toSymbol(x.asset, chain as Chain))
-                                    : await toSymbol(x?.symbol || x.asset, chain as Chain),
+                                    ? capFirstLetter(x?.symbol) || toSymbol(x.asset)
+                                    : toSymbol(x?.symbol || x.asset),
                             value: percentFormatter.format(Number(x.apy || '0') / 100),
                         })),
                 );

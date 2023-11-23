@@ -36,12 +36,12 @@ import {
     bigNumberToUnformattedString,
     getNetworkName,
     unformattedStringToBigNumber,
-    calculateHealthFactorAfterLeverage,
     calculateTotalBorrowAmount,
     formatUsdUnits,
     isAddressEqual,
-    calculateHealthFactorAfterUnwind,
     isUnwindTwoBorrow,
+    toSymbol,
+    toAddress,
 } from '@/utils';
 import { useAccount } from 'wagmi';
 import { BigNumber, constants, utils } from 'ethers';
@@ -52,9 +52,8 @@ import {
     useUserTrancheData,
 } from '@/api';
 import { getAddress, parseUnits } from 'ethers/lib/utils.js';
-import { convertAddressListToSymbol, convertAddressToSymbol } from '@vmexfinance/sdk';
+import { convertAddressListToSymbol } from '@vmexfinance/sdk';
 import { toast } from 'react-toastify';
-import { useMaxBorrowableAmount } from '@/hooks/max-borrowable';
 
 const VERY_BIG_ALLOWANCE = BigNumber.from(2).pow(128); // big enough
 
@@ -98,18 +97,8 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
         maxOnClick,
         amount: withdrawAmount,
     } = useLeverage({ data, ...modalProps });
-    const {
-        zappableAssets,
-        handleZap,
-        setIsMaxZap,
-        setZapAmount,
-        zapAmount,
-        zapBalance,
-        zapAsset,
-        submitZap,
-        getZapOutput,
-    } = useZap(asset);
 
+    console.log('asset', asset, amountWithdraw);
     const [errMsg, setErrMsg] = useState('');
     const { queryUserTrancheData } = useUserTrancheData(wallet, trancheId);
     const { findAssetInMarketsData } = useSubgraphTrancheData(trancheId as number);
@@ -121,7 +110,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
 
     const collateralSymbols =
         collaterals.length && asset ? convertAddressListToSymbol(collaterals, network) : [];
-    const assetSymbol = asset ? convertAddressToSymbol(asset, network) : '';
+    const assetSymbol = asset ? toSymbol(asset) : '';
     const collateralMarketData = collaterals.map((x) => {
         const marketData = queryAllMarketsData.data?.find(
             (y) => y.trancheId === trancheId?.toString() && isAddressEqual(y.assetAddress, x),
@@ -137,7 +126,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
     const suppliedAssetDetails =
         asset &&
         queryUserActivity.data?.supplies.find(
-            (el) => utils.getAddress(el?.assetAddress) === utils.getAddress(asset),
+            (el) => utils.getAddress(el?.assetAddress) === getAddress(toAddress(asset)),
         );
 
     const [borrowAllowance, setBorrowAllowance] = useState(BigNumber.from(0));
@@ -183,7 +172,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
         const CHAIN_CONFIG = NETWORKS[network];
         const { token0, decimals0, token1, decimals1, stable } = leverageDetails;
         const params = {
-            lpToken: utils.getAddress(asset),
+            lpToken: utils.getAddress(toAddress(asset)),
             trancheId: BigNumber.from(trancheId),
             token0,
             decimals0,
@@ -343,8 +332,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
     const unwind = async () => {
         if (!wallet) return;
         if (!NETWORKS[network].leverageControllerAddress) return;
-
-        if (!mostBorrowedTokens) return;
+        if (!mostBorrowedTokens?.length) return;
 
         const leverageControllerAddress = getAddress(NETWORKS[network].leverageControllerAddress);
 
@@ -370,7 +358,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
         }
 
         const veloPoolContract = {
-            address: utils.getAddress(asset),
+            address: utils.getAddress(toAddress(asset)),
             abi: VeloPoolABI,
         };
 
@@ -400,7 +388,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                 args: [
                     {
                         trancheId: BigNumber.from(trancheId),
-                        lpToken: getAddress(asset),
+                        lpToken: getAddress(toAddress(asset)),
                         tokenA: token0,
                         tokenB: token1,
                         stable: stable,
@@ -421,7 +409,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                 args: [
                     {
                         trancheId: BigNumber.from(trancheId),
-                        lpToken: getAddress(asset),
+                        lpToken: getAddress(toAddress(asset)),
                         tokenA: isBorrowToken0 ? token0 : token1,
                         tokenB: isBorrowToken0 ? token1 : token0,
                         stable: stable,
@@ -461,7 +449,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
             const CHAIN_CONFIG = NETWORKS[network];
 
             const veloPoolContract = {
-                address: utils.getAddress(asset),
+                address: getAddress(toAddress(asset)),
                 abi: VeloPoolABI,
             };
             const lendingPoolContract = {
@@ -540,7 +528,10 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                         <>
                             <div className={``}>
                                 <div className="flex items-start justify-between mt-5 px-1">
-                                    <AssetDisplay name={(data as any)?.symbol} size={'lg'} />
+                                    <AssetDisplay
+                                        name={(data as any)?.symbol || asset}
+                                        size={'lg'}
+                                    />
                                     <div className="flex-col items-end hidden sm:flex">
                                         <span className="text-xl leading-none">{`${
                                             (data as any)?.tranche || ''
@@ -554,9 +545,9 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                                 <div className="flex items-start justify-between mt-4 px-2">
                                     <div className="flex flex-col items-start">
                                         <span className="text-2xl leading-none">{`${
-                                            (Number((data as any)?.totalApy) * _leverage).toFixed(
-                                                2,
-                                            ) || 0
+                                            (
+                                                Number((data as any)?.totalApy || '0') * _leverage
+                                            ).toFixed(2) || 0
                                         }%`}</span>
                                         <span className="text-xs font-light text-neutral-600 dark:text-neutral-400">
                                             Asset APY
@@ -723,7 +714,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                             <h3 className="mt-3 2xl:mt-4 text-neutral400">Health Factor</h3>
                             <HealthFactor
                                 asset={asset || 'ETH'}
-                                amount={amountWithdraw}
+                                amount={amountWithdraw.toString()}
                                 type={'unwind'}
                                 trancheId={String(trancheId)}
                                 collateral={_collateral}

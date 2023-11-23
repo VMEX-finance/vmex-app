@@ -1,6 +1,6 @@
-import { BigNumber, BigNumberish, ethers } from 'ethers';
+import { BigNumber, BigNumberish, ethers, utils } from 'ethers';
 import { usdFormatter, nativeTokenFormatter } from './helpers';
-import { convertAddressToSymbol } from '@vmexfinance/sdk';
+import { convertAddressToSymbol, convertSymbolToAddress } from '@vmexfinance/sdk';
 import { ITrancheCategories } from '@/api';
 import { DECIMALS } from './constants';
 import { getNetwork } from '@wagmi/core';
@@ -57,11 +57,22 @@ export const bigNumberToUnformattedString = (
     if (number.lt(10)) {
         number = BigNumber.from('0');
     }
+    const symbol = utils.isAddress(asset) ? convertAddressToSymbol(asset, network) : asset;
+    return ethers.utils.formatUnits(number, DECIMALS.get(symbol) || 18);
+};
 
-    return ethers.utils.formatUnits(
-        number,
-        DECIMALS.get(convertAddressToSymbol(asset, network) || asset) || 18,
-    );
+export const toAddress = (asset?: string) => {
+    if (!asset) return '';
+    if (utils.isAddress(asset)) return asset;
+    const network = getNetworkName();
+    return convertSymbolToAddress(asset, network);
+};
+
+export const toSymbol = (asset?: string) => {
+    if (!asset) return '';
+    if (!utils.isAddress(asset)) return asset;
+    const network = getNetworkName();
+    return convertAddressToSymbol(asset, network);
 };
 
 export const unformattedStringToBigNumber = (

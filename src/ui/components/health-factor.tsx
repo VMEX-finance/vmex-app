@@ -14,12 +14,13 @@ import {
     calculateHealthFactorAfterUnwind,
     calculateHealthFactorAfterLeverage,
     calculateTotalBorrowAmount,
+    toSymbol,
 } from '@/utils';
 import { BigNumber, ethers, utils } from 'ethers';
 import { useAccount } from 'wagmi';
 import { useLocation } from 'react-router-dom';
 import { Loader } from './loader';
-import { convertAddressListToSymbol, convertAddressToSymbol } from '@vmexfinance/sdk';
+import { convertAddressListToSymbol } from '@vmexfinance/sdk';
 
 interface IHealthFactorProps {
     asset?: string;
@@ -119,8 +120,9 @@ export const HealthFactor = ({
     const determineHFFinal = () => {
         // For loop and unwind
         if ((type === 'loop' || type === 'unwind') && amount) {
-            const assetSymbol = asset ? convertAddressToSymbol(asset, network) : '';
+            const assetSymbol = toSymbol(asset);
             const depositAsset = findAssetInMarketsData(assetSymbol);
+            console.log('assetSymbol', assetSymbol, 'depositAsset', depositAsset);
             if (type === 'loop' && leverage) {
                 const collaterals = collateral ? collateral.split(':') : [];
                 const collateralSymbols =
@@ -171,54 +173,6 @@ export const HealthFactor = ({
         let d = a?.decimals;
         if (!a || !d || amount == '' || !parseFloat(amount)) {
             return undefined;
-        }
-
-        console.log('before entering loop 1', asset, collateral);
-        if ((type === 'loop' || type === 'unwind') && collateral) {
-            const collaterals = collateral ? collateral.split(':') : [];
-
-            const collateralSymbols =
-                collaterals.length && asset ? convertAddressListToSymbol(collaterals, network) : [];
-            const assetSymbol = asset ? convertAddressToSymbol(asset, network) : '';
-            const depositAsset = findAssetInMarketsData(assetSymbol);
-            console.log('before entering loop 2', asset, collateral, assetSymbol, depositAsset);
-            if (type === 'loop' && leverage) {
-                const borrowAssets = collateralSymbols.map((x) => findAssetInMarketsData(x));
-                const afterLoop = calculateHealthFactorAfterLeverage(
-                    depositAsset,
-                    borrowAssets,
-                    calculateTotalBorrowAmount(amount, leverage),
-                    queryUserTrancheData.data,
-                );
-                console.log('afterLooping', afterLoop?.toString());
-                return renderHealth(
-                    afterLoop && ethers.utils.formatUnits(afterLoop, 18), //HF always has 18 decimals
-                    size,
-                    queryUserTrancheData.isLoading,
-                );
-            }
-            if (type === 'unwind') {
-                const mostBorrowedToken = queryUserTrancheData.data?.borrows.sort((a, b) =>
-                    b.amount.localeCompare(a.amount),
-                )[0];
-                const afterUnwind = calculateHealthFactorAfterUnwind(
-                    depositAsset,
-                    findAssetInMarketsData(mostBorrowedToken?.asset || ''),
-                    amount
-                        ? utils
-                              .parseUnits(amount, 18)
-                              .mul(depositAsset.priceUSD)
-                              .div(BigNumber.from(10).pow(18))
-                        : undefined,
-                    queryUserTrancheData.data,
-                );
-                console.log('afterUnwinding', afterUnwind?.toString());
-                return renderHealth(
-                    afterUnwind && ethers.utils.formatUnits(afterUnwind, 18), //HF always has 18 decimals
-                    size,
-                    queryUserTrancheData.isLoading,
-                );
-            }
         }
 
         try {
