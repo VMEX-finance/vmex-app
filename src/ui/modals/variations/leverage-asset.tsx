@@ -320,11 +320,13 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
 
     const renderButtonLabel = () => {
         if (view === 'Loop') {
-            return borrowAllowance?.lt(VERY_BIG_ALLOWANCE)
-                ? 'Approve Delegation'
-                : 'Submit Transaction';
-        } else {
+            if (borrowAllowance?.lt(VERY_BIG_ALLOWANCE)) return 'Approve Delegation';
+            return 'Loop';
+        } else if (view === 'Unwind') {
+            if (!queryUserTrancheData.data?.borrows?.length) return 'No assets to unwind';
             return 'Unwind';
+        } else {
+            return 'Submit Transaction';
         }
     };
 
@@ -713,7 +715,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                             <h3 className="mt-3 2xl:mt-4 text-neutral400">Health Factor</h3>
                             <HealthFactor
                                 asset={asset || 'ETH'}
-                                amount={amountWithdraw.toString()}
+                                amount={utils.formatUnits(amountWithdraw, 18) || '0'}
                                 type={'unwind'}
                                 trancheId={String(trancheId)}
                                 collateral={_collateral}
@@ -786,7 +788,10 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                     )}
                     <Button
                         type="accent"
-                        disabled={isButtonDisabled()}
+                        disabled={
+                            isButtonDisabled() ||
+                            (view === 'Unwind' && !queryUserTrancheData?.data?.borrows?.length)
+                        }
                         onClick={determineClick}
                         loading={isLoading}
                         loadingText={

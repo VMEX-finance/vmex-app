@@ -128,7 +128,7 @@ export const calculateHealthFactorAfterUnwind = (
     let borrowFactorTimesDebtAfter = avgBorrowFactor.mul(totalDebtETH);
     console.log('old borrow factor times debt', borrowFactorTimesDebtAfter.toString());
     borrowFactorTimesDebtAfter = borrowFactorTimesDebtAfter.sub(
-        unwindAmountUsd.mul(borrowAsset.borrowFactor),
+        unwindAmountUsd.mul(borrowAsset?.borrowFactor),
     );
     console.log('new borrow factor times debt', borrowFactorTimesDebtAfter.toString());
 

@@ -119,7 +119,7 @@ export const HealthFactor = ({
 
     const determineHFFinal = () => {
         // For loop and unwind
-        if ((type === 'loop' || type === 'unwind') && amount) {
+        if (type === 'loop' || type === 'unwind') {
             const assetSymbol = toSymbol(asset);
             const depositAsset = findAssetInMarketsData(assetSymbol);
             if (!depositAsset) {
@@ -136,7 +136,7 @@ export const HealthFactor = ({
                 const afterLoop = calculateHealthFactorAfterLeverage(
                     depositAsset,
                     borrowAssets,
-                    calculateTotalBorrowAmount(amount, leverage),
+                    calculateTotalBorrowAmount(amount || '0', leverage),
                     queryUserTrancheData.data,
                 );
                 return renderHealth(
@@ -146,6 +146,10 @@ export const HealthFactor = ({
                 );
             }
             if (type === 'unwind') {
+                if (!queryUserTrancheData.data?.borrows?.length) {
+                    console.error('#determineHFFinal: user has no borrowed assets');
+                    return;
+                }
                 const mostBorrowedToken = queryUserTrancheData.data?.borrows.sort((a, b) =>
                     b.amount.localeCompare(a.amount),
                 )[0];
