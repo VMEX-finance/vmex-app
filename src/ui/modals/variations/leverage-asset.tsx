@@ -104,6 +104,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
 
     const [_collateral, _setCollateral] = useState(collateral);
     const [_leverage, _setLeverage] = useState(leverage);
+    const [_loading, _setLoading] = useState(false);
 
     const collaterals = _collateral ? _collateral.split(':') : [];
 
@@ -131,6 +132,8 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
     const [borrowAllowance, setBorrowAllowance] = useState(BigNumber.from(0));
     const [leverageDetails, setLeverageDetails] = useState<LeverageDetails>();
 
+    const CHAIN_CONFIG = NETWORKS[network];
+
     const handleCollateralClick = (address: string) => {
         if (errMsg) setErrMsg('');
         _setCollateral(address);
@@ -148,10 +151,10 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
         }
         if (!leverageDetails || !network) {
             toast.error('Error getting leverage details');
+            _setLoading(false);
             return;
         } // TODO: better error handling
 
-        const CHAIN_CONFIG = NETWORKS[network];
         const config = await prepareWriteContract({
             address: leverageDetails.variableDebtTokenAddress,
             abi: VariableDebtTokenABI,
@@ -168,7 +171,6 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
             toast.error('Please enter an amount');
             return;
         } // TODO: better error handling
-        const CHAIN_CONFIG = NETWORKS[network];
         const { token0, decimals0, token1, decimals1, stable } = leverageDetails;
         const params = {
             lpToken: utils.getAddress(toAddress(asset)),
@@ -320,10 +322,11 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
 
     const renderButtonLabel = () => {
         if (view === 'Loop') {
+            if (!_collateral) return 'Select Collateral';
             if (borrowAllowance?.lt(VERY_BIG_ALLOWANCE)) return 'Approve Delegation';
             return 'Loop';
         } else if (view === 'Unwind') {
-            if (!queryUserTrancheData.data?.borrows?.length) return 'No assets to unwind';
+            if (!queryUserTrancheData.data?.borrows?.length) return 'No Assets Available to Unwind';
             return 'Unwind';
         } else {
             return 'Submit Transaction';
@@ -425,30 +428,29 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
         }
     };
 
-    const doLooping = async () => {
-        console.log('do looping');
-        if (borrowAllowance?.lt(VERY_BIG_ALLOWANCE)) {
-            console.log('approve looping');
-            await approveBorrowDelegation();
+    const determineClick = async () => {
+        if (!_collateral) {
+            setErrMsg('No collateral provided');
             return;
         }
-        await leverageVeloZap();
-    };
-
-    const determineClick = async () => {
+        _setLoading(true);
         if (view === 'Loop') {
-            await doLooping();
+            if (borrowAllowance?.lt(VERY_BIG_ALLOWANCE)) {
+                console.log('approve looping');
+                await approveBorrowDelegation();
+                return;
+            }
+            await leverageVeloZap();
         } else {
             await unwind();
         }
+        _setLoading(false);
     };
 
     useEffect(() => {
         if (!network || !wallet || !asset || !_collateral || !trancheId) return;
 
         (async () => {
-            const CHAIN_CONFIG = NETWORKS[network];
-
             const veloPoolContract = {
                 address: getAddress(toAddress(asset)),
                 abi: VeloPoolABI,
@@ -511,7 +513,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                 variableDebtTokenAddress,
             });
         })().catch((err) => console.error(err));
-    }, [network, wallet]);
+    }, [network, wallet, _loading, _collateral]);
 
     return (
         <>
@@ -790,10 +792,11 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                         type="accent"
                         disabled={
                             isButtonDisabled() ||
-                            (view === 'Unwind' && !queryUserTrancheData?.data?.borrows?.length)
+                            (view === 'Unwind' && !queryUserTrancheData?.data?.borrows?.length) ||
+                            (view === 'Loop' && !_collateral)
                         }
                         onClick={determineClick}
-                        loading={isLoading}
+                        loading={isLoading || _loading}
                         loadingText={
                             borrowAllowance?.lt(VERY_BIG_ALLOWANCE) ? 'Approving' : 'Submitting'
                         }
