@@ -142,7 +142,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
     };
 
     const approveBorrowDelegation = async () => {
-        if (!collateral) {
+        if (!_collateral) {
             setErrMsg('Must provide collateral first');
             return;
         }
@@ -426,20 +426,20 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
     };
 
     const doLooping = async () => {
-        console.log('do loping');
+        console.log('do looping');
         if (borrowAllowance?.lt(VERY_BIG_ALLOWANCE)) {
-            console.log('approve');
+            console.log('approve looping');
             await approveBorrowDelegation();
             return;
         }
         await leverageVeloZap();
     };
 
-    const determineClick = () => {
+    const determineClick = async () => {
         if (view === 'Loop') {
-            doLooping();
+            await doLooping();
         } else {
-            unwind();
+            await unwind();
         }
     };
 
