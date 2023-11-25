@@ -19,7 +19,7 @@ export type ITransactionsStoreProps = {
     transactions: Array<ITransactionProps>;
     setTransactions?: any;
     isAnyTransactionLoading: boolean;
-    newTransaction: (tx: Transaction, type?: 'Deposit' | 'Borrow') => Promise<void>;
+    newTransaction: (tx: Transaction, type?: 'Deposit' | 'Borrow' | 'Loop') => Promise<void>;
     updateTransaction: (hash: string, status: string) => void;
 };
 
@@ -48,7 +48,7 @@ export function TransactionsStore(props: { children: ReactNode }) {
         return () => clearInterval(interval);
     }, [transactions]);
 
-    const newTransaction = async (tx: Transaction, type?: 'Deposit' | 'Borrow') => {
+    const newTransaction = async (tx: Transaction, type?: 'Deposit' | 'Borrow' | 'Loop') => {
         if (!tx.hash) return;
         const { hash } = tx;
         setIsAnyTransactionLoading(true);

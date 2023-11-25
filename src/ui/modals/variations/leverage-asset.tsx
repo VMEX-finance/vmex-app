@@ -161,9 +161,8 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
             functionName: 'approveDelegation',
             args: [CHAIN_CONFIG.leverageControllerAddress, constants.MaxUint256],
         });
-        const data = await writeContract(config);
-        await data.wait();
         setBorrowAllowance(constants.MaxUint256);
+        return await writeContract(config);
     };
 
     const leverageVeloZap = async () => {
@@ -172,7 +171,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
             return;
         } // TODO: better error handling
         const { token0, decimals0, token1, decimals1, stable } = leverageDetails;
-        const params = {
+        const params: any = {
             lpToken: utils.getAddress(toAddress(asset)),
             trancheId: BigNumber.from(trancheId),
             token0,
@@ -191,8 +190,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
             args: [params, totalBorrowAmount, isBorrowToken0],
         });
 
-        const data = await writeContract(config);
-        await data.wait();
+        return await writeContract(config);
     };
 
     const getCollateralAssets = (token0: string, token1: string) => {
@@ -398,12 +396,13 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                         stable: stable,
                         aToken: getAddress(reserveData.aTokenAddress),
                     },
-                    withdrawAmountNative.mul(reserveData.priceUSD).div(BigNumber.from(10).pow(18)),
+                    withdrawAmountNative
+                        .mul(reserveData?.priceUSD || BigNumber.from('0'))
+                        .div(BigNumber.from(10).pow(18)),
                 ],
             });
 
-            const tx = await writeContract(config);
-            await tx.wait();
+            return await writeContract(config);
         } else {
             const isBorrowToken0 = isAddressEqual(mostBorrowedTokens[0].assetAddress, token0);
             const config = await prepareWriteContract({
@@ -419,32 +418,29 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                         stable: stable,
                         aToken: getAddress(reserveData.aTokenAddress),
                     },
-                    withdrawAmountNative.mul(reserveData.priceUSD).div(BigNumber.from(10).pow(18)),
+                    withdrawAmountNative
+                        .mul(reserveData?.priceUSD || BigNumber.from('0'))
+                        .div(BigNumber.from(10).pow(18)),
                 ],
             });
-
-            const tx = await writeContract(config);
-            await tx.wait();
+            return await writeContract(config);
         }
     };
 
     const determineClick = async () => {
-        if (!_collateral) {
-            setErrMsg('No collateral provided');
-            return;
-        }
-        _setLoading(true);
         if (view === 'Loop') {
-            if (borrowAllowance?.lt(VERY_BIG_ALLOWANCE)) {
-                console.log('approve looping');
-                await approveBorrowDelegation();
+            if (!_collateral) {
+                setErrMsg('No collateral provided');
                 return;
             }
-            await leverageVeloZap();
+            if (borrowAllowance?.lt(VERY_BIG_ALLOWANCE)) {
+                console.log('approve looping');
+                await modalProps.submitTx(async () => await approveBorrowDelegation(), false);
+            }
+            await modalProps.submitTx(async () => await leverageVeloZap());
         } else {
-            await unwind();
+            await modalProps.submitTx(async () => await unwind());
         }
-        _setLoading(false);
     };
 
     useEffect(() => {
@@ -506,9 +502,9 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
             setBorrowAllowance(borrowAllowance);
             setLeverageDetails({
                 token0,
-                decimals0: BigNumber.from(decimals0),
+                decimals0: BigNumber.from(decimals0 || BigNumber.from('0')),
                 token1,
-                decimals1: BigNumber.from(decimals1),
+                decimals1: BigNumber.from(decimals1 || BigNumber.from('0')),
                 stable,
                 variableDebtTokenAddress,
             });
@@ -703,7 +699,12 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                                 isMax={isMax}
                                 setIsMax={setIsMax}
                                 loading={
-                                    Number(bigNumberToNative(amountWithdraw, asset || 'ETH')) === 0
+                                    Number(
+                                        bigNumberToNative(
+                                            amountWithdraw || BigNumber.from('0'),
+                                            asset || 'ETH',
+                                        ),
+                                    ) === 0
                                 }
                                 customMaxClick={maxOnClick}
                             />
@@ -717,7 +718,10 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                             <h3 className="mt-3 2xl:mt-4 text-neutral400">Health Factor</h3>
                             <HealthFactor
                                 asset={asset || 'ETH'}
-                                amount={utils.formatUnits(amountWithdraw, 18) || '0'}
+                                amount={
+                                    utils.formatUnits(amountWithdraw || BigNumber.from('0'), 18) ||
+                                    '0'
+                                }
                                 type={'unwind'}
                                 trancheId={String(trancheId)}
                                 collateral={_collateral}
@@ -734,16 +738,22 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                                                 ? bigNumberToNative(
                                                       amountWithdraw.sub(
                                                           unformattedStringToBigNumber(
-                                                              amount,
+                                                              amount || '0',
                                                               asset || 'ETH',
                                                           ),
-                                                      ),
+                                                      ) || BigNumber.from('0'),
                                                       asset || 'ETH',
                                                   )
-                                                : bigNumberToNative(amountWithdraw, asset || 'ETH'),
+                                                : bigNumberToNative(
+                                                      amountWithdraw || BigNumber.from('0'),
+                                                      asset || 'ETH',
+                                                  ),
                                         loading:
                                             Number(
-                                                bigNumberToNative(amountWithdraw, asset || 'ETH'),
+                                                bigNumberToNative(
+                                                    amountWithdraw || BigNumber.from('0'),
+                                                    asset || 'ETH',
+                                                ),
                                             ) === 0,
                                     },
                                     {
@@ -798,7 +808,9 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                         onClick={determineClick}
                         loading={isLoading || _loading}
                         loadingText={
-                            borrowAllowance?.lt(VERY_BIG_ALLOWANCE) ? 'Approving' : 'Submitting'
+                            view === 'Loop' && borrowAllowance?.lt(VERY_BIG_ALLOWANCE)
+                                ? 'Approving'
+                                : 'Submitting'
                         }
                     >
                         {renderButtonLabel()}

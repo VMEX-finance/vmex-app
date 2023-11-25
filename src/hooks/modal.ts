@@ -43,6 +43,8 @@ export const useModal = (dialog?: IDialogNames): IUseModal => {
                 return 'Deposit';
             case 'borrow-asset-dialog':
                 return 'Borrow';
+            case 'leverage-asset-dialog':
+                return 'Loop';
             default:
                 return undefined;
         }
