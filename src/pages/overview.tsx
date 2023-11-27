@@ -40,14 +40,16 @@ const Overview: React.FC = () => {
                 topTranches={queryProtocolData.data?.topTranches}
                 isLoading={queryProtocolData.isLoading}
             />
+
             <Carousel
                 type="strategies"
                 items={queryAllMarketsData.data?.sort(
                     (a, b) => Number(b.supplyApy) - Number(a.supplyApy),
                 )}
             />
-            {/* {isConnected && !chain?.unsupported ? (
-                <GridView type="fixed" className='mt-8'>
+
+            {isConnected && !chain?.unsupported ? (
+                <GridView type="fixed" className="mt-8">
                     <UserPerformanceCard
                         isLoading={queryUserActivity.isLoading || queryUserPnlChart.isLoading}
                         loanedAssets={queryUserActivity.data?.supplies?.map((el: any) => ({
@@ -81,9 +83,9 @@ const Overview: React.FC = () => {
                                 : 'Please connect your wallet'}
                         </span>
                     </div>
-                    <WalletButton primary className="!w-fit" />
+                    <WalletButton className="!w-fit" />
                 </div>
-            )} */}
+            )}
         </Base>
     );
 };
