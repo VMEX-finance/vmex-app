@@ -132,12 +132,17 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                                                     zappableAssets.map((el, i) => (
                                                         <button
                                                             key={`top-supplied-asset-${i}`}
-                                                            onClick={(e) => handleZap(e, el)}
+                                                            onClick={(e) =>
+                                                                el.amount === '$0.00'
+                                                                    ? {}
+                                                                    : handleZap(e, el)
+                                                            }
+                                                            disabled={el.amount === '$0.00'}
                                                         >
                                                             <PillDisplay
                                                                 type="asset"
                                                                 asset={el.symbol}
-                                                                hoverable
+                                                                hoverable={el.amount !== '$0.00'}
                                                                 selected={
                                                                     el.address?.toLowerCase() ===
                                                                     zapAsset?.address.toLowerCase()
