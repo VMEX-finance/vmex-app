@@ -42,6 +42,7 @@ import {
     isUnwindTwoBorrow,
     toSymbol,
     toAddress,
+    cleanNumberString,
 } from '@/utils';
 import { useAccount } from 'wagmi';
 import { BigNumber, constants, utils } from 'ethers';
@@ -240,7 +241,9 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
         const userBorrowableAmount = queryUserActivity?.data?.availableBorrowsETH;
         const steps: string[] = [];
         if (userBorrowableAmount) {
-            const availableBorrowUsd = parseUnits(userBorrowableAmount, 18).mul(9).div(10);
+            const availableBorrowUsd = parseUnits(cleanNumberString(userBorrowableAmount), 18)
+                .mul(9)
+                .div(10);
             while (totalBorrowAmount.gt(0)) {
                 const borrowAmountUsd = availableBorrowUsd.lt(totalBorrowAmount)
                     ? availableBorrowUsd

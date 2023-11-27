@@ -14,7 +14,6 @@ import { BigNumber } from 'ethers';
 import { getAddress, parseUnits } from 'ethers/lib/utils.js';
 import { useAccount, useNetwork } from 'wagmi';
 import { formatUnits } from 'ethers/lib/utils.js';
-import { convertSymbolToAddress } from '@vmexfinance/sdk';
 
 const EMPTY_TOKEN = { address: '', symbol: '' };
 
@@ -41,9 +40,7 @@ export const useZap = (
     const { address: wallet } = useAccount();
     const { queryUserWallet } = useUserData(wallet);
 
-    const lpAddress = symbolOrAddress
-        ? convertSymbolToAddress(symbolOrAddress, chain?.network || '')
-        : undefined;
+    const lpAddress = symbolOrAddress ? toAddress(symbolOrAddress) : undefined;
     const zapAmountNative =
         zapAmount !== ''
             ? parseUnits(zapAmount, DECIMALS.get(zapAsset.symbol) || 18)

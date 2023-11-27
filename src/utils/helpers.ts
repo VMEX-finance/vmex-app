@@ -369,3 +369,8 @@ export const isAddressEqual = (address1: string, address2: string) => {
 export const formatUsdUnits = (amount: BigNumber, precion: number = 2) => {
     return `$${parseFloat(formatUnits(amount, 8)).toFixed(precion)}`;
 };
+
+export const cleanNumberString = (val: string) => {
+    if (!val) return '';
+    return val.replace(/[^\d.]/g, '');
+};
