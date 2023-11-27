@@ -314,6 +314,18 @@ export const useZap = (
             utils.isAddress(existingZapAsset?.address)
         ) {
             setZapAsset({ address: existingZapAsset.address, symbol: existingZapAsset.symbol });
+            if (existingZappableAssets?.length) {
+                setZapBalance(
+                    existingZappableAssets.find((x) =>
+                        isAddressEqual(x.address, existingZapAsset.address),
+                    )?.amount || '0',
+                );
+            } else if (assets?.length) {
+                setZapBalance(
+                    assets.find((x) => isAddressEqual(x.address, existingZapAsset.address))
+                        ?.amount || '0',
+                );
+            }
         }
     }, [existingZapAsset, existingZappableAssets?.length]);
 
