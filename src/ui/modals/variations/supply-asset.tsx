@@ -80,7 +80,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
         zapAsset,
         submitZap,
         getZapOutput,
-    } = useZap(asset);
+    } = useZap(asset, (data as any)?.zapAsset, (data as any)?.zappableAssets);
 
     const poolLink = redirectToPool(convertSymbolToAddress(asset, networkName));
 
@@ -173,8 +173,11 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                                                         onClick={submitZap as any}
                                                         className="w-fit"
                                                         type="accent"
+                                                        disabled={zapBalance === '0'}
                                                     >
-                                                        {`Zap to ${asset ? asset : ''}`}
+                                                        {zapBalance === '0'
+                                                            ? `Insufficient ${zapAsset.symbol}`
+                                                            : `Zap to ${asset ? asset : ''}`}
                                                     </Button>
                                                 </div>
                                             </div>

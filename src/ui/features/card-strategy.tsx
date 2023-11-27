@@ -20,7 +20,7 @@ import {
 } from '@/api';
 import { Chain, useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
-import { useDialogController } from '@/hooks';
+import { useDialogController, useZap } from '@/hooks';
 import { useUserData } from '@/api/user-data';
 import { getAddress } from 'ethers/lib/utils.js';
 import { useMaxBorrowableAmount } from '@/hooks/max-borrowable';
@@ -61,6 +61,8 @@ export const StrategyCard = ({
     const { queryAllAssetMappingsData } = useSubgraphAllAssetMappingsData();
     const { queryTrancheData } = useSubgraphTrancheData(trancheId);
     const { prices } = usePricesData();
+
+    const { zappableAssets, handleZap, zapAsset } = useZap(asset);
 
     const isLoopable = token0 && token1 && name;
 
@@ -150,6 +152,8 @@ export const StrategyCard = ({
             trancheId,
             tranche: queryTrancheData?.data?.name || '',
             collateral: true,
+            zapAsset,
+            zappableAssets,
         });
     };
 
@@ -157,7 +161,7 @@ export const StrategyCard = ({
         if (!chain && openConnectModal) return 'Connect Wallet';
         else if (chain?.unsupported && switchNetwork) return 'Switch Network';
         if (isLeverage) return 'Loop';
-        return 'Supply';
+        return 'Supply / Zap';
     };
 
     const handleSlide = (e: Event) => {
@@ -222,53 +226,50 @@ export const StrategyCard = ({
                         </div>
                         <div>
                             <p className="text-xs leading-tight">
-                                Open this strategy by providing any of the assets as collateral:
+                                {suppliedAssetDetails
+                                    ? 'Select one of the following assets to borrow and use as collateral:'
+                                    : `Select one of the following assets to zap into ${asset}:`}
                             </p>
                             <div className="flex gap-1 flex-wrap mt-1">
-                                {getCollateralAssets(token0 || '', token1 || '').map((el, i) =>
-                                    suppliedAssetDetails ? (
-                                        <button
-                                            onClick={(e) => handleCollateralClick(el.assetAddress)}
-                                            key={`collateral-asset-${el}-${i}`}
-                                        >
-                                            <PillDisplay
-                                                type="asset"
-                                                asset={el.assetName}
-                                                size="sm"
-                                                hoverable={!!suppliedAssetDetails}
-                                                selected={
-                                                    el.assetAddress.toLowerCase() ===
-                                                    collateral.toLowerCase()
-                                                }
-                                            />
-                                        </button>
-                                    ) : (
-                                        <Tooltip
-                                            id={`collateral-tooltip-${i}-${el.assetAddress}-${asset}`}
-                                            text="Supply first to start looping"
-                                            key={`collateral-tooltip-${i}-${el}-${asset}`}
-                                        >
-                                            <button
-                                                onClick={(e) =>
-                                                    handleCollateralClick(el.assetAddress)
-                                                }
-                                                key={`collateral-asset-${el}-${i}`}
-                                                disabled
-                                            >
-                                                <PillDisplay
-                                                    type="asset"
-                                                    asset={el.assetName}
-                                                    size="sm"
-                                                    hoverable={!getLeverageDisabled()}
-                                                    selected={
-                                                        el.assetAddress.toLowerCase() ===
-                                                        collateral.toLowerCase()
-                                                    }
-                                                />
-                                            </button>
-                                        </Tooltip>
-                                    ),
-                                )}
+                                {suppliedAssetDetails
+                                    ? getCollateralAssets(token0, token1).map((el, i) => (
+                                          <button
+                                              onClick={(e) =>
+                                                  handleCollateralClick(el.assetAddress)
+                                              }
+                                              key={`collateral-asset-${el}-${i}`}
+                                          >
+                                              <PillDisplay
+                                                  type="asset"
+                                                  asset={el.assetName}
+                                                  size="sm"
+                                                  hoverable={!!suppliedAssetDetails}
+                                                  selected={
+                                                      el.assetAddress.toLowerCase() ===
+                                                      collateral.toLowerCase()
+                                                  }
+                                              />
+                                          </button>
+                                      ))
+                                    : zappableAssets.map((el, i) => (
+                                          <button
+                                              key={`top-supplied-asset-${i}`}
+                                              onClick={(e) =>
+                                                  el.amount === '$0.00' ? {} : handleZap(e, el)
+                                              }
+                                              disabled={el.amount === '$0.00'}
+                                          >
+                                              <PillDisplay
+                                                  type="asset"
+                                                  asset={el.symbol}
+                                                  hoverable={el.amount !== '$0.00'}
+                                                  selected={
+                                                      el.address?.toLowerCase() ===
+                                                      zapAsset?.address.toLowerCase()
+                                                  }
+                                              />
+                                          </button>
+                                      ))}
                             </div>
                         </div>
                     </>

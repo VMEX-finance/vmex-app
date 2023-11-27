@@ -1,7 +1,7 @@
-import { constants } from 'ethers';
+import { constants, utils } from 'ethers';
 import { SyntheticEvent, useEffect, useState } from 'react';
 import { useUserData } from '@/api';
-import { DECIMALS, NETWORKS, isAddressEqual, isPoolStable } from '@/utils';
+import { DECIMALS, NETWORKS, isAddressEqual, isPoolStable, toAddress, toSymbol } from '@/utils';
 import { VeloPoolABI, VeloRouterABI } from '@/utils/abis';
 import {
     erc20ABI,
@@ -24,14 +24,18 @@ type IVeloPoolDetails = { token0: `0x${string}`; token1: `0x${string}`; stable: 
 const ONE_BN = BigNumber.from(1);
 const ZERO_BN = BigNumber.from(0);
 
-export const useZap = (symbolOrAddress: string) => {
+export const useZap = (
+    symbolOrAddress: string,
+    existingZapAsset?: any,
+    existingZappableAssets?: IZapAssetProps[],
+) => {
     const [assets, setAssets] = useState<IZapAssetProps[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [zapAsset, setZapAsset] = useState({ address: '', symbol: '' });
     const [zapAmount, setZapAmount] = useState('');
     const [zapBalance, setZapBalance] = useState('0');
     const [isMaxZap, setIsMaxZap] = useState(false);
-    const [zapOutput, setZapOutput] = useState('');
+    // const [zapOutput, setZapOutput] = useState('');
     const { chain } = useNetwork();
     const [veloPoolDetails, setVeloPoolDetails] = useState<IVeloPoolDetails>();
     const { address: wallet } = useAccount();
@@ -274,9 +278,9 @@ export const useZap = (symbolOrAddress: string) => {
     }, [lpAddress]);
 
     useEffect(() => {
-        if (!symbolOrAddress || !queryUserWallet?.data || !veloPoolDetails) return;
-
         (async () => {
+            if (!symbolOrAddress || !queryUserWallet?.data || !veloPoolDetails || assets?.length)
+                return;
             const zappableTokens = queryUserWallet.data.assets
                 .filter(
                     (x) =>
@@ -299,6 +303,19 @@ export const useZap = (symbolOrAddress: string) => {
             );
         })().catch((err) => console.error(err));
     }, [symbolOrAddress, queryUserWallet, veloPoolDetails]);
+
+    useEffect(() => {
+        if (existingZappableAssets?.length) {
+            setAssets(existingZappableAssets);
+        }
+        if (
+            existingZapAsset?.address &&
+            existingZapAsset?.symbol &&
+            utils.isAddress(existingZapAsset?.address)
+        ) {
+            setZapAsset({ address: existingZapAsset.address, symbol: existingZapAsset.symbol });
+        }
+    }, [existingZapAsset, existingZappableAssets?.length]);
 
     return {
         zappableAssets: assets,
