@@ -42,7 +42,7 @@ export const useZap = (
 
     const lpAddress = symbolOrAddress ? toAddress(symbolOrAddress) : undefined;
     const zapAmountNative =
-        zapAmount !== ''
+        zapAmount && zapAsset.symbol
             ? parseUnits(zapAmount, DECIMALS.get(zapAsset.symbol) || 18)
             : BigNumber.from(0);
 

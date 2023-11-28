@@ -133,14 +133,14 @@ export function useUserData(userAddress: any): IUserDataProps {
         queryKey: ['user-activity', network],
         queryFn: () => getUserActivityData(userAddress),
         enabled: !!userAddress,
-        refetchInterval: 5000,
+        refetchInterval: 3000,
     });
 
     const queryUserWallet = useQuery({
         queryKey: ['user-wallet', network],
         queryFn: () => _getUserWalletData(userAddress),
         enabled: !!userAddress,
-        refetchInterval: 5000,
+        refetchInterval: 3000,
     });
 
     const getTokenBalance = (asset: string) => {
