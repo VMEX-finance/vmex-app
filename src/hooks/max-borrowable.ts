@@ -24,8 +24,8 @@ export const useMaxBorrowableAmount = (
             return;
         }
 
-        const minBorrowBN = parseUnits(minBorrow, DECIMALS);
-        const availableBorrowsBN = parseEther(availableBorrows);
+        const minBorrowBN = parseUnits(cleanNumberString(minBorrow), DECIMALS);
+        const availableBorrowsBN = parseEther(cleanNumberString(availableBorrows));
         const ltvDec = new Decimal(formatEther(ltv));
 
         if (minBorrowBN.gt(availableBorrowsBN)) {
@@ -41,7 +41,7 @@ export const useMaxBorrowableAmount = (
 
         const maxBorrowableAmountUsd = cleanNumberString(
             formatUnits(
-                new Decimal(availableBorrowsBN.toString())
+                new Decimal(cleanNumberString(availableBorrowsBN.toString()))
                     .times(DECIMAL_ONE.minus(ltvDec.pow(N)))
                     .dividedBy(DECIMAL_ONE.minus(ltvDec))
                     .floor()
@@ -52,7 +52,7 @@ export const useMaxBorrowableAmount = (
 
         const maxLeverage = assetAmountUsd
             ? new Decimal(maxBorrowableAmountUsd)
-                  .dividedBy(cleanNumberString(assetAmountUsd).replace('$', ''))
+                  .dividedBy(cleanNumberString(assetAmountUsd))
                   .plus(1)
                   .toDecimalPlaces(LEVERAGE_DECIMAL_PLACES)
                   .toNumber()
