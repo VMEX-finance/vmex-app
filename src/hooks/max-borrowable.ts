@@ -1,3 +1,4 @@
+import { cleanNumberString } from '@/utils';
 import { Decimal } from 'decimal.js';
 import { BigNumber } from 'ethers';
 import { formatEther, parseEther } from 'ethers/lib/utils.js';
@@ -38,13 +39,15 @@ export const useMaxBorrowableAmount = (
             .dividedBy(ltvDec.ln())
             .floor();
 
-        const maxBorrowableAmountUsd = formatUnits(
-            new Decimal(availableBorrowsBN.toString())
-                .times(DECIMAL_ONE.minus(ltvDec.pow(N)))
-                .dividedBy(DECIMAL_ONE.minus(ltvDec))
-                .floor()
-                .toString(),
-            DECIMALS,
+        const maxBorrowableAmountUsd = cleanNumberString(
+            formatUnits(
+                new Decimal(availableBorrowsBN.toString())
+                    .times(DECIMAL_ONE.minus(ltvDec.pow(N)))
+                    .dividedBy(DECIMAL_ONE.minus(ltvDec))
+                    .floor()
+                    .toString(),
+                DECIMALS,
+            ),
         );
 
         const maxLeverage = assetAmountUsd

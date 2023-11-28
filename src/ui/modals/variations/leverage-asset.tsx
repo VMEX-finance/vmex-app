@@ -112,7 +112,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
     const collateralSymbols =
         collaterals.length && asset ? convertAddressListToSymbol(collaterals, network) : [];
     const assetSymbol = asset ? toSymbol(asset) : '';
-    const collateralMarketData = collaterals.map((x) => {
+    const collateralMarketData = collaterals?.map((x) => {
         const marketData = queryAllMarketsData.data?.find(
             (y) => y.trancheId === trancheId?.toString() && isAddressEqual(y.assetAddress, x),
         );
