@@ -52,7 +52,7 @@ export const useMaxBorrowableAmount = (
 
         const maxLeverage = assetAmountUsd
             ? new Decimal(maxBorrowableAmountUsd)
-                  .dividedBy(assetAmountUsd.replace('$', ''))
+                  .dividedBy(cleanNumberString(assetAmountUsd).replace('$', ''))
                   .plus(1)
                   .toDecimalPlaces(LEVERAGE_DECIMAL_PLACES)
                   .toNumber()
