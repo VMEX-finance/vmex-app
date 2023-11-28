@@ -590,7 +590,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                                             errMsg ? 'text-red-600' : ''
                                         }`}
                                     >
-                                        Provide any of the assets as collateral:
+                                        Select one of the following assets to borrow:
                                     </p>
                                     <div className="flex gap-1 flex-wrap mt-1">
                                         {getCollateralAssets(
