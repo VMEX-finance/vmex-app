@@ -1,5 +1,5 @@
 import { BigNumber, BigNumberish, ethers, utils } from 'ethers';
-import { usdFormatter, nativeTokenFormatter } from './helpers';
+import { usdFormatter, nativeTokenFormatter, cleanNumberString } from './helpers';
 import { convertAddressToSymbol, convertSymbolToAddress } from '@vmexfinance/sdk';
 import { ITrancheCategories } from '@/api';
 import { DECIMALS } from './constants';
@@ -84,12 +84,9 @@ export const unformattedStringToBigNumber = (
         console.error('given invalid number');
         return BigNumber.from('0');
     }
-
+    const _number = cleanNumberString(number);
     try {
-        return ethers.utils.parseUnits(
-            number,
-            DECIMALS.get(convertAddressToSymbol(asset, network) || asset) || 18,
-        );
+        return ethers.utils.parseUnits(_number, DECIMALS.get(toSymbol(asset)) || 18);
     } catch {
         return BigNumber.from('0');
     }

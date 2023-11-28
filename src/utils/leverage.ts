@@ -5,7 +5,7 @@ import { formatUnits, parseUnits } from 'ethers/lib/utils.js';
 import { IGraphAssetData, IUserTrancheData } from '@/api';
 import { convertAddressToSymbol } from '@vmexfinance/sdk';
 import { IYourBorrowsTableItemProps } from '@/ui/tables';
-import { isAddressEqual } from '.';
+import { cleanNumberString, isAddressEqual } from '.';
 
 const DECIMALS = 8;
 const DECIMAL_ONE = new Decimal(1);
@@ -139,7 +139,8 @@ export const calculateHealthFactorAfterUnwind = (
 
 export const calculateTotalBorrowAmount = (amountHumanReadable: string, leverage: number) => {
     if (!amountHumanReadable || !leverage) return BigNumber.from(0);
-    return parseUnits(amountHumanReadable.replace('$', ''), 8)
+    const _amountHumanReadable = cleanNumberString(amountHumanReadable);
+    return parseUnits(_amountHumanReadable.replace('$', ''), 8)
         .mul((leverage * 100).toFixed(0))
         .div(100);
 };
