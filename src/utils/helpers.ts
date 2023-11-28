@@ -372,5 +372,8 @@ export const formatUsdUnits = (amount: BigNumber, precion: number = 2) => {
 
 export const cleanNumberString = (val: string) => {
     if (!val) return '';
-    return val.replace(/[^\d.]/g, '').replaceAll(',', '');
+    return val
+        .replace(/[^\d.]/g, '')
+        .replaceAll(',', '')
+        .replaceAll('$', '');
 };
