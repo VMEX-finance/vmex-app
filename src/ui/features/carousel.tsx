@@ -5,6 +5,7 @@ import { useWindowSize } from '@/hooks';
 import { HiOutlineChevronLeft, HiOutlineChevronRight } from 'react-icons/hi';
 import { StrategyCard } from '@/ui/components';
 import { NETWORKS, getNetworkName } from '@/utils';
+import { constants, utils } from 'ethers';
 
 type ICarousel = {
     items?: any[];
@@ -131,13 +132,14 @@ export const Carousel = ({ items, type }: ICarousel) => {
                                   />
                               ))
                             : [1, 2, 3, 4, 5].map((el, i) => (
-                                  <Card
-                                      key={`carousel-item-${i}`}
-                                      className="min-h-[225px]"
-                                      loading={!items?.length}
-                                  >
-                                      {'Loading'}
-                                  </Card>
+                                  <StrategyCard
+                                      key={`carousel-item-${i}-${el}`}
+                                      asset={'ETH'}
+                                      assetAddress={constants.AddressZero}
+                                      supplyApy={0}
+                                      trancheId={0}
+                                      loading
+                                  />
                               ))}
                     </Slider>
                 </div>

@@ -19,7 +19,7 @@ import {
     useSubgraphTrancheData,
 } from '@/api';
 import { Chain, useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
-import { useConnectModal } from '@rainbow-me/rainbowkit';
+import { useChainModal, useConnectModal } from '@rainbow-me/rainbowkit';
 import { useDialogController, useZap } from '@/hooks';
 import { useUserData } from '@/api/user-data';
 import { getAddress } from 'ethers/lib/utils.js';
@@ -35,6 +35,7 @@ type IStrategyCard = {
     token1?: string;
     name?: string;
     tranche?: string;
+    loading?: boolean;
 };
 
 export const StrategyCard = ({
@@ -46,11 +47,12 @@ export const StrategyCard = ({
     token0,
     token1,
     name,
+    loading,
 }: IStrategyCard) => {
     const { chain } = useNetwork();
     const { address } = useAccount();
     const { openDialog } = useDialogController();
-    const { switchNetwork } = useSwitchNetwork();
+    const { openChainModal } = useChainModal();
     const { openConnectModal } = useConnectModal();
     const [leverage, setLeverage] = useState(1);
     const { queryAssetApys } = useApyData();
@@ -146,7 +148,7 @@ export const StrategyCard = ({
 
     const handleSupplyClick = (e: any) => {
         if (!chain && openConnectModal) return openConnectModal();
-        else if (chain?.unsupported && switchNetwork) return switchNetwork(DEFAULT_CHAINID);
+        else if (chain?.unsupported && openChainModal) return openChainModal();
         return openDialog('loan-asset-dialog', {
             asset,
             trancheId,
@@ -159,7 +161,7 @@ export const StrategyCard = ({
 
     const renderBtnText = (isLeverage?: boolean) => {
         if (!chain && openConnectModal) return 'Connect Wallet';
-        else if (chain?.unsupported && switchNetwork) return 'Switch Network';
+        else if (chain?.unsupported && openChainModal) return 'Switch Network';
         if (isLeverage) return 'Loop';
         return 'Supply / Zap';
     };

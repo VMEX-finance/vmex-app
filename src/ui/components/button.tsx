@@ -1,5 +1,5 @@
 import { useWindowSize } from '@/hooks';
-import { useConnectModal } from '@rainbow-me/rainbowkit';
+import { useChainModal, useConnectModal } from '@rainbow-me/rainbowkit';
 import React from 'react';
 import { CgSpinner } from 'react-icons/cg';
 import { useNavigate } from 'react-router-dom';
@@ -55,7 +55,7 @@ export const Button = ({
     const { width, breakpoints } = useWindowSize();
     const navigate = useNavigate();
     const { openConnectModal } = useConnectModal();
-    const { switchNetwork } = useSwitchNetwork();
+    const { openChainModal } = useChainModal();
 
     // CSS
     const baseClass =
@@ -111,7 +111,7 @@ export const Button = ({
     function renderClick() {
         if (web3) {
             if (!address && openConnectModal) () => openConnectModal();
-            if (chain?.unsupported && switchNetwork) () => switchNetwork();
+            if (chain?.unsupported && openChainModal) () => openChainModal();
             return onClick;
         }
         return onClick;

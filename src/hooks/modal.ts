@@ -96,7 +96,7 @@ export const useModal = (dialog?: IDialogNames): IUseModal => {
         error,
         setError,
         submitTx,
-        dialog: dialog || 'disclaimer-dialog',
+        dialog: dialog || 'tos-dialog',
         view,
         setView,
         isMax,

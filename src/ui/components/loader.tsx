@@ -62,7 +62,7 @@ export const Loader = ({
     if (type === 'full-page') {
         const determineShow = () => {
             if (onlyHome) {
-                return loading && (pathname === '/' || pathname === '/overview') && !firstLoad;
+                return loading && (pathname === '/' || pathname === '/overview') && firstLoad;
             } else {
                 return loading;
             }
@@ -71,7 +71,7 @@ export const Loader = ({
             <>
                 <Transition
                     show={determineShow()}
-                    leave="transition-opacity duration-1000"
+                    leave="transition-opacity duration-800 delay-500"
                     leaveFrom="opacity-100"
                     leaveTo="opacity-0"
                 >
@@ -81,6 +81,9 @@ export const Loader = ({
                                 animation ? 'animate-pulse' : ''
                             }`}
                             show={determineShow()}
+                            enter="transition-opacity duration-400"
+                            enterFrom="opacity-0"
+                            enterTo="opacity-100 "
                             leave="transition-opacity duration-800"
                             leaveFrom="opacity-100"
                             leaveTo="opacity-0"

@@ -75,16 +75,7 @@ const Overview: React.FC = () => {
                     </div>
                 </GridView>
             ) : (
-                <div className="mt-10 text-center flex-col">
-                    <div className="mb-4">
-                        <span className="text-lg dark:text-neutral-200">
-                            {chain?.unsupported
-                                ? 'Please switch networks'
-                                : 'Please connect your wallet'}
-                        </span>
-                    </div>
-                    <WalletButton className="!w-fit" />
-                </div>
+                <></>
             )}
         </Base>
     );

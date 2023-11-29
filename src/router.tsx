@@ -10,7 +10,7 @@ import Construction from './pages/construction';
 import TrancheDetails from './pages/tranche-details';
 import Portfolio from './pages/portfolio';
 import MyTranches from './pages/my-tranches';
-import { ProtectedRoute, useGlobalContext } from '@/store';
+import { useGlobalContext } from '@/store';
 
 function Router() {
     const [showLoading, setShowLoading] = useState(true);
@@ -28,80 +28,17 @@ function Router() {
         <Loader type="full-page" loading={showLoading} onlyHome>
             <Routes>
                 <Route index element={<Navigate to="/overview" />} />
-                <Route
-                    path="/overview"
-                    element={
-                        <ProtectedRoute>
-                            <Overview />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="/tranches"
-                    element={
-                        <ProtectedRoute>
-                            <Tranches />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="/markets"
-                    element={
-                        <ProtectedRoute>
-                            <Markets />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="/staking"
-                    element={
-                        <ProtectedRoute>
-                            <Staking />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="/governance"
-                    element={
-                        <ProtectedRoute>
-                            <Construction />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="/develop"
-                    element={
-                        <ProtectedRoute>
-                            <Construction />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="/portfolio"
-                    element={
-                        <ProtectedRoute>
-                            <Portfolio />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="/my-tranches"
-                    element={
-                        <ProtectedRoute>
-                            <MyTranches />
-                        </ProtectedRoute>
-                    }
-                />
+                <Route path="/overview" element={<Overview />} />
+                <Route path="/tranches" element={<Tranches />} />
+                <Route path="/markets" element={<Markets />} />
+                <Route path="/staking" element={<Staking />} />
+                <Route path="/governance" element={<Construction />} />
+                <Route path="/develop" element={<Construction />} />
+                <Route path="/portfolio" element={<Portfolio />} />
+                <Route path="/my-tranches" element={<MyTranches />} />
 
                 {/* Dynamic Tranche Routes */}
-                <Route
-                    path="/tranches/:name"
-                    element={
-                        <ProtectedRoute>
-                            <TrancheDetails />
-                        </ProtectedRoute>
-                    }
-                />
+                <Route path="/tranches/:name" element={<TrancheDetails />} />
             </Routes>
         </Loader>
     );
