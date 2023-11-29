@@ -170,7 +170,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                                                         Output amount: <SmartPrice price={''} />
                                                     </p>
                                                     <Button
-                                                        onClick={submitZap as any}
+                                                        onClick={submitZap}
                                                         className="w-fit"
                                                         type="accent"
                                                         disabled={zapBalance === '0'}

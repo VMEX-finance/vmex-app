@@ -40,7 +40,7 @@ export const PillDisplay = ({
             case 'sm':
                 return ['text-md', ''];
             default:
-                return ['2xl:text-lg', '2xl:pl-2 2xl:pr-2.5'];
+                return ['', ''];
         }
     };
 

@@ -156,14 +156,25 @@ export const useZap = (
         }
     }
 
+    function resetZap() {
+        setZapAsset({ address: '', symbol: '' });
+        setZapAmount('');
+        setZapBalance('0');
+    }
+
     async function submitZap(e: SyntheticEvent) {
         e.preventDefault();
         if (zapAmount && zapAsset) {
+            setIsLoading(true);
             await checkAllowance();
             await zapIn();
+            setIsLoading(false);
+            resetZap();
             // TODO: fico/alo - decide
-            return zapAmount;
+        } else {
+            console.error('#submitZap: zapAmount or zapAsset missing');
         }
+        return;
     }
 
     async function getZapOutput() {

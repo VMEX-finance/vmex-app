@@ -16,14 +16,35 @@ const Under = ({ children }: { children: React.ReactNode }) => (
 const UandI = ({ children }: { children: React.ReactNode }) => (
     <span className="underline italic">{children}</span>
 );
-const List = ({ list, type = 'num', id }: { list: string[]; type?: 'num' | 'dot'; id: string }) => (
-    <ol className={`${type === 'num' ? 'list-decimal' : 'list-disc'} pl-4`}>
+const UandB = ({ children }: { children: React.ReactNode }) => (
+    <span className="underline font-semibold">{children}</span>
+);
+const List = ({
+    list,
+    type = 'num',
+    id,
+}: {
+    list: string[];
+    type?: 'num' | 'dot' | 'disc';
+    id: string;
+}) => (
+    <ol
+        className={`${
+            type === 'num'
+                ? 'list-decimal'
+                : type === 'disc'
+                ? 'list-disc marker:text-gray-400'
+                : 'list-disc'
+        } pl-4`}
+    >
         {list.map((x, i) => (
             <li key={`tos-${id}-${i}`}>{x}</li>
         ))}
     </ol>
 );
-
+const Title = ({ children }: { children: React.ReactNode }) => (
+    <span className="font-bold uppercase text-center">{children}</span>
+);
 export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
     name,
     isOpen,
@@ -62,7 +83,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                             owner/operator of the Site) (collectively with its successors and
                             assigns, the <Bold>“Site Operator”</Bold>).
                         </p>
-                        <p className="font-bold uppercase text-center">Summary</p>
+                        <Title>Summary</Title>
                         <p>Among other things, the Terms and Conditions provide that you must:</p>
                         <List
                             id="summary"
