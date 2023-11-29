@@ -4,6 +4,7 @@ import { IYourBorrowsTableItemProps, IYourSuppliesTableItemProps } from '@/ui/ta
 import { UserRewards } from '@vmexfinance/sdk';
 import { IAvailableCoins } from '@/utils';
 import { ILineChartDataPointProps } from '@/ui/components';
+import { Address } from 'wagmi';
 
 // Table of Contents:
 // 1. General
@@ -158,6 +159,7 @@ export type IUserDataProps = {
     queryUserActivity: UseQueryResult<IUserActivityDataProps, unknown>;
     queryUserWallet: UseQueryResult<IUserWalletDataProps, unknown>;
     getTokenBalance: (asset: string) => ITokenBalanceProps;
+    queryUserLooping: UseQueryResult<IUserLoopingProps, unknown>;
 };
 
 export type IUserActivityDataProps = {
@@ -180,6 +182,13 @@ export type IWalletAssetProps = {
 
 export type IUserWalletDataProps = {
     assets: IWalletAssetProps[];
+};
+
+export type IUserLoopingProps = {
+    depositAssets: Address[];
+    depositAmounts: BigNumber[];
+    borrowAssets: Address[];
+    borrowAmounts: BigNumber[];
 };
 
 export type IUserTrancheDataProps = {

@@ -163,7 +163,9 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
             args: [CHAIN_CONFIG.leverageControllerAddress, constants.MaxUint256],
         });
         setBorrowAllowance(constants.MaxUint256);
-        return await writeContract(config);
+        const tx = await writeContract(config);
+
+        return tx.wait();
     };
 
     const leverageVeloZap = async () => {
@@ -191,7 +193,9 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
             args: [params, totalBorrowAmount, isBorrowToken0],
         });
 
-        return await writeContract(config);
+        const tx = await writeContract(config);
+
+        return tx.wait();
     };
 
     const getCollateralAssets = (token0: string, token1: string) => {
@@ -439,6 +443,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
             if (borrowAllowance?.lt(VERY_BIG_ALLOWANCE)) {
                 console.log('approve looping');
                 await modalProps.submitTx(async () => await approveBorrowDelegation(), false);
+                return;
             }
             await modalProps.submitTx(async () => await leverageVeloZap());
         } else {

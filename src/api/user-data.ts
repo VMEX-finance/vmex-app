@@ -16,10 +16,15 @@ import {
     PRICING_DECIMALS,
     getNetworkName,
 } from '@/utils';
-import { IUserActivityDataProps, IUserDataProps, IUserWalletDataProps } from './types';
+import {
+    IUserActivityDataProps,
+    IUserDataProps,
+    IUserLoopingProps,
+    IUserWalletDataProps,
+} from './types';
 import { BigNumber } from 'ethers';
 import { getSubgraphTranchesOverviewData } from './tranches-data';
-
+import { getUserLoopingQuery } from './queries/user-looping';
 // Gets
 export async function getUserActivityData(userAddress: string): Promise<IUserActivityDataProps> {
     if (!userAddress) {
@@ -125,6 +130,40 @@ export async function _getUserWalletData(
     };
 }
 
+async function _getUserLooping(
+    userAddress: string | undefined,
+    network: string,
+): Promise<IUserLoopingProps> {
+    if (!userAddress) {
+        return {
+            depositAssets: [],
+            depositAmounts: [],
+            borrowAssets: [],
+            borrowAmounts: [],
+        };
+    }
+    const query = getUserLoopingQuery(userAddress);
+
+    const networkConfig = NETWORKS[network];
+
+    const responseRaw = await fetch(networkConfig.subgraph, {
+        method: 'POST',
+        body: JSON.stringify({ query }),
+        headers: { 'Content-Type': 'application/json' },
+    });
+
+    const response = await responseRaw.json();
+
+    return response.data.userLoopings.length
+        ? response.data.userLoopings[0]
+        : {
+              depositAssets: [],
+              depositAmounts: [],
+              borrowAssets: [],
+              borrowAmounts: [],
+          };
+}
+
 // Master
 export function useUserData(userAddress: any): IUserDataProps {
     const network = getNetworkName();
@@ -169,9 +208,17 @@ export function useUserData(userAddress: any): IUserDataProps {
         }
     };
 
+    const queryUserLooping = useQuery({
+        queryKey: ['user-looping', network],
+        queryFn: () => _getUserLooping(userAddress, network),
+        enabled: !!userAddress,
+        refetchInterval: 5000,
+    });
+
     return {
         queryUserActivity,
         queryUserWallet,
         getTokenBalance,
+        queryUserLooping,
     };
 }

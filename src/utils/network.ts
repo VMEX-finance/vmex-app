@@ -6,7 +6,7 @@ export const NETWORKS: Record<string, any> = {
     optimism: {
         name: 'optimism',
         rpc: `https://optimism.llamarpc.com/rpc/${process.env.REACT_APP_LLAMA_RPC_KEY}`, // https://mainnet.optimism.io
-        subgraph: 'https://api.thegraph.com/subgraphs/name/vmex-finance/vmex-optimism',
+        subgraph: 'https://api.thegraph.com/subgraphs/name/fico23/vmex-optimism-test', // 'https://api.thegraph.com/subgraphs/name/vmex-finance/vmex-optimism',
         chainId: 10,
         explorer: 'https://explorer.optimism.io',
         backend: 'https://seal-app-bomfb.ondigitalocean.app',
@@ -15,7 +15,7 @@ export const NETWORKS: Record<string, any> = {
         veloRouterAddress: '0xa062aE8A9c5e11aaA026fc2670B0D65cCc8B2858',
         veloFactoryAddress: '0xF1046053aa5682b4F9a81b5481394DA16BE5FF5a',
         lendingPoolAddress: '0x60F015F66F3647168831d31C7048ca95bb4FeaF9',
-        leverageControllerAddress: '0x92045342eFE272D501987940D394cE5df50c4085',
+        leverageControllerAddress: '0xB878983cA41e3a4703cdb0Dced9E06f200eCf2Fc',
         strategies: {
             '0xf04458f7b21265b80fc340de7ee598e24485c5bb': {
                 name: 'sAMMV2-USDC/LUSD',
