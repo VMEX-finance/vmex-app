@@ -19,7 +19,7 @@ const UandI = ({ children }: { children: React.ReactNode }) => (
 const List = ({ list, type = 'num', id }: { list: string[]; type?: 'num' | 'dot'; id: string }) => (
     <ol className={`${type === 'num' ? 'list-decimal' : 'list-disc'} pl-4`}>
         {list.map((x, i) => (
-            <li className="py-2" key={`tos-${id}-${i}`}>
+            <li className="" key={`tos-${id}-${i}`}>
                 {x}
             </li>
         ))}
@@ -55,7 +55,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                             BLOCKCHAIN ADDRESSES SUSPECTED OF BEING TIED TO A UNITED STATES
                             RESIDENCE OR PLACE OF BUSINESS.
                         </p>
-                        <p className="py-2">
+                        <p className="">
                             These terms and conditions (these <Bold>“Terms”</Bold>) constitute a
                             binding legal agreement between each individual, entity, group or
                             association who views, interacts, links to or otherwise uses or derives
@@ -65,7 +65,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                             assigns, the <Bold>“Site Operator”</Bold>).
                         </p>
                         <p className="font-bold uppercase text-center">Summary</p>
-                        <p className="py-2">
+                        <p className="">
                             Among other things, the Terms and Conditions provide that you must:
                         </p>
                         <List
@@ -94,7 +94,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 your right to a jury trial in connection with such disputes.`,
                             ]}
                         />
-                        <p className="py-2">
+                        <p className="">
                             The above is only a partial summary. You should read the{' '}
                             <Bold>Terms and Conditions in their entirety</Bold>. In the event of any
                             conflict or consistency on between this summary and the Terms and
@@ -103,7 +103,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                         </p>
                         <h1 className="font-bold uppercase text-center">SITE OVERVIEW</h1>
                         <h2>I. About the Site</h2>
-                        <p className="py-2">
+                        <p className="">
                             The Site aggregates and publishes publicly available third-party
                             information about:
                         </p>
@@ -118,19 +118,19 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 'transaction records relating to the VMEX Protocol.',
                             ]}
                         />
-                        <p className="py-2">
+                        <p className="">
                             The Site also offers interaction methods whereby the User can indicate a
                             transaction the User would like to perform in connection with the VMEX
                             Protocol (such as swapping one token for another).
                         </p>
-                        <p className="py-2">
+                        <p className="">
                             When used in this way, the Site can generate a draft transaction message
                             which the User can independently use in conjunction with a third-party
                             wallet application or device to conduct transactions on Ethereum Mainnet
                             or altchains.
                         </p>
                         <h2>II. About VMEX</h2>
-                        <p className="py-2">
+                        <p className="">
                             The VMEX Protocol is software source code freely licensed to the public,
                             which provides a decentralized &ldquo;lending&rdquo; protocol through
                             which tokens can be &lsquo;loaned&rsquo; and &lsquo;borrowed&rsquo;. The
@@ -139,7 +139,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                             Mainnet.
                         </p>
                         <h2>III. Relationship to VMEX Protocol</h2>
-                        <p className="py-2">
+                        <p className="">
                             Using the VMEX Protocol, Ethereum Mainnet, Optimism Mainnet, Arbitrum
                             Mainnet, Base Mainnet, or the software that works on the VMEX Protocol
                             does not require use of the Site. The Site aggregates and publishes
@@ -150,7 +150,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                             Protocol on a compatible block explorer for Ethereum Mainnet or an
                             altchain.
                         </p>
-                        <p className="py-2">
+                        <p className="">
                             The Site Operator and the Site are not agents or intermediaries of the
                             User, do not store or have access to or control over any tokens, private
                             keys, passwords, accounts or other property of the User, and are not
@@ -163,7 +163,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                         </p>
 
                         <h2>IV. Disclaimers and Disclosures</h2>
-                        <p className="py-2">
+                        <p className="">
                             Important disclaimers and disclosures regarding the subject material of
                             the Site can be found in Section 6. You should familiarize yourself with
                             these disclaimers and disclosures and conduct your own thorough due
@@ -171,7 +171,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                         </p>
 
                         <p className="font-bold uppercase text-center">Binding Provisions</p>
-                        <p className="py-2">
+                        <p className="">
                             <Bold>
                                 1. <Under>Certain Defined Terms</Under>
                             </Bold>
@@ -194,7 +194,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 ]}
                             />
                         </p>
-                        <p className="py-2">
+                        <p className="">
                             <Bold>
                                 2.{' '}
                                 <Under>Site Operator Discretion; Certain Risks of the Site</Under>
@@ -207,7 +207,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                             </p>
                         </p>
                         <div className="pl-8">
-                            <p className="py-2">
+                            <p className="">
                                 <Bold>a. Content</Bold>
                                 <br />
                                 Site Operator makes no representations or warranties as to the
@@ -218,7 +218,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 liable for any losses, injuries, or damages from the purchase,
                                 inability to purchase, display, or use of content.
                             </p>
-                            <p className="py-2">
+                            <p className="">
                                 <Bold>b. Token Lists and Token Identification</Bold>
                                 <br />
                                 In providing information about tokens, the Site associates or
@@ -229,7 +229,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 associated with the name, symbol or branding and confirm that the
                                 token accords with User&apos;s expectations.
                             </p>
-                            <p className="py-2">
+                            <p className="">
                                 <Bold>c. User Responsibility for Accounts & Security</Bold>
                                 <br />
                                 Users are solely responsible for all matters relating to their
@@ -240,7 +240,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 recommendation thereof or a warranty, guarantee, promise or
                                 assurance regarding the fitness or security thereof.
                             </p>
-                            <p className="py-2">
+                            <p className="">
                                 <Bold>d. No Site Fees; Third-Party Fees Irreversible</Bold>
                                 <br />
                                 There are no fees or charges for use of the Site. Use of the VMEX
@@ -248,7 +248,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 Operator does not receive such fees and has no ability to reverse or
                                 refund any amounts paid in error.
                             </p>
-                            <p className="py-2">
+                            <p className="">
                                 <Bold>
                                     e. Site Operator Has No Business Plan and May Discontinue,
                                     Limit, Terminate or Refuse Support for the Site or any Smart
@@ -260,7 +260,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 of the Site and may terminate or change the Site in any or all
                                 respects at any time.
                             </p>
-                            <p className="py-2">
+                            <p className="">
                                 <Bold>
                                     f. Site Operator May Deny or Limit Access on a Targeted Basis
                                 </Bold>
@@ -270,7 +270,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 time, without notice, as determined in the Site Operator&apos;s sole
                                 and absolute discretion.
                             </p>
-                            <p className="py-2">
+                            <p className="">
                                 <Bold>
                                     g. Site Operator May Cooperate with Investigations and Disclose
                                     Information
@@ -281,7 +281,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 information it deems necessary to satisfy any applicable law,
                                 regulation, legal process or governmental request.
                             </p>
-                            <p className="py-2">
+                            <p className="">
                                 <Bold>h. No Regulatory Supervision</Bold>
                                 <br />
                                 The Site Operator and the Site are not registered or qualified with
@@ -289,13 +289,13 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 authority or organization.
                             </p>
                         </div>
-                        <p className="py-2">
+                        <p className="">
                             <Bold>
                                 3. <Under>Intellectual Property Matters</Under>
                             </Bold>
                         </p>
                         <div className="pl-8">
-                            <p className="py-2">
+                            <p className="">
                                 <Bold>a. License to Use Site</Bold>
                                 <br />
                                 Each User, subject to and conditioned upon such User&apos;s
@@ -304,14 +304,14 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 non-transferable, non-sub-licensable license to view, access and use
                                 the Site for the Permitted Uses in accordance with these Terms.
                             </p>
-                            <p className="py-2">
+                            <p className="">
                                 <Bold>b. Site Code &amp; License</Bold>
                                 <br />
                                 The software code for the Site is available at
                                 https://github.com/VMEX-finance and is licensed for use in
                                 connection with the VMEX Protocol, Ethereum Mainnet and altchains.
                             </p>
-                            <p className="py-2">
+                            <p className="">
                                 <Bold>c. Privacy Policy</Bold>
                                 <br />
                                 The Site Operator may directly or indirectly collect and temporarily
@@ -322,7 +322,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 such personal information collected will be processed in accordance
                                 with the Privacy Policy available at https://docs.vmex.finance/.
                             </p>
-                            <p className="py-2">
+                            <p className="">
                                 <Bold>d. VMEX Protocol</Bold>
                                 <br />
                                 The VMEX Protocol will be available in various repositories at
@@ -330,13 +330,13 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 set forth in each such repository, as applicable.
                             </p>
                         </div>
-                        <p className="py-2">
+                        <p className="">
                             <Bold>
                                 4. <Under>Permitted &amp; Prohibited Uses</Under>
                             </Bold>
                         </p>
                         <div className="pl-8">
-                            <p className="py-2">
+                            <p className="">
                                 <Bold>a. Permitted Uses</Bold>
                                 <br />
                                 The Site is available exclusively for use by technologically and
@@ -345,7 +345,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 diligence and financial decision making. Users must independently
                                 verify the accuracy of information used in transactions.
                             </p>
-                            <p className="py-2">
+                            <p className="">
                                 <Bold>b. Prohibited Uses</Bold>
                                 <br />
                                 Each User must not, directly or indirectly, in connection with their
@@ -369,7 +369,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 />
                             </p>
                         </div>
-                        <p className="py-2">
+                        <p className="">
                             <Bold>
                                 5. <Under>Representations and Warranties of Users</Under>
                             </Bold>
@@ -382,7 +382,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                             accessing and using the Site.
                         </p>
                         <div className="pl-8">
-                            <p className="py-2">
+                            <p className="">
                                 <Bold>a. Adult Status; Capacity; Residence; Etc.</Bold>
                                 <br />
                                 If User is an individual, User is of legal age in the jurisdiction
@@ -391,7 +391,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 duly organized, validly existing and in good standing under the laws
                                 of the jurisdiction in which it is organized.
                             </p>
-                            <p className="py-2">
+                            <p className="">
                                 <Bold>b. Power and Authority</Bold>
                                 <br />
                                 User has all requisite capacity, power and authority to accept the
@@ -400,14 +400,14 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 valid and binding obligation of User enforceable against User in
                                 accordance with its terms.
                             </p>
-                            <p className="py-2">
+                            <p className="">
                                 <Bold>c. No Conflict; Compliance with Law</Bold>
                                 <br />
                                 User agreeing to these Term and using the Site does not constitute a
                                 breach of any law applicable to User, or contract or agreement to
                                 which User is a party or by which User is bound.
                             </p>
-                            <p className="py-2">
+                            <p className="">
                                 <Bold>d. Absence of Sanctions</Bold>
                                 <br />
                                 User is not, (and, if User is an entity, User is not owned or
@@ -444,7 +444,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 represent the proceeds of, any activities done in violation or
                                 contravention of any law.
                             </p>
-                            <p className="py-2">
+                            <p className="">
                                 <Bold>e. Non-Reliance</Bold>
                                 <br />
                                 User is knowledgeable and experienced in using and evaluating
@@ -453,7 +453,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 investigation and analysis of the VMEX Protocol and altchains.
                             </p>
                         </div>
-                        <p className="py-2">
+                        <p className="">
                             <Bold>
                                 6. <Under>Risks, Disclaimers and Limitations of Liability</Under>
                             </Bold>
@@ -463,7 +463,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                             the risks of, the matters described in this Section 6.
                         </p>
                         <div className="pl-8">
-                            <p className="py-2">
+                            <p className="">
                                 <Bold>a. No Consequential, Incidental or Punitive Damages</Bold>
                                 <br />
                                 Notwithstanding anything to the contrary contained on the Site, in
@@ -479,7 +479,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 such damages, and regardless of the nature of the cause of action or
                                 theory asserted.
                             </p>
-                            <p className="py-2">
+                            <p className="">
                                 <Bold>b. Disclaimer of Representations</Bold>
                                 <br />
                                 The Site is being provided on an “AS IS” and “AS AVAILABLE” basis.
@@ -495,7 +495,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 relating to the Site. User acknowledges and agrees that use of the
                                 Site is at the User&apos;s own risk.
                             </p>
-                            <p className="py-2">
+                            <p className="">
                                 <Bold>
                                     c. No Responsibility for Tokens; No Guarantee of Uniqueness or
                                     IP
@@ -508,7 +508,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 token traded by Users on the VMEX Protocol or altchains, even if
                                 information about such token is available on the Site.
                             </p>
-                            <p className="py-2">
+                            <p className="">
                                 <Bold>d. No Proffesional Advice or Liability</Bold>
                                 <br />
                                 All information provided by or on behalf of Site Operator is for
@@ -521,7 +521,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 advice from persons licensed and qualified in the area for which
                                 such advice would be appropriate.
                             </p>
-                            <p className="py-2">
+                            <p className="">
                                 <Bold>e. Limited Survival Period for Claims</Bold>
                                 <br />
                                 Any claim or cause of action a User may have or acquire in
@@ -532,7 +532,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 six months after the date on which the facts and circumstances
                                 giving rise to such claim or cause of action first arose.
                             </p>
-                            <p className="py-2">
+                            <p className="">
                                 <Bold>f. Third-Party Offerings and Content</Bold>
                                 <br />
                                 References, links or referrals to or connections with or reliance on
@@ -554,11 +554,11 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 with use of or reliance on any such resources, products, services,
                                 content or promotions from third parties.
                             </p>
-                            <p className="py-2">
+                            <p className="">
                                 <Bold>g. Certain Uses and Risks of Blockchain Technology</Bold>
                                 <br />
                                 <div className="pl-4">
-                                    <p className="py-2">
+                                    <p className="">
                                         i. Use of Blockchain Technology. Site Operator or third
                                         parties may utilize experimental cryptographic technologies
                                         and blockchain technologies, including tokens,
@@ -572,7 +572,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                         effects and risks thereof and the application of existing
                                         law thereto.
                                     </p>
-                                    <p className="py-2">
+                                    <p className="">
                                         ii. Certain Risks of Blockchain Technology. The technologies
                                         relevant to the Site depend on public peer-to-peer networks
                                         such as Ethereum Mainnet and the altchains that are not
@@ -591,7 +591,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                         private key or otherwise, a User will be unable to enjoy the
                                         benefits of such tokens.
                                     </p>
-                                    <p className="py-2">
+                                    <p className="">
                                         iii. Certain Risks of Smart Contract Technology. Digital
                                         assets relevant to the Site depend on the VMEX Protocol or
                                         other smart contracts deployed to altchains or other
@@ -611,7 +611,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                         assets. Site Operator assumes no liability or responsibility
                                         for any of the foregoing matters.
                                     </p>
-                                    <p className="py-2">
+                                    <p className="">
                                         iv. Asset Prices. The fiat-denominated prices and value in
                                         public markets of cryptocurrencies and tokens have
                                         historically been subject to dramatic fluctuations and may
@@ -631,7 +631,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                         dramatically at any time, resulting in prolonged inability
                                         to access or use any tokens.
                                     </p>
-                                    <p className="py-2">
+                                    <p className="">
                                         v. Regulatory Uncertainty. Blockchain technologies and
                                         digital assets are subject to many legal and regulatory
                                         uncertainties, and the Ethereum Mainnet, altchains, the VMEX
@@ -641,7 +641,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                         impede or limit the ability of User to continue the use and
                                         enjoyment of such assets and technologies.
                                     </p>
-                                    <p className="py-2">
+                                    <p className="">
                                         vi. Cryptography Risks. Cryptography is a progressing field.
                                         Advances in code cracking or technical advances such as the
                                         development of quantum computers may present risks to
@@ -649,7 +649,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                         VMEX Protocol or tokens, including the theft, loss or
                                         inaccessibility thereof.
                                     </p>
-                                    <p className="py-2">
+                                    <p className="">
                                         vii. Fork Handling. Ethereum Mainnet, altchains, the the
                                         VMEX Protocol, and all tokens may be subject to “forks.”
                                         Forks occur when some or all persons running the software
@@ -691,7 +691,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                         forks, and to manage the User&apos;s own interests and risks
                                         in connection therewith.
                                     </p>
-                                    <p className="py-2">
+                                    <p className="">
                                         viii. Essential Third-Party Software Dependencies The
                                         Ethereum Mainnet, altchains, the VMEX Protocol and other
                                         relevant Blockchain Systems and smart contracts are public
@@ -715,7 +715,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                     </p>
                                 </div>
                             </p>
-                            <p className="py-2">
+                            <p className="">
                                 <Bold>h. Tax Issues</Bold>
                                 <br />
                                 The tax consequences of purchasing, selling, holding, transferring
@@ -726,7 +726,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 optimize the tax consequences to any person and is not providing any
                                 tax advice.
                             </p>
-                            <p className="py-2">
+                            <p className="">
                                 <Bold>i. Legal Limitations on Disclaimers</Bold>
                                 <br />
                                 Some jurisdictions do not allow the exclusion of certain warranties
@@ -736,7 +736,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 and limitations of liability provided in these terms shall apply to
                                 the fullest extent permitted by applicable law.
                             </p>
-                            <p className="py-2">
+                            <p className="">
                                 <Bold>j. Officers, Directors, Etc.</Bold>
                                 <br />
                                 All provisions of these Terms which disclaim or limit obligations or
@@ -745,7 +745,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 independent contractors, agents, stockholders, debtholders and
                                 affiliates of Site Operator.
                             </p>
-                            <p className="py-2">
+                            <p className="">
                                 <Bold>k. Indemnification</Bold>
                                 <br />
                                 All provisions of these Terms which disclaim or limit obligations or
@@ -755,13 +755,13 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 affiliates of Site Operator.
                             </p>
                         </div>
-                        <p className="py-2">
+                        <p className="">
                             <Bold>
                                 7. <Under>Governing Law; Dispute Resolution</Under>
                             </Bold>
                         </p>
                         <div className="pl-8">
-                            <p className="py-2">
+                            <p className="">
                                 <Bold>a. Governing Law</Bold>
                                 <br />
                                 These Terms shall be governed by and construed and interpreted in
@@ -774,7 +774,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 specific personal jurisdiction over Site Operator in any forum
                                 outside the British Virgin Islands.
                             </p>
-                            <p className="py-2">
+                            <p className="">
                                 <Bold>b. SettlementNegotiations</Bold>
                                 <br />
                                 If a User has a potential legal dispute, claim or cause of action
@@ -790,12 +790,12 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 brought and resolved exclusively in accordance with the following
                                 provisions of this Section 7.
                             </p>
-                            <p className="py-2">
+                            <p className="">
                                 <Bold>c. Agreement to Binding, Exclusive Arbitration</Bold>
                             </p>
                             <br />
                             <div className="pl-4">
-                                <p className="py-2">
+                                <p className="">
                                     i. Mandatory Binding Arbitration. All disputes, controversies,
                                     claims, breaches and terminations directly or indirectly arising
                                     out of or in connection with or directly or indirectly relating
@@ -829,29 +829,29 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                     bond or security for costs in connection with any such
                                     application for injunctive relief or specific performance.
                                 </p>
-                                <p className="py-2">
+                                <p className="">
                                     ii. Waiver of Jury Trial. The parties hereby acknowledge,
                                     represent and warrant that they understand that:
                                 </p>
                                 <br />
                                 <div className="pl-4">
-                                    <p className="py-2">
+                                    <p className="">
                                         0. there is no judge or jury in arbitration, and, absent
                                         this mandatory provision, the parties may have the right to
                                         sue in court and have a jury trial concerning Disputes;
                                     </p>
                                     <br />
-                                    <p className="py-2">
+                                    <p className="">
                                         1. in some instances, the costs of arbitration could exceed
                                         the costs of litigation;
                                     </p>
                                     <br />
-                                    <p className="py-2">
+                                    <p className="">
                                         2. the right to discovery may be more limited in arbitration
                                         than in court; and
                                     </p>
                                     <br />
-                                    <p className="py-2">
+                                    <p className="">
                                         3. court review of an arbitration award is limited. Each of
                                         the parties hereto hereby irrevocably waives any and all
                                         right to trial by jury in any action, suit or other legal
@@ -860,7 +860,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                     </p>
                                     <br />
                                 </div>
-                                <p className="py-2">
+                                <p className="">
                                     iii. Confidentiality of Arbitration. Except to the extent
                                     necessary to enforce their respective rights under these Terms
                                     or as otherwise required by applicable law or regulation, the
@@ -872,7 +872,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                     provision shall survive the termination of the arbitral
                                     proceedings.
                                 </p>
-                                <p className="py-2">
+                                <p className="">
                                     iv. Court Jurisdiction. To the extent that any court is required
                                     to consider the enforceability of this Section 7.iii, to enforce
                                     any judgment of the arbitrator, then, without limiting this
@@ -894,7 +894,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                     enforced in or by such court.
                                 </p>
                             </div>
-                            <p className="py-2">
+                            <p className="">
                                 <Bold>d. Class Action Waiver</Bold>
                                 <br />
                                 All Users hereby agree that any arbitration or other permitted
@@ -904,13 +904,13 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 file a class action or seek relief on a class basis.
                             </p>
                         </div>
-                        <p className="py-2">
+                        <p className="">
                             <Bold>
                                 8. <Under>Governing Law; Dispute Resolution</Under>
                             </Bold>
                         </p>
                         <div className="pl-8">
-                            <p className="py-2">
+                            <p className="">
                                 <Bold>a. Headings</Bold>
                                 <br />
                                 The headings and captions contained in these Terms are for
@@ -918,7 +918,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 these Terms and shall not be referred to in connection with the
                                 construction or interpretation of these Terms.
                             </p>
-                            <p className="py-2">
+                            <p className="">
                                 <Bold>b. Successors and Assigns</Bold>
                                 <br />
                                 These Terms shall inure to the benefit of Site Operator, the Users,
@@ -933,7 +933,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 delegate its rights, obligations and liabilities under these Terms
                                 to the maximum extent permitted by applicable law.
                             </p>
-                            <p className="py-2">
+                            <p className="">
                                 <Bold>c. Severability</Bold>
                                 <br />
                                 In the event that any provision of these Terms, or the application
@@ -951,7 +951,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 be consumed as originally contemplated to the fullest extent
                                 possible.
                             </p>
-                            <p className="py-2">
+                            <p className="">
                                 <Bold>d. ForceMajeure</Bold>
                                 <br />
                                 Site Operator shall not incur any liability or penalty for not
@@ -972,7 +972,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 operates, as applicable, to resume performance as soon as reasonably
                                 practicable under the circumstances.
                             </p>
-                            <p className="py-2">
+                            <p className="">
                                 <Bold>e. Amendments and Modifications</Bold>
                                 <br />
                                 These Terms may only be amended, modified, altered or supplemented
@@ -990,7 +990,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 a User does not agree to any such modifications, the User must
                                 immediately stop using the Site.
                             </p>
-                            <p className="py-2">
+                            <p className="">
                                 <Bold>f. No Implied Waivers</Bold>
                                 <br />
                                 No failure or delay on the part of Site Operator in the exercise of
@@ -1007,7 +1007,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 or have any effect except in the specific instance in which it is
                                 given.
                             </p>
-                            <p className="py-2">
+                            <p className="">
                                 <Bold>g. EntireAgreement</Bold>
                                 <br />
                                 These Terms constitutes the entire agreement between the parties
@@ -1015,35 +1015,35 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 contemporaneous agreements and understandings, both written and
                                 oral, between the parties with respect to the subject matter hereof.
                             </p>
-                            <p className="py-2">
+                            <p className="">
                                 <Bold>h. Rules of Interpretation</Bold>
                                 <br />
                                 <div className="pl-4">
-                                    <p className="py-2">
+                                    <p className="">
                                         i. “hereof,” “herein,” “hereunder,” “hereby” and words of
                                         similar import will, unless otherwise stated, be construed
                                         to refer to these Terms as a whole and not to any particular
                                         provision of these Terms;
                                     </p>
-                                    <p className="py-2">
+                                    <p className="">
                                         ii. “include(s)” and “including” shall be construed to be
                                         followed by the words “without limitation”;
                                     </p>
-                                    <p className="py-2">
+                                    <p className="">
                                         iii. “or” shall be construed to be the “inclusive or” rather
                                         than “exclusive or” unless the context requires otherwise;
                                     </p>
-                                    <p className="py-2">
+                                    <p className="">
                                         iv. any rule of construction to the effect that ambiguities
                                         are to be resolved against the drafting party shall not be
                                         applied in the construction or interpretation of these
                                         Terms;
                                     </p>
-                                    <p className="py-2">
+                                    <p className="">
                                         v. section titles, captions and headings are for convenience
                                         of reference only and have no legal or contractual effect;
                                     </p>
-                                    <p className="py-2">
+                                    <p className="">
                                         vi. whenever the context requires: the singular number shall
                                         include the plural, and vice versa; the masculine gender
                                         shall include the feminine and neuter genders; the feminine
@@ -1051,7 +1051,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                         the neuter gender shall include the masculine and feminine
                                         genders; and
                                     </p>
-                                    <p className="py-2">
+                                    <p className="">
                                         vii. except as otherwise indicated, all references in these
                                         Terms to “Sections,” “clauses,” etc., are intended to refer
                                         to sections, clauses, etc. of these Terms.
