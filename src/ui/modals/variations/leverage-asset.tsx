@@ -309,12 +309,12 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
         summary.push(
             `Deposit total ${formatUsdUnits(
                 totalBorrowAmount,
-            )} worth of ${assetSymbol} with apy ${totalApy} %`,
+            )} worth of ${assetSymbol} with an APY of ${totalApy} %`,
         );
         summary.push(
-            `Total apy ${(
-                parseFloat(totalApy) -
-                parseFloat(collateralMarketData[0].borrowApy) * 100
+            `Total APY is ${(
+                Number(_leverage) *
+                (parseFloat(totalApy) - parseFloat(collateralMarketData[0].borrowApy) * 100)
             ).toFixed(4)} %`,
         );
 
