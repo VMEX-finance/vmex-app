@@ -74,7 +74,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                             BLOCKCHAIN ADDRESSES SUSPECTED OF BEING TIED TO A UNITED STATES
                             RESIDENCE OR PLACE OF BUSINESS.
                         </p>
-                        <p>
+                        <p className="">
                             These terms and conditions (these <Bold>“Terms”</Bold>) constitute a
                             binding legal agreement between each individual, entity, group or
                             association who views, interacts, links to or otherwise uses or derives
