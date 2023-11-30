@@ -5,8 +5,8 @@ import { useWindowSize } from '@/hooks';
 import { HiOutlineChevronLeft, HiOutlineChevronRight } from 'react-icons/hi';
 import { StrategyCard } from '@/ui/components';
 import { NETWORKS, getNetworkName } from '@/utils';
-import { constants, utils } from 'ethers';
-import { IUserLoopingProps, useLoopData } from '@/api';
+import { constants } from 'ethers';
+import { useLoopData } from '@/api';
 import { useAccount } from 'wagmi';
 
 type ICarousel = {
@@ -72,7 +72,7 @@ export const Carousel = ({ items, type }: ICarousel) => {
                 }, []);
                 const _userLoops = userLoops?.map((l: any) => l.depositAssetAddress.toLowerCase());
                 if (_userLoops?.length) {
-                    return filteredArr.sort(
+                    return filteredArr?.sort(
                         (a: any, b: any) =>
                             _userLoops.indexOf(b.assetAddress.toLowerCase()) -
                             _userLoops.indexOf(a.assetAddress.toLowerCase()),
@@ -140,7 +140,7 @@ export const Carousel = ({ items, type }: ICarousel) => {
                 <div className="px-6">
                     <Slider {...settings}>
                         {items?.length
-                            ? renderStrategyItems(data).map((el: any, i: number) => (
+                            ? renderStrategyItems(data)?.map((el: any, i: number) => (
                                   <StrategyCard
                                       key={`carousel-item-${i}-${el}`}
                                       userLoops={data}
@@ -148,7 +148,7 @@ export const Carousel = ({ items, type }: ICarousel) => {
                                       {...renderStrategy(el.assetAddress?.toLowerCase())}
                                   />
                               ))
-                            : [1, 2, 3, 4, 5].map((el, i) => (
+                            : [1, 2, 3, 4, 5]?.map((el, i) => (
                                   <StrategyCard
                                       key={`carousel-item-${i}-${el}`}
                                       asset={'ETH'}
@@ -167,8 +167,8 @@ export const Carousel = ({ items, type }: ICarousel) => {
         <div className="px-6 lg:px-8">
             <Slider {...settings}>
                 {items?.length
-                    ? items.map((el, i) => <Card key={`carousel-item-${i}`}>{i}</Card>)
-                    : [1, 2, 3, 4].map((el, i) => <Card key={`carousel-item-${i}`}>{i}</Card>)}
+                    ? items?.map((el, i) => <Card key={`carousel-item-${i}`}>{i}</Card>)
+                    : [1, 2, 3, 4]?.map((el, i) => <Card key={`carousel-item-${i}`}>{i}</Card>)}
             </Slider>
         </div>
     );

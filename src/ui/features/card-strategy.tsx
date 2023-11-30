@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Slider as MUISlider } from '@mui/material';
-import { AssetDisplay, Button, Card, Label, PillDisplay, Tooltip } from '@/ui/components';
+import {
+    AssetDisplay,
+    Button,
+    Card,
+    Label,
+    PillDisplay,
+    SmartPrice,
+    Tooltip,
+} from '@/ui/components';
 import {
     AVAILABLE_COLLATERAL_TRESHOLD,
     DEFAULT_CHAINID,
@@ -181,6 +189,13 @@ export const StrategyCard = ({
         setLeverage((e.target as any).value || 1);
     };
 
+    const renderText = () => {
+        if (foundUserLoop) return `Currently looping ${asset} with this asset as collateral:`;
+        return suppliedAssetDetails
+            ? 'Select one of the following assets to borrow and use as collateral:'
+            : `Select one of the following assets to zap into ${asset}:`;
+    };
+
     useEffect(() => {
         if (rewardApy) {
             (async () => {
@@ -217,31 +232,44 @@ export const StrategyCard = ({
                 {isLoopable && (
                     <>
                         <div className="mt-2">
-                            <span className="text-xs flex items-center gap-1">
-                                <span>Looping:</span>
-                                <span className="font-medium">{leverage}x</span>
-                            </span>
-                            <div className="px-2">
-                                <MUISlider
-                                    aria-label="looping slider steps"
-                                    defaultValue={1}
-                                    step={0.25}
-                                    marks
-                                    min={1}
-                                    max={maxLeverage}
-                                    valueLabelDisplay="auto"
-                                    size="small"
-                                    value={leverage}
-                                    onChange={handleSlide}
-                                />
-                            </div>
+                            {foundUserLoop ? (
+                                <div className="min-h-[51px] flex flex-col items-start justify-center">
+                                    <span className="text-xs flex gap-0.5 items-center">
+                                        <span className="font-semibold">Supply:</span>{' '}
+                                        <SmartPrice price={foundUserLoop.depositAmountNative} />{' '}
+                                        {foundUserLoop.depositAsset}
+                                    </span>
+                                    <span className="text-xs flex gap-0.5 items-center">
+                                        <span className="font-semibold">Borrow:</span>{' '}
+                                        <SmartPrice price={foundUserLoop.borrowAmountNative} />{' '}
+                                        {foundUserLoop.borrowAsset}
+                                    </span>
+                                </div>
+                            ) : (
+                                <>
+                                    <span className="text-xs flex items-center gap-1">
+                                        <span>Looping:</span>
+                                        <span className="font-medium">{leverage}x</span>
+                                    </span>
+                                    <div className="px-2">
+                                        <MUISlider
+                                            aria-label="looping slider steps"
+                                            defaultValue={1}
+                                            step={0.25}
+                                            marks
+                                            min={1}
+                                            max={maxLeverage}
+                                            valueLabelDisplay="auto"
+                                            size="small"
+                                            value={leverage}
+                                            onChange={handleSlide}
+                                        />
+                                    </div>
+                                </>
+                            )}
                         </div>
                         <div>
-                            <p className="text-xs leading-tight">
-                                {suppliedAssetDetails
-                                    ? 'Select one of the following assets to borrow and use as collateral:'
-                                    : `Select one of the following assets to zap into ${asset}:`}
-                            </p>
+                            <p className="text-xs leading-tight">{renderText()}</p>
                             <div className="flex gap-1 flex-wrap mt-1">
                                 {suppliedAssetDetails
                                     ? getCollateralAssets(token0, token1).map((el, i) => (
@@ -258,7 +286,9 @@ export const StrategyCard = ({
                                                   hoverable={!!suppliedAssetDetails}
                                                   selected={
                                                       el.assetAddress.toLowerCase() ===
-                                                      collateral.toLowerCase()
+                                                          collateral.toLowerCase() ||
+                                                      el.assetAddress.toLowerCase() ===
+                                                          foundUserLoop?.borrowAssetAddress?.toLowerCase()
                                                   }
                                               />
                                           </button>
@@ -277,7 +307,9 @@ export const StrategyCard = ({
                                                   hoverable={el.amount !== '$0.00'}
                                                   selected={
                                                       el.address?.toLowerCase() ===
-                                                      zapAsset?.address.toLowerCase()
+                                                          zapAsset?.address.toLowerCase() ||
+                                                      el.address.toLowerCase() ===
+                                                          foundUserLoop?.borrowAssetAddress?.toLowerCase()
                                                   }
                                               />
                                           </button>
