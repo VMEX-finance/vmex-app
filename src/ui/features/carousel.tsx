@@ -55,36 +55,33 @@ export const Carousel = ({ items, type }: ICarousel) => {
         }
     };
 
-    const renderStrategyItems = useMemo(
-        () => (userLoops?: any[]) => {
-            if (NETWORKS[network]['strategies']) {
-                const displayItems = items?.filter(
-                    (x) => !!NETWORKS[network]['strategies'][x.assetAddress.toLowerCase()],
-                );
-                // Remove duplicates
-                const filteredArr = displayItems?.reduce((acc, current) => {
-                    const x = acc.find((item: any) => item.assetAddress === current.assetAddress);
-                    if (!x) {
-                        return acc.concat([current]);
-                    } else {
-                        return acc;
-                    }
-                }, []);
-                const _userLoops = userLoops?.map((l: any) => l.depositAssetAddress.toLowerCase());
-                if (_userLoops?.length) {
-                    return filteredArr?.sort(
-                        (a: any, b: any) =>
-                            _userLoops.indexOf(b.assetAddress.toLowerCase()) -
-                            _userLoops.indexOf(a.assetAddress.toLowerCase()),
-                    );
+    const renderStrategyItems = (userLoops?: any[]) => {
+        if (NETWORKS[network]['strategies']) {
+            const displayItems = items?.filter(
+                (x) => !!NETWORKS[network]['strategies'][x.assetAddress.toLowerCase()],
+            );
+            // Remove duplicates
+            const filteredArr = displayItems?.reduce((acc, current) => {
+                const x = acc.find((item: any) => item.assetAddress === current.assetAddress);
+                if (!x) {
+                    return acc.concat([current]);
+                } else {
+                    return acc;
                 }
-                return filteredArr || [];
-            } else {
-                return items || [];
+            }, []);
+            const _userLoops = userLoops?.map((l: any) => l.depositAssetAddress.toLowerCase());
+            if (_userLoops?.length) {
+                return filteredArr?.sort(
+                    (a: any, b: any) =>
+                        _userLoops.indexOf(b.assetAddress.toLowerCase()) -
+                        _userLoops.indexOf(a.assetAddress.toLowerCase()),
+                );
             }
-        },
-        [],
-    );
+            return filteredArr || [];
+        } else {
+            return items || [];
+        }
+    };
 
     const settings = {
         ...defaultSettings,
