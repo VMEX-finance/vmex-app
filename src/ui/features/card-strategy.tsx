@@ -190,6 +190,7 @@ export const StrategyCard = ({
     };
 
     const renderText = () => {
+        if (!address) return '';
         if (foundUserLoop) return `Currently looping ${asset} with this asset as collateral:`;
         return suppliedAssetDetails
             ? 'Select one of the following assets to borrow and use as collateral:'

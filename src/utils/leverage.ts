@@ -111,8 +111,6 @@ export const calculateHealthFactorAfterUnwind = (
         return;
     }
 
-    console.log('calculate HF unwind', unwindAmountUsd.toString());
-
     let { totalCollateralETH, totalDebtETH, currentLiquidationThreshold, avgBorrowFactor } =
         userTrancheData;
 
@@ -120,18 +118,14 @@ export const calculateHealthFactorAfterUnwind = (
         return;
     }
 
-    console.log('old liq tres', currentLiquidationThreshold.mul(totalCollateralETH).toString());
     const liquidationThresholdTimesCollateralAfter = currentLiquidationThreshold
         .mul(totalCollateralETH)
         .sub(unwindAmountUsd.mul(depositAsset.liquidationThreshold));
-    console.log('new liq tres', liquidationThresholdTimesCollateralAfter.toString());
 
     let borrowFactorTimesDebtAfter = avgBorrowFactor.mul(totalDebtETH);
-    console.log('old borrow factor times debt', borrowFactorTimesDebtAfter.toString());
     borrowFactorTimesDebtAfter = borrowFactorTimesDebtAfter.sub(
         unwindAmountUsd.mul(borrowAsset?.borrowFactor),
     );
-    console.log('new borrow factor times debt', borrowFactorTimesDebtAfter.toString());
 
     return liquidationThresholdTimesCollateralAfter
         .mul(parseUnits('1', 18))

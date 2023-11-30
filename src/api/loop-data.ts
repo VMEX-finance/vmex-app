@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { NETWORKS, getDecimals, getNetworkName, toSymbol } from '@/utils';
+import { NETWORKS, bigNumberToNative, getDecimals, getNetworkName, toSymbol } from '@/utils';
 import { IUserLoopingProps } from './types';
 import { getUserLoopingQuery } from './queries/user-looping';
 import { utils } from 'ethers';
@@ -11,22 +11,17 @@ async function formatUserLooping(network: string, loops?: IUserLoopingProps[]) {
         loops?.map(async (userLoop) => {
             await Promise.all(
                 userLoop.depositedAssets.map(async (dAss, i) => {
-                    const depositDecimals = await getDecimals(dAss, network);
-                    const borrowDecimals = await getDecimals(userLoop?.depositedAssets[i], network);
                     returnList.push({
                         user: userLoop.id,
                         borrowAsset: toSymbol(userLoop.borrowedAssets[i]),
                         borrowAssetAddress: userLoop.borrowedAssets[i],
-                        borrowAmountNative: utils.formatUnits(
+                        borrowAmountNative: bigNumberToNative(
                             userLoop.borrowedAmounts[i],
-                            borrowDecimals,
+                            userLoop.borrowedAssets[i],
                         ),
                         depositAsset: toSymbol(dAss),
                         depositAssetAddress: dAss,
-                        depositAmountNative: utils.formatUnits(
-                            userLoop.depositedAmounts[i],
-                            depositDecimals,
-                        ),
+                        depositAmountNative: bigNumberToNative(userLoop.depositedAmounts[i], dAss),
                     });
                 }),
             );

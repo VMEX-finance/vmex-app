@@ -43,6 +43,7 @@ import {
     toSymbol,
     toAddress,
     cleanNumberString,
+    calculateHealthFactorAfterLeverage,
 } from '@/utils';
 import { useAccount } from 'wagmi';
 import { BigNumber, constants, utils } from 'ethers';
@@ -338,6 +339,16 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
         }
     };
 
+    const depositAsset = findAssetInMarketsData(assetSymbol);
+    const borrowAssets = collateralSymbols?.map((x) => findAssetInMarketsData(x));
+    const afterLoop = calculateHealthFactorAfterLeverage(
+        depositAsset,
+        borrowAssets,
+        calculateTotalBorrowAmount(amount || '0', _leverage),
+        queryUserTrancheData.data,
+    );
+    const healthFactorTooLow = afterLoop ? afterLoop < BigNumber.from('1') : true;
+
     const unwind = async () => {
         if (!wallet) return;
         if (!NETWORKS[network].leverageControllerAddress) return;
@@ -579,21 +590,6 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                                     </div>
                                 </div>
 
-                                <div className="px-2 mt-4">
-                                    <MUISlider
-                                        aria-label="looping slider steps"
-                                        defaultValue={1}
-                                        step={0.25}
-                                        marks
-                                        min={1}
-                                        max={(data as any)?.maxLeverage || 5}
-                                        valueLabelDisplay="auto"
-                                        size="small"
-                                        value={_leverage}
-                                        onChange={handleSlide}
-                                    />
-                                </div>
-
                                 <ModalTableDisplay
                                     title="APY Breakdown"
                                     content={(data as any)?.apyBreakdown || []}
@@ -630,6 +626,24 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                                                 />
                                             </button>
                                         ))}
+                                    </div>
+                                </div>
+
+                                <div className="mt-4">
+                                    <p className={`text-xs`}>Looping:</p>
+                                    <div className="px-4">
+                                        <MUISlider
+                                            aria-label="looping slider steps"
+                                            defaultValue={1}
+                                            step={0.25}
+                                            marks
+                                            min={1}
+                                            max={(data as any)?.maxLeverage || 5}
+                                            valueLabelDisplay="auto"
+                                            size="small"
+                                            value={_leverage}
+                                            onChange={handleSlide}
+                                        />
                                     </div>
                                 </div>
 
@@ -824,7 +838,8 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                         disabled={
                             isButtonDisabled() ||
                             (view === 'Unwind' && !queryUserTrancheData?.data?.borrows?.length) ||
-                            (view === 'Loop' && !_collateral)
+                            (view === 'Loop' && !_collateral) ||
+                            (view === 'Loop' && healthFactorTooLow)
                         }
                         onClick={determineClick}
                         loading={isLoading || _loading}

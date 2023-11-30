@@ -69,13 +69,15 @@ export const Carousel = ({ items, type }: ICarousel) => {
                     return acc;
                 }
             }, []);
-            const _userLoops = userLoops?.map((l: any) => l.depositAssetAddress.toLowerCase());
-            if (_userLoops?.length) {
-                return filteredArr?.sort(
-                    (a: any, b: any) =>
-                        _userLoops.indexOf(b.assetAddress.toLowerCase()) -
-                        _userLoops.indexOf(a.assetAddress.toLowerCase()),
-                );
+            if (address) {
+                const _userLoops = userLoops?.map((l: any) => l.depositAssetAddress.toLowerCase());
+                if (_userLoops?.length) {
+                    return filteredArr?.sort(
+                        (a: any, b: any) =>
+                            _userLoops.indexOf(b.assetAddress.toLowerCase()) -
+                            _userLoops.indexOf(a.assetAddress.toLowerCase()),
+                    );
+                }
             }
             return filteredArr || [];
         } else {
@@ -127,7 +129,7 @@ export const Carousel = ({ items, type }: ICarousel) => {
     };
 
     if (type === 'strategies') {
-        const { data } = queryUserLooping;
+        const { data, isLoading } = queryUserLooping;
         return (
             <div className="mt-2">
                 <h2 className="text-[22px] 2xl:text-2xl dark:text-neutral-100">
@@ -136,24 +138,23 @@ export const Carousel = ({ items, type }: ICarousel) => {
 
                 <div className="px-6">
                     <Slider {...settings}>
-                        {items?.length
+                        {items?.length && !isLoading
                             ? renderStrategyItems(data)?.map((el: any, i: number) => (
                                   <StrategyCard
                                       key={`carousel-item-${i}-${el}`}
-                                      userLoops={data}
+                                      userLoops={address ? data : []}
                                       {...el}
                                       {...renderStrategy(el.assetAddress?.toLowerCase())}
                                   />
                               ))
                             : [1, 2, 3, 4, 5]?.map((el, i) => (
-                                  <StrategyCard
-                                      key={`carousel-item-${i}-${el}`}
-                                      asset={'ETH'}
-                                      assetAddress={constants.AddressZero}
-                                      supplyApy={0}
-                                      trancheId={0}
-                                      loading
-                                  />
+                                  <Card
+                                      key={`carousel-item-${i}`}
+                                      className="min-h-[225px]"
+                                      loading={true}
+                                  >
+                                      {'Loading'}
+                                  </Card>
                               ))}
                     </Slider>
                 </div>
