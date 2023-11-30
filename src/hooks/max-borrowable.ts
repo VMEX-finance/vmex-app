@@ -51,13 +51,14 @@ export const useMaxBorrowableAmount = (
             ),
         );
 
-        const maxLeverage = assetAmountUsd
-            ? new Decimal(maxBorrowableAmountUsd)
-                  .dividedBy(cleanNumberString(assetAmountUsd))
-                  .plus(1)
-                  .toDecimalPlaces(LEVERAGE_DECIMAL_PLACES)
-                  .toNumber()
-            : DEFAULT_MAX_LEVERAGE;
+        const maxLeverage =
+            assetAmountUsd && cleanNumberString(assetAmountUsd) !== '0.00'
+                ? new Decimal(maxBorrowableAmountUsd)
+                      .dividedBy(cleanNumberString(assetAmountUsd))
+                      .plus(1)
+                      .toDecimalPlaces(LEVERAGE_DECIMAL_PLACES)
+                      .toNumber()
+                : DEFAULT_MAX_LEVERAGE;
         setMaxBorrowable({ maxBorrowableAmountUsd, maxLeverage });
         return;
     }, [availableBorrows, minBorrow, ltv, assetAmountUsd]);
