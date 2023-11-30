@@ -371,7 +371,7 @@ export const formatUsdUnits = (amount: BigNumber, precion: number = 2) => {
     return `$${parseFloat(formatUnits(amount, 8)).toFixed(precion)}`;
 };
 
-export const cleanNumberString = (val: string) => {
+export const cleanNumberString = (val: string | undefined) => {
     if (!val) return '';
     return val
         .replace(/[^\d.]/g, '')

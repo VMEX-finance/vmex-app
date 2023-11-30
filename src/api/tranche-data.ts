@@ -55,6 +55,7 @@ export const processTrancheData = async (
                         parseFloat(utils.formatUnits(item.optimalUtilisationRate, 27)),
                     ),
                     aTokenAddress: item.aToken.id,
+                    assetAddress: item.assetData.id,
                     reserveFactor: item.reserveFactor,
                     vmexReserveFactor: item.assetData.vmexReserveFactor,
                     utilityRate: `${item.utilizationRate}`,

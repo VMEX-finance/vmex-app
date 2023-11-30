@@ -328,6 +328,7 @@ export type IGraphAssetData = {
     yieldStrategy: string;
     isFrozen?: boolean;
     aTokenAddress: string;
+    assetAddress: string;
 };
 
 export type IGraphTrancheAssetProps = IGraphAssetData | Record<string, IGraphAssetData>;

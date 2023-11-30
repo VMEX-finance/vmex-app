@@ -122,9 +122,14 @@ export const calculateHealthFactorAfterUnwind = (
         .mul(totalCollateralETH)
         .sub(unwindAmountUsd.mul(depositAsset.liquidationThreshold));
 
+    const borrowDetails = userTrancheData.borrows.find((x) =>
+        isAddressEqual(x.assetAddress, borrowAsset.assetAddress),
+    );
+    const borrowAmountUsd = parseUnits(cleanNumberString(borrowDetails?.amount), 8);
+
     let borrowFactorTimesDebtAfter = avgBorrowFactor.mul(totalDebtETH);
     borrowFactorTimesDebtAfter = borrowFactorTimesDebtAfter.sub(
-        unwindAmountUsd.mul(borrowAsset?.borrowFactor),
+        borrowAmountUsd.mul(borrowAsset?.borrowFactor),
     );
 
     return liquidationThresholdTimesCollateralAfter
