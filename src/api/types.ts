@@ -159,7 +159,6 @@ export type IUserDataProps = {
     queryUserActivity: UseQueryResult<IUserActivityDataProps, unknown>;
     queryUserWallet: UseQueryResult<IUserWalletDataProps, unknown>;
     getTokenBalance: (asset: string) => ITokenBalanceProps;
-    queryUserLooping: UseQueryResult<IUserLoopingProps, unknown>;
 };
 
 export type IUserActivityDataProps = {
@@ -185,10 +184,11 @@ export type IUserWalletDataProps = {
 };
 
 export type IUserLoopingProps = {
-    depositAssets: Address[];
-    depositAmounts: BigNumber[];
-    borrowAssets: Address[];
-    borrowAmounts: BigNumber[];
+    depositedAssets: Address[];
+    depositedAmounts: BigNumber[];
+    borrowedAssets: Address[];
+    borrowedAmounts: BigNumber[];
+    id: '';
 };
 
 export type IUserTrancheDataProps = {

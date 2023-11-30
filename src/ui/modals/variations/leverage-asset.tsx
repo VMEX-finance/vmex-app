@@ -370,6 +370,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
             address: utils.getAddress(toAddress(asset)),
             abi: VeloPoolABI,
         };
+        if (veloPoolContract.address === constants.AddressZero) return;
 
         const [token0, token1, stable] = await multicall({
             contracts: [
@@ -464,6 +465,11 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                 abi: LendingPoolABI,
             };
 
+            if (
+                veloPoolContract.address === constants.AddressZero &&
+                lendingPoolContract.address === constants.AddressZero
+            )
+                return;
             const [token0, token1, stable, { variableDebtTokenAddress }] = await multicall({
                 contracts: [
                     {

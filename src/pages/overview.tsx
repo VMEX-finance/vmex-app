@@ -3,6 +3,7 @@ import { Base } from '@/ui/base';
 import { ProtocolStatsCard, UserPerformanceCard } from '@/ui/features';
 import { Carousel, WalletButton } from '@/ui/components';
 import {
+    useLoopData,
     useSubgraphAllMarketsData,
     useSubgraphProtocolData,
     useSubgraphUserData,
@@ -23,6 +24,7 @@ const Overview: React.FC = () => {
     const { queryUserActivity, queryUserWallet } = useUserData(address);
     const { queryUserPnlChart } = useSubgraphUserData(address);
     const { queryAllMarketsData } = useSubgraphAllMarketsData();
+    const { queryUserLooping } = useLoopData();
 
     return (
         <Base title="overview">

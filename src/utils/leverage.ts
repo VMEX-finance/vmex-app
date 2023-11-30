@@ -5,7 +5,7 @@ import { formatUnits, parseUnits } from 'ethers/lib/utils.js';
 import { IGraphAssetData, IUserTrancheData } from '@/api';
 import { convertAddressToSymbol } from '@vmexfinance/sdk';
 import { IYourBorrowsTableItemProps } from '@/ui/tables';
-import { cleanNumberString, isAddressEqual } from '.';
+import { TESTING, cleanNumberString, isAddressEqual } from '.';
 
 const DECIMALS = 8;
 const DECIMAL_ONE = new Decimal(1);
@@ -28,7 +28,8 @@ export const getMaxBorrowableAmount = (
     const ltvDec = new Decimal(formatEther(ltv));
 
     if (minBorrowBN.gt(availableBorrowsBN)) {
-        console.warn('getMaxBorrowableAmount -> minBorrow greater than availableBorrows');
+        if (TESTING)
+            console.warn('getMaxBorrowableAmount -> minBorrow greater than availableBorrows');
         return defaultReturn;
     }
 

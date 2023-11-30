@@ -114,7 +114,7 @@ export function useUserTranchesData(
     const network = getNetworkName();
 
     const queryUserTranchesData = useQuery({
-        queryKey: ['user-tranches', network],
+        queryKey: ['user-tranches-many', network, trancheIds],
         queryFn: () => _getUserTranchesData(userAddress, trancheIds || []),
         refetchOnMount: true,
     });

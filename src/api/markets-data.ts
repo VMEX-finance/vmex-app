@@ -5,11 +5,11 @@ import { ILineChartDataPointProps } from '@/ui/components';
 import { utils } from 'ethers';
 import { IMarketsAsset } from './types';
 import { getAllAssetPrices } from './asset-prices';
-import { nativeAmountToUSD, PRICING_DECIMALS, findInObjArr, getNetworkName } from '@/utils';
+import { nativeAmountToUSD, PRICING_DECIMALS, getNetworkName } from '@/utils';
 import { getApolloClient } from '@/config';
 import { convertSymbolToAddress } from '@vmexfinance/sdk';
 import { getReserveId } from './id-generation';
-import { IAssetApyProps, getAllAssetApys } from '.';
+import { getAllAssetApys } from '.';
 
 export const getSubgraphMarketsChart = async (
     _trancheId: string | number,
@@ -197,7 +197,7 @@ export function useSubgraphAllMarketsData(): ISubgraphAllMarketsData {
     const network = getNetworkName();
 
     const queryAllMarketsData = useQuery({
-        queryKey: [`all-markets-data`, network],
+        queryKey: [`markets-data`, network],
         queryFn: () => getSubgraphAllMarketsData(),
     });
 

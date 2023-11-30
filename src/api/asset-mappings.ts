@@ -54,7 +54,7 @@ export function useSubgraphAllAssetMappingsData(): ISubgraphAllAssetMappingsData
     const network = getNetworkName();
 
     const queryAllAssetMappingsData = useQuery({
-        queryKey: [`subgraph-all-asset-mappings-data`, network],
+        queryKey: [`asset-mappings`, network],
         queryFn: () => getSubgraphAllAssetMappingsData(),
     });
 

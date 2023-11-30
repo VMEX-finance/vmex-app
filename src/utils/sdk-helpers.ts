@@ -1,10 +1,10 @@
-import { BigNumber, BigNumberish, ethers, utils } from 'ethers';
+import { BigNumber, BigNumberish, Contract, constants, ethers, providers, utils } from 'ethers';
 import { usdFormatter, nativeTokenFormatter, cleanNumberString } from './helpers';
 import { convertAddressToSymbol, convertSymbolToAddress } from '@vmexfinance/sdk';
 import { ITrancheCategories } from '@/api';
 import { DECIMALS } from './constants';
 import { getNetwork } from '@wagmi/core';
-import { DEFAULT_NETWORK, getNetworkName } from './network';
+import { DEFAULT_NETWORK, NETWORKS, getNetworkName } from './network';
 
 export const bigNumberToUSD = (
     number: BigNumberish | undefined,
@@ -63,7 +63,7 @@ export const bigNumberToUnformattedString = (
 
 export const toAddress = (asset?: string) => {
     if (!asset) return '';
-    if (utils.isAddress(asset)) return asset;
+    if (utils.isAddress(asset)) return utils.getAddress(asset);
     const network = getNetworkName();
     return convertSymbolToAddress(asset, network);
 };
@@ -74,6 +74,29 @@ export const toSymbol = (asset?: string) => {
     const network = getNetworkName();
     return convertAddressToSymbol(asset, network);
 };
+
+export async function getDecimals(token: string, network: string): Promise<number> {
+    if (!token || !network) return 18;
+    if (utils.isAddress(token)) {
+        const address = utils.getAddress(token);
+        if (address === constants.AddressZero) return 18;
+        else {
+            try {
+                const contract = new Contract(
+                    address,
+                    ['function decimals() view returns (uint8)'],
+                    new providers.JsonRpcProvider(NETWORKS[network].rpc),
+                );
+                const decimals = Number((await contract?.decimals()) || '18');
+                return decimals || 18;
+            } catch (err) {
+                return 18;
+            }
+        }
+    }
+    console.warn('#getDecimal: not address');
+    return 18;
+}
 
 export const unformattedStringToBigNumber = (
     number: string | undefined,

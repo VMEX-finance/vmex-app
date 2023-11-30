@@ -1,7 +1,11 @@
-export function getUserLoopingQuery(user: string): string {
-    const queryString = `
+export function getUserLoopingQuery(user?: string): string {
+    const buildParams = () => {
+        if (user) return `(where: {id: "${user?.toLowerCase()}"})`;
+        return '';
+    };
+    return `
         {
-            userLoopings(where: {id: "${user.toLowerCase()}"}) {
+            userLoopings ${buildParams()} {
                 id
                 depositedAssets
                 depositedAmounts
@@ -10,5 +14,4 @@ export function getUserLoopingQuery(user: string): string {
             }
         }
     `;
-    return queryString;
 }

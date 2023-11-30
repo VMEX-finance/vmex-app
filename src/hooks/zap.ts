@@ -187,6 +187,7 @@ export const useZap = (
             address: getAddress(poolAddress),
             abi: VeloPoolABI,
         };
+        if (veloPoolContract.address === constants.AddressZero) return;
         return multicall({
             contracts: [
                 {
@@ -280,8 +281,13 @@ export const useZap = (
         if (!lpAddress) return;
 
         (async () => {
-            const [token0, token1, stable] = await readVeloPoolDetails(lpAddress);
-            setVeloPoolDetails({ token0, token1, stable });
+            const veloPool = await readVeloPoolDetails(lpAddress);
+            if (veloPool)
+                setVeloPoolDetails({
+                    token0: veloPool[0],
+                    token1: veloPool[1],
+                    stable: veloPool[2],
+                });
         })();
     }, [lpAddress]);
 

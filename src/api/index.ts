@@ -15,3 +15,4 @@ export * from './user-rewards';
 export * from './user-tranche-data';
 export * from './user-tranches-data';
 export * from './user-tx-history';
+export * from './loop-data';

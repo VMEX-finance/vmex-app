@@ -10,6 +10,11 @@ const cache = new InMemoryCache({
                         return incoming;
                     },
                 },
+                tranche: {
+                    merge(existing, incoming) {
+                        return incoming;
+                    },
+                },
             },
         },
     },

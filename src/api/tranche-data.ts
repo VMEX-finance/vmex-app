@@ -404,13 +404,13 @@ export function useSubgraphTrancheData(trancheId: number): ISubgraphTrancheData 
     const network = getNetworkName();
 
     const queryTrancheData = useQuery({
-        queryKey: ['tranche-data', Number(trancheId), network],
+        queryKey: ['tranche-data', trancheId, network],
         queryFn: () => getSubgraphTrancheData(trancheId),
         enabled: !!trancheId,
     });
 
     const queryTrancheChart = useQuery({
-        queryKey: ['tranche-chart', Number(trancheId), network],
+        queryKey: ['tranche-chart', trancheId, network],
         queryFn: () => getSubgraphTrancheChart(trancheId),
         enabled: !!trancheId,
     });

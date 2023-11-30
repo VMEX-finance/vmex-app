@@ -402,20 +402,20 @@ export function useSubgraphUserData(address?: string): ISubgraphUserData {
     const network = getNetworkName();
 
     const queryUserPnlChart = useQuery({
-        queryKey: ['user-pnl-chart', network],
+        queryKey: ['user-pnl-chart', network, address],
         queryFn: () => getSubgraphUserChart(address || ''),
         refetchInterval: 1 * 60 * 1000, // Refetch every minute
         enabled: !!address,
     });
 
     const queryUserData = useQuery({
-        queryKey: ['user-data', network],
+        queryKey: ['user-data', network, address],
         queryFn: () => getSubgraphUserData(address || ''),
         enabled: !!address,
     });
 
     const queryTrancheAdminData = useQuery({
-        queryKey: ['tranche-admin-data', network],
+        queryKey: ['tranche-admin-data', network, address],
         queryFn: () => getUserAdminTrancheData(address || ''),
     });
 

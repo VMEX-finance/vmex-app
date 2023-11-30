@@ -188,7 +188,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                         </p>
 
                         <p className="font-bold uppercase text-center">Binding Provisions</p>
-                        <p>
+                        <span>
                             <Bold>
                                 1. <Under>Certain Defined Terms</Under>
                             </Bold>
@@ -210,8 +210,8 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                     `Site means the web site, web pages, web applications and information and software available at or accessible through the URL vmex.finance or any sub-URL of any such URL and any other VMEX-related website or web application maintained by the Site Operator.`,
                                 ]}
                             />
-                        </p>
-                        <p>
+                        </span>
+                        <div>
                             <Bold>
                                 2.{' '}
                                 <Under>Site Operator Discretion; Certain Risks of the Site</Under>
@@ -222,7 +222,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 Each User hereby acknowledges and agrees and consents to, and
                                 assumes the risks of, the matters described in this Section 2.
                             </p>
-                        </p>
+                        </div>
                         <div>
                             <p>
                                 <Bold>a. Content</Bold>
@@ -362,7 +362,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 diligence and financial decision making. Users must independently
                                 verify the accuracy of information used in transactions.
                             </p>
-                            <p>
+                            <span>
                                 <Bold>b. Prohibited Uses</Bold>
                                 <br />
                                 Each User must not, directly or indirectly, in connection with their
@@ -384,13 +384,13 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                         'engage in any act, practice or course of business that operates to circumvent any sanctions or export controls targeting the User or the country or territory where User is located.',
                                     ]}
                                 />
-                            </p>
+                            </span>
                         </div>
-                        <p>
+                        <div>
                             <Bold>
                                 5. <Under>Representations and Warranties of Users</Under>
                             </Bold>
-                        </p>
+                        </div>
                         <p>
                             By using the Site, each User represents and warrants to Site Operator
                             that the following statements and information are accurate and complete
@@ -571,7 +571,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 with use of or reliance on any such resources, products, services,
                                 content or promotions from third parties.
                             </p>
-                            <p>
+                            <div>
                                 <Bold>g. Certain Uses and Risks of Blockchain Technology</Bold>
                                 <br />
                                 <div>
@@ -731,7 +731,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                         of any of the foregoing dependencies.
                                     </p>
                                 </div>
-                            </p>
+                            </div>
                             <p>
                                 <Bold>h. Tax Issues</Bold>
                                 <br />
@@ -1032,7 +1032,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                 contemporaneous agreements and understandings, both written and
                                 oral, between the parties with respect to the subject matter hereof.
                             </p>
-                            <p>
+                            <div>
                                 <Bold>h. Rules of Interpretation</Bold>
                                 <br />
                                 <div>
@@ -1074,7 +1074,7 @@ export const TermsOfServiceDialog: React.FC<IDialogProps> = ({
                                         to sections, clauses, etc. of these Terms.
                                     </p>
                                 </div>
-                            </p>
+                            </div>
                         </div>
                     </div>
                 </Card>

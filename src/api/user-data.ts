@@ -130,53 +130,19 @@ export async function _getUserWalletData(
     };
 }
 
-async function _getUserLooping(
-    userAddress: string | undefined,
-    network: string,
-): Promise<IUserLoopingProps> {
-    if (!userAddress) {
-        return {
-            depositAssets: [],
-            depositAmounts: [],
-            borrowAssets: [],
-            borrowAmounts: [],
-        };
-    }
-    const query = getUserLoopingQuery(userAddress);
-
-    const networkConfig = NETWORKS[network];
-
-    const responseRaw = await fetch(networkConfig.subgraph, {
-        method: 'POST',
-        body: JSON.stringify({ query }),
-        headers: { 'Content-Type': 'application/json' },
-    });
-
-    const response = await responseRaw.json();
-
-    return response.data.userLoopings.length
-        ? response.data.userLoopings[0]
-        : {
-              depositAssets: [],
-              depositAmounts: [],
-              borrowAssets: [],
-              borrowAmounts: [],
-          };
-}
-
 // Master
 export function useUserData(userAddress: any): IUserDataProps {
     const network = getNetworkName();
 
     const queryUserActivity = useQuery({
-        queryKey: ['user-activity', network],
+        queryKey: ['user-activity', network, userAddress],
         queryFn: () => getUserActivityData(userAddress),
         enabled: !!userAddress,
         refetchInterval: 3000,
     });
 
     const queryUserWallet = useQuery({
-        queryKey: ['user-wallet', network],
+        queryKey: ['user-wallet', network, userAddress],
         queryFn: () => _getUserWalletData(userAddress),
         enabled: !!userAddress,
         refetchInterval: 3000,
@@ -208,17 +174,9 @@ export function useUserData(userAddress: any): IUserDataProps {
         }
     };
 
-    const queryUserLooping = useQuery({
-        queryKey: ['user-looping', network],
-        queryFn: () => _getUserLooping(userAddress, network),
-        enabled: !!userAddress,
-        refetchInterval: 5000,
-    });
-
     return {
         queryUserActivity,
         queryUserWallet,
         getTokenBalance,
-        queryUserLooping,
     };
 }
