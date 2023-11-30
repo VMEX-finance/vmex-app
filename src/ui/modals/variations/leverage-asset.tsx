@@ -344,9 +344,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
         if (!mostBorrowedTokens?.length) return;
 
         const leverageControllerAddress = getAddress(NETWORKS[network].leverageControllerAddress);
-
         const withdrawAmountNative = parseUnits(withdrawAmount, 18);
-
         const reserveData = findAssetInMarketsData(assetSymbol);
 
         const allowance = await readContract({
@@ -451,6 +449,12 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
             await modalProps.submitTx(async () => await unwind());
         }
     };
+
+    useEffect(() => {
+        if ((data as any)?.foundUserLoop) {
+            setView('Unwind');
+        }
+    }, [(data as any)?.foundUserLoop]);
 
     useEffect(() => {
         if (!network || !wallet || !asset || !_collateral || !trancheId) return;
@@ -747,21 +751,24 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                                 content={[
                                     {
                                         label: 'Remaining Supply',
-                                        value:
-                                            amount && amountWithdraw
-                                                ? bigNumberToNative(
-                                                      amountWithdraw.sub(
-                                                          unformattedStringToBigNumber(
-                                                              amount || '0',
-                                                              asset || 'ETH',
-                                                          ),
-                                                      ) || BigNumber.from('0'),
-                                                      asset || 'ETH',
-                                                  )
-                                                : bigNumberToNative(
-                                                      amountWithdraw || BigNumber.from('0'),
-                                                      asset || 'ETH',
-                                                  ),
+                                        value: Math.abs(
+                                            Number(
+                                                amount && amountWithdraw
+                                                    ? bigNumberToNative(
+                                                          amountWithdraw.sub(
+                                                              unformattedStringToBigNumber(
+                                                                  amount || '0',
+                                                                  asset || 'ETH',
+                                                              ),
+                                                          ) || BigNumber.from('0'),
+                                                          asset || 'ETH',
+                                                      )
+                                                    : bigNumberToNative(
+                                                          amountWithdraw || BigNumber.from('0'),
+                                                          asset || 'ETH',
+                                                      ),
+                                            ),
+                                        ),
                                         loading:
                                             Number(
                                                 bigNumberToNative(

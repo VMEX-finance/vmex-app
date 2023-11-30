@@ -1,77 +1,38 @@
 import { useQuery } from '@tanstack/react-query';
-import {
-    DECIMALS,
-    NETWORKS,
-    PRICING_DECIMALS,
-    bigNumberToUSD,
-    getDecimals,
-    getNetworkName,
-    toAddress,
-    toSymbol,
-} from '@/utils';
+import { NETWORKS, getDecimals, getNetworkName, toSymbol } from '@/utils';
 import { IUserLoopingProps } from './types';
 import { getUserLoopingQuery } from './queries/user-looping';
 import { utils } from 'ethers';
 
-async function formatUserLooping(
-    network: string,
-    loops?: IUserLoopingProps[],
-    userAddress?: string,
-) {
+async function formatUserLooping(network: string, loops?: IUserLoopingProps[]) {
     if (!loops?.length) return [];
-    const returnList = [];
-    const renderKey = (i: number) => {
-        switch (i) {
-            case 0:
-                return 'id';
-            case 1:
-                return 'depositAsset';
-            case 2:
-                return 'depositAmount';
-            case 3:
-                return 'borrowAsset';
-            case 4:
-                return 'borrowAmount';
-        }
-    };
-    return await Promise.all(
+    const returnList: any[] = [];
+    await Promise.all(
         loops?.map(async (userLoop) => {
-            return {
-                ...userLoop,
-                depositedAssets: userLoop.depositedAssets?.map((dAss) => toSymbol(dAss)),
-                depositedAmounts: userLoop?.depositedAssets?.length
-                    ? await Promise.all(
-                          userLoop.depositedAmounts?.map(async (dAmo, i) => {
-                              const decimals = await getDecimals(
-                                  userLoop?.depositedAssets[i],
-                                  network,
-                              );
-                              return {
-                                  native: utils.formatUnits(dAmo, decimals),
-                                  usd: bigNumberToUSD(dAmo, decimals, false),
-                              };
-                          }),
-                      )
-                    : [],
-                borrowedAssets: userLoop.borrowedAssets?.map((bAss) => toSymbol(bAss)),
-                borrowedAmounts: userLoop?.borrowedAssets?.length
-                    ? await Promise.all(
-                          userLoop.borrowedAmounts?.map(async (bAmo, i) => {
-                              const decimals = await getDecimals(
-                                  userLoop?.borrowedAssets[i],
-                                  network,
-                              );
-                              const native = utils.formatUnits(bAmo, decimals);
-                              return {
-                                  native,
-                                  usd: bigNumberToUSD(bAmo, decimals, false),
-                              };
-                          }),
-                      )
-                    : [],
-            };
+            await Promise.all(
+                userLoop.depositedAssets.map(async (dAss, i) => {
+                    const depositDecimals = await getDecimals(dAss, network);
+                    const borrowDecimals = await getDecimals(userLoop?.depositedAssets[i], network);
+                    returnList.push({
+                        user: userLoop.id,
+                        borrowAsset: toSymbol(userLoop.borrowedAssets[i]),
+                        borrowAssetAddress: userLoop.borrowedAssets[i],
+                        borrowAmountNative: utils.formatUnits(
+                            userLoop.borrowedAmounts[i],
+                            borrowDecimals,
+                        ),
+                        depositAsset: toSymbol(dAss),
+                        depositAssetAddress: dAss,
+                        depositAmountNative: utils.formatUnits(
+                            userLoop.depositedAmounts[i],
+                            depositDecimals,
+                        ),
+                    });
+                }),
+            );
         }),
     );
+    return returnList;
 }
 
 async function _getUserLooping(
@@ -86,6 +47,7 @@ async function _getUserLooping(
         headers: { 'Content-Type': 'application/json' },
     });
 
+    let returnList: IUserLoopingProps[];
     const response = await responseRaw.json();
     if (response.data?.userLoopings?.length) {
         const {
@@ -95,20 +57,12 @@ async function _getUserLooping(
             const foundUser = userLoopings.find(
                 (el: any) => el.id.toLowerCase() === userAddress.toLowerCase(),
             );
-            if (foundUser) return [foundUser];
-            return userLoopings;
-        }
-        return userLoopings;
+            if (foundUser) returnList = [foundUser];
+            else returnList = userLoopings;
+        } else returnList = userLoopings;
+        return await formatUserLooping(network, returnList);
     }
-    return [
-        {
-            depositedAssets: [],
-            depositedAmounts: [],
-            borrowedAssets: [],
-            borrowedAmounts: [],
-            id: '',
-        },
-    ];
+    return [];
 }
 
 // Master
@@ -120,10 +74,6 @@ export function useLoopData(userAddress?: string) {
         queryFn: () => _getUserLooping(network, userAddress),
         refetchInterval: 5000,
     });
-
-    (async () => {
-        console.log('user looping', await formatUserLooping(network, queryUserLooping.data));
-    })();
 
     return {
         queryUserLooping,

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import Slider from 'react-slick';
 import { Card } from '../components/card';
 import { useWindowSize } from '@/hooks';
@@ -6,6 +6,8 @@ import { HiOutlineChevronLeft, HiOutlineChevronRight } from 'react-icons/hi';
 import { StrategyCard } from '@/ui/components';
 import { NETWORKS, getNetworkName } from '@/utils';
 import { constants, utils } from 'ethers';
+import { IUserLoopingProps, useLoopData } from '@/api';
+import { useAccount } from 'wagmi';
 
 type ICarousel = {
     items?: any[];
@@ -41,6 +43,8 @@ const defaultSettings = {
 
 export const Carousel = ({ items, type }: ICarousel) => {
     const { breakpoints, width } = useWindowSize();
+    const { address } = useAccount();
+    const { queryUserLooping } = useLoopData(address);
     const network = getNetworkName();
 
     const renderStrategy = (address: string) => {
@@ -51,25 +55,36 @@ export const Carousel = ({ items, type }: ICarousel) => {
         }
     };
 
-    const renderStrategyItems = () => {
-        if (NETWORKS[network]['strategies']) {
-            const displayItems = items?.filter(
-                (x) => !!NETWORKS[network]['strategies'][x.assetAddress.toLowerCase()],
-            );
-            // Remove duplicates
-            const filteredArr = displayItems?.reduce((acc, current) => {
-                const x = acc.find((item: any) => item.assetAddress === current.assetAddress);
-                if (!x) {
-                    return acc.concat([current]);
-                } else {
-                    return acc;
+    const renderStrategyItems = useMemo(
+        () => (userLoops?: any[]) => {
+            if (NETWORKS[network]['strategies']) {
+                const displayItems = items?.filter(
+                    (x) => !!NETWORKS[network]['strategies'][x.assetAddress.toLowerCase()],
+                );
+                // Remove duplicates
+                const filteredArr = displayItems?.reduce((acc, current) => {
+                    const x = acc.find((item: any) => item.assetAddress === current.assetAddress);
+                    if (!x) {
+                        return acc.concat([current]);
+                    } else {
+                        return acc;
+                    }
+                }, []);
+                const _userLoops = userLoops?.map((l: any) => l.depositAssetAddress.toLowerCase());
+                if (_userLoops?.length) {
+                    return filteredArr.sort(
+                        (a: any, b: any) =>
+                            _userLoops.indexOf(b.assetAddress.toLowerCase()) -
+                            _userLoops.indexOf(a.assetAddress.toLowerCase()),
+                    );
                 }
-            }, []);
-            return filteredArr || [];
-        } else {
-            return items || [];
-        }
-    };
+                return filteredArr || [];
+            } else {
+                return items || [];
+            }
+        },
+        [],
+    );
 
     const settings = {
         ...defaultSettings,
@@ -115,6 +130,7 @@ export const Carousel = ({ items, type }: ICarousel) => {
     };
 
     if (type === 'strategies') {
+        const { data } = queryUserLooping;
         return (
             <div className="mt-2">
                 <h2 className="text-[22px] 2xl:text-2xl dark:text-neutral-100">
@@ -124,9 +140,10 @@ export const Carousel = ({ items, type }: ICarousel) => {
                 <div className="px-6">
                     <Slider {...settings}>
                         {items?.length
-                            ? renderStrategyItems().map((el: any, i: number) => (
+                            ? renderStrategyItems(data).map((el: any, i: number) => (
                                   <StrategyCard
                                       key={`carousel-item-${i}-${el}`}
+                                      userLoops={data}
                                       {...el}
                                       {...renderStrategy(el.assetAddress?.toLowerCase())}
                                   />

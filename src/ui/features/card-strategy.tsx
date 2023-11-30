@@ -36,6 +36,7 @@ type IStrategyCard = {
     name?: string;
     tranche?: string;
     loading?: boolean;
+    userLoops?: any[];
 };
 
 export const StrategyCard = ({
@@ -48,6 +49,7 @@ export const StrategyCard = ({
     token1,
     name,
     loading,
+    userLoops,
 }: IStrategyCard) => {
     const { chain } = useNetwork();
     const { address } = useAccount();
@@ -63,6 +65,7 @@ export const StrategyCard = ({
     const { queryAllAssetMappingsData } = useSubgraphAllAssetMappingsData();
     const { queryTrancheData } = useSubgraphTrancheData(trancheId);
     const { prices } = usePricesData();
+    const foundUserLoop = userLoops?.find((loop) => loop.depositAssetAddress === assetAddress);
 
     const { zappableAssets, handleZap, zapAsset } = useZap(asset);
 
@@ -142,6 +145,7 @@ export const StrategyCard = ({
             token1,
             tranche: queryTrancheData?.data?.name || '',
             maxLeverage,
+            foundUserLoop,
         });
         setTimeout(() => setCollateral(''), 2000);
     };
@@ -162,8 +166,14 @@ export const StrategyCard = ({
     const renderBtnText = (isLeverage?: boolean) => {
         if (!chain && openConnectModal) return 'Connect Wallet';
         else if (chain?.unsupported && openChainModal) return 'Switch Network';
+        if (foundUserLoop) return 'Unwind';
         if (isLeverage) return 'Loop';
         return 'Supply / Zap';
+    };
+
+    const renderBtnClick = (e: any) => {
+        if (suppliedAssetDetails) return openLeverageDialog();
+        return handleSupplyClick(e);
     };
 
     const handleSlide = (e: Event) => {
@@ -293,11 +303,7 @@ export const StrategyCard = ({
                 </div>
             </div>
             <div className={`mt-3 2xl:mt-4 grid items-center gap-1 w-full grid-cols-1`}>
-                <Button
-                    onClick={suppliedAssetDetails ? openLeverageDialog : handleSupplyClick}
-                    className="w-full"
-                    type="accent"
-                >
+                <Button onClick={renderBtnClick} className="w-full" type="accent">
                     {renderBtnText(!!suppliedAssetDetails)}
                 </Button>
             </div>
