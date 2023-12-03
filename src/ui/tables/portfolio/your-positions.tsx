@@ -91,9 +91,10 @@ export const YourPositionsTable: React.FC<IYourPositionsProps> = ({ type, data, 
                             </div>
                         }
                         details={
-                            <div className="px-4">
+                            <div className="px-2 xl:px-4">
                                 <YourSuppliesTable
                                     data={(el as IYourSuppliesTableItemProps[]) || []}
+                                    responsive
                                 />
                             </div>
                         }
@@ -127,9 +128,10 @@ export const YourPositionsTable: React.FC<IYourPositionsProps> = ({ type, data, 
                             </div>
                         }
                         details={
-                            <div className="px-4">
+                            <div className="px-2 xl:px-4">
                                 <YourBorrowsTable
                                     data={(el as IYourSuppliesTableItemProps[]) || []}
+                                    responsive
                                 />
                             </div>
                         }

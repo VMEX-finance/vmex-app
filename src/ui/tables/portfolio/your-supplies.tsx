@@ -20,14 +20,16 @@ export type IYourSuppliesTableProps = {
     data: IYourSuppliesTableItemProps[];
     withHealth?: boolean;
     healthLoading?: boolean;
+    responsive?: boolean;
 };
 
 export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({
     data,
     withHealth,
     healthLoading,
+    responsive,
 }) => {
-    const { width } = useWindowSize();
+    const { width, breakpoints } = useWindowSize();
     const [checked, setChecked] = useState<boolean[]>([]);
     const { openDialog } = useDialogController();
 
@@ -75,6 +77,7 @@ export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({
                                 <AssetDisplay
                                     name={i.asset}
                                     logo={`/coins/${i.asset?.toLowerCase()}.svg`}
+                                    noText={responsive && width < breakpoints.sm}
                                 />
                             </td>
                             <td>

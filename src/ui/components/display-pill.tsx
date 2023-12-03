@@ -1,15 +1,17 @@
-import { determineCoinImg, numberFormatter, usdFormatter } from '@/utils';
-import React from 'react';
+import { truncate as _truncate, numberFormatter, usdFormatter } from '@/utils';
+import React, { ReactNode } from 'react';
 import { AssetDisplay } from './display-asset';
+import { useWindowSize } from '@/hooks';
 
 type IPillDisplayProps = {
     asset: string;
-    value?: string | number;
+    value?: string | number | ReactNode;
     type?: 'asset' | 'basic';
     formatter?: 'usd' | 'basic' | 'none';
     size?: 'sm' | 'md';
     hoverable?: boolean;
     selected?: boolean;
+    truncate?: boolean;
 };
 
 export const PillDisplay = ({
@@ -20,8 +22,11 @@ export const PillDisplay = ({
     size = 'md',
     hoverable,
     selected,
+    truncate,
 }: IPillDisplayProps) => {
-    const determineFormat = (val: number | string) => {
+    const { width, breakpoints } = useWindowSize();
+    const determineFormat = (val: number | string | ReactNode) => {
+        if (typeof val !== 'string' && typeof val !== 'number') return val;
         if (typeof val === 'string') {
             return val;
         }
@@ -69,7 +74,9 @@ export const PillDisplay = ({
     } else {
         return (
             <div className="bg-transparent border border-neutral-100 rounded-full flex items-center gap-3 w-fit px-3 2xl:px-4 py-0.5 lg:py-1">
-                <span className="text-xl">{asset || 'ETH'}</span>
+                <span className="text-xl">
+                    {truncate && width < breakpoints.sm ? _truncate(asset, 5) : asset || 'ETH'}
+                </span>
                 {value && <span className="text-lg">{determineFormat(value) || 0}</span>}
             </div>
         );

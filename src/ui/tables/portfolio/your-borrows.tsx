@@ -19,14 +19,16 @@ export type IYourBorrowsTableProps = {
     data: IYourBorrowsTableItemProps[];
     withHealth?: boolean;
     healthLoading?: boolean;
+    responsive?: boolean;
 };
 
 export const YourBorrowsTable: React.FC<IYourBorrowsTableProps> = ({
     data,
     withHealth,
     healthLoading,
+    responsive,
 }) => {
-    const { width } = useWindowSize();
+    const { width, breakpoints } = useWindowSize();
     const { openDialog } = useDialogController();
     const headers = withHealth
         ? ['Asset', 'Amount', 'APY%', 'Health']
@@ -65,6 +67,7 @@ export const YourBorrowsTable: React.FC<IYourBorrowsTableProps> = ({
                                     <AssetDisplay
                                         name={i.asset}
                                         logo={`/coins/${i.asset?.toLowerCase()}.svg`}
+                                        noText={responsive && width < breakpoints.sm}
                                     />{' '}
                                 </td>
                                 <td>

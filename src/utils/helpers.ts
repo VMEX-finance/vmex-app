@@ -176,6 +176,11 @@ export const truncate = (str: string, show = 6) => {
         const last = str.substring(str.length - show, str.length);
         return `${first}...${last}`;
     }
+    if (show !== 6 && str.length > show * 2) {
+        const first = str.substring(0, show);
+        const last = str.substring(str.length - show, str.length);
+        return `${first}...${last}`;
+    }
     return str || '';
 };
 

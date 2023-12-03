@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { PillDisplay, Card, ILineChartDataPointProps, ReLineChart } from '@/ui/components';
+import {
+    PillDisplay,
+    Card,
+    ILineChartDataPointProps,
+    ReLineChart,
+    SmartPrice,
+} from '@/ui/components';
 import { ITrancheInteractedProps } from '@/api';
 
 type ILoanedAssetProps = {
@@ -73,8 +79,9 @@ export const UserPerformanceCard: React.FC<IUserPerformanceCardProps> = ({
                             <PillDisplay
                                 key={`${el}-${i}`}
                                 asset={el.asset}
-                                value={el.amount}
+                                value={<SmartPrice price={String(el.amount)} />}
                                 formatter="basic"
+                                truncate
                             />
                         ))}
                         {loanedAssets?.length > 6 && (

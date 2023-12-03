@@ -29,7 +29,7 @@
             "@/config": ["config/index.ts"],
             "@/config/*": ["config/*"]
         },
-        "target": "es5",
+        "target": "ES6",
         "outDir": "lib",
         "lib": ["dom", "dom.iterable", "esnext"],
         "declaration": true,
@@ -40,7 +40,7 @@
         "allowSyntheticDefaultImports": true,
         "strict": true,
         "forceConsistentCasingInFileNames": true,
-        "module": "CommonJS",
+        "module": "ES2022",
         "moduleResolution": "node",
         "resolveJsonModule": true,
         "isolatedModules": true,
