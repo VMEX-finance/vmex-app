@@ -10,10 +10,13 @@ import {
     convertStringFormatToNumber,
     PRICING_DECIMALS,
     getNetworkName,
+    toAddress,
+    getChainId,
 } from '../utils';
 import { borrow, estimateGas, repay } from '@vmexfinance/sdk';
 import { useAccount, useSigner } from 'wagmi';
 import { useSubgraphTrancheData, useUserTrancheData, useUserData } from '../api';
+import { fetchBalance } from '@wagmi/core';
 
 export const useBorrow = ({
     data,
@@ -28,6 +31,7 @@ export const useBorrow = ({
     setAmount,
 }: ISupplyBorrowProps & IUseModal) => {
     const network = getNetworkName();
+    const chainId = getChainId();
     const { address } = useAccount();
     const { data: signer } = useSigner();
     const { findAssetInUserSuppliesOrBorrows, findAmountBorrowable } = useUserTrancheData(
@@ -43,7 +47,7 @@ export const useBorrow = ({
         errorMessage: '',
     });
     const [asset, setAsset] = useState(data?.asset || '');
-    const amountWalletNative = getTokenBalance(asset || '');
+    const amountWalletNative = getTokenBalance(toAddress(asset));
 
     const toggleEthWeth = () => {
         if (data?.asset?.toLowerCase() === 'weth') {
@@ -130,6 +134,7 @@ export const useBorrow = ({
             if (amount.includes('.') && amount.split('.')[1].length > (DECIMALS.get(asset) || 18)) {
                 return true;
             } else {
+                // TODO: fico --> amountWalletNative broken?
                 const inputAmount = utils.parseUnits(amount, DECIMALS.get(asset));
                 return inputAmount.gt(amountWalletNative.amountNative);
             }

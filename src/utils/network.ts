@@ -162,3 +162,9 @@ export const getNetworkName = () => {
         ? DEFAULT_NETWORK
         : getNetwork()?.chain?.network || DEFAULT_NETWORK;
 };
+
+export const getChainId = () => {
+    return getNetwork()?.chain?.unsupported
+        ? DEFAULT_CHAINID
+        : getNetwork()?.chain?.id || DEFAULT_CHAINID;
+};

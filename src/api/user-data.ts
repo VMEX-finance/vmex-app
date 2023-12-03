@@ -15,6 +15,7 @@ import {
     averageOfArr,
     PRICING_DECIMALS,
     getNetworkName,
+    toSymbol,
 } from '@/utils';
 import {
     IUserActivityDataProps,
@@ -120,7 +121,7 @@ export async function _getUserWalletData(
     return {
         assets: res.map((assetData: UserWalletData) => {
             return {
-                asset: convertAddressToSymbol(assetData.asset, network),
+                asset: toSymbol(assetData.asset),
                 assetAddress: assetData.asset,
                 amount: bigNumberToUSD(assetData.amount, PRICING_DECIMALS[network]),
                 amountNative: assetData.amountNative,
@@ -145,9 +146,8 @@ export function useUserData(userAddress: any): IUserDataProps {
         queryKey: ['user-wallet', network, userAddress],
         queryFn: () => _getUserWalletData(userAddress),
         enabled: !!userAddress,
-        refetchInterval: 3000,
+        refetchInterval: 5000,
     });
-
     const getTokenBalance = (asset: string) => {
         if (queryUserWallet.isLoading)
             return {

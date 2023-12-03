@@ -74,7 +74,7 @@ export const PillDisplay = ({
     } else {
         return (
             <div className="bg-transparent border border-neutral-100 rounded-full flex items-center gap-3 w-fit px-3 2xl:px-4 py-0.5 lg:py-1">
-                <span className="text-xl">
+                <span className="text-lg">
                     {truncate && width < breakpoints.sm ? _truncate(asset, 5) : asset || 'ETH'}
                 </span>
                 {value && <span className="text-lg">{determineFormat(value) || 0}</span>}
