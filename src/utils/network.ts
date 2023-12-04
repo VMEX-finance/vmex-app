@@ -15,7 +15,7 @@ export const NETWORKS: Record<string, any> = {
         veloRouterAddress: '0xa062aE8A9c5e11aaA026fc2670B0D65cCc8B2858',
         veloFactoryAddress: '0xF1046053aa5682b4F9a81b5481394DA16BE5FF5a',
         lendingPoolAddress: '0x60F015F66F3647168831d31C7048ca95bb4FeaF9',
-        leverageControllerAddress: '0x74cd3dc24152b6701a3bc3cb85178b468e1c605b',
+        leverageControllerAddress: '0x91aa02b462a08a7975f2f82ad31116b8ea275a10',
         strategies: {
             '0xf04458f7b21265b80fc340de7ee598e24485c5bb': {
                 name: 'sAMMV2-USDC/LUSD',
