@@ -16,7 +16,6 @@ import {
 import { borrow, estimateGas, repay } from '@vmexfinance/sdk';
 import { useAccount, useSigner } from 'wagmi';
 import { useSubgraphTrancheData, useUserTrancheData, useUserData } from '../api';
-import { fetchBalance } from '@wagmi/core';
 
 export const useBorrow = ({
     data,
