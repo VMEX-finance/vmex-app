@@ -147,7 +147,9 @@ export function useUserData(userAddress: any): IUserDataProps {
         queryFn: () => _getUserWalletData(userAddress),
         enabled: !!userAddress,
         refetchInterval: 5000,
+        cacheTime: 1000 * 10, // 10 second cache time
     });
+
     const getTokenBalance = (asset: string) => {
         if (queryUserWallet.isLoading)
             return {
