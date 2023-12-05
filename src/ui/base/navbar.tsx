@@ -2,13 +2,14 @@ import { Menu, Transition } from '@headlessui/react';
 import React, { Fragment, useContext } from 'react';
 import { HiOutlineMenuAlt3 } from 'react-icons/hi';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { DefaultDropdown, MenuItemButton, WalletButton, ToggleThemeButton } from '@/ui/components';
+import { DefaultDropdown, WalletButton, ToggleThemeButton } from '@/ui/components';
 import { ThemeContext, IDialogNames } from '@/store';
-import { useAccount, useSwitchNetwork } from 'wagmi';
+import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
 import { useDialogController, useWindowSize } from '@/hooks';
 import { useSubgraphUserData } from '@/api';
 import { renderNetworks } from '@/utils';
 import { getNetwork } from '@wagmi/core';
+import { NavItem } from './nav-item';
 
 const navItems = ['Overview', 'Tranches', 'Markets', 'Portfolio', 'Governance'];
 
@@ -21,9 +22,11 @@ export const Navbar: React.FC = () => {
     const { openDialog } = useDialogController();
     const { address } = useAccount();
     const { queryTrancheAdminData } = useSubgraphUserData(address || '');
-    const { switchNetworkAsync } = useSwitchNetwork();
+    const { switchNetworkAsync, switchNetwork } = useSwitchNetwork();
+    const { chain } = useNetwork();
 
-    function navigateTo(e: any) {
+    function navigateTo(e: any, text: string) {
+        if (text === 'Portfolio' && switchNetwork && chain?.unsupported) switchNetwork();
         if (typeof e === 'string') navigate(`../${e}`, { replace: false });
         else {
             e.preventDefault();
@@ -42,9 +45,9 @@ export const Navbar: React.FC = () => {
     }
 
     return (
-        <nav className="flex justify-center flex-row sticky h-fit items-center top-0 font-basefont px-3 md:px-4 py-2 lg:px-5 2xl:px-10 lg:py-3 bg-neutral-900 dark:bg-brand-black lg:bg-[#FFF] z-[1000] shadow-lg lg:shadow-md">
+        <nav className="flex justify-center flex-row sticky h-fit items-center top-0 font-basefont px-2 lg:px-4 py-1.5 md:py-2 2xl:py-2.5 2xl:px-6 bg-neutral-900 dark:bg-brand-black lg:bg-white z-[1000] shadow-md shadow-gray-300 dark:shadow-neutral-950">
             <div
-                className={`w-full max-w-[150rem]
+                className={`w-full max-w-[125rem]
                 ${
                     width <= breakpoints.lg
                         ? 'flex flex-row items-center justify-between'
@@ -72,15 +75,15 @@ export const Navbar: React.FC = () => {
                     <div className="justify-self-center">
                         <div
                             className={
-                                'grid grid-flow-col auto-cols-max justify-between gap-1 2xl:gap-1.5 w-max p-1.5 shadow-neutral-500 shadow-inner dark:shadow-black bg-brand-black dark:bg-neutral-900 rounded-xl'
+                                'grid grid-flow-col auto-cols-max justify-between gap-1 w-max p-1 shadow-[0px_0px_4px_0px_rgba(0,0,0,0.75)_inset] shadow-neutral-400 dark:shadow-black bg-[rgb(240,240,240)] dark:bg-[rgba(30,30,30)] rounded-xl'
                             }
                         >
                             {navItems.map((item) => (
-                                <MenuItemButton
+                                <NavItem
                                     key={item}
                                     label={item}
                                     selected={location.pathname === `/${item?.toLowerCase()}`}
-                                    onClick={navigateTo}
+                                    onClick={(e: any) => navigateTo(e, item)}
                                 />
                             ))}
                         </div>
@@ -94,12 +97,12 @@ export const Navbar: React.FC = () => {
                         selected={renderChainImg()}
                         items={renderNetworks(switchNetworkAsync)}
                         size="lg"
-                        className={`border border-1 lg:border-brand-black !px-0 !pl-2 !py-1 lg:!py-[4px]`}
                         icon
+                        className="!bg-neutral-800 hover:!bg-neutral-700 !text-neutral-100 lg:!bg-neutral-300 lg:hover:!bg-[rgb(200,200,200)] lg:!text-black dark:lg:!bg-neutral-800 dark:lg:hover:!bg-neutral-700 dark:lg:!text-neutral-100"
                     />
 
                     {width >= breakpoints.lg ? (
-                        <WalletButton primary label={width > 1200 ? 'Connect Wallet' : 'Connect'} />
+                        <WalletButton>{width > 1200 ? 'Connect Wallet' : 'Connect'}</WalletButton>
                     ) : (
                         <MobileDropdownMenu
                             onClick={openDialog}
@@ -126,10 +129,17 @@ const MobileDropdownMenu = ({
     tranches?: any[];
 }) => {
     return (
-        <Menu as="div" className="relative inline-block">
+        <Menu as="div" className="relative inline-block my-auto">
             <div>
-                <Menu.Button className="inline-flex justify-center w-full rounded-md border shadow-sm px-2 md:px-3 py-1 bg-neutral-900 text-sm font-medium text-neutral-100 focus:outline-none focus:ring-0">
-                    <HiOutlineMenuAlt3 size="26px" />
+                <Menu.Button
+                    className={[
+                        'dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-neutral-100',
+                        'px-2 md:px-3 py-1',
+                        'flex my-auto justify-center w-full rounded-md shadow-sm text-sm font-medium focus:outline-none focus:ring-0',
+                        'bg-neutral-800 hover:bg-neutral-700 text-neutral-100 lg:bg-neutral-300 lg:hover:bg-[rgb(200,200,200)]',
+                    ].join(' ')}
+                >
+                    <HiOutlineMenuAlt3 size="27px" />
                 </Menu.Button>
             </div>
 
@@ -146,30 +156,27 @@ const MobileDropdownMenu = ({
                     <div className="p-2">
                         {navItems.map((item: string, i: number) => (
                             <Menu.Item key={`${item}-${i}`}>
-                                <MenuItemButton key={item} label={item} onClick={navigate} mobile />
+                                <NavItem key={item} label={item} onClick={navigate} mobile />
                             </Menu.Item>
                         ))}
                         <div className="flex flex-col justify-center gap-1 border-2 border-neutral-800 rounded-xl mt-1">
-                            <WalletButton
-                                primary
-                                className="border-0 !bg-neutral-900 !rounded-b-none !text-white hover:!bg-neutral-800"
-                            />
+                            <WalletButton className="border-0 !bg-neutral-900 !rounded-b-none !text-white hover:!bg-neutral-800" />
                             {isConnected && (
                                 <>
-                                    <MenuItemButton label={`Portfolio`} onClick={navigate} mobile />
-                                    {/* TODO: uncomment when backend enables creating tranches */}
+                                    <NavItem label={`Portfolio`} onClick={navigate} mobile />
+                                    {/* WEN: uncomment when backend enables creating tranches */}
                                     {/* <MenuItemButton
                                         label={`Create Tranche`}
                                         onClick={() => onClick('create-tranche-dialog')}
                                         mobile
                                     /> */}
-                                    <MenuItemButton
+                                    <NavItem
                                         label={`History`}
                                         onClick={() => onClick('transactions-dialog')}
                                         mobile
                                     />
                                     {tranches?.length !== 0 && (
-                                        <MenuItemButton
+                                        <NavItem
                                             label={`My Tranches`}
                                             onClick={() => navigate('my-tranches')}
                                             mobile

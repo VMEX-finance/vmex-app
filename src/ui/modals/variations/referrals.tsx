@@ -65,7 +65,9 @@ export const ReferralsDialog: React.FC<IDialogProps> = ({ name, isOpen, data }) 
             )}
 
             <ModalFooter>
-                <Button primary onClick={() => closeDialog('referrals-dialog')} label="Close" />
+                <Button type="accent" onClick={() => closeDialog('referrals-dialog')}>
+                    Close
+                </Button>
             </ModalFooter>
         </>
     );

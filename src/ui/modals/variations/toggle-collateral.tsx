@@ -6,8 +6,7 @@ import { useSigner } from 'wagmi';
 import { useModal } from '@/hooks';
 import { markReserveAsCollateral } from '@vmexfinance/sdk';
 import { ethers } from 'ethers';
-import { DEFAULT_NETWORK, NETWORKS, TESTING, DECIMALS } from '@/utils';
-import { getNetwork } from '@wagmi/core';
+import { NETWORKS, DECIMALS, getNetworkName } from '@/utils';
 
 export const ToggleCollateralDialog: React.FC<IDialogProps> = ({
     name,
@@ -17,9 +16,7 @@ export const ToggleCollateralDialog: React.FC<IDialogProps> = ({
 }) => {
     const { submitTx, isLoading, isSuccess, error } = useModal('confirmation-dialog');
     const { data: signer } = useSigner();
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetworkName();
 
     const handleCollateral = async () => {
         if (signer) {
@@ -85,13 +82,14 @@ export const ToggleCollateralDialog: React.FC<IDialogProps> = ({
 
                 <ModalFooter>
                     <Button
-                        primary
+                        type="accent"
                         disabled={isSuccess || isLoading}
-                        onClick={() => handleCollateral()}
-                        label="Submit Transaction"
+                        onClick={() => handleCollateral() as any}
                         loading={isLoading}
                         loadingText="Submitting"
-                    />
+                    >
+                        Submit Transaction
+                    </Button>
                 </ModalFooter>
             </>
         )

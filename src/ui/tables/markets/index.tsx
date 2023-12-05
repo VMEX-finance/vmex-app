@@ -1,14 +1,13 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { CacheProvider } from '@emotion/react';
-import { ThemeProvider } from '@mui/material/styles';
-import { muiCache, options, vmexTheme } from '../utils';
+import { muiCache, options } from '../utils';
 import { MarketsCustomRow } from './custom-row';
 import MUIDataTable from 'mui-datatables';
-import { SpinnerLoader } from '@/ui/components';
-import { ThemeContext } from '@/store';
+import { Loader } from '@/ui/components';
 import { addFeaturedTranches, bigNumberToUnformattedString, numberFormatter } from '@/utils';
 import { UseQueryResult } from '@tanstack/react-query';
 import { IUserActivityDataProps, IMarketsAsset } from '@/api';
+import { useAccount } from 'wagmi';
 
 interface ITableProps {
     data?: IMarketsAsset[];
@@ -17,33 +16,33 @@ interface ITableProps {
 }
 
 export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivity }) => {
-    const { isDark } = useContext(ThemeContext);
+    const { address } = useAccount();
 
-    const renderYourAmount = (asset: string, trancheId: number) => {
-        let amount = 0;
-        if (userActivity?.isLoading)
-            return {
-                amount,
-                loading: true,
-            };
-        userActivity?.data?.supplies.map((supply) => {
-            if (supply.asset === asset && supply.trancheId == trancheId) {
-                amount =
-                    amount +
-                    parseFloat(bigNumberToUnformattedString(supply.amountNative, supply.asset));
-            }
-        });
-        userActivity?.data?.borrows.map((borrow) => {
-            if (borrow.asset === asset && borrow.trancheId == trancheId)
-                amount =
-                    amount -
-                    parseFloat(bigNumberToUnformattedString(borrow.amountNative, borrow.asset));
-        });
-        return {
-            amount: numberFormatter.format(amount),
-            loading: false,
-        };
-    };
+    // const renderYourAmount = (asset: string, trancheId: number) => {
+    //     let amount = 0;
+    //     if (userActivity?.isLoading)
+    //         return {
+    //             amount,
+    //             loading: true,
+    //         };
+    //     userActivity?.data?.supplies.map((supply) => {
+    //         if (supply.asset === asset && supply.trancheId == trancheId) {
+    //             amount =
+    //                 amount +
+    //                 parseFloat(bigNumberToUnformattedString(supply.amountNative, supply.asset));
+    //         }
+    //     });
+    //     userActivity?.data?.borrows.map((borrow) => {
+    //         if (borrow.asset === asset && borrow.trancheId == trancheId)
+    //             amount =
+    //                 amount -
+    //                 parseFloat(bigNumberToUnformattedString(borrow.amountNative, borrow.asset));
+    //     });
+    //     return {
+    //         amount: numberFormatter.format(amount),
+    //         loading: false,
+    //     };
+    // };
 
     const columns = [
         {
@@ -109,12 +108,13 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
             },
         },
         {
-            name: 'yourAmount',
-            label: 'Your Amount',
+            name: 'walletBalance',
+            label: 'Wallet Balance',
             options: {
                 filter: false,
                 sort: true,
                 sortThirdClickReset: true,
+                display: address ? true : false,
             },
         },
         {
@@ -144,15 +144,6 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
                 sortThirdClickReset: true,
             },
         },
-        // {
-        //     name: 'rating',
-        //     label: 'Rating',
-        //     options: {
-        //         filter: true,
-        //         sort: true,
-        //         sortThirdClickReset: true,
-        //     },
-        // },
         {
             name: 'strategies',
             label: 'Strategies',
@@ -209,65 +200,62 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
     ];
 
     return (
-        <CacheProvider value={muiCache}>
-            <ThemeProvider theme={vmexTheme(isDark)}>
-                <MUIDataTable
-                    title={'All Available Assets'}
-                    columns={columns as any}
-                    data={addFeaturedTranches(data, 'markets')}
-                    options={{
-                        ...options,
-                        customRowRender: (
-                            [
-                                asset,
-                                tranche,
-                                supplyApy,
-                                borrowApy,
-                                yourAmount,
-                                available,
-                                supplyTotal,
-                                borrowTotal,
-                                // rating,
-                                strategies,
-                                canBeCollateral,
-                                trancheId,
-                                canBeBorrowed,
-                                featured,
-                            ],
-                            dataIndex,
-                            rowIndex,
-                        ) => (
-                            <MarketsCustomRow
-                                asset={asset}
-                                tranche={tranche}
-                                trancheId={trancheId}
-                                supplyApy={supplyApy}
-                                borrowApy={borrowApy}
-                                yourAmount={renderYourAmount(asset, trancheId)}
-                                available={available}
-                                borrowTotal={borrowTotal}
-                                supplyTotal={supplyTotal}
-                                // rating={rating}
-                                strategies={strategies}
-                                collateral={canBeCollateral}
-                                key={`markets-table-${
-                                    rowIndex || Math.floor(Math.random() * 10000)
-                                }`}
-                                borrowable={canBeBorrowed}
-                            />
-                        ),
-                        textLabels: {
-                            body: {
-                                noMatch: loading ? (
-                                    <SpinnerLoader />
-                                ) : (
-                                    'An error has occured while fetching tranches. Please refresh the page.'
-                                ),
-                            },
+        <CacheProvider value={muiCache('markets')}>
+            <MUIDataTable
+                title={'All Available Assets'}
+                columns={columns as any}
+                data={addFeaturedTranches(data, 'markets')}
+                options={{
+                    ...options,
+                    customRowRender: (
+                        [
+                            asset,
+                            tranche,
+                            supplyApy,
+                            borrowApy,
+                            walletBalance,
+                            available,
+                            supplyTotal,
+                            borrowTotal,
+                            // rating,
+                            strategies,
+                            canBeCollateral,
+                            trancheId,
+                            canBeBorrowed,
+                            featured,
+                        ],
+                        dataIndex,
+                        rowIndex,
+                    ) => (
+                        <MarketsCustomRow
+                            asset={asset}
+                            tranche={tranche}
+                            trancheId={trancheId}
+                            supplyApy={supplyApy}
+                            borrowApy={borrowApy}
+                            // yourAmount={renderYourAmount(asset, trancheId)}
+                            walletBalance={walletBalance}
+                            available={available}
+                            borrowTotal={borrowTotal}
+                            supplyTotal={supplyTotal}
+                            // rating={rating}
+                            strategies={strategies}
+                            collateral={canBeCollateral}
+                            key={`markets-table-${rowIndex || Math.floor(Math.random() * 10000)}`}
+                            borrowable={canBeBorrowed}
+                        />
+                    ),
+                    textLabels: {
+                        body: {
+                            noMatch: loading ? (
+                                <Loader type="spinner" />
+                            ) : (
+                                'An error has occured while fetching tranches. Please refresh the page.'
+                            ),
                         },
-                    }}
-                />
-            </ThemeProvider>
+                    },
+                }}
+            />
         </CacheProvider>
     );
 };

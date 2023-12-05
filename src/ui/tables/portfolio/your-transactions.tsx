@@ -1,19 +1,16 @@
 import React from 'react';
 import { useUserHistory } from '@/api';
 import { useTransactionsContext } from '@/store';
-import { DEFAULT_NETWORK, NETWORKS, truncate } from '@/utils';
+import { NETWORKS, getNetworkName, truncate } from '@/utils';
 import { useAccount } from 'wagmi';
-import { getNetwork } from '@wagmi/core';
-import { AssetDisplay } from '@/ui/components';
+import { AssetDisplay, SmartPrice } from '@/ui/components';
 
 export const YourTransactionsTable = () => {
     const { address } = useAccount();
     const { transactions } = useTransactionsContext();
     const { queryUserTxHistory } = useUserHistory(address);
 
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetworkName();
 
     const renderStatus = (status: 'error' | 'pending' | 'complete') => {
         switch (status) {
@@ -29,7 +26,7 @@ export const YourTransactionsTable = () => {
         }
     };
 
-    const headers = ['Hash', 'Date', 'Type', 'Asset', 'Status'];
+    const headers = ['Hash', 'Date', 'Type', 'Amount', 'Status'];
     return (
         <div className="fix-table-head">
             {queryUserTxHistory?.data?.length || transactions?.length ? (
@@ -40,7 +37,9 @@ export const YourTransactionsTable = () => {
                                 <th
                                     key={`table-header-${i}`}
                                     scope="col"
-                                    className={`bg-neutral-100 dark:bg-brand-black py-2 text-left text-sm font-semibold text-neutral900 first-of-type:pl-2 first-of-type:md:pl-6`}
+                                    className={`bg-neutral-100 pr-3 dark:bg-brand-black py-2 text-left text-sm font-semibold text-neutral900 first-of-type:pl-2 first-of-type:md:pl-6 ${
+                                        i === headers.length - 1 ? 'hidden sm:block text-right' : ''
+                                    } ${i === headers.length - 2 ? 'text-right' : ''}`}
                                 >
                                     {el}
                                 </th>
@@ -59,15 +58,20 @@ export const YourTransactionsTable = () => {
                                         target="_blank"
                                         rel="noreferrer"
                                     >
-                                        {truncate(el.text, 4)}
+                                        {truncate(el.text, 3)}
                                     </a>
                                 </td>
                                 <td>{el.date}</td>
                                 <td>{el?.type || ''}</td>
                                 <td>
-                                    {el.amount} <AssetDisplay name={el.asset} size={'sm'} noText />
+                                    <span className="flex gap-1 items-center justify-end pr-3 sm:pr-0">
+                                        <SmartPrice price={el.amount} />{' '}
+                                        <AssetDisplay name={el.asset} size={'sm'} noText />
+                                    </span>
                                 </td>
-                                <td>{renderStatus(el.status)}</td>
+                                <td className="hidden sm:table-cell text-right pr-3">
+                                    {renderStatus(el.status)}
+                                </td>
                             </tr>
                         ))}
                         {queryUserTxHistory?.data?.map((el, i) => (
@@ -81,7 +85,7 @@ export const YourTransactionsTable = () => {
                                         target="_blank"
                                         rel="noreferrer"
                                     >
-                                        {truncate(el.txHash, 4)}
+                                        {truncate(el.txHash, 3)}
                                     </a>
                                 </td>
                                 <td>
@@ -91,12 +95,14 @@ export const YourTransactionsTable = () => {
                                     <span>{el.type}</span>
                                 </td>
                                 <td>
-                                    <span className="flex gap-1 items-center">
-                                        {el.amount}{' '}
+                                    <span className="flex gap-1 items-center justify-end pr-3 sm:pr-0">
+                                        <SmartPrice price={el.amount} />{' '}
                                         <AssetDisplay name={el.asset} size={'sm'} noText />
                                     </span>
                                 </td>
-                                <td>{renderStatus('complete')}</td>
+                                <td className="hidden sm:table-cell text-right pr-3">
+                                    {renderStatus('complete')}
+                                </td>
                             </tr>
                         ))}
                     </tbody>

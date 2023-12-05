@@ -1,20 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-export type DialogType = {
-    name?: string;
-    tab?: string;
-    isOpen?: boolean;
-    data?: any;
-    isError?: boolean;
-    isSuccess?: boolean;
-};
-
-export interface IDialogState {
-    dialogs?: Map<string, DialogType>;
-    isLoading?: boolean;
-    error?: null | string;
-}
-
 export type IDialogNames =
     | 'loan-asset-dialog'
     | 'borrow-asset-dialog'
@@ -23,13 +8,41 @@ export type IDialogNames =
     | 'create-tranche-dialog'
     | 'confirmation-dialog'
     | 'feedback-dialog'
-    | 'disclaimer-dialog'
     | 'toggle-collateral-dialog'
     | 'transactions-dialog'
-    | 'referrals-dialog';
+    | 'referrals-dialog'
+    | 'leverage-asset-dialog'
+    | 'tos-dialog';
+
+export type DialogType = {
+    name?: string;
+    tab?: string;
+    isOpen?: boolean;
+    data?: any;
+    isError?: boolean;
+    isSuccess?: boolean;
+    closeDialog?: (e: IDialogNames) => void;
+};
+
+export interface IDialogState {
+    dialogs?: Map<string, DialogType>;
+    isLoading?: boolean;
+    error?: null | string;
+}
 
 const DialogControllerState: IDialogState = {
     dialogs: new Map<string, DialogType>([
+        [
+            'leverage-asset-dialog',
+            {
+                name: 'Leverage',
+                tab: '',
+                isOpen: false,
+                data: {},
+                isSuccess: false,
+                isError: false,
+            },
+        ],
         [
             'loan-asset-dialog',
             {
@@ -103,10 +116,10 @@ const DialogControllerState: IDialogState = {
             },
         ],
         [
-            'disclaimer-dialog',
+            'tos-dialog',
             {
-                name: 'Disclaimer',
-                isOpen: false,
+                name: 'Terms of Service',
+                isOpen: true,
                 data: {},
                 isSuccess: false,
                 isError: false,

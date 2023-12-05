@@ -28,13 +28,14 @@ export const ConfirmationDialog: React.FC<IDialogProps> = ({ name, isOpen, data,
 
                 <ModalFooter>
                     <Button
-                        primary
+                        type="accent"
                         disabled={data.success || isLoading}
                         onClick={handleSubmit}
-                        label="Submit Transaction"
                         loading={data.loading || isLoading}
                         loadingText="Submitting"
-                    />
+                    >
+                        Submit Transaction
+                    </Button>
                 </ModalFooter>
             </>
         )

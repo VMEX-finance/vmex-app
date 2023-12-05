@@ -12,16 +12,13 @@ import { IDialogProps } from '../utils';
 import { useStepper, useModal } from '@/hooks';
 import { ModalFooter, ModalHeader } from '@/ui/modals';
 import { CreateTrancheAssetsTable } from '@/ui/tables';
-import { NETWORKS, DEFAULT_NETWORK, AVAILABLE_ASSETS, checkProfanity } from '@/utils';
+import { NETWORKS, AVAILABLE_ASSETS, checkProfanity, getNetworkName } from '@/utils';
 import { useAccount, useSigner } from 'wagmi';
 import { initTranche } from '@vmexfinance/sdk';
 import { useSubgraphTranchesOverviewData } from '@/api';
-import { getNetwork } from '@wagmi/core';
 
 export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeDialog }) => {
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetworkName();
     const { address } = useAccount();
     const { data: signer } = useSigner();
     const { setError, isSuccess, error, submitTx, isLoading } = useModal('create-tranche-dialog');
@@ -230,12 +227,9 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
             )}
 
             <ModalFooter>
-                <Button
-                    disabled={isSuccess || activeStep === 0}
-                    onClick={prevStep}
-                    label="Back"
-                    primary
-                />
+                <Button disabled={isSuccess || activeStep === 0} onClick={prevStep} type="accent">
+                    Back
+                </Button>
 
                 <Button
                     disabled={
@@ -247,10 +241,11 @@ export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeD
                         !treasuryAddress
                     }
                     onClick={activeStep === steps.length - 1 ? handleSubmit : nextStep}
-                    label={activeStep === steps.length - 1 ? 'Save' : 'Next'}
-                    primary
+                    type="accent"
                     loading={isLoading}
-                />
+                >
+                    {activeStep === steps.length - 1 ? 'Save' : 'Next'}
+                </Button>
             </ModalFooter>
         </>
     );

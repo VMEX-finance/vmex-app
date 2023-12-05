@@ -138,12 +138,13 @@ export const FeedbackDialog: React.FC<IDialogProps> = ({ name, isOpen, data, clo
 
             <ModalFooter>
                 <Button
-                    primary
+                    type="accent"
                     disabled={!form.feature || !form.message || !captcha}
                     onClick={handleSubmit}
-                    label="Send Message"
                     loading={isSending}
-                />
+                >
+                    Send Message
+                </Button>
             </ModalFooter>
         </>
     );

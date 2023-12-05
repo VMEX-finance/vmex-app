@@ -1,29 +1,33 @@
 import React from 'react';
-import { AppTemplate, GridView } from '@/ui/templates';
+import { Base } from '@/ui/base';
 import { ProtocolStatsCard, UserPerformanceCard } from '@/ui/features';
 import { Carousel, WalletButton } from '@/ui/components';
 import {
+    useLoopData,
     useSubgraphAllMarketsData,
     useSubgraphProtocolData,
     useSubgraphUserData,
     useUserData,
 } from '@/api';
-import useAnalyticsEventTracker from '../utils/google-analytics';
-import { getNetwork } from '@wagmi/core';
+import { useAnalyticsEventTracker } from '@/config';
 import { useAccount, useNetwork } from 'wagmi';
-import { bigNumberToUnformattedString, numberFormatter } from '@/utils';
-import { YourPositionsTable } from 'ui/tables/portfolio';
+import { NETWORKS, bigNumberToUnformattedString, numberFormatter } from '@/utils';
+import { isAddress } from 'ethers/lib/utils.js';
+import { YourPositionsTable } from '@/ui/tables';
+import { GridView } from '@/ui/templates';
 
 const Overview: React.FC = () => {
     const gaEventTracker = useAnalyticsEventTracker('Overview');
     const { address, isConnected } = useAccount();
     const { chain } = useNetwork();
     const { queryProtocolTVLChart, queryProtocolData } = useSubgraphProtocolData();
-    const { queryUserActivity } = useUserData(address);
+    const { queryUserActivity, queryUserWallet } = useUserData(address);
     const { queryUserPnlChart } = useSubgraphUserData(address);
+    const { queryAllMarketsData } = useSubgraphAllMarketsData();
+    const { queryUserLooping } = useLoopData();
 
     return (
-        <AppTemplate title="overview">
+        <Base title="overview">
             <ProtocolStatsCard
                 tvl={queryProtocolData.data?.tvl}
                 tvlChart={queryProtocolTVLChart}
@@ -38,8 +42,16 @@ const Overview: React.FC = () => {
                 topTranches={queryProtocolData.data?.topTranches}
                 isLoading={queryProtocolData.isLoading}
             />
+
+            <Carousel
+                type="strategies"
+                items={queryAllMarketsData.data?.sort(
+                    (a, b) => Number(b.supplyApy) - Number(a.supplyApy),
+                )}
+            />
+
             {isConnected && !chain?.unsupported ? (
-                <GridView type="fixed">
+                <GridView type="fixed" className="mt-8">
                     <UserPerformanceCard
                         isLoading={queryUserActivity.isLoading || queryUserPnlChart.isLoading}
                         loanedAssets={queryUserActivity.data?.supplies?.map((el: any) => ({
@@ -65,24 +77,9 @@ const Overview: React.FC = () => {
                     </div>
                 </GridView>
             ) : (
-                <div className="mt-10 text-center flex-col">
-                    <div className="mb-4">
-                        <span className="text-lg dark:text-neutral-200">
-                            {getNetwork()?.chain?.unsupported
-                                ? 'Please switch networks'
-                                : 'Please connect your wallet'}
-                        </span>
-                    </div>
-                    <WalletButton primary className="!w-fit" />
-                </div>
+                <></>
             )}
-            {/* <Carousel
-                type="strategies"
-                items={queryAllMarketsData.data
-                    ?.sort((a, b) => Number(b.supplyApy) - Number(a.supplyApy))
-                    .slice(0, 8)}
-            /> */}
-        </AppTemplate>
+        </Base>
     );
 };
 export default Overview;

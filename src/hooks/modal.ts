@@ -26,6 +26,8 @@ export type IUseModal = {
 export const useModal = (dialog?: IDialogNames): IUseModal => {
     const determineDefaultView = () => {
         switch (dialog) {
+            case 'leverage-asset-dialog':
+                return 'Loop';
             case 'loan-asset-dialog':
                 return 'Supply';
             case 'borrow-asset-dialog':
@@ -41,6 +43,8 @@ export const useModal = (dialog?: IDialogNames): IUseModal => {
                 return 'Deposit';
             case 'borrow-asset-dialog':
                 return 'Borrow';
+            case 'leverage-asset-dialog':
+                return 'Loop';
             default:
                 return undefined;
         }
@@ -92,7 +96,7 @@ export const useModal = (dialog?: IDialogNames): IUseModal => {
         error,
         setError,
         submitTx,
-        dialog: dialog || 'disclaimer-dialog',
+        dialog: dialog || 'tos-dialog',
         view,
         setView,
         isMax,

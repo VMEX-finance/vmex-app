@@ -15,7 +15,9 @@ export const TransactionsDialog: React.FC<IDialogProps> = ({ name, isOpen, data 
             <YourTransactionsTable />
 
             <ModalFooter>
-                <Button primary onClick={() => closeDialog('transactions-dialog')} label="Close" />
+                <Button type="accent" onClick={() => closeDialog('transactions-dialog')}>
+                    Close
+                </Button>
             </ModalFooter>
         </>
     );

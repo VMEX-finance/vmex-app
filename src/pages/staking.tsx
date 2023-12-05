@@ -1,11 +1,11 @@
 import React from 'react';
-import { AppTemplate, GridView } from '../ui/templates';
-import { StakingAsset, StakingOverview } from '../ui/features/stake';
-import { MOCK_STAKE_ASSET_DATA } from '../utils/mock-data';
+import { GridView } from '@/ui/templates';
+import { Base } from '@/ui/base';
+import { StakingAsset, StakingOverview } from '@/ui/features';
 
 const Staking: React.FC = () => {
     return (
-        <AppTemplate
+        <Base
             title="staking"
             description={
                 <>
@@ -40,7 +40,13 @@ const Staking: React.FC = () => {
                         staked: 0.04,
                         claim: 1.59,
                     }}
-                    data={MOCK_STAKE_ASSET_DATA}
+                    data={{
+                        asset: 'USDC',
+                        amount: 9921,
+                        apy: 0.0078,
+                        canBeCollat: true,
+                        liquidity: '18.3',
+                    }}
                 />
 
                 <StakingAsset
@@ -55,10 +61,16 @@ const Staking: React.FC = () => {
                         staked: 0.04,
                         claim: 1.59,
                     }}
-                    data={MOCK_STAKE_ASSET_DATA}
+                    data={{
+                        asset: 'USDC',
+                        amount: 9921,
+                        apy: 0.0078,
+                        canBeCollat: true,
+                        liquidity: '18.3',
+                    }}
                 />
             </GridView>
-        </AppTemplate>
+        </Base>
     );
 };
 export default Staking;

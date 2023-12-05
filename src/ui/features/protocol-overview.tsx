@@ -3,8 +3,7 @@ import { TopTranchesTable } from '../tables';
 import { makeCompact } from '@/utils';
 import { AssetBalance, TrancheData } from '@/api';
 import {
-    SkeletonLoader,
-    ReLineChart,
+    Loader,
     NumberDisplay,
     PillDisplay,
     Card,
@@ -13,6 +12,7 @@ import {
 import { UseQueryResult } from '@tanstack/react-query';
 import { useSelectedTrancheContext } from '@/store';
 import { useNavigate } from 'react-router-dom';
+import { ReAreaChart } from '@/ui/charts';
 
 export interface IProtocolProps {
     isLoading?: boolean;
@@ -65,7 +65,7 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
     return (
         <Card>
             <div className="flex flex-col lg:flex-row gap-2 md:gap-4 divide-y-2 lg:divide-y-0 lg:divide-x-2 divide-neutral-300 dark:divide-neutral-800">
-                <div className="flex flex-col md:flex-row font-basefont gap-8">
+                <div className="flex flex-col md:flex-row font-basefont gap-2 md:gap-4 2xl:gap-6">
                     <div className="flex flex-col justify-between min-w-[90%] lg:min-w-[300px]">
                         <NumberDisplay
                             size="xl"
@@ -75,26 +75,14 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                             loading={isLoading}
                         />
                         {tvlChart?.isLoading ? (
-                            <SkeletonLoader
-                                variant="rounded"
-                                animtion="wave"
-                                className="min-w-full"
-                            >
-                                <div className="h-[100px] w-full">
-                                    <ReLineChart
-                                        data={tvlChart?.data || []}
-                                        color="#3CB55E"
-                                        type="usd"
-                                    />
+                            <Loader variant="rounded" animation="wave" className="min-w-full">
+                                <div className="h-[100px] lg:min-w-[360px] 2xl:min-w-0 w-full">
+                                    <ReAreaChart data={tvlChart?.data || []} type="usd" />
                                 </div>
-                            </SkeletonLoader>
+                            </Loader>
                         ) : (
-                            <div className="h-[100px] lg:h-full w-full">
-                                <ReLineChart
-                                    data={tvlChart?.data || []}
-                                    color="#3CB55E"
-                                    type="usd"
-                                />
+                            <div className="h-[100px] lg:h-full lg:min-w-[360px] 2xl:min-w-0 w-full">
+                                <ReAreaChart data={tvlChart?.data || []} type="usd" />
                             </div>
                         )}
                     </div>
@@ -124,7 +112,7 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                     </div>
                 </div>
 
-                <div className="py-2 md:py-4 lg:py-0 lg:px-6 grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4 w-full">
+                <div className="py-2 md:py-4 lg:py-0 lg:px-6 grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-x-2 gap-y-4 w-full">
                     <div className="flex flex-col gap-2">
                         <NumberDisplay
                             size="xl"
@@ -136,9 +124,9 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                             <span>Top Supplied Assets</span>
                             <div className="flex flex-wrap gap-1">
                                 {isLoading ? (
-                                    <SkeletonLoader variant="rounded" className="!rounded-3xl">
+                                    <Loader variant="rounded" className="!rounded-3xl">
                                         <PillDisplay type="asset" asset={'BTC'} value={0} />
-                                    </SkeletonLoader>
+                                    </Loader>
                                 ) : (
                                     renderTopAssetsList(topSuppliedAssets).map((el, i) => (
                                         <button
@@ -175,9 +163,9 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                             <span>Top Borrowed Assets</span>
                             <div className="flex flex-wrap gap-1">
                                 {isLoading ? (
-                                    <SkeletonLoader variant="rounded" className="!rounded-3xl">
+                                    <Loader variant="rounded" className="!rounded-3xl">
                                         <PillDisplay type="asset" asset={'BTC'} value={0} />
-                                    </SkeletonLoader>
+                                    </Loader>
                                 ) : (
                                     renderTopAssetsList(topBorrowedAssets).map((el, i) => (
                                         <button
@@ -203,12 +191,18 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                         </div>
                     </div>
 
-                    <div className="flex flex-col gap-1 lg:col-span-2 2xl:col-span-1">
+                    <div className="flex flex-col lg:col-span-2 2xl:col-span-1 lg:hidden 2xl:flex">
                         <span>Top Tranches</span>
                         <div className="flex flex-col">
                             <TopTranchesTable data={topTranches || []} loading={isLoading} />
                         </div>
                     </div>
+                </div>
+            </div>
+            <div className="flex-col lg:col-span-2 2xl:col-span-1 hidden lg:flex 2xl:hidden mt-4">
+                <span>Top Tranches</span>
+                <div className="flex flex-col">
+                    <TopTranchesTable data={topTranches || []} loading={isLoading} />
                 </div>
             </div>
         </Card>

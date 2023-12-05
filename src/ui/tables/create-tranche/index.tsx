@@ -1,6 +1,6 @@
 import { IAvailableCoins } from '@/utils';
 import React, { useEffect } from 'react';
-import { Checkbox, AssetDisplay, DefaultInput, InnerCard } from '@/ui/components';
+import { Checkbox, AssetDisplay, DefaultInput, Card } from '@/ui/components';
 import { useSubgraphAllAssetMappingsData } from '@/api';
 
 type ICreateTrancheAssetsTableProps = {
@@ -93,7 +93,10 @@ export const CreateTrancheAssetsTable = ({
             <div className="flex justify-between items-end">
                 <h3 className="mt-6 mb-1">{title}</h3>
             </div>
-            <InnerCard className={`${wrapperClass ? wrapperClass : ''} max-h-60 overflow-y-auto`}>
+            <Card
+                type="inner"
+                className={`${wrapperClass ? wrapperClass : ''} max-h-60 overflow-y-auto`}
+            >
                 <table className="w-full table-auto">
                     <thead>
                         <tr>
@@ -203,7 +206,7 @@ export const CreateTrancheAssetsTable = ({
                 _adminFee={_adminFee}
                 setAdminFee={setAdminFee}
             /> */}
-            </InnerCard>
+            </Card>
 
             {!originalAssets && assets.length === 0 && (
                 <div className="mt-6 flex justify-center">

@@ -1,5 +1,5 @@
 import { useSubgraphTrancheData, useUserData, useUserTrancheData, AvailableAsset } from '@/api';
-import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
+import { useAccount, useSwitchNetwork } from 'wagmi';
 import React, { useMemo } from 'react';
 import { BsCheck } from 'react-icons/bs';
 import { IoIosClose } from 'react-icons/io';
@@ -11,13 +11,11 @@ import {
     numberFormatter,
     bigNumberToNative,
     percentFormatter,
-    bigNumberToUSD,
     nativeAmountToUSD,
     PRICING_DECIMALS,
-    DEFAULT_NETWORK,
     usdFormatter,
-    NETWORKS,
     DEFAULT_CHAINID,
+    getNetworkName,
 } from '@/utils';
 import { useLocation } from 'react-router-dom';
 import { IYourSuppliesTableItemProps } from '../portfolio';
@@ -47,7 +45,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
 
     const mode1 =
         type === 'supply'
-            ? width > breakpoints.md
+            ? width > breakpoints['2xl']
                 ? 'Wallet Balance'
                 : 'Balance'
             : width > breakpoints.md
@@ -56,19 +54,27 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
 
     const mode2 =
         type === 'supply'
-            ? width > breakpoints.md
+            ? width > breakpoints['2xl']
                 ? 'Can Collateralize'
                 : 'Collateral'
-            : width > breakpoints.md
+            : width > breakpoints['2xl']
             ? 'Total liquidity'
             : 'Liquidity';
+
+    const supplied =
+        type === 'supply'
+            ? width > breakpoints['2xl']
+                ? 'Supplied Amount'
+                : 'Supplied'
+            : width > breakpoints['2xl']
+            ? 'Borrowed Amount'
+            : 'Borrowed';
 
     const isCollateralized = (asset: string) =>
         type === 'supply' &&
         (findAssetInUserSuppliesOrBorrows(asset || '', 'supply') as IYourSuppliesTableItemProps)
             ?.collateral;
 
-    // TODO: check to see if user has rewards
     const hasRewards = (asset: string) =>
         findAssetInRewards(asset || '', tranche?.id || '', 'supply');
 
@@ -103,9 +109,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
         return [];
     }, [data]);
 
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetworkName();
 
     const handleClick = (e: any, row: any) => {
         if (!address && openConnectModal) {
@@ -159,9 +163,16 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                     <th scope="col" className="py-3.5 pl-4 sm:pl-6">
                         Asset
                     </th>
-                    <th scope="col" className="py-3.5">
-                        {mode1}
-                    </th>
+                    {address ? (
+                        <th scope="col" className="py-3.5">
+                            {supplied}
+                        </th>
+                    ) : null}
+                    {address ? (
+                        <th scope="col" className="py-3.5">
+                            {mode1}
+                        </th>
+                    ) : null}
                     <th scope="col" className="py-3.5">
                         APY
                     </th>
@@ -201,7 +212,98 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                     />
                                 </div>
                             </td>
-                            <td className={`${queryUserWallet.isLoading ? 'animate-pulse' : ''}`}>
+                            {address ? (
+                                <td
+                                    className={`${
+                                        queryUserWallet.isLoading ? 'animate-pulse' : ''
+                                    }`}
+                                >
+                                    {type === 'supply' ? (
+                                        bigNumberToNative(
+                                            findAssetInUserSuppliesOrBorrows(
+                                                el.asset || '',
+                                                'supply',
+                                            )?.amountNative,
+                                            el.asset,
+                                        ) !== '0' ? (
+                                            <NumberAndDollar
+                                                value={`${bigNumberToNative(
+                                                    findAssetInUserSuppliesOrBorrows(
+                                                        el.asset || '',
+                                                        'supply',
+                                                    )?.amountNative,
+                                                    el.asset,
+                                                )}`}
+                                                dollar={`${
+                                                    findAssetInUserSuppliesOrBorrows(
+                                                        el.asset || '',
+                                                        'supply',
+                                                    )?.amount ?? 0
+                                                }`}
+                                                size="xs"
+                                                color="text-brand-black"
+                                            />
+                                        ) : (
+                                            '-'
+                                        )
+                                    ) : bigNumberToNative(
+                                          findAssetInUserSuppliesOrBorrows(el.asset || '', 'borrow')
+                                              ?.amountNative,
+                                          el.asset,
+                                      ) !== '0' ? (
+                                        <NumberAndDollar
+                                            value={`${bigNumberToNative(
+                                                findAssetInUserSuppliesOrBorrows(
+                                                    el.asset || '',
+                                                    'borrow',
+                                                )?.amountNative,
+                                                el.asset,
+                                            )}`}
+                                            dollar={`${
+                                                findAssetInUserSuppliesOrBorrows(
+                                                    el.asset || '',
+                                                    'borrow',
+                                                )?.amount ?? 0
+                                            }`}
+                                            size="xs"
+                                            color="text-brand-black"
+                                        />
+                                    ) : (
+                                        '-'
+                                    )}
+                                </td>
+                            ) : null}
+                            {address ? (
+                                <td
+                                    className={`${
+                                        queryUserWallet.isLoading ? 'animate-pulse' : ''
+                                    }`}
+                                >
+                                    <NumberAndDollar
+                                        value={`${
+                                            type === 'supply'
+                                                ? `${bigNumberToNative(
+                                                      BigNumber.from(
+                                                          getTokenBalance(el.asset).amountNative,
+                                                      ),
+                                                      el.asset,
+                                                  )}`
+                                                : `${bigNumberToNative(
+                                                      amountBorrwable(el.asset).amountNative,
+                                                      el.asset,
+                                                  )}`
+                                        }`}
+                                        dollar={`${
+                                            type === 'supply'
+                                                ? `${getTokenBalance(el.asset).amount}`
+                                                : `${amountBorrwable(el.asset).amount}`
+                                        }`}
+                                        size="xs"
+                                        color="text-brand-black"
+                                    />
+                                </td>
+                            ) : null}
+                            {/* <td className={`${queryUserWallet.isLoading ? 'animate-pulse' : ''}`}>
                                 <NumberAndDollar
                                     value={`${
                                         type === 'supply'
@@ -224,7 +326,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                     size="xs"
                                     color="text-brand-black"
                                 />
-                            </td>
+                            </td> */}
                             <td>
                                 {type === 'supply' ? (
                                     <ApyToolitp symbol={el.asset} oldApy={el.apy} />

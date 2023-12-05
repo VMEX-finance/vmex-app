@@ -5,16 +5,17 @@ import { BigNumber, Wallet, utils } from 'ethers';
 import {
     DECIMALS,
     NETWORKS,
-    DEFAULT_NETWORK,
     bigNumberToUSD,
     bigNumberToUnformattedString,
     convertStringFormatToNumber,
     PRICING_DECIMALS,
+    getNetworkName,
+    toAddress,
+    getChainId,
 } from '../utils';
 import { borrow, estimateGas, repay } from '@vmexfinance/sdk';
 import { useAccount, useSigner } from 'wagmi';
-import { useSubgraphTrancheData, useUserTrancheData, useUserData, usePricesData } from '../api';
-import { getNetwork } from '@wagmi/core';
+import { useSubgraphTrancheData, useUserTrancheData, useUserData } from '../api';
 
 export const useBorrow = ({
     data,
@@ -28,9 +29,8 @@ export const useBorrow = ({
     amount,
     setAmount,
 }: ISupplyBorrowProps & IUseModal) => {
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetworkName();
+    const chainId = getChainId();
     const { address } = useAccount();
     const { data: signer } = useSigner();
     const { findAssetInUserSuppliesOrBorrows, findAmountBorrowable } = useUserTrancheData(
@@ -46,7 +46,7 @@ export const useBorrow = ({
         errorMessage: '',
     });
     const [asset, setAsset] = useState(data?.asset || '');
-    const amountWalletNative = getTokenBalance(asset || '');
+    const amountWalletNative = getTokenBalance(toAddress(asset));
 
     const toggleEthWeth = () => {
         if (data?.asset?.toLowerCase() === 'weth') {
@@ -133,6 +133,7 @@ export const useBorrow = ({
             if (amount.includes('.') && amount.split('.')[1].length > (DECIMALS.get(asset) || 18)) {
                 return true;
             } else {
+                // TODO: fico --> amountWalletNative broken?
                 const inputAmount = utils.parseUnits(amount, DECIMALS.get(asset));
                 return inputAmount.gt(amountWalletNative.amountNative);
             }

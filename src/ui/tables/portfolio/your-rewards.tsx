@@ -2,9 +2,8 @@ import React from 'react';
 import { useModal, useWindowSize } from '@/hooks';
 import { Button, Card, AssetDisplay, NumberAndDollar } from '@/ui/components';
 import { useNetwork, useSigner, useSwitchNetwork } from 'wagmi';
-import { DEFAULT_NETWORK, NETWORKS } from '@/utils';
+import { DEFAULT_NETWORK, NETWORKS, getNetworkName } from '@/utils';
 import { claimExternalRewards } from '@vmexfinance/sdk';
-import { getNetwork } from '@wagmi/core';
 
 export type IYourRewardsTableItemProps = {
     asset: string;
@@ -29,9 +28,7 @@ export const YourRewardsTable: React.FC<IYourRewardsTableProps> = ({
     isLoading,
     address,
 }) => {
-    const network = getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    const network = getNetworkName();
     const { width } = useWindowSize();
     const headers = ['Asset', 'Amount', ''];
     const { data: signer } = useSigner();
@@ -113,8 +110,7 @@ export const YourRewardsTable: React.FC<IYourRewardsTableProps> = ({
                                         <td>
                                             <div className="h-full w-full flex justify-end items-center">
                                                 <Button
-                                                    label="Claim"
-                                                    primary
+                                                    type="accent"
                                                     disabled={reward.claimableAmountWei === '0x0'}
                                                     onClick={() =>
                                                         handleClaim(
@@ -123,9 +119,11 @@ export const YourRewardsTable: React.FC<IYourRewardsTableProps> = ({
                                                             reward.amountWei,
                                                             reward.proof,
                                                             reward.chainId,
-                                                        )
+                                                        ) as any
                                                     }
-                                                />
+                                                >
+                                                    Claim
+                                                </Button>
                                             </div>
                                         </td>
                                     </tr>

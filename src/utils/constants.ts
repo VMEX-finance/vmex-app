@@ -1,3 +1,5 @@
+import { utils } from 'ethers';
+
 // General
 export const TESTING = process.env.REACT_APP_TEST ? true : false;
 
@@ -11,6 +13,7 @@ export const HEALTH = {
 
 export const TIMER_CLOSE_DELAY = 1500;
 
+export const AVAILABLE_COLLATERAL_TRESHOLD = utils.parseUnits('5000', 8);
 export const MAX_UINT_AMOUNT =
     '115792089237316195423570985008687907853269984665640564039457584007913129639935';
 

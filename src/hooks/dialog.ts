@@ -1,5 +1,11 @@
 import { useAppSelector, useAppDispatch } from './redux';
-import { clearAndClose, setDataAndOpen, IDialogState, IDialogNames } from '../store/modals';
+import {
+    clearAndClose,
+    setDataAndOpen,
+    IDialogState,
+    IDialogNames,
+    DialogType,
+} from '../store/modals';
 import { useNetwork } from 'wagmi';
 
 export const useDialogController = () => {
@@ -18,7 +24,7 @@ export const useDialogController = () => {
         dispatch(clearAndClose({ id: e }));
     }
 
-    function getDialogProps(id: string) {
+    function getDialogProps(id: IDialogNames): any {
         if (dialogs) {
             let data = dialogs.get(id);
             return {

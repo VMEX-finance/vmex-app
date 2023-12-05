@@ -3,12 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '@/store';
 import { BsCheck } from 'react-icons/bs';
 import { IoIosClose } from 'react-icons/io';
-import { ApyToolitp, AssetDisplay, SplitButton } from '@/ui/components';
+import { ApyToolitp, AssetDisplay, Button, NumberAndDollar } from '@/ui/components';
 import { useDialogController, useWindowSize } from '@/hooks';
-import { IMarketsAsset } from '@/api';
-import { DEFAULT_CHAINID, percentFormatter, usdFormatter } from '@/utils';
+import { IMarketsAsset, useUserData } from '@/api';
+import { DEFAULT_CHAINID, bigNumberToNative, percentFormatter, usdFormatter } from '@/utils';
 import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
+import { BigNumber } from 'ethers';
 
 const MarketsCustomRow = (props: any) => {
     const {
@@ -31,6 +32,7 @@ const MarketsCustomRow = (props: any) => {
     const { updateTranche, setAsset } = useSelectedTrancheContext();
     const { openDialog } = useDialogController();
     const { address } = useAccount();
+    const { getTokenBalance } = useUserData(address);
     const { chain } = useNetwork();
     const { switchNetwork } = useSwitchNetwork();
     const { openConnectModal } = useConnectModal();
@@ -88,12 +90,26 @@ const MarketsCustomRow = (props: any) => {
                     <span className="font-bold">Borrow APY</span>
                     <span>{borrowable ? percentFormatter.format(borrowApy) : '-'}</span>
                 </td>
-                <td className="flex justify-between">
-                    <span className="font-bold">Your Amount</span>
-                    <span className={`${yourAmount.loading ? 'animate-pulse' : ''}`}>
-                        {yourAmount.amount}
-                    </span>
-                </td>
+                {address && (
+                    <td className="flex justify-between">
+                        {/* <span className="font-bold">Your Amount</span>
+                        <span className={`${yourAmount.loading ? 'animate-pulse' : ''}`}>
+                            {yourAmount.amount}
+                        </span> */}
+                        <span className="font-bold">Wallet Balance</span>
+                        <span>
+                            <NumberAndDollar
+                                value={`${bigNumberToNative(
+                                    BigNumber.from(getTokenBalance(asset).amountNative),
+                                    asset,
+                                )}`}
+                                dollar={`${getTokenBalance(asset).amount}`}
+                                size="xs"
+                                color="text-brand-black"
+                            />
+                        </span>
+                    </td>
+                )}
                 <td className="flex justify-between">
                     <span className="font-bold">Available Borrows</span>
                     <span>{borrowable ? usdFormatter().format(available) : '-'}</span>
@@ -119,18 +135,19 @@ const MarketsCustomRow = (props: any) => {
                     )}
                 </td>
                 <td>
-                    <SplitButton
-                        full
+                    <Button
                         className="mt-1 mb-2"
-                        content={{
-                            left: 'Supply',
-                            right: 'Borrow',
+                        type="accent"
+                        left={{
+                            text: 'Supply',
+                            disabled: false,
+                            onClick: handleActionClick,
                         }}
-                        onClick={{
-                            left: handleActionClick,
-                            right: handleActionClick,
+                        right={{
+                            text: 'Borrow',
+                            disabled: !borrowable,
+                            onClick: handleActionClick,
                         }}
-                        disabled={{ right: !borrowable }}
                     />
                 </td>
             </tr>
@@ -150,9 +167,19 @@ const MarketsCustomRow = (props: any) => {
                     <ApyToolitp symbol={asset} oldApy={supplyApy} />
                 </td>
                 <td className="pl-4">{borrowable ? percentFormatter.format(borrowApy) : '-'}</td>
-                <td className={`pl-4 ${yourAmount.loading ? 'animate-pulse' : ''}`}>
-                    {yourAmount.amount}
-                </td>
+                {address && (
+                    <td className="pl-4">
+                        <NumberAndDollar
+                            value={`${bigNumberToNative(
+                                BigNumber.from(getTokenBalance(asset).amountNative),
+                                asset,
+                            )}`}
+                            dollar={`${getTokenBalance(asset).amount}`}
+                            size="xs"
+                            color="text-brand-black"
+                        />
+                    </td>
+                )}
                 <td className="pl-4">{borrowable ? usdFormatter().format(available) : '-'}</td>
                 <td className="pl-4">{usdFormatter().format(supplyTotal)}</td>
                 <td className="pl-4">{borrowable ? usdFormatter().format(borrowTotal) : '-'}</td>
@@ -169,16 +196,18 @@ const MarketsCustomRow = (props: any) => {
                     </div>
                 </td>
                 <td className="text-right pr-3.5">
-                    <SplitButton
-                        content={{
-                            left: 'Supply',
-                            right: 'Borrow',
+                    <Button
+                        type="accent"
+                        left={{
+                            text: 'Supply',
+                            disabled: false,
+                            onClick: handleActionClick,
                         }}
-                        onClick={{
-                            left: handleActionClick,
-                            right: handleActionClick,
+                        right={{
+                            text: 'Borrow',
+                            disabled: !borrowable,
+                            onClick: handleActionClick,
                         }}
-                        disabled={{ right: !borrowable }}
                     />
                 </td>
             </tr>
