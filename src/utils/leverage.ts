@@ -9,6 +9,7 @@ import { TESTING, cleanNumberString, isAddressEqual } from '.';
 
 const DECIMALS = 8;
 const DECIMAL_ONE = new Decimal(1);
+const TEN_E_18 = BigNumber.from(10).pow(18);
 const DEFAULT_MAX_LEVERAGE = 2.5;
 const LEVERAGE_DECIMAL_PLACES = 2;
 const defaultReturn = { maxBorrowableAmountUsd: '0', maxLeverage: DEFAULT_MAX_LEVERAGE };
@@ -183,4 +184,60 @@ export const isUnwindTwoBorrow = (
             parseFloat(borrowedToken1.amount.replace('$', ''))
         );
     }
+};
+
+export const processUserLoop = (
+    trancheId: number,
+    assetAddress: string,
+    userLoopingState: any | undefined,
+    allMarketsData: any[] | undefined,
+    userActivity: any,
+    prices: any,
+): any => {
+    if (!userLoopingState || !allMarketsData || !userActivity) return;
+
+    const depositedAssetData = allMarketsData.find(
+        (x) => x.trancheId === trancheId.toString() && isAddressEqual(x.assetAddress, assetAddress),
+    );
+    const depositedUserData = userActivity.supplies.find(
+        (x: any) =>
+            x.trancheId.toString() === trancheId && isAddressEqual(x.assetAddress, assetAddress),
+    );
+    const borrowedAssetData = allMarketsData.find(
+        (x) =>
+            x.trancheId === trancheId &&
+            isAddressEqual(x.assetAddress, userLoopingState.borrowAssetAddress),
+    );
+    const depositPrice = prices[userLoopingState.depositAsset.toUpperCase()];
+    const borrowPrice = prices[userLoopingState.borrowAsset.toUpperCase()];
+
+    if (!depositPrice || !borrowPrice) {
+        console.error('processUserLoop cant find deposit or borrow price');
+        return;
+    }
+
+    if (depositedUserData.amountNative.lte(parseEther(userLoopingState.depositAmountNative))) {
+        console.error('processUserLoop cant determine starting amount');
+        return;
+    }
+
+    const startingAmount = depositedUserData.amountNative
+        .sub(parseEther(userLoopingState.depositAmountNative))
+        .mul(depositPrice.usdPrice)
+        .div(TEN_E_18);
+    const earnAmount = new Decimal(depositedAssetData.supplyApy).mul(
+        depositPrice.usdPrice
+            .mul(parseEther(userLoopingState.depositAmountNative))
+            .div(TEN_E_18)
+            .toString(),
+    );
+    const interestPayAmount = new Decimal(borrowedAssetData.borrowApy).mul(
+        borrowPrice.usdPrice
+            .mul(parseEther(userLoopingState.borrowAmountNative))
+            .div(TEN_E_18)
+            .toString(),
+    );
+    const apy = earnAmount.minus(interestPayAmount).div(startingAmount.toString());
+
+    return `${(parseFloat(apy.toString()) * 100).toFixed(2)} %`;
 };

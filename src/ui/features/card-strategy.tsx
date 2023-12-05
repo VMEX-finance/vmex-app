@@ -16,6 +16,7 @@ import {
     findInObjArr,
     isAddressEqual,
     percentFormatter,
+    processUserLoop,
     toSymbol,
 } from '@/utils';
 import { ModalTableDisplay } from '../modals';
@@ -73,7 +74,17 @@ export const StrategyCard = ({
     const { queryAllAssetMappingsData } = useSubgraphAllAssetMappingsData();
     const { queryTrancheData } = useSubgraphTrancheData(trancheId);
     const { prices } = usePricesData();
-    const foundUserLoop = userLoops?.find((loop) => loop.depositAssetAddress === assetAddress);
+    const foundUserLoop = userLoops?.find((loop) =>
+        isAddressEqual(loop.depositAssetAddress, assetAddress),
+    );
+    const currentApy = processUserLoop(
+        trancheId,
+        assetAddress,
+        foundUserLoop,
+        queryAllMarketsData.data,
+        queryUserActivity.data,
+        prices,
+    );
 
     const { zappableAssets, handleZap, zapAsset } = useZap(asset);
 
@@ -223,10 +234,12 @@ export const StrategyCard = ({
                     <AssetDisplay name={asset || ''} />
                     <div className="flex flex-col items-end">
                         <span className="text-xs text-neutral-600 dark:text-neutral-400">
-                            Max APY
+                            {currentApy ? 'Current Apy' : 'Max APY'}
                         </span>
                         <span className="font-medium text-lg leading-none">
-                            {percentFormatter.format(Number(supplyApy) * leverage)}
+                            {currentApy
+                                ? currentApy
+                                : percentFormatter.format(Number(supplyApy) * leverage)}
                         </span>
                     </div>
                 </div>
