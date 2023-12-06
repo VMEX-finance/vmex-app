@@ -21,10 +21,9 @@ const Overview: React.FC = () => {
     const { address, isConnected } = useAccount();
     const { chain } = useNetwork();
     const { queryProtocolTVLChart, queryProtocolData } = useSubgraphProtocolData();
-    const { queryUserActivity, queryUserWallet } = useUserData(address);
+    const { queryUserActivity } = useUserData(address);
     const { queryUserPnlChart } = useSubgraphUserData(address);
     const { queryAllMarketsData } = useSubgraphAllMarketsData();
-    const { queryUserLooping } = useLoopData();
 
     return (
         <Base title="overview">
