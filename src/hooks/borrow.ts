@@ -46,7 +46,7 @@ export const useBorrow = ({
         errorMessage: '',
     });
     const [asset, setAsset] = useState(data?.asset || '');
-    const amountWalletNative = getTokenBalance(toAddress(asset));
+    const amountWalletNative = getTokenBalance(asset);
 
     const toggleEthWeth = () => {
         if (data?.asset?.toLowerCase() === 'weth') {
