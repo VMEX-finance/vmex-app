@@ -4,7 +4,7 @@ import { IButtonProps } from './button';
 import { useAccount, useDisconnect, useNetwork } from 'wagmi';
 import { useWindowSize, useDialogController } from '@/hooks';
 import { DefaultDropdown, IDropdownItemProps } from './dropdown';
-import { truncateAddress, truncate } from '@/utils';
+import { truncateAddress, truncate, isChainUnsupported } from '@/utils';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSubgraphUserData } from '@/api';
@@ -67,7 +67,7 @@ export const WalletButton = ({ className, children = 'Connect Wallet' }: IButton
         }
     }, [address, queryClient]);
 
-    if (address && width > 1024 && !chain?.unsupported) {
+    if (address && width > 1024 && !isChainUnsupported()) {
         return (
             <DefaultDropdown
                 className={['', mode, className].join(' ')}

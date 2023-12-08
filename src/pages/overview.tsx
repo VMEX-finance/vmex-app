@@ -11,7 +11,12 @@ import {
 } from '@/api';
 import { useAnalyticsEventTracker } from '@/config';
 import { useAccount, useNetwork } from 'wagmi';
-import { NETWORKS, bigNumberToUnformattedString, numberFormatter } from '@/utils';
+import {
+    NETWORKS,
+    bigNumberToUnformattedString,
+    isChainUnsupported,
+    numberFormatter,
+} from '@/utils';
 import { isAddress } from 'ethers/lib/utils.js';
 import { YourPositionsTable } from '@/ui/tables';
 import { GridView } from '@/ui/templates';
@@ -49,7 +54,7 @@ const Overview: React.FC = () => {
                 )}
             />
 
-            {isConnected && !chain?.unsupported ? (
+            {isConnected && !isChainUnsupported() ? (
                 <GridView type="fixed" className="mt-8">
                     <UserPerformanceCard
                         isLoading={queryUserActivity.isLoading || queryUserPnlChart.isLoading}

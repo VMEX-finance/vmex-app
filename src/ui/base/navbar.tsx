@@ -7,7 +7,7 @@ import { ThemeContext, IDialogNames } from '@/store';
 import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
 import { useDialogController, useWindowSize } from '@/hooks';
 import { useSubgraphUserData } from '@/api';
-import { renderNetworks } from '@/utils';
+import { isChainUnsupported, renderNetworks } from '@/utils';
 import { getNetwork } from '@wagmi/core';
 import { NavItem } from './nav-item';
 
@@ -26,7 +26,7 @@ export const Navbar: React.FC = () => {
     const { chain } = useNetwork();
 
     function navigateTo(e: any, text: string) {
-        if (text === 'Portfolio' && switchNetwork && chain?.unsupported) switchNetwork();
+        if (text === 'Portfolio' && switchNetwork && isChainUnsupported()) switchNetwork();
         if (typeof e === 'string') navigate(`../${e}`, { replace: false });
         else {
             e.preventDefault();
@@ -36,7 +36,7 @@ export const Navbar: React.FC = () => {
     }
 
     function renderChainImg() {
-        if (getNetwork()?.chain?.unsupported || !address) return 'coins/op.svg';
+        if (isChainUnsupported() || !address) return 'coins/op.svg';
         else {
             return renderNetworks().filter(
                 (network) => network.text === getNetwork()?.chain?.network,

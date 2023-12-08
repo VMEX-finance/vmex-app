@@ -11,6 +11,7 @@ import {
     bigNumberToUnformattedString,
     averageOfArr,
     numberFormatter,
+    isChainUnsupported,
 } from '@/utils';
 import { useSubgraphUserData } from '@/api';
 import { useAnalyticsEventTracker } from '@/config';
@@ -91,7 +92,7 @@ const Portfolio: React.FC = () => {
 
     return (
         <Base title="Portfolio">
-            {address && !chain?.unsupported ? (
+            {address && !isChainUnsupported() ? (
                 <GridView type="fixed">
                     <div className="col-span-3 2xl:col-span-2 flex flex-col gap-4">
                         <PortfolioStatsCard
@@ -151,7 +152,7 @@ const Portfolio: React.FC = () => {
                 <div className="mt-10 text-center flex-col">
                     <div className="mb-4">
                         <span className="text-lg dark:text-neutral-200">
-                            {getNetwork()?.chain?.unsupported
+                            {isChainUnsupported()
                                 ? 'Please switch networks'
                                 : 'Please connect your wallet'}
                         </span>

@@ -8,6 +8,7 @@ import { Skeleton } from '@mui/material';
 import { usePricesData, useSubgraphUserData } from '@/api';
 import { useSelectedTrancheContext } from '@/store';
 import { Transition } from '@headlessui/react';
+import { isChainUnsupported } from '@/utils';
 
 interface IDashboardTemplateProps {
     title?: string;
@@ -152,7 +153,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                     )}
                     {(location.pathname === `/tranches` || location.pathname === '/portfolio') &&
                         isConnected &&
-                        !chain?.unsupported && (
+                        !isChainUnsupported() && (
                             <div className="flex gap-1 2xl:gap-1.5 items-center md:justify-end">
                                 {queryTrancheAdminData.data?.length &&
                                 queryTrancheAdminData.data?.length > 0 ? (

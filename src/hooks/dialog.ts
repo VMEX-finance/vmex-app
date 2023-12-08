@@ -7,6 +7,7 @@ import {
     DialogType,
 } from '../store/modals';
 import { useNetwork } from 'wagmi';
+import { isChainUnsupported } from '@/utils';
 
 export const useDialogController = () => {
     const { chain } = useNetwork();
@@ -16,7 +17,7 @@ export const useDialogController = () => {
     const dispatch = useAppDispatch();
 
     function openDialog(e: IDialogNames, data?: any) {
-        if (chain?.unsupported && e !== 'feedback-dialog') return;
+        if (isChainUnsupported() && e !== 'feedback-dialog') return;
         dispatch(setDataAndOpen({ data: data, id: e }));
     }
 

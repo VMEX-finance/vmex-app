@@ -157,14 +157,15 @@ export const renderNetworks = (fx?: any) => {
     }));
 };
 
+export const isChainUnsupported = () => {
+    if (getNetwork()?.chain?.unsupported || getNetwork()?.chain?.id === 1) return true;
+    return false;
+};
+
 export const getNetworkName = () => {
-    return getNetwork()?.chain?.unsupported
-        ? DEFAULT_NETWORK
-        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    return isChainUnsupported() ? DEFAULT_NETWORK : getNetwork()?.chain?.network || DEFAULT_NETWORK;
 };
 
 export const getChainId = () => {
-    return getNetwork()?.chain?.unsupported
-        ? DEFAULT_CHAINID
-        : getNetwork()?.chain?.id || DEFAULT_CHAINID;
+    return isChainUnsupported() ? DEFAULT_CHAINID : getNetwork()?.chain?.id || DEFAULT_CHAINID;
 };

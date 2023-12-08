@@ -1,4 +1,5 @@
 import { useWindowSize } from '@/hooks';
+import { isChainUnsupported } from '@/utils';
 import { useChainModal, useConnectModal } from '@rainbow-me/rainbowkit';
 import React from 'react';
 import { CgSpinner } from 'react-icons/cg';
@@ -100,7 +101,7 @@ export const Button = ({
     function renderButtonText() {
         if (web3) {
             if (!address) return width > breakpoints.md ? 'Connect Wallet' : 'Connect';
-            if (chain?.unsupported) return 'Switch Networks';
+            if (isChainUnsupported()) return 'Switch Networks';
             return children;
         }
         if (loadingText && loading) return loadingText;
@@ -111,7 +112,7 @@ export const Button = ({
     function renderClick() {
         if (web3) {
             if (!address && openConnectModal) () => openConnectModal();
-            if (chain?.unsupported && openChainModal) () => openChainModal();
+            if (isChainUnsupported() && openChainModal) () => openChainModal();
             return onClick;
         }
         return onClick;

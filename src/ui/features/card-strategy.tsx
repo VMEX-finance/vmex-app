@@ -15,6 +15,7 @@ import {
     capFirstLetter,
     findInObjArr,
     isAddressEqual,
+    isChainUnsupported,
     percentFormatter,
     processUserLoop,
     toSymbol,
@@ -171,7 +172,7 @@ export const StrategyCard = ({
 
     const handleSupplyClick = (e: any) => {
         if (!chain && openConnectModal) return openConnectModal();
-        else if (chain?.unsupported && openChainModal) return openChainModal();
+        else if (isChainUnsupported() && openChainModal) return openChainModal();
         return openDialog('loan-asset-dialog', {
             asset,
             trancheId,
@@ -184,7 +185,7 @@ export const StrategyCard = ({
 
     const renderBtnText = (isLeverage?: boolean) => {
         if (!chain && openConnectModal) return 'Connect Wallet';
-        else if (chain?.unsupported && openChainModal) return 'Switch Network';
+        else if (isChainUnsupported() && openChainModal) return 'Switch Network';
         if (foundUserLoop) return 'Unwind';
         if (isLeverage) return 'Loop';
         return 'Supply / Zap';

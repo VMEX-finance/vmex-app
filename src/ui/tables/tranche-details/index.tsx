@@ -16,6 +16,7 @@ import {
     usdFormatter,
     DEFAULT_CHAINID,
     getNetworkName,
+    isChainUnsupported,
 } from '@/utils';
 import { useLocation } from 'react-router-dom';
 import { IYourSuppliesTableItemProps } from '../portfolio';
@@ -115,7 +116,7 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
         if (!address && openConnectModal) {
             return openConnectModal();
         }
-        if (getNetwork()?.chain?.unsupported && switchNetworkAsync) {
+        if (isChainUnsupported() && switchNetworkAsync) {
             return switchNetworkAsync(DEFAULT_CHAINID);
         }
         return openDialog(type === 'supply' ? 'loan-asset-dialog' : 'borrow-asset-dialog', {

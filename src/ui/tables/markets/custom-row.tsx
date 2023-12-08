@@ -6,7 +6,13 @@ import { IoIosClose } from 'react-icons/io';
 import { ApyToolitp, AssetDisplay, Button, NumberAndDollar } from '@/ui/components';
 import { useDialogController, useWindowSize } from '@/hooks';
 import { IMarketsAsset, useUserData } from '@/api';
-import { DEFAULT_CHAINID, bigNumberToNative, percentFormatter, usdFormatter } from '@/utils';
+import {
+    DEFAULT_CHAINID,
+    bigNumberToNative,
+    isChainUnsupported,
+    percentFormatter,
+    usdFormatter,
+} from '@/utils';
 import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { BigNumber } from 'ethers';
@@ -49,7 +55,7 @@ const MarketsCustomRow = (props: any) => {
     const handleActionClick = (e: any) => {
         e.stopPropagation();
         if (!address && openConnectModal) return openConnectModal();
-        if (chain?.unsupported && switchNetwork) return switchNetwork(DEFAULT_CHAINID);
+        if (isChainUnsupported() && switchNetwork) return switchNetwork(DEFAULT_CHAINID);
         if (e.target.innerHTML === 'Supply') {
             openDialog('loan-asset-dialog', {
                 asset: asset,

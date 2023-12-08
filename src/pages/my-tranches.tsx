@@ -25,6 +25,7 @@ import {
     nativeAmountToUSD,
     PRICING_DECIMALS,
     getNetworkName,
+    isChainUnsupported,
 } from '../utils';
 import { useAnalyticsEventTracker } from '@/config';
 import { getNetwork } from '@wagmi/core';
@@ -457,7 +458,7 @@ const MyTranches: React.FC = () => {
                 <div className="pt-10 lg:pt-20 text-center flex-col">
                     <div className="mb-4">
                         <span className="text-lg lg:text-2xl">
-                            {getNetwork()?.chain?.unsupported
+                            {isChainUnsupported()
                                 ? 'Please switch networks'
                                 : 'Please connect your wallet'}
                         </span>
