@@ -1,8 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
-import { NETWORKS, bigNumberToNative, getDecimals, getNetworkName, toSymbol } from '@/utils';
-import { IUserLoopingProps } from './types';
+import {
+    NETWORKS,
+    bigNumberToNative,
+    getDecimals,
+    getNetworkName,
+    isAddressEqual,
+    toSymbol,
+} from '@/utils';
+import { IFormattedUserLoopingProps, IUserLoopingProps } from './types';
 import { getUserLoopingQuery } from './queries/user-looping';
 import { utils } from 'ethers';
+import { getAddress } from 'ethers/lib/utils.js';
 
 async function formatUserLooping(network: string, loops?: IUserLoopingProps[]) {
     if (!loops?.length) return [];
@@ -33,7 +41,7 @@ async function formatUserLooping(network: string, loops?: IUserLoopingProps[]) {
 async function _getUserLooping(
     network: string,
     userAddress?: string,
-): Promise<IUserLoopingProps[]> {
+): Promise<IFormattedUserLoopingProps[]> {
     const query = getUserLoopingQuery(userAddress);
     const networkConfig = NETWORKS[network];
     const responseRaw = await fetch(networkConfig.subgraph, {
@@ -70,7 +78,20 @@ export function useLoopData(userAddress?: string) {
         refetchInterval: 5000,
     });
 
+    const findLoop = (address: string) => {
+        if (!address) return;
+        if (!utils.isAddress(address)) {
+            console.warn('#findLoop: not passing an address', address);
+            return;
+        }
+        const foundUserLoop = queryUserLooping.data?.find((loop) =>
+            isAddressEqual(loop.depositAssetAddress, getAddress(address)),
+        );
+        return foundUserLoop;
+    };
+
     return {
         queryUserLooping,
+        findLoop,
     };
 }

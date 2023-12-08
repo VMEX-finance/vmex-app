@@ -191,6 +191,16 @@ export type IUserLoopingProps = {
     id: '';
 };
 
+export type IFormattedUserLoopingProps = {
+    user: string;
+    depositAssetAddress: string;
+    depositAsset: string;
+    depositAmountNative: string;
+    borrowAssetAddress: string;
+    borrowAsset: string;
+    borrowAmountNative: string;
+};
+
 export type IUserTrancheDataProps = {
     queryUserTrancheData: UseQueryResult<IUserTrancheData, unknown>;
     queryUserRewardsData: UseQueryResult<UserRewards, unknown>;

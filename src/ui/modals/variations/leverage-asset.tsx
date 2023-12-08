@@ -48,6 +48,7 @@ import {
 import { useAccount } from 'wagmi';
 import { BigNumber, constants, utils } from 'ethers';
 import {
+    useLoopData,
     useSubgraphAllMarketsData,
     useSubgraphTrancheData,
     useUserData,
@@ -71,6 +72,7 @@ type LeverageDetails = {
 export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
     const modalProps = useModal('leverage-asset-dialog');
     const navigate = useNavigate();
+    const { address } = useAccount();
     const { setAsset } = useSelectedTrancheContext();
     const { closeDialog } = useDialogController();
     const { address: wallet } = useAccount();
@@ -82,6 +84,9 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
         ? data
         : { asset: '', trancheId: '', collateral: '', amount: '', leverage: 0, totalApy: '' };
     const { asset, trancheId, collateral, amount, leverage, totalApy } = _data; // TODO: move functionality to leverage and zap hooks
+
+    const { findLoop } = useLoopData(address);
+    const loopedAsset = findLoop(toAddress(asset));
 
     const {
         view,
@@ -713,38 +718,51 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                     ) : (
                         <>
                             <div className="mt-4 flex justify-between items-center">
-                                <h3>Amount</h3>
+                                <h3>Withdraw Amount</h3>
                             </div>
                             <CoinInput
-                                amount={withdrawAmount}
-                                setAmount={setAmount}
+                                amount={loopedAsset?.depositAmountNative || '0'} // TODO: fico --> was originally amountWithdraw but i believe that is incorrect
+                                // setAmount={setAmount}
                                 coin={{
                                     logo: `/coins/${
-                                        (_data as any)?.symbol?.toLowerCase() || 'eth'
+                                        loopedAsset?.depositAsset?.toLowerCase() || 'eth'
                                     }.svg`,
-                                    name: (_data as any)?.symbol || 'ETH',
+                                    name: loopedAsset?.depositAsset || 'ETH',
                                 }}
-                                balance={bigNumberToUnformattedString(
-                                    amountWithdraw || BigNumber.from('0'),
-                                    asset || 'ETH',
-                                )}
-                                isMax={isMax}
-                                setIsMax={setIsMax}
-                                loading={
-                                    Number(
-                                        bigNumberToNative(
-                                            amountWithdraw || BigNumber.from('0'),
-                                            asset || 'ETH',
-                                        ),
-                                    ) === 0
-                                }
-                                customMaxClick={maxOnClick}
+                                // balance={bigNumberToUnformattedString(
+                                //     amountWithdraw || BigNumber.from('0'),
+                                //     asset || 'ETH',
+                                // )}
+                                // isMax={isMax}
+                                // setIsMax={setIsMax}
+                                // loading={
+                                //     Number(
+                                //         bigNumberToNative(
+                                //             amountWithdraw || BigNumber.from('0'),
+                                //             asset || 'ETH',
+                                //         ),
+                                //     ) === 0
+                                // }
+                                // customMaxClick={maxOnClick}
                             />
                             <MessageStatus
                                 type="error"
                                 show={isViolatingMax()}
                                 message="Input amount is over the max."
                                 icon
+                            />
+
+                            <div className="mt-4 flex justify-between items-center">
+                                <h3>Repay Amount</h3>
+                            </div>
+                            <CoinInput
+                                amount={loopedAsset?.borrowAmountNative || '0'}
+                                coin={{
+                                    logo: `/coins/${
+                                        loopedAsset?.borrowAsset?.toLowerCase() || 'eth'
+                                    }.svg`,
+                                    name: loopedAsset?.borrowAsset || 'ETH',
+                                }}
                             />
 
                             <h3 className="mt-3 2xl:mt-4 text-neutral400">Health Factor</h3>

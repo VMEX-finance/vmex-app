@@ -8,7 +8,7 @@ import { BigNumber, utils } from 'ethers';
 
 export interface ICoinInput {
     amount: string;
-    setAmount: React.Dispatch<React.SetStateAction<string>>;
+    setAmount?: React.Dispatch<React.SetStateAction<string>>;
     coin: {
         logo: string;
         name: string;
@@ -16,7 +16,7 @@ export interface ICoinInput {
     balance?: string;
     type?: 'collateral' | 'owed' | 'default';
     isMax?: boolean;
-    setIsMax: React.Dispatch<React.SetStateAction<boolean>>;
+    setIsMax?: React.Dispatch<React.SetStateAction<boolean>>;
     loading?: boolean;
     customMaxClick?: any;
     disabled?: boolean;
@@ -44,11 +44,11 @@ export const CoinInput = ({
         const isFirstDecimal = amount.length === 0 && myamount === '.';
         if (!myamount || myamount.match(/^\d{1,}(\.\d{0,})?$/) || isFirstDecimal) {
             if (isFirstDecimal) {
-                setAmount(`0${myamount}`);
+                setAmount && setAmount(`0${myamount}`);
             } else {
-                setAmount(myamount);
+                setAmount && setAmount(myamount);
             }
-            setIsMax(false);
+            setIsMax && setIsMax(false);
         }
     };
 
@@ -57,8 +57,8 @@ export const CoinInput = ({
             customMaxClick();
             return;
         } else {
-            balance ? setAmount(balance) : {};
-            setIsMax(true);
+            balance && setAmount ? setAmount(balance) : {};
+            setIsMax && setIsMax(true);
         }
     };
 
@@ -105,25 +105,32 @@ export const CoinInput = ({
                     />
                     <AssetDisplay logo={coin.logo} name={coin.name} />
                 </div>
-                <div className="flex flex-row justify-end items-end gap-3">
-                    {/* TODO: add usd value */}
-                    {/* <div className="text-neutral-400">{calculateUsd()} USD</div> */}
-                    <Button onClick={onMaxButtonClick} disabled={disabled} type="link" size="sm">
-                        <div className="leading-none flex flex-col justify-end items-end text-xs">
-                            <span>MAX</span>
-                            <span className="flex items-center gap-1">
-                                {`${
-                                    type === 'collateral'
-                                        ? 'Amount Borrowable'
-                                        : type === 'owed'
-                                        ? 'Amount Owed'
-                                        : 'Balance'
-                                }:`}{' '}
-                                {<SmartPrice price={String(balance) || '0'} />}
-                            </span>
-                        </div>
-                    </Button>
-                </div>
+                {setIsMax && (
+                    <div className="flex flex-row justify-end items-end gap-3">
+                        {/* TODO: add usd value */}
+                        {/* <div className="text-neutral-400">{calculateUsd()} USD</div> */}
+                        <Button
+                            onClick={onMaxButtonClick}
+                            disabled={disabled}
+                            type="link"
+                            size="sm"
+                        >
+                            <div className="leading-none flex flex-col justify-end items-end text-xs">
+                                <span>MAX</span>
+                                <span className="flex items-center gap-1">
+                                    {`${
+                                        type === 'collateral'
+                                            ? 'Amount Borrowable'
+                                            : type === 'owed'
+                                            ? 'Amount Owed'
+                                            : 'Balance'
+                                    }:`}{' '}
+                                    {<SmartPrice price={String(balance) || '0'} />}
+                                </span>
+                            </div>
+                        </Button>
+                    </div>
+                )}
             </div>
             {NETWORKS[network].testing && (
                 <div className="mt-2 flex justify-end">
