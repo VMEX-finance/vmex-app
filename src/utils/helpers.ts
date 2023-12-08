@@ -383,3 +383,8 @@ export const cleanNumberString = (val: string | undefined) => {
         .replaceAll(',', '')
         .replaceAll('$', '');
 };
+
+export const calculatePercentDiffBN = (initialValue: BigNumber, finalValue: BigNumber) => {
+    const finalMinusInitial = finalValue.sub(initialValue);
+    return finalMinusInitial.div(initialValue);
+};

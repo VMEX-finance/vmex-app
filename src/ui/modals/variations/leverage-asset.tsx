@@ -44,6 +44,7 @@ import {
     toAddress,
     cleanNumberString,
     calculateHealthFactorAfterLeverage,
+    calculatePercentDiffBN,
 } from '@/utils';
 import { useAccount } from 'wagmi';
 import { BigNumber, constants, utils } from 'ethers';
@@ -721,29 +722,29 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                                 <h3>Withdraw Amount</h3>
                             </div>
                             <CoinInput
-                                amount={loopedAsset?.depositAmountNative || '0'} // TODO: fico --> was originally amountWithdraw but i believe that is incorrect
-                                // setAmount={setAmount}
+                                amount={withdrawAmount}
+                                setAmount={setAmount}
                                 coin={{
                                     logo: `/coins/${
-                                        loopedAsset?.depositAsset?.toLowerCase() || 'eth'
+                                        (_data as any)?.symbol?.toLowerCase() || 'eth'
                                     }.svg`,
-                                    name: loopedAsset?.depositAsset || 'ETH',
+                                    name: (_data as any)?.symbol || 'ETH',
                                 }}
-                                // balance={bigNumberToUnformattedString(
-                                //     amountWithdraw || BigNumber.from('0'),
-                                //     asset || 'ETH',
-                                // )}
-                                // isMax={isMax}
-                                // setIsMax={setIsMax}
-                                // loading={
-                                //     Number(
-                                //         bigNumberToNative(
-                                //             amountWithdraw || BigNumber.from('0'),
-                                //             asset || 'ETH',
-                                //         ),
-                                //     ) === 0
-                                // }
-                                // customMaxClick={maxOnClick}
+                                balance={bigNumberToUnformattedString(
+                                    amountWithdraw || BigNumber.from('0'),
+                                    asset || 'ETH',
+                                )}
+                                isMax={isMax}
+                                setIsMax={setIsMax}
+                                loading={
+                                    Number(
+                                        bigNumberToNative(
+                                            amountWithdraw || BigNumber.from('0'),
+                                            asset || 'ETH',
+                                        ),
+                                    ) === 0
+                                }
+                                customMaxClick={maxOnClick}
                             />
                             <MessageStatus
                                 type="error"
@@ -753,7 +754,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                             />
 
                             <div className="mt-4 flex justify-between items-center">
-                                <h3>Repay Amount</h3>
+                                <h3>Borrowed Amount</h3>
                             </div>
                             <CoinInput
                                 amount={loopedAsset?.borrowAmountNative || '0'}
@@ -768,10 +769,8 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                             <h3 className="mt-3 2xl:mt-4 text-neutral400">Health Factor</h3>
                             <HealthFactor
                                 asset={asset || 'ETH'}
-                                amount={
-                                    utils.formatUnits(amountWithdraw || BigNumber.from('0'), 18) ||
-                                    '0'
-                                }
+                                // TODO: fix to calculate percent from the total looped multiplied by the amount withdraw
+                                amount={loopedAsset?.depositAmountNative}
                                 type={'unwind'}
                                 trancheId={String(trancheId)}
                                 collateral={_collateral}
