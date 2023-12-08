@@ -45,6 +45,7 @@ import {
     cleanNumberString,
     calculateHealthFactorAfterLeverage,
     calculatePercentDiffBN,
+    TESTING,
 } from '@/utils';
 import { useAccount } from 'wagmi';
 import { BigNumber, constants, utils } from 'ethers';
@@ -363,7 +364,13 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
         const leverageControllerAddress = getAddress(NETWORKS[network].leverageControllerAddress);
         const withdrawAmountNative = parseUnits(withdrawAmount, 18);
         const reserveData = findAssetInMarketsData(assetSymbol);
-
+        if (TESTING)
+            console.log('#unwind - before read:', {
+                address: getAddress(reserveData.aTokenAddress),
+                abi: erc20ABI,
+                functionName: 'allowance',
+                args: [wallet, leverageControllerAddress],
+            });
         const allowance = await readContract({
             address: getAddress(reserveData.aTokenAddress),
             abi: erc20ABI,
@@ -371,12 +378,20 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
             args: [wallet, leverageControllerAddress],
         });
         if (allowance.lt(withdrawAmountNative)) {
+            if (TESTING)
+                console.log('#unwind - before prepare approve params', {
+                    address: getAddress(reserveData.aTokenAddress),
+                    abi: erc20ABI,
+                    functionName: 'approve',
+                    args: [leverageControllerAddress, constants.MaxUint256],
+                });
             const config = await prepareWriteContract({
                 address: getAddress(reserveData.aTokenAddress),
                 abi: erc20ABI,
                 functionName: 'approve',
                 args: [leverageControllerAddress, constants.MaxUint256],
             });
+            if (TESTING) console.log('#unwind - after prepare approve params:', config);
             const tx = await writeContract(config);
             await tx.wait();
         }
@@ -406,6 +421,25 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
 
         // TODO fico -> make better decision on whether to repay just one token or two
         if (isUnwindTwoBorrow(mostBorrowedTokens, token0, token1)) {
+            if (TESTING)
+                console.log('#unwind - before prepare two borrow params:', {
+                    address: leverageControllerAddress,
+                    abi: LeverageControllerABI,
+                    functionName: 'unwindVeloLeverageTwoBorrow',
+                    args: [
+                        {
+                            trancheId: BigNumber.from(trancheId),
+                            lpToken: getAddress(toAddress(asset)),
+                            tokenA: token0,
+                            tokenB: token1,
+                            stable: stable,
+                            aToken: getAddress(reserveData.aTokenAddress),
+                        },
+                        withdrawAmountNative
+                            .mul(reserveData?.priceUSD || BigNumber.from('0'))
+                            .div(BigNumber.from(10).pow(18)),
+                    ],
+                });
             const config = await prepareWriteContract({
                 address: leverageControllerAddress,
                 abi: LeverageControllerABI,
@@ -424,10 +458,29 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                         .div(BigNumber.from(10).pow(18)),
                 ],
             });
-
+            if (TESTING) console.log('#unwind - after prepare two borrow params:', config);
             return await writeContract(config);
         } else {
             const isBorrowToken0 = isAddressEqual(mostBorrowedTokens[0].assetAddress, token0);
+            if (TESTING)
+                console.log('#unwind - before prepare one borrow params:', {
+                    address: leverageControllerAddress,
+                    abi: LeverageControllerABI,
+                    functionName: 'unwindVeloLeverageOneBorrow',
+                    args: [
+                        {
+                            trancheId: BigNumber.from(trancheId),
+                            lpToken: getAddress(toAddress(asset)),
+                            tokenA: isBorrowToken0 ? token0 : token1,
+                            tokenB: isBorrowToken0 ? token1 : token0,
+                            stable: stable,
+                            aToken: getAddress(reserveData.aTokenAddress),
+                        },
+                        withdrawAmountNative
+                            .mul(reserveData?.priceUSD || BigNumber.from('0'))
+                            .div(BigNumber.from(10).pow(18)),
+                    ],
+                });
             const config = await prepareWriteContract({
                 address: leverageControllerAddress,
                 abi: LeverageControllerABI,
@@ -446,6 +499,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                         .div(BigNumber.from(10).pow(18)),
                 ],
             });
+            if (TESTING) console.log('#unwind - after prepare one borrow params:', config);
             return await writeContract(config);
         }
     };
