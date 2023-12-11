@@ -396,12 +396,8 @@ export const calculateRepayAmount = async (
 ) => {
     if (!supplyAsset || !borrowAsset) return '0';
     if (!inputAmount || !depositedAmount || !borrowedAmount) return '0';
-    console.log('params', inputAmount, depositedAmount, borrowedAmount, supplyAsset);
     const network = getNetworkName();
     const supplyDecimals = await getDecimals(toAddress(supplyAsset), network);
-    const borrowDecimals = await getDecimals(toAddress(borrowAsset), network);
-    console.log('decimals', supplyDecimals, borrowDecimals);
-
     const nativeDepositAmount = parseFloat(utils.formatUnits(depositedAmount, supplyDecimals));
     const nativeInputAmount = parseFloat(inputAmount);
     const nativeBorrowAmount = parseFloat(borrowedAmount);
