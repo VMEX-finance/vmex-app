@@ -32,6 +32,202 @@ export const LeverageControllerABI = [
     },
     {
         inputs: [],
+        name: 'InvalidParams',
+        type: 'error',
+    },
+    {
+        anonymous: false,
+        inputs: [
+            {
+                indexed: true,
+                internalType: 'address',
+                name: 'from',
+                type: 'address',
+            },
+            {
+                indexed: false,
+                internalType: 'address',
+                name: 'depositAsset',
+                type: 'address',
+            },
+            {
+                indexed: false,
+                internalType: 'uint256',
+                name: 'depositAmount',
+                type: 'uint256',
+            },
+            {
+                indexed: false,
+                internalType: 'address',
+                name: 'borrowAsset',
+                type: 'address',
+            },
+            {
+                indexed: false,
+                internalType: 'uint256',
+                name: 'borrowAmount',
+                type: 'uint256',
+            },
+        ],
+        name: 'LoopedOne',
+        type: 'event',
+    },
+    {
+        anonymous: false,
+        inputs: [
+            {
+                indexed: true,
+                internalType: 'address',
+                name: 'from',
+                type: 'address',
+            },
+            {
+                indexed: false,
+                internalType: 'address',
+                name: 'depositAsset',
+                type: 'address',
+            },
+            {
+                indexed: false,
+                internalType: 'uint256',
+                name: 'depositAmount',
+                type: 'uint256',
+            },
+            {
+                indexed: false,
+                internalType: 'address',
+                name: 'borrowAsset0',
+                type: 'address',
+            },
+            {
+                indexed: false,
+                internalType: 'uint256',
+                name: 'borrowAmount0',
+                type: 'uint256',
+            },
+            {
+                indexed: false,
+                internalType: 'address',
+                name: 'borrowAsset1',
+                type: 'address',
+            },
+            {
+                indexed: false,
+                internalType: 'uint256',
+                name: 'borrowAmount1',
+                type: 'uint256',
+            },
+        ],
+        name: 'LoopedTwo',
+        type: 'event',
+    },
+    {
+        anonymous: false,
+        inputs: [
+            {
+                indexed: true,
+                internalType: 'address',
+                name: 'user',
+                type: 'address',
+            },
+            {
+                indexed: true,
+                internalType: 'address',
+                name: 'newOwner',
+                type: 'address',
+            },
+        ],
+        name: 'OwnershipTransferred',
+        type: 'event',
+    },
+    {
+        anonymous: false,
+        inputs: [
+            {
+                indexed: true,
+                internalType: 'address',
+                name: 'from',
+                type: 'address',
+            },
+            {
+                indexed: false,
+                internalType: 'address',
+                name: 'withdrawAsset',
+                type: 'address',
+            },
+            {
+                indexed: false,
+                internalType: 'uint256',
+                name: 'withdrawAmount',
+                type: 'uint256',
+            },
+            {
+                indexed: false,
+                internalType: 'address',
+                name: 'repayAsset',
+                type: 'address',
+            },
+            {
+                indexed: false,
+                internalType: 'uint256',
+                name: 'repayAmount',
+                type: 'uint256',
+            },
+        ],
+        name: 'UnwindedOne',
+        type: 'event',
+    },
+    {
+        anonymous: false,
+        inputs: [
+            {
+                indexed: true,
+                internalType: 'address',
+                name: 'from',
+                type: 'address',
+            },
+            {
+                indexed: false,
+                internalType: 'address',
+                name: 'withdrawAsset',
+                type: 'address',
+            },
+            {
+                indexed: false,
+                internalType: 'uint256',
+                name: 'withdrawAmount',
+                type: 'uint256',
+            },
+            {
+                indexed: false,
+                internalType: 'address',
+                name: 'repayAsset0',
+                type: 'address',
+            },
+            {
+                indexed: false,
+                internalType: 'uint256',
+                name: 'repayAmount0',
+                type: 'uint256',
+            },
+            {
+                indexed: false,
+                internalType: 'address',
+                name: 'repayAsset1',
+                type: 'address',
+            },
+            {
+                indexed: false,
+                internalType: 'uint256',
+                name: 'repayAmount1',
+                type: 'uint256',
+            },
+        ],
+        name: 'UnwindedTwo',
+        type: 'event',
+    },
+    {
+        inputs: [],
         name: 'assetMappings',
         outputs: [
             {
@@ -102,7 +298,7 @@ export const LeverageControllerABI = [
             },
             {
                 internalType: 'uint256',
-                name: 'totalBorrowAmount',
+                name: 'totalBorrowAmountUsd',
                 type: 'uint256',
             },
         ],
@@ -157,7 +353,7 @@ export const LeverageControllerABI = [
             },
             {
                 internalType: 'uint256',
-                name: 'totalBorrowAmount',
+                name: 'totalBorrowAmountUsd',
                 type: 'uint256',
             },
             {
@@ -239,7 +435,7 @@ export const LeverageControllerABI = [
             },
             {
                 internalType: 'uint256',
-                name: 'totalBorrowAmount',
+                name: 'totalBorrowAmountUsd',
                 type: 'uint256',
             },
             {
@@ -249,6 +445,45 @@ export const LeverageControllerABI = [
             },
         ],
         name: 'leverageVeloLpZap',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
+    },
+    {
+        inputs: [],
+        name: 'owner',
+        outputs: [
+            {
+                internalType: 'address',
+                name: '',
+                type: 'address',
+            },
+        ],
+        stateMutability: 'view',
+        type: 'function',
+    },
+    {
+        inputs: [
+            {
+                internalType: 'address',
+                name: 'token',
+                type: 'address',
+            },
+        ],
+        name: 'skim',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
+    },
+    {
+        inputs: [
+            {
+                internalType: 'address',
+                name: 'newOwner',
+                type: 'address',
+            },
+        ],
+        name: 'transferOwnership',
         outputs: [],
         stateMutability: 'nonpayable',
         type: 'function',
@@ -295,6 +530,11 @@ export const LeverageControllerABI = [
             {
                 internalType: 'uint256',
                 name: 'totalUnwindAmountUsd',
+                type: 'uint256',
+            },
+            {
+                internalType: 'uint256',
+                name: 'debt',
                 type: 'uint256',
             },
         ],
