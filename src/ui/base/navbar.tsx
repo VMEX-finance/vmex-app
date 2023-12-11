@@ -11,7 +11,7 @@ import { isChainUnsupported, renderNetworks } from '@/utils';
 import { getNetwork } from '@wagmi/core';
 import { NavItem } from './nav-item';
 
-const navItems = ['Overview', 'Tranches', 'Markets', 'Portfolio', 'Governance'];
+const navItems = ['Overview', 'Tranches', 'Markets', 'Portfolio', 'Staking'];
 
 export const Navbar: React.FC = () => {
     const { isDark } = useContext(ThemeContext);

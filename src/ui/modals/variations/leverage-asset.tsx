@@ -44,8 +44,8 @@ import {
     toAddress,
     cleanNumberString,
     calculateHealthFactorAfterLeverage,
-    calculatePercentDiffBN,
     TESTING,
+    calculateRepayAmount,
 } from '@/utils';
 import { useAccount } from 'wagmi';
 import { BigNumber, constants, utils } from 'ethers';
@@ -600,6 +600,23 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
         })().catch((err) => console.error(err));
     }, [network, wallet, _loading, _collateral]);
 
+    const [repayAmount, setRepayAmount] = useState('0');
+    useEffect(() => {
+        (async () => {
+            if (withdrawAmount) {
+                setRepayAmount(
+                    await calculateRepayAmount(
+                        withdrawAmount,
+                        amountWithdraw,
+                        loopedAsset?.borrowAmountNative,
+                        asset,
+                        loopedAsset?.borrowAsset,
+                    ),
+                );
+            }
+        })().catch((err) => console.error(err));
+    }, [withdrawAmount]);
+
     return (
         <>
             <ModalHeader
@@ -808,10 +825,10 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                             />
 
                             <div className="mt-4 flex justify-between items-center">
-                                <h3>Borrowed Amount</h3>
+                                <h3>Repay Amount</h3>
                             </div>
                             <CoinInput
-                                amount={loopedAsset?.borrowAmountNative || '0'}
+                                amount={repayAmount}
                                 coin={{
                                     logo: `/coins/${
                                         loopedAsset?.borrowAsset?.toLowerCase() || 'eth'
@@ -823,8 +840,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                             <h3 className="mt-3 2xl:mt-4 text-neutral400">Health Factor</h3>
                             <HealthFactor
                                 asset={asset || 'ETH'}
-                                // TODO: fix to calculate percent from the total looped multiplied by the amount withdraw
-                                amount={loopedAsset?.depositAmountNative}
+                                amount={withdrawAmount}
                                 type={'unwind'}
                                 trancheId={String(trancheId)}
                                 collateral={_collateral}

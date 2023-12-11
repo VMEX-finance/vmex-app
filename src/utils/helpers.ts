@@ -1,14 +1,12 @@
 import { IMarketsAsset, ITrancheProps } from '@/api';
-import { BigNumber, Contract, ethers } from 'ethers';
+import { BigNumber, Contract, ethers, utils } from 'ethers';
 import { AVAILABLE_ASSETS, HEALTH } from './constants';
 import moment from 'moment';
 import { ILineChartDataPointProps } from '@/ui/components';
 import { NAME_CACHE, SYMBOL_CACHE } from './cache';
-import { Chain } from '@wagmi/core';
 import { getNetworkName } from './network';
-import { provider } from '@/config';
-import { convertAddressToSymbol } from '@vmexfinance/sdk';
 import { formatUnits } from 'ethers/lib/utils.js';
+import { bigNumberToNative, getDecimals, toAddress, toSymbol } from './sdk-helpers';
 
 const Filter = require('bad-words'),
     filter = new Filter();
@@ -387,4 +385,26 @@ export const cleanNumberString = (val: string | undefined) => {
 export const calculatePercentDiffBN = (initialValue: BigNumber, finalValue: BigNumber) => {
     const finalMinusInitial = finalValue.sub(initialValue);
     return finalMinusInitial.div(initialValue);
+};
+
+export const calculateRepayAmount = async (
+    inputAmount?: string,
+    depositedAmount?: BigNumber, // wallet balance
+    borrowedAmount?: string, // amount to repay
+    supplyAsset?: string,
+    borrowAsset?: string,
+) => {
+    if (!supplyAsset || !borrowAsset) return '0';
+    if (!inputAmount || !depositedAmount || !borrowedAmount) return '0';
+    console.log('params', inputAmount, depositedAmount, borrowedAmount, supplyAsset);
+    const network = getNetworkName();
+    const supplyDecimals = await getDecimals(toAddress(supplyAsset), network);
+    const borrowDecimals = await getDecimals(toAddress(borrowAsset), network);
+    console.log('decimals', supplyDecimals, borrowDecimals);
+
+    const nativeDepositAmount = parseFloat(utils.formatUnits(depositedAmount, supplyDecimals));
+    const nativeInputAmount = parseFloat(inputAmount);
+    const nativeBorrowAmount = parseFloat(borrowedAmount);
+    const percent = nativeInputAmount / nativeDepositAmount;
+    return (nativeBorrowAmount * percent).toString();
 };
