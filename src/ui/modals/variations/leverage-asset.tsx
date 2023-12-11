@@ -44,6 +44,7 @@ import {
     toAddress,
     cleanNumberString,
     calculateHealthFactorAfterLeverage,
+    isTrancheIdEqual,
 } from '@/utils';
 import { useAccount } from 'wagmi';
 import { BigNumber, constants, utils } from 'ethers';
@@ -115,7 +116,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
     const assetSymbol = asset ? toSymbol(asset) : '';
     const collateralMarketData = collaterals?.map((x) => {
         const marketData = queryAllMarketsData.data?.find(
-            (y) => y.trancheId === trancheId?.toString() && isAddressEqual(y.assetAddress, x),
+            (y) => isTrancheIdEqual(y.trancheId, trancheId) && isAddressEqual(y.assetAddress, x),
         );
         if (!marketData) return { borrowApy: '' };
         return marketData;
@@ -349,6 +350,22 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
     );
     const healthFactorTooLow = afterLoop ? afterLoop < BigNumber.from('1') : true;
 
+    const getDebt = async (token: string) => {
+        if (!NETWORKS[network].lendingPoolAddress || !wallet) return BigNumber.from(0);
+        const reserveData = await readContract({
+            address: getAddress(NETWORKS[network].lendingPoolAddress),
+            abi: LendingPoolABI,
+            functionName: 'getReserveData',
+            args: [utils.getAddress(token), BigNumber.from(trancheId)],
+        });
+        return readContract({
+            address: reserveData.variableDebtTokenAddress,
+            abi: erc20ABI,
+            functionName: 'balanceOf',
+            args: [wallet],
+        });
+    };
+
     const unwind = async () => {
         if (!wallet) return;
         if (!NETWORKS[network].leverageControllerAddress) return;
@@ -422,6 +439,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
             return await writeContract(config);
         } else {
             const isBorrowToken0 = isAddressEqual(mostBorrowedTokens[0].assetAddress, token0);
+            const debt = await getDebt(isBorrowToken0 ? token0 : token1);
             const config = await prepareWriteContract({
                 address: leverageControllerAddress,
                 abi: LeverageControllerABI,
@@ -438,6 +456,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                     withdrawAmountNative
                         .mul(reserveData?.priceUSD || BigNumber.from('0'))
                         .div(BigNumber.from(10).pow(18)),
+                    debt,
                 ],
             });
             return await writeContract(config);
@@ -507,7 +526,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                 ],
             });
 
-            const [decimals0, decimals1, borrowAllowance] = await multicall({
+            const [decimals0, decimals1, currentBorrowAllowance] = await multicall({
                 contracts: [
                     {
                         address: token0,
@@ -528,7 +547,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                 ],
             });
 
-            setBorrowAllowance(borrowAllowance);
+            setBorrowAllowance(currentBorrowAllowance);
             setLeverageDetails({
                 token0,
                 decimals0: BigNumber.from(decimals0 || BigNumber.from('0')),

@@ -383,3 +383,11 @@ export const cleanNumberString = (val: string | undefined) => {
         .replaceAll(',', '')
         .replaceAll('$', '');
 };
+
+// data is messed accross the app and trancheId is sometimes string and sometimes number
+export const isTrancheIdEqual = (val1: string | number, val2: string | number) => {
+    const tranche1 = typeof val1 === 'string' ? parseInt(val1, 10) : val1;
+    const tranche2 = typeof val2 === 'string' ? parseInt(val2, 10) : val1;
+
+    return tranche1 === tranche2;
+};

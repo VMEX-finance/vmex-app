@@ -5,7 +5,7 @@ import { formatUnits, parseUnits } from 'ethers/lib/utils.js';
 import { IGraphAssetData, IUserTrancheData } from '@/api';
 import { convertAddressToSymbol } from '@vmexfinance/sdk';
 import { IYourBorrowsTableItemProps } from '@/ui/tables';
-import { TESTING, cleanNumberString, isAddressEqual } from '.';
+import { TESTING, cleanNumberString, isAddressEqual, isTrancheIdEqual } from '.';
 
 const DECIMALS = 8;
 const DECIMAL_ONE = new Decimal(1);
@@ -197,15 +197,18 @@ export const processUserLoop = (
     if (!userLoopingState || !allMarketsData || !userActivity) return;
 
     const depositedAssetData = allMarketsData.find(
-        (x) => x.trancheId === trancheId.toString() && isAddressEqual(x.assetAddress, assetAddress),
+        (x) =>
+            isTrancheIdEqual(x.trancheId, trancheId) &&
+            isAddressEqual(x.assetAddress, assetAddress),
     );
     const depositedUserData = userActivity.supplies.find(
         (x: any) =>
-            x.trancheId.toString() === trancheId && isAddressEqual(x.assetAddress, assetAddress),
+            isTrancheIdEqual(x.trancheId, trancheId) &&
+            isAddressEqual(x.assetAddress, assetAddress),
     );
     const borrowedAssetData = allMarketsData.find(
         (x) =>
-            x.trancheId === trancheId &&
+            isTrancheIdEqual(x.trancheId, trancheId) &&
             isAddressEqual(x.assetAddress, userLoopingState.borrowAssetAddress),
     );
     const depositPrice = prices[userLoopingState.depositAsset.toUpperCase()];
