@@ -600,19 +600,19 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
         })().catch((err) => console.error(err));
     }, [network, wallet, _loading, _collateral]);
 
-    const [repayAmount, setRepayAmount] = useState('0');
+    const [repayAmount, setRepayAmount] = useState({ loading: false, value: '0' });
     useEffect(() => {
         (async () => {
             if (withdrawAmount) {
-                setRepayAmount(
-                    await calculateRepayAmount(
-                        withdrawAmount,
-                        amountWithdraw,
-                        loopedAsset?.borrowAmountNative,
-                        asset,
-                        loopedAsset?.borrowAsset,
-                    ),
+                setRepayAmount({ ...repayAmount, loading: true });
+                const _repayAmount = await calculateRepayAmount(
+                    withdrawAmount,
+                    amountWithdraw,
+                    loopedAsset?.borrowAmountNative,
+                    asset,
+                    loopedAsset?.borrowAsset,
                 );
+                setRepayAmount({ loading: false, value: _repayAmount });
             }
         })().catch((err) => console.error(err));
     }, [withdrawAmount]);
@@ -828,13 +828,14 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                                 <h3>Repay Amount</h3>
                             </div>
                             <CoinInput
-                                amount={repayAmount}
+                                amount={repayAmount.value}
                                 coin={{
                                     logo: `/coins/${
                                         loopedAsset?.borrowAsset?.toLowerCase() || 'eth'
                                     }.svg`,
                                     name: loopedAsset?.borrowAsset || 'ETH',
                                 }}
+                                loading={repayAmount.loading}
                             />
 
                             <h3 className="mt-3 2xl:mt-4 text-neutral400">Health Factor</h3>
