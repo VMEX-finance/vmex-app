@@ -46,7 +46,7 @@ export const Card = ({
         <div
             className={`dark:bg-brand-black dark:text-neutral-300
     w-full rounded-md shadow-md shadow-gray-300 dark:shadow-neutral-950 overflow-auto
-    ${color ? color : black ? 'bg-neutral-900 text-neutral-100' : 'bg-neutral-100'}
+    ${color ? color : black ? 'bg-neutral-900 text-neutral-100' : 'bg-white'}
     ${padding ? padding : 'p-3 lg:p-4 xl:p-5 2xl:py-6'}
     ${className ? className : ''}
   `}

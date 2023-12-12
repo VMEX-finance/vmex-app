@@ -4,8 +4,12 @@ import { Base } from '@/ui/base';
 import { StakingAsset, StakingOverview } from '@/ui/features';
 import { numberFormatter, percentFormatter } from '@/utils';
 import { Card, CustomTabPanel, CustomTabs } from '@/ui/components';
+import { MarketsTable } from '@/ui/tables';
+import { useSubgraphAllMarketsData } from '@/api';
 
 const Staking: React.FC = () => {
+    const { queryAllMarketsData } = useSubgraphAllMarketsData();
+
     const [tabIndex, setTabIndex] = React.useState(0);
 
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -44,58 +48,60 @@ const Staking: React.FC = () => {
                     handleTabChange={handleTabChange}
                 />
                 <CustomTabPanel value={tabIndex} index={0}>
-                    Item One
+                    <MarketsTable
+                        data={queryAllMarketsData.data}
+                        loading={queryAllMarketsData.isLoading}
+                    />
                 </CustomTabPanel>
                 <CustomTabPanel value={tabIndex} index={1}>
-                    Item Two
+                    Manage veVMEX....
                 </CustomTabPanel>
                 <CustomTabPanel value={tabIndex} index={2}>
-                    Item Three
+                    <GridView>
+                        <StakingAsset
+                            asset={`USDC`}
+                            bonus={{
+                                days: 275,
+                                percent: 9.75,
+                            }}
+                            apr={`9.75`}
+                            slashing={`30`}
+                            wallet={{
+                                staked: 0.04,
+                                claim: 1.59,
+                            }}
+                            data={{
+                                asset: 'USDC',
+                                amount: 9921,
+                                apy: 0.0078,
+                                canBeCollat: true,
+                                liquidity: '18.3',
+                            }}
+                        />
+
+                        <StakingAsset
+                            asset={`USDC`}
+                            bonus={{
+                                days: 275,
+                                percent: 9.75,
+                            }}
+                            apr={`9.75`}
+                            slashing={`30`}
+                            wallet={{
+                                staked: 0.04,
+                                claim: 1.59,
+                            }}
+                            data={{
+                                asset: 'USDC',
+                                amount: 9921,
+                                apy: 0.0078,
+                                canBeCollat: true,
+                                liquidity: '18.3',
+                            }}
+                        />
+                    </GridView>
                 </CustomTabPanel>
             </Card>
-            <GridView>
-                <StakingAsset
-                    asset={`USDC`}
-                    bonus={{
-                        days: 275,
-                        percent: 9.75,
-                    }}
-                    apr={`9.75`}
-                    slashing={`30`}
-                    wallet={{
-                        staked: 0.04,
-                        claim: 1.59,
-                    }}
-                    data={{
-                        asset: 'USDC',
-                        amount: 9921,
-                        apy: 0.0078,
-                        canBeCollat: true,
-                        liquidity: '18.3',
-                    }}
-                />
-
-                <StakingAsset
-                    asset={`USDC`}
-                    bonus={{
-                        days: 275,
-                        percent: 9.75,
-                    }}
-                    apr={`9.75`}
-                    slashing={`30`}
-                    wallet={{
-                        staked: 0.04,
-                        claim: 1.59,
-                    }}
-                    data={{
-                        asset: 'USDC',
-                        amount: 9921,
-                        apy: 0.0078,
-                        canBeCollat: true,
-                        liquidity: '18.3',
-                    }}
-                />
-            </GridView>
         </Base>
     );
 };

@@ -33,8 +33,15 @@ export function vmexTheme(isDark = false) {
                     root: {
                         borderRadius: '0.375rem',
                         backgroundImage: 'none',
-                        boxShadow:
-                            '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
+                        boxShadow: 'none',
+                    },
+                },
+            },
+            MuiTableCell: {
+                styleOverrides: {
+                    root: {
+                        paddingBottom: '4px !important',
+                        paddingTop: '8px !important',
                     },
                 },
             },

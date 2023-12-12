@@ -14,13 +14,15 @@ const Tranches: React.FC = () => {
 
     return (
         <Base title="tranches">
-            <TranchesTable
-                data={queryAllTranches.data?.filter(
-                    (el: ITrancheProps) => el.assets && el.assets.length > 0,
-                )}
-                loading={queryAllTranches.isLoading}
-                userActivity={queryUserActivity}
-            />
+            <div className="shadow-md shadow-gray-300 dark:shadow-neutral-950">
+                <TranchesTable
+                    data={queryAllTranches.data?.filter(
+                        (el: ITrancheProps) => el.assets && el.assets.length > 0,
+                    )}
+                    loading={queryAllTranches.isLoading}
+                    userActivity={queryUserActivity}
+                />
+            </div>
         </Base>
     );
 };

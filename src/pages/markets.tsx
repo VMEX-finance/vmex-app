@@ -13,11 +13,13 @@ const Markets: React.FC = () => {
 
     return (
         <Base title="markets">
-            <MarketsTable
-                data={queryAllMarketsData.data}
-                loading={queryAllMarketsData.isLoading}
-                userActivity={queryUserActivity}
-            />
+            <div className="shadow-md shadow-gray-300 dark:shadow-neutral-950">
+                <MarketsTable
+                    data={queryAllMarketsData.data}
+                    loading={queryAllMarketsData.isLoading}
+                    userActivity={queryUserActivity}
+                />
+            </div>
         </Base>
     );
 };

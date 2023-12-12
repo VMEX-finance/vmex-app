@@ -57,7 +57,7 @@ export function CustomTabPanel(props: {
             aria-labelledby={`tab-${index}`}
             {...other}
         >
-            {value === index && <div className="p-3">{children}</div>}
+            {value === index && <div className="pt-2 xl:pt-3">{children}</div>}
         </div>
     );
 }
