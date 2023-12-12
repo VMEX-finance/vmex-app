@@ -24,7 +24,7 @@ export const StakingAsset = (props: IStakingAsset) => {
         <Card black>
             <div className="flex flex-col">
                 <h2 className="text-4xl">Stake</h2>
-                <div className="grid divide-neutral-100 grid-cols-1 divide-y md:grid-cols-2 md:divide-y-0 md:divide-x">
+                <div className="grid divide-gray-700 grid-cols-1 divide-y md:grid-cols-2 md:divide-y-0 md:divide-x">
                     <div className="flex flex-col pb-6 md:pb-0 md:pr-6">
                         <span className="mb-6 text-3xl">{props.asset}</span>
 
@@ -49,6 +49,7 @@ export const StakingAsset = (props: IStakingAsset) => {
                                 />
                                 <div className="h-fit">
                                     <Button
+                                        className="text-gray-900 dark:text-white"
                                         onClick={() =>
                                             openDialog('stake-asset-dialog', { ...props.data })
                                         }
@@ -68,7 +69,9 @@ export const StakingAsset = (props: IStakingAsset) => {
                                 dollar={0.0}
                             />
                             <div className="w-fit">
-                                <Button type="accent">Claim VMEX</Button>
+                                <Button type="accent" className="text-gray-900">
+                                    Claim VMEX
+                                </Button>
                             </div>
                         </div>
 
@@ -80,7 +83,9 @@ export const StakingAsset = (props: IStakingAsset) => {
                                 dollar={0.0}
                             />
                             <div className="w-fit">
-                                <Button type="accent">Unstake VMEX</Button>
+                                <Button type="accent" className="text-gray-900">
+                                    Unstake VMEX
+                                </Button>
                             </div>
                         </div>
                     </div>

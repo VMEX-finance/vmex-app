@@ -2,8 +2,16 @@ import React from 'react';
 import { GridView } from '@/ui/templates';
 import { Base } from '@/ui/base';
 import { StakingAsset, StakingOverview } from '@/ui/features';
+import { numberFormatter, percentFormatter } from '@/utils';
+import { Card, CustomTabPanel, CustomTabs } from '@/ui/components';
 
 const Staking: React.FC = () => {
+    const [tabIndex, setTabIndex] = React.useState(0);
+
+    const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+        setTabIndex(newValue);
+    };
+
     return (
         <Base
             title="staking"
@@ -22,11 +30,29 @@ const Staking: React.FC = () => {
             }
         >
             <StakingOverview
-                safetyFunds={'255.55MM'}
-                dailyEmissions={'200.50 VMEX'}
-                stakers={254}
-                etc={'123'}
+                apr={percentFormatter.format(0)}
+                totalLocked={numberFormatter.format(0)}
+                yourLocked={numberFormatter.format(0)}
+                expiration={'-'}
             />
+
+            <Card>
+                <CustomTabs
+                    id="staking"
+                    tabs={['Manage Gauges', 'Manage veVMEX', 'Claim / Redeem']}
+                    tabIndex={tabIndex}
+                    handleTabChange={handleTabChange}
+                />
+                <CustomTabPanel value={tabIndex} index={0}>
+                    Item One
+                </CustomTabPanel>
+                <CustomTabPanel value={tabIndex} index={1}>
+                    Item Two
+                </CustomTabPanel>
+                <CustomTabPanel value={tabIndex} index={2}>
+                    Item Three
+                </CustomTabPanel>
+            </Card>
             <GridView>
                 <StakingAsset
                     asset={`USDC`}
