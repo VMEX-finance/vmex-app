@@ -3,6 +3,7 @@ import { NumberDisplay, NumberAndDollar, Card, Button } from '@/ui/components';
 import { useDialogController } from '@/hooks';
 
 export type IStakingAsset = {
+    title: string;
     asset: string;
     bonus: {
         days: string | number;
@@ -23,7 +24,7 @@ export const StakingAsset = (props: IStakingAsset) => {
     return (
         <div className="p-2">
             <div className="flex flex-col">
-                <h2 className="text-4xl">Stake</h2>
+                <h2 className="text-4xl">{props.title}</h2>
                 <div className="grid divide-gray-700 grid-cols-1 divide-y md:grid-cols-2 md:divide-y-0 md:divide-x">
                     <div className="flex flex-col pb-6 md:pb-0 md:pr-6">
                         <span className="mb-6 text-3xl">{props.asset}</span>

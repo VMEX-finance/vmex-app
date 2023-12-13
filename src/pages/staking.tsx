@@ -98,7 +98,8 @@ const Staking: React.FC = () => {
                 <CustomTabPanel value={tabIndex} index={2}>
                     <GridView>
                         <StakingAsset
-                            asset={`USDC`}
+                            title="Claim"
+                            asset={`veVMEX`}
                             bonus={{
                                 days: 275,
                                 percent: 9.75,
@@ -119,7 +120,8 @@ const Staking: React.FC = () => {
                         />
 
                         <StakingAsset
-                            asset={`USDC`}
+                            title="Redeem"
+                            asset={`dVMEX`}
                             bonus={{
                                 days: 275,
                                 percent: 9.75,
