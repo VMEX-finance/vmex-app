@@ -3,7 +3,7 @@ import { GridView } from '@/ui/templates';
 import { Base } from '@/ui/base';
 import { StakingAsset, StakingOverview } from '@/ui/features';
 import { numberFormatter, percentFormatter } from '@/utils';
-import { Card, CustomTabPanel, CustomTabs } from '@/ui/components';
+import { Button, Card, CustomTabPanel, CustomTabs, DefaultInput } from '@/ui/components';
 import { GaugesTable } from '@/ui/tables';
 import { useNavigate, createSearchParams } from 'react-router-dom';
 
@@ -64,7 +64,12 @@ const Staking: React.FC = () => {
                                     <li>Receive dVMEX (the longer you lock, the more you keep).</li>
                                 </ol>
                             </div>
-                            <div></div>
+                            <div className="grid grid-cols-2 gap-2 content-end">
+                                <DefaultInput onType={() => {}} value="" />
+                                <DefaultInput onType={() => {}} value="" />
+                                <DefaultInput onType={() => {}} value="" />
+                                <Button className="h-fit">Approve</Button>
+                            </div>
                         </GridView>
                         <GridView className="p-2" type="fixed" cols="grid-cols-1 lg:grid-cols-2">
                             <div>
@@ -74,7 +79,12 @@ const Staking: React.FC = () => {
                                     your gauge boost weight.
                                 </p>
                             </div>
-                            <div></div>
+                            <div className="grid grid-cols-2 gap-2 content-end">
+                                <DefaultInput onType={() => {}} value="" />
+                                <DefaultInput onType={() => {}} value="" />
+                                <DefaultInput onType={() => {}} value="" />
+                                <Button className="h-fit">Extend</Button>
+                            </div>
                         </GridView>
                         <GridView className="p-2" type="fixed" cols="grid-cols-1 lg:grid-cols-2">
                             <div>
@@ -84,14 +94,22 @@ const Staking: React.FC = () => {
                                     duration.
                                 </p>
                             </div>
-                            <div></div>
+                            <div className="grid grid-cols-2 gap-2 content-end">
+                                <DefaultInput onType={() => {}} value="" />
+                                <DefaultInput onType={() => {}} value="" />
+                                <DefaultInput onType={() => {}} value="" />
+                                <Button className="h-fit">Exit</Button>
+                            </div>
                         </GridView>
                         <GridView className="p-2" type="fixed" cols="grid-cols-1 lg:grid-cols-2">
                             <div>
                                 <h3 className="text-xl mb-3">Claim expired lock</h3>
                                 <p>Claim your YFI from expired veYFI lock.</p>
                             </div>
-                            <div></div>
+                            <div className="grid grid-cols-2 gap-2 content-end">
+                                <DefaultInput onType={() => {}} value="" />
+                                <Button className="h-fit">Claim</Button>
+                            </div>
                         </GridView>
                     </div>
                 </CustomTabPanel>
