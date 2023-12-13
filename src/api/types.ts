@@ -70,6 +70,18 @@ export type IMarketsAsset = {
     liquidationThreshold: BigNumber;
 };
 
+export type IGaugesAsset = {
+    asset: string;
+    assetAddress: string;
+    tranche: string;
+    trancheId: string;
+    vaultApy: number | string;
+    depositedInVault: string;
+    gaugeApr: string | number;
+    stakedInGauge: BigNumber;
+    boost: number | string;
+};
+
 export type ITrancheProps = {
     id?: number | string;
     name?: string;

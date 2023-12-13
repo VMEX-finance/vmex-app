@@ -21,7 +21,7 @@ export const StakingAsset = (props: IStakingAsset) => {
     const { openDialog } = useDialogController();
 
     return (
-        <Card black>
+        <div className="p-2">
             <div className="flex flex-col">
                 <h2 className="text-4xl">Stake</h2>
                 <div className="grid divide-gray-700 grid-cols-1 divide-y md:grid-cols-2 md:divide-y-0 md:divide-x">
@@ -91,6 +91,6 @@ export const StakingAsset = (props: IStakingAsset) => {
                     </div>
                 </div>
             </div>
-        </Card>
+        </div>
     );
 };

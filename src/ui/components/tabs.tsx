@@ -20,7 +20,7 @@ export const CustomTabs = ({
     handleTabChange: (event: React.SyntheticEvent, newValue: number) => void;
 }) => {
     return (
-        <div className="border-b border-gray-300">
+        <div className="border-b border-gray-300 dark:border-gray-700">
             <Tabs
                 value={tabIndex}
                 onChange={handleTabChange}

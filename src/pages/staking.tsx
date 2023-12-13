@@ -4,15 +4,15 @@ import { Base } from '@/ui/base';
 import { StakingAsset, StakingOverview } from '@/ui/features';
 import { numberFormatter, percentFormatter } from '@/utils';
 import { Card, CustomTabPanel, CustomTabs } from '@/ui/components';
-import { MarketsTable } from '@/ui/tables';
-import { useSubgraphAllMarketsData } from '@/api';
+import { GaugesTable } from '@/ui/tables';
+import { useNavigate, createSearchParams } from 'react-router-dom';
 
 const Staking: React.FC = () => {
-    const { queryAllMarketsData } = useSubgraphAllMarketsData();
-
+    const navigate = useNavigate();
     const [tabIndex, setTabIndex] = React.useState(0);
 
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+        const tabText = (event.target as any).innerText;
         setTabIndex(newValue);
     };
 
@@ -48,13 +48,52 @@ const Staking: React.FC = () => {
                     handleTabChange={handleTabChange}
                 />
                 <CustomTabPanel value={tabIndex} index={0}>
-                    <MarketsTable
-                        data={queryAllMarketsData.data}
-                        loading={queryAllMarketsData.isLoading}
-                    />
+                    <GaugesTable data={[]} loading={false} />
                 </CustomTabPanel>
                 <CustomTabPanel value={tabIndex} index={1}>
-                    Manage veVMEX....
+                    <div className="flex flex-col divide-y divide-gray-300 dark:divide-gray-700">
+                        <GridView className="p-2" type="fixed" cols="grid-cols-1 lg:grid-cols-2">
+                            <div>
+                                <h3 className="text-xl mb-3">
+                                    VMEX Holders, lock your tokens here.
+                                </h3>
+                                <p>Lock your VMEX to veVMEX to:</p>
+                                <ol className="list-disc pl-6">
+                                    <li>Take part in VMEX governance.</li>
+                                    <li>Direct VMEX rewards to vaults.</li>
+                                    <li>Receive dVMEX (the longer you lock, the more you keep).</li>
+                                </ol>
+                            </div>
+                            <div></div>
+                        </GridView>
+                        <GridView className="p-2" type="fixed" cols="grid-cols-1 lg:grid-cols-2">
+                            <div>
+                                <h3 className="text-xl mb-3">Extend lock</h3>
+                                <p>
+                                    Want to lock for longer? Extend your lock period to increase
+                                    your gauge boost weight.
+                                </p>
+                            </div>
+                            <div></div>
+                        </GridView>
+                        <GridView className="p-2" type="fixed" cols="grid-cols-1 lg:grid-cols-2">
+                            <div>
+                                <h3 className="text-xl mb-3">Early exit</h3>
+                                <p>
+                                    Or you can exit early by paying a penalty based on lock
+                                    duration.
+                                </p>
+                            </div>
+                            <div></div>
+                        </GridView>
+                        <GridView className="p-2" type="fixed" cols="grid-cols-1 lg:grid-cols-2">
+                            <div>
+                                <h3 className="text-xl mb-3">Claim expired lock</h3>
+                                <p>Claim your YFI from expired veYFI lock.</p>
+                            </div>
+                            <div></div>
+                        </GridView>
+                    </div>
                 </CustomTabPanel>
                 <CustomTabPanel value={tabIndex} index={2}>
                     <GridView>
