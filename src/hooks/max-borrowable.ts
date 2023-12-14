@@ -7,44 +7,48 @@ import { useEffect, useState } from 'react';
 
 const DECIMALS = 8;
 const DECIMAL_ONE = new Decimal(1);
-const DEFAULT_MAX_LEVERAGE = 2.5;
+const DEFAULT_MAX_LEVERAGE = 1;
 const LEVERAGE_DECIMAL_PLACES = 2;
 const defaultReturn = { maxBorrowableAmountUsd: '0', maxLeverage: DEFAULT_MAX_LEVERAGE };
+const MIN_BORROW_BN = parseUnits('5', DECIMALS);
 
+// ltv borrowFactor liquidationBonus are actually all string, but data types are messed up
 export const useMaxBorrowableAmount = (
     availableBorrows: string | undefined,
-    minBorrow: string,
     ltv: BigNumber | undefined,
+    borrowFactor: BigNumber | undefined,
+    liquidationBonus: BigNumber | undefined,
     assetAmountUsd: string | undefined, // $108.12 -> need to remove $
 ) => {
     const [maxBorrowable, setMaxBorrowable] = useState(defaultReturn);
 
     useEffect(() => {
-        if (!availableBorrows || !ltv) {
+        if (!availableBorrows || !ltv || !borrowFactor || !liquidationBonus) {
             return;
         }
 
-        const minBorrowBN = parseUnits(cleanNumberString(minBorrow), DECIMALS);
         const availableBorrowsBN = parseEther(cleanNumberString(availableBorrows));
-        const ltvDec = new Decimal(formatEther(ltv));
+        const effectiveLtvDec = new Decimal(formatEther(ltv))
+            .mul(formatEther(borrowFactor))
+            .div(formatEther(liquidationBonus));
 
-        if (minBorrowBN.gt(availableBorrowsBN)) {
+        if (MIN_BORROW_BN.gt(availableBorrowsBN)) {
             if (TESTING)
                 console.warn('getMaxBorrowableAmount -> minBorrow greater than availableBorrows');
             return;
         }
 
-        const N = new Decimal(minBorrowBN.toString())
+        const N = new Decimal(MIN_BORROW_BN.toString())
             .dividedBy(availableBorrowsBN.toString())
             .ln()
-            .dividedBy(ltvDec.ln())
+            .dividedBy(effectiveLtvDec.ln())
             .floor();
 
         const maxBorrowableAmountUsd = cleanNumberString(
             formatUnits(
                 new Decimal(cleanNumberString(availableBorrowsBN.toString()))
-                    .times(DECIMAL_ONE.minus(ltvDec.pow(N)))
-                    .dividedBy(DECIMAL_ONE.minus(ltvDec))
+                    .times(DECIMAL_ONE.minus(effectiveLtvDec.pow(N)))
+                    .dividedBy(DECIMAL_ONE.minus(effectiveLtvDec))
                     .floor()
                     .toString(),
                 DECIMALS,
@@ -55,13 +59,12 @@ export const useMaxBorrowableAmount = (
             assetAmountUsd && cleanNumberString(assetAmountUsd) !== '0.00'
                 ? new Decimal(maxBorrowableAmountUsd)
                       .dividedBy(cleanNumberString(assetAmountUsd))
-                      .plus(1)
                       .toDecimalPlaces(LEVERAGE_DECIMAL_PLACES)
                       .toNumber()
                 : DEFAULT_MAX_LEVERAGE;
         setMaxBorrowable({ maxBorrowableAmountUsd, maxLeverage });
         return;
-    }, [availableBorrows, minBorrow, ltv, assetAmountUsd]);
+    }, [availableBorrows, MIN_BORROW_BN, ltv, assetAmountUsd, borrowFactor, liquidationBonus]);
 
     return maxBorrowable;
 };

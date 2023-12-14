@@ -47,6 +47,7 @@ import {
     TESTING,
     calculateRepayAmount,
     isTrancheIdEqual,
+    isPoolStable,
 } from '@/utils';
 import { useAccount } from 'wagmi';
 import { BigNumber, constants, utils } from 'ethers';
@@ -125,8 +126,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
         const marketData = queryAllMarketsData.data?.find(
             (y) => isTrancheIdEqual(y.trancheId, trancheId) && isAddressEqual(y.assetAddress, x),
         );
-        if (!marketData) return { borrowApy: '' };
-        return marketData;
+        return marketData || { borrowApy: '', decimals: 18 };
     });
 
     const mostBorrowedTokens = queryUserTrancheData.data?.borrows.sort((a, b) =>
@@ -183,28 +183,61 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
             return;
         } // TODO: better error handling
         const { token0, decimals0, token1, decimals1, stable } = leverageDetails;
-        const params: any = {
-            lpToken: utils.getAddress(toAddress(asset)),
-            trancheId: BigNumber.from(trancheId),
-            token0,
-            decimals0,
-            token1,
-            decimals1,
-            stable,
-        };
-        const totalBorrowAmount = calculateTotalBorrowAmount(amount, _leverage);
-        const isBorrowToken0 = utils.getAddress(_collateral) === utils.getAddress(token0);
-        if (!totalBorrowAmount) return;
-        const config = await prepareWriteContract({
-            address: CHAIN_CONFIG.leverageControllerAddress,
-            abi: LeverageControllerABI,
-            functionName: 'leverageVeloLpZap',
-            args: [params, totalBorrowAmount, isBorrowToken0],
-        });
 
-        const tx = await writeContract(config);
+        if (isAddressEqual(token0, _collateral) || isAddressEqual(token1, _collateral)) {
+            const params: any = {
+                lpToken: utils.getAddress(toAddress(asset)),
+                trancheId: BigNumber.from(trancheId),
+                token0,
+                decimals0,
+                token1,
+                decimals1,
+                stable,
+            };
+            const totalBorrowAmount = calculateTotalBorrowAmount(amount, _leverage);
+            const isBorrowToken0 = isAddressEqual(_collateral, token0);
+            if (!totalBorrowAmount) return;
+            const config = await prepareWriteContract({
+                address: CHAIN_CONFIG.leverageControllerAddress,
+                abi: LeverageControllerABI,
+                functionName: 'leverageVeloLpZap',
+                args: [params, totalBorrowAmount, isBorrowToken0],
+            });
 
-        return tx.wait();
+            const tx = await writeContract(config);
+
+            return tx.wait();
+        } else {
+            const params: any = {
+                lpToken: utils.getAddress(toAddress(asset)),
+                trancheId: BigNumber.from(trancheId),
+                token0,
+                decimals0,
+                token1,
+                decimals1,
+                stable,
+            };
+
+            const borrowParams = {
+                token: getAddress(_collateral),
+                decimals: BigNumber.from(collateralMarketData[0].decimals),
+                stable0: isPoolStable(network, token0, _collateral),
+                stable1: isPoolStable(network, token1, _collateral),
+            };
+            const totalBorrowAmount = calculateTotalBorrowAmount(amount, _leverage);
+            if (!totalBorrowAmount) return;
+            console.log('borrow other', params, totalBorrowAmount.toString(), borrowParams);
+            const config = await prepareWriteContract({
+                address: CHAIN_CONFIG.leverageControllerAddress,
+                abi: LeverageControllerABI,
+                functionName: 'leverageVeloLpBorrowOther',
+                args: [params, totalBorrowAmount, borrowParams],
+            });
+
+            const tx = await writeContract(config);
+
+            return tx.wait();
+        }
     };
 
     const getCollateralAssets = (token0: string, token1: string) => {
@@ -730,10 +763,10 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                                     <div className="px-4">
                                         <MUISlider
                                             aria-label="looping slider steps"
-                                            defaultValue={1}
-                                            step={0.25}
+                                            defaultValue={0.5}
+                                            step={0.1}
                                             marks
-                                            min={1}
+                                            min={0.5}
                                             max={(data as any)?.maxLeverage || 5}
                                             valueLabelDisplay="auto"
                                             size="small"

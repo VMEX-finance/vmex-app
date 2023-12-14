@@ -68,6 +68,7 @@ export type IMarketsAsset = {
     currentPrice?: BigNumber;
     supplyCap?: BigNumber;
     liquidationThreshold: BigNumber;
+    decimals: number;
 };
 
 export type IGaugesAsset = {

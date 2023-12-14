@@ -98,8 +98,9 @@ export const StrategyCard = ({
     const assetDetails = queryAllAssetMappingsData.data?.get(name?.toUpperCase() || '');
     const { maxLeverage } = useMaxBorrowableAmount(
         queryUserActivity.data?.availableBorrowsETH,
-        '50',
         assetDetails?.baseLTV,
+        assetDetails?.borrowFactor,
+        assetDetails?.liquidationBonus,
         suppliedAssetDetails?.amount,
     );
 
@@ -270,7 +271,7 @@ export const StrategyCard = ({
                                         <MUISlider
                                             aria-label="looping slider steps"
                                             defaultValue={1}
-                                            step={0.25}
+                                            step={0.1}
                                             marks
                                             min={1}
                                             max={maxLeverage}

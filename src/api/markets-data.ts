@@ -147,6 +147,7 @@ export const getSubgraphAllMarketsData = async (): Promise<IMarketsAsset[]> => {
                     reserve.decimals,
                     assetUSDPrice,
                 ),
+                decimals: parseInt(reserve.decimals, 10),
 
                 availableNative: reserve.availableLiquidity,
                 supplyTotal: nativeAmountToUSD(
