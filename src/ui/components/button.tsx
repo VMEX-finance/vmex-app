@@ -13,7 +13,7 @@ export type IButtonProps = {
     ) => void | Promise<void> | (() => Promise<void>) | ((e: any) => Promise<void>);
     className?: string;
     disabled?: boolean;
-    type?: 'danger' | 'link' | 'default' | 'accent' | 'outline' | 'selected';
+    type?: 'danger' | 'link' | 'default' | 'accent' | 'outline' | 'selected' | 'accent-strong';
     icon?: React.ReactNode;
     loading?: boolean;
     loadingText?: string;
@@ -91,6 +91,8 @@ export const Button = ({
             case 'outline':
                 return '!border-gray-500 dark:!border-gray-500 dark:text-white hover:bg-gray-100  dark:hover:bg-neutral-800';
             case 'accent':
+                return 'hover:bg-indigo-200 bg-[rgb(214,222,255)] disabled:!bg-[rgb(214,222,255)] dark:text-neutral-900 dark:bg-indigo-300 dark:disabled:!bg-indigo-300 dark:hover:bg-indigo-200 dark:disabled:text-neutral-700';
+            case 'accent-strong':
                 return 'hover:bg-indigo-200 bg-[rgb(214,222,255)] disabled:!bg-[rgb(214,222,255)] dark:text-neutral-900 dark:bg-indigo-300 dark:disabled:!bg-indigo-300 dark:hover:bg-indigo-200 dark:disabled:text-neutral-700';
             default:
                 return 'bg-gray-300 hover:bg-[rgb(199,207,219)] dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-white disabled:bg-gray-300 dark:disabled:bg-neutral-800 disabled:shadow-none';

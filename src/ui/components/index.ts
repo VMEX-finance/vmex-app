@@ -13,6 +13,7 @@ export * from './display-number';
 export * from './display-number-and-dollar';
 export * from './display-percent-change';
 export * from './display-pill';
+export * from './input-stake';
 export * from './dropdown';
 export * from './health-factor';
 export * from './input-autocomplete';

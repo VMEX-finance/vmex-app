@@ -398,7 +398,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
             functionName: 'getReserveData',
             args: [utils.getAddress(token), BigNumber.from(trancheId)],
         });
-        return readContract({
+        return await readContract({
             address: reserveData.variableDebtTokenAddress,
             abi: erc20ABI,
             functionName: 'balanceOf',

@@ -3,12 +3,20 @@ import { GridView } from '@/ui/templates';
 import { Base } from '@/ui/base';
 import { StakingAsset, StakingOverview } from '@/ui/features';
 import { numberFormatter, percentFormatter } from '@/utils';
-import { Button, Card, CustomTabPanel, CustomTabs, DefaultInput } from '@/ui/components';
+import {
+    Button,
+    Card,
+    CustomTabPanel,
+    CustomTabs,
+    DefaultInput,
+    StakeInput,
+} from '@/ui/components';
 import { GaugesTable } from '@/ui/tables';
 import { useNavigate, createSearchParams } from 'react-router-dom';
+import { useWindowSize } from '@/hooks';
 
 const Staking: React.FC = () => {
-    const navigate = useNavigate();
+    const { width, breakpoints } = useWindowSize();
     const [tabIndex, setTabIndex] = React.useState(0);
 
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -43,7 +51,11 @@ const Staking: React.FC = () => {
             <Card>
                 <CustomTabs
                     id="staking"
-                    tabs={['Manage Gauges', 'Manage veVMEX', 'Claim / Redeem']}
+                    tabs={
+                        width > breakpoints.sm
+                            ? ['Manage Gauges', 'Manage veVMEX', 'Claim / Redeem']
+                            : ['Gauges', 'veVMEX', 'Rewards']
+                    }
                     tabIndex={tabIndex}
                     handleTabChange={handleTabChange}
                 />
@@ -64,11 +76,25 @@ const Staking: React.FC = () => {
                                     <li>Receive dVMEX (the longer you lock, the more you keep).</li>
                                 </ol>
                             </div>
-                            <div className="grid grid-cols-2 gap-2 content-end">
-                                <DefaultInput onType={() => {}} value="" />
-                                <DefaultInput onType={() => {}} value="" />
-                                <DefaultInput onType={() => {}} value="" />
-                                <Button className="h-fit">Approve</Button>
+                            <div className="grid sm:grid-cols-2 gap-1 lg:gap-2 xl:gap-2.5 content-end items-end">
+                                <StakeInput
+                                    header="VMEX"
+                                    footer={`Available: ${numberFormatter.format(0)} VMEX`}
+                                    onChange={() => {}}
+                                    value=""
+                                    max="0"
+                                />
+                                <StakeInput
+                                    header="Current lock period (weeks)"
+                                    footer="Minimum: 1 week"
+                                    onChange={() => {}}
+                                    value=""
+                                    max="0"
+                                />
+                                <StakeInput header="Total veVMEX" value="" disabled />
+                                <Button type="accent" className="h-fit mb-[17.88px]">
+                                    Approve
+                                </Button>
                             </div>
                         </GridView>
                         <GridView className="p-2" type="fixed" cols="grid-cols-1 lg:grid-cols-2">
@@ -79,11 +105,22 @@ const Staking: React.FC = () => {
                                     your gauge boost weight.
                                 </p>
                             </div>
-                            <div className="grid grid-cols-2 gap-2 content-end">
-                                <DefaultInput onType={() => {}} value="" />
-                                <DefaultInput onType={() => {}} value="" />
-                                <DefaultInput onType={() => {}} value="" />
-                                <Button className="h-fit">Extend</Button>
+                            <div className="grid sm:grid-cols-2 gap-1 lg:gap-2 content-end items-end">
+                                <StakeInput
+                                    header="Current lock period (weeks)"
+                                    onChange={() => {}}
+                                    value=""
+                                />
+                                <StakeInput
+                                    header="Increase lock period (weeks)"
+                                    footer="Minimum: 1 week"
+                                    onChange={() => {}}
+                                    value=""
+                                />
+                                <StakeInput header="Total veVMEX" onChange={() => {}} value="" />
+                                <Button type="accent" className="h-fit mb-[17.88px]">
+                                    Extend
+                                </Button>
                             </div>
                         </GridView>
                         <GridView className="p-2" type="fixed" cols="grid-cols-1 lg:grid-cols-2">
@@ -94,11 +131,22 @@ const Staking: React.FC = () => {
                                     duration.
                                 </p>
                             </div>
-                            <div className="grid grid-cols-2 gap-2 content-end">
-                                <DefaultInput onType={() => {}} value="" />
-                                <DefaultInput onType={() => {}} value="" />
-                                <DefaultInput onType={() => {}} value="" />
-                                <Button className="h-fit">Exit</Button>
+                            <div className="grid sm:grid-cols-2 gap-1 lg:gap-2 content-end items-end">
+                                <StakeInput header="veVMEX you have" onChange={() => {}} value="" />
+                                <StakeInput
+                                    header="Current lock time (weeks)"
+                                    onChange={() => {}}
+                                    value=""
+                                />
+                                <StakeInput
+                                    header="YFI you get"
+                                    footer={`Penalty: ${percentFormatter.format(0)}`}
+                                    onChange={() => {}}
+                                    value=""
+                                />
+                                <Button type="accent" className="h-fit mb-[17.88px]">
+                                    Exit
+                                </Button>
                             </div>
                         </GridView>
                         <GridView className="p-2" type="fixed" cols="grid-cols-1 lg:grid-cols-2">
@@ -106,9 +154,11 @@ const Staking: React.FC = () => {
                                 <h3 className="text-xl mb-3">Claim expired lock</h3>
                                 <p>Claim your YFI from expired veYFI lock.</p>
                             </div>
-                            <div className="grid grid-cols-2 gap-2 content-end">
-                                <DefaultInput onType={() => {}} value="" />
-                                <Button className="h-fit">Claim</Button>
+                            <div className="grid sm:grid-cols-2 gap-1 lg:gap-2 content-end items-end">
+                                <StakeInput header="Unlocked YFI" onChange={() => {}} value="" />
+                                <Button type="accent" className="h-fit mb-[17.88px]">
+                                    Claim
+                                </Button>
                             </div>
                         </GridView>
                     </div>

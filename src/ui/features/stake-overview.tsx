@@ -34,7 +34,7 @@ export const StakingOverview = (props: IStakingOverviewProps) => {
                 {stats.map((el, i) => (
                     <div
                         key={`staking-overview-${i}`}
-                        className="flex lg:justify-center lg:items-center py-2 first:pt-0 last:pb-0"
+                        className="flex justify-center lg:items-center py-2 first:pt-0 last:pb-0"
                     >
                         <div className="flex flex-col gap-1 items-center">
                             <span className="text-4xl">{el.amount}</span>
