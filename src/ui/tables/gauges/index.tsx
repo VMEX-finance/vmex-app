@@ -1,10 +1,9 @@
 import React from 'react';
 import { CacheProvider } from '@emotion/react';
 import { muiCache, options } from '../utils';
-import { MarketsCustomRow } from './custom-row';
+import { GaugesCustomRow } from './custom-row';
 import MUIDataTable from 'mui-datatables';
 import { Loader } from '@/ui/components';
-import { addFeaturedTranches } from '@/utils';
 import { UseQueryResult } from '@tanstack/react-query';
 import { IUserActivityDataProps, IGaugesAsset } from '@/api';
 import { useAccount } from 'wagmi';
@@ -51,15 +50,6 @@ export const GaugesTable: React.FC<ITableProps> = ({ data, loading, userActivity
                         return false;
                     },
                 },
-            },
-        },
-        {
-            name: 'tranche',
-            label: 'Tranche',
-            options: {
-                filter: true,
-                sort: true,
-                sortThirdClickReset: true,
             },
         },
         {
@@ -155,7 +145,7 @@ export const GaugesTable: React.FC<ITableProps> = ({ data, loading, userActivity
                         dataIndex,
                         rowIndex,
                     ) => (
-                        <MarketsCustomRow
+                        <GaugesCustomRow
                             asset={asset}
                             tranche={tranche}
                             trancheId={trancheId}

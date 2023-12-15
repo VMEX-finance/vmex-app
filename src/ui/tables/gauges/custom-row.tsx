@@ -10,6 +10,7 @@ import {
     DEFAULT_CHAINID,
     bigNumberToNative,
     isChainUnsupported,
+    numberFormatter,
     percentFormatter,
     usdFormatter,
 } from '@/utils';
@@ -17,7 +18,7 @@ import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { BigNumber } from 'ethers';
 
-const MarketsCustomRow = (props: any) => {
+export const GaugesCustomRow = (props: any) => {
     const {
         asset,
         tranche,
@@ -85,24 +86,16 @@ const MarketsCustomRow = (props: any) => {
                     </div>
                 </td>
                 <td className="flex justify-between">
-                    <span className="font-bold">Tranche</span>
-                    <span>{tranche}</span>
-                </td>
-                <td className="flex justify-between">
-                    <span className="font-bold">Supply APY</span>
+                    <span className="font-bold">Vault APY</span>
                     <ApyToolitp symbol={asset} oldApy={supplyApy} />
                 </td>
                 <td className="flex justify-between">
-                    <span className="font-bold">Borrow APY</span>
+                    <span className="font-bold">Deposited</span>
                     <span>{borrowable ? percentFormatter.format(borrowApy) : '-'}</span>
                 </td>
                 {address && (
                     <td className="flex justify-between">
-                        {/* <span className="font-bold">Your Amount</span>
-                        <span className={`${yourAmount.loading ? 'animate-pulse' : ''}`}>
-                            {yourAmount.amount}
-                        </span> */}
-                        <span className="font-bold">Wallet Balance</span>
+                        <span className="font-bold">Gauge APR</span>
                         <span>
                             <NumberAndDollar
                                 value={`${bigNumberToNative(
@@ -117,40 +110,24 @@ const MarketsCustomRow = (props: any) => {
                     </td>
                 )}
                 <td className="flex justify-between">
-                    <span className="font-bold">Available Borrows</span>
+                    <span className="font-bold">Staked</span>
                     <span>{borrowable ? usdFormatter().format(available) : '-'}</span>
                 </td>
                 <td className="flex justify-between">
-                    <span className="font-bold">Supply</span>
-                    <span>{usdFormatter().format(supplyTotal)}</span>
-                </td>
-                <td className="flex justify-between">
-                    <span className="font-bold">Borrow</span>
-                    <span>{borrowable ? usdFormatter().format(borrowTotal) : '-'}</span>
-                </td>
-                {/* <td className="flex justify-between">
-                    <span className="font-bold">Rating</span>
-                    <span style={{ color: determineRatingColor(rating) }}>{rating}</span>
-                </td> */}
-                <td className="flex justify-between">
-                    <span className="font-bold">Strategy</span>
-                    {strategies ? (
-                        <BsCheck className="w-6 h-6 text-green-500" />
-                    ) : (
-                        <IoIosClose className="w-6 h-6 text-red-500" />
-                    )}
+                    <span className="font-bold">Boost</span>
+                    <span>{'-'}</span>
                 </td>
                 <td>
                     <Button
                         className="mt-1 mb-2"
                         type="accent"
                         left={{
-                            text: 'Supply',
+                            text: 'Deposit',
                             disabled: false,
                             onClick: handleActionClick,
                         }}
                         right={{
-                            text: 'Borrow',
+                            text: 'Withdraw',
                             disabled: !borrowable,
                             onClick: handleActionClick,
                         }}
@@ -168,11 +145,9 @@ const MarketsCustomRow = (props: any) => {
                 <td className="whitespace-nowrap pl-2 md:pl-4 pr-2 text-sm">
                     <AssetDisplay name={asset} />
                 </td>
-                <td className="min-w-[150px] pl-4 py-3">{tranche}</td>
-                <td className="pl-4">
-                    <ApyToolitp symbol={asset} oldApy={supplyApy} />
-                </td>
-                <td className="pl-4">{borrowable ? percentFormatter.format(borrowApy) : '-'}</td>
+                <td className="min-w-[150px] pl-4 py-3">{percentFormatter.format(tranche)}</td>
+                <td className="pl-4">{numberFormatter.format(0)}</td>
+                <td className="pl-4">{borrowable ? numberFormatter.format(borrowApy) : '-'}</td>
                 {address && (
                     <td className="pl-4">
                         <NumberAndDollar
@@ -187,31 +162,17 @@ const MarketsCustomRow = (props: any) => {
                     </td>
                 )}
                 <td className="pl-4">{borrowable ? usdFormatter().format(available) : '-'}</td>
-                <td className="pl-4">{usdFormatter().format(supplyTotal)}</td>
-                <td className="pl-4">{borrowable ? usdFormatter().format(borrowTotal) : '-'}</td>
-                {/* <td className="text-lg pl-4" style={{ color: determineRatingColor(rating) }}>
-                    {rating}
-                </td> */}
-                <td className="pl-4">
-                    <div className="w-8 h-8">
-                        {strategies ? (
-                            <BsCheck className="w-full h-full text-[#00DD3E]" />
-                        ) : (
-                            <IoIosClose className="w-full h-full text-[#FF1F00]" />
-                        )}
-                    </div>
-                </td>
                 <td className="text-right pr-3.5">
                     <Button
                         type="accent"
                         left={{
-                            text: 'Supply',
-                            disabled: false,
+                            text: 'Deposit',
+                            disabled: true,
                             onClick: handleActionClick,
                         }}
                         right={{
-                            text: 'Borrow',
-                            disabled: !borrowable,
+                            text: 'Withdraw',
+                            disabled: true,
                             onClick: handleActionClick,
                         }}
                     />
@@ -220,5 +181,3 @@ const MarketsCustomRow = (props: any) => {
         );
     }
 };
-
-export { MarketsCustomRow };

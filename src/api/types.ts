@@ -78,8 +78,9 @@ export type IGaugesAsset = {
     trancheId: string;
     vaultApy: number | string;
     depositedInVault: string;
-    gaugeApr: string | number;
-    stakedInGauge: BigNumber;
+    gaugeAprMin: string | number;
+    gaugeAprMax: string | number;
+    stakedInGauge: string;
     boost: number | string;
 };
 
