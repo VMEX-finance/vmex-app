@@ -1,4 +1,4 @@
-import { mainnet, optimism, sepolia, hardhat, Chain, arbitrum } from 'wagmi/chains';
+import { mainnet, optimism, goerli, sepolia, hardhat, Chain, arbitrum } from 'wagmi/chains';
 import { TESTING } from './constants';
 import { getNetwork } from '@wagmi/core';
 
@@ -69,6 +69,16 @@ export const NETWORKS: Record<string, any> = {
         testing: true,
         icon: '/networks/sepolia.png',
     },
+    goerli: {
+        name: 'goerli',
+        rpc: 'https://eth-goerli.public.blastapi.io',
+        subgraph: 'https://api.studio.thegraph.com/query/40387/vmex-finance-sepolia/version/latest', // sepolia
+        chainId: 5,
+        explorer: 'https://goerli.etherscan.io',
+        backend: 'https://dolphin-app-ajfiy.ondigitalocean.app', // sepolia
+        testing: true,
+        icon: '/networks/goerli.png',
+    },
     mainnet: {
         name: 'mainnet',
         rpc: '', // Fill in
@@ -138,11 +148,14 @@ export const DEFAULT_CHAINID = 10;
 
 export const availableNetworks = (type: 'wagmi' | 'string') => {
     if (type === 'wagmi') {
-        if (TESTING) return [optimism, baseChain, arbitrum, sepolia, hardhat];
+        if (TESTING) return [optimism, baseChain, arbitrum, sepolia, goerli, hardhat];
         return [optimism, baseChain, arbitrum, sepolia];
     }
     const networks = ['optimism', 'base', 'arbitrum', 'sepolia'];
-    if (TESTING) networks.push('hardhat');
+    if (TESTING) {
+        networks.push('hardhat');
+        networks.push('goerli');
+    }
     return networks;
 };
 
