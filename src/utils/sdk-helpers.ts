@@ -4,7 +4,8 @@ import { convertAddressToSymbol, convertSymbolToAddress } from '@vmexfinance/sdk
 import { ITrancheCategories } from '@/api';
 import { DECIMALS } from './constants';
 import { getNetwork } from '@wagmi/core';
-import { DEFAULT_NETWORK, NETWORKS, getNetworkName } from './network';
+import { DEFAULT_NETWORK, NETWORKS, getChainId, getNetworkName } from './network';
+import { DECIMAL_CACHE } from './cache';
 
 export const bigNumberToUSD = (
     number: BigNumberish | undefined,
@@ -79,6 +80,8 @@ export async function getDecimals(token: string, network: string): Promise<numbe
     if (!token || !network) return 18;
     if (utils.isAddress(token)) {
         const address = utils.getAddress(token);
+        const chainId = getChainId();
+        if (DECIMAL_CACHE[chainId][address]) return DECIMAL_CACHE[chainId][address];
         if (address === constants.AddressZero) return 18;
         else {
             try {
@@ -88,6 +91,7 @@ export async function getDecimals(token: string, network: string): Promise<numbe
                     new providers.JsonRpcProvider(NETWORKS[network].rpc),
                 );
                 const decimals = Number((await contract?.decimals()) || '18');
+                if (!DECIMAL_CACHE[chainId][address]) DECIMAL_CACHE[chainId][address] = decimals;
                 return decimals || 18;
             } catch (err) {
                 return 18;
@@ -102,7 +106,6 @@ export const unformattedStringToBigNumber = (
     number: string | undefined,
     asset: string,
 ): BigNumber => {
-    const network = getNetworkName();
     if (!number) {
         console.error('given invalid number');
         return BigNumber.from('0');

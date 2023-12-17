@@ -56,7 +56,7 @@ export function useApyData() {
     const queryAssetApys = useQuery({
         queryKey: ['asset-apys', getNetworkName()],
         queryFn: getAllAssetApys,
-        refetchInterval: 60000 * 2, // refetch prices every 2 minutes
+        refetchInterval: 1000 * 60 * 5, // refetch apys every 5 minutes
     });
 
     return { queryAssetApys };

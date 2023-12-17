@@ -318,35 +318,6 @@ export const capFirstLetter = (str: string) => str.charAt(0).toUpperCase() + str
 export const findAvailableAssetProps = (asset: string, network: string) =>
     AVAILABLE_ASSETS[network].find((el) => el.symbol.toLowerCase() === asset.toLowerCase());
 
-export const getContractMetadata = async (
-    contractAddress: string,
-    provider: any,
-    type: 'name' | 'symbol',
-) => {
-    if (!contractAddress) return '';
-    const abi = [
-        'function name() view returns (string)',
-        'function symbol() view returns (string)',
-    ];
-    const contract = new Contract(contractAddress, abi, provider);
-    switch (type.toLowerCase()) {
-        case 'name': {
-            if (NAME_CACHE[contractAddress]) return NAME_CACHE[contractAddress];
-            const name = await contract.name();
-            NAME_CACHE[contractAddress] = name;
-            return name;
-        }
-        default: {
-            if (SYMBOL_CACHE[contractAddress]) return SYMBOL_CACHE[contractAddress];
-            console.log('before symbol');
-            const symbol = await contract.symbol();
-            console.log('after symbol');
-            SYMBOL_CACHE[contractAddress] = symbol;
-            return symbol;
-        }
-    }
-};
-
 export function unixToDate(unix: string | number) {
     const isSeconds = String(unix).length < 12 ? true : false;
     const numberUnix = typeof unix === 'string' ? parseFloat(unix) : unix;

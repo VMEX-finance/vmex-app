@@ -36,7 +36,7 @@ export function usePricesData(): IPricesDataProps {
     const queryAssetPrices = useQuery({
         queryKey: ['asset-prices', getNetworkName()],
         queryFn: getAllAssetPrices,
-        refetchInterval: 60000, // refetch prices every minute
+        refetchInterval: 1000 * 60 * 5, // refetch apys every 5 minutes
     });
     const getErroredAssets = () => {
         const returnArr: string[] = [];

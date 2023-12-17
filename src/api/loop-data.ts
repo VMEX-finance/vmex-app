@@ -75,7 +75,7 @@ export function useLoopData(userAddress?: string) {
     const queryUserLooping = useQuery({
         queryKey: ['user-loopings', network, userAddress],
         queryFn: () => _getUserLooping(network, userAddress),
-        refetchInterval: 5000,
+        refetchInterval: 1000 * 5,
     });
 
     const findLoop = (address: string) => {
