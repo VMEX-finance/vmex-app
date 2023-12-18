@@ -16,7 +16,7 @@ export const CONTRACTS = {
         veloRouter: '0xa062aE8A9c5e11aaA026fc2670B0D65cCc8B2858', // VELO Router
         veloFactory: '0xF1046053aa5682b4F9a81b5481394DA16BE5FF5a', // VELO Factory
         lendingPool: '0x60F015F66F3647168831d31C7048ca95bb4FeaF9', // Lending Pool
-        leverageController: '0x5635e7eae86c20ce431702ef08b1aa41613b319e', // Leverage Controller
+        leverageController: '0x69d61714e902C9c337394424C5fC2482f00bfC70', // Leverage Controller
     },
 };
 
