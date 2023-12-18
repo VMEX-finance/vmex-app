@@ -139,7 +139,7 @@ export const calculateHealthFactorAfterUnwind = (
 };
 
 export const calculateTotalBorrowAmount = (borrowable: string, looping: number, ltv: Decimal) => {
-    if (!borrowable || !looping) return BigNumber.from(0);
+    if (!borrowable || !looping || !ltv) return BigNumber.from(0);
 
     const borrowableBN = formatUnits(parseEther(borrowable), DECIMALS);
     return parseUnits(

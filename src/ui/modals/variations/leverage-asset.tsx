@@ -63,10 +63,9 @@ import { getAddress, parseUnits } from 'ethers/lib/utils.js';
 import { convertAddressListToSymbol } from '@vmexfinance/sdk';
 import { toast } from 'react-toastify';
 import Decimal from 'decimal.js';
-import { parseEther } from 'viem';
 
 const VERY_BIG_ALLOWANCE = BigNumber.from(2).pow(128); // big enough
-const ONE_ETHER = parseEther('1');
+const ONE_ETHER = utils.parseEther('1');
 
 type LeverageDetails = {
     token0: Address;
@@ -264,7 +263,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
         }
         const collateralAssets = [];
 
-        const borrowableAssets = queryAllMarketsData.data.filter((x) => {
+        const borrowableAssets = queryAllMarketsData.data?.filter((x) => {
             if (x.trancheId !== trancheId?.toString() || !x.canBeBorrowed) return false;
             return AVAILABLE_COLLATERAL_TRESHOLD.lt(parseUnits(String(x.available), 8));
         });
