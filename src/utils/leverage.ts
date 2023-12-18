@@ -138,12 +138,56 @@ export const calculateHealthFactorAfterUnwind = (
         .div(borrowFactorTimesDebtAfter);
 };
 
-export const calculateTotalBorrowAmount = (amountHumanReadable: string, leverage: number) => {
-    if (!amountHumanReadable || !leverage) return BigNumber.from(0);
-    const _amountHumanReadable = cleanNumberString(amountHumanReadable);
-    return parseUnits(_amountHumanReadable.replace('$', ''), 8)
-        .mul((leverage * 100).toFixed(0))
-        .div(100);
+export const calculateTotalBorrowAmount = (borrowable: string, looping: number, ltv: Decimal) => {
+    if (!borrowable || !looping) return BigNumber.from(0);
+
+    const borrowableBN = formatUnits(parseEther(borrowable), DECIMALS);
+    return parseUnits(
+        ltv
+            .mul(borrowableBN)
+            .mul(DECIMAL_ONE.minus(ltv.pow(looping - 1)))
+            .div(DECIMAL_ONE.minus(ltv))
+            .plus(borrowableBN)
+            .toFixed(DECIMALS),
+        DECIMALS,
+    );
+};
+
+export const calculateCurrentApy = (
+    amountHumanReadable: string,
+    totalBorrowAmount: BigNumber,
+    apy: string,
+) => {
+    if (
+        !amountHumanReadable ||
+        !totalBorrowAmount ||
+        totalBorrowAmount.eq(BigNumber.from(0)) ||
+        !apy
+    )
+        return '0.00';
+
+    return new Decimal(totalBorrowAmount.toString())
+        .div(parseUnits(cleanNumberString(amountHumanReadable), DECIMALS).toString())
+        .mul(apy)
+        .toFixed(2);
+};
+
+export const calculateLoopingApy = (
+    maxBorrowableAmount: string,
+    looping: number,
+    apy: number,
+    ltv: Decimal,
+) => {
+    const borrowAmountReadable = formatUnits(parseEther(maxBorrowableAmount), DECIMALS);
+
+    return ltv
+        .mul(borrowAmountReadable)
+        .mul(DECIMAL_ONE.minus(ltv.pow(looping - 1)))
+        .div(DECIMAL_ONE.minus(ltv))
+        .plus(borrowAmountReadable)
+        .div(borrowAmountReadable)
+        .mul(apy)
+        .toFixed(4);
 };
 
 export const isPoolStable = (network: string, token0: string, token1: string) => {

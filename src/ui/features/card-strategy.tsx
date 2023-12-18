@@ -1,17 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Slider as MUISlider } from '@mui/material';
-import {
-    AssetDisplay,
-    Button,
-    Card,
-    Label,
-    PillDisplay,
-    SmartPrice,
-    Tooltip,
-} from '@/ui/components';
+import { AssetDisplay, Button, Card, Label, PillDisplay, SmartPrice } from '@/ui/components';
 import {
     AVAILABLE_COLLATERAL_TRESHOLD,
-    DEFAULT_CHAINID,
+    calculateLoopingApy,
     capFirstLetter,
     findInObjArr,
     isAddressEqual,
@@ -28,12 +20,12 @@ import {
     useSubgraphAllMarketsData,
     useSubgraphTrancheData,
 } from '@/api';
-import { Chain, useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
+import { useAccount, useNetwork } from 'wagmi';
 import { useChainModal, useConnectModal } from '@rainbow-me/rainbowkit';
 import { useDialogController, useZap } from '@/hooks';
 import { useUserData } from '@/api/user-data';
 import { getAddress } from 'ethers/lib/utils.js';
-import { useMaxBorrowableAmount } from '@/hooks/max-borrowable';
+import { useMaxLooping } from '@/hooks/max-borrowable';
 import { parseUnits } from 'ethers/lib/utils.js';
 
 type IStrategyCard = {
@@ -66,7 +58,7 @@ export const StrategyCard = ({
     const { openDialog } = useDialogController();
     const { openChainModal } = useChainModal();
     const { openConnectModal } = useConnectModal();
-    const [leverage, setLeverage] = useState(1);
+    const [looping, setLooping] = useState(1);
     const { queryAssetApys } = useApyData();
     const [apyBreakdown, setApyBreakdown] = useState<any[]>([]);
     const [collateral, setCollateral] = useState('');
@@ -96,7 +88,7 @@ export const StrategyCard = ({
     );
 
     const assetDetails = queryAllAssetMappingsData.data?.get(name?.toUpperCase() || '');
-    const { maxLeverage } = useMaxBorrowableAmount(
+    const { maxLooping, ltv } = useMaxLooping(
         queryUserActivity.data?.availableBorrowsETH,
         assetDetails?.baseLTV,
         assetDetails?.borrowFactor,
@@ -106,9 +98,12 @@ export const StrategyCard = ({
 
     const rewardApy = findInObjArr('asset', assetAddress, queryAssetApys.data);
 
-    const getLeverageDisabled = () => {
-        return !suppliedAssetDetails?.amountNative.gt(0) || !collateral;
-    };
+    const potentialApy = calculateLoopingApy(
+        queryUserActivity.data?.availableBorrowsETH || '0',
+        looping,
+        supplyApy,
+        ltv,
+    );
 
     const getCollateralAssets = (token0: string, token1: string) => {
         if (!queryAllMarketsData.data || !prices) {
@@ -159,14 +154,15 @@ export const StrategyCard = ({
             ...suppliedAssetDetails,
             ...rewardApy,
             apyBreakdown,
-            leverage,
+            looping,
             collateral,
             trancheId,
             token0,
             token1,
             tranche: queryTrancheData?.data?.name || '',
-            maxLeverage,
+            maxLooping,
             foundUserLoop,
+            ltv,
         });
         setTimeout(() => setCollateral(''), 2000);
     };
@@ -199,7 +195,7 @@ export const StrategyCard = ({
 
     const handleSlide = (e: Event) => {
         e.stopPropagation();
-        setLeverage((e.target as any).value || 1);
+        setLooping((e.target as any).value || 1);
     };
 
     const renderText = () => {
@@ -241,7 +237,7 @@ export const StrategyCard = ({
                         <span className="font-medium text-lg leading-none">
                             {currentApy
                                 ? currentApy
-                                : percentFormatter.format(Number(supplyApy) * leverage)}
+                                : percentFormatter.format(Number(potentialApy))}
                         </span>
                     </div>
                 </div>
@@ -265,19 +261,19 @@ export const StrategyCard = ({
                                 <>
                                     <span className="text-xs flex items-center gap-1">
                                         <span>Looping:</span>
-                                        <span className="font-medium">{leverage}x</span>
+                                        <span className="font-medium">{looping}x</span>
                                     </span>
                                     <div className="px-2">
                                         <MUISlider
                                             aria-label="looping slider steps"
                                             defaultValue={1}
-                                            step={0.1}
+                                            step={1}
                                             marks
                                             min={1}
-                                            max={maxLeverage}
+                                            max={maxLooping}
                                             valueLabelDisplay="auto"
                                             size="small"
-                                            value={leverage}
+                                            value={looping}
                                             onChange={handleSlide}
                                         />
                                     </div>

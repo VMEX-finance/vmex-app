@@ -1,3 +1,4 @@
+import Decimal from 'decimal.js';
 import { BigNumber } from 'ethers';
 
 export type AssetDetails = {
@@ -34,8 +35,9 @@ export type LeverageDetails = {
     amount: string;
     collateral: string;
     suppliedAssetDetails: any;
-    leverage: number;
+    looping: number;
     totalApy: string;
+    ltv: Decimal;
 };
 
 export type ILeverageProps = {

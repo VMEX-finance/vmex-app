@@ -48,6 +48,7 @@ import {
     calculateRepayAmount,
     isTrancheIdEqual,
     isPoolStable,
+    calculateCurrentApy,
 } from '@/utils';
 import { useAccount } from 'wagmi';
 import { BigNumber, constants, utils } from 'ethers';
@@ -61,8 +62,11 @@ import {
 import { getAddress, parseUnits } from 'ethers/lib/utils.js';
 import { convertAddressListToSymbol } from '@vmexfinance/sdk';
 import { toast } from 'react-toastify';
+import Decimal from 'decimal.js';
+import { parseEther } from 'viem';
 
 const VERY_BIG_ALLOWANCE = BigNumber.from(2).pow(128); // big enough
+const ONE_ETHER = parseEther('1');
 
 type LeverageDetails = {
     token0: Address;
@@ -86,8 +90,16 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
 
     const _data = data
         ? data
-        : { asset: '', trancheId: '', collateral: '', amount: '', leverage: 0, totalApy: '' };
-    const { asset, trancheId, collateral, amount, leverage, totalApy } = _data; // TODO: move functionality to leverage and zap hooks
+        : {
+              asset: '',
+              trancheId: '',
+              collateral: '',
+              amount: '',
+              looping: 0,
+              totalApy: '',
+              ltv: new Decimal(0),
+          };
+    const { asset, trancheId, collateral, amount, looping, totalApy, ltv } = _data; // TODO: move functionality to leverage and zap hooks
 
     const { findLoop } = useLoopData(address);
     const loopedAsset = findLoop(toAddress(asset));
@@ -114,7 +126,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
     const { findAssetInMarketsData } = useSubgraphTrancheData(trancheId as number);
 
     const [_collateral, _setCollateral] = useState(collateral);
-    const [_leverage, _setLeverage] = useState(leverage);
+    const [_looping, _setLooping] = useState(looping);
     const [_loading, _setLoading] = useState(false);
 
     const collaterals = _collateral ? _collateral.split(':') : [];
@@ -139,6 +151,13 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
             (el) => utils.getAddress(el?.assetAddress) === getAddress(toAddress(asset)),
         );
 
+    const totalBorrowAmount = calculateTotalBorrowAmount(
+        queryUserActivity.data?.availableBorrowsETH || '0',
+        _looping,
+        ltv,
+    );
+    const currentApy = calculateCurrentApy(amount, totalBorrowAmount, totalApy);
+
     const [borrowAllowance, setBorrowAllowance] = useState(BigNumber.from(0));
     const [leverageDetails, setLeverageDetails] = useState<LeverageDetails>();
 
@@ -151,7 +170,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
 
     const handleSlide = (e: Event) => {
         e.stopPropagation();
-        _setLeverage((e.target as any).value || 1);
+        _setLooping((e.target as any).value || 1);
     };
 
     const approveBorrowDelegation = async () => {
@@ -194,7 +213,6 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                 decimals1,
                 stable,
             };
-            const totalBorrowAmount = calculateTotalBorrowAmount(amount, _leverage);
             const isBorrowToken0 = isAddressEqual(_collateral, token0);
             if (!totalBorrowAmount) return;
             const config = await prepareWriteContract({
@@ -224,7 +242,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                 stable0: isPoolStable(network, token0, _collateral),
                 stable1: isPoolStable(network, token1, _collateral),
             };
-            const totalBorrowAmount = calculateTotalBorrowAmount(amount, _leverage);
+
             if (!totalBorrowAmount) return;
             console.log('borrow other', params, totalBorrowAmount.toString(), borrowParams);
             const config = await prepareWriteContract({
@@ -283,17 +301,17 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
     };
 
     const populateHowItWorks = () => {
-        let totalBorrowAmount = calculateTotalBorrowAmount(amount, _leverage);
+        let currTotalBorrowAmount = BigNumber.from(totalBorrowAmount.toString());
         const userBorrowableAmount = queryUserActivity?.data?.availableBorrowsETH;
         const steps: string[] = [];
         if (userBorrowableAmount) {
             const availableBorrowUsd = parseUnits(cleanNumberString(userBorrowableAmount), 18)
                 .mul(9)
                 .div(10);
-            while (totalBorrowAmount.gt(0)) {
-                const borrowAmountUsd = availableBorrowUsd.lt(totalBorrowAmount)
+            while (currTotalBorrowAmount.gt(0)) {
+                const borrowAmountUsd = availableBorrowUsd.lt(currTotalBorrowAmount)
                     ? availableBorrowUsd
-                    : totalBorrowAmount;
+                    : currTotalBorrowAmount;
                 if (collateralSymbols.length === 1) {
                     steps.push(
                         `Borrow ${formatUsdUnits(borrowAmountUsd)} worth of ${
@@ -317,7 +335,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                     steps.push(`Add liquidity in Velo pool, get LP tokens.`);
                 }
                 steps.push(`Desposit ${formatUsdUnits(borrowAmountUsd)} worth of Velo LP tokens`);
-                totalBorrowAmount = totalBorrowAmount.sub(borrowAmountUsd);
+                currTotalBorrowAmount = currTotalBorrowAmount.sub(borrowAmountUsd);
             }
         }
         return steps;
@@ -325,7 +343,6 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
 
     const populateSummary = () => {
         if (!collateralMarketData.length) return [];
-        const totalBorrowAmount = calculateTotalBorrowAmount(amount, _leverage);
         const summary = [];
         if (collaterals.length === 1) {
             summary.push(
@@ -359,7 +376,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
         );
         summary.push(
             `Total APY is ${(
-                Number(_leverage) *
+                Number(_looping) *
                 (parseFloat(totalApy) - parseFloat(collateralMarketData[0].borrowApy) * 100)
             ).toFixed(4)} %`,
         );
@@ -385,7 +402,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
     const afterLoop = calculateHealthFactorAfterLeverage(
         depositAsset,
         borrowAssets,
-        calculateTotalBorrowAmount(amount || '0', _leverage),
+        totalBorrowAmount,
         queryUserTrancheData.data,
     );
     const healthFactorTooLow = afterLoop ? afterLoop < BigNumber.from('1') : true;
@@ -487,7 +504,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                         },
                         withdrawAmountNative
                             .mul(reserveData?.priceUSD || BigNumber.from('0'))
-                            .div(BigNumber.from(10).pow(18)),
+                            .div(ONE_ETHER),
                     ],
                 });
             const config = await prepareWriteContract({
@@ -505,7 +522,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                     },
                     withdrawAmountNative
                         .mul(reserveData?.priceUSD || BigNumber.from('0'))
-                        .div(BigNumber.from(10).pow(18)),
+                        .div(ONE_ETHER),
                 ],
             });
             if (TESTING) console.log('#unwind - after prepare two borrow params:', config);
@@ -528,7 +545,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                         },
                         withdrawAmountNative
                             .mul(reserveData?.priceUSD || BigNumber.from('0'))
-                            .div(BigNumber.from(10).pow(18)),
+                            .div(ONE_ETHER),
                     ],
                 });
             const debt = await getDebt(isBorrowToken0 ? token0 : token1);
@@ -547,7 +564,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                     },
                     withdrawAmountNative
                         .mul(reserveData?.priceUSD || BigNumber.from('0'))
-                        .div(BigNumber.from(10).pow(18)),
+                        .div(ONE_ETHER),
                     debt,
                 ],
             });
@@ -701,18 +718,14 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
 
                                 <div className="flex items-start justify-between mt-4 px-2">
                                     <div className="flex flex-col items-start">
-                                        <span className="text-2xl leading-none">{`${
-                                            (
-                                                Number((data as any)?.totalApy || '0') * _leverage
-                                            ).toFixed(2) || 0
-                                        }%`}</span>
+                                        <span className="text-2xl leading-none">{`${currentApy}%`}</span>
                                         <span className="text-xs font-light text-neutral-600 dark:text-neutral-400">
                                             Asset APY
                                         </span>
                                     </div>
 
                                     <div className="flex flex-col items-end">
-                                        <span className="text-2xl leading-none">{`${_leverage}x`}</span>
+                                        <span className="text-2xl leading-none">{`${_looping}x`}</span>
                                         <span className="text-xs font-light text-neutral-600 dark:text-neutral-400">
                                             Looping
                                         </span>
@@ -763,14 +776,14 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                                     <div className="px-4">
                                         <MUISlider
                                             aria-label="looping slider steps"
-                                            defaultValue={0.5}
-                                            step={0.1}
+                                            defaultValue={1}
+                                            step={1}
                                             marks
-                                            min={0.5}
-                                            max={(data as any)?.maxLeverage || 5}
+                                            min={1}
+                                            max={(data as any)?.maxLooping || 3}
                                             valueLabelDisplay="auto"
                                             size="small"
-                                            value={_leverage}
+                                            value={_looping}
                                             onChange={handleSlide}
                                         />
                                     </div>
@@ -819,7 +832,9 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                                     type={'loop'}
                                     trancheId={String(trancheId)}
                                     collateral={_collateral}
-                                    leverage={_leverage}
+                                    looping={_looping}
+                                    ltv={ltv}
+                                    borrowable={queryUserActivity.data?.availableBorrowsETH}
                                 />
 
                                 <ModalTableDisplay
@@ -897,7 +912,9 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                                 type={'unwind'}
                                 trancheId={String(trancheId)}
                                 collateral={_collateral}
-                                leverage={_leverage}
+                                looping={_looping}
+                                ltv={ltv}
+                                borrowable={queryUserActivity.data?.availableBorrowsETH}
                             />
 
                             <ModalTableDisplay
