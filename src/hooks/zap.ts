@@ -316,7 +316,7 @@ export const useZap = (
                 }),
             );
         })().catch((err) => console.error(err));
-    }, [symbolOrAddress, queryUserWallet, veloPoolDetails]);
+    }, [symbolOrAddress, queryUserWallet.isRefetching, veloPoolDetails]);
 
     useEffect(() => {
         if (existingZappableAssets?.length) {

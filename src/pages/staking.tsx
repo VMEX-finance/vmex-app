@@ -198,9 +198,9 @@ const Staking: React.FC = () => {
                             <div>
                                 <h3 className="text-xl mb-3">Gauge Rewards</h3>
                                 <p>
-                                    Select a gauge below and claim any dVMEX rewards you’re eligible
-                                    for. Remember, to earn rewards you must stake your Vault token
-                                    into the corresponding gauge.
+                                    Select a gauge and claim any dVMEX rewards you’re eligible for.
+                                    Remember, to earn rewards you must stake your Vault token into
+                                    the corresponding gauge.
                                 </p>
                             </div>
                             <div className="grid sm:grid-cols-2 gap-1 lg:gap-2 content-end items-end">

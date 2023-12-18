@@ -60,7 +60,7 @@ export const useMaxLooping = (
 
         setMaxLooping({ maxBorrowableAmountUsd, maxLooping: N.toNumber(), ltv: effectiveLtvDec });
         return;
-    }, [availableBorrows, MIN_BORROW_BN, ltv, assetAmountUsd, borrowFactor, liquidationBonus]);
+    }, [availableBorrows, ltv, assetAmountUsd, borrowFactor, liquidationBonus]);
 
     return maxLooping;
 };
