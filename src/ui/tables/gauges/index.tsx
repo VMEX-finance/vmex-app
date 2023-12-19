@@ -60,7 +60,7 @@ export const GaugesTable: React.FC<ITableProps> = ({ data, loading, userActivity
                 filter: false,
                 sort: true,
                 sortThirdClickReset: true,
-                sortDirection: 'desc',
+                sortOrder: 'desc',
             },
         },
         {

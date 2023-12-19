@@ -54,7 +54,9 @@ export const StakeInput = ({
                 )}
             </div>
             {footer ? (
-                <span className="text-[11px] leading-relaxed">{footer}</span>
+                <span className={`text-[11px] leading-relaxed ${error ? 'text-red-600' : ''}`}>
+                    {footer}
+                </span>
             ) : (
                 <span className="min-h-[17.88px]" />
             )}

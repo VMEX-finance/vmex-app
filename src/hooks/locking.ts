@@ -68,11 +68,15 @@ export const useLockingUI = () => {
         if (vmexBalance?.value && vmexBalance?.value.gt(BigNumber.from('0'))) {
             if (lockInput?.amountBn.gt(vmexBalance.value)) {
                 // User trying to input more VMEX than they hold
-                setError('amount: greater than max');
+                setError('amount:Insufficient balance');
             } else if (Number(lockInput?.period) > maxWeeks) {
-                setError('period: greater than max');
+                setError(`period:Cannot be more than ${maxWeeks} weeks`);
             } else if (Number(lockInput?.period) < 1 && lockInput?.period) {
-                setError('period: less than minimum');
+                setError('period:Cannot be less than 1 week');
+            } else if (Number(extendInput?.period) > maxWeeks) {
+                setError(`extend:Cannot be more than ${maxWeeks} weeks`);
+            } else if (Number(extendInput?.period) < 1 && extendInput?.period) {
+                setError('extend:Cannot be less than 1 week');
             } else {
                 setError('');
             }
@@ -94,11 +98,12 @@ export const useLockingUI = () => {
         handleExtendInput,
         handleLockAmountInput,
         handleLockPeriodInput,
-        inputError: error,
+        inputError: error?.includes(':') ? error?.split(':')[1] : '',
         handleAmountMax,
         handlePeriodMax,
         periodInputError: error?.startsWith('period'),
         amountInputError: error?.startsWith('amount'),
+        extendPeriodError: error?.startsWith('extend'),
         unlockTimeSeconds,
         handleRedeemAmountInput,
         handleRedeemMax,

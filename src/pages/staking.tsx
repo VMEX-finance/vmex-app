@@ -46,6 +46,7 @@ const Staking: React.FC = () => {
         handleRedeemAmountInput,
         handleRedeemMax,
         redeemInput,
+        extendPeriodError,
     } = useLockingUI();
     const { width, breakpoints } = useWindowSize();
     const [tabIndex, setTabIndex] = React.useState(0);
@@ -76,17 +77,21 @@ const Staking: React.FC = () => {
                     {TESTING && chainId === 5 && address && (
                         <Button
                             onClick={async () => {
-                                await writeContract({
-                                    address: CONTRACTS[5].vmex as `0x${string}`,
-                                    abi: ['function mint(address, uint256) external'],
-                                    functionName: 'mint',
-                                    args: [address, utils.parseEther('100')],
-                                    mode: 'recklesslyUnprepared',
-                                });
-                                console.log('Minted 100 VMEX tokens');
+                                try {
+                                    await writeContract({
+                                        address: CONTRACTS[5].vmex as `0x${string}`,
+                                        abi: ['function mint(address, uint256) external'],
+                                        functionName: 'mint',
+                                        args: [address, utils.parseEther('1000')],
+                                        mode: 'recklesslyUnprepared',
+                                    });
+                                    console.log('Minted 1000 VMEX tokens');
+                                } catch (e) {
+                                    return;
+                                }
                             }}
                         >
-                            Mint 100 VMEX Tokens
+                            Mint 1000 VMEX
                         </Button>
                     )}
                 </>
@@ -138,7 +143,11 @@ const Staking: React.FC = () => {
                             <div className="grid sm:grid-cols-2 gap-1 lg:gap-2 xl:gap-2.5 content-end items-end">
                                 <StakeInput
                                     header="VMEX"
-                                    footer={`Available: ${vmexBalance?.formatted || '0.0'} VMEX`}
+                                    footer={
+                                        inputError && amountInputError
+                                            ? inputError
+                                            : `Available: ${vmexBalance?.formatted || '0.0'} VMEX`
+                                    }
                                     onChange={handleLockAmountInput}
                                     value={lockInput.amount}
                                     setMax={handleAmountMax}
@@ -147,7 +156,11 @@ const Staking: React.FC = () => {
                                 />
                                 <StakeInput
                                     header="Current lock period (weeks)"
-                                    footer="Minimum: 1 week"
+                                    footer={
+                                        inputError && periodInputError
+                                            ? inputError
+                                            : `Minimum: 1 week`
+                                    }
                                     onChange={handleLockPeriodInput}
                                     value={lockInput.period}
                                     setMax={handlePeriodMax}
@@ -187,7 +200,7 @@ const Staking: React.FC = () => {
                         <div
                             className={
                                 vevmexUserData?.data?.walletBalance &&
-                                vevmexUserData?.data?.walletBalance > '0'
+                                vevmexUserData?.data?.walletBalance !== '0.0'
                                     ? ''
                                     : 'opacity-60 blur-[0.5px] !pointer-events-none'
                             }
@@ -213,9 +226,14 @@ const Staking: React.FC = () => {
                                     />
                                     <StakeInput
                                         header="Increase lock period (weeks)"
-                                        footer="Minimum: 1 week"
+                                        footer={
+                                            inputError && extendPeriodError
+                                                ? inputError
+                                                : `Minimum: 1 week`
+                                        }
                                         onChange={handleExtendInput}
                                         value={extendInput.period}
+                                        error={extendPeriodError}
                                     />
                                     <StakeInput
                                         header="Total veVMEX"
