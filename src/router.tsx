@@ -25,7 +25,7 @@ function Router() {
     }, []);
 
     return (
-        <Loader type="full-page" loading={showLoading} onlyHome>
+        <Loader type="full-page" loading={showLoading}>
             <Routes>
                 <Route index element={<Navigate to="/overview" />} />
                 <Route path="/overview" element={<Overview />} />

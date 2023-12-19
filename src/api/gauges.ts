@@ -15,7 +15,7 @@ const toNormalizedBN = (value: BigNumberish, decimals?: number) => ({
 
 const formatGauges = async (gaugeAddresses: string[]) => {
     const gaugePromises = gaugeAddresses.map(async (gaugeAddress) => {
-        const results: any[] = await readContracts({
+        const results = await readContracts({
             contracts: [
                 {
                     address: gaugeAddress as `0x${string}`,
@@ -55,19 +55,15 @@ const formatGauges = async (gaugeAddresses: string[]) => {
                 },
             ],
         });
-        console.log('Results:', results);
-        const decimals = Number(decodeAsBigInt(results[3])) || decodeAsNumber(results[3]);
-        const totalAssets = toNormalizedBN(decodeAsBigInt(results[4]), decimals);
-        const rewardRate = toNormalizedBN(decodeAsBigInt(results[5]), 18);
 
         return {
             address: gaugeAddress,
-            vaultAddress: decodeAsAddress(results[0]),
-            name: decodeAsString(results[1]),
-            symbol: decodeAsString(results[2]),
-            decimals: decimals,
-            totalStaked: totalAssets,
-            rewardRate,
+            vaultAddress: results[0],
+            name: results[1],
+            symbol: results[2],
+            decimals: results[3],
+            totalStaked: toNormalizedBN(results[4], results[3]),
+            rewardRate: toNormalizedBN(results[5], 18),
         };
     });
 

@@ -71,7 +71,7 @@ export const Loader = ({
             <>
                 <Transition
                     show={determineShow()}
-                    leave="transition-opacity duration-800 delay-500"
+                    leave="transition-opacity duration-800"
                     leaveFrom="opacity-100"
                     leaveTo="opacity-0"
                 >
