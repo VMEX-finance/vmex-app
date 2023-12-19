@@ -183,9 +183,9 @@ export const Button = ({
                 highlightedClass,
             ].join(' ')}
         >
-            {loading && <CgSpinner className="animate-spin" />}
             {renderButtonText()}
             {icon && icon}
+            {loading && <CgSpinner className="animate-spin" />}
         </button>
     );
 };

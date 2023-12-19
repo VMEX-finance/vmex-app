@@ -16,8 +16,6 @@ interface ITableProps {
 
 export const GaugesTable: React.FC<ITableProps> = ({ data, loading, userActivity }) => {
     const { address } = useAccount();
-    const { queryGauges } = useGauages();
-    console.log('gauges', queryGauges.data);
 
     const columns = [
         {

@@ -1,16 +1,36 @@
 import React from 'react';
 import { GridView } from '@/ui/templates';
 import { Base } from '@/ui/base';
-import { StakingAsset, StakingOverview } from '@/ui/features';
-import { numberFormatter, percentFormatter } from '@/utils';
+import { StakingOverview } from '@/ui/features';
+import { CONTRACTS, TESTING, getChainId, numberFormatter, percentFormatter } from '@/utils';
 import { Button, Card, CustomTabPanel, CustomTabs, StakeInput } from '@/ui/components';
 import { GaugesTable } from '@/ui/tables';
-import { useWindowSize } from '@/hooks';
-import { constants, utils } from 'ethers';
+import { useLockingUI, useWindowSize } from '@/hooks';
+import { BigNumber, constants, utils } from 'ethers';
+import { useAccount } from 'wagmi';
+import { writeContract } from '@wagmi/core';
+import { IGaugesAsset, useGauages, useToken } from '@/api';
 
 const Staking: React.FC = () => {
+    const chainId = getChainId();
+    const { address } = useAccount();
+    const { vmexBalance, inputToBn, vevmexIsApproved, lockVmex, tokenLoading } = useToken();
+    const {
+        handleExtendInput,
+        handleLockAmountInput,
+        handleLockPeriodInput,
+        lockInput,
+        extendInput,
+        handleAmountMax,
+        handlePeriodMax,
+        amountInputError,
+        periodInputError,
+        inputError,
+        unlockTimeSeconds,
+    } = useLockingUI();
     const { width, breakpoints } = useWindowSize();
     const [tabIndex, setTabIndex] = React.useState(0);
+    const { queryGauges } = useGauages();
 
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
         const tabText = (event.target as any).innerText;
@@ -31,6 +51,22 @@ const Staking: React.FC = () => {
                         here
                     </a>
                     .
+                    {TESTING && chainId === 5 && address && (
+                        <Button
+                            onClick={async () => {
+                                await writeContract({
+                                    address: CONTRACTS[5].vmex as `0x${string}`,
+                                    abi: ['function mint(address, uint256) external'],
+                                    functionName: 'mint',
+                                    args: [address, utils.parseEther('100')],
+                                    mode: 'recklesslyUnprepared',
+                                });
+                                console.log('Minted 100 VMEX tokens');
+                            }}
+                        >
+                            Mint 100 VMEX Tokens
+                        </Button>
+                    )}
                 </>
             }
         >
@@ -54,20 +90,7 @@ const Staking: React.FC = () => {
                 />
                 <CustomTabPanel value={tabIndex} index={0}>
                     <GaugesTable
-                        data={[
-                            {
-                                asset: 'Curve VMEX-ETH Pool vVault',
-                                assetAddress: constants.AddressZero,
-                                tranche: 'Tranche 0',
-                                trancheId: '0',
-                                vaultApy: '3.52',
-                                depositedInVault: '0',
-                                gaugeAprMin: '0.51',
-                                gaugeAprMax: '5.81',
-                                stakedInGauge: '0',
-                                boost: 'N/A',
-                            },
-                        ]}
+                        data={[]} // TODO: Format queryGauges before passing
                         loading={false}
                     />
                 </CustomTabPanel>
@@ -92,21 +115,49 @@ const Staking: React.FC = () => {
                             <div className="grid sm:grid-cols-2 gap-1 lg:gap-2 xl:gap-2.5 content-end items-end">
                                 <StakeInput
                                     header="VMEX"
-                                    footer={`Available: ${numberFormatter.format(0)} VMEX`}
-                                    onChange={() => {}}
-                                    value=""
-                                    max="0"
+                                    footer={`Available: ${vmexBalance?.formatted} VMEX`}
+                                    onChange={handleLockAmountInput}
+                                    value={lockInput.amount}
+                                    setMax={handleAmountMax}
+                                    error={amountInputError}
+                                    disabled={tokenLoading.lock || tokenLoading.lockApprove}
                                 />
                                 <StakeInput
                                     header="Current lock period (weeks)"
                                     footer="Minimum: 1 week"
-                                    onChange={() => {}}
-                                    value=""
-                                    max="0"
+                                    onChange={handleLockPeriodInput}
+                                    value={lockInput.period}
+                                    setMax={handlePeriodMax}
+                                    error={periodInputError}
+                                    disabled={tokenLoading.lock || tokenLoading.lockApprove}
                                 />
                                 <StakeInput header="Total veVMEX" value="" disabled />
-                                <Button type="accent" className="h-fit mb-[17.88px]">
-                                    Approve
+                                <Button
+                                    type="accent"
+                                    className="h-fit mb-[17.88px]"
+                                    onClick={() =>
+                                        lockVmex(
+                                            lockInput.amountBn,
+                                            BigNumber.from(unlockTimeSeconds),
+                                        )
+                                    } // TODO: check if time to unlock is correct
+                                    disabled={
+                                        !!inputError || !lockInput.amount || !lockInput.period
+                                    }
+                                    loading={tokenLoading.lock || tokenLoading.lockApprove}
+                                    loadingText={
+                                        vevmexIsApproved &&
+                                        vevmexIsApproved.gte(lockInput.amountBn) &&
+                                        vevmexIsApproved.toString() !== '0'
+                                            ? 'Submitting'
+                                            : 'Approving'
+                                    }
+                                >
+                                    {vevmexIsApproved &&
+                                    vevmexIsApproved.gte(lockInput.amountBn) &&
+                                    vevmexIsApproved.toString() !== '0'
+                                        ? 'Submit'
+                                        : 'Approve'}
                                 </Button>
                             </div>
                         </GridView>
@@ -288,7 +339,7 @@ const Staking: React.FC = () => {
                                     header="dVMEX to use"
                                     onChange={() => {}}
                                     value=""
-                                    max="0"
+                                    setMax={() => {}}
                                 />
                                 <StakeInput
                                     header="Redemption cost (ETH)"

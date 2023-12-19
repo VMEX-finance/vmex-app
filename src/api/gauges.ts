@@ -22,6 +22,8 @@ export const useGauages = () => {
         queryFn: getGauges,
     });
 
+    console.log('Available Gauges:', queryGauges.data);
+
     return {
         queryGauges,
     };

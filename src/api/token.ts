@@ -1,10 +1,10 @@
 import { useTransactionsContext } from '@/store';
-import { CONTRACTS, getChainId, getNetworkName } from '@/utils';
+import { CONTRACTS, TESTING, getChainId, getNetworkName } from '@/utils';
 import { VEVMEX_ABI, VEVMEX_OPTIONS_ABI } from '@/utils/abis';
 import { erc20ABI, readContract, writeContract, prepareWriteContract } from '@wagmi/core';
 import { BigNumber, constants, utils } from 'ethers';
 import { useState } from 'react';
-import { useAccount, useContractRead } from 'wagmi';
+import { useAccount, useBalance, useContractRead } from 'wagmi';
 
 const VMEX_VEVMEX_CHAINID = 5;
 
@@ -20,7 +20,9 @@ const VMEX_VEVMEX_CHAINID = 5;
  *       getVmexLockEarlyExitPenalty,
  *       extendVmexLockTime,
  *       increaseVmexLockAmount,
- *       lockVmex
+ *       lockVmex,
+ *       vmexBalance,
+ *       veVmexBalance
  */
 export const useToken = () => {
     const { address } = useAccount();
@@ -37,16 +39,31 @@ export const useToken = () => {
         expiredLock: false,
         expiredLockApprove: false,
     });
+    const { data: vmexBalance } = useBalance({
+        address,
+        chainId: VMEX_VEVMEX_CHAINID,
+        watch: true,
+        enabled: !!address,
+        token: CONTRACTS[VMEX_VEVMEX_CHAINID].vmex as any,
+    });
 
     const { data: vevmexIsApproved, refetch: vevmexRefreshAllowances } = useContractRead({
-        address: CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as `0x${string}`,
+        address: CONTRACTS[VMEX_VEVMEX_CHAINID].vmex as `0x${string}`,
         abi: erc20ABI,
         chainId: VMEX_VEVMEX_CHAINID,
         functionName: 'allowance',
-        args: [utils.getAddress(address || ''), '0x VEVMEX_OPTIONS_ADDRESS'], // Is second address multisig?
-        // select: (value: bigint): boolean => value >= redeemAmount.raw,
+        args: [
+            utils.getAddress(address || ''),
+            CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as `0x${string}`,
+        ],
         enabled: !!address,
     });
+
+    const inputToBn = (val: string) => {
+        // TODO: better handling when
+        if (val && Number(val) > 0) return utils.parseEther(val); // veVMEX and VMEX tokens are 18 decimals
+        return BigNumber.from('0');
+    };
 
     const vevmexRedeem = async (amount: BigNumber) => {
         if (!address) return;
@@ -61,6 +78,8 @@ export const useToken = () => {
                 args: [cleanAddress, amount],
             });
             const approveTx = await writeContract(prepareApproveTx);
+            await newTransaction(approveTx);
+            await approveTx.wait();
             setLoading({ ...loading, redeemApprove: false });
         }
         setLoading({ ...loading, redeem: true });
@@ -76,21 +95,49 @@ export const useToken = () => {
         await newTransaction(redeemTx);
     };
 
+    /**
+     * @param amount BN amount of VMEX tokens locking
+     * @param time BN time when VMEX will be unlocked
+     */
     const lockVmex = async (amount: BigNumber, time: BigNumber) => {
-        if (!address) return;
-        const cleanAddress = utils.getAddress(address);
-        // TODO: approval if necessary
-        setLoading({ ...loading, lock: true });
-        const prepareLockTx = await prepareWriteContract({
-            address: constants.AddressZero, // TODO
-            abi: VEVMEX_ABI,
-            chainId: VMEX_VEVMEX_CHAINID,
-            functionName: 'modify_lock',
-            args: [amount, time, cleanAddress],
-        });
-        const lockTx = await writeContract(prepareLockTx);
-        setLoading({ ...loading, lock: false });
-        await newTransaction(lockTx);
+        try {
+            if (!address || amount.eq(BigNumber.from(0)) || time.eq(BigNumber.from(0))) return;
+            const cleanAddress = utils.getAddress(address);
+            // approval if necessary
+            if (TESTING)
+                console.log(
+                    'VMEX Allowance:',
+                    utils.formatEther(vevmexIsApproved || BigNumber.from(0)),
+                );
+            if (vevmexIsApproved && vevmexIsApproved.lt(amount)) {
+                const prepareApproveTx = await prepareWriteContract({
+                    address: CONTRACTS[VMEX_VEVMEX_CHAINID].vmex as `0x${string}`,
+                    abi: erc20ABI,
+                    chainId: VMEX_VEVMEX_CHAINID,
+                    functionName: 'approve',
+                    args: [CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as `0x${string}`, amount],
+                });
+                setLoading({ ...loading, lockApprove: true });
+                if (TESTING) console.log('Approve VMEX Spend TX:', prepareApproveTx);
+                const approveTx = await writeContract(prepareApproveTx);
+                await Promise.all([newTransaction(approveTx), approveTx.wait()]);
+                setLoading({ ...loading, lockApprove: false });
+            }
+            const prepareLockTx = await prepareWriteContract({
+                address: CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as `0x${string}`,
+                abi: VEVMEX_ABI,
+                chainId: VMEX_VEVMEX_CHAINID,
+                functionName: 'modify_lock',
+                args: [amount, time, cleanAddress],
+            });
+            if (TESTING) console.log('Lock VMEX TX:', prepareLockTx);
+            const lockTx = await writeContract(prepareLockTx);
+            setLoading({ ...loading, lock: true });
+            await Promise.all([newTransaction(lockTx), lockTx.wait()]);
+            setLoading({ ...loading, lock: false });
+        } catch (e) {
+            console.error('#lockVmex:', e);
+        }
     };
 
     const increaseVmexLockAmount = async (amount: BigNumber) => {
@@ -99,7 +146,7 @@ export const useToken = () => {
         // TODO: approval if necessary
         setLoading({ ...loading, lock: true });
         const prepareLockTx = await prepareWriteContract({
-            address: constants.AddressZero, // TODO
+            address: CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as `0x${string}`,
             abi: VEVMEX_ABI,
             chainId: VMEX_VEVMEX_CHAINID,
             functionName: 'modify_lock',
@@ -116,7 +163,7 @@ export const useToken = () => {
         // TODO: approval if necessary
         setLoading({ ...loading, extendLock: true });
         const prepareLockTx = await prepareWriteContract({
-            address: constants.AddressZero, // TODO
+            address: CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as `0x${string}`,
             abi: VEVMEX_ABI,
             chainId: VMEX_VEVMEX_CHAINID,
             functionName: 'modify_lock',
@@ -132,7 +179,7 @@ export const useToken = () => {
         const cleanAddress = utils.getAddress(address);
         try {
             const prepareEarlyExit = await prepareWriteContract({
-                address: constants.AddressZero, // TODO
+                address: CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as `0x${string}`,
                 abi: VEVMEX_ABI,
                 chainId: VMEX_VEVMEX_CHAINID,
                 functionName: 'withdraw',
@@ -162,5 +209,7 @@ export const useToken = () => {
         extendVmexLockTime,
         increaseVmexLockAmount,
         lockVmex,
+        vmexBalance,
+        inputToBn,
     };
 };

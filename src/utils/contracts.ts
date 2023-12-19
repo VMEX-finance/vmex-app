@@ -17,6 +17,15 @@ export const CONTRACTS = {
         veloFactory: '0xF1046053aa5682b4F9a81b5481394DA16BE5FF5a', // VELO Factory
         lendingPool: '0x60F015F66F3647168831d31C7048ca95bb4FeaF9', // Lending Pool
         leverageController: '0x69d61714e902C9c337394424C5fC2482f00bfC70', // Leverage Controller
+        dvmex: '', // dVMEX
+        vmex: '', // VMEX
+        vevmex: '', // veVMEX
+        vmexRewards: '', // VMEX Reward Pool
+        dvmexRewards: '', // dVMEX Reward Pool
+        gaugeFactory: '', // Gauage Factory
+        registery: '', // Registery
+        vmexWeth: '', // vmexWeth Pool
+        redemption: '', // Redemption
     },
 };
 

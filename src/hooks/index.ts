@@ -9,3 +9,4 @@ export * from './supply';
 export * from './borrow';
 export * from './zap';
 export * from './leverage';
+export * from './locking';

@@ -146,7 +146,9 @@ export const isChainUnsupported = () => {
 };
 
 export const getNetworkName = () => {
-    return isChainUnsupported() ? DEFAULT_NETWORK : getNetwork()?.chain?.network || DEFAULT_NETWORK;
+    return isChainUnsupported() || getNetwork()?.chain?.id === 5
+        ? DEFAULT_NETWORK
+        : getNetwork()?.chain?.network || DEFAULT_NETWORK;
 };
 
 export const getChainId = () => {
