@@ -20,11 +20,23 @@ export const AssetDisplay = (props: IAssetDisplayProps) => {
                 props.className ? props.className : ''
             } ${props.border ? 'border border-1 border-brand-black w-fit px-2' : ''}`}
         >
-            {!props?.name?.includes('Underlying') && renderAsset(props.name || '', props.size)}
-            {!props.noText && (
-                <span className="truncate whitespace-nowrap">{props.name || ''}</span>
+            {props?.logo && props?.name ? (
+                <>
+                    <img src={props.logo} alt={props.name} />
+                    {!props.noText && (
+                        <span className="truncate whitespace-nowrap">{props.name || ''}</span>
+                    )}
+                </>
+            ) : (
+                <>
+                    {!props?.name?.includes('Underlying') &&
+                        renderAsset(props.name || '', props.size)}
+                    {!props.noText && (
+                        <span className="truncate whitespace-nowrap">{props.name || ''}</span>
+                    )}
+                    {props.value && <span>{props.value}</span>}
+                </>
             )}
-            {props.value && <span>{props.value}</span>}
         </div>
     );
 };

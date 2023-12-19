@@ -5,16 +5,14 @@ import React, { useEffect, useMemo, useState } from 'react';
 
 const maxWeeks = 52 * 5; // 5 years (10 years is technically the max)
 
+const defaultPeriod = { period: '', periodBn: BigNumber.from(0) };
+const defaultAmount = { amount: '', amountBn: BigNumber.from(0) };
+
 export const useLockingUI = () => {
     const { vmexBalance, dvmexBalance } = useToken();
-    const [lockInput, setLockInput] = useState({
-        amount: '',
-        amountBn: BigNumber.from(0),
-        period: '',
-        periodBn: BigNumber.from(0),
-    });
-    const [extendInput, setExtendInput] = useState({ period: '', periodBn: BigNumber.from(0) });
-    const [redeemInput, setRedeemInput] = useState({ amount: '', amountBn: BigNumber.from(0) });
+    const [lockInput, setLockInput] = useState({ ...defaultAmount, ...defaultPeriod });
+    const [extendInput, setExtendInput] = useState(defaultPeriod);
+    const [redeemInput, setRedeemInput] = useState(defaultAmount);
     const [error, setError] = useState('');
 
     const unlockTimeSeconds = useMemo((): number => {
@@ -92,6 +90,12 @@ export const useLockingUI = () => {
         }
     }, [error]);
 
+    const clearInputs = () => {
+        setExtendInput(defaultPeriod);
+        setRedeemInput(defaultAmount);
+        setLockInput({ ...defaultAmount, ...defaultPeriod });
+    };
+
     return {
         lockInput,
         extendInput,
@@ -108,5 +112,6 @@ export const useLockingUI = () => {
         handleRedeemAmountInput,
         handleRedeemMax,
         redeemInput,
+        clearInputs,
     };
 };

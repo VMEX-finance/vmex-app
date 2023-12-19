@@ -81,7 +81,7 @@ export const VEVMEX_ABI = [
         inputs: [
             { name: 'amount', type: 'uint256' },
             { name: 'unlock_time', type: 'uint256' },
-            { name: 'user', type: 'address' },
+            // { name: 'user', type: 'address' },
         ],
         outputs: [
             {

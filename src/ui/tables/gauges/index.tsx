@@ -5,23 +5,23 @@ import { GaugesCustomRow } from './custom-row';
 import MUIDataTable from 'mui-datatables';
 import { Loader } from '@/ui/components';
 import { UseQueryResult } from '@tanstack/react-query';
-import { IUserActivityDataProps, IGaugesAsset, useGauages } from '@/api';
+import { IUserActivityDataProps, IGaugesAsset, useGauages, IVaultAsset } from '@/api';
 import { useAccount } from 'wagmi';
 
 interface ITableProps {
-    data?: IGaugesAsset[];
+    data?: IVaultAsset[];
     loading?: boolean;
-    userActivity?: UseQueryResult<IUserActivityDataProps, unknown>;
+    userData?: UseQueryResult<IUserActivityDataProps, unknown>;
     error?: boolean;
 }
 
-export const GaugesTable: React.FC<ITableProps> = ({ data, loading, userActivity, error }) => {
+export const GaugesTable: React.FC<ITableProps> = ({ data, loading, userData, error }) => {
     const { address } = useAccount();
 
     const columns = [
         {
-            name: 'asset',
-            label: 'Asset',
+            name: 'vaultName',
+            label: 'Vault',
             options: {
                 filter: true,
                 sort: true,
@@ -60,22 +60,11 @@ export const GaugesTable: React.FC<ITableProps> = ({ data, loading, userActivity
                 filter: false,
                 sort: true,
                 sortThirdClickReset: true,
-                sortOrder: 'desc',
             },
         },
         {
-            name: 'depositedInVault',
-            label: 'Deposited In Vault',
-            options: {
-                filter: false,
-                sort: true,
-                sortThirdClickReset: true,
-                display: address ? true : false,
-            },
-        },
-        {
-            name: 'gaugeApr',
-            label: 'Guage APR',
+            name: 'vaultDeposited',
+            label: 'Deposited in Vault',
             options: {
                 filter: false,
                 sort: true,
@@ -83,8 +72,8 @@ export const GaugesTable: React.FC<ITableProps> = ({ data, loading, userActivity
             },
         },
         {
-            name: 'stakedInGauge',
-            label: 'Staked in Gauge',
+            name: 'gaugeAPR',
+            label: 'Gauge APR',
             options: {
                 filter: false,
                 sort: true,
@@ -92,7 +81,16 @@ export const GaugesTable: React.FC<ITableProps> = ({ data, loading, userActivity
             },
         },
         {
-            name: 'boost',
+            name: 'gaugeStaked',
+            label: 'Staked In Gauge',
+            options: {
+                filter: false,
+                sort: true,
+                sortThirdClickReset: true,
+            },
+        },
+        {
+            name: 'gaugeBoost',
             label: 'Boost',
             options: {
                 filter: true,
@@ -101,11 +99,30 @@ export const GaugesTable: React.FC<ITableProps> = ({ data, loading, userActivity
             },
         },
         {
-            name: 'trancheId',
-            label: 'Tranche ID',
+            name: 'decimals',
+            label: 'Decimals',
             options: {
-                filter: false,
-                sort: false,
+                display: false,
+            },
+        },
+        {
+            name: 'vaultAddress',
+            label: 'Vault Address',
+            options: {
+                display: false,
+            },
+        },
+        {
+            name: 'vaultIcon',
+            label: 'Icon',
+            options: {
+                display: false,
+            },
+        },
+        {
+            name: 'gaugeAddress',
+            label: 'Gauge Address',
+            options: {
                 display: false,
             },
         },
@@ -128,40 +145,34 @@ export const GaugesTable: React.FC<ITableProps> = ({ data, loading, userActivity
                     ...options,
                     customRowRender: (
                         [
-                            asset,
-                            tranche,
-                            supplyApy,
-                            borrowApy,
-                            walletBalance,
-                            available,
-                            supplyTotal,
-                            borrowTotal,
-                            // rating,
-                            strategies,
-                            canBeCollateral,
-                            trancheId,
-                            canBeBorrowed,
-                            featured,
+                            vaultName,
+                            vaultApy,
+                            vaultDeposited,
+                            gaugeAPR,
+                            gaugeStaked,
+                            gaugeBoost,
+                            decimals,
+                            vaultAddress,
+                            vaultIcon,
+                            gaugeAddress,
+                            actions,
                         ],
                         dataIndex,
                         rowIndex,
                     ) => (
                         <GaugesCustomRow
-                            asset={asset}
-                            tranche={tranche}
-                            trancheId={trancheId}
-                            supplyApy={supplyApy}
-                            borrowApy={borrowApy}
-                            // yourAmount={renderYourAmount(asset, trancheId)}
-                            walletBalance={walletBalance}
-                            available={available}
-                            borrowTotal={borrowTotal}
-                            supplyTotal={supplyTotal}
-                            // rating={rating}
-                            strategies={strategies}
-                            collateral={canBeCollateral}
-                            key={`markets-table-${rowIndex || Math.floor(Math.random() * 10000)}`}
-                            borrowable={canBeBorrowed}
+                            gaugeAddress={gaugeAddress}
+                            vaultAddress={vaultAddress}
+                            decimals={decimals}
+                            vaultIcon={vaultIcon}
+                            vaultName={vaultName}
+                            vaultApy={vaultApy}
+                            vaultDeposited={vaultDeposited}
+                            gaugeAPR={gaugeAPR}
+                            gaugeBoost={gaugeBoost}
+                            gaugeStaked={gaugeStaked}
+                            actions={actions}
+                            key={`gauges-table-${rowIndex || Math.floor(Math.random() * 10000)}`}
                         />
                     ),
                     textLabels: {

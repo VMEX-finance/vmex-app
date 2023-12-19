@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import { Button } from './button';
 
 type IStakeInput = {
-    value: string;
+    value: string | number;
     onChange?: React.ChangeEventHandler<HTMLInputElement>;
     disabled?: boolean;
     header?: string;

@@ -1,5 +1,5 @@
 import { useTransactionsContext } from '@/store';
-import { CONTRACTS, TESTING } from '@/utils';
+import { CONTRACTS, TESTING, toWeeks } from '@/utils';
 import { VEVMEX_ABI, VEVMEX_OPTIONS_ABI } from '@/utils/abis';
 import { useQueries } from '@tanstack/react-query';
 import { erc20ABI, writeContract, prepareWriteContract, readContracts } from '@wagmi/core';
@@ -25,7 +25,7 @@ export const VMEX_VEVMEX_CHAINID = 5;
  *       vmexBalance,
  *       veVmexBalance
  */
-export const useToken = () => {
+export const useToken = (clearInputs?: () => void) => {
     const { address } = useAccount();
     const { newTransaction } = useTransactionsContext();
     const [loading, setLoading] = useState({
@@ -46,6 +46,14 @@ export const useToken = () => {
         watch: true,
         enabled: !!address,
         token: CONTRACTS[VMEX_VEVMEX_CHAINID].vmex as any,
+    });
+
+    const { data: vevmexBalance } = useBalance({
+        address,
+        chainId: VMEX_VEVMEX_CHAINID,
+        watch: true,
+        enabled: !!address,
+        token: CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as any,
     });
 
     const { data: dvmexBalance } = useBalance({
@@ -104,6 +112,7 @@ export const useToken = () => {
         const redeemTx = await writeContract(prepareRedeemTx);
         setLoading({ ...loading, redeem: false });
         await newTransaction(redeemTx);
+        clearInputs && clearInputs();
     };
 
     // TODO
@@ -135,6 +144,7 @@ export const useToken = () => {
         const redeemTx = await writeContract(prepareRedeemTx);
         setLoading({ ...loading, redeem: false });
         await newTransaction(redeemTx);
+        clearInputs && clearInputs();
     };
 
     /**
@@ -167,18 +177,20 @@ export const useToken = () => {
                 setLoading({ ...loading, lockApprove: false });
             }
             // Lock TX
+            if (TESTING) console.log('VMEX Lock Args:', [amount, time]);
             const prepareLockTx = await prepareWriteContract({
                 address: CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as `0x${string}`,
                 abi: VEVMEX_ABI,
                 chainId: VMEX_VEVMEX_CHAINID,
                 functionName: 'modify_lock',
-                args: [amount, time, address],
+                args: [amount, BigNumber.from(1734552024)], // remember to change
             });
             if (TESTING) console.log('Lock VMEX TX:', prepareLockTx);
             const lockTx = await writeContract(prepareLockTx);
             setLoading({ ...loading, lock: true });
             await Promise.all([newTransaction(lockTx), lockTx.wait()]);
             setLoading({ ...loading, lock: false });
+            clearInputs && clearInputs();
         } catch (e) {
             console.error('#lockVmex:', e);
         }
@@ -194,11 +206,12 @@ export const useToken = () => {
             abi: VEVMEX_ABI,
             chainId: VMEX_VEVMEX_CHAINID,
             functionName: 'modify_lock',
-            args: [amount, BigNumber.from(0), cleanAddress],
+            args: [amount, BigNumber.from(0)],
         });
         const lockTx = await writeContract(prepareLockTx);
         setLoading({ ...loading, lock: false });
         await newTransaction(lockTx);
+        clearInputs && clearInputs();
     };
 
     const extendVmexLockTime = async (time: BigNumber) => {
@@ -211,11 +224,12 @@ export const useToken = () => {
             abi: VEVMEX_ABI,
             chainId: VMEX_VEVMEX_CHAINID,
             functionName: 'modify_lock',
-            args: [BigNumber.from(0), time, cleanAddress],
+            args: [BigNumber.from(0), time],
         });
         const lockTx = await writeContract(prepareLockTx);
         setLoading({ ...loading, extendLock: false });
         await newTransaction(lockTx);
+        clearInputs && clearInputs();
     };
 
     const getVmexLockEarlyExitPenalty = async () => {
@@ -264,10 +278,10 @@ export const useToken = () => {
             ],
         });
         return {
-            walletBalance: utils.formatEther(data[0]),
+            votingPower: utils.formatEther(data[0]),
             locked: {
-                end: utils.formatEther(data[1].end),
-                amount: utils.formatEther(data[1].amount),
+                end: toWeeks(data[1]?.end?.toNumber()),
+                amount: data[1]?.amount?.toString(),
             },
             exitPreview: '', // TODO
         };
@@ -298,7 +312,7 @@ export const useToken = () => {
             ],
         });
         return {
-            totalSupply: utils.formatEther(data[0]),
+            totalVotingPower: utils.formatEther(data[0]),
             supply: utils.formatEther(data[1]),
         };
     };
@@ -338,6 +352,7 @@ export const useToken = () => {
         vevmexMetaData: queries[0],
         vevmexUserData: queries[1],
         dvmexBalance,
+        vevmexBalance,
         dvmexRedeem,
     };
 };

@@ -72,11 +72,11 @@ export type IMarketsAsset = {
 };
 
 export type INormalizedBN = {
-    raw: bigint;
+    raw: BigNumber;
     normalized: number | string;
 };
 
-export type IGaugesAsset = {
+export type IVaultAsset = {
     gaugeAddress: string;
     vaultAddress: string;
     decimals: number;
@@ -88,6 +88,16 @@ export type IGaugesAsset = {
     gaugeBoost: number;
     gaugeStaked: INormalizedBN;
     actions: undefined;
+};
+
+export type IGaugesAsset = {
+    address: string;
+    decimals: number;
+    name: string;
+    rewardRate: INormalizedBN;
+    symbol: string;
+    totalStaked: INormalizedBN;
+    vaultAddress: string;
 };
 
 export type ITrancheProps = {

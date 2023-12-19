@@ -9,28 +9,11 @@ import { useLockingUI, useWindowSize, useToken } from '@/hooks';
 import { BigNumber, constants, utils } from 'ethers';
 import { useAccount } from 'wagmi';
 import { writeContract } from '@wagmi/core';
-import { IGaugesAsset, useGauages } from '@/api';
+import { IGaugesAsset, useGauages, useVaults } from '@/api';
 
 const Staking: React.FC = () => {
     const chainId = getChainId();
     const { address } = useAccount();
-    const {
-        vmexBalance,
-        dvmexBalance,
-        dvmexRedeem,
-        inputToBn,
-        vevmexIsApproved,
-        lockVmex,
-        tokenLoading,
-        vevmexMetaData,
-        vevmexUserData,
-        extendVmexLockTime,
-        vmexLockEarlyExitPenalty,
-        vevmexRedeem,
-        increaseVmexLockAmount,
-        withdrawUnlockedVevmex,
-        withdrawLockedVevmex,
-    } = useToken();
     const {
         handleExtendInput,
         handleLockAmountInput,
@@ -47,10 +30,28 @@ const Staking: React.FC = () => {
         handleRedeemMax,
         redeemInput,
         extendPeriodError,
+        clearInputs,
     } = useLockingUI();
+    const {
+        vmexBalance,
+        dvmexBalance,
+        dvmexRedeem,
+        inputToBn,
+        vevmexIsApproved,
+        lockVmex,
+        tokenLoading,
+        vevmexMetaData,
+        vevmexUserData,
+        extendVmexLockTime,
+        vmexLockEarlyExitPenalty,
+        vevmexRedeem,
+        increaseVmexLockAmount,
+        withdrawUnlockedVevmex,
+        withdrawLockedVevmex,
+    } = useToken(clearInputs);
     const { width, breakpoints } = useWindowSize();
     const [tabIndex, setTabIndex] = React.useState(0);
-    const { queryGauges } = useGauages();
+    const { queryVaults } = useVaults();
 
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
         const tabText = (event.target as any).innerText;
@@ -122,9 +123,9 @@ const Staking: React.FC = () => {
                 />
                 <CustomTabPanel value={tabIndex} index={0}>
                     <GaugesTable
-                        data={[]} // TODO: Format queryGauges before passing
+                        data={queryVaults.data}
                         loading={false}
-                        error={queryGauges.isError}
+                        error={queryVaults.isError}
                     />
                 </CustomTabPanel>
                 <CustomTabPanel value={tabIndex} index={1}>
@@ -204,8 +205,8 @@ const Staking: React.FC = () => {
                         </GridView>
                         <div
                             className={
-                                vevmexUserData?.data?.walletBalance &&
-                                vevmexUserData?.data?.walletBalance !== '0.0'
+                                vevmexUserData?.data?.votingPower &&
+                                vevmexUserData?.data?.votingPower !== '0.0'
                                     ? ''
                                     : 'opacity-60 blur-[0.5px] !pointer-events-none'
                             }

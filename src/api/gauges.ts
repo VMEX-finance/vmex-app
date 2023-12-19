@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { readContract, readContracts } from '@wagmi/core';
 import { BigNumber, BigNumberish, utils } from 'ethers';
 import { useEffect, useMemo } from 'react';
-import { IGaugesAsset } from './types';
+import { IGaugesAsset, IVaultAsset } from './types';
 
 const toNormalizedBN = (value: BigNumberish, decimals?: number) => ({
     raw: BigNumber.from(value),
@@ -81,6 +81,7 @@ export const useGauages = () => {
     const queryGauges = useQuery({
         queryKey: ['gauges', network],
         queryFn: getGauges,
+        initialData: [],
     });
 
     // TODO: remove

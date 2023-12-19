@@ -1,16 +1,16 @@
 export const CONTRACTS = {
     5: {
         // Goerli
-        dvmex: '0xBce70d5081D0a594b249Bd0C5872cB038A2f7F3f', // dVMEX
+        dvmex: '0xB124e57FbA2624Dbe9FD147245630c4299c51569', // dVMEX
         vmex: '0xd0eEfD79b19Eb8c26856453A487aeFbEdD85127f', // VMEX
-        vmexComputed: '0x711c60FbD45fE5C106bB661304c26314172165f3',
+        vmexComputed: '0x61EADfFbE50c1b97f7309Cac313A4FC49569e24D',
         vevmex: '0x8224acafafD9E0FfBeB76fd6dd933bD0C2288466', // veVMEX
-        vmexRewards: '0x711c60FbD45fE5C106bB661304c26314172165f3', // VMEX Reward Pool
-        dvmexRewards: '0x7dc0ed5e83c5e8D1022b8070D2ab73C4b88f3132', // dVMEX Reward Pool
-        gaugeFactory: '0x911D5bf3cD7D27A718F29bf1977Ca5bA9498e5B8', // Gauage Factory
-        registery: '0xA186ef560bb27Ff2e39738A906271864fa58A09D', // Registery
-        vmexWeth: '0x4FA6086ED10C971D255aa1B09a6beB1C7bE5ca37', // vmexWeth Pool
-        redemption: '0x074C4A63632B8E66fcE6858C293a5B4210159067', // Redemption
+        vmexRewards: '0x61EADfFbE50c1b97f7309Cac313A4FC49569e24D', // VMEX Reward Pool
+        dvmexRewards: '0x0cbCBa330C3904672E90f9D1A4a5918D5b1691ac', // dVMEX Reward Pool
+        gaugeFactory: '0x71b5F73cE44254Db01c949632C750797897Df50F', // Gauage Factory
+        registery: '0x6904E008a42541A91a6b58B80ea4D5a45D9Cc844', // Registery
+        vmexWeth: '0x3e5FA9518eA95c3E533EB377C001702A9AaCAA32', // vmexWeth Pool
+        redemption: '0x9041Efc8fa750173f22E1fc67b5dAdB942eaBfaC', // Redemption
         gauges: [
             '0x19E008c221B5297063F729e25B450754366aF83e', // VMEX
             '0x28fdb3bC3D8D3304D85194C88aD83470634aA51b', // WETH
