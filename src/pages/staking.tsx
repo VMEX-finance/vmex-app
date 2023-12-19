@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { GridView } from '@/ui/templates';
 import { Base } from '@/ui/base';
 import { StakingOverview } from '@/ui/features';
@@ -57,8 +57,13 @@ const Staking: React.FC = () => {
         setTabIndex(newValue);
     };
 
-    console.log('veVMEX:', vevmexMetaData.data);
-    console.log('veVMEX User Data:', vevmexUserData.data);
+    // TESTING
+    useEffect(() => {
+        if (TESTING) {
+            console.log('veVMEX:', vevmexMetaData.data);
+            console.log('veVMEX User Data:', vevmexUserData.data);
+        }
+    }, [vevmexMetaData.data, vevmexUserData.data]);
 
     return (
         <Base

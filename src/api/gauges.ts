@@ -1,11 +1,11 @@
 import { VMEX_VEVMEX_CHAINID } from '@/hooks';
-import { CONTRACTS, getChainId, getNetworkName, truncate } from '@/utils';
+import { CONTRACTS, TESTING, getChainId, getNetworkName, truncate } from '@/utils';
 import { VEVMEX_GAUGE_ABI } from '@/utils/abis';
 import { decodeAsAddress, decodeAsBigInt, decodeAsNumber, decodeAsString } from '@/utils/decode';
 import { useQuery } from '@tanstack/react-query';
 import { readContract, readContracts } from '@wagmi/core';
 import { BigNumber, BigNumberish, utils } from 'ethers';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { IGaugesAsset } from './types';
 
 const toNormalizedBN = (value: BigNumberish, decimals?: number) => ({
@@ -83,7 +83,12 @@ export const useGauages = () => {
         queryFn: getGauges,
     });
 
-    console.log('Available Gauges:', queryGauges.data);
+    // TODO: remove
+    useEffect(() => {
+        if (TESTING) {
+            console.log('Available Gauges:', queryGauges.data);
+        }
+    }, [queryGauges.data]);
 
     return {
         queryGauges,

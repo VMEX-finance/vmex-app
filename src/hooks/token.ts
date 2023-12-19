@@ -150,7 +150,7 @@ export const useToken = () => {
                     utils.formatEther(vevmexIsApproved || BigNumber.from(0)),
                 );
             if (TESTING)
-                console.log('Amount:', utils.formatEther(amount), 'Time:', utils.formatUnits(time));
+                console.log('Amount:', utils.formatEther(amount), '\nTime:', time.toString());
             // Approval TX - if necessary
             if (vevmexIsApproved && vevmexIsApproved.lt(amount)) {
                 const prepareApproveTx = await prepareWriteContract({
