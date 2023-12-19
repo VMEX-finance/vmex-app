@@ -138,7 +138,7 @@ const Staking: React.FC = () => {
                             <div className="grid sm:grid-cols-2 gap-1 lg:gap-2 xl:gap-2.5 content-end items-end">
                                 <StakeInput
                                     header="VMEX"
-                                    footer={`Available: ${vmexBalance?.formatted} VMEX`}
+                                    footer={`Available: ${vmexBalance?.formatted || '0.0'} VMEX`}
                                     onChange={handleLockAmountInput}
                                     value={lockInput.amount}
                                     setMax={handleAmountMax}
@@ -400,7 +400,7 @@ const Staking: React.FC = () => {
                             <div className="grid sm:grid-cols-2 gap-1 lg:gap-2 content-end items-end">
                                 <StakeInput
                                     header="dVMEX to use"
-                                    footer={`Available: ${dvmexBalance?.formatted} VMEX`}
+                                    footer={`Available: ${dvmexBalance?.formatted || '0.0'} VMEX`}
                                     onChange={handleRedeemAmountInput}
                                     value={redeemInput.amount}
                                     setMax={handleRedeemMax}

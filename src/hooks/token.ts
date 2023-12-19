@@ -68,11 +68,11 @@ export const useToken = () => {
         chainId: VMEX_VEVMEX_CHAINID,
         functionName: 'allowance',
         args: [
-            utils.getAddress(address || ''),
+            address || constants.AddressZero,
             CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as `0x${string}`,
         ],
-        enabled: !!address,
-        watch: true,
+        enabled: !!address ?? false,
+        watch: address ? true : false,
     });
 
     const inputToBn = (val: string) => {
