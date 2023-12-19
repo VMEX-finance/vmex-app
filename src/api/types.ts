@@ -71,17 +71,23 @@ export type IMarketsAsset = {
     decimals: number;
 };
 
+export type INormalizedBN = {
+    raw: bigint;
+    normalized: number | string;
+};
+
 export type IGaugesAsset = {
-    asset: string;
-    assetAddress: string;
-    tranche: string;
-    trancheId: string;
-    vaultApy: number | string;
-    depositedInVault: string;
-    gaugeAprMin: string | number;
-    gaugeAprMax: string | number;
-    stakedInGauge: string;
-    boost: number | string;
+    gaugeAddress: string;
+    vaultAddress: string;
+    decimals: number;
+    vaultIcon: string;
+    vaultName: string;
+    vaultApy: number;
+    vaultDeposited: INormalizedBN;
+    gaugeAPR: number;
+    gaugeBoost: number;
+    gaugeStaked: INormalizedBN;
+    actions: undefined;
 };
 
 export type ITrancheProps = {

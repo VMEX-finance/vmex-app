@@ -17,4 +17,4 @@ export * from './user-tranches-data';
 export * from './user-tx-history';
 export * from './loop-data';
 export * from './gauges';
-export * from './token';
+export * from './vaults';

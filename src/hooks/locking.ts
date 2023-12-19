@@ -1,4 +1,4 @@
-import { useToken } from '@/api';
+import { useToken } from './token';
 import { fromWeeks, toSeconds, toTime } from '@/utils';
 import { BigNumber, utils } from 'ethers';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -6,7 +6,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 const maxWeeks = 52 * 5; // 5 years (10 years is technically the max)
 
 export const useLockingUI = () => {
-    const { vmexBalance } = useToken();
+    const { vmexBalance, dvmexBalance } = useToken();
     const [lockInput, setLockInput] = useState({
         amount: '',
         amountBn: BigNumber.from(0),
@@ -14,6 +14,7 @@ export const useLockingUI = () => {
         periodBn: BigNumber.from(0),
     });
     const [extendInput, setExtendInput] = useState({ period: '', periodBn: BigNumber.from(0) });
+    const [redeemInput, setRedeemInput] = useState({ amount: '', amountBn: BigNumber.from(0) });
     const [error, setError] = useState('');
 
     const unlockTimeSeconds = useMemo((): number => {
@@ -28,6 +29,11 @@ export const useLockingUI = () => {
     function handleLockPeriodInput(e: React.ChangeEvent<HTMLInputElement>) {
         const val = e.target?.value;
         setLockInput({ ...lockInput, period: val, periodBn: BigNumber.from(val || '0') });
+    }
+
+    function handleRedeemAmountInput(e: React.ChangeEvent<HTMLInputElement>) {
+        const val = e.target?.value;
+        setRedeemInput({ ...redeemInput, amount: val, amountBn: utils.parseEther(val || '0') });
     }
 
     function handleExtendInput(e: React.ChangeEvent<HTMLInputElement>) {
@@ -47,6 +53,14 @@ export const useLockingUI = () => {
             max = { string: vmexBalance.formatted, bn: vmexBalance.value };
         }
         setLockInput({ ...lockInput, amount: max.string, amountBn: max.bn });
+    }
+
+    function handleRedeemMax(e: React.ChangeEvent<HTMLInputElement>) {
+        let max = { string: '', bn: BigNumber.from(0) };
+        if (dvmexBalance) {
+            max = { string: dvmexBalance.formatted, bn: dvmexBalance.value };
+        }
+        setRedeemInput({ ...redeemInput, amount: max.string, amountBn: max.bn });
     }
 
     // Handle input errors
@@ -86,5 +100,8 @@ export const useLockingUI = () => {
         periodInputError: error?.startsWith('period'),
         amountInputError: error?.startsWith('amount'),
         unlockTimeSeconds,
+        handleRedeemAmountInput,
+        handleRedeemMax,
+        redeemInput,
     };
 };

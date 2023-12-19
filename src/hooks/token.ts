@@ -1,12 +1,19 @@
 import { useTransactionsContext } from '@/store';
 import { CONTRACTS, TESTING, getChainId, getNetworkName } from '@/utils';
 import { VEVMEX_ABI, VEVMEX_OPTIONS_ABI } from '@/utils/abis';
-import { erc20ABI, readContract, writeContract, prepareWriteContract } from '@wagmi/core';
+import { useQueries } from '@tanstack/react-query';
+import {
+    erc20ABI,
+    readContract,
+    writeContract,
+    prepareWriteContract,
+    readContracts,
+} from '@wagmi/core';
 import { BigNumber, constants, utils } from 'ethers';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useAccount, useBalance, useContractRead } from 'wagmi';
 
-const VMEX_VEVMEX_CHAINID = 5;
+export const VMEX_VEVMEX_CHAINID = 5;
 
 /**
  * Contains all functions revolving around VMEX & veVMEX staking
@@ -47,6 +54,14 @@ export const useToken = () => {
         token: CONTRACTS[VMEX_VEVMEX_CHAINID].vmex as any,
     });
 
+    const { data: dvmexBalance } = useBalance({
+        address,
+        chainId: VMEX_VEVMEX_CHAINID,
+        watch: true,
+        enabled: !!address,
+        token: CONTRACTS[VMEX_VEVMEX_CHAINID].dvmex as any,
+    });
+
     const { data: vevmexIsApproved, refetch: vevmexRefreshAllowances } = useContractRead({
         address: CONTRACTS[VMEX_VEVMEX_CHAINID].vmex as `0x${string}`,
         abi: erc20ABI,
@@ -57,6 +72,7 @@ export const useToken = () => {
             CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as `0x${string}`,
         ],
         enabled: !!address,
+        watch: true,
     });
 
     const inputToBn = (val: string) => {
@@ -65,6 +81,7 @@ export const useToken = () => {
         return BigNumber.from('0');
     };
 
+    // TODO
     const vevmexRedeem = async (amount: BigNumber) => {
         if (!address) return;
         const cleanAddress = utils.getAddress(address);
@@ -85,6 +102,37 @@ export const useToken = () => {
         setLoading({ ...loading, redeem: true });
         const prepareRedeemTx = await prepareWriteContract({
             address: CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as `0x${string}`,
+            abi: VEVMEX_OPTIONS_ABI,
+            chainId: VMEX_VEVMEX_CHAINID,
+            functionName: 'redeem',
+            args: [amount, cleanAddress],
+        });
+        const redeemTx = await writeContract(prepareRedeemTx);
+        setLoading({ ...loading, redeem: false });
+        await newTransaction(redeemTx);
+    };
+
+    // TODO
+    const dvmexRedeem = async (amount: BigNumber) => {
+        if (!address) return;
+        const cleanAddress = utils.getAddress(address);
+        if (!vevmexIsApproved) {
+            setLoading({ ...loading, redeemApprove: true });
+            const prepareApproveTx = await prepareWriteContract({
+                address: CONTRACTS[VMEX_VEVMEX_CHAINID].dvmex as `0x${string}`,
+                abi: erc20ABI,
+                chainId: VMEX_VEVMEX_CHAINID,
+                functionName: 'approve',
+                args: [cleanAddress, amount],
+            });
+            const approveTx = await writeContract(prepareApproveTx);
+            await newTransaction(approveTx);
+            await approveTx.wait();
+            setLoading({ ...loading, redeemApprove: false });
+        }
+        setLoading({ ...loading, redeem: true });
+        const prepareRedeemTx = await prepareWriteContract({
+            address: CONTRACTS[VMEX_VEVMEX_CHAINID].dvmex as `0x${string}`,
             abi: VEVMEX_OPTIONS_ABI,
             chainId: VMEX_VEVMEX_CHAINID,
             functionName: 'redeem',
@@ -200,6 +248,86 @@ export const useToken = () => {
         // TODO
     };
 
+    const getVevmexUserData = async () => {
+        // TODO
+        if (!address) return;
+        const data = await readContracts({
+            contracts: [
+                {
+                    address: CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as `0x${string}`,
+                    abi: VEVMEX_ABI,
+                    chainId: VMEX_VEVMEX_CHAINID,
+                    functionName: 'balanceOf',
+                    args: [address],
+                },
+                {
+                    address: CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as `0x${string}`,
+                    abi: VEVMEX_ABI,
+                    chainId: VMEX_VEVMEX_CHAINID,
+                    functionName: 'locked',
+                    args: [address],
+                },
+            ],
+        });
+        return {
+            walletBalance: utils.formatEther(data[0]),
+            locked: {
+                end: utils.formatEther(data[1].end),
+                amount: utils.formatEther(data[1].amount),
+            },
+            exitPreview: '', // TODO
+        };
+    };
+
+    const getVevmexMetaData = async () => {
+        // TODO
+        const data = await readContracts({
+            contracts: [
+                {
+                    address: CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as `0x${string}`,
+                    abi: VEVMEX_ABI,
+                    chainId: VMEX_VEVMEX_CHAINID,
+                    functionName: 'totalSupply',
+                },
+                {
+                    address: CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as `0x${string}`,
+                    abi: VEVMEX_ABI,
+                    chainId: VMEX_VEVMEX_CHAINID,
+                    functionName: 'supply',
+                },
+                {
+                    address: CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as `0x${string}`,
+                    abi: VEVMEX_ABI,
+                    chainId: VMEX_VEVMEX_CHAINID,
+                    functionName: 'reward_pool',
+                },
+            ],
+        });
+        return {
+            totalSupply: utils.formatEther(data[0]),
+            supply: utils.formatEther(data[1]),
+        };
+    };
+
+    const queries = useQueries({
+        queries: [
+            {
+                queryKey: ['vevmex-data'],
+                queryFn: getVevmexMetaData,
+                refetchInterval: 30 * 1000,
+            },
+            {
+                queryKey: ['vevmex-user-data', address],
+                queryFn: getVevmexUserData,
+                refetchInterval: 10 * 1000,
+            },
+            {
+                queryKey: ['vevmex-early-exit-penalty', address],
+                queryFn: getVmexLockEarlyExitPenalty,
+            },
+        ],
+    });
+
     return {
         vevmexIsApproved,
         vevmexRefreshAllowances,
@@ -207,11 +335,15 @@ export const useToken = () => {
         tokenLoading: loading,
         withdrawLockedVevmex,
         withdrawUnlockedVevmex,
-        getVmexLockEarlyExitPenalty,
+        vmexLockEarlyExitPenalty: queries[2],
         extendVmexLockTime,
         increaseVmexLockAmount,
         lockVmex,
         vmexBalance,
         inputToBn,
+        vevmexMetaData: queries[0],
+        vevmexUserData: queries[1],
+        dvmexBalance,
+        dvmexRedeem,
     };
 };

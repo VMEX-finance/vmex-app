@@ -5,16 +5,32 @@ import { StakingOverview } from '@/ui/features';
 import { CONTRACTS, TESTING, getChainId, numberFormatter, percentFormatter } from '@/utils';
 import { Button, Card, CustomTabPanel, CustomTabs, StakeInput } from '@/ui/components';
 import { GaugesTable } from '@/ui/tables';
-import { useLockingUI, useWindowSize } from '@/hooks';
+import { useLockingUI, useWindowSize, useToken } from '@/hooks';
 import { BigNumber, constants, utils } from 'ethers';
 import { useAccount } from 'wagmi';
 import { writeContract } from '@wagmi/core';
-import { IGaugesAsset, useGauages, useToken } from '@/api';
+import { IGaugesAsset, useGauages } from '@/api';
 
 const Staking: React.FC = () => {
     const chainId = getChainId();
     const { address } = useAccount();
-    const { vmexBalance, inputToBn, vevmexIsApproved, lockVmex, tokenLoading } = useToken();
+    const {
+        vmexBalance,
+        dvmexBalance,
+        dvmexRedeem,
+        inputToBn,
+        vevmexIsApproved,
+        lockVmex,
+        tokenLoading,
+        vevmexMetaData,
+        vevmexUserData,
+        extendVmexLockTime,
+        vmexLockEarlyExitPenalty,
+        vevmexRedeem,
+        increaseVmexLockAmount,
+        withdrawUnlockedVevmex,
+        withdrawLockedVevmex,
+    } = useToken();
     const {
         handleExtendInput,
         handleLockAmountInput,
@@ -27,6 +43,9 @@ const Staking: React.FC = () => {
         periodInputError,
         inputError,
         unlockTimeSeconds,
+        handleRedeemAmountInput,
+        handleRedeemMax,
+        redeemInput,
     } = useLockingUI();
     const { width, breakpoints } = useWindowSize();
     const [tabIndex, setTabIndex] = React.useState(0);
@@ -36,6 +55,9 @@ const Staking: React.FC = () => {
         const tabText = (event.target as any).innerText;
         setTabIndex(newValue);
     };
+
+    console.log('veVMEX:', vevmexMetaData.data);
+    console.log('veVMEX User Data:', vevmexUserData.data);
 
     return (
         <Base
@@ -72,7 +94,7 @@ const Staking: React.FC = () => {
         >
             <StakingOverview
                 apr={percentFormatter.format(0)}
-                totalLocked={numberFormatter.format(0)}
+                totalLocked={vevmexMetaData.data?.supply || '0'}
                 yourLocked={numberFormatter.format(0)}
                 expiration={'-'}
             />
@@ -162,82 +184,122 @@ const Staking: React.FC = () => {
                                 </Button>
                             </div>
                         </GridView>
-                        <GridView
-                            className="p-2 lg:pt-4"
-                            type="fixed"
-                            cols="grid-cols-1 lg:grid-cols-2"
+                        <div
+                            className={
+                                vevmexUserData?.data?.walletBalance &&
+                                vevmexUserData?.data?.walletBalance > '0'
+                                    ? ''
+                                    : 'opacity-60 blur-[0.5px] !pointer-events-none'
+                            }
                         >
-                            <div>
-                                <h3 className="text-xl mb-3">Extend lock</h3>
-                                <p>
-                                    Want to lock for longer? Extend your lock period to increase
-                                    your gauge boost weight.
-                                </p>
-                            </div>
-                            <div className="grid sm:grid-cols-2 gap-1 lg:gap-2 content-end items-end">
-                                <StakeInput
-                                    header="Current lock period (weeks)"
-                                    onChange={() => {}}
-                                    value=""
-                                />
-                                <StakeInput
-                                    header="Increase lock period (weeks)"
-                                    footer="Minimum: 1 week"
-                                    onChange={() => {}}
-                                    value=""
-                                />
-                                <StakeInput header="Total veVMEX" onChange={() => {}} value="" />
-                                <Button type="accent" className="h-fit mb-[17.88px]">
-                                    Extend
-                                </Button>
-                            </div>
-                        </GridView>
-                        <GridView
-                            className="p-2 lg:pt-4"
-                            type="fixed"
-                            cols="grid-cols-1 lg:grid-cols-2"
-                        >
-                            <div>
-                                <h3 className="text-xl mb-3">Early exit</h3>
-                                <p>
-                                    Or you can exit early by paying a penalty based on lock
-                                    duration.
-                                </p>
-                            </div>
-                            <div className="grid sm:grid-cols-2 gap-1 lg:gap-2 content-end items-end">
-                                <StakeInput header="veVMEX you have" onChange={() => {}} value="" />
-                                <StakeInput
-                                    header="Current lock time (weeks)"
-                                    onChange={() => {}}
-                                    value=""
-                                />
-                                <StakeInput
-                                    header="VMEX you get"
-                                    footer={`Penalty: ${percentFormatter.format(0)}`}
-                                    onChange={() => {}}
-                                    value=""
-                                />
-                                <Button type="accent" className="h-fit mb-[17.88px]">
-                                    Exit
-                                </Button>
-                            </div>
-                        </GridView>
-                        <GridView
-                            className="p-2 lg:pt-4"
-                            type="fixed"
-                            cols="grid-cols-1 lg:grid-cols-2"
-                        >
-                            <div>
-                                <h3 className="text-xl mb-3">Claim expired lock</h3>
-                                <p>Claim your VMEX from expired veVMEX lock.</p>
-                            </div>
-                            <div className="grid sm:grid-cols-2 gap-1 lg:gap-2 content-end items-end">
-                                <StakeInput header="Unlocked VMEX" onChange={() => {}} value="" />
-                                <Button type="accent" className="h-fit mb-[17.88px]">
-                                    Claim
-                                </Button>
-                            </div>
-                        </GridView>
+                            <GridView
+                                className="p-2 lg:pt-4"
+                                type="fixed"
+                                cols="grid-cols-1 lg:grid-cols-2"
+                            >
+                                <div>
+                                    <h3 className="text-xl mb-3">Extend lock</h3>
+                                    <p>
+                                        Want to lock for longer? Extend your lock period to increase
+                                        your gauge boost weight.
+                                    </p>
+                                </div>
+                                <div className="grid sm:grid-cols-2 gap-1 lg:gap-2 content-end items-end">
+                                    <StakeInput
+                                        header="Current lock period (weeks)"
+                                        onChange={() => {}}
+                                        value={vevmexUserData?.data?.locked.end || ''}
+                                        disabled
+                                    />
+                                    <StakeInput
+                                        header="Increase lock period (weeks)"
+                                        footer="Minimum: 1 week"
+                                        onChange={handleExtendInput}
+                                        value={extendInput.period}
+                                    />
+                                    <StakeInput
+                                        header="Total veVMEX"
+                                        disabled
+                                        onChange={() => {}}
+                                        value=""
+                                    />
+                                    <Button
+                                        type="accent"
+                                        className="h-fit mb-[17.88px]"
+                                        onClick={() => extendVmexLockTime(extendInput.periodBn)}
+                                    >
+                                        Extend
+                                    </Button>
+                                </div>
+                            </GridView>
+                            <GridView
+                                className="p-2 lg:pt-4"
+                                type="fixed"
+                                cols="grid-cols-1 lg:grid-cols-2"
+                            >
+                                <div>
+                                    <h3 className="text-xl mb-3">Early exit</h3>
+                                    <p>
+                                        Or you can exit early by paying a penalty based on lock
+                                        duration.
+                                    </p>
+                                </div>
+                                <div className="grid sm:grid-cols-2 gap-1 lg:gap-2 content-end items-end">
+                                    <StakeInput
+                                        header="veVMEX you have"
+                                        onChange={() => {}}
+                                        value=""
+                                    />
+                                    <StakeInput
+                                        header="Current lock time (weeks)"
+                                        disabled
+                                        onChange={() => {}}
+                                        value={vevmexUserData?.data?.locked.end || ''}
+                                    />
+                                    <StakeInput
+                                        header="VMEX you get"
+                                        footer={`Penalty: ${utils.formatEther(
+                                            vmexLockEarlyExitPenalty?.data || BigNumber.from(0),
+                                        )}`}
+                                        onChange={() => {}}
+                                        disabled
+                                        value={vevmexUserData?.data?.exitPreview || ''}
+                                    />
+                                    <Button
+                                        type="accent"
+                                        className="h-fit mb-[17.88px]"
+                                        onClick={withdrawLockedVevmex}
+                                    >
+                                        Exit
+                                    </Button>
+                                </div>
+                            </GridView>
+                            <GridView
+                                className="p-2 lg:pt-4"
+                                type="fixed"
+                                cols="grid-cols-1 lg:grid-cols-2"
+                            >
+                                <div>
+                                    <h3 className="text-xl mb-3">Claim expired lock</h3>
+                                    <p>Claim your VMEX from expired veVMEX lock.</p>
+                                </div>
+                                <div className="grid sm:grid-cols-2 gap-1 lg:gap-2 content-end items-end">
+                                    <StakeInput
+                                        header="Unlocked VMEX"
+                                        disabled
+                                        onChange={() => {}}
+                                        value=""
+                                    />
+                                    <Button
+                                        type="accent"
+                                        className="h-fit mb-[17.88px]"
+                                        onClick={withdrawUnlockedVevmex}
+                                    >
+                                        Claim
+                                    </Button>
+                                </div>
+                            </GridView>
+                        </div>
                     </div>
                 </CustomTabPanel>
                 <CustomTabPanel value={tabIndex} index={2}>
@@ -338,9 +400,12 @@ const Staking: React.FC = () => {
                             <div className="grid sm:grid-cols-2 gap-1 lg:gap-2 content-end items-end">
                                 <StakeInput
                                     header="dVMEX to use"
-                                    onChange={() => {}}
-                                    value=""
-                                    setMax={() => {}}
+                                    footer={`Available: ${dvmexBalance?.formatted} VMEX`}
+                                    onChange={handleRedeemAmountInput}
+                                    value={redeemInput.amount}
+                                    setMax={handleRedeemMax}
+                                    error={amountInputError}
+                                    disabled={tokenLoading.redeem || tokenLoading.redeemApprove}
                                 />
                                 <StakeInput
                                     header="Redemption cost (ETH)"
@@ -354,7 +419,11 @@ const Staking: React.FC = () => {
                                     value=""
                                     disabled
                                 />
-                                <Button type="accent" className="h-fit mb-[17.88px]">
+                                <Button
+                                    type="accent"
+                                    className="h-fit mb-[17.88px]"
+                                    onClick={() => dvmexRedeem(redeemInput.amountBn)}
+                                >
                                     Redeem
                                 </Button>
                             </div>

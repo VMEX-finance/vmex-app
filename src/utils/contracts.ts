@@ -10,6 +10,10 @@ export const CONTRACTS = {
         registery: '0x4A5Fe07ED053273eB9ef4bCcD7762bEca1D22477', // Registery
         vmexWeth: '0xad302e620FEDb60078B33514757335545ba05c6D', // vmexWeth Pool
         redemption: '0x7e1b80bD1b4aBBF5876cE57bE34D33a526501aC5', // Redemption
+        gauges: [
+            '0x07a04494F11FfAB44Da3081EF9e448F51ceE5Ca1',
+            '0x0560688001295E4486D97FC3348a35a8B74Aaf2F',
+        ],
     },
     10: {
         // Optimism
@@ -26,6 +30,7 @@ export const CONTRACTS = {
         registery: '', // Registery
         vmexWeth: '', // vmexWeth Pool
         redemption: '', // Redemption
+        gauges: [''],
     },
 };
 
