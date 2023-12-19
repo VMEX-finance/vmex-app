@@ -109,6 +109,8 @@ export const useToken = () => {
                     'VMEX Allowance:',
                     utils.formatEther(vevmexIsApproved || BigNumber.from(0)),
                 );
+            if (TESTING)
+                console.log('Amount:', utils.formatEther(amount), 'Time:', utils.formatUnits(time));
             if (vevmexIsApproved && vevmexIsApproved.lt(amount)) {
                 const prepareApproveTx = await prepareWriteContract({
                     address: CONTRACTS[VMEX_VEVMEX_CHAINID].vmex as `0x${string}`,

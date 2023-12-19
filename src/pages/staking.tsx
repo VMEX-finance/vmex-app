@@ -92,6 +92,7 @@ const Staking: React.FC = () => {
                     <GaugesTable
                         data={[]} // TODO: Format queryGauges before passing
                         loading={false}
+                        error={queryGauges.isError}
                     />
                 </CustomTabPanel>
                 <CustomTabPanel value={tabIndex} index={1}>

@@ -1,6 +1,7 @@
 import { CONTRACTS, getChainId, getNetworkName } from '@/utils';
+import { VEVMEX_GAUGE_ABI } from '@/utils/abis';
 import { useQuery } from '@tanstack/react-query';
-import { readContract } from '@wagmi/core';
+import { readContract, readContracts } from '@wagmi/core';
 
 const getGauges = async () => {
     const chainId = getChainId();
@@ -13,6 +14,23 @@ const getGauges = async () => {
     });
     return factory;
 };
+
+// const formatGauge = async (gaugeAddresses: string[]) => {
+//     const gaugesConfig = gaugeAddresses.map(g => ({
+//         address: g as `0x${string}`,
+//         abi: VEVMEX_GAUGE_ABI,
+//         functionName: ''
+//     }))
+//     const gauges = await readContracts({
+//         contracts: [
+//             {
+//                 address: gaugeAddresses[0] as `0x${string}`,
+//                 abi: VEVMEX_GAUGE_ABI,
+//                 functionName: ''
+//             }
+//         ]
+//     })
+// }
 
 export const useGauages = () => {
     const network = getNetworkName();

@@ -12,9 +12,10 @@ interface ITableProps {
     data?: IGaugesAsset[];
     loading?: boolean;
     userActivity?: UseQueryResult<IUserActivityDataProps, unknown>;
+    error?: boolean;
 }
 
-export const GaugesTable: React.FC<ITableProps> = ({ data, loading, userActivity }) => {
+export const GaugesTable: React.FC<ITableProps> = ({ data, loading, userActivity, error }) => {
     const { address } = useAccount();
 
     const columns = [
@@ -165,11 +166,19 @@ export const GaugesTable: React.FC<ITableProps> = ({ data, loading, userActivity
                     ),
                     textLabels: {
                         body: {
-                            noMatch: loading ? (
-                                <Loader type="spinner" />
-                            ) : (
-                                'An error has occured while fetching tranches. Please refresh the page.'
-                            ),
+                            noMatch:
+                                loading && !data?.length ? (
+                                    <Loader type="spinner" />
+                                ) : error ? (
+                                    <span className="flex justify-center items-center min-h-[100px]">
+                                        An error has occured while fetching gauges. Please refresh
+                                        the page.
+                                    </span>
+                                ) : (
+                                    <span className="flex justify-center items-center min-h-[100px]">
+                                        No gauges available. Please check again later.
+                                    </span>
+                                ),
                         },
                     },
                 }}
