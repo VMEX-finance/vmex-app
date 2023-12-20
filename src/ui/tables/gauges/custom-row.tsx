@@ -1,5 +1,5 @@
 import React from 'react';
-import { ApyToolitp, AssetDisplay, Button, Loader } from '@/ui/components';
+import { ApyToolitp, AssetDisplay, Button, Loader, SmartPrice } from '@/ui/components';
 import { useDialogController, useWindowSize } from '@/hooks';
 import { IVaultAsset, useUserData } from '@/api';
 import { DEFAULT_CHAINID, isChainUnsupported } from '@/utils';
@@ -115,7 +115,11 @@ export const GaugesCustomRow = (props: IVaultAsset & { loading?: boolean }) => {
                 </td>
                 <td className="pl-4">
                     <Loader loading={loading}>
-                        {vaultDeposited?.normalized ? vaultDeposited?.normalized : '-'}
+                        <SmartPrice
+                            price={String(
+                                vaultDeposited?.normalized ? vaultDeposited?.normalized : '-',
+                            )}
+                        />
                     </Loader>
                 </td>
                 <td className="pl-4">
@@ -125,7 +129,9 @@ export const GaugesCustomRow = (props: IVaultAsset & { loading?: boolean }) => {
                 <td className="pl-4">
                     {' '}
                     <Loader loading={loading}>
-                        {gaugeStaked?.normalized ? gaugeStaked?.normalized : '-'}
+                        <SmartPrice
+                            price={String(gaugeStaked?.normalized ? gaugeStaked?.normalized : '-')}
+                        />
                     </Loader>
                 </td>
                 <td className="pl-4">
