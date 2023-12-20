@@ -69,9 +69,10 @@ export function roundToWeek(time?: TMilliseconds): TMilliseconds {
     return Math.floor(toTime(time) / WEEK) * WEEK;
 }
 
+// TODO: not exact
 export function weeksToUnixBn(weeks?: number): BigNumber {
     if (!weeks) return BigNumber.from(0);
-    const today = Math.ceil(Date.now().valueOf() / 1000);
+    const today = Math.floor(Date.now().valueOf() / 1000);
     const secondsBn = BigNumber.from(weeks).mul(BigNumber.from(SECONDS_IN_WEEK));
     const future = BigNumber.from(today).add(secondsBn);
     return weeks === 1 ? future.add(BigNumber.from(1000)) : future;
@@ -83,9 +84,10 @@ export function weeksToBn(weeks?: number): BigNumber {
     return secondsBn;
 }
 
+// TODO: Not exact
 export function weeksUntilUnlock(unlockTime?: BigNumber): number {
-    if (!unlockTime) return 0;
-    const today = Math.ceil(Date.now().valueOf() / 1000);
+    if (!unlockTime || unlockTime === BigNumber.from(0) || unlockTime.toString() === '0') return 0;
+    const today = Math.floor(Date.now().valueOf() / 1000);
     const timeRemaining = unlockTime.sub(BigNumber.from(today));
     const weeksLeft = timeRemaining.div(BigNumber.from(SECONDS_IN_WEEK));
     let trimmed;
@@ -94,7 +96,7 @@ export function weeksUntilUnlock(unlockTime?: BigNumber): number {
     } else {
         trimmed = weeksLeft.toString();
     }
+    if (timeRemaining.toNumber() > 1 && weeksLeft.toNumber() === 0) return 1;
     const returnVal = Math.ceil(Number(trimmed));
-    if (returnVal < 0) return 0;
-    return Math.ceil(Number(trimmed));
+    return returnVal;
 }

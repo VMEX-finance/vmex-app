@@ -29,5 +29,6 @@ module.exports = override(
         ['@/hooks/*']: path.resolve(__dirname, 'src/hooks/*'),
         ['@/config']: path.resolve(__dirname, 'src/config'),
         ['@/config/*']: path.resolve(__dirname, 'src/config/*'),
+        ['@/types/*']: path.resolve(__dirname, 'src/types/*'),
     }),
 );

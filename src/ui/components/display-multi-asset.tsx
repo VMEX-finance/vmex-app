@@ -3,11 +3,12 @@ import React from 'react';
 import { Loader } from './loader';
 import { Tooltip } from './tooltip-default';
 import { renderAsset, smallerIconSize, iconSizeClass, marginLeft } from './display-asset';
+import { IAssetSize } from '@/types/size';
 
 interface IMultipleAssetsProps {
     assets?: string[];
     show?: number | 'all';
-    size?: 'lg' | 'md' | 'sm' | 'pill';
+    size?: IAssetSize;
     loading?: boolean;
     gap?: string;
     origAssetName?: string;

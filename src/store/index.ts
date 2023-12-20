@@ -5,3 +5,4 @@ export * from './transactions';
 export * from './modals';
 export * from './redux';
 export * from './global';
+export * from './vaults';

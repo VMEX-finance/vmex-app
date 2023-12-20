@@ -9,7 +9,13 @@ import ReduxProvider from './store/redux';
 import { HashRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { SelectedTrancheStore, TransactionsStore, ThemeProvider, GlobalStore } from '@/store';
+import {
+    SelectedTrancheStore,
+    TransactionsStore,
+    ThemeProvider,
+    GlobalStore,
+    VaultsStore,
+} from '@/store';
 import { WagmiConfig } from 'wagmi';
 import { chains, RainbowKitProvider, wagmiClient, walletTheme } from '@/config';
 
@@ -31,15 +37,17 @@ root.render(
                 <ThemeProvider>
                     <QueryClientProvider client={queryClient}>
                         <ReactQueryDevtools />
-                        <TransactionsStore>
-                            <SelectedTrancheStore>
-                                <ReduxProvider>
-                                    <RainbowKitProvider chains={chains} theme={walletTheme}>
-                                        <Router />
-                                    </RainbowKitProvider>
-                                </ReduxProvider>
-                            </SelectedTrancheStore>
-                        </TransactionsStore>
+                        <VaultsStore>
+                            <TransactionsStore>
+                                <SelectedTrancheStore>
+                                    <ReduxProvider>
+                                        <RainbowKitProvider chains={chains} theme={walletTheme}>
+                                            <Router />
+                                        </RainbowKitProvider>
+                                    </ReduxProvider>
+                                </SelectedTrancheStore>
+                            </TransactionsStore>
+                        </VaultsStore>
                     </QueryClientProvider>
                 </ThemeProvider>
             </GlobalStore>

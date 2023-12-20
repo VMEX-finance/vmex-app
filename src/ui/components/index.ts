@@ -36,3 +36,4 @@ export * from './tooltip-apy';
 export * from '../charts/tooltip'; // TODO
 export * from './tooltip-default';
 export * from './tabs';
+export * from './border';

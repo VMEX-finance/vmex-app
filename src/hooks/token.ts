@@ -368,6 +368,7 @@ export const useToken = (clearInputs?: () => void) => {
             const earlyExitTx = await writeContract(prepareEarlyExit);
             await Promise.all([newTransaction(earlyExitTx), earlyExitTx.wait()]);
             setLoading({ ...loading, earlyExit: false });
+            clearInputs && clearInputs();
         } catch (e) {
             console.log(e);
         }

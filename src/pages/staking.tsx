@@ -17,7 +17,7 @@ import { useLockingUI, useWindowSize, useToken } from '@/hooks';
 import { BigNumber, utils } from 'ethers';
 import { useAccount } from 'wagmi';
 import { writeContract } from '@wagmi/core';
-import { useVaults } from '@/api';
+import { useVaultsContext } from '@/store';
 
 const Staking: React.FC = () => {
     const chainId = getChainId();
@@ -58,7 +58,7 @@ const Staking: React.FC = () => {
     } = useToken(clearInputs);
     const { width, breakpoints } = useWindowSize();
     const [tabIndex, setTabIndex] = React.useState(0);
-    const { queryVaults } = useVaults();
+    const { vaults, isError: vaultsError } = useVaultsContext();
 
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
         const tabText = (event.target as any).innerText;
@@ -127,11 +127,7 @@ const Staking: React.FC = () => {
                     handleTabChange={handleTabChange}
                 />
                 <CustomTabPanel value={tabIndex} index={0}>
-                    <GaugesTable
-                        data={queryVaults.data}
-                        loading={false}
-                        error={queryVaults.isError}
-                    />
+                    <GaugesTable data={vaults} loading={false} error={vaultsError} />
                 </CustomTabPanel>
                 <CustomTabPanel value={tabIndex} index={1}>
                     <div className="flex flex-col divide-y divide-gray-300 dark:divide-gray-700">
@@ -300,10 +296,14 @@ const Staking: React.FC = () => {
                                     />
                                     <StakeInput
                                         header="VMEX you get"
-                                        footer={`Penalty: ${utils.formatEther(
-                                            vmexLockEarlyExitPenalty?.data?.penalty ||
-                                                BigNumber.from(0),
-                                        )}`}
+                                        footer={`Penalty: ${
+                                            vmexLockEarlyExitPenalty?.data?.penalty
+                                                ? utils.formatEther(
+                                                      vmexLockEarlyExitPenalty?.data?.penalty ||
+                                                          BigNumber.from(0),
+                                                  )
+                                                : '50.12%'
+                                        }`}
                                         onChange={() => {}}
                                         disabled
                                         value={vevmexUserData?.data?.exitPreview || ''}

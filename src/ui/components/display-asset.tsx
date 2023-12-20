@@ -2,18 +2,27 @@ import { determineCoinDescription, determineCoinImg, getRandomNumber } from '@/u
 import React from 'react';
 import { Tooltip } from './tooltip-default';
 import { MultipleAssetsDisplayOverlapping } from './display-multi-asset';
+import { IAssetSize } from '@/types/size';
 
 type IAssetDisplayProps = {
     logo?: string;
     name: string;
     className?: string;
-    size?: 'lg' | 'md' | 'sm' | 'pill';
+    size?: IAssetSize;
     value?: string;
     border?: boolean;
     noText?: boolean;
 };
 
 export const AssetDisplay = (props: IAssetDisplayProps) => {
+    const renderSize = () => {
+        switch (props.size) {
+            case 'xl':
+                return { img: '48', text: 'text-xl ml-1' };
+            default:
+                return { img: '36', text: 'text-md' };
+        }
+    };
     return (
         <div
             className={`flex items-center gap-1 rounded-lg w-max ${
@@ -22,9 +31,16 @@ export const AssetDisplay = (props: IAssetDisplayProps) => {
         >
             {props?.logo && props?.name ? (
                 <>
-                    <img src={props.logo} alt={props.name} height="36" width="36" />
+                    <img
+                        src={props.logo}
+                        alt={props.name}
+                        height={renderSize().img}
+                        width={renderSize().img}
+                    />
                     {!props.noText && (
-                        <span className="truncate whitespace-nowrap">{props.name || ''}</span>
+                        <span className={`${renderSize().text} truncate whitespace-nowrap`}>
+                            {props.name || ''}
+                        </span>
                     )}
                 </>
             ) : (
@@ -43,7 +59,7 @@ export const AssetDisplay = (props: IAssetDisplayProps) => {
 
 export const renderAsset = (
     asset: string,
-    size?: 'lg' | 'md' | 'sm' | 'pill',
+    size?: IAssetSize,
     i?: number,
     custom?: string,
     key?: string,
@@ -99,7 +115,7 @@ export const renderAsset = (
     );
 };
 
-export const iconSize = (size?: 'lg' | 'md' | 'sm' | 'pill') => {
+export const iconSize = (size?: IAssetSize) => {
     switch (size) {
         case 'lg':
             return '36';
@@ -111,7 +127,7 @@ export const iconSize = (size?: 'lg' | 'md' | 'sm' | 'pill') => {
             return '28';
     }
 };
-export const smallerIconSize = (size?: 'lg' | 'md' | 'sm' | 'pill') => {
+export const smallerIconSize = (size?: IAssetSize) => {
     switch (size) {
         case 'lg':
             return 'h-4 w-4';
@@ -122,7 +138,7 @@ export const smallerIconSize = (size?: 'lg' | 'md' | 'sm' | 'pill') => {
     }
 };
 
-export const iconSizeClass = (size?: 'lg' | 'md' | 'sm' | 'pill') => {
+export const iconSizeClass = (size?: IAssetSize) => {
     switch (size) {
         case 'lg':
             return 'h-7 2xl:h-8 w-7 2xl:w-8';
@@ -133,7 +149,7 @@ export const iconSizeClass = (size?: 'lg' | 'md' | 'sm' | 'pill') => {
     }
 };
 
-export const marginLeft = (size?: 'lg' | 'md' | 'sm' | 'pill') => {
+export const marginLeft = (size?: IAssetSize) => {
     switch (size) {
         case 'lg':
             return '-1.5rem';

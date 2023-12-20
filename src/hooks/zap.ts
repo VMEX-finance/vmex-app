@@ -182,13 +182,13 @@ export const useZap = (
         return '0.00';
     }
 
-    function readVeloPoolDetails(poolAddress: string) {
+    async function readVeloPoolDetails(poolAddress: string) {
         const veloPoolContract = {
             address: getAddress(poolAddress),
             abi: VeloPoolABI,
         };
         if (veloPoolContract.address === constants.AddressZero) return;
-        return multicall({
+        return await multicall({
             contracts: [
                 {
                     ...veloPoolContract,

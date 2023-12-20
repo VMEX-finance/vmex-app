@@ -3,25 +3,43 @@ import { IDialogProps } from '../utils';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
 import { useModal, useVault } from '@/hooks';
 import { Button, TransactionStatus, CoinInput } from '@/ui/components';
+import { VaultDetails } from '@/ui/features/vault-details';
+import { convertAddressToSymbol } from '@vmexfinance/sdk';
+import { getNetworkName, toSymbol } from '@/utils';
+import { useAccount, useBalance } from 'wagmi';
 
 export const VaultAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, closeDialog }) => {
+    const { address } = useAccount();
     const { submitTx, isSuccess, isLoading, error, view, setView } = useModal('vault-asset-dialog');
-    const { amount, setAmount, isMax, setIsMax, handleDeposit, handleWithdraw } = useVault(
-        data?.vaultAddress,
-    );
+    const {
+        amount,
+        setAmount,
+        isMax,
+        setIsMax,
+        handleDeposit,
+        handleWithdraw,
+        approvedEnough,
+        loading,
+        vaultBalance,
+        gaugeBalance,
+    } = useVault(data?.vaultAddress, data?.gaugeAddress);
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (e: any) => {
         if (view === 'Deposit') {
-            await submitTx(() => {
-                const res = handleDeposit();
-                return res;
-            }, true);
+            await handleDeposit(e);
         } else {
-            await submitTx(() => {
-                const res = handleWithdraw();
-                return res;
-            }, true);
+            await handleWithdraw(e);
         }
+    };
+
+    const renderBtnText = () => {
+        if (view === 'Deposit') {
+            if (approvedEnough()) {
+                return 'Deposit';
+            }
+            return 'Approve';
+        }
+        return 'Withdraw';
     };
 
     useEffect(() => {
@@ -40,19 +58,28 @@ export const VaultAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
             {!isSuccess && !error ? (
                 // Default State
                 <>
-                    <h3 className="mt-5 text-neutral400">Amount</h3>
+                    <h3 className="mt-3 text-neutral400">Vault Details</h3>
+                    <VaultDetails vault={data} deposited={gaugeBalance?.formatted} />
+                    <h3 className="mt-3 text-neutral400">Amount</h3>
                     <CoinInput
                         amount={amount}
                         setAmount={setAmount}
                         coin={{
                             logo: data.vaultIcon,
-                            name: data.vaultSymbol,
+                            name:
+                                view === 'Deposit'
+                                    ? toSymbol(data?.vaultAddress) || 'VMEX'
+                                    : data.vaultSymbol,
                         }}
-                        balance={'0.23'}
+                        balance={
+                            (view === 'Deposit'
+                                ? vaultBalance?.formatted
+                                : gaugeBalance?.formatted) || '0.0'
+                        }
                         isMax={isMax}
                         setIsMax={setIsMax}
                     />
-                    {view === 'Deposit' ? (
+                    {/* {view === 'Deposit' ? (
                         <ModalTableDisplay
                             title="Transaction Overview"
                             content={[
@@ -72,7 +99,7 @@ export const VaultAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
                                 },
                             ]}
                         />
-                    )}
+                    )} */}
                 </>
             ) : (
                 <div className="mt-10 mb-8">
@@ -84,11 +111,16 @@ export const VaultAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
                 <div>
                     <Button
                         disabled={isSuccess}
-                        onClick={handleSubmit as any}
-                        loading={isLoading}
+                        onClick={handleSubmit}
+                        loading={
+                            isLoading ||
+                            loading.deposit ||
+                            loading.depositApprove ||
+                            loading.withdraw
+                        }
                         type="accent"
                     >
-                        Submit Transaction
+                        {renderBtnText()}
                     </Button>
                 </div>
             </ModalFooter>

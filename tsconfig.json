@@ -27,7 +27,8 @@
             "@/hooks": ["hooks/index.ts"],
             "@/hooks/*": ["hooks/*"],
             "@/config": ["config/index.ts"],
-            "@/config/*": ["config/*"]
+            "@/config/*": ["config/*"],
+            "@/types/*": ["types/*"]
         },
         "target": "ES6",
         "outDir": "lib",
