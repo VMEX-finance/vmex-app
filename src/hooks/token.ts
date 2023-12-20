@@ -1,4 +1,5 @@
 import { useTransactionsContext } from '@/store';
+import { IAddress } from '@/types/wagmi';
 import { CONTRACTS, TESTING, VMEX_VEVMEX_CHAINID, weeksUntilUnlock } from '@/utils';
 import { VEVMEX_ABI, VEVMEX_OPTIONS_ABI, VEVMEX_POSITION_HELPER_ABI } from '@/utils/abis';
 import { useQueries } from '@tanstack/react-query';
@@ -12,7 +13,7 @@ import {
 import { BigNumber, constants, utils } from 'ethers';
 import { formatEther } from 'ethers/lib/utils.js';
 import { useState } from 'react';
-import { useAccount, useBalance, useContractRead } from 'wagmi';
+import { useAccount, useBalance, useBlockNumber, useContractRead } from 'wagmi';
 
 /**
  * Contains all functions revolving around VMEX & veVMEX staking
@@ -20,6 +21,7 @@ import { useAccount, useBalance, useContractRead } from 'wagmi';
 export const useToken = (clearInputs?: () => void) => {
     const { address } = useAccount();
     const { newTransaction } = useTransactionsContext();
+    const { data: currentBlock } = useBlockNumber({ chainId: VMEX_VEVMEX_CHAINID });
     const [loading, setLoading] = useState({
         redeem: false,
         redeemApprove: false,
@@ -65,22 +67,23 @@ export const useToken = (clearInputs?: () => void) => {
     const MAX_LOCK_DURATION = Math.floor((4 * 365 * 86400) / WEEK) * WEEK;
     const SCALE = BigNumber.from(10).pow(18);
     const MAX_PENALTY_RATIO = SCALE.mul(3).div(4);
+    const vevmexConfig = {
+        address: CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as IAddress,
+        abi: VEVMEX_ABI,
+        chainId: VMEX_VEVMEX_CHAINID,
+    };
 
     const getVevmexUserData = async () => {
         if (!address) return;
         const [balance, { end, amount }] = await readContracts({
             contracts: [
                 {
-                    address: CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as `0x${string}`,
-                    abi: VEVMEX_ABI,
-                    chainId: VMEX_VEVMEX_CHAINID,
+                    ...vevmexConfig,
                     functionName: 'balanceOf',
                     args: [address],
                 },
                 {
-                    address: CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as `0x${string}`,
-                    abi: VEVMEX_ABI,
-                    chainId: VMEX_VEVMEX_CHAINID,
+                    ...vevmexConfig,
                     functionName: 'locked',
                     args: [address],
                 },
@@ -122,32 +125,31 @@ export const useToken = (clearInputs?: () => void) => {
     };
 
     const getVevmexMetaData = async () => {
-        const data = await readContracts({
+        const currentData = await readContracts({
             contracts: [
                 {
-                    address: CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as `0x${string}`,
-                    abi: VEVMEX_ABI,
-                    chainId: VMEX_VEVMEX_CHAINID,
+                    ...vevmexConfig,
                     functionName: 'totalSupply',
                 },
                 {
-                    address: CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as `0x${string}`,
-                    abi: VEVMEX_ABI,
-                    chainId: VMEX_VEVMEX_CHAINID,
+                    ...vevmexConfig,
                     functionName: 'supply',
                 },
                 {
-                    address: CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as `0x${string}`,
-                    abi: VEVMEX_ABI,
-                    chainId: VMEX_VEVMEX_CHAINID,
+                    ...vevmexConfig,
                     functionName: 'reward_pool',
                 },
+                // {
+                //     ...vevmexConfig,
+                //     functionName: 'totalSupplyAt',
+                //     args: [BigNumber.from(10238156)] // Block number when contract created on Goerli
+                // },
             ],
         });
         return {
-            totalVotingPower: utils.formatEther(data[0]),
-            supply: utils.formatEther(data[1]),
-            rewardPool: utils.getAddress(data[2]),
+            totalVotingPower: utils.formatEther(currentData[0]),
+            supply: utils.formatEther(currentData[1]),
+            rewardPool: utils.getAddress(currentData[2]),
         };
     };
 
