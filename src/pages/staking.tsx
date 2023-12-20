@@ -58,7 +58,7 @@ const Staking: React.FC = () => {
     } = useToken(clearInputs);
     const { width, breakpoints } = useWindowSize();
     const [tabIndex, setTabIndex] = React.useState(0);
-    const { vaults, isError: vaultsError } = useVaultsContext();
+    const { vaults, isError: vaultsError, isLoading: vaultsLoading } = useVaultsContext();
 
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
         const tabText = (event.target as any).innerText;
@@ -113,6 +113,7 @@ const Staking: React.FC = () => {
                 totalLocked={vevmexMetaData.data?.supply || '0'}
                 yourLocked={vevmexUserData?.data?.locked?.amount?.normalized || '0'}
                 expiration={vevmexUserData?.data?.locked?.end?.normalized || '-'}
+                loading={vevmexMetaData.isLoading && vevmexMetaData.isLoading}
             />
 
             <Card>
@@ -127,7 +128,7 @@ const Staking: React.FC = () => {
                     handleTabChange={handleTabChange}
                 />
                 <CustomTabPanel value={tabIndex} index={0}>
-                    <GaugesTable data={vaults} loading={false} error={vaultsError} />
+                    <GaugesTable data={vaults} loading={vaultsLoading} error={vaultsError} />
                 </CustomTabPanel>
                 <CustomTabPanel value={tabIndex} index={1}>
                     <div className="flex flex-col divide-y divide-gray-300 dark:divide-gray-700">

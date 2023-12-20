@@ -1,12 +1,12 @@
 import React from 'react';
-import { ApyToolitp, AssetDisplay, Button } from '@/ui/components';
+import { ApyToolitp, AssetDisplay, Button, Loader } from '@/ui/components';
 import { useDialogController, useWindowSize } from '@/hooks';
 import { IVaultAsset, useUserData } from '@/api';
 import { DEFAULT_CHAINID, isChainUnsupported } from '@/utils';
 import { useAccount, useSwitchNetwork } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 
-export const GaugesCustomRow = (props: IVaultAsset) => {
+export const GaugesCustomRow = (props: IVaultAsset & { loading?: boolean }) => {
     const {
         gaugeAddress,
         vaultAddress,
@@ -20,6 +20,7 @@ export const GaugesCustomRow = (props: IVaultAsset) => {
         gaugeBoost,
         gaugeStaked,
         actions,
+        loading,
     } = props;
     const { width } = useWindowSize();
     const { openDialog } = useDialogController();
@@ -45,28 +46,40 @@ export const GaugesCustomRow = (props: IVaultAsset) => {
                 <td className="flex justify-between">
                     <span className="font-bold">Asset</span>
                     <div className="flex items-center gap-2">
-                        <AssetDisplay name={vaultName} logo={vaultIcon} />
+                        <Loader loading={loading}>
+                            <AssetDisplay name={vaultName} logo={vaultIcon} />
+                        </Loader>
                     </div>
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Vault APY</span>
-                    <ApyToolitp symbol={vaultName} oldApy={vaultApy} />
+                    <Loader loading={loading}>
+                        <ApyToolitp symbol={vaultName} oldApy={vaultApy} />
+                    </Loader>
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Deposited</span>
-                    <span>{vaultDeposited?.normalized ? vaultDeposited?.normalized : '-'}</span>
+                    <Loader loading={loading}>
+                        <span>{vaultDeposited?.normalized ? vaultDeposited?.normalized : '-'}</span>
+                    </Loader>
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Gauge APR</span>
-                    <span>{gaugeAPR ? gaugeAPR : '-'}</span>
+                    <Loader loading={loading}>
+                        <span>{gaugeAPR ? gaugeAPR : '-'}</span>
+                    </Loader>
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Staked</span>
-                    <span>{gaugeStaked?.normalized ? gaugeStaked?.normalized : '-'}</span>
+                    <Loader loading={loading}>
+                        <span>{gaugeStaked?.normalized ? gaugeStaked?.normalized : '-'}</span>
+                    </Loader>
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Boost</span>
-                    <span>{gaugeBoost ? gaugeBoost : '-'}</span>
+                    <Loader loading={loading}>
+                        <span>{gaugeBoost ? gaugeBoost : '-'}</span>
+                    </Loader>
                 </td>
                 <td>
                     <Button
@@ -91,17 +104,33 @@ export const GaugesCustomRow = (props: IVaultAsset) => {
         return (
             <tr className="text-left transition duration-200 hover:bg-neutral-200 dark:hover:bg-neutral-900 hover:cursor-pointer border-y-[1px] dark:border-neutral-800">
                 <td className="whitespace-nowrap pl-2 md:pl-4 pr-2 text-sm">
-                    <AssetDisplay name={vaultName} logo={vaultIcon} />
+                    <Loader loading={loading}>
+                        <AssetDisplay name={vaultName} logo={vaultIcon} />
+                    </Loader>
                 </td>
                 <td className="min-w-[150px] pl-4 py-3">
-                    <ApyToolitp symbol={vaultName} oldApy={vaultApy} />
+                    <Loader loading={loading}>
+                        <ApyToolitp symbol={vaultName} oldApy={vaultApy} />
+                    </Loader>
                 </td>
                 <td className="pl-4">
-                    {vaultDeposited?.normalized ? vaultDeposited?.normalized : '-'}
+                    <Loader loading={loading}>
+                        {vaultDeposited?.normalized ? vaultDeposited?.normalized : '-'}
+                    </Loader>
                 </td>
-                <td className="pl-4">{gaugeAPR ? gaugeAPR : '-'}</td>
-                <td className="pl-4">{gaugeStaked?.normalized ? gaugeStaked?.normalized : '-'}</td>
-                <td className="pl-4">{gaugeBoost ? gaugeBoost : '-'}</td>
+                <td className="pl-4">
+                    {' '}
+                    <Loader loading={loading}>{gaugeAPR ? gaugeAPR : '-'}</Loader>
+                </td>
+                <td className="pl-4">
+                    {' '}
+                    <Loader loading={loading}>
+                        {gaugeStaked?.normalized ? gaugeStaked?.normalized : '-'}
+                    </Loader>
+                </td>
+                <td className="pl-4">
+                    <Loader loading={loading}>{gaugeBoost ? gaugeBoost : '-'}</Loader>
+                </td>
                 <td className="text-right pr-3.5">
                     <Button
                         type="accent"

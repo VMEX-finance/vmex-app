@@ -106,6 +106,15 @@ export const Loader = ({
         );
     }
 
+    if (
+        typeof loading !== 'undefined' &&
+        typeof loading === 'boolean' &&
+        loading === false &&
+        children
+    ) {
+        return <>{children}</>;
+    }
+
     return (
         <Skeleton
             variant={variant}

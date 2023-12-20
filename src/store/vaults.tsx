@@ -54,6 +54,7 @@ export function VaultsStore(props: { children: ReactNode }) {
         queryFn: () => renderGauges(queryGauges.data),
         enabled: queryGauges?.data?.length > 0,
         initialData: [],
+        refetchInterval: 10 * 1000,
     });
 
     const refresh = () => {

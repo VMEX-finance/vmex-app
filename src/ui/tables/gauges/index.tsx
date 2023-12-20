@@ -179,6 +179,7 @@ export const GaugesTable: React.FC<ITableProps> = ({ data, loading, userData, er
                             vaultSymbol={vaultSymbol}
                             actions={actions}
                             key={`gauges-table-${rowIndex || Math.floor(Math.random() * 10000)}`}
+                            loading={loading}
                         />
                     ),
                     textLabels: {
