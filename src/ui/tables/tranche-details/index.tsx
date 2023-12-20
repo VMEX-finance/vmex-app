@@ -20,7 +20,6 @@ import {
 } from '@/utils';
 import { useLocation } from 'react-router-dom';
 import { IYourSuppliesTableItemProps } from '../portfolio';
-import { getNetwork } from '@wagmi/core';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 
 interface ITableProps {
@@ -304,30 +303,6 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                     />
                                 </td>
                             ) : null}
-                            {/* <td className={`${queryUserWallet.isLoading ? 'animate-pulse' : ''}`}>
-                                <NumberAndDollar
-                                    value={`${
-                                        type === 'supply'
-                                            ? `${bigNumberToNative(
-                                                  BigNumber.from(
-                                                      getTokenBalance(el.asset).amountNative,
-                                                  ),
-                                                  el.asset,
-                                              )}`
-                                            : `${bigNumberToNative(
-                                                  amountBorrwable(el.asset).amountNative,
-                                                  el.asset,
-                                              )}`
-                                    }`}
-                                    dollar={`${
-                                        type === 'supply'
-                                            ? `${getTokenBalance(el.asset).amount}`
-                                            : `${amountBorrwable(el.asset).amount}`
-                                    }`}
-                                    size="xs"
-                                    color="text-brand-black"
-                                />
-                            </td> */}
                             <td>
                                 {type === 'supply' ? (
                                     <ApyToolitp symbol={el.asset} oldApy={el.apy} />
@@ -343,18 +318,6 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                                         ) : (
                                             <IoIosClose className="w-full h-full text-red-500" />
                                         )}
-                                        {/* <BasicToggle
-                                                checked={el.canBeCollat}
-                                                onClick={(e: any) => {
-                                                    e.preventDefault();
-                                                    openDialog('confirmation-dialog', {
-                                                        ...el,
-                                                        message: `Are you sure you want to ${el.canBeCollat ? 'disable' : 'enable'} collateral for this asset? This will affect your health score.`,
-                                                        action: () => handleCollateral(el, i),
-                                                    })
-                                                    e.stopPropagation();
-                                                }}
-                                            /> */}
                                     </div>
                                 ) : (
                                     <NumberAndDollar

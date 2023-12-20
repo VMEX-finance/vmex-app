@@ -1,5 +1,5 @@
 import { IDialogProps } from '../ui/modals';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { IUseModal } from './modal';
 import { useSubgraphTrancheData, useUserData, useUserTrancheData } from '../api';
 import { useAccount, useSigner } from 'wagmi';

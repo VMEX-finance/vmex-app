@@ -128,10 +128,6 @@ const MarketsCustomRow = (props: any) => {
                     <span className="font-bold">Borrow</span>
                     <span>{borrowable ? usdFormatter().format(borrowTotal) : '-'}</span>
                 </td>
-                {/* <td className="flex justify-between">
-                    <span className="font-bold">Rating</span>
-                    <span style={{ color: determineRatingColor(rating) }}>{rating}</span>
-                </td> */}
                 <td className="flex justify-between">
                     <span className="font-bold">Strategy</span>
                     {strategies ? (
@@ -189,9 +185,6 @@ const MarketsCustomRow = (props: any) => {
                 <td className="pl-4">{borrowable ? usdFormatter().format(available) : '-'}</td>
                 <td className="pl-4">{usdFormatter().format(supplyTotal)}</td>
                 <td className="pl-4">{borrowable ? usdFormatter().format(borrowTotal) : '-'}</td>
-                {/* <td className="text-lg pl-4" style={{ color: determineRatingColor(rating) }}>
-                    {rating}
-                </td> */}
                 <td className="pl-4">
                     <div className="w-8 h-8">
                         {strategies ? (

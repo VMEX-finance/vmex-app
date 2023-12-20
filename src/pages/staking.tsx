@@ -2,15 +2,7 @@ import React, { useEffect } from 'react';
 import { GridView } from '@/ui/templates';
 import { Base } from '@/ui/base';
 import { StakingOverview } from '@/ui/features';
-import {
-    CONTRACTS,
-    TESTING,
-    getChainId,
-    numberFormatter,
-    percentFormatter,
-    weeksToBn,
-    weeksToUnixBn,
-} from '@/utils';
+import { CONTRACTS, TESTING, getChainId, percentFormatter, weeksToUnixBn } from '@/utils';
 import {
     Button,
     Card,

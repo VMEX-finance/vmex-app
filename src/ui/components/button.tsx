@@ -4,7 +4,7 @@ import { useChainModal, useConnectModal } from '@rainbow-me/rainbowkit';
 import React from 'react';
 import { CgSpinner } from 'react-icons/cg';
 import { useNavigate } from 'react-router-dom';
-import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
+import { useAccount, useNetwork } from 'wagmi';
 
 export type IButtonProps = {
     children?: string | React.ReactNode;

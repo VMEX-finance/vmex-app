@@ -148,7 +148,6 @@ export function useUserData(userAddress: any): IUserDataProps {
         enabled: !!userAddress,
         refetchInterval: 1000 * 60,
     });
-
     const getTokenBalance = (asset: string) => {
         if (queryUserWallet.isLoading)
             return {

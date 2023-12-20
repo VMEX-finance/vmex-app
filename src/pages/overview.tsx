@@ -1,9 +1,8 @@
 import React from 'react';
 import { Base } from '@/ui/base';
 import { ProtocolStatsCard, UserPerformanceCard } from '@/ui/features';
-import { Carousel, WalletButton } from '@/ui/components';
+import { Carousel } from '@/ui/components';
 import {
-    useLoopData,
     useSubgraphAllMarketsData,
     useSubgraphProtocolData,
     useSubgraphUserData,
@@ -11,20 +10,13 @@ import {
 } from '@/api';
 import { useAnalyticsEventTracker } from '@/config';
 import { useAccount, useNetwork } from 'wagmi';
-import {
-    NETWORKS,
-    bigNumberToUnformattedString,
-    isChainUnsupported,
-    numberFormatter,
-} from '@/utils';
-import { isAddress } from 'ethers/lib/utils.js';
+import { bigNumberToUnformattedString, isChainUnsupported, numberFormatter } from '@/utils';
 import { YourPositionsTable } from '@/ui/tables';
 import { GridView } from '@/ui/templates';
 
 const Overview: React.FC = () => {
     const gaEventTracker = useAnalyticsEventTracker('Overview');
     const { address, isConnected } = useAccount();
-    const { chain } = useNetwork();
     const { queryProtocolTVLChart, queryProtocolData } = useSubgraphProtocolData();
     const { queryUserActivity } = useUserData(address);
     const { queryUserPnlChart } = useSubgraphUserData(address);
