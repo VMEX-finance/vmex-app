@@ -32,6 +32,8 @@ export const useModal = (dialog?: IDialogNames): IUseModal => {
                 return 'Supply';
             case 'borrow-asset-dialog':
                 return 'Borrow';
+            case 'vault-asset-dialog':
+                return 'Deposit';
             default:
                 return 'Modal';
         }

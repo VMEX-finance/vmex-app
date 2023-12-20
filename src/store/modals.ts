@@ -12,7 +12,8 @@ export type IDialogNames =
     | 'transactions-dialog'
     | 'referrals-dialog'
     | 'leverage-asset-dialog'
-    | 'tos-dialog';
+    | 'tos-dialog'
+    | 'vault-asset-dialog';
 
 export type DialogType = {
     name?: string;
@@ -149,6 +150,16 @@ const DialogControllerState: IDialogState = {
             'referrals-dialog',
             {
                 name: 'Referrals',
+                isOpen: false,
+                data: {},
+                isSuccess: false,
+                isError: false,
+            },
+        ],
+        [
+            'vault-asset-dialog',
+            {
+                name: 'Vault',
                 isOpen: false,
                 data: {},
                 isSuccess: false,

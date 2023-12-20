@@ -87,6 +87,7 @@ export type IVaultAsset = {
     gaugeAPR: number;
     gaugeBoost: number;
     gaugeStaked: INormalizedBN;
+    vaultSymbol: string;
     actions: undefined;
 };
 

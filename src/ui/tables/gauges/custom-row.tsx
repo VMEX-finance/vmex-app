@@ -13,6 +13,7 @@ export const GaugesCustomRow = (props: IVaultAsset) => {
         decimals,
         vaultIcon,
         vaultName,
+        vaultSymbol,
         vaultApy,
         vaultDeposited,
         gaugeAPR,
@@ -31,12 +32,10 @@ export const GaugesCustomRow = (props: IVaultAsset) => {
         e.stopPropagation();
         if (!address && openConnectModal) return openConnectModal();
         if (isChainUnsupported() && switchNetwork) return switchNetwork(DEFAULT_CHAINID);
-        //     openDialog('vault-dialog', {
-        //         asset: asset,
-        //         trancheId: trancheId,
-        //         collateral,
-        //         tab: e.target.innerHTML
-        //     });
+        openDialog('vault-asset-dialog', {
+            ...props,
+            tab: e.target.innerHTML,
+        });
     };
 
     // Mobile
@@ -75,12 +74,12 @@ export const GaugesCustomRow = (props: IVaultAsset) => {
                         type="accent"
                         left={{
                             text: 'Deposit',
-                            disabled: true,
+                            disabled: false,
                             onClick: handleActionClick,
                         }}
                         right={{
                             text: 'Withdraw',
-                            disabled: true,
+                            disabled: false,
                             onClick: handleActionClick,
                         }}
                     />
@@ -108,12 +107,12 @@ export const GaugesCustomRow = (props: IVaultAsset) => {
                         type="accent"
                         left={{
                             text: 'Deposit',
-                            disabled: true,
+                            disabled: false,
                             onClick: handleActionClick,
                         }}
                         right={{
                             text: 'Withdraw',
-                            disabled: true,
+                            disabled: false,
                             onClick: handleActionClick,
                         }}
                     />

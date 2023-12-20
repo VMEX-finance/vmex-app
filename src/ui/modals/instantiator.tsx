@@ -12,6 +12,7 @@ import {
     ReferralsDialog,
     LeverageAssetDialog,
     TermsOfServiceDialog,
+    VaultAssetDialog,
 } from '../modals';
 import { ModalWrapper } from './subcomponents';
 
@@ -29,6 +30,12 @@ export const AllModalsInstance: React.FC = () => {
             <React.Fragment>
                 <ModalWrapper {...getDialogProps('leverage-asset-dialog')}>
                     <LeverageAssetDialog {...getDialogProps('leverage-asset-dialog')} />
+                </ModalWrapper>
+            </React.Fragment>
+
+            <React.Fragment>
+                <ModalWrapper {...getDialogProps('vault-asset-dialog')}>
+                    <VaultAssetDialog {...getDialogProps('vault-asset-dialog')} />
                 </ModalWrapper>
             </React.Fragment>
 

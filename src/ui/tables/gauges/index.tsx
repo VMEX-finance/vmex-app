@@ -117,6 +117,13 @@ export const GaugesTable: React.FC<ITableProps> = ({ data, loading, userData, er
             },
         },
         {
+            name: 'vaultSymbol',
+            label: 'Symbol',
+            options: {
+                display: false,
+            },
+        },
+        {
             name: 'gaugeAddress',
             label: 'Gauge Address',
             options: {
@@ -151,6 +158,7 @@ export const GaugesTable: React.FC<ITableProps> = ({ data, loading, userData, er
                             decimals,
                             vaultAddress,
                             vaultIcon,
+                            vaultSymbol,
                             gaugeAddress,
                             actions,
                         ],
@@ -168,6 +176,7 @@ export const GaugesTable: React.FC<ITableProps> = ({ data, loading, userData, er
                             gaugeAPR={gaugeAPR}
                             gaugeBoost={gaugeBoost}
                             gaugeStaked={gaugeStaked}
+                            vaultSymbol={vaultSymbol}
                             actions={actions}
                             key={`gauges-table-${rowIndex || Math.floor(Math.random() * 10000)}`}
                         />

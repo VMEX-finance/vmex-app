@@ -337,6 +337,10 @@ export const useToken = (clearInputs?: () => void) => {
 
     const withdrawLockedVevmex = async () => {
         // TODO
+        // try {
+        // } catch (e) {
+        //     console.log(e);
+        // }
     };
 
     return {

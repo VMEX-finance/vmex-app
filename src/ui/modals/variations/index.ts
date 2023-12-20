@@ -9,3 +9,4 @@ export * from './toggle-collateral';
 export * from './referrals';
 export * from './leverage-asset';
 export * from './terms-of-service';
+export * from './vault-asset';

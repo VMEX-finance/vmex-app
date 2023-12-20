@@ -18,6 +18,7 @@ const renderGauges = async (gauges: IGaugesAsset[]): Promise<IVaultAsset[]> => {
             gaugeAPR: Number(g.rewardRate.normalized),
             gaugeBoost: 0,
             gaugeStaked: g.totalStaked,
+            vaultSymbol: g.symbol,
             actions: undefined,
         })),
     );
