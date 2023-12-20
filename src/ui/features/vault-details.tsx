@@ -1,7 +1,7 @@
 import React from 'react';
 import { IVaultAsset } from '@/api';
 import { AssetDisplay, NumberDisplay, PercentChangeDisplay } from '../components';
-import { NETWORKS, getNetworkName } from '@/utils';
+import { NETWORKS, getNetworkName, percentFormatter } from '@/utils';
 import { GoLinkExternal } from 'react-icons/go';
 
 type IVaultDetails = {
@@ -29,14 +29,17 @@ export const VaultDetails = ({ vault, deposited }: IVaultDetails & { deposited?:
                 <NumberDisplay size="xl" value={`${vault?.gaugeBoost || '0'}`} label="Boost" />
                 <NumberDisplay
                     size="xl"
-                    value={`${vault?.vaultApy || '0'} %`}
+                    value={percentFormatter.format(vault?.vaultApy || 0)}
                     label="Vault APY"
                     align="right"
                 />
             </div>
 
             <div className="flex flex-row justify-between items-center mt-2 px-2">
-                <NumberDisplay value={`${vault?.gaugeAPR || '0'} %`} label="Gauge APR" />
+                <NumberDisplay
+                    value={percentFormatter.format(vault?.gaugeAPR || 0)}
+                    label="Gauge APR"
+                />
                 <NumberDisplay
                     value={`${vault?.gaugeStaked?.normalized || '0.0'}`}
                     label="Total Staked"

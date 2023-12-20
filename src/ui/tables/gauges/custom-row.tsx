@@ -29,13 +29,13 @@ export const GaugesCustomRow = (props: IVaultAsset & { loading?: boolean }) => {
     const { switchNetwork } = useSwitchNetwork();
     const { openConnectModal } = useConnectModal();
 
-    const handleActionClick = (e: any) => {
+    const handleActionClick = (e: any, rowClick?: boolean) => {
         e.stopPropagation();
         if (!address && openConnectModal) return openConnectModal();
         if (isChainUnsupported() && switchNetwork) return switchNetwork(DEFAULT_CHAINID);
         openDialog('vault-asset-dialog', {
             ...props,
-            tab: e.target.innerHTML,
+            tab: rowClick ? 'Deposit' : e.target.innerHTML,
         });
     };
 
@@ -102,7 +102,10 @@ export const GaugesCustomRow = (props: IVaultAsset & { loading?: boolean }) => {
         // Desktop
     } else {
         return (
-            <tr className="text-left transition duration-200 hover:bg-neutral-200 dark:hover:bg-neutral-900 hover:cursor-pointer border-y-[1px] dark:border-neutral-800">
+            <tr
+                className="text-left transition duration-200 hover:bg-neutral-200 dark:hover:bg-neutral-900 hover:cursor-pointer border-y-[1px] dark:border-neutral-800"
+                onClick={(e) => handleActionClick(e, true)}
+            >
                 <td className="whitespace-nowrap pl-2 md:pl-4 pr-2 text-sm">
                     <Loader loading={loading}>
                         <AssetDisplay name={vaultName} logo={vaultIcon} />
