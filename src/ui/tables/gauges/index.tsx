@@ -5,8 +5,7 @@ import { GaugesCustomRow } from './custom-row';
 import MUIDataTable from 'mui-datatables';
 import { Loader } from '@/ui/components';
 import { UseQueryResult } from '@tanstack/react-query';
-import { IUserActivityDataProps, IGaugesAsset, useGauages, IVaultAsset } from '@/api';
-import { useAccount } from 'wagmi';
+import { IUserActivityDataProps, IVaultAsset } from '@/api';
 
 interface ITableProps {
     data?: IVaultAsset[];
@@ -16,8 +15,6 @@ interface ITableProps {
 }
 
 export const GaugesTable: React.FC<ITableProps> = ({ data, loading, userData, error }) => {
-    const { address } = useAccount();
-
     const columns = [
         {
             name: 'vaultName',

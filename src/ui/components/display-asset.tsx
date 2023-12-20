@@ -22,7 +22,7 @@ export const AssetDisplay = (props: IAssetDisplayProps) => {
         >
             {props?.logo && props?.name ? (
                 <>
-                    <img src={props.logo} alt={props.name} />
+                    <img src={props.logo} alt={props.name} height="36" width="36" />
                     {!props.noText && (
                         <span className="truncate whitespace-nowrap">{props.name || ''}</span>
                     )}

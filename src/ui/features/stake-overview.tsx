@@ -37,7 +37,14 @@ export const StakingOverview = (props: IStakingOverviewProps) => {
                         className="flex justify-center lg:items-center py-2 first:pt-0 last:pb-0"
                     >
                         <div className="flex flex-col gap-1 items-center">
-                            <span className="text-4xl">{el.amount}</span>
+                            <span className="flex gap-0.5 items-end">
+                                <span className="text-4xl">{el.amount}</span>
+                                {el.label === 'Expiration for the lock' && el.amount !== '0' && (
+                                    <span className="text-xs mb-1 text-gray-600 dark:text-gray-400">
+                                        Weeks
+                                    </span>
+                                )}
+                            </span>
                             <span className="text-gray-500">{el.label}</span>
                         </div>
                     </div>

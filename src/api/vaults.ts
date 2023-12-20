@@ -11,7 +11,7 @@ const renderGauges = async (gauges: IGaugesAsset[]): Promise<IVaultAsset[]> => {
             gaugeAddress: g.address,
             vaultAddress: g.vaultAddress,
             decimals: g.decimals,
-            vaultIcon: '/coins/algo.svg',
+            vaultIcon: '/3D-logo.svg',
             vaultName: g.name,
             vaultApy: Number(g.rewardRate.normalized),
             vaultDeposited: g.totalStaked,
