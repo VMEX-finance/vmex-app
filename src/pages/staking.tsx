@@ -11,7 +11,14 @@ import {
     weeksToBn,
     weeksToUnixBn,
 } from '@/utils';
-import { Button, Card, CustomTabPanel, CustomTabs, StakeInput } from '@/ui/components';
+import {
+    Button,
+    Card,
+    CustomTabPanel,
+    CustomTabs,
+    DefaultDropdown,
+    StakeInput,
+} from '@/ui/components';
 import { GaugesTable } from '@/ui/tables';
 import { useLockingUI, useWindowSize, useToken, useVault } from '@/hooks';
 import { BigNumber, utils } from 'ethers';
@@ -59,7 +66,7 @@ const Staking: React.FC = () => {
     const { width, breakpoints } = useWindowSize();
     const [tabIndex, setTabIndex] = React.useState(0);
     const { vaults, isError: vaultsError, isLoading: vaultsLoading } = useVaultsContext();
-    const { vaultBalance, gaugeBalance } = useVault();
+    const { vaultBalance, gaugeBalance, selected, setSelected } = useVault();
 
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
         const tabText = (event.target as any).innerText;
@@ -363,13 +370,29 @@ const Staking: React.FC = () => {
                                     the corresponding gauge.
                                 </p>
                             </div>
-                            <div className="grid sm:grid-cols-2 gap-1 lg:gap-2 content-end items-end">
-                                <StakeInput
-                                    header="Unclaimed rewards (dVMEX)"
-                                    onChange={() => {}}
-                                    value={'0.0'}
-                                    disabled
-                                />
+                            <div className="grid sm:grid-cols-3 gap-1 lg:gap-2 content-end items-end">
+                                <div className="grid sm:grid-cols-2 items-center gap-1 lg:gap-2 sm:col-span-2">
+                                    <DefaultDropdown
+                                        border="border-gray-300 hover:border-gray-400"
+                                        full
+                                        type="fresh"
+                                        items={vaults.map((v) => ({
+                                            text: v.vaultName,
+                                            icon: v.vaultIcon,
+                                            onClick: () => setSelected(v.vaultAddress),
+                                        }))}
+                                        selected={
+                                            vaults.find((v) => v.vaultAddress === selected)
+                                                ?.vaultName || vaults[0]?.vaultName
+                                        }
+                                    />
+                                    <StakeInput
+                                        header="Unclaimed rewards (dVMEX)"
+                                        onChange={() => {}}
+                                        value={'0.0'}
+                                        disabled
+                                    />
+                                </div>
                                 <Button type="accent" className="h-fit mb-[17.88px]" disabled>
                                     Claim
                                 </Button>

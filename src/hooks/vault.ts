@@ -20,6 +20,7 @@ export const useVault = (vaultAddress?: string, gaugeAddress?: string) => {
     const { newTransaction } = useTransactionsContext();
     const [amount, setAmount] = useMediatedState(inputMediator, '');
     const [isMax, setIsMax] = React.useState(false);
+    const [selected, setSelected] = useState(vaults[0]?.vaultAddress || '');
     const { data: gaugeBalance } = useBalance({
         address,
         token: gaugeAddress as `0x${string}`,
@@ -177,5 +178,7 @@ export const useVault = (vaultAddress?: string, gaugeAddress?: string) => {
         approvedEnough,
         vaultBalance,
         gaugeBalance,
+        selected,
+        setSelected,
     };
 };

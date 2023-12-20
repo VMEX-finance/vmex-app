@@ -15,7 +15,7 @@ export interface IDropdownItemProps {
 export interface IDropdownProps {
     items: Array<IDropdownItemProps | any>;
     primary?: boolean;
-    border?: boolean;
+    border?: boolean | `border-${string}`;
     direction?: 'left' | 'right' | 'top';
     size?: 'lg' | 'md';
     selected?: string | string[];
@@ -31,6 +31,7 @@ export interface IDropdownProps {
     truncate?: boolean;
     wrapperClass?: string;
     icon?: boolean;
+    type?: 'fresh';
 }
 
 export const DefaultDropdown = ({
@@ -52,6 +53,7 @@ export const DefaultDropdown = ({
     truncate,
     wrapperClass,
     icon,
+    type,
 }: IDropdownProps) => {
     const [list, setList] = useState([]);
 
@@ -76,7 +78,9 @@ export const DefaultDropdown = ({
     const textSize = size === 'lg' ? 'text-md' : 'text-sm';
     const iconSize = size === 'lg' ? '22px' : '18px';
     const paddingSize = icon ? 'py-1.5 pr-1 pl-2.5' : size === 'lg' ? 'py-1.5 pl-3 pr-2' : 'pl-2';
-    const withBorder = border ? 'border border-brand-black' : '';
+    const withBorder = border
+        ? `border ${typeof border !== 'boolean' ? border : 'border-brand-black'}`
+        : '';
     const roundedSize = size === 'lg' ? 'rounded-lg' : 'rounded-md';
     const displayOnly = label
         ? `lg:border lg:border-brand-black bg-white ${
@@ -148,6 +152,7 @@ export const DefaultDropdown = ({
                         roundedSize,
                         dark,
                         shadow,
+                        type === 'fresh' ? 'py-[7px] !bg-gray-100 ' : '',
                     ].join(' ')}
                 >
                     {label ? (
@@ -185,7 +190,7 @@ export const DefaultDropdown = ({
                     >
                         <Menu.Items
                             className={`absolute max-h-72 overflow-y-scroll bg-white mt-2 
-                            ${full ? 'w-full' : 'min-w-[180px]'} 
+                            ${full ? 'w-full overflow-visible min-w-max' : 'min-w-[180px]'} 
                             ${determineDirection()}
                             rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-[999999]`}
                         >

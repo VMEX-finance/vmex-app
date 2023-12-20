@@ -195,7 +195,7 @@ export const useToken = (clearInputs?: () => void) => {
 
     // TODO
     const vevmexRedeem = async (amount: BigNumber) => {
-        if (!address) return;
+        if (!address || amount === BigNumber.from(0) || !amount) return;
         const cleanAddress = utils.getAddress(address);
         if (!vevmexIsApproved) {
             setLoading({ ...loading, redeemApprove: true });
@@ -227,7 +227,7 @@ export const useToken = (clearInputs?: () => void) => {
 
     // TODO
     const dvmexRedeem = async (amount: BigNumber) => {
-        if (!address) return;
+        if (!address || amount === BigNumber.from(0) || !amount) return;
         const cleanAddress = utils.getAddress(address);
         if (!vevmexIsApproved) {
             setLoading({ ...loading, redeemApprove: true });
@@ -309,7 +309,7 @@ export const useToken = (clearInputs?: () => void) => {
     };
 
     const increaseVmexLockAmount = async (amount: BigNumber) => {
-        if (!address) return;
+        if (!address || amount === BigNumber.from(0) || !amount) return;
         const cleanAddress = utils.getAddress(address);
         // TODO: approval if necessary
         setLoading({ ...loading, lock: true });
@@ -327,7 +327,7 @@ export const useToken = (clearInputs?: () => void) => {
     };
 
     const extendVmexLockTime = async (time: BigNumber) => {
-        if (queries[1]?.data?.locked?.amount?.raw === BigNumber.from(0)) return;
+        if (queries[1]?.data?.locked?.amount?.raw === BigNumber.from(0) || !time) return;
         if (!address) return;
         try {
             setLoading({ ...loading, extendLock: true });
