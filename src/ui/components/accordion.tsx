@@ -95,14 +95,14 @@ export function DefaultAccordion({
                         ? `!bg-brand-black !text-neutral-200 ${
                               customHover ? customHover : 'hover:!bg-neutral-900'
                           }`
-                        : `!bg-neutral-100 ${customHover ? customHover : 'hover:!bg-neutral-200'}`
+                        : `!bg-white ${customHover ? customHover : 'hover:!bg-neutral-100'}`
                 }`}
             >
                 {summary}
             </AccordionSummary>
             <AccordionDetails
                 className={`${detailsClass || ''} ${
-                    isDark ? '!bg-brand-black !text-neutral-200' : '!bg-neutral-100'
+                    isDark ? '!bg-brand-black !text-neutral-200' : '!bg-white'
                 }`}
             >
                 {details}

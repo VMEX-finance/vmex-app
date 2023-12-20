@@ -4,8 +4,8 @@ import { Base } from '@/ui/base';
 import { PortfolioStatsCard, UserPerformanceCard } from '@/ui/features';
 import { YourPositionsTable, YourRewardsTable, YourTransactionsTable } from '@/ui/tables';
 import { Card, WalletButton } from '@/ui/components';
-import { useUserData, useUserHistory, useUserRewards, useUserTranchesData } from '@/api';
-import { useAccount, useNetwork } from 'wagmi';
+import { useUserData, useUserRewards, useUserTranchesData } from '@/api';
+import { useAccount } from 'wagmi';
 import {
     addDollarAmounts,
     bigNumberToUnformattedString,
@@ -15,17 +15,14 @@ import {
 } from '@/utils';
 import { useSubgraphUserData } from '@/api';
 import { useAnalyticsEventTracker } from '@/config';
-import { getNetwork } from '@wagmi/core';
 
 const Portfolio: React.FC = () => {
     const gaEventTracker = useAnalyticsEventTracker('Portfolio');
     const { address } = useAccount();
-    const { chain } = useNetwork();
     const { queryUserActivity } = useUserData(address);
     const { queryUserPnlChart } = useSubgraphUserData(address);
     const { queryUserTranchesData } = useUserTranchesData(address);
     const { queryUserRewards } = useUserRewards(address);
-    const { queryUserTxHistory } = useUserHistory(address);
 
     const calculateNetworth = () => {
         let sum = 0;

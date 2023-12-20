@@ -78,6 +78,7 @@ export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({
                                     name={i.asset}
                                     logo={`/coins/${i.asset?.toLowerCase()}.svg`}
                                     noText={responsive && width < breakpoints.sm}
+                                    size="sm"
                                 />
                             </td>
                             <td>

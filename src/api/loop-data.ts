@@ -1,12 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import {
-    NETWORKS,
-    bigNumberToNative,
-    getDecimals,
-    getNetworkName,
-    isAddressEqual,
-    toSymbol,
-} from '@/utils';
+import { NETWORKS, bigNumberToNative, getNetworkName, isAddressEqual, toSymbol } from '@/utils';
 import { IFormattedUserLoopingProps, IUserLoopingProps } from './types';
 import { getUserLoopingQuery } from './queries/user-looping';
 import { utils } from 'ethers';

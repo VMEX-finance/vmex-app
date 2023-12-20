@@ -3,8 +3,7 @@ import { usdFormatter, nativeTokenFormatter, cleanNumberString } from './helpers
 import { convertAddressToSymbol, convertSymbolToAddress } from '@vmexfinance/sdk';
 import { ITrancheCategories } from '@/api';
 import { DECIMALS } from './constants';
-import { getNetwork } from '@wagmi/core';
-import { DEFAULT_NETWORK, NETWORKS, getChainId, getNetworkName } from './network';
+import { NETWORKS, getChainId, getNetworkName } from './network';
 import { DECIMAL_CACHE } from './cache';
 
 export const bigNumberToUSD = (

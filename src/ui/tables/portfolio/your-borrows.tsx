@@ -68,6 +68,7 @@ export const YourBorrowsTable: React.FC<IYourBorrowsTableProps> = ({
                                         name={i.asset}
                                         logo={`/coins/${i.asset?.toLowerCase()}.svg`}
                                         noText={responsive && width < breakpoints.sm}
+                                        size="sm"
                                     />{' '}
                                 </td>
                                 <td>
