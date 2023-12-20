@@ -19,6 +19,8 @@ export const AssetDisplay = (props: IAssetDisplayProps) => {
         switch (props.size) {
             case 'xl':
                 return { img: '48', text: 'text-xl ml-1' };
+            case 'sm':
+                return { img: '24', text: 'text-md' };
             default:
                 return { img: '36', text: 'text-md' };
         }
