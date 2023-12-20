@@ -80,9 +80,14 @@ export const useToken = (clearInputs?: () => void) => {
         watch: address ? true : false,
     });
 
+    const WEEK = 7 * 86400;
+    const MAX_LOCK_DURATION = Math.floor((4 * 365 * 86400) / WEEK) * WEEK;
+    const SCALE = BigNumber.from(10).pow(18);
+    const MAX_PENALTY_RATIO = SCALE.mul(3).div(4);
+
     const getVevmexUserData = async () => {
         if (!address) return;
-        const data = await readContracts({
+        const [balance, { end, amount }] = await readContracts({
             contracts: [
                 {
                     address: CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as `0x${string}`,
@@ -100,16 +105,29 @@ export const useToken = (clearInputs?: () => void) => {
                 },
             ],
         });
+
+        const now = Math.floor(Date.now() / 1000);
+        let penalty = '0.00 %';
+        if (end.gt(now)) {
+            const timeLeft = end.sub(now).lt(MAX_LOCK_DURATION)
+                ? end.sub(now)
+                : BigNumber.from(MAX_LOCK_DURATION);
+            const penaltyRatio = timeLeft.mul(SCALE).div(MAX_LOCK_DURATION).lt(MAX_PENALTY_RATIO)
+                ? timeLeft.mul(SCALE).div(MAX_LOCK_DURATION)
+                : MAX_PENALTY_RATIO;
+            penalty = `${(penaltyRatio.mul('10000').div(SCALE).toNumber() / 100).toFixed(2)} %`;
+        }
+
         return {
-            votingPower: utils.formatEther(data[0]),
+            votingPower: utils.formatEther(balance),
             locked: {
                 end: {
-                    normalized: weeksUntilUnlock(data[1]?.end),
-                    raw: data[1]?.end,
+                    normalized: weeksUntilUnlock(end),
+                    raw: end,
                 },
                 amount: {
-                    normalized: utils.formatEther(data[1]?.amount),
-                    raw: data[1]?.amount,
+                    normalized: utils.formatEther(amount),
+                    raw: amount,
                 },
             },
             unlocked: {
@@ -117,6 +135,7 @@ export const useToken = (clearInputs?: () => void) => {
                 raw: BigNumber.from(0),
             },
             exitPreview: '', // TODO
+            penalty,
         };
     };
 
@@ -150,22 +169,6 @@ export const useToken = (clearInputs?: () => void) => {
         };
     };
 
-    const getPositionsData = async () => {
-        if (!address) return;
-        try {
-            const earlyExitRead = await readContract({
-                address: CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as `0x${string}`,
-                abi: VEVMEX_POSITION_HELPER_ABI,
-                chainId: VMEX_VEVMEX_CHAINID,
-                functionName: 'getPositionDetails',
-                args: [address],
-            });
-            return earlyExitRead;
-        } catch (e) {
-            console.error('#getPositionsData:', e);
-        }
-    };
-
     const queries = useQueries({
         queries: [
             {
@@ -177,11 +180,6 @@ export const useToken = (clearInputs?: () => void) => {
                 queryKey: ['vevmex-user-data', address],
                 queryFn: getVevmexUserData,
                 refetchInterval: 10 * 1000,
-                enabled: !!address,
-            },
-            {
-                queryKey: ['vevmex-positions', address],
-                queryFn: getPositionsData,
                 enabled: !!address,
             },
         ],
@@ -381,7 +379,6 @@ export const useToken = (clearInputs?: () => void) => {
         tokenLoading: loading,
         withdrawLockedVevmex,
         withdrawUnlockedVevmex,
-        vmexLockEarlyExitPenalty: queries[2],
         extendVmexLockTime,
         increaseVmexLockAmount,
         lockVmex,

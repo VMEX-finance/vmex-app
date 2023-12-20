@@ -57,7 +57,6 @@ const Staking: React.FC = () => {
         vevmexMetaData,
         vevmexUserData,
         extendVmexLockTime,
-        vmexLockEarlyExitPenalty,
         vevmexRedeem,
         increaseVmexLockAmount,
         withdrawUnlockedVevmex,
@@ -84,7 +83,6 @@ const Staking: React.FC = () => {
         if (TESTING) {
             console.log('veVMEX:', vevmexMetaData.data);
             console.log('veVMEX User Data:', vevmexUserData.data);
-            console.log('Early Exit Penalty:', vmexLockEarlyExitPenalty.data);
         }
     }, [vevmexMetaData.data, vevmexUserData.data]);
 
@@ -306,11 +304,8 @@ const Staking: React.FC = () => {
                                     <StakeInput
                                         header="VMEX you get"
                                         footer={`Penalty: ${
-                                            vmexLockEarlyExitPenalty?.data?.penalty
-                                                ? utils.formatEther(
-                                                      vmexLockEarlyExitPenalty?.data?.penalty ||
-                                                          BigNumber.from(0),
-                                                  )
+                                            vevmexUserData?.data?.penalty
+                                                ? vevmexUserData?.data?.penalty
                                                 : '50.12%'
                                         }`}
                                         onChange={() => {}}
