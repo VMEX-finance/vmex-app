@@ -8,6 +8,7 @@ import {
     getChainId,
     numberFormatter,
     percentFormatter,
+    weeksToBn,
     weeksToUnixBn,
 } from '@/utils';
 import { Button, Card, CustomTabPanel, CustomTabs, StakeInput } from '@/ui/components';
@@ -259,7 +260,11 @@ const Staking: React.FC = () => {
                                     <Button
                                         type="accent"
                                         className="h-fit mb-[17.88px]"
-                                        onClick={() => extendVmexLockTime(extendInput.periodBn)}
+                                        onClick={() =>
+                                            extendVmexLockTime(
+                                                weeksToUnixBn(Number(extendInput.period)),
+                                            )
+                                        }
                                         disabled={!extendInput?.period}
                                     >
                                         Extend
@@ -438,7 +443,7 @@ const Staking: React.FC = () => {
                             <div className="grid sm:grid-cols-2 gap-1 lg:gap-2 content-end items-end">
                                 <StakeInput
                                     header="dVMEX to use"
-                                    footer={`Available: ${dvmexBalance?.formatted || '0.0'} VMEX`}
+                                    footer={`Available: ${dvmexBalance?.formatted || '0.0'} dVMEX`}
                                     onChange={handleRedeemAmountInput}
                                     value={redeemInput.amount}
                                     setMax={handleRedeemMax}

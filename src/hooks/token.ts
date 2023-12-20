@@ -1,5 +1,5 @@
 import { useTransactionsContext } from '@/store';
-import { CONTRACTS, TESTING, toWeeks, weeksUntilUnlock } from '@/utils';
+import { CONTRACTS, TESTING, toWeeks, weeksToUnixBn, weeksUntilUnlock } from '@/utils';
 import { VEVMEX_ABI, VEVMEX_OPTIONS_ABI } from '@/utils/abis';
 import { useQueries } from '@tanstack/react-query';
 import { erc20ABI, writeContract, prepareWriteContract, readContracts } from '@wagmi/core';
@@ -70,7 +70,6 @@ export const useToken = (clearInputs?: () => void) => {
     });
 
     const getVevmexUserData = async () => {
-        // TODO
         if (!address) return;
         const data = await readContracts({
             contracts: [
@@ -107,7 +106,6 @@ export const useToken = (clearInputs?: () => void) => {
     };
 
     const getVevmexMetaData = async () => {
-        // TODO
         const data = await readContracts({
             contracts: [
                 {
@@ -138,7 +136,6 @@ export const useToken = (clearInputs?: () => void) => {
 
     const getVmexLockEarlyExitPenalty = async () => {
         if (!address) return;
-        const cleanAddress = utils.getAddress(address);
         try {
             const prepareEarlyExit = await prepareWriteContract({
                 address: CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as `0x${string}`,
@@ -311,24 +308,27 @@ export const useToken = (clearInputs?: () => void) => {
     };
 
     const extendVmexLockTime = async (time: BigNumber) => {
+        if (queries[1]?.data?.locked?.amount?.raw === BigNumber.from(0)) return;
         if (!address) return;
-        const cleanAddress = utils.getAddress(address);
-        // TODO: approval if necessary
-        setLoading({ ...loading, extendLock: true });
-        const prepareLockTx = await prepareWriteContract({
-            address: CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as `0x${string}`,
-            abi: VEVMEX_ABI,
-            chainId: VMEX_VEVMEX_CHAINID,
-            functionName: 'modify_lock',
-            args: [
-                BigNumber.from(0),
-                time.add(queries[1]?.data?.locked?.amount?.raw || BigNumber.from(0)),
-            ],
-        });
-        const lockTx = await writeContract(prepareLockTx);
-        setLoading({ ...loading, extendLock: false });
-        await newTransaction(lockTx);
-        clearInputs && clearInputs();
+        try {
+            setLoading({ ...loading, extendLock: true });
+            const addedWeeks = weeksUntilUnlock(time);
+            const currentWeeks = Number(queries[1]?.data?.locked?.amount?.normalized);
+            const newTime = weeksToUnixBn(addedWeeks + currentWeeks);
+            const prepareLockTx = await prepareWriteContract({
+                address: CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as `0x${string}`,
+                abi: VEVMEX_ABI,
+                chainId: VMEX_VEVMEX_CHAINID,
+                functionName: 'modify_lock',
+                args: [BigNumber.from(0), newTime],
+            });
+            const lockTx = await writeContract(prepareLockTx);
+            setLoading({ ...loading, extendLock: false });
+            await newTransaction(lockTx);
+            clearInputs && clearInputs();
+        } catch (e) {
+            console.error(e);
+        }
     };
 
     const withdrawUnlockedVevmex = async () => {

@@ -77,6 +77,12 @@ export function weeksToUnixBn(weeks?: number): BigNumber {
     return weeks === 1 ? future.add(BigNumber.from(1000)) : future;
 }
 
+export function weeksToBn(weeks?: number): BigNumber {
+    if (!weeks) return BigNumber.from(0);
+    const secondsBn = BigNumber.from(weeks).mul(BigNumber.from(SECONDS_IN_WEEK));
+    return secondsBn;
+}
+
 export function weeksUntilUnlock(unlockTime?: BigNumber): number {
     if (!unlockTime) return 0;
     const today = Math.ceil(Date.now().valueOf() / 1000);

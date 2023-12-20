@@ -32,7 +32,7 @@ export const useLockingUI = () => {
 
     function handleExtendInput(e: React.ChangeEvent<HTMLInputElement>) {
         const val = e.target?.value;
-        setExtendInput({ ...extendInput, period: val, periodBn: utils.parseEther(val || '0') });
+        setExtendInput({ ...extendInput, period: val, periodBn: BigNumber.from(val || '0') });
     }
 
     function handlePeriodMax(e: React.ChangeEvent<HTMLInputElement>) {
