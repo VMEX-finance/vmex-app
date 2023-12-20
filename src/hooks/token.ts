@@ -200,19 +200,19 @@ export const useToken = (clearInputs?: () => void) => {
                 refetchInterval: 10 * 1000,
                 enabled: !!address,
             },
-            {
-                queryKey: ['vevmex-positions', address],
-                queryFn: getPositionsData,
-                enabled: !!address,
-                initialData: {
-                    balance: BigNumber.from(0),
-                    depositAmount: BigNumber.from(0),
-                    withdrawable: BigNumber.from(0),
-                    penalty: BigNumber.from(0),
-                    unlockTime: BigNumber.from(0),
-                    timeRemaining: BigNumber.from(0),
-                },
-            },
+            // {
+            //     queryKey: ['vevmex-positions', address],
+            //     queryFn: getPositionsData,
+            //     enabled: !!address,
+            //     initialData: {
+            //         balance: BigNumber.from(0),
+            //         depositAmount: BigNumber.from(0),
+            //         withdrawable: BigNumber.from(0),
+            //         penalty: BigNumber.from(0),
+            //         unlockTime: BigNumber.from(0),
+            //         timeRemaining: BigNumber.from(0),
+            //     },
+            // },
         ],
     });
 
