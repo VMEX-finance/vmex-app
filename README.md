@@ -1,6 +1,6 @@
-# VMEX app
+# VMEX Finance | Web App
 
-This is the frontend application for the VMEX Finance Protocol.
+This is the frontend application for the VMEX Finance Protocol. This app uses [react-app-rewired](https://www.npmjs.com/package/react-app-rewired) to ensure all dependencies are appropriately handled. For web3 functionality, an older version of wagmi is used so that `viem` does not collide with `ethers`, which is used in the SDK.
 
 ## Installation
 
@@ -28,8 +28,6 @@ Then, in the VMEX App repo, run:
 yarn dev
 ```
 
-_Note: Make sure your Metamask network is set to localhost:8545 with a chain ID 31337 and reset your MetaMask account for using the hardhat network_
-
 When adding new features, create a new branch based on `origin/develop`. Upon completing new features, create pull requests to `origin/develop`.
 
 ## Directory
@@ -43,18 +41,33 @@ src
 ├── store
 ├── ui
 │   ├── base                # Includes navbar, footer, and base layout
+│   ├── charts              # Includes chart UI components
 │   ├── components          # Includes subcomponents to be used in larger UI components
 │   ├── features            # Includes larger components to be injected into templates
 │   ├── modals              # Includes all modals and their subcomponents
 │   ├── tables              # Includes all tables, some made with MUIDataTable
 │   └── templates           # Includes templates for app, dashboard, generic grid, etc.
 ├── utils                   # Tools and utilities
-├── App.tsx
 ├── index.css
-└── index.js
+├── index.tsx               # App injection and all global contexts
+└── router.tsx              # Pages router using hash router
 ```
 
-### Site Links
+## Pipeline
+
+Production Branch: `master`
+
+Development Branch: `develop`
+
+## Site Links
 
 - [Production Site](https://app.vmex.finance)
-- [Development Site](https://vmex-app-develop.on.fleek.co/)
+- [Development Site](https://dev-app.vmex.finance/)
+
+## Credits
+
+Volatile Labs, LLC
+
+## License
+
+MIT License
