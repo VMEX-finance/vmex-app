@@ -355,14 +355,20 @@ export const useToken = (clearInputs?: () => void) => {
         clearInputs && clearInputs();
     };
 
-    const extendVmexLockTime = async (time: BigNumber) => {
-        if (queries[1]?.data?.locked?.amount?.raw === BigNumber.from(0) || !time) return;
+    const WEEK_BN = BigNumber.from(7).mul(24).mul(60).mul(60);
+    const extendVmexLockTime = async (addedWeeks: Number) => {
+        if (
+            !queries[1]?.data?.locked.end.raw ||
+            queries[1]?.data?.locked?.amount?.raw === BigNumber.from(0) ||
+            !addedWeeks
+        )
+            return;
         if (!address) return;
         try {
             setLoading({ ...loading, extendLock: true });
-            const addedWeeks = weeksUntilUnlock(time);
-            const currentWeeks = Number(queries[1]?.data?.locked?.amount?.normalized);
-            const newTime = weeksToUnixBn(addedWeeks + currentWeeks);
+            const newTime = WEEK_BN.mul(addedWeeks.toString()).add(
+                queries[1]?.data?.locked.end.raw,
+            );
             const prepareLockTx = await prepareWriteContract({
                 address: CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as `0x${string}`,
                 abi: VEVMEX_ABI,

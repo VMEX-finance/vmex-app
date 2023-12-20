@@ -265,9 +265,7 @@ const Staking: React.FC = () => {
                                         type="accent"
                                         className="h-fit mb-[17.88px]"
                                         onClick={() =>
-                                            extendVmexLockTime(
-                                                weeksToUnixBn(Number(extendInput.period)),
-                                            )
+                                            extendVmexLockTime(Number(extendInput.period))
                                         }
                                         disabled={!extendInput?.period}
                                     >
