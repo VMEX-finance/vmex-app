@@ -2,7 +2,7 @@ import React from 'react';
 import { ApyToolitp, AssetDisplay, Button, Loader, SmartPrice } from '@/ui/components';
 import { useDialogController, useWindowSize } from '@/hooks';
 import { IVaultAsset, useUserData } from '@/api';
-import { DEFAULT_CHAINID, isChainUnsupported } from '@/utils';
+import { DEFAULT_CHAINID, isChainUnsupported, percentFormatter } from '@/utils';
 import { useAccount, useSwitchNetwork } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 
@@ -66,7 +66,7 @@ export const GaugesCustomRow = (props: IVaultAsset & { loading?: boolean }) => {
                 <td className="flex justify-between">
                     <span className="font-bold">Gauge APR</span>
                     <Loader loading={loading}>
-                        <span>{gaugeAPR ? gaugeAPR : '-'}</span>
+                        <span>{gaugeAPR ? percentFormatter.format(gaugeAPR) : '-'}</span>
                     </Loader>
                 </td>
                 <td className="flex justify-between">
@@ -124,7 +124,9 @@ export const GaugesCustomRow = (props: IVaultAsset & { loading?: boolean }) => {
                 </td>
                 <td className="pl-4">
                     {' '}
-                    <Loader loading={loading}>{gaugeAPR ? gaugeAPR : '-'}</Loader>
+                    <Loader loading={loading}>
+                        {gaugeAPR ? percentFormatter.format(gaugeAPR) : '-'}
+                    </Loader>
                 </td>
                 <td className="pl-4">
                     {' '}

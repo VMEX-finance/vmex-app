@@ -115,7 +115,7 @@ const Staking: React.FC = () => {
             }
         >
             <StakingOverview
-                apr={percentFormatter.format(0)}
+                apr={percentFormatter.format(0)} // TODO
                 totalLocked={vevmexMetaData.data?.supply || '0'}
                 yourLocked={vevmexUserData?.data?.locked?.amount?.normalized || '0'}
                 expiration={vevmexUserData?.data?.locked?.end?.normalized || '-'}

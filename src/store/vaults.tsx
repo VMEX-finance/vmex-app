@@ -24,14 +24,15 @@ const VaultsContext = createContext<IVaultsStoreProps>({
 });
 
 // Utils
+const gaugeImages = ['/coins/vmex.png', '/coins/vmex-weth.png'];
 const renderGauges = async (gauges: IGaugesAsset[]): Promise<IVaultAsset[]> => {
     if (!gauges.length) return [];
     return await Promise.all(
-        gauges.map((g) => ({
+        gauges.map((g, i) => ({
             gaugeAddress: g.address,
             vaultAddress: g.vaultAddress,
             decimals: g.decimals,
-            vaultIcon: '/3D-logo.svg',
+            vaultIcon: gaugeImages[i] || '/3D-logo.svg',
             vaultName: g.name,
             vaultApy: Number(g.rewardRate.normalized),
             vaultDeposited: g.totalStaked,
