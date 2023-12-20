@@ -1,3 +1,5 @@
+import { BigNumber } from 'ethers';
+
 export type TSeconds = number;
 export type TMilliseconds = number;
 export type TWeeks = number;
@@ -6,6 +8,7 @@ export const SECOND: TMilliseconds = 1000;
 export const DAY: TMilliseconds = SECOND * 3600 * 24;
 export const WEEK: TMilliseconds = DAY * 7;
 export const YEAR: TMilliseconds = DAY * 365;
+export const SECONDS_IN_WEEK = 604800;
 
 export function toTime(time: number | string | undefined): TMilliseconds {
     if (time === undefined) {
@@ -64,4 +67,26 @@ export function roundToWeek(time?: TMilliseconds): TMilliseconds {
         return 0;
     }
     return Math.floor(toTime(time) / WEEK) * WEEK;
+}
+
+export function weeksToUnixBn(weeks?: number): BigNumber {
+    if (!weeks) return BigNumber.from(0);
+    const today = Math.ceil(Date.now().valueOf() / 1000);
+    const secondsBn = BigNumber.from(weeks).mul(BigNumber.from(SECONDS_IN_WEEK));
+    const future = BigNumber.from(today).add(secondsBn);
+    return weeks === 1 ? future.add(BigNumber.from(1000)) : future;
+}
+
+export function weeksUntilUnlock(unlockTime?: BigNumber): number {
+    if (!unlockTime) return 0;
+    const today = Math.ceil(Date.now().valueOf() / 1000);
+    const timeRemaining = unlockTime.sub(BigNumber.from(today));
+    const weeksLeft = timeRemaining.div(BigNumber.from(SECONDS_IN_WEEK));
+    let trimmed;
+    if (weeksLeft.toString().length > 6) {
+        trimmed = weeksLeft.toString().slice(0, 5);
+    } else {
+        trimmed = weeksLeft.toString();
+    }
+    return Math.ceil(Number(trimmed));
 }

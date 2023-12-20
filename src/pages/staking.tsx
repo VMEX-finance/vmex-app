@@ -2,14 +2,21 @@ import React, { useEffect } from 'react';
 import { GridView } from '@/ui/templates';
 import { Base } from '@/ui/base';
 import { StakingOverview } from '@/ui/features';
-import { CONTRACTS, TESTING, getChainId, numberFormatter, percentFormatter } from '@/utils';
+import {
+    CONTRACTS,
+    TESTING,
+    getChainId,
+    numberFormatter,
+    percentFormatter,
+    weeksToUnixBn,
+} from '@/utils';
 import { Button, Card, CustomTabPanel, CustomTabs, StakeInput } from '@/ui/components';
 import { GaugesTable } from '@/ui/tables';
 import { useLockingUI, useWindowSize, useToken } from '@/hooks';
-import { BigNumber, constants, utils } from 'ethers';
+import { BigNumber, utils } from 'ethers';
 import { useAccount } from 'wagmi';
 import { writeContract } from '@wagmi/core';
-import { IGaugesAsset, useGauages, useVaults } from '@/api';
+import { useVaults } from '@/api';
 
 const Staking: React.FC = () => {
     const chainId = getChainId();
@@ -25,7 +32,6 @@ const Staking: React.FC = () => {
         amountInputError,
         periodInputError,
         inputError,
-        unlockTimeSeconds,
         handleRedeemAmountInput,
         handleRedeemMax,
         redeemInput,
@@ -58,6 +64,12 @@ const Staking: React.FC = () => {
         setTabIndex(newValue);
     };
 
+    const renderMinWeeks = () => {
+        if (vevmexUserData?.data?.locked?.end?.normalized)
+            return `${vevmexUserData?.data?.locked?.end?.normalized} weeks`;
+        return '1 week';
+    };
+
     // TESTING
     useEffect(() => {
         if (TESTING) {
@@ -71,15 +83,6 @@ const Staking: React.FC = () => {
             title="staking"
             description={
                 <>
-                    VMEX users can stake their funds to help secure the protocol, receiving{' '}
-                    <a className="text-brand-purple underline" href="#">
-                        protocol emission
-                    </a>{' '}
-                    in return. Read more about risks associated with staking funds{' '}
-                    <a className="text-brand-purple underline" href="#">
-                        here
-                    </a>
-                    .
                     {TESTING && chainId === 5 && address && (
                         <Button
                             onClick={async () => {
@@ -106,8 +109,8 @@ const Staking: React.FC = () => {
             <StakingOverview
                 apr={percentFormatter.format(0)}
                 totalLocked={vevmexMetaData.data?.supply || '0'}
-                yourLocked={numberFormatter.format(0)}
-                expiration={'-'}
+                yourLocked={vevmexUserData?.data?.locked?.amount?.normalized || '0'}
+                expiration={vevmexUserData?.data?.locked?.end?.normalized || '-'}
             />
 
             <Card>
@@ -165,7 +168,7 @@ const Staking: React.FC = () => {
                                     footer={
                                         inputError && periodInputError
                                             ? inputError
-                                            : `Minimum: 1 week`
+                                            : `Minimum: ${renderMinWeeks()}`
                                     }
                                     onChange={handleLockPeriodInput}
                                     value={lockInput.period}
@@ -173,14 +176,18 @@ const Staking: React.FC = () => {
                                     error={periodInputError}
                                     disabled={tokenLoading.lock || tokenLoading.lockApprove}
                                 />
-                                <StakeInput header="Total veVMEX" value="" disabled />
+                                <StakeInput
+                                    header="Total veVMEX"
+                                    value={lockInput.amount}
+                                    disabled
+                                />
                                 <Button
                                     type="accent"
                                     className="h-fit mb-[17.88px]"
                                     onClick={() =>
                                         lockVmex(
                                             lockInput.amountBn,
-                                            BigNumber.from(unlockTimeSeconds),
+                                            weeksToUnixBn(Number(lockInput.period)),
                                         )
                                     } // TODO: check if time to unlock is correct
                                     disabled={
@@ -204,12 +211,12 @@ const Staking: React.FC = () => {
                             </div>
                         </GridView>
                         <div
-                            className={
+                            className={`${
                                 vevmexUserData?.data?.votingPower &&
                                 vevmexUserData?.data?.votingPower !== '0.0'
                                     ? ''
                                     : 'opacity-60 blur-[0.5px] !pointer-events-none'
-                            }
+                            } flex flex-col divide-y divide-gray-300 dark:divide-gray-700`}
                         >
                             <GridView
                                 className="p-2 lg:pt-4"
@@ -227,7 +234,7 @@ const Staking: React.FC = () => {
                                     <StakeInput
                                         header="Current lock period (weeks)"
                                         onChange={() => {}}
-                                        value={vevmexUserData?.data?.locked.end || ''}
+                                        value={vevmexUserData?.data?.locked?.end?.normalized || ''}
                                         disabled
                                     />
                                     <StakeInput
@@ -245,7 +252,9 @@ const Staking: React.FC = () => {
                                         header="Total veVMEX"
                                         disabled
                                         onChange={() => {}}
-                                        value=""
+                                        value={
+                                            vevmexUserData?.data?.locked?.amount?.normalized || ''
+                                        }
                                     />
                                     <Button
                                         type="accent"
@@ -272,13 +281,15 @@ const Staking: React.FC = () => {
                                     <StakeInput
                                         header="veVMEX you have"
                                         onChange={() => {}}
-                                        value=""
+                                        value={
+                                            vevmexUserData?.data?.locked?.amount?.normalized || ''
+                                        }
                                     />
                                     <StakeInput
                                         header="Current lock time (weeks)"
                                         disabled
                                         onChange={() => {}}
-                                        value={vevmexUserData?.data?.locked.end || ''}
+                                        value={vevmexUserData?.data?.locked?.end?.normalized || ''}
                                     />
                                     <StakeInput
                                         header="VMEX you get"
@@ -293,6 +304,7 @@ const Staking: React.FC = () => {
                                         type="accent"
                                         className="h-fit mb-[17.88px]"
                                         onClick={withdrawLockedVevmex}
+                                        disabled
                                     >
                                         Exit
                                     </Button>
@@ -318,6 +330,7 @@ const Staking: React.FC = () => {
                                         type="accent"
                                         className="h-fit mb-[17.88px]"
                                         onClick={withdrawUnlockedVevmex}
+                                        disabled
                                     >
                                         Claim
                                     </Button>
@@ -347,7 +360,7 @@ const Staking: React.FC = () => {
                                     onChange={() => {}}
                                     value=""
                                 />
-                                <Button type="accent" className="h-fit mb-[17.88px]">
+                                <Button type="accent" className="h-fit mb-[17.88px]" disabled>
                                     Claim
                                 </Button>
                             </div>
@@ -371,7 +384,7 @@ const Staking: React.FC = () => {
                                     onChange={() => {}}
                                     value=""
                                 />
-                                <Button type="accent" className="h-fit mb-[17.88px]">
+                                <Button type="accent" className="h-fit mb-[17.88px]" disabled>
                                     Claim
                                 </Button>
                             </div>
@@ -396,7 +409,7 @@ const Staking: React.FC = () => {
                                     onChange={() => {}}
                                     value=""
                                 />
-                                <Button type="accent" className="h-fit mb-[17.88px]">
+                                <Button type="accent" className="h-fit mb-[17.88px]" disabled>
                                     Claim
                                 </Button>
                             </div>
@@ -447,6 +460,7 @@ const Staking: React.FC = () => {
                                     type="accent"
                                     className="h-fit mb-[17.88px]"
                                     onClick={() => dvmexRedeem(redeemInput.amountBn)}
+                                    disabled={!redeemInput?.amount}
                                 >
                                     Redeem
                                 </Button>

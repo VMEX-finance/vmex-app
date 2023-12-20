@@ -9,15 +9,11 @@ const defaultPeriod = { period: '', periodBn: BigNumber.from(0) };
 const defaultAmount = { amount: '', amountBn: BigNumber.from(0) };
 
 export const useLockingUI = () => {
-    const { vmexBalance, dvmexBalance } = useToken();
+    const { vmexBalance, dvmexBalance, vevmexUserData } = useToken();
     const [lockInput, setLockInput] = useState({ ...defaultAmount, ...defaultPeriod });
     const [extendInput, setExtendInput] = useState(defaultPeriod);
     const [redeemInput, setRedeemInput] = useState(defaultAmount);
     const [error, setError] = useState('');
-
-    const unlockTimeSeconds = useMemo((): number => {
-        return toSeconds(Date.now() + fromWeeks(toTime(lockInput.period)));
-    }, [lockInput.amount]);
 
     function handleLockAmountInput(e: React.ChangeEvent<HTMLInputElement>) {
         const val = e.target?.value;
@@ -75,6 +71,13 @@ export const useLockingUI = () => {
                 setError(`extend:Cannot be more than ${maxWeeks} weeks`);
             } else if (Number(extendInput?.period) < 1 && extendInput?.period) {
                 setError('extend:Cannot be less than 1 week');
+            } else if (
+                Number(lockInput?.period) < Number(vevmexUserData?.data?.locked?.end?.normalized) &&
+                lockInput?.period
+            ) {
+                setError(
+                    `period:Cannot be less than ${vevmexUserData?.data?.locked?.end?.normalized} weeks`,
+                );
             } else {
                 setError('');
             }
@@ -89,6 +92,29 @@ export const useLockingUI = () => {
             return () => clearTimeout(timeout);
         }
     }, [error]);
+
+    // If user has locked
+    useEffect(() => {
+        if (vevmexUserData?.data?.votingPower && vevmexUserData?.data?.votingPower !== '0.0') {
+            const {
+                data: { locked },
+            } = vevmexUserData;
+            if (locked?.amount?.normalized) {
+                setLockInput({
+                    ...lockInput,
+                    amount: locked?.amount?.normalized,
+                    amountBn: locked?.amount?.raw,
+                });
+            }
+            if (locked?.end?.normalized) {
+                setLockInput({
+                    ...lockInput,
+                    period: String(locked?.end?.normalized),
+                    amountBn: locked?.end?.raw,
+                });
+            }
+        }
+    }, [vevmexUserData.isLoading]);
 
     const clearInputs = () => {
         setExtendInput(defaultPeriod);
@@ -108,7 +134,6 @@ export const useLockingUI = () => {
         periodInputError: error?.startsWith('period'),
         amountInputError: error?.startsWith('amount'),
         extendPeriodError: error?.startsWith('extend'),
-        unlockTimeSeconds,
         handleRedeemAmountInput,
         handleRedeemMax,
         redeemInput,
