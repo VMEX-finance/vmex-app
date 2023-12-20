@@ -1,31 +1,31 @@
 import React, { useEffect } from 'react';
-import { FaGasPump } from 'react-icons/fa';
-import { useMediatedState } from 'react-use';
-import { inputMediator } from '@/utils';
 import { IDialogProps } from '../utils';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
-import { useModal } from '@/hooks';
-import {
-    DefaultDropdown,
-    Button,
-    ActiveStatus,
-    TransactionStatus,
-    CoinInput,
-} from '@/ui/components';
+import { useModal, useVault } from '@/hooks';
+import { Button, TransactionStatus, CoinInput } from '@/ui/components';
 
 export const VaultAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, closeDialog }) => {
     const { submitTx, isSuccess, isLoading, error, view, setView } = useModal('vault-asset-dialog');
-    const [amount, setAmount] = useMediatedState(inputMediator, '');
-    const [isMax, setIsMax] = React.useState(false);
+    const { amount, setAmount, isMax, setIsMax, handleDeposit, handleWithdraw } = useVault(
+        data?.vaultAddress,
+    );
 
     const handleSubmit = async () => {
-        await submitTx();
+        if (view === 'Deposit') {
+            await submitTx(() => {
+                const res = handleDeposit();
+                return res;
+            }, true);
+        } else {
+            await submitTx(() => {
+                const res = handleWithdraw();
+                return res;
+            }, true);
+        }
     };
 
     useEffect(() => {
-        if (data?.tab) {
-            setView(data?.tab);
-        }
+        if (data?.tab) setView(data?.tab);
     }, []);
 
     return (
@@ -40,76 +40,38 @@ export const VaultAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
             {!isSuccess && !error ? (
                 // Default State
                 <>
+                    <h3 className="mt-5 text-neutral400">Amount</h3>
+                    <CoinInput
+                        amount={amount}
+                        setAmount={setAmount}
+                        coin={{
+                            logo: data.vaultIcon,
+                            name: data.vaultSymbol,
+                        }}
+                        balance={'0.23'}
+                        isMax={isMax}
+                        setIsMax={setIsMax}
+                    />
                     {view === 'Deposit' ? (
-                        <>
-                            <h3 className="mt-5 text-neutral400">Amount</h3>
-                            <CoinInput
-                                amount={amount}
-                                setAmount={setAmount}
-                                coin={{
-                                    logo: data.vaultIcon,
-                                    name: data.vaultSymbol,
-                                }}
-                                balance={'0.23'}
-                                isMax={isMax}
-                                setIsMax={setIsMax}
-                            />
-
-                            <ModalTableDisplay
-                                title="Transaction Overview"
-                                content={
-                                    [
-                                        // {
-                                        //     label: 'Supply APR (%)',
-                                        //     value: `${0.44}%`,
-                                        // },
-                                        // {
-                                        //     label: 'Collateralization',
-                                        //     value: <ActiveStatus active={true} size="sm" />,
-                                        // },
-                                        // {
-                                        //     label: 'Insurance',
-                                        //     value: <ActiveStatus active={false} size="sm" />,
-                                        // },
-                                    ]
-                                }
-                            />
-                        </>
+                        <ModalTableDisplay
+                            title="Transaction Overview"
+                            content={[
+                                {
+                                    label: 'Vault APR (%)',
+                                    value: `${0.44}%`,
+                                },
+                            ]}
+                        />
                     ) : (
-                        <>
-                            <h3 className="mt-5 text-neutral400">Amount</h3>
-                            <CoinInput
-                                amount={amount}
-                                setAmount={setAmount}
-                                coin={{
-                                    logo: data.vaultIcon,
-                                    name: data.vaultSymbol,
-                                }}
-                                balance={'0.23'}
-                                isMax={isMax}
-                                setIsMax={setIsMax}
-                            />
-
-                            <ModalTableDisplay
-                                title="Transaction Overview"
-                                content={
-                                    [
-                                        // {
-                                        //     label: 'Supply APR (%)',
-                                        //     value: `${0.44}%`,
-                                        // },
-                                        // {
-                                        //     label: 'Collateralization',
-                                        //     value: <ActiveStatus active={true} size="sm" />,
-                                        // },
-                                        // {
-                                        //     label: 'Insurance',
-                                        //     value: <ActiveStatus active={false} size="sm" />,
-                                        // },
-                                    ]
-                                }
-                            />
-                        </>
+                        <ModalTableDisplay
+                            title="Transaction Overview"
+                            content={[
+                                {
+                                    label: 'Remaining Supply',
+                                    value: `0`,
+                                },
+                            ]}
+                        />
                     )}
                 </>
             ) : (
