@@ -373,7 +373,7 @@ const Staking: React.FC = () => {
                             <div className="grid sm:grid-cols-3 gap-1 lg:gap-2 content-end items-end">
                                 <div className="grid sm:grid-cols-2 items-center gap-1 lg:gap-2 sm:col-span-2">
                                     <DefaultDropdown
-                                        border="border-gray-300 hover:border-gray-400"
+                                        border="border-gray-300 hover:border-gray-400 dark:border-gray-600 dark:border-gray-500"
                                         full
                                         type="fresh"
                                         items={vaults.map((v) => ({

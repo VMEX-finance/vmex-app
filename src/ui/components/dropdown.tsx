@@ -152,7 +152,7 @@ export const DefaultDropdown = ({
                         roundedSize,
                         dark,
                         shadow,
-                        type === 'fresh' ? 'py-[7px] !bg-gray-100 ' : '',
+                        type === 'fresh' ? 'py-[7px] !bg-gray-100 dark:!bg-neutral-800' : '',
                     ].join(' ')}
                 >
                     {label ? (
