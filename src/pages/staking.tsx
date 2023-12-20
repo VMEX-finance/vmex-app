@@ -13,7 +13,7 @@ import {
 } from '@/utils';
 import { Button, Card, CustomTabPanel, CustomTabs, StakeInput } from '@/ui/components';
 import { GaugesTable } from '@/ui/tables';
-import { useLockingUI, useWindowSize, useToken } from '@/hooks';
+import { useLockingUI, useWindowSize, useToken, useVault } from '@/hooks';
 import { BigNumber, utils } from 'ethers';
 import { useAccount } from 'wagmi';
 import { writeContract } from '@wagmi/core';
@@ -59,6 +59,7 @@ const Staking: React.FC = () => {
     const { width, breakpoints } = useWindowSize();
     const [tabIndex, setTabIndex] = React.useState(0);
     const { vaults, isError: vaultsError, isLoading: vaultsLoading } = useVaultsContext();
+    const { vaultBalance, gaugeBalance } = useVault();
 
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
         const tabText = (event.target as any).innerText;
@@ -332,7 +333,7 @@ const Staking: React.FC = () => {
                                         header="Unlocked VMEX"
                                         disabled
                                         onChange={() => {}}
-                                        value=""
+                                        value="0.0"
                                     />
                                     <Button
                                         type="accent"
@@ -366,7 +367,8 @@ const Staking: React.FC = () => {
                                 <StakeInput
                                     header="Unclaimed rewards (dVMEX)"
                                     onChange={() => {}}
-                                    value=""
+                                    value={'0.0'}
+                                    disabled
                                 />
                                 <Button type="accent" className="h-fit mb-[17.88px]" disabled>
                                     Claim
@@ -390,7 +392,8 @@ const Staking: React.FC = () => {
                                 <StakeInput
                                     header="Unclaimed veVMEX boost rewards (dVMEX)"
                                     onChange={() => {}}
-                                    value=""
+                                    value="0.0"
+                                    disabled
                                 />
                                 <Button type="accent" className="h-fit mb-[17.88px]" disabled>
                                     Claim
@@ -415,7 +418,8 @@ const Staking: React.FC = () => {
                                 <StakeInput
                                     header="Unclaimed veVMEX exit rewards (VMEX)"
                                     onChange={() => {}}
-                                    value=""
+                                    value="0.0"
+                                    disabled
                                 />
                                 <Button type="accent" className="h-fit mb-[17.88px]" disabled>
                                     Claim
@@ -439,17 +443,25 @@ const Staking: React.FC = () => {
                                     cheap VMEX anon.
                                 </p>
                                 <p className="font-bold mt-2">
-                                    Current Discount: {percentFormatter.format(0)}
+                                    Current Discount: {percentFormatter.format(0.1183)}
                                 </p>
                             </div>
                             <div className="grid sm:grid-cols-2 gap-1 lg:gap-2 content-end items-end">
                                 <StakeInput
                                     header="dVMEX to use"
-                                    footer={`Available: ${dvmexBalance?.formatted || '0.0'} dVMEX`}
+                                    footer={
+                                        redeemInput.amountBn.gt(
+                                            dvmexBalance?.value || BigNumber.from(0),
+                                        )
+                                            ? 'Insufficient balance'
+                                            : `Available: ${dvmexBalance?.formatted || '0.0'} dVMEX`
+                                    }
                                     onChange={handleRedeemAmountInput}
                                     value={redeemInput.amount}
                                     setMax={handleRedeemMax}
-                                    error={amountInputError}
+                                    error={redeemInput.amountBn.gt(
+                                        dvmexBalance?.value || BigNumber.from(0),
+                                    )}
                                     disabled={tokenLoading.redeem || tokenLoading.redeemApprove}
                                 />
                                 <StakeInput
@@ -468,7 +480,12 @@ const Staking: React.FC = () => {
                                     type="accent"
                                     className="h-fit mb-[17.88px]"
                                     onClick={() => dvmexRedeem(redeemInput.amountBn)}
-                                    disabled={!redeemInput?.amount}
+                                    disabled={
+                                        !redeemInput?.amount ||
+                                        redeemInput.amountBn.gt(
+                                            dvmexBalance?.value || BigNumber.from(0),
+                                        )
+                                    }
                                 >
                                     Redeem
                                 </Button>
