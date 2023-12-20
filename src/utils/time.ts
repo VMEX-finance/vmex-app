@@ -84,19 +84,15 @@ export function weeksToBn(weeks?: number): BigNumber {
     return secondsBn;
 }
 
-// TODO: Not exact
 export function weeksUntilUnlock(unlockTime?: BigNumber): number {
     if (!unlockTime || unlockTime === BigNumber.from(0) || unlockTime.toString() === '0') return 0;
-    const today = Math.floor(Date.now().valueOf() / 1000);
-    const timeRemaining = unlockTime.sub(BigNumber.from(today));
-    const weeksLeft = timeRemaining.div(BigNumber.from(SECONDS_IN_WEEK));
-    let trimmed;
-    if (weeksLeft.toString().length > 6) {
-        trimmed = weeksLeft.toString().slice(0, 5);
-    } else {
-        trimmed = weeksLeft.toString();
-    }
-    if (timeRemaining.toNumber() > 1 && weeksLeft.toNumber() === 0) return 1;
-    const returnVal = Math.ceil(Number(trimmed));
-    return returnVal;
+
+    const now = Math.floor(Date.now() / 1000);
+    if (unlockTime.lt(now)) return 0;
+
+    const secondsRemaining = unlockTime.sub(BigNumber.from(now));
+    const weeksLeft = secondsRemaining.div(BigNumber.from(SECONDS_IN_WEEK));
+    if (secondsRemaining.gt(1) && weeksLeft.eq(0)) return 1;
+
+    return weeksLeft.toNumber();
 }
