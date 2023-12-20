@@ -1,5 +1,5 @@
 import { useTransactionsContext } from '@/store';
-import { CONTRACTS, TESTING, VMEX_VEVMEX_CHAINID, weeksToUnixBn, weeksUntilUnlock } from '@/utils';
+import { CONTRACTS, TESTING, VMEX_VEVMEX_CHAINID, weeksUntilUnlock } from '@/utils';
 import { VEVMEX_ABI, VEVMEX_OPTIONS_ABI, VEVMEX_POSITION_HELPER_ABI } from '@/utils/abis';
 import { useQueries } from '@tanstack/react-query';
 import {
@@ -15,19 +15,6 @@ import { useAccount, useBalance, useContractRead } from 'wagmi';
 
 /**
  * Contains all functions revolving around VMEX & veVMEX staking
- * @returns
- *      vevmexIsApproved,
- *       vevmexRefreshAllowances,
- *       vevmexRedeem,
- *       tokenLoading: loading,
- *       withdrawLockedVevmex,
- *       withdrawUnlockedVevmex,
- *       getVmexLockEarlyExitPenalty,
- *       extendVmexLockTime,
- *       increaseVmexLockAmount,
- *       lockVmex,
- *       vmexBalance,
- *       veVmexBalance
  */
 export const useToken = (clearInputs?: () => void) => {
     const { address } = useAccount();
