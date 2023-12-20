@@ -84,7 +84,7 @@ const Staking: React.FC = () => {
             console.log('veVMEX:', vevmexMetaData.data);
             console.log('veVMEX User Data:', vevmexUserData.data);
         }
-    }, [vevmexMetaData.data, vevmexUserData.data]);
+    }, [vevmexMetaData.isLoading, vevmexUserData.isLoading]);
 
     return (
         <Base
@@ -303,11 +303,11 @@ const Staking: React.FC = () => {
                                     />
                                     <StakeInput
                                         header="VMEX you get"
-                                        footer={`Penalty: ${
+                                        footer={`Penalty: ${percentFormatter.format(
                                             vevmexUserData?.data?.penalty
                                                 ? vevmexUserData?.data?.penalty
-                                                : '50.12%'
-                                        }`}
+                                                : 0,
+                                        )}`}
                                         onChange={() => {}}
                                         disabled
                                         value={vevmexUserData?.data?.exitPreview || ''}

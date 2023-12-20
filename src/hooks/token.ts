@@ -100,7 +100,7 @@ export const useToken = (clearInputs?: () => void) => {
         });
 
         const now = Math.floor(Date.now() / 1000);
-        let penalty = '0.00 %';
+        let penalty = 0;
         if (end.gt(now)) {
             const timeLeft = end.sub(now).lt(MAX_LOCK_DURATION)
                 ? end.sub(now)
@@ -108,7 +108,8 @@ export const useToken = (clearInputs?: () => void) => {
             const penaltyRatio = timeLeft.mul(SCALE).div(MAX_LOCK_DURATION).lt(MAX_PENALTY_RATIO)
                 ? timeLeft.mul(SCALE).div(MAX_LOCK_DURATION)
                 : MAX_PENALTY_RATIO;
-            penalty = `${(penaltyRatio.mul('10000').div(SCALE).toNumber() / 100).toFixed(2)} %`;
+            const formatted = penaltyRatio.mul('10000').div(SCALE).toNumber();
+            penalty = formatted / (100 * 100);
         }
 
         return {
@@ -127,7 +128,7 @@ export const useToken = (clearInputs?: () => void) => {
                 normalized: '0.0',
                 raw: BigNumber.from(0),
             },
-            exitPreview: '', // TODO
+            exitPreview: Number(penalty) * 100 * Number(utils.formatEther(amount)), // TODO
             penalty,
         };
     };
@@ -162,6 +163,30 @@ export const useToken = (clearInputs?: () => void) => {
         };
     };
 
+    const getPositionsData = async () => {
+        if (!address) return;
+        try {
+            const earlyExitRead = await readContract({
+                address: CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as `0x${string}`,
+                abi: VEVMEX_POSITION_HELPER_ABI,
+                chainId: VMEX_VEVMEX_CHAINID,
+                functionName: 'getPositionDetails',
+                args: [address],
+            });
+            return earlyExitRead;
+        } catch (e) {
+            console.error('#getPositionsData:', e);
+            return {
+                balance: BigNumber.from(0),
+                depositAmount: BigNumber.from(0),
+                withdrawable: BigNumber.from(0),
+                penalty: BigNumber.from(0),
+                unlockTime: BigNumber.from(0),
+                timeRemaining: BigNumber.from(0),
+            };
+        }
+    };
+
     const queries = useQueries({
         queries: [
             {
@@ -174,6 +199,19 @@ export const useToken = (clearInputs?: () => void) => {
                 queryFn: getVevmexUserData,
                 refetchInterval: 10 * 1000,
                 enabled: !!address,
+            },
+            {
+                queryKey: ['vevmex-positions', address],
+                queryFn: getPositionsData,
+                enabled: !!address,
+                initialData: {
+                    balance: BigNumber.from(0),
+                    depositAmount: BigNumber.from(0),
+                    withdrawable: BigNumber.from(0),
+                    penalty: BigNumber.from(0),
+                    unlockTime: BigNumber.from(0),
+                    timeRemaining: BigNumber.from(0),
+                },
             },
         ],
     });
