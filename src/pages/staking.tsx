@@ -310,7 +310,6 @@ const Staking: React.FC = () => {
                                         type="accent"
                                         className="h-fit mb-[17.88px]"
                                         onClick={withdrawLockedVevmex}
-                                        disabled
                                     >
                                         Exit
                                     </Button>
