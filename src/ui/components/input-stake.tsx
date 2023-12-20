@@ -30,7 +30,11 @@ export const StakeInput = ({
                     'p-1',
                     'rounded-lg',
                     `border ${
-                        disabled ? 'border-gray-300' : error ? 'border-red-600' : 'border-gray-400'
+                        disabled
+                            ? 'border-gray-300 dark:border-gray-800'
+                            : error
+                            ? 'border-red-600'
+                            : 'border-gray-400 dark:border-gray-500'
                     }`,
                 ].join(' ')}
             >

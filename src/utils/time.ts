@@ -94,5 +94,7 @@ export function weeksUntilUnlock(unlockTime?: BigNumber): number {
     } else {
         trimmed = weeksLeft.toString();
     }
+    const returnVal = Math.ceil(Number(trimmed));
+    if (returnVal < 0) return 0;
     return Math.ceil(Number(trimmed));
 }

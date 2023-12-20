@@ -39,7 +39,7 @@ export const StakingOverview = (props: IStakingOverviewProps) => {
                         <div className="flex flex-col gap-1 items-center">
                             <span className="flex gap-0.5 items-end">
                                 <span className="text-4xl">{el.amount}</span>
-                                {el.label === 'Expiration for the lock' && el.amount !== '0' && (
+                                {el.label === 'Expiration for the lock' && el.amount !== '-' && (
                                     <span className="text-xs mb-1 text-gray-600 dark:text-gray-400">
                                         Weeks
                                     </span>

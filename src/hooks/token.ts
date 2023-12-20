@@ -1,8 +1,19 @@
 import { useTransactionsContext } from '@/store';
 import { CONTRACTS, TESTING, toWeeks, weeksToUnixBn, weeksUntilUnlock } from '@/utils';
-import { VEVMEX_ABI, VEVMEX_OPTIONS_ABI } from '@/utils/abis';
+import {
+    VEVMEX_ABI,
+    VEVMEX_CLAIM_REWARDS_ZAP_ABI,
+    VEVMEX_OPTIONS_ABI,
+    VEVMEX_POSITION_HELPER_ABI,
+} from '@/utils/abis';
 import { useQueries } from '@tanstack/react-query';
-import { erc20ABI, writeContract, prepareWriteContract, readContracts } from '@wagmi/core';
+import {
+    erc20ABI,
+    writeContract,
+    prepareWriteContract,
+    readContracts,
+    readContract,
+} from '@wagmi/core';
 import { BigNumber, constants, utils } from 'ethers';
 import { useState } from 'react';
 import { useAccount, useBalance, useContractRead } from 'wagmi';
@@ -101,6 +112,10 @@ export const useToken = (clearInputs?: () => void) => {
                     raw: data[1]?.amount,
                 },
             },
+            unlocked: {
+                normalized: '0.0',
+                raw: BigNumber.from(0),
+            },
             exitPreview: '', // TODO
         };
     };
@@ -131,21 +146,23 @@ export const useToken = (clearInputs?: () => void) => {
         return {
             totalVotingPower: utils.formatEther(data[0]),
             supply: utils.formatEther(data[1]),
+            rewardPool: utils.getAddress(data[2]),
         };
     };
 
-    const getVmexLockEarlyExitPenalty = async () => {
+    const getPositionsData = async () => {
         if (!address) return;
         try {
-            const prepareEarlyExit = await prepareWriteContract({
+            const earlyExitRead = await readContract({
                 address: CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as `0x${string}`,
-                abi: VEVMEX_ABI,
+                abi: VEVMEX_POSITION_HELPER_ABI,
                 chainId: VMEX_VEVMEX_CHAINID,
-                functionName: 'withdraw',
+                functionName: 'getPositionDetails',
+                args: [address],
             });
-            return prepareEarlyExit.request.value; // TODO
+            return earlyExitRead;
         } catch (e) {
-            return BigNumber.from(0);
+            console.error('#getPositionsData:', e);
         }
     };
 
@@ -160,10 +177,12 @@ export const useToken = (clearInputs?: () => void) => {
                 queryKey: ['vevmex-user-data', address],
                 queryFn: getVevmexUserData,
                 refetchInterval: 10 * 1000,
+                enabled: !!address,
             },
             {
-                queryKey: ['vevmex-early-exit-penalty', address],
-                queryFn: getVmexLockEarlyExitPenalty,
+                queryKey: ['vevmex-positions', address],
+                queryFn: getPositionsData,
+                enabled: !!address,
             },
         ],
     });
@@ -335,12 +354,23 @@ export const useToken = (clearInputs?: () => void) => {
         // TODO
     };
 
+    // TODO
     const withdrawLockedVevmex = async () => {
-        // TODO
-        // try {
-        // } catch (e) {
-        //     console.log(e);
-        // }
+        if (!address) return;
+        try {
+            setLoading({ ...loading, earlyExit: true });
+            const prepareEarlyExit = await prepareWriteContract({
+                address: CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as `0x${string}`,
+                abi: VEVMEX_ABI,
+                chainId: VMEX_VEVMEX_CHAINID,
+                functionName: 'withdraw',
+            });
+            const earlyExitTx = await writeContract(prepareEarlyExit);
+            await Promise.all([newTransaction(earlyExitTx), earlyExitTx.wait()]);
+            setLoading({ ...loading, earlyExit: false });
+        } catch (e) {
+            console.log(e);
+        }
     };
 
     return {
