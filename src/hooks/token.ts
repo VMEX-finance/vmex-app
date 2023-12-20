@@ -10,6 +10,7 @@ import {
     readContract,
 } from '@wagmi/core';
 import { BigNumber, constants, utils } from 'ethers';
+import { formatEther } from 'ethers/lib/utils.js';
 import { useState } from 'react';
 import { useAccount, useBalance, useContractRead } from 'wagmi';
 
@@ -115,7 +116,7 @@ export const useToken = (clearInputs?: () => void) => {
                 normalized: '0.0',
                 raw: BigNumber.from(0),
             },
-            exitPreview: Number(penalty) * 100 * Number(utils.formatEther(amount)), // TODO
+            exitPreview: formatEther(amount.sub(amount.mul((penalty * 100).toFixed(0)).div(100))),
             penalty,
         };
     };

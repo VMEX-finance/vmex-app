@@ -8,13 +8,9 @@ export const CONTRACTS = {
         vmexRewards: '0x61EADfFbE50c1b97f7309Cac313A4FC49569e24D', // VMEX Reward Pool
         dvmexRewards: '0x0cbCBa330C3904672E90f9D1A4a5918D5b1691ac', // dVMEX Reward Pool
         gaugeFactory: '0x71b5F73cE44254Db01c949632C750797897Df50F', // Gauage Factory
-        registery: '0x6904E008a42541A91a6b58B80ea4D5a45D9Cc844', // Registery
+        registry: '0x6904E008a42541A91a6b58B80ea4D5a45D9Cc844', // registry
         vmexWeth: '0x3e5FA9518eA95c3E533EB377C001702A9AaCAA32', // vmexWeth Pool
         redemption: '0x9041Efc8fa750173f22E1fc67b5dAdB942eaBfaC', // Redemption
-        gauges: [
-            '0x19E008c221B5297063F729e25B450754366aF83e', // VMEX
-            '0x28fdb3bC3D8D3304D85194C88aD83470634aA51b', // WETH
-        ],
     },
     10: {
         // Optimism
@@ -28,10 +24,9 @@ export const CONTRACTS = {
         vmexRewards: '', // VMEX Reward Pool
         dvmexRewards: '', // dVMEX Reward Pool
         gaugeFactory: '', // Gauage Factory
-        registery: '', // Registery
+        registry: '', // registry
         vmexWeth: '', // vmexWeth Pool
         redemption: '', // Redemption
-        gauges: [''],
     },
 };
 

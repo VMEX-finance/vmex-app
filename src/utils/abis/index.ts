@@ -9,5 +9,5 @@ export * from './veVmexDVmex';
 export * from './veVmexGauge';
 export * from './veVmexOptions';
 export * from './veVmexPositionHelper';
-export * from './veVmexRegistery';
+export * from './veVmexRegistry';
 export * from './veVmexRewardsClaimZap';
