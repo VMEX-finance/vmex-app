@@ -76,7 +76,8 @@ export const useVault = (vaultAddress?: string, gaugeAddress?: string) => {
         if (!amount || !vaultDetails.data?.[4]) return false;
         const allowance = utils.formatUnits(vaultDetails.data?.[4]);
         const bnAmount = utils.parseUnits(amount); // TODO: handle decimals
-        return Number(bnAmount) > Number(allowance) ? true : false;
+        console.log('Approved Enough:', Number(bnAmount) > Number(allowance));
+        return Number(bnAmount) > Number(allowance);
     }
 
     async function handleDeposit(e: any) {

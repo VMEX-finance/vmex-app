@@ -4,12 +4,13 @@ import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
 import { useModal, useVault } from '@/hooks';
 import { Button, TransactionStatus, CoinInput } from '@/ui/components';
 import { VaultDetails } from '@/ui/features/vault-details';
-import { convertAddressToSymbol } from '@vmexfinance/sdk';
-import { getNetworkName, toSymbol } from '@/utils';
-import { useAccount, useBalance } from 'wagmi';
+import { VMEX_VEVMEX_CHAINID, getChainId, toSymbol } from '@/utils';
+import { useAccount, useSwitchNetwork, useFeeData } from 'wagmi';
 
 export const VaultAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, closeDialog }) => {
     const { address } = useAccount();
+    const chainId = getChainId();
+    const { switchNetworkAsync } = useSwitchNetwork();
     const { submitTx, isSuccess, isLoading, error, view, setView } = useModal('vault-asset-dialog');
     const {
         amount,
@@ -23,8 +24,11 @@ export const VaultAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
         vaultBalance,
         gaugeBalance,
     } = useVault(data?.vaultAddress, data?.gaugeAddress);
+    const { data: gas } = useFeeData();
 
     const handleSubmit = async (e: any) => {
+        if (chainId !== VMEX_VEVMEX_CHAINID && switchNetworkAsync)
+            await switchNetworkAsync(VMEX_VEVMEX_CHAINID);
         if (view === 'Deposit') {
             await handleDeposit(e);
         } else {
@@ -33,6 +37,7 @@ export const VaultAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
     };
 
     const renderBtnText = () => {
+        if (chainId !== VMEX_VEVMEX_CHAINID) return 'Switch Network';
         if (view === 'Deposit') {
             if (approvedEnough()) {
                 return 'Deposit';
@@ -79,13 +84,13 @@ export const VaultAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
                         isMax={isMax}
                         setIsMax={setIsMax}
                     />
-                    {/* {view === 'Deposit' ? (
+                    {view === 'Deposit' ? (
                         <ModalTableDisplay
                             title="Transaction Overview"
                             content={[
                                 {
-                                    label: 'Vault APR (%)',
-                                    value: `${0.44}%`,
+                                    label: 'Estimated Gas',
+                                    value: `${gas?.formatted.gasPrice} gwei`,
                                 },
                             ]}
                         />
@@ -95,11 +100,18 @@ export const VaultAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
                             content={[
                                 {
                                     label: 'Remaining Supply',
-                                    value: `0`,
+                                    value: `${
+                                        Number(data?.vaultDeposited?.normalized || '0') -
+                                        Number(amount || '0')
+                                    }`,
+                                },
+                                {
+                                    label: 'Estimated Gas',
+                                    value: `${gas?.formatted.gasPrice} gwei`,
                                 },
                             ]}
                         />
-                    )} */}
+                    )}
                 </>
             ) : (
                 <div className="mt-10 mb-8">

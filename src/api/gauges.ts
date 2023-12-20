@@ -1,12 +1,9 @@
-import { VMEX_VEVMEX_CHAINID } from '@/hooks';
-import { CONTRACTS, TESTING, getChainId, getNetworkName, truncate } from '@/utils';
+import { CONTRACTS, TESTING, getNetworkName, VMEX_VEVMEX_CHAINID } from '@/utils';
 import { VEVMEX_GAUGE_ABI } from '@/utils/abis';
-import { decodeAsAddress, decodeAsBigInt, decodeAsNumber, decodeAsString } from '@/utils/decode';
 import { useQuery } from '@tanstack/react-query';
-import { readContract, readContracts } from '@wagmi/core';
+import { readContracts } from '@wagmi/core';
 import { BigNumber, BigNumberish, utils } from 'ethers';
-import { useEffect, useMemo } from 'react';
-import { IGaugesAsset, IVaultAsset } from './types';
+import { useEffect } from 'react';
 
 const toNormalizedBN = (value: BigNumberish, decimals?: number) => ({
     raw: BigNumber.from(value),

@@ -1,11 +1,6 @@
 import { useTransactionsContext } from '@/store';
-import { CONTRACTS, TESTING, toWeeks, weeksToUnixBn, weeksUntilUnlock } from '@/utils';
-import {
-    VEVMEX_ABI,
-    VEVMEX_CLAIM_REWARDS_ZAP_ABI,
-    VEVMEX_OPTIONS_ABI,
-    VEVMEX_POSITION_HELPER_ABI,
-} from '@/utils/abis';
+import { CONTRACTS, TESTING, VMEX_VEVMEX_CHAINID, weeksToUnixBn, weeksUntilUnlock } from '@/utils';
+import { VEVMEX_ABI, VEVMEX_OPTIONS_ABI, VEVMEX_POSITION_HELPER_ABI } from '@/utils/abis';
 import { useQueries } from '@tanstack/react-query';
 import {
     erc20ABI,
@@ -17,8 +12,6 @@ import {
 import { BigNumber, constants, utils } from 'ethers';
 import { useState } from 'react';
 import { useAccount, useBalance, useContractRead } from 'wagmi';
-
-export const VMEX_VEVMEX_CHAINID = 5;
 
 /**
  * Contains all functions revolving around VMEX & veVMEX staking

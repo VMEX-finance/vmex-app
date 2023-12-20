@@ -115,6 +115,7 @@ const baseChain: Chain | any = {
 
 export const DEFAULT_NETWORK = 'optimism';
 export const DEFAULT_CHAINID = 10;
+export const VMEX_VEVMEX_CHAINID = process.env.REACT_APP_TEST ? 5 : DEFAULT_CHAINID;
 
 export const availableNetworks = (type: 'wagmi' | 'string') => {
     if (type === 'wagmi') {
