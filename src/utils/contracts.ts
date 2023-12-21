@@ -1,6 +1,16 @@
-export const CONTRACTS = {
+// VMEX START TIME: 1703718921
+// dVMEX START TIME: 1703718921
+
+import { INetworkContracts } from '@/types/network';
+import { constants } from 'ethers';
+
+export const CONTRACTS: Record<5 | 10, INetworkContracts> = {
     5: {
         // Goerli
+        veloRouter: constants.AddressZero, // VELO Router
+        veloFactory: constants.AddressZero, // VELO Factory
+        lendingPool: constants.AddressZero, // Lending Pool
+        leverageController: constants.AddressZero, // Leverage Controller
         dvmex: '0xB124e57FbA2624Dbe9FD147245630c4299c51569', // dVMEX
         vmex: '0xd0eEfD79b19Eb8c26856453A487aeFbEdD85127f', // VMEX
         vmexComputed: '0x61EADfFbE50c1b97f7309Cac313A4FC49569e24D',
@@ -18,15 +28,16 @@ export const CONTRACTS = {
         veloFactory: '0xF1046053aa5682b4F9a81b5481394DA16BE5FF5a', // VELO Factory
         lendingPool: '0x60F015F66F3647168831d31C7048ca95bb4FeaF9', // Lending Pool
         leverageController: '0x69d61714e902C9c337394424C5fC2482f00bfC70', // Leverage Controller
-        dvmex: '', // dVMEX
-        vmex: '', // VMEX
-        vevmex: '', // veVMEX
-        vmexRewards: '', // VMEX Reward Pool
-        dvmexRewards: '', // dVMEX Reward Pool
-        gaugeFactory: '', // Gauage Factory
-        registry: '', // registry
-        vmexWeth: '', // vmexWeth Pool
-        redemption: '', // Redemption
+        dvmex: '0xb5359eCdc13f055DF2b433520F9Df35D68F49D3d', // dVMEX
+        vmex: '0x6D2E5b8841a6Aa5f0f973436357f75D3Eeb93312', // VMEX
+        vevmex: '0xD5A3E749a03c2f9645fdF2d755f96e407d0A2D5a', // veVMEX
+        vmexRewards: '0xecF3e854D428074d116DE6f31213522F6525Cf81', // VMEX Reward Pool
+        dvmexRewards: '0xC4F1050a3216b116a78133038912BC3b9506aEF0', // dVMEX Reward Pool
+        gaugeFactory: '0x9D2105416cE030c4dE41Eea9C37c83a065508977', // Gauage Factory
+        registry: '0xe04B52356246C3b21CA796799532f4C1Fb7ac4A7', // registry
+        vmexWeth: '0x4Dde571Dc66217a062e4B50f9b20c4D08b3245a0', // vmexWeth Pool
+        redemption: '0x0D7F8980Fd1571B3Af0900D0eccB88e5c633f1d8', // Redemption
+        vmexComputed: '0xecF3e854D428074d116DE6f31213522F6525Cf81',
     },
 };
 
