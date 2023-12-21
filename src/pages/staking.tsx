@@ -125,10 +125,10 @@ const Staking: React.FC = () => {
                     tabIndex={tabIndex}
                     handleTabChange={handleTabChange}
                 />
-                <CustomTabPanel value={tabIndex} index={0}>
+                <CustomTabPanel value={tabIndex} index={0} className="min-h-[425px]">
                     <GaugesTable data={vaults} loading={vaultsLoading} error={vaultsError} />
                 </CustomTabPanel>
-                <CustomTabPanel value={tabIndex} index={1}>
+                <CustomTabPanel value={tabIndex} index={1} className="min-h-[425px]">
                     <div className="flex flex-col divide-y divide-gray-300 dark:divide-gray-700">
                         <GridView
                             className="p-2 pt-1"
@@ -340,7 +340,7 @@ const Staking: React.FC = () => {
                         </div>
                     </div>
                 </CustomTabPanel>
-                <CustomTabPanel value={tabIndex} index={2}>
+                <CustomTabPanel value={tabIndex} index={2} className="min-h-[425px]">
                     <div className="flex flex-col divide-y divide-gray-300 dark:divide-gray-700">
                         <GridView
                             className="p-2 pt-1"
@@ -361,14 +361,15 @@ const Staking: React.FC = () => {
                                         border="border-gray-300 hover:border-gray-400 dark:border-gray-600 dark:border-gray-500"
                                         full
                                         type="fresh"
+                                        className=""
                                         items={vaults.map((v) => ({
-                                            text: v.vaultName,
+                                            text: v.vaultSymbol,
                                             icon: v.vaultIcon,
                                             onClick: () => setSelected(v.vaultAddress),
                                         }))}
                                         selected={
                                             vaults.find((v) => v.vaultAddress === selected)
-                                                ?.vaultName || vaults[0]?.vaultName
+                                                ?.vaultSymbol || vaults[0]?.vaultSymbol
                                         }
                                     />
                                     <StakeInput
@@ -436,7 +437,7 @@ const Staking: React.FC = () => {
                         </GridView>
                     </div>
                 </CustomTabPanel>
-                <CustomTabPanel value={tabIndex} index={3}>
+                <CustomTabPanel value={tabIndex} index={3} className="min-h-[425px]">
                     <div className="flex flex-col divide-y divide-gray-300 dark:divide-gray-700">
                         <GridView
                             className="p-2 pt-1"

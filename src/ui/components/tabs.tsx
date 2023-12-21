@@ -46,8 +46,9 @@ export function CustomTabPanel(props: {
     children?: React.ReactNode;
     index: number;
     value: number;
+    className?: string;
 }) {
-    const { children, value, index, ...other } = props;
+    const { children, value, index, className, ...other } = props;
 
     return (
         <div
@@ -55,6 +56,7 @@ export function CustomTabPanel(props: {
             hidden={value !== index}
             id={`tabpanel-${index}`}
             aria-labelledby={`tab-${index}`}
+            className={className}
             {...other}
         >
             {value === index && <div className="pt-2 xl:pt-3">{children}</div>}

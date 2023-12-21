@@ -70,6 +70,7 @@ export const determineCoinImg = (asset: string, custom?: string) => {
         }
         if (_asset === 'bibta') return `${url}bibta.webp`;
         if (_asset === 'bib01') return `${url}bib01.png`;
+        if (_asset === 'vmex') return `${url}vmex.png`;
         return `${url}${_asset}.svg`;
     }
 };

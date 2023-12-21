@@ -18,11 +18,7 @@ export const VaultDetails = ({ vault, deposited }: IVaultDetails & { deposited?:
                 className="flex items-center gap-1"
                 rel="noreferrer"
             >
-                <AssetDisplay
-                    logo={vault?.vaultIcon || '/coins/eth.svg'}
-                    name={vault?.vaultName || 'ETH'}
-                    size="xl"
-                />
+                <AssetDisplay name={vault?.vaultSymbol || 'ETH'} size="xl" />
                 <GoLinkExternal />
             </a>
             <div className="flex flex-row justify-between items-center mt-2 px-2">

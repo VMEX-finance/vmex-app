@@ -70,7 +70,6 @@ export const VaultAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
                         amount={amount}
                         setAmount={setAmount}
                         coin={{
-                            logo: data.vaultIcon,
                             name:
                                 view === 'Deposit'
                                     ? toSymbol(data?.vaultAddress) || 'VMEX'

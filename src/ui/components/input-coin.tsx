@@ -10,7 +10,7 @@ export interface ICoinInput {
     amount: string;
     setAmount?: React.Dispatch<React.SetStateAction<string>>;
     coin: {
-        logo: string;
+        logo?: string;
         name: string;
     };
     balance?: string;
@@ -103,7 +103,7 @@ export const CoinInput = ({
                         placeholder="0.00"
                         disabled={disabled}
                     />
-                    <AssetDisplay logo={coin.logo} name={coin.name} />
+                    <AssetDisplay logo={coin?.logo} name={coin.name} />
                 </div>
                 {setIsMax && (
                     <div className="flex flex-row justify-end items-end gap-3">

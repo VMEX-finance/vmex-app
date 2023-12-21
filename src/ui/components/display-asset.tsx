@@ -50,7 +50,9 @@ export const AssetDisplay = (props: IAssetDisplayProps) => {
                     {!props?.name?.includes('Underlying') &&
                         renderAsset(props.name || '', props.size)}
                     {!props.noText && (
-                        <span className="truncate whitespace-nowrap">{props.name || ''}</span>
+                        <span className={`truncate whitespace-nowrap ${renderSize().text}`}>
+                            {props.name || ''}
+                        </span>
                     )}
                     {props.value && <span>{props.value}</span>}
                 </>
@@ -102,6 +104,12 @@ export const renderAsset = (
             size,
             origAssetName: asset,
         })
+    ) : asset.substring(0, 4) === 'vG-v' ? (
+        MultipleAssetsDisplayOverlapping({
+            assets: ['vmex', asset.substring(4).replace(/[0-9]/g, '')],
+            size,
+            origAssetName: asset,
+        })
     ) : (
         <Tooltip
             text={determineCoinDescription(asset)}
@@ -131,6 +139,8 @@ export const iconSize = (size?: IAssetSize) => {
 };
 export const smallerIconSize = (size?: IAssetSize) => {
     switch (size) {
+        case 'xl':
+            return 'h-5 w-5';
         case 'lg':
             return 'h-4 w-4';
         case 'sm':
@@ -142,6 +152,8 @@ export const smallerIconSize = (size?: IAssetSize) => {
 
 export const iconSizeClass = (size?: IAssetSize) => {
     switch (size) {
+        case 'xl':
+            return 'h-10 w-10';
         case 'lg':
             return 'h-7 2xl:h-8 w-7 2xl:w-8';
         case 'sm':

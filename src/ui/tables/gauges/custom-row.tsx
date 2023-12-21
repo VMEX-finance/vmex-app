@@ -108,7 +108,7 @@ export const GaugesCustomRow = (props: IVaultAsset & { loading?: boolean }) => {
             >
                 <td className="whitespace-nowrap pl-2 md:pl-4 pr-2 text-sm">
                     <Loader loading={loading}>
-                        <AssetDisplay name={vaultName} logo={vaultIcon} />
+                        <AssetDisplay name={vaultSymbol} />
                     </Loader>
                 </td>
                 <td className="min-w-[150px] pl-4 py-3">
