@@ -16,11 +16,11 @@ export const StakingOverview = (props: IStakingOverviewProps) => {
             amount: props.apr,
         },
         {
-            label: 'Total Locked VMEX',
+            label: 'Total Locked VW8020',
             amount: props.totalLocked,
         },
         {
-            label: 'Your Locked VMEX',
+            label: 'Your Locked VW8020',
             amount: props.yourLocked,
         },
         {

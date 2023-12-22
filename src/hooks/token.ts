@@ -1,13 +1,26 @@
 import { useTransactionsContext } from '@/store';
 import { IAddress } from '@/types/wagmi';
 import { CONTRACTS, TESTING, VMEX_VEVMEX_CHAINID, weeksUntilUnlock } from '@/utils';
-import { VEVMEX_ABI, VEVMEX_OPTIONS_ABI, VEVMEX_POSITION_HELPER_ABI } from '@/utils/abis';
+import { VEVMEX_ABI, VEVMEX_OPTIONS_ABI } from '@/utils/abis';
 import { useQueries } from '@tanstack/react-query';
 import { erc20ABI, writeContract, prepareWriteContract, readContracts } from '@wagmi/core';
 import { BigNumber, constants, utils } from 'ethers';
 import { formatEther } from 'ethers/lib/utils.js';
 import { useState } from 'react';
-import { useAccount, useBalance, useBlockNumber, useContractRead } from 'wagmi';
+import { useAccount, useBalance, useContractRead } from 'wagmi';
+
+const DEFAULT_LOADING = {
+    redeem: false,
+    redeemApprove: false,
+    lock: false,
+    lockApprove: false,
+    extendLock: false,
+    extendLockApprove: false,
+    earlyExit: false,
+    earlyExitApprove: false,
+    expiredLock: false,
+    expiredLockApprove: false,
+};
 
 /**
  * Contains all functions revolving around VMEX & veVMEX staking
@@ -15,18 +28,7 @@ import { useAccount, useBalance, useBlockNumber, useContractRead } from 'wagmi';
 export const useToken = (clearInputs?: () => void) => {
     const { address } = useAccount();
     const { newTransaction } = useTransactionsContext();
-    const [loading, setLoading] = useState({
-        redeem: false,
-        redeemApprove: false,
-        lock: false,
-        lockApprove: false,
-        extendLock: false,
-        extendLockApprove: false,
-        earlyExit: false,
-        earlyExitApprove: false,
-        expiredLock: false,
-        expiredLockApprove: false,
-    });
+    const [loading, setLoading] = useState(DEFAULT_LOADING);
     const { data: vmexBalance } = useBalance({
         address,
         chainId: VMEX_VEVMEX_CHAINID,
@@ -322,6 +324,7 @@ export const useToken = (clearInputs?: () => void) => {
             clearInputs && clearInputs();
         } catch (e) {
             console.error('#lockVmex:', e);
+            setLoading(DEFAULT_LOADING);
         }
     };
 
@@ -370,6 +373,7 @@ export const useToken = (clearInputs?: () => void) => {
             clearInputs && clearInputs();
         } catch (e) {
             console.error(e);
+            setLoading(DEFAULT_LOADING);
         }
     };
 
@@ -394,6 +398,7 @@ export const useToken = (clearInputs?: () => void) => {
             clearInputs && clearInputs();
         } catch (e) {
             console.log(e);
+            setLoading(DEFAULT_LOADING);
         }
     };
 
