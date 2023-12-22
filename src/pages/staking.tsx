@@ -2,15 +2,7 @@ import React, { useEffect } from 'react';
 import { GridView } from '@/ui/templates';
 import { Base } from '@/ui/base';
 import { StakingOverview } from '@/ui/features';
-import {
-    CONTRACTS,
-    NETWORKS,
-    TESTING,
-    VMEX_VEVMEX_CHAINID,
-    getChainId,
-    percentFormatter,
-    weeksToUnixBn,
-} from '@/utils';
+import { CONTRACTS, NETWORKS, TESTING, getChainId, percentFormatter, weeksToUnixBn } from '@/utils';
 import {
     Button,
     Card,
@@ -47,25 +39,22 @@ const Staking: React.FC = () => {
         clearInputs,
     } = useLockingUI();
     const {
-        vmexBalance,
         dvmexBalance,
         dvmexRedeem,
-        inputToBn,
         vevmexIsApproved,
         lockVmex,
         tokenLoading,
         vevmexMetaData,
         vevmexUserData,
         extendVmexLockTime,
-        vevmexRedeem,
-        increaseVmexLockAmount,
         withdrawUnlockedVevmex,
         withdrawLockedVevmex,
+        vw8020Balance,
     } = useToken(clearInputs);
     const { width, breakpoints } = useWindowSize();
     const [tabIndex, setTabIndex] = React.useState(0);
     const { vaults, isError: vaultsError, isLoading: vaultsLoading } = useVaultsContext();
-    const { vaultBalance, gaugeBalance, selected, setSelected } = useVault();
+    const { selected, setSelected } = useVault();
 
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
         const tabText = (event.target as any).innerText;
@@ -167,7 +156,9 @@ const Staking: React.FC = () => {
                                     footer={
                                         inputError && amountInputError
                                             ? inputError
-                                            : `Available: ${vmexBalance?.formatted || '0.0'} VW8020`
+                                            : `Available: ${
+                                                  vw8020Balance?.formatted || '0.0'
+                                              } VW8020`
                                     }
                                     onChange={handleLockAmountInput}
                                     value={lockInput.amount}
