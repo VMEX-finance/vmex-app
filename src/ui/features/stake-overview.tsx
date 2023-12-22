@@ -1,5 +1,6 @@
 import React from 'react';
 import { Card, Loader } from '@/ui/components';
+import { numberFormatter } from '@/utils';
 
 export type IStakingOverviewProps = {
     apr: string | number;
@@ -40,7 +41,11 @@ export const StakingOverview = (props: IStakingOverviewProps) => {
                         <div className="flex flex-col gap-1 items-center">
                             <Loader loading={props.loading} height={40}>
                                 <span className="flex gap-0.5 items-end">
-                                    <span className="text-4xl">{el.amount}</span>
+                                    <span className="text-4xl">
+                                        {el.label.includes('Locked')
+                                            ? numberFormatter.format(Number(el.amount))
+                                            : el.amount}
+                                    </span>
                                     {el.label === 'Expiration for the lock' &&
                                         el.amount !== '-' && (
                                             <span className="text-xs mb-1 text-gray-600 dark:text-gray-400">
