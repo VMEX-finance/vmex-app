@@ -319,10 +319,8 @@ export const useToken = (clearInputs?: () => void) => {
                 abi: VEVMEX_ABI,
                 chainId: VMEX_VEVMEX_CHAINID,
                 functionName: 'modify_lock',
-                args: [amount, BigNumber.from(time)], // remember to change
+                args: [amount, BigNumber.from(time)],
             });
-            // 1703024518854
-            // 1734552024
             if (TESTING) console.log('Lock VMEX TX:', prepareLockTx);
             const lockTx = await writeContract(prepareLockTx);
             setLoading({ ...loading, lock: true });

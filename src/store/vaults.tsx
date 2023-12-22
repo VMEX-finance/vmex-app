@@ -1,7 +1,14 @@
-import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import React, { createContext, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
 import { useAccount, useSwitchNetwork } from 'wagmi';
 import { getNetworkName } from '../utils/network';
-import { IGaugesAsset, IVaultAsset, useGauages } from '@/api';
+import {
+    IGaugesAsset,
+    IMarketsAsset,
+    IVaultAsset,
+    useGauages,
+    useSubgraphAllMarketsData,
+    useSubgraphTranchesOverviewData,
+} from '@/api';
 import { QueryClient, useQuery } from '@tanstack/react-query';
 import { TESTING } from '@/utils';
 
@@ -23,8 +30,13 @@ const VaultsContext = createContext<IVaultsStoreProps>({
     refresh: () => {},
 });
 
+const calculateApyFromRewardRate = (val: string | number): number => {
+    if (!val) return 0;
+    const _val = Number(val);
+    return _val * 86400 * 365;
+};
+
 // Utils
-const gaugeImages = ['/coins/vmex.png', '/coins/vmex-weth.png'];
 const renderGauges = async (gauges: IGaugesAsset[]): Promise<IVaultAsset[]> => {
     if (!gauges.length) return [];
     return await Promise.all(
@@ -32,11 +44,10 @@ const renderGauges = async (gauges: IGaugesAsset[]): Promise<IVaultAsset[]> => {
             gaugeAddress: g.address,
             vaultAddress: g.vaultAddress,
             decimals: g.decimals,
-            vaultIcon: gaugeImages[i] || '/3D-logo.svg',
             vaultName: g.name,
-            vaultApy: Number(g.rewardRate.normalized),
+            vaultApy: 0,
             vaultDeposited: g.totalStaked,
-            gaugeAPR: Number(g.rewardRate.normalized),
+            gaugeAPR: calculateApyFromRewardRate(g.rewardRate.normalized),
             gaugeBoost: 0,
             gaugeStaked: g.totalStaked,
             vaultSymbol: g.symbol,
@@ -45,10 +56,24 @@ const renderGauges = async (gauges: IGaugesAsset[]): Promise<IVaultAsset[]> => {
     );
 };
 
+export function getUnderlying(_vaultSymbol?: string, markets?: IMarketsAsset[]) {
+    if (!_vaultSymbol || !markets?.length) return;
+    const trimmed = _vaultSymbol?.substring(4);
+    const trancheId = _vaultSymbol.slice(_vaultSymbol.length - 1);
+    const symbol = trimmed.slice(0, trimmed.length - 1);
+    const market = markets?.find(
+        (el) =>
+            String(el?.trancheId || 0) === String(trancheId) &&
+            String(el.asset)?.toLowerCase() === String(symbol)?.toLowerCase(),
+    );
+    return market;
+}
+
 // Wrapper
 export function VaultsStore(props: { children: ReactNode }) {
     const network = getNetworkName();
     const { queryGauges } = useGauages();
+    const { queryAllMarketsData } = useSubgraphAllMarketsData();
 
     const queryVaults = useQuery({
         queryKey: ['vaults', network],
@@ -62,17 +87,29 @@ export function VaultsStore(props: { children: ReactNode }) {
         // TODO: force refresh
     };
 
-    // TODO: remove
-    useEffect(() => {
-        if (TESTING) {
-            console.log('Available Vaults:', queryVaults.data);
+    const vaults = useMemo(() => {
+        if (queryAllMarketsData.data?.length) {
+            const markets = queryAllMarketsData.data;
+            console.log('Markets', queryAllMarketsData.data);
+            return queryVaults?.data?.map((v) => {
+                const underlying = getUnderlying(v.vaultSymbol, markets);
+                console.log('Underlying', underlying);
+                return {
+                    ...v,
+                    vaultApy: Number(underlying?.supplyApy || '0'),
+                };
+            });
+        } else {
+            return queryVaults.data;
         }
-    }, [queryVaults.data]);
+    }, [queryAllMarketsData.data, queryGauges.isLoading]);
+
+    console.log('Vaults:', vaults);
 
     return (
         <VaultsContext.Provider
             value={{
-                vaults: queryVaults.data,
+                vaults,
                 isLoading: queryVaults.isLoading,
                 isError: queryVaults.isError,
                 error: queryVaults.error,

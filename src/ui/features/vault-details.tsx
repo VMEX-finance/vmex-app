@@ -26,7 +26,7 @@ export const VaultDetails = ({ vault, deposited }: IVaultDetails & { deposited?:
                 <NumberDisplay
                     size="xl"
                     value={percentFormatter.format(vault?.vaultApy || 0)}
-                    label="Vault APY"
+                    label="Asset APY"
                     align="right"
                 />
             </div>

@@ -379,7 +379,6 @@ const Staking: React.FC = () => {
                                         className=""
                                         items={vaults.map((v) => ({
                                             text: v.vaultSymbol,
-                                            icon: v.vaultIcon,
                                             onClick: () => setSelected(v.vaultAddress),
                                         }))}
                                         selected={

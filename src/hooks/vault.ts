@@ -1,5 +1,5 @@
-import { useSubgraphTranchesOverviewData } from '@/api';
-import { useTransactionsContext, useVaultsContext } from '@/store';
+import { IMarketsAsset, useSubgraphAllMarketsData, useSubgraphTranchesOverviewData } from '@/api';
+import { getUnderlying, useTransactionsContext, useVaultsContext } from '@/store';
 import { TESTING, inputMediator, toSymbol } from '@/utils';
 import {
     erc20ABI,
@@ -18,7 +18,7 @@ import { useAccount, useBalance, useContractReads } from 'wagmi';
 export const useVault = (vaultAddress?: string, gaugeAddress?: string, vaultSymbol?: string) => {
     const { vaults } = useVaultsContext();
     const { address } = useAccount();
-    const { queryAllTranches } = useSubgraphTranchesOverviewData();
+    const { queryAllMarketsData } = useSubgraphAllMarketsData();
     const { newTransaction } = useTransactionsContext();
     const [amount, setAmount] = useMediatedState(inputMediator, '');
     const [isMax, setIsMax] = React.useState(false);
@@ -168,23 +168,8 @@ export const useVault = (vaultAddress?: string, gaugeAddress?: string, vaultSymb
         });
     }
 
-    function getUnderlying() {
-        if (!vaultSymbol) return;
-        const trimmed = vaultSymbol?.substring(4);
-        const trancheId = vaultSymbol.slice(vaultSymbol.length - 1);
-        const symbol = trimmed.slice(0, trimmed.length - 1);
-
-        return {
-            trancheId: trancheId,
-            symbol,
-            trancheName: queryAllTranches.data?.find(
-                (el) => String(el?.id || 0) === String(trancheId),
-            )?.name,
-        };
-    }
-
     return {
-        underlying: getUnderlying(),
+        underlying: getUnderlying(vaultSymbol, queryAllMarketsData.data),
         amount,
         setAmount,
         isMax,

@@ -140,10 +140,10 @@ export const VaultAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
                 <Button
                     type="outline"
                     onClick={(e: any) =>
-                        route(e, underlying?.symbol, underlying?.trancheId, underlying?.trancheName)
+                        route(e, underlying?.asset, underlying?.trancheId, underlying?.tranche)
                     }
                 >
-                    Deposit {underlying?.symbol}
+                    Deposit {underlying?.asset}
                 </Button>
                 <Button
                     disabled={isSuccess}

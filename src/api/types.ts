@@ -80,7 +80,6 @@ export type IVaultAsset = {
     gaugeAddress: string;
     vaultAddress: string;
     decimals: number;
-    vaultIcon: string;
     vaultName: string;
     vaultApy: number;
     vaultDeposited: INormalizedBN;

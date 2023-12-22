@@ -52,7 +52,7 @@ export const GaugesTable: React.FC<ITableProps> = ({ data, loading, userData, er
         },
         {
             name: 'vaultApy',
-            label: 'Vault APY',
+            label: 'Asset APY',
             options: {
                 filter: false,
                 sort: true,
@@ -110,13 +110,6 @@ export const GaugesTable: React.FC<ITableProps> = ({ data, loading, userData, er
             },
         },
         {
-            name: 'vaultIcon',
-            label: 'Icon',
-            options: {
-                display: false,
-            },
-        },
-        {
             name: 'vaultSymbol',
             label: 'Symbol',
             options: {
@@ -157,7 +150,6 @@ export const GaugesTable: React.FC<ITableProps> = ({ data, loading, userData, er
                             gaugeBoost,
                             decimals,
                             vaultAddress,
-                            vaultIcon,
                             vaultSymbol,
                             gaugeAddress,
                             actions,
@@ -169,7 +161,6 @@ export const GaugesTable: React.FC<ITableProps> = ({ data, loading, userData, er
                             gaugeAddress={gaugeAddress}
                             vaultAddress={vaultAddress}
                             decimals={decimals}
-                            vaultIcon={vaultIcon}
                             vaultName={vaultName}
                             vaultApy={vaultApy}
                             vaultDeposited={vaultDeposited}

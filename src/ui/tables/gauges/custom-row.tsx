@@ -11,7 +11,6 @@ export const GaugesCustomRow = (props: IVaultAsset & { loading?: boolean }) => {
         gaugeAddress,
         vaultAddress,
         decimals,
-        vaultIcon,
         vaultName,
         vaultSymbol,
         vaultApy,
@@ -47,7 +46,7 @@ export const GaugesCustomRow = (props: IVaultAsset & { loading?: boolean }) => {
                     <span className="font-bold">Asset</span>
                     <div className="flex items-center gap-2">
                         <Loader loading={loading}>
-                            <AssetDisplay name={vaultName} logo={vaultIcon} />
+                            <AssetDisplay name={vaultName} />
                         </Loader>
                     </div>
                 </td>
