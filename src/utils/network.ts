@@ -18,6 +18,8 @@ export const NETWORKS: Record<string, any> = {
         lendingPoolAddress: CONTRACTS[10].lendingPool,
         leverageControllerAddress: CONTRACTS[10].leverageController,
         strategies: STRATEGIES[10],
+        vmexwethbpt:
+            'https://op.beets.fi/pool/0x4dde571dc66217a062e4b50f9b20c4d08b3245a0000200000000000000000118',
     },
     localhost: {
         name: 'hardhat',

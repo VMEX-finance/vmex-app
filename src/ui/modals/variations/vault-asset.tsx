@@ -6,9 +6,12 @@ import { Button, TransactionStatus, CoinInput } from '@/ui/components';
 import { VaultDetails } from '@/ui/features/vault-details';
 import { VMEX_VEVMEX_CHAINID, getChainId, toSymbol } from '@/utils';
 import { useAccount, useSwitchNetwork, useFeeData } from 'wagmi';
+import { useNavigate } from 'react-router-dom';
+import { useSelectedTrancheContext } from '@/store';
 
 export const VaultAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, closeDialog }) => {
     const { address } = useAccount();
+    const navigate = useNavigate();
     const chainId = getChainId();
     const { switchNetworkAsync } = useSwitchNetwork();
     const { submitTx, isSuccess, isLoading, error, view, setView } = useModal('vault-asset-dialog');
@@ -23,8 +26,10 @@ export const VaultAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
         loading,
         vaultBalance,
         gaugeBalance,
-    } = useVault(data?.vaultAddress, data?.gaugeAddress);
+        underlying,
+    } = useVault(data?.vaultAddress, data?.gaugeAddress, data?.vaultSymbol);
     const { data: gas } = useFeeData();
+    const { updateTranche, setAsset } = useSelectedTrancheContext();
 
     const handleSubmit = async (e: any) => {
         if (chainId !== VMEX_VEVMEX_CHAINID && switchNetworkAsync)
@@ -47,10 +52,26 @@ export const VaultAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
         return 'Withdraw';
     };
 
+    const route = (
+        e: Event,
+        symbol?: string,
+        trancheId?: string | number,
+        trancheName?: string,
+    ) => {
+        e.stopPropagation();
+        if (!trancheId || !trancheName || !symbol) return;
+        setAsset(symbol);
+        updateTranche('id', trancheId.toString());
+        closeDialog && closeDialog('vault-asset-dialog');
+        navigate(`/tranches/${trancheName.replace(/\s+/g, '-')?.toLowerCase()}`, {
+            state: { view, trancheId: trancheId.toString() },
+        });
+    };
+
     useEffect(() => {
         if (data?.tab) setView(data?.tab);
     }, []);
-
+    console.log('Data in Modal:', data);
     return (
         <>
             <ModalHeader
@@ -70,10 +91,7 @@ export const VaultAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
                         amount={amount}
                         setAmount={setAmount}
                         coin={{
-                            name:
-                                view === 'Deposit'
-                                    ? toSymbol(data?.vaultAddress) || 'VMEX'
-                                    : data.vaultSymbol,
+                            name: data.vaultSymbol,
                         }}
                         balance={
                             (view === 'Deposit'
@@ -118,22 +136,25 @@ export const VaultAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
                 </div>
             )}
 
-            <ModalFooter>
-                <div>
-                    <Button
-                        disabled={isSuccess}
-                        onClick={handleSubmit}
-                        loading={
-                            isLoading ||
-                            loading.deposit ||
-                            loading.depositApprove ||
-                            loading.withdraw
-                        }
-                        type="accent"
-                    >
-                        {renderBtnText()}
-                    </Button>
-                </div>
+            <ModalFooter between>
+                <Button
+                    type="outline"
+                    onClick={(e: any) =>
+                        route(e, underlying?.symbol, underlying?.trancheId, underlying?.trancheName)
+                    }
+                >
+                    Deposit {underlying?.symbol}
+                </Button>
+                <Button
+                    disabled={isSuccess}
+                    onClick={handleSubmit}
+                    loading={
+                        isLoading || loading.deposit || loading.depositApprove || loading.withdraw
+                    }
+                    type="accent"
+                >
+                    {renderBtnText()}
+                </Button>
             </ModalFooter>
         </>
     );

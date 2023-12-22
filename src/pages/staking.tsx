@@ -2,7 +2,15 @@ import React, { useEffect } from 'react';
 import { GridView } from '@/ui/templates';
 import { Base } from '@/ui/base';
 import { StakingOverview } from '@/ui/features';
-import { CONTRACTS, TESTING, getChainId, percentFormatter, weeksToUnixBn } from '@/utils';
+import {
+    CONTRACTS,
+    NETWORKS,
+    TESTING,
+    VMEX_VEVMEX_CHAINID,
+    getChainId,
+    percentFormatter,
+    weeksToUnixBn,
+} from '@/utils';
 import {
     Button,
     Card,
@@ -137,22 +145,29 @@ const Staking: React.FC = () => {
                         >
                             <div>
                                 <h3 className="text-xl mb-3">
-                                    VMEX Holders, lock your tokens here.
+                                    <a
+                                        href={NETWORKS['optimism'].vmexwethbpt}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                    >
+                                        VW8020
+                                    </a>{' '}
+                                    Holders, lock your tokens here.
                                 </h3>
-                                <p>Lock your VMEX to veVMEX to:</p>
+                                <p>Lock your VW8020 to veVMEX to:</p>
                                 <ol className="list-disc pl-6">
                                     <li>Take part in VMEX governance.</li>
-                                    <li>Direct VMEX rewards to vaults.</li>
+                                    <li>Direct VW8020 rewards to vaults.</li>
                                     <li>Receive dVMEX (the longer you lock, the more you keep).</li>
                                 </ol>
                             </div>
                             <div className="grid sm:grid-cols-2 gap-1 lg:gap-2 xl:gap-2.5 content-end items-end">
                                 <StakeInput
-                                    header="VMEX"
+                                    header="VW8020"
                                     footer={
                                         inputError && amountInputError
                                             ? inputError
-                                            : `Available: ${vmexBalance?.formatted || '0.0'} VMEX`
+                                            : `Available: ${vmexBalance?.formatted || '0.0'} VW8020`
                                     }
                                     onChange={handleLockAmountInput}
                                     value={lockInput.amount}
@@ -292,7 +307,7 @@ const Staking: React.FC = () => {
                                         value={vevmexUserData?.data?.locked?.end?.normalized || ''}
                                     />
                                     <StakeInput
-                                        header="VMEX you get"
+                                        header="VW8020 you get"
                                         footer={`Penalty: ${percentFormatter.format(
                                             vevmexUserData?.data?.penalty
                                                 ? vevmexUserData?.data?.penalty
@@ -318,11 +333,11 @@ const Staking: React.FC = () => {
                             >
                                 <div>
                                     <h3 className="text-xl mb-3">Claim expired lock</h3>
-                                    <p>Claim your VMEX from expired veVMEX lock.</p>
+                                    <p>Claim your VW8020 from expired veVMEX lock.</p>
                                 </div>
                                 <div className="grid sm:grid-cols-2 gap-1 lg:gap-2 content-end items-end">
                                     <StakeInput
-                                        header="Unlocked VMEX"
+                                        header="Unlocked VW8020"
                                         disabled
                                         onChange={() => {}}
                                         value="0.0"
@@ -420,12 +435,12 @@ const Staking: React.FC = () => {
                                     When some spaghetti handed locker takes an early exit from their
                                     veVMEX lock, their penalty is distributed amongst other lockers.
                                     It’s like a loyalty bonus, but instead of cheaper groceries you
-                                    get sweet sweet VMEX.
+                                    get sweet sweet VW8020.
                                 </p>
                             </div>
                             <div className="grid sm:grid-cols-2 gap-1 lg:gap-2 content-end items-end">
                                 <StakeInput
-                                    header="Unclaimed veVMEX exit rewards (VMEX)"
+                                    header="Unclaimed veVMEX exit rewards (VW8020)"
                                     onChange={() => {}}
                                     value="0.0"
                                     disabled
@@ -447,9 +462,9 @@ const Staking: React.FC = () => {
                             <div>
                                 <h3 className="text-xl mb-3">Redeem</h3>
                                 <p>
-                                    Got dVMEX, want VMEX? You’ve come to the right place. Redeem
-                                    dVMEX for VMEX by paying the redemption cost in ETH. Enjoy your
-                                    cheap VMEX anon.
+                                    Got dVMEX, want VW8020? You’ve come to the right place. Redeem
+                                    dVMEX for VW8020 by paying the redemption cost in ETH. Enjoy
+                                    your cheap VW8020 anon.
                                 </p>
                                 <p className="font-bold mt-2">
                                     Current Discount: {percentFormatter.format(0.1183)}
@@ -480,7 +495,7 @@ const Staking: React.FC = () => {
                                     disabled
                                 />
                                 <StakeInput
-                                    header="Redeems VMEX"
+                                    header="Redeems VW8020"
                                     onChange={() => {}}
                                     value=""
                                     disabled

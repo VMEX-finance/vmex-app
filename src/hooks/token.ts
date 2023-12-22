@@ -41,6 +41,13 @@ export const useToken = (clearInputs?: () => void) => {
         enabled: !!address,
         token: CONTRACTS[VMEX_VEVMEX_CHAINID].vmex as any,
     });
+    const { data: vw8020Balance } = useBalance({
+        address,
+        chainId: VMEX_VEVMEX_CHAINID,
+        watch: true,
+        enabled: !!address,
+        token: CONTRACTS[VMEX_VEVMEX_CHAINID].vmexWeth as any,
+    });
 
     const { data: dvmexBalance } = useBalance({
         address,
@@ -51,7 +58,7 @@ export const useToken = (clearInputs?: () => void) => {
     });
 
     const { data: vevmexIsApproved, refetch: vevmexRefreshAllowances } = useContractRead({
-        address: CONTRACTS[VMEX_VEVMEX_CHAINID].vmex as `0x${string}`,
+        address: CONTRACTS[VMEX_VEVMEX_CHAINID].vmexWeth as `0x${string}`,
         abi: erc20ABI,
         chainId: VMEX_VEVMEX_CHAINID,
         functionName: 'allowance',
@@ -153,29 +160,29 @@ export const useToken = (clearInputs?: () => void) => {
         };
     };
 
-    const getPositionsData = async () => {
-        if (!address) return;
-        try {
-            const earlyExitRead = await readContract({
-                address: CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as `0x${string}`,
-                abi: VEVMEX_POSITION_HELPER_ABI,
-                chainId: VMEX_VEVMEX_CHAINID,
-                functionName: 'getPositionDetails',
-                args: [address],
-            });
-            return earlyExitRead;
-        } catch (e) {
-            console.error('#getPositionsData:', e);
-            return {
-                balance: BigNumber.from(0),
-                depositAmount: BigNumber.from(0),
-                withdrawable: BigNumber.from(0),
-                penalty: BigNumber.from(0),
-                unlockTime: BigNumber.from(0),
-                timeRemaining: BigNumber.from(0),
-            };
-        }
-    };
+    // const getPositionsData = async () => {
+    //     if (!address) return;
+    //     try {
+    //         const earlyExitRead = await readContract({
+    //             address: CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as `0x${string}`,
+    //             abi: VEVMEX_POSITION_HELPER_ABI,
+    //             chainId: VMEX_VEVMEX_CHAINID,
+    //             functionName: 'getPositionDetails',
+    //             args: [address],
+    //         });
+    //         return earlyExitRead;
+    //     } catch (e) {
+    //         console.error('#getPositionsData:', e);
+    //         return {
+    //             balance: BigNumber.from(0),
+    //             depositAmount: BigNumber.from(0),
+    //             withdrawable: BigNumber.from(0),
+    //             penalty: BigNumber.from(0),
+    //             unlockTime: BigNumber.from(0),
+    //             timeRemaining: BigNumber.from(0),
+    //         };
+    //     }
+    // };
 
     const queries = useQueries({
         queries: [
@@ -293,7 +300,7 @@ export const useToken = (clearInputs?: () => void) => {
             // Approval TX - if necessary
             if (vevmexIsApproved && vevmexIsApproved.lt(amount)) {
                 const prepareApproveTx = await prepareWriteContract({
-                    address: CONTRACTS[VMEX_VEVMEX_CHAINID].vmex as `0x${string}`,
+                    address: CONTRACTS[VMEX_VEVMEX_CHAINID].vmexWeth as `0x${string}`,
                     abi: erc20ABI,
                     chainId: VMEX_VEVMEX_CHAINID,
                     functionName: 'approve',
@@ -415,5 +422,6 @@ export const useToken = (clearInputs?: () => void) => {
         vevmexUserData: queries[1],
         dvmexBalance,
         dvmexRedeem,
+        vw8020Balance,
     };
 };
