@@ -1,7 +1,6 @@
 import { useToken } from './token';
-import { fromWeeks, toSeconds, toTime } from '@/utils';
 import { BigNumber, utils } from 'ethers';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const maxWeeks = 52 * 5; // 5 years (10 years is technically the max)
 
@@ -9,7 +8,7 @@ const defaultPeriod = { period: '', periodBn: BigNumber.from(0) };
 const defaultAmount = { amount: '', amountBn: BigNumber.from(0) };
 
 export const useLockingUI = () => {
-    const { vmexBalance, dvmexBalance, vevmexUserData, vw8020Balance } = useToken();
+    const { dvmexBalance, vevmexUserData, vw8020Balance } = useToken();
     const [lockInput, setLockInput] = useState({ ...defaultAmount, ...defaultPeriod });
     const [extendInput, setExtendInput] = useState(defaultPeriod);
     const [redeemInput, setRedeemInput] = useState(defaultAmount);
