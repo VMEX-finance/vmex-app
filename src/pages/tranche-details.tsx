@@ -11,7 +11,7 @@ import { useSubgraphTrancheData, useUserTrancheData } from '@/api';
 import { useAnalyticsEventTracker } from '@/config';
 import { useDialogController, useWindowSize } from '@/hooks';
 import { convertSymbolToAddress } from '@vmexfinance/sdk';
-import { getNetworkName } from '@/utils';
+import { getNetworkName, hardcodedTrancheNames } from '@/utils';
 
 const TrancheDetails: React.FC = () => {
     const navigate = useNavigate();
@@ -100,7 +100,7 @@ const TrancheDetails: React.FC = () => {
 
     return (
         <Base
-            title={tranche?.name}
+            title={hardcodedTrancheNames(tranche?.name)}
             description="Tranche"
             view={view}
             setView={setView}
