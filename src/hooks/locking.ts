@@ -9,7 +9,7 @@ const defaultPeriod = { period: '', periodBn: BigNumber.from(0) };
 const defaultAmount = { amount: '', amountBn: BigNumber.from(0) };
 
 export const useLockingUI = () => {
-    const { vmexBalance, dvmexBalance, vevmexUserData } = useToken();
+    const { vmexBalance, dvmexBalance, vevmexUserData, vw8020Balance } = useToken();
     const [lockInput, setLockInput] = useState({ ...defaultAmount, ...defaultPeriod });
     const [extendInput, setExtendInput] = useState(defaultPeriod);
     const [redeemInput, setRedeemInput] = useState(defaultAmount);
@@ -43,8 +43,8 @@ export const useLockingUI = () => {
 
     function handleAmountMax(e: React.ChangeEvent<HTMLInputElement>) {
         let max = { string: '', bn: BigNumber.from(0) };
-        if (vmexBalance) {
-            max = { string: vmexBalance.formatted, bn: vmexBalance.value };
+        if (vw8020Balance) {
+            max = { string: vw8020Balance.formatted, bn: vw8020Balance.value };
         }
         setLockInput({ ...lockInput, amount: max.string, amountBn: max.bn });
     }
@@ -59,8 +59,8 @@ export const useLockingUI = () => {
 
     // Handle input errors
     useEffect(() => {
-        if (vmexBalance?.value && vmexBalance?.value.gt(BigNumber.from('0'))) {
-            if (lockInput?.amountBn.gt(vmexBalance.value)) {
+        if (vw8020Balance?.value && vw8020Balance?.value.gt(BigNumber.from('0'))) {
+            if (lockInput?.amountBn.gt(vw8020Balance.value)) {
                 // User trying to input more VMEX than they hold
                 setError('amount:Insufficient balance');
             } else if (Number(lockInput?.period) > maxWeeks) {
