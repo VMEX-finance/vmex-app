@@ -3,6 +3,7 @@ import { Base } from '@/ui/base';
 import { ProtocolStatsCard, UserPerformanceCard } from '@/ui/features';
 import { Carousel } from '@/ui/components';
 import {
+    useLoopData,
     useSubgraphAllMarketsData,
     useSubgraphProtocolData,
     useSubgraphUserData,

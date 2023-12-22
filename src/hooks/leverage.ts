@@ -1,17 +1,20 @@
-import { IDialogProps } from '../ui/modals';
-import { useState } from 'react';
+import { IDialogProps, ISupplyBorrowProps } from '../ui/modals';
+import { useEffect, useState } from 'react';
 import { IUseModal } from './modal';
 import { useSubgraphTrancheData, useUserData, useUserTrancheData } from '../api';
 import { useAccount, useSigner } from 'wagmi';
 import {
     NETWORKS,
     convertStringFormatToNumber,
+    PRICING_DECIMALS,
+    bigNumberToUSD,
     getNetworkName,
     bigNumberToUnformattedString,
     DECIMALS,
 } from '../utils';
 import { BigNumber, Wallet, utils } from 'ethers';
-import { supply } from '@vmexfinance/sdk';
+import { estimateGas, supply } from '@vmexfinance/sdk';
+import { toast } from 'react-toastify';
 import { IYourSuppliesTableItemProps } from '@/ui/tables';
 
 export const useLeverage = ({
@@ -109,32 +112,32 @@ export const useLeverage = ({
     };
 
     // Use effects
-    // useEffect(() => {
-    //     const getter = async () => {
-    //         setEstimatedGasCost({ ...estimatedGasCost, loading: true });
-    //         if (signer && data) {
-    //             try {
-    //                 const res = await estimateGas({
-    //                     ...defaultFunctionParams,
-    //                     function: 'withdraw',
-    //                     asset: asset,
-    //                 });
-    //                 setEstimatedGasCost({
-    //                     loading: false,
-    //                     cost: `${String(bigNumberToUSD(res, PRICING_DECIMALS[network]))}`,
-    //                     errorMessage: '',
-    //                 });
-    //             } catch (err: any) {
-    //                 setEstimatedGasCost({
-    //                     loading: false,
-    //                     cost: `$0`,
-    //                     errorMessage: err.toString(),
-    //                 });
-    //             }
-    //         }
-    //     };
-    //     getter();
-    // }, [view, data, isMax, amount, signer]);
+    useEffect(() => {
+        const getter = async () => {
+            setEstimatedGasCost({ ...estimatedGasCost, loading: true });
+            if (signer && data) {
+                try {
+                    const res = await estimateGas({
+                        ...defaultFunctionParams,
+                        function: 'withdraw',
+                        asset: asset,
+                    });
+                    setEstimatedGasCost({
+                        loading: false,
+                        cost: `${String(bigNumberToUSD(res, PRICING_DECIMALS[network]))}`,
+                        errorMessage: '',
+                    });
+                } catch (err: any) {
+                    setEstimatedGasCost({
+                        loading: false,
+                        cost: `$0`,
+                        errorMessage: err.toString(),
+                    });
+                }
+            }
+        };
+        getter();
+    }, [view, data, isMax, amount, signer]);
 
     return {
         view,

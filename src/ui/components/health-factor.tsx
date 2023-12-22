@@ -21,7 +21,6 @@ import { useAccount } from 'wagmi';
 import { useLocation } from 'react-router-dom';
 import { Loader } from './loader';
 import { convertAddressListToSymbol } from '@vmexfinance/sdk';
-import Decimal from 'decimal.js';
 
 interface IHealthFactorProps {
     asset?: string;
@@ -42,9 +41,7 @@ interface IHealthFactorProps {
     showInfo?: boolean;
     loader?: 'skeleton' | 'default';
     collateral?: string;
-    looping?: number;
-    ltv?: Decimal;
-    borrowable?: string;
+    leverage?: number;
 }
 
 export const determineSize = (size: 'sm' | 'md' | 'lg') => {
@@ -97,9 +94,7 @@ export const HealthFactor = ({
     trancheId,
     showInfo = true,
     collateral,
-    looping,
-    ltv,
-    borrowable,
+    leverage,
     loader = 'default',
 }: IHealthFactorProps) => {
     const network = getNetworkName();
@@ -128,10 +123,10 @@ export const HealthFactor = ({
             const assetSymbol = toSymbol(asset);
             const depositAsset = findAssetInMarketsData(assetSymbol);
             if (!depositAsset) {
-                console.error('#determineHFFinal: depositAsset not found', assetSymbol);
+                console.error('#determineHFFinal: depositAsset not found');
                 return;
             }
-            if (type === 'loop' && looping && ltv) {
+            if (type === 'loop' && leverage) {
                 const collaterals = collateral ? collateral.split(':') : [];
                 const collateralSymbols =
                     collaterals.length && asset
@@ -141,7 +136,7 @@ export const HealthFactor = ({
                 const afterLoop = calculateHealthFactorAfterLeverage(
                     depositAsset,
                     borrowAssets,
-                    calculateTotalBorrowAmount(borrowable || '0', looping, ltv),
+                    calculateTotalBorrowAmount(amount || '0', leverage),
                     queryUserTrancheData.data,
                 );
                 return renderHealth(

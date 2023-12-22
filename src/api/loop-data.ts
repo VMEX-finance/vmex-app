@@ -3,7 +3,6 @@ import { NETWORKS, bigNumberToNative, getNetworkName, isAddressEqual, toSymbol }
 import { IFormattedUserLoopingProps, IUserLoopingProps } from './types';
 import { getUserLoopingQuery } from './queries/user-looping';
 import { utils } from 'ethers';
-import { getAddress } from 'ethers/lib/utils.js';
 
 async function formatUserLooping(network: string, loops?: IUserLoopingProps[]) {
     if (!loops?.length) return [];
@@ -78,7 +77,7 @@ export function useLoopData(userAddress?: string) {
             return;
         }
         const foundUserLoop = queryUserLooping.data?.find((loop) =>
-            isAddressEqual(loop.depositAssetAddress, getAddress(address)),
+            isAddressEqual(loop.depositAssetAddress, utils.getAddress(address)),
         );
         return foundUserLoop;
     };

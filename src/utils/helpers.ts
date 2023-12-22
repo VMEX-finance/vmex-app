@@ -1,12 +1,10 @@
 import { IMarketsAsset, ITrancheProps } from '@/api';
-import { BigNumber, Contract, ethers, utils } from 'ethers';
+import { BigNumber, ethers, utils } from 'ethers';
 import { AVAILABLE_ASSETS, HEALTH } from './constants';
 import moment from 'moment';
 import { ILineChartDataPointProps } from '@/ui/components';
-import { NAME_CACHE, SYMBOL_CACHE } from './cache';
 import { getNetworkName } from './network';
-import { formatUnits } from 'ethers/lib/utils.js';
-import { bigNumberToNative, getDecimals, toAddress, toSymbol } from './sdk-helpers';
+import { getDecimals, toAddress, toSymbol } from './sdk-helpers';
 
 const Filter = require('bad-words'),
     filter = new Filter();
@@ -343,7 +341,7 @@ export const isAddressEqual = (address1: string, address2: string) => {
 };
 
 export const formatUsdUnits = (amount: BigNumber, precion: number = 2) => {
-    return `$${parseFloat(formatUnits(amount, 8)).toFixed(precion)}`;
+    return `$${parseFloat(utils.formatUnits(amount, 8)).toFixed(precion)}`;
 };
 
 export const cleanNumberString = (val: string | undefined) => {

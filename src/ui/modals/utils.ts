@@ -35,9 +35,8 @@ export type LeverageDetails = {
     amount: string;
     collateral: string;
     suppliedAssetDetails: any;
-    looping: number;
+    leverage: number;
     totalApy: string;
-    ltv: Decimal;
 };
 
 export type ILeverageProps = {
