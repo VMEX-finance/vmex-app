@@ -46,6 +46,7 @@ import {
     calculateHealthFactorAfterLeverage,
     isTrancheIdEqual,
     TESTING,
+    hardcodedTrancheNames,
 } from '@/utils';
 import { useAccount } from 'wagmi';
 import { BigNumber, constants, utils } from 'ethers';
@@ -595,9 +596,9 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                                         size={'lg'}
                                     />
                                     <div className="flex-col items-end hidden sm:flex">
-                                        <span className="text-xl leading-none">{`${
-                                            (data as any)?.tranche || ''
-                                        }`}</span>
+                                        <span className="text-xl leading-none">{`${hardcodedTrancheNames(
+                                            (data as any)?.tranche || '',
+                                        )}`}</span>
                                         <span className="text-xs font-light text-neutral-600 dark:text-neutral-400">
                                             Tranche
                                         </span>
