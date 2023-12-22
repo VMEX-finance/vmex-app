@@ -3,7 +3,13 @@ import { useQuery } from '@tanstack/react-query';
 import { ISubgraphTranchesDataProps } from './types';
 import { ITrancheProps } from './types';
 import { getAllAssetPrices } from './asset-prices';
-import { nativeAmountToUSD, getTrancheCategory, PRICING_DECIMALS, getNetworkName } from '@/utils';
+import {
+    nativeAmountToUSD,
+    getTrancheCategory,
+    PRICING_DECIMALS,
+    getNetworkName,
+    hardcodedTrancheNames,
+} from '@/utils';
 import { getApolloClient } from '@/config';
 import { getTrancheIdFromTrancheEntity } from './id-generation';
 
@@ -104,7 +110,7 @@ export const getSubgraphTranchesOverviewData = async (): Promise<ITrancheProps[]
         tranches.map((tranche: any) => {
             let trancheInfo = {
                 id: getTrancheIdFromTrancheEntity(tranche.id),
-                name: tranche.name,
+                name: hardcodedTrancheNames(tranche.name),
                 assets: tranche.reserves.map((el: any) => el.assetData.underlyingAssetName),
                 tvl: 0,
                 supplyTotal: 0,

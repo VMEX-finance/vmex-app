@@ -5,7 +5,12 @@ import { ILineChartDataPointProps } from '@/ui/components';
 import { utils } from 'ethers';
 import { IMarketsAsset } from './types';
 import { getAllAssetPrices } from './asset-prices';
-import { nativeAmountToUSD, PRICING_DECIMALS, getNetworkName } from '@/utils';
+import {
+    nativeAmountToUSD,
+    PRICING_DECIMALS,
+    getNetworkName,
+    hardcodedTrancheNames,
+} from '@/utils';
 import { getApolloClient } from '@/config';
 import { convertSymbolToAddress } from '@vmexfinance/sdk';
 import { getReserveId } from './id-generation';
@@ -134,7 +139,7 @@ export const getSubgraphAllMarketsData = async (): Promise<IMarketsAsset[]> => {
             returnObj.push({
                 assetAddress: reserve.assetData.id,
                 asset: reserve.assetData.underlyingAssetName,
-                tranche: reserve.tranche.name,
+                tranche: hardcodedTrancheNames(reserve.tranche.name),
                 trancheId:
                     reserve.tranche.id && reserve.tranche.id.includes(':')
                         ? reserve.tranche.id.split(':')[1]

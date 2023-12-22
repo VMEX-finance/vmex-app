@@ -7,6 +7,7 @@ import {
     usdFormatter,
     PRICING_DECIMALS,
     getNetworkName,
+    hardcodedTrancheNames,
 } from '@/utils';
 import { getApolloClient } from '@/config';
 import { getAllAssetPrices } from './asset-prices';
@@ -161,7 +162,7 @@ async function getTopAssets(
                 asset: _asset,
                 amount: 0,
                 trancheId: reserve.tranche.id.split(':')[1],
-                trancheName: reserve.tranche.name,
+                trancheName: hardcodedTrancheNames(reserve.tranche.name),
             };
             r[_asset].amount += _usdAmount;
             return r;
@@ -191,7 +192,7 @@ async function getTopAssets(
                 asset: _asset,
                 amount: 0,
                 trancheId: reserve.tranche.id.split(':')[1],
-                trancheName: reserve.tranche.name,
+                trancheName: hardcodedTrancheNames(reserve.tranche.name),
             };
             r[_asset].amount += _usdAmount;
             return r;
