@@ -13,6 +13,10 @@ export function checkProfanity(s: string) {
     return filter.isProfane(s);
 }
 
+export const endsWithNumber = (text: string) => {
+    return /\d$/.test(text);
+};
+
 export function truncateAddress(s: string) {
     return `${s.slice(0, 3)}...${s.slice(-4)}`;
 }

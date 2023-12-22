@@ -1,4 +1,9 @@
-import { determineCoinDescription, determineCoinImg, getRandomNumber } from '@/utils';
+import {
+    determineCoinDescription,
+    determineCoinImg,
+    endsWithNumber,
+    getRandomNumber,
+} from '@/utils';
 import React from 'react';
 import { Tooltip } from './tooltip-default';
 import { MultipleAssetsDisplayOverlapping } from './display-multi-asset';
@@ -70,43 +75,49 @@ export const renderAsset = (
 ) => {
     return asset?.includes('moo') ? (
         MultipleAssetsDisplayOverlapping({
-            assets: [asset.substring(3), 'beefy'],
+            assets: [asset?.substring(3), 'beefy'],
             size,
             origAssetName: asset,
         })
-    ) : asset.substring(0, 2) == 'yv' ? (
+    ) : asset?.substring(0, 2) == 'yv' ? (
         MultipleAssetsDisplayOverlapping({
             assets: [asset.substring(2), 'yearn'],
             size,
             origAssetName: asset,
         })
-    ) : asset.substring(1, 5).toUpperCase() == 'AMM-' ? ( // aero in base
+    ) : asset?.substring(1, 5).toUpperCase() == 'AMM-' ? ( // aero in base
         MultipleAssetsDisplayOverlapping({
-            assets: [asset.split('/')[0].substring(5), 'aero'],
+            assets: [asset?.split('/')[0].substring(5), 'aero'],
             size,
             origAssetName: asset,
         })
-    ) : asset.toUpperCase().startsWith('CMLT-') ? ( // cmlt
+    ) : asset?.toUpperCase().startsWith('CMLT-') ? ( // cmlt
         MultipleAssetsDisplayOverlapping({
-            assets: [asset.substring(5).split('-')[0], 'grail'],
+            assets: [asset?.substring(5).split('-')[0], 'grail'],
             size,
             origAssetName: asset,
         })
-    ) : asset.toUpperCase().endsWith('-BPT') ? ( // balancer
+    ) : asset?.toUpperCase().endsWith('-BPT') ? ( // balancer
         MultipleAssetsDisplayOverlapping({
-            assets: [asset.split('-')[0], 'bal'],
+            assets: [asset?.split('-')[0], 'bal'],
             size,
             origAssetName: asset,
         })
-    ) : asset.toUpperCase() == 'FRAXBPCRV-F' ? (
+    ) : asset?.toUpperCase() == 'FRAXBPCRV-F' ? (
         MultipleAssetsDisplayOverlapping({
             assets: ['frax', 'crv'],
             size,
             origAssetName: asset,
         })
-    ) : asset.substring(0, 4) === 'vG-v' ? (
+    ) : asset?.substring(0, 4) === 'vG-v' ? (
         MultipleAssetsDisplayOverlapping({
             assets: ['vmex', asset.substring(4).replace(/[0-9]/g, '')],
+            size,
+            origAssetName: asset,
+        })
+    ) : asset?.startsWith('v') && endsWithNumber(asset) ? (
+        MultipleAssetsDisplayOverlapping({
+            assets: ['vmex', asset?.substring(1)?.replace(/[0-9]/g, '')],
             size,
             origAssetName: asset,
         })

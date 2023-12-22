@@ -223,7 +223,7 @@ export const useToken = (clearInputs?: () => void) => {
     const vevmexRedeem = async (amount: BigNumber) => {
         if (!address || amount === BigNumber.from(0) || !amount) return;
         const cleanAddress = utils.getAddress(address);
-        if (!vevmexIsApproved) {
+        if (vevmexIsApproved && vevmexIsApproved.lt(amount)) {
             setLoading({ ...loading, redeemApprove: true });
             const prepareApproveTx = await prepareWriteContract({
                 address: CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as `0x${string}`,
@@ -319,7 +319,7 @@ export const useToken = (clearInputs?: () => void) => {
                 abi: VEVMEX_ABI,
                 chainId: VMEX_VEVMEX_CHAINID,
                 functionName: 'modify_lock',
-                args: [amount, BigNumber.from(time)],
+                args: [amount, BigNumber.from(time)], // TODO: fix time
             });
             if (TESTING) console.log('Lock VMEX TX:', prepareLockTx);
             const lockTx = await writeContract(prepareLockTx);

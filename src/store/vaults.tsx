@@ -90,10 +90,8 @@ export function VaultsStore(props: { children: ReactNode }) {
     const vaults = useMemo(() => {
         if (queryAllMarketsData.data?.length) {
             const markets = queryAllMarketsData.data;
-            console.log('Markets', queryAllMarketsData.data);
             return queryVaults?.data?.map((v) => {
                 const underlying = getUnderlying(v.vaultSymbol, markets);
-                console.log('Underlying', underlying);
                 return {
                     ...v,
                     vaultApy: Number(underlying?.supplyApy || '0'),
@@ -102,9 +100,7 @@ export function VaultsStore(props: { children: ReactNode }) {
         } else {
             return queryVaults.data;
         }
-    }, [queryAllMarketsData.data, queryGauges.isLoading]);
-
-    console.log('Vaults:', vaults);
+    }, [queryAllMarketsData.isLoading, queryGauges.isLoading]);
 
     return (
         <VaultsContext.Provider

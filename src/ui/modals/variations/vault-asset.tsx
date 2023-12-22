@@ -44,7 +44,7 @@ export const VaultAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
     const renderBtnText = () => {
         if (chainId !== VMEX_VEVMEX_CHAINID) return 'Switch Network';
         if (view === 'Deposit') {
-            if (approvedEnough()) {
+            if (approvedEnough) {
                 return 'Deposit';
             }
             return 'Approve';
@@ -71,7 +71,7 @@ export const VaultAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
     useEffect(() => {
         if (data?.tab) setView(data?.tab);
     }, []);
-    console.log('Data in Modal:', data);
+
     return (
         <>
             <ModalHeader
@@ -100,6 +100,7 @@ export const VaultAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
                         }
                         isMax={isMax}
                         setIsMax={setIsMax}
+                        type={`staking-${view?.toLowerCase() || 'deposit'}` as any}
                     />
                     {view === 'Deposit' ? (
                         <ModalTableDisplay

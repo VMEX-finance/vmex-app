@@ -494,7 +494,7 @@ const Staking: React.FC = () => {
                                     disabled
                                 />
                                 <StakeInput
-                                    header="Redeems VW8020"
+                                    header="Redeems VMEX"
                                     onChange={() => {}}
                                     value=""
                                     disabled

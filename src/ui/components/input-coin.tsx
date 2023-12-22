@@ -14,7 +14,7 @@ export interface ICoinInput {
         name: string;
     };
     balance?: string;
-    type?: 'collateral' | 'owed' | 'default';
+    type?: 'collateral' | 'owed' | 'default' | 'staking-deposit' | 'staking-withdraw';
     isMax?: boolean;
     setIsMax?: React.Dispatch<React.SetStateAction<boolean>>;
     loading?: boolean;
@@ -103,7 +103,10 @@ export const CoinInput = ({
                         placeholder="0.00"
                         disabled={disabled}
                     />
-                    <AssetDisplay logo={coin?.logo} name={coin.name} />
+                    <AssetDisplay
+                        logo={coin?.logo}
+                        name={type === 'staking-deposit' ? coin?.name?.substring(3) : coin?.name}
+                    />
                 </div>
                 {setIsMax && (
                     <div className="flex flex-row justify-end items-end gap-3">
