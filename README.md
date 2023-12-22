@@ -55,7 +55,7 @@ src
 
 ## Pipeline
 
-Production Branch: `master`
+Production Branch: `main`
 
 Development Branch: `develop`
 
