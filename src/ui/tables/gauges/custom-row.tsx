@@ -1,7 +1,7 @@
 import React from 'react';
 import { ApyToolitp, AssetDisplay, Button, Loader, SmartPrice } from '@/ui/components';
 import { useDialogController, useWindowSize } from '@/hooks';
-import { IVaultAsset, useUserData } from '@/api';
+import { IVaultAsset } from '@/api';
 import { DEFAULT_CHAINID, isChainUnsupported, percentFormatter } from '@/utils';
 import { useAccount, useSwitchNetwork } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
@@ -24,7 +24,6 @@ export const GaugesCustomRow = (props: IVaultAsset & { loading?: boolean }) => {
     const { width } = useWindowSize();
     const { openDialog } = useDialogController();
     const { address } = useAccount();
-    const { getTokenBalance } = useUserData(address);
     const { switchNetwork } = useSwitchNetwork();
     const { openConnectModal } = useConnectModal();
 
@@ -46,20 +45,26 @@ export const GaugesCustomRow = (props: IVaultAsset & { loading?: boolean }) => {
                     <span className="font-bold">Asset</span>
                     <div className="flex items-center gap-2">
                         <Loader loading={loading}>
-                            <AssetDisplay name={vaultName} />
+                            <AssetDisplay name={vaultSymbol} />
                         </Loader>
                     </div>
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Vault APY</span>
                     <Loader loading={loading}>
-                        <ApyToolitp symbol={vaultName} oldApy={vaultApy} />
+                        <ApyToolitp symbol={vaultSymbol} oldApy={vaultApy} />
                     </Loader>
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Deposited</span>
                     <Loader loading={loading}>
-                        <span>{vaultDeposited?.normalized ? vaultDeposited?.normalized : '-'}</span>
+                        <span>
+                            {vaultDeposited?.normalized ? (
+                                <SmartPrice price={String(vaultDeposited?.normalized)} />
+                            ) : (
+                                '-'
+                            )}
+                        </span>
                     </Loader>
                 </td>
                 <td className="flex justify-between">
@@ -71,7 +76,13 @@ export const GaugesCustomRow = (props: IVaultAsset & { loading?: boolean }) => {
                 <td className="flex justify-between">
                     <span className="font-bold">Staked</span>
                     <Loader loading={loading}>
-                        <span>{gaugeStaked?.normalized ? gaugeStaked?.normalized : '-'}</span>
+                        <span>
+                            {gaugeStaked?.normalized ? (
+                                <SmartPrice price={String(gaugeStaked?.normalized)} />
+                            ) : (
+                                '-'
+                            )}
+                        </span>
                     </Loader>
                 </td>
                 <td className="flex justify-between">

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, Loader } from '@/ui/components';
 import { numberFormatter } from '@/utils';
+import { useWindowSize } from '@/hooks';
 
 export type IStakingOverviewProps = {
     apr: string | number;
@@ -11,47 +12,47 @@ export type IStakingOverviewProps = {
 };
 
 export const StakingOverview = (props: IStakingOverviewProps) => {
+    const { isBigger } = useWindowSize();
     const stats = [
         {
-            label: 'Max veVMEX lock vAPR',
+            label: isBigger('sm') ? 'Max veVMEX lock vAPR' : 'Max veVMEX vAPR',
             amount: props.apr,
         },
         {
-            label: 'Total Locked VW8020',
+            label: isBigger('sm') ? 'Total Locked VW8020' : 'Total Locked',
             amount: props.totalLocked,
         },
         {
-            label: 'Your Locked VW8020',
+            label: isBigger('sm') ? 'Your Locked VW8020' : 'Your Locked',
             amount: props.yourLocked,
         },
         {
-            label: 'Expiration for the lock',
+            label: isBigger('sm') ? 'Expiration for the lock' : 'Your Expiration',
             amount: props.expiration,
         },
     ];
 
     return (
         <Card>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 divide-y md:divide-y-0 lg:divide-x divide-gray-300 dark:divide-gray-700 items-center justify-center">
+            <div className="grid grid-cols-2 lg:grid-cols-4 divide-y md:divide-y-0 lg:divide-x divide-gray-300 dark:divide-gray-700 items-center justify-center">
                 {stats.map((el, i) => (
                     <div
                         key={`staking-overview-${i}`}
-                        className="flex justify-center lg:items-center py-2 first:pt-0 last:pb-0"
+                        className="flex justify-center lg:items-center py-2 lg:first:pt-0 lg:last:pb-0"
                     >
-                        <div className="flex flex-col gap-1 items-center">
+                        <div className="flex flex-col gap-0.5 sm:gap-1 items-center">
                             <Loader loading={props.loading} height={40} width={100}>
                                 <span className="flex gap-0.5 items-end">
-                                    <span className="text-4xl">
+                                    <span className="text-3xl sm:text-4xl">
                                         {el.label.includes('Locked')
                                             ? numberFormatter.format(Number(el.amount))
                                             : el.amount}
                                     </span>
-                                    {el.label === 'Expiration for the lock' &&
-                                        el.amount !== '-' && (
-                                            <span className="text-xs mb-1 text-gray-600 dark:text-gray-400">
-                                                Weeks
-                                            </span>
-                                        )}
+                                    {el.label.includes('Expiration') && el.amount !== '-' && (
+                                        <span className="text-xs mb-1 text-gray-600 dark:text-gray-400">
+                                            Weeks
+                                        </span>
+                                    )}
                                 </span>
                             </Loader>
                             <span className="text-gray-500">{el.label}</span>
