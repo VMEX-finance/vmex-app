@@ -23,7 +23,7 @@ export function vmexTheme(isDark = false) {
             MuiTab: {
                 styleOverrides: {
                     root: {
-                        padding: '10px 14px',
+                        padding: '6px 10px',
                     },
                 },
             },
