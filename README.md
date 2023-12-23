@@ -8,9 +8,7 @@ This is the frontend application for the VMEX Finance Protocol. This app uses [r
 yarn
 ```
 
-Make sure to set your local enviornment variables, like REACT_APP_ALCHEMY_KEY to query the alchemy api for gas price.
-REACT_APP_ALCHEMY_KEY = optimism alchemy key
-REACT_APP_SEPOLIA_ALCHEMY_KEY = sepolia alchemy key
+*Make sure to set your local enviornment variables, as the provided example in `.env.example`*
 
 ## Development
 
@@ -28,7 +26,14 @@ Then, in the VMEX App repo, run:
 yarn dev
 ```
 
-When adding new features, create a new branch based on `origin/develop`. Upon completing new features, create pull requests to `origin/develop`.
+## Contributions
+
+When adding new features:
+1. Create a new branch based on `origin/develop` with the appriopriate schema: `[username]/[feature-or-bug]` (Recommended Usage: `git checkout -b [username]/[feature-or-bug] origin/develop`)
+2. Pull `origin/develop` to ensure your branch is up to date
+3. Create a pull request to `origin/develop`
+4. Request a contributor to review
+
 
 ## Directory
 
@@ -55,14 +60,14 @@ src
 
 ## Pipeline
 
-Production Branch: `main`
+Production: 
+- Branch: `main`
+- Link: https://app.vmex.finance
 
-Development Branch: `develop`
+Development Branch: 
+- Branch: `develop`
+- Link: https://dev-app.vmex.finance
 
-## Site Links
-
-- [Production Site](https://app.vmex.finance)
-- [Development Site](https://dev-app.vmex.finance/)
 
 ## Credits
 
