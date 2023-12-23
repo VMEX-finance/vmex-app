@@ -24,8 +24,8 @@ export const Navbar: React.FC = () => {
     const { queryTrancheAdminData } = useSubgraphUserData(address || '');
     const { switchNetworkAsync, switchNetwork } = useSwitchNetwork();
 
-    function navigateTo(e: any, text: string) {
-        if (text === 'Portfolio' && switchNetwork && isChainUnsupported()) switchNetwork();
+    function navigateTo(e: any, text?: string) {
+        if (text && text === 'Portfolio' && switchNetwork && isChainUnsupported()) switchNetwork();
         if (typeof e === 'string') navigate(`../${e}`, { replace: false });
         else {
             e.preventDefault();
@@ -56,17 +56,21 @@ export const Navbar: React.FC = () => {
             >
                 {/* Desktop/Mobile Left Nav */}
                 <div className="flex items-center gap-4 xl:gap-6">
-                    <a id="nav-logo" className="flex items-center gap-2" href="/">
-                        <img
-                            src={
-                                isDark && width >= 1024 ? '/VMEX-logo-white.svg' : '/VMEX-logo.svg'
-                            }
-                            alt="VMEX Finance Logo"
-                            width="72"
-                            height="42.66"
-                            className="invert lg:invert-0"
-                        />
-                    </a>
+                    <button onClick={() => navigateTo('overview')}>
+                        <a id="nav-logo" className="flex items-center gap-2">
+                            <img
+                                src={
+                                    isDark && width >= 1024
+                                        ? '/VMEX-logo-white.svg'
+                                        : '/VMEX-logo.svg'
+                                }
+                                alt="VMEX Finance Logo"
+                                width="72"
+                                height="42.66"
+                                className="invert lg:invert-0"
+                            />
+                        </a>
+                    </button>
                 </div>
 
                 {/* Desktop Center Nav */}
@@ -92,13 +96,17 @@ export const Navbar: React.FC = () => {
                 {/* Desktop/Mobile Right Nav */}
                 <div className="flex items-center justify-end gap-1">
                     <ToggleThemeButton />
-                    <DefaultDropdown
-                        selected={renderChainImg()}
-                        items={renderNetworks(switchNetworkAsync)}
-                        size="lg"
-                        icon
-                        className="!bg-neutral-800 hover:!bg-neutral-700 !text-neutral-100 lg:!bg-neutral-300 lg:hover:!bg-[rgb(200,200,200)] lg:!text-black dark:lg:!bg-neutral-800 dark:lg:hover:!bg-neutral-700 dark:lg:!text-neutral-100"
-                    />
+                    {width < breakpoints.lg && !address ? (
+                        <WalletButton>{width > 1200 ? 'Connect Wallet' : 'Connect'}</WalletButton>
+                    ) : (
+                        <DefaultDropdown
+                            selected={renderChainImg()}
+                            items={renderNetworks(switchNetworkAsync)}
+                            size="lg"
+                            icon
+                            className="!bg-neutral-800 hover:!bg-neutral-700 !text-neutral-100 lg:!bg-neutral-300 lg:hover:!bg-[rgb(200,200,200)] lg:!text-black dark:lg:!bg-neutral-800 dark:lg:hover:!bg-neutral-700 dark:lg:!text-neutral-100"
+                        />
+                    )}
 
                     {width >= breakpoints.lg ? (
                         <WalletButton>{width > 1200 ? 'Connect Wallet' : 'Connect'}</WalletButton>

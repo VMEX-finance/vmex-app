@@ -1,60 +1,12 @@
 import React, { Dispatch, SetStateAction, useContext } from 'react';
 import { ThemeProvider as MUITheme } from '@mui/material/styles';
-import { createTheme } from '@mui/material/styles';
+import { vmexTheme } from '@/config';
 
 type IThemeProps = {
     theme: string;
     setTheme: Dispatch<SetStateAction<string>>;
     isDark: boolean;
 };
-
-export function vmexTheme(isDark = false) {
-    return (createTheme as any)({
-        palette: {
-            mode: isDark ? 'dark' : 'light',
-            background: {
-                paper: isDark ? '#0f0f0f' : '#fff',
-            },
-            primary: {
-                main: isDark ? '#fff' : '#0f0f0f',
-            },
-        },
-        components: {
-            MUIDataTableToolbar: {
-                styleOverrides: {
-                    root: {
-                        display: 'flex',
-                        alignItems: 'center',
-                    },
-                },
-            },
-            MuiPaper: {
-                styleOverrides: {
-                    root: {
-                        borderRadius: '0.375rem',
-                        backgroundImage: 'none',
-                        boxShadow: 'none',
-                    },
-                },
-            },
-            MuiTableCell: {
-                styleOverrides: {
-                    root: {
-                        paddingBottom: '4px !important',
-                        paddingTop: '8px !important',
-                    },
-                },
-            },
-            MUIDataTablePagination: {
-                styleOverrides: {
-                    tableCellContainer: {
-                        border: '0',
-                    },
-                },
-            },
-        },
-    });
-}
 
 const getInitialTheme = () => {
     if (typeof window !== 'undefined' && window.localStorage) {

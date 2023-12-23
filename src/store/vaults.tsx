@@ -1,5 +1,4 @@
-import React, { createContext, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
-import { useAccount, useSwitchNetwork } from 'wagmi';
+import React, { createContext, ReactNode, useContext, useMemo } from 'react';
 import { getNetworkName } from '../utils/network';
 import {
     IGaugesAsset,
@@ -7,10 +6,8 @@ import {
     IVaultAsset,
     useGauages,
     useSubgraphAllMarketsData,
-    useSubgraphTranchesOverviewData,
 } from '@/api';
-import { QueryClient, useQuery } from '@tanstack/react-query';
-import { TESTING } from '@/utils';
+import { useQuery } from '@tanstack/react-query';
 
 // Types
 export type IVaultsStoreProps = {
@@ -83,10 +80,6 @@ export function VaultsStore(props: { children: ReactNode }) {
         refetchInterval: 10 * 1000,
     });
 
-    const refresh = () => {
-        // TODO: force refresh
-    };
-
     const vaults = useMemo(() => {
         if (queryAllMarketsData.data?.length) {
             const markets = queryAllMarketsData.data;
@@ -100,7 +93,7 @@ export function VaultsStore(props: { children: ReactNode }) {
         } else {
             return queryVaults.data;
         }
-    }, [queryAllMarketsData.isLoading, queryGauges.isLoading]);
+    }, [queryAllMarketsData?.data?.length, queryGauges?.data?.length, queryVaults?.data?.length]);
 
     return (
         <VaultsContext.Provider
@@ -109,7 +102,6 @@ export function VaultsStore(props: { children: ReactNode }) {
                 isLoading: queryVaults.isLoading,
                 isError: queryVaults.isError,
                 error: queryVaults.error,
-                refresh,
             }}
         >
             {props.children}

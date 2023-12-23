@@ -13,19 +13,27 @@ import MyTranches from './pages/my-tranches';
 import { useGlobalContext } from '@/store';
 
 function Router() {
-    const [showLoading, setShowLoading] = useState(true);
+    const [showLoading, setShowLoading] = useState({ slow: true, fast: true });
     const { setFirstLoad } = useGlobalContext();
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-            setShowLoading(false);
+            setShowLoading({ ...showLoading, fast: false });
             setFirstLoad(false);
-        }, 2000);
+        }, 2600);
+        return () => clearTimeout(timeout);
+    }, []);
+
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            setShowLoading({ ...showLoading, slow: false });
+            setFirstLoad(false);
+        }, 3000);
         return () => clearTimeout(timeout);
     }, []);
 
     return (
-        <Loader type="full-page" loading={showLoading}>
+        <Loader type="full-page" loading={showLoading as any} text="VMEX FINANCE">
             <Routes>
                 <Route index element={<Navigate to="/overview" />} />
                 <Route path="/overview" element={<Overview />} />

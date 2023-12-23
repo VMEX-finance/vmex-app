@@ -1,13 +1,13 @@
 import React, { ReactNode } from 'react';
 import { CgSpinner } from 'react-icons/cg';
-import { useLocation } from 'react-router-dom';
-import { useGlobalContext, useThemeContext } from '@/store';
+import { useThemeContext } from '@/store';
 import { Transition } from '@headlessui/react';
 import { Skeleton } from '@mui/material';
+import { ProgressBar } from './progress';
 
 type ILoaderProps = {
     type?: 'spinner' | 'skeleton' | 'full-page';
-    loading?: boolean;
+    loading?: boolean | { slow: boolean; fast: boolean };
     text?: string;
     onlyHome?: boolean;
     children?: ReactNode;
@@ -33,8 +33,6 @@ export const Loader = ({
     className,
 }: ILoaderProps) => {
     const { isDark } = useThemeContext();
-    const { pathname } = useLocation();
-    const { firstLoad } = useGlobalContext();
 
     if (type === 'spinner') {
         const determineSize = () => {
@@ -60,44 +58,40 @@ export const Loader = ({
     }
 
     if (type === 'full-page') {
-        const determineShow = () => {
-            if (onlyHome) {
-                return loading && (pathname === '/' || pathname === '/overview') && firstLoad;
-            } else {
-                return loading;
-            }
-        };
         return (
             <>
                 <Transition
-                    show={determineShow()}
-                    leave="transition-opacity duration-800"
+                    show={typeof loading === 'boolean' ? loading : loading?.slow}
+                    leave="transition-opacity duration-400"
                     leaveFrom="opacity-100"
                     leaveTo="opacity-0"
                 >
-                    <div className="top-0 left-0 h-screen w-full bg-[#eee] dark:bg-neutral-900 z-[9999] fixed">
+                    <div className="top-0 left-0 h-screen w-full bg-white dark:bg-neutral-900 z-[9999] fixed">
                         <Transition
                             className={`flex flex-col justify-center items-center h-full ${
                                 animation ? 'animate-pulse' : ''
                             }`}
-                            show={determineShow()}
-                            enter="transition-opacity duration-400"
+                            show={typeof loading === 'boolean' ? loading : loading?.fast}
+                            enter="transition-opacity duration-300"
                             enterFrom="opacity-0"
                             enterTo="opacity-100 "
-                            leave="transition-opacity duration-800"
+                            leave="transition-opacity duration-400"
                             leaveFrom="opacity-100"
                             leaveTo="opacity-0"
                         >
                             <img
                                 src="/3D-logo.svg"
                                 alt="VMEX Logo"
-                                width="165"
+                                width="150"
                                 height="150"
                                 rel="preload"
                             />
-                            <p className="text-center font-medium dark:text-neutral-300 mt-6">
+                            <p className="text-center font-medium dark:text-neutral-300 mt-4 tracking-wide">
                                 {text}
                             </p>
+                            <div className="w-60 mx-auto mt-2">
+                                <ProgressBar />
+                            </div>
                         </Transition>
                     </div>
                 </Transition>
