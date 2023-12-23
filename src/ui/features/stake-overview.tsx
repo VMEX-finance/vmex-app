@@ -34,7 +34,7 @@ export const StakingOverview = (props: IStakingOverviewProps) => {
 
     return (
         <Card>
-            <div className="grid grid-cols-2 lg:grid-cols-4 divide-y md:divide-y-0 lg:divide-x divide-gray-300 dark:divide-gray-700 items-center justify-center">
+            <div className="grid grid-cols-2 lg:grid-cols-4 lg:divide-x divide-gray-300 dark:divide-gray-700 items-center justify-center">
                 {stats.map((el, i) => (
                     <div
                         key={`staking-overview-${i}`}
@@ -55,7 +55,7 @@ export const StakingOverview = (props: IStakingOverviewProps) => {
                                     )}
                                 </span>
                             </Loader>
-                            <span className="text-gray-500">{el.label}</span>
+                            <span className="text-gray-500 text-sm sm:text-md">{el.label}</span>
                         </div>
                     </div>
                 ))}
