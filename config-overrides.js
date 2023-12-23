@@ -25,6 +25,8 @@ module.exports = override(
         ['@/ui/templates/*']: path.resolve(__dirname, 'src/ui/templates/*'),
         ['@/ui/charts']: path.resolve(__dirname, 'src/ui/charts'),
         ['@/ui/charts/*']: path.resolve(__dirname, 'src/ui/charts/*'),
+        ['@/ui/transitions']: path.resolve(__dirname, 'src/ui/transitions'),
+        ['@/ui/transitions/*']: path.resolve(__dirname, 'src/ui/transitions/*'),
         ['@/hooks']: path.resolve(__dirname, 'src/hooks'),
         ['@/hooks/*']: path.resolve(__dirname, 'src/hooks/*'),
         ['@/config']: path.resolve(__dirname, 'src/config'),
