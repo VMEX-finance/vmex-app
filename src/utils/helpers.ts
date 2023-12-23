@@ -213,6 +213,7 @@ export const HFFormatter = new Intl.NumberFormat('en-US', {
 
 export const numberFormatter = new Intl.NumberFormat('en-US', {
     notation: 'compact',
+    maximumSignificantDigits: 5,
 });
 
 export const nativeTokenFormatter = new Intl.NumberFormat('en-US', {

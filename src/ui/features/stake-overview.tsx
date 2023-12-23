@@ -39,7 +39,7 @@ export const StakingOverview = (props: IStakingOverviewProps) => {
                         className="flex justify-center lg:items-center py-2 first:pt-0 last:pb-0"
                     >
                         <div className="flex flex-col gap-1 items-center">
-                            <Loader loading={props.loading} height={40}>
+                            <Loader loading={props.loading} height={40} width={100}>
                                 <span className="flex gap-0.5 items-end">
                                     <span className="text-4xl">
                                         {el.label.includes('Locked')
