@@ -38,7 +38,9 @@ export const StakingOverview = (props: IStakingOverviewProps) => {
                 {stats.map((el, i) => (
                     <div
                         key={`staking-overview-${i}`}
-                        className="flex justify-center lg:items-center py-2 sm:border-none border-t border-gray-300 dark:border-gray-700 lg:first:pt-0 lg:last:pb-0"
+                        className={`flex justify-center lg:items-center py-2 sm:border-none border-gray-300 dark:border-gray-700 lg:first:pt-0 lg:last:pb-0 ${
+                            i > 1 ? 'border-t' : ''
+                        }`}
                     >
                         <div className="flex flex-col gap-0.5 sm:gap-1 items-center">
                             <Loader loading={props.loading} height={40} width={100}>
@@ -50,7 +52,7 @@ export const StakingOverview = (props: IStakingOverviewProps) => {
                                     </span>
                                     {el.label.includes('Expiration') && el.amount !== '-' && (
                                         <span className="text-xs mb-1 text-gray-600 dark:text-gray-400">
-                                            Weeks
+                                            Week{el.amount !== Number(1) && 's'}
                                         </span>
                                     )}
                                 </span>

@@ -17,7 +17,7 @@ export const ProgressBar = ({ progress, setProgress }: IProgressBar) => {
             if (realProgress > 100) {
                 realSetProgress(100);
             } else {
-                const diff = Math.random() * 15;
+                const diff = Math.random() * 20;
                 realSetProgress(realProgress + diff);
             }
         };
