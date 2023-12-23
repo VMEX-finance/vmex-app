@@ -40,7 +40,7 @@ export const GaugesCustomRow = (props: IVaultAsset & { loading?: boolean }) => {
     // Mobile
     if (width < 900) {
         return (
-            <tr className="text-left transition duration-200 hover:bg-neutral-200 dark:hover:bg-neutral-900 hover:cursor-pointer flex flex-col px-4 pt-2 pb-1 border-y-[1px] dark:border-neutral-800">
+            <tr className="text-left transition duration-150 hover:bg-neutral-100 dark:hover:bg-neutral-900 hover:cursor-pointer flex flex-col px-4 pt-2 pb-1 border-y-[1px] dark:border-neutral-800">
                 <td className="flex justify-between">
                     <span className="font-bold">Asset</span>
                     <div className="flex items-center gap-2">
