@@ -56,19 +56,21 @@ export const Navbar: React.FC = () => {
             >
                 {/* Desktop/Mobile Left Nav */}
                 <div className="flex items-center gap-4 xl:gap-6">
-<button onClick={() => navigateTo("overview"}>
-                    <a id="nav-logo" className="flex items-center gap-2">
-                        <img
-                            src={
-                                isDark && width >= 1024 ? '/VMEX-logo-white.svg' : '/VMEX-logo.svg'
-                            }
-                            alt="VMEX Finance Logo"
-                            width="72"
-                            height="42.66"
-                            className="invert lg:invert-0"
-                        />
-                    </a>
-</button>
+                    <button onClick={() => navigateTo('overview')}>
+                        <a id="nav-logo" className="flex items-center gap-2">
+                            <img
+                                src={
+                                    isDark && width >= 1024
+                                        ? '/VMEX-logo-white.svg'
+                                        : '/VMEX-logo.svg'
+                                }
+                                alt="VMEX Finance Logo"
+                                width="72"
+                                height="42.66"
+                                className="invert lg:invert-0"
+                            />
+                        </a>
+                    </button>
                 </div>
 
                 {/* Desktop Center Nav */}

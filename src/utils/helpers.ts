@@ -386,3 +386,15 @@ export const isTrancheIdEqual = (val1: string | number, val2: string | number) =
 
     return tranche1 === tranche2;
 };
+
+const HARDCODED_TRANCHE_NAMES: Record<string, string> = {
+    '�N|�%��.��U$��D9Iyś��M���u�': 'LP asset tranche',
+    '�V@�nг,� [��͔�pD}����v�9�p': 'Base assets tranche',
+};
+
+export const hardcodedTrancheNames = (name: string): string => {
+    if (name in HARDCODED_TRANCHE_NAMES) {
+        return HARDCODED_TRANCHE_NAMES[name];
+    }
+    return name;
+};
