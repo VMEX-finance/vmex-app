@@ -96,13 +96,17 @@ export const Navbar: React.FC = () => {
                 {/* Desktop/Mobile Right Nav */}
                 <div className="flex items-center justify-end gap-1">
                     <ToggleThemeButton />
-                    <DefaultDropdown
-                        selected={renderChainImg()}
-                        items={renderNetworks(switchNetworkAsync)}
-                        size="lg"
-                        icon
-                        className="!bg-neutral-800 hover:!bg-neutral-700 !text-neutral-100 lg:!bg-neutral-300 lg:hover:!bg-[rgb(200,200,200)] lg:!text-black dark:lg:!bg-neutral-800 dark:lg:hover:!bg-neutral-700 dark:lg:!text-neutral-100"
-                    />
+                    {width < breakpoints.lg && !address ? (
+                        <WalletButton>{width > 1200 ? 'Connect Wallet' : 'Connect'}</WalletButton>
+                    ) : (
+                        <DefaultDropdown
+                            selected={renderChainImg()}
+                            items={renderNetworks(switchNetworkAsync)}
+                            size="lg"
+                            icon
+                            className="!bg-neutral-800 hover:!bg-neutral-700 !text-neutral-100 lg:!bg-neutral-300 lg:hover:!bg-[rgb(200,200,200)] lg:!text-black dark:lg:!bg-neutral-800 dark:lg:hover:!bg-neutral-700 dark:lg:!text-neutral-100"
+                        />
+                    )}
 
                     {width >= breakpoints.lg ? (
                         <WalletButton>{width > 1200 ? 'Connect Wallet' : 'Connect'}</WalletButton>
