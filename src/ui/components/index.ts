@@ -19,6 +19,7 @@ export * from './health-factor';
 export * from './input-autocomplete';
 export * from './input-coin';
 export * from './input-default';
+export * from './progress';
 export * from './input-list';
 export * from './label';
 export * from './legend';

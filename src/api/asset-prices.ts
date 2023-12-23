@@ -27,7 +27,7 @@ export async function getAllAssetPrices(): Promise<
             });
         return returnObj;
     } catch (err) {
-        console.error('#getAllAssetPrices:', err);
+        console.error('#getAllAssetPrices:', String(err).split('[')[0]);
         return {};
     }
 }
