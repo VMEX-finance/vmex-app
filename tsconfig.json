@@ -24,6 +24,8 @@
             "@/ui/templates/*": ["ui/templates/*"],
             "@/ui/charts": ["ui/charts/index.ts"],
             "@/ui/charts/*": ["ui/charts/*"],
+            "@/ui/transitions": ["ui/transitions/index.ts"],
+            "@/ui/transitions/*": ["ui/transitions/*"],
             "@/hooks": ["hooks/index.ts"],
             "@/hooks/*": ["hooks/*"],
             "@/config": ["config/index.ts"],
