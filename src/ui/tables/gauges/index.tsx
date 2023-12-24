@@ -14,7 +14,7 @@ interface ITableProps {
     error?: boolean;
 }
 
-export const GaugesTable: React.FC<ITableProps> = ({ data, loading, userData, error }) => {
+const GaugesTable: React.FC<ITableProps> = React.memo(({ data, loading, userData, error }: any) => {
     const columns = [
         {
             name: 'vaultName',
@@ -194,4 +194,8 @@ export const GaugesTable: React.FC<ITableProps> = ({ data, loading, userData, er
             />
         </CacheProvider>
     );
-};
+});
+
+GaugesTable.displayName = 'GaugesTable';
+
+export { GaugesTable };
