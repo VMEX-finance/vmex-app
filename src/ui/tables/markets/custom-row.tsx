@@ -17,7 +17,7 @@ import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { BigNumber } from 'ethers';
 
-const MarketsCustomRow = (props: any) => {
+const MarketsCustomRow = React.memo((props: any) => {
     const {
         asset,
         tranche,
@@ -212,6 +212,8 @@ const MarketsCustomRow = (props: any) => {
             </tr>
         );
     }
-};
+});
+
+MarketsCustomRow.displayName = 'MarketsCustomRow';
 
 export { MarketsCustomRow };

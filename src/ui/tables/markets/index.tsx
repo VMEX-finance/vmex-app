@@ -15,7 +15,7 @@ interface ITableProps {
     userActivity?: UseQueryResult<IUserActivityDataProps, unknown>;
 }
 
-export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivity }) => {
+const MarketsTable: React.FC<ITableProps> = React.memo(({ data, loading, userActivity }: any) => {
     const { address } = useAccount();
 
     // const renderYourAmount = (asset: string, trancheId: number) => {
@@ -258,4 +258,8 @@ export const MarketsTable: React.FC<ITableProps> = ({ data, loading, userActivit
             />
         </CacheProvider>
     );
-};
+});
+
+MarketsTable.displayName = 'MarketsTable';
+
+export { MarketsTable };

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Tooltip } from './tooltip-default';
 
 function SmartPrice({ price }: { price: string }) {
     if (price === 'N/A' && !price) return <>-</>;
@@ -33,10 +34,13 @@ function SmartPrice({ price }: { price: string }) {
     }
 
     return (
-        <span className={textClass}>
-            0.0<sub>{zeroCount}</sub>
-            {endingFour}
-        </span>
+        <Tooltip text={price}>
+            <span className={textClass}>
+                0.0...
+                {/* <sub>{zeroCount}</sub> */}
+                {endingFour}
+            </span>
+        </Tooltip>
     );
 }
 
