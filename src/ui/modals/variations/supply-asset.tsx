@@ -7,6 +7,7 @@ import {
     bigNumberToUnformattedString,
     getNetworkName,
     redirectToPool,
+    hardcodedTrancheNames,
 } from '@/utils';
 import {
     HealthFactor,
@@ -451,7 +452,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                                 closeDialog('loan-asset-dialog');
                                 window.scroll(0, 0);
                                 navigate(
-                                    `/tranches/${data?.tranche
+                                    `/tranches/${hardcodedTrancheNames(data?.tranche || '')
                                         ?.toLowerCase()
                                         .replace(/\s+/g, '-')}`,
                                     {

@@ -14,6 +14,7 @@ import {
     unformattedStringToBigNumber,
     bigNumberToNative,
     bigNumberToUnformattedString,
+    hardcodedTrancheNames,
 } from '@/utils';
 import { useSelectedTrancheContext } from '@/store';
 import { useNavigate } from 'react-router-dom';
@@ -203,7 +204,9 @@ export const BorrowAssetDialog: React.FC<ISupplyBorrowProps> = ({ name, isOpen, 
                             closeDialog('borrow-asset-dialog');
                             window.scroll(0, 0);
                             navigate(
-                                `/tranches/${data.tranche?.toLowerCase().replace(/\s+/g, '-')}`,
+                                `/tranches/${hardcodedTrancheNames(data.tranche || '')
+                                    .toLowerCase()
+                                    .replace(/\s+/g, '-')}`,
                                 {
                                     state: { view: 'details', trancheId: data.trancheId },
                                 },
