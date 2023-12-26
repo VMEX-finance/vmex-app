@@ -15,7 +15,7 @@ type ILoaderProps = {
     variant?: 'text' | 'rectangular' | 'rounded' | 'circular';
     height?: string | number | 'auto';
     width?: string | number;
-    size?: 'lg' | 'md' | 'sm';
+    size?: 'lg' | 'md' | 'sm' | 'xs';
     className?: string;
 };
 
@@ -41,6 +41,8 @@ export const Loader = ({
                     return '48px';
                 case 'sm':
                     return '24px';
+                case 'xs':
+                    return '18px';
                 default:
                     return '36px';
             }

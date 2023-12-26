@@ -1,4 +1,4 @@
-import { IMarketsAsset, ITrancheProps } from '@/api';
+import { IMarketsAsset, INormalizedBN, ITrancheProps } from '@/api';
 import { BigNumber, ethers, utils } from 'ethers';
 import { AVAILABLE_ASSETS, HEALTH } from './constants';
 import moment from 'moment';
@@ -228,6 +228,18 @@ export const percentFormatter = new Intl.NumberFormat('en-US', {
     maximumFractionDigits: 2,
     notation: 'compact',
 });
+
+export const toNormalizedBN = (value: BigNumber, decimals = 18): INormalizedBN => {
+    if (value === BigNumber.from(0) || !value)
+        return {
+            raw: BigNumber.from(0),
+            normalized: 0,
+        };
+    return {
+        raw: value,
+        normalized: utils.formatUnits(value, decimals),
+    };
+};
 
 export const convertStringFormatToNumber = (amount: string | number) => {
     if (!amount) return 'N/A';

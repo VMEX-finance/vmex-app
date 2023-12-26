@@ -12,7 +12,7 @@ import {
     StakeInput,
 } from '@/ui/components';
 import { GaugesTable } from '@/ui/tables';
-import { useLockingUI, useWindowSize, useToken, useVault } from '@/hooks';
+import { useLockingUI, useWindowSize, useToken, useVault, useGauge } from '@/hooks';
 import { BigNumber, utils } from 'ethers';
 import { useAccount } from 'wagmi';
 import { writeContract } from '@wagmi/core';
@@ -54,7 +54,7 @@ const Staking: React.FC = () => {
     const { width, breakpoints } = useWindowSize();
     const [tabIndex, setTabIndex] = React.useState(0);
     const { vaults, isError: vaultsError, isLoading: vaultsLoading } = useVaultsContext();
-    const { selected, setSelected } = useVault();
+    const { selected, setSelected, gaugeRewards, redeemGaugeRewards, gaugeLoading } = useGauge();
 
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
         const tabText = (event.target as any).innerText;
@@ -370,21 +370,27 @@ const Staking: React.FC = () => {
                                         className=""
                                         items={vaults.map((v) => ({
                                             text: v.vaultSymbol,
-                                            onClick: () => setSelected(v.vaultAddress),
+                                            onClick: () => setSelected(v.gaugeAddress),
                                         }))}
                                         selected={
-                                            vaults.find((v) => v.vaultAddress === selected)
+                                            vaults.find((v) => v.gaugeAddress === selected)
                                                 ?.vaultSymbol || vaults[0]?.vaultSymbol
                                         }
                                     />
                                     <StakeInput
                                         header="Unclaimed rewards (dVMEX)"
                                         onChange={() => {}}
-                                        value={'0.0'}
+                                        value={gaugeRewards?.earned?.normalized}
                                         disabled
+                                        loading={gaugeLoading.rewards}
                                     />
                                 </div>
-                                <Button type="accent" className="h-fit mb-[17.88px]" disabled>
+                                <Button
+                                    type="accent"
+                                    className="h-fit mb-[17.88px]"
+                                    onClick={redeemGaugeRewards}
+                                    loading={gaugeLoading.redeem}
+                                >
                                     Claim
                                 </Button>
                             </div>
