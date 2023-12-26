@@ -132,7 +132,7 @@ export const determineHealthColor = (health: number | string | undefined) => {
     else if (_health > HEALTH['GOOD']) return 'text-green-300';
     else if (_health > HEALTH['OKAY']) return 'text-yellow-400';
     else if (_health > HEALTH['BAD']) return 'text-red-300';
-    else return 'text-red-500';
+    else return 'text-red-500 dark:text-red-400';
 };
 
 export type IAvailableCoins =
