@@ -1,12 +1,13 @@
 import { useTransactionsContext } from '@/store';
 import { IAddress } from '@/types/wagmi';
 import { CONTRACTS, TESTING, VMEX_VEVMEX_CHAINID, weeksUntilUnlock } from '@/utils';
-import { VEVMEX_ABI, VEVMEX_OPTIONS_ABI } from '@/utils/abis';
+import { VEVMEX_ABI, VEVMEX_GAUGE_ABI, VEVMEX_OPTIONS_ABI } from '@/utils/abis';
 import { useQueries } from '@tanstack/react-query';
 import { erc20ABI, writeContract, prepareWriteContract, readContracts } from '@wagmi/core';
 import { BigNumber, constants, utils } from 'ethers';
 import { formatEther } from 'ethers/lib/utils.js';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 import { useAccount, useBalance, useContractRead } from 'wagmi';
 
 const DEFAULT_LOADING = {
