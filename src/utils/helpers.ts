@@ -63,10 +63,10 @@ export const determineCoinImg = (asset: string, custom?: string) => {
         if (_asset == 'beefy') return `${url}beefy.png`;
         if (_asset?.includes('bpt')) return `${url}${_asset}.png`;
         if (
-            (_asset?.includes('crv') && _asset != 'crv') ||
+            (_asset?.includes('crv') && _asset !== 'crv') ||
             _asset?.includes('curve') ||
             _asset?.includes('ammv2') ||
-            _asset == 'grail'
+            _asset === 'grail'
         ) {
             return `${url}${_asset}.webp`;
         }

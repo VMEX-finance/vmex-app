@@ -207,7 +207,6 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                                 amount={amount}
                                 setAmount={setAmount}
                                 coin={{
-                                    logo: `/coins/${asset?.toLowerCase() || 'eth'}.svg`,
                                     name: asset || 'ETH',
                                 }}
                                 balance={bigNumberToUnformattedString(
