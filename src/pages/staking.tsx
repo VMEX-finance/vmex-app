@@ -12,7 +12,7 @@ import {
     StakeInput,
 } from '@/ui/components';
 import { GaugesTable } from '@/ui/tables';
-import { useLockingUI, useWindowSize, useToken, useVault, useGauge } from '@/hooks';
+import { useLockingUI, useWindowSize, useToken, useGauge } from '@/hooks';
 import { BigNumber, utils } from 'ethers';
 import { useAccount } from 'wagmi';
 import { writeContract } from '@wagmi/core';
@@ -54,7 +54,15 @@ const Staking: React.FC = () => {
     const { width, breakpoints } = useWindowSize();
     const [tabIndex, setTabIndex] = React.useState(0);
     const { vaults, isError: vaultsError, isLoading: vaultsLoading } = useVaultsContext();
-    const { selected, setSelected, gaugeRewards, redeemGaugeRewards, gaugeLoading } = useGauge();
+    const {
+        selected,
+        setSelected,
+        gaugeRewards,
+        redeemGaugeRewards,
+        gaugeLoading,
+        claimBoostRewards,
+        boostRewards,
+    } = useGauge();
 
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
         const tabText = (event.target as any).innerText;
@@ -104,7 +112,7 @@ const Staking: React.FC = () => {
             }
         >
             <StakingOverview
-                apr={percentFormatter.format(0)} // TODO
+                apr={'- %'} // TODO
                 totalLocked={vevmexMetaData.data?.supply || '0'}
                 yourLocked={vevmexUserData?.data?.locked?.amount?.normalized || '0'}
                 expiration={vevmexUserData?.data?.locked?.end?.normalized || '-'}
@@ -390,6 +398,7 @@ const Staking: React.FC = () => {
                                     className="h-fit mb-[17.88px]"
                                     onClick={redeemGaugeRewards}
                                     loading={gaugeLoading.redeem}
+                                    disabled={gaugeRewards.earned.normalized === '0.0'}
                                 >
                                     Claim
                                 </Button>
@@ -412,10 +421,16 @@ const Staking: React.FC = () => {
                                 <StakeInput
                                     header="Unclaimed veVMEX boost rewards (dVMEX)"
                                     onChange={() => {}}
-                                    value="0.0"
+                                    value={boostRewards.normalized}
                                     disabled
                                 />
-                                <Button type="accent" className="h-fit mb-[17.88px]" disabled>
+                                <Button
+                                    type="accent"
+                                    className="h-fit mb-[17.88px]"
+                                    disabled
+                                    onClick={claimBoostRewards}
+                                    loading={gaugeLoading.boost}
+                                >
                                     Claim
                                 </Button>
                             </div>
