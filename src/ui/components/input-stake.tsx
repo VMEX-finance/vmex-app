@@ -1,5 +1,7 @@
 import React, { ReactNode } from 'react';
 import { Button } from './button';
+import { Loader } from './loader';
+import { Fade } from '../transitions';
 
 type IStakeInput = {
     value: string | number;
@@ -9,6 +11,7 @@ type IStakeInput = {
     footer?: ReactNode | string;
     setMax?: (() => void) | any;
     error?: boolean;
+    loading?: boolean;
 };
 
 export const StakeInput = ({
@@ -19,6 +22,7 @@ export const StakeInput = ({
     footer,
     setMax,
     error,
+    loading,
 }: IStakeInput) => {
     return (
         <div className="flex flex-col">
@@ -42,9 +46,18 @@ export const StakeInput = ({
                     disabled={disabled}
                     value={value}
                     onChange={onChange}
-                    className={['bg-transparent', 'w-full', 'focus:outline-none', 'pl-1'].join(' ')}
+                    className={[
+                        'bg-transparent',
+                        'w-full',
+                        'focus:outline-none',
+                        'pl-1',
+                        loading && loading === true ? 'opacity-60' : '',
+                    ].join(' ')}
                     type="number"
                 />
+                <Fade show={!!loading && !setMax && loading === true} className="my-auto">
+                    <Loader type="spinner" height="h-auto" size="xs" />
+                </Fade>
                 {setMax && (
                     <Button
                         type="accent-strong"

@@ -11,4 +11,5 @@ export * from './zap';
 export * from './leverage';
 export * from './locking';
 export * from './token';
+export * from './gauge';
 export * from './vault';

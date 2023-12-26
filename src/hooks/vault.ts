@@ -17,13 +17,11 @@ import { useAccount, useBalance, useContractReads } from 'wagmi';
 import { useDialogController } from './dialog';
 
 export const useVault = (vaultAddress?: string, gaugeAddress?: string, vaultSymbol?: string) => {
-    const { vaults } = useVaultsContext();
     const { address } = useAccount();
     const { queryAllMarketsData } = useSubgraphAllMarketsData();
     const { newTransaction } = useTransactionsContext();
     const [amount, setAmount] = useMediatedState(inputMediator, '');
     const [isMax, setIsMax] = React.useState(false);
-    const [selected, setSelected] = useState(vaults[0]?.vaultAddress || '');
     const [success, setSuccess] = useState(false);
     const { closeDialog } = useDialogController();
     const { data: gaugeBalance } = useBalance({
@@ -204,8 +202,6 @@ export const useVault = (vaultAddress?: string, gaugeAddress?: string, vaultSymb
         approvedEnough,
         vaultBalance,
         gaugeBalance,
-        selected,
-        setSelected,
         success,
     };
 };
