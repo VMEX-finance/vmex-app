@@ -29,7 +29,7 @@ export const YourRewardsTable: React.FC<IYourRewardsTableProps> = ({
     address,
 }) => {
     const network = getNetworkName();
-    const { width } = useWindowSize();
+    const { width, breakpoints } = useWindowSize();
     const headers = ['Asset', 'Amount', ''];
     const { data: signer } = useSigner();
     const { chain } = useNetwork();
@@ -71,7 +71,7 @@ export const YourRewardsTable: React.FC<IYourRewardsTableProps> = ({
                                 <th
                                     key={`table-header-${i}`}
                                     scope="col"
-                                    className={`py-3 text-left text-sm font-semibold text-neutral900 first-of-type:pl-2 first-of-type:md:pl-6`}
+                                    className={`py-1 text-left text-sm font-semibold text-neutral900 first-of-type:pl-2 first-of-type:md:pl-6`}
                                 >
                                     {el}
                                 </th>
@@ -95,8 +95,8 @@ export const YourRewardsTable: React.FC<IYourRewardsTableProps> = ({
                                     >
                                         <td className="whitespace-nowrap pl-4 py-2 text-sm sm:pl-6">
                                             <AssetDisplay
-                                                name={width > 600 ? reward.asset : ''}
-                                                logo={`/coins/${reward.token}.svg`}
+                                                name={reward.asset}
+                                                noText={width < breakpoints.sm}
                                             />
                                         </td>
                                         <td>

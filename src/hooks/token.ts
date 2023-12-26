@@ -8,7 +8,7 @@ import { BigNumber, constants, utils } from 'ethers';
 import { formatEther } from 'ethers/lib/utils.js';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { useAccount, useBalance, useContractRead } from 'wagmi';
+import { useAccount, useBalance, useContractRead, useContractReads } from 'wagmi';
 
 const DEFAULT_LOADING = {
     redeem: false,
@@ -53,14 +53,28 @@ export const useToken = (clearInputs?: () => void) => {
         token: CONTRACTS[VMEX_VEVMEX_CHAINID].dvmex as any,
     });
 
-    const { data: vevmexIsApproved, refetch: vevmexRefreshAllowances } = useContractRead({
-        address: CONTRACTS[VMEX_VEVMEX_CHAINID].vmexWeth as `0x${string}`,
-        abi: erc20ABI,
-        chainId: VMEX_VEVMEX_CHAINID,
-        functionName: 'allowance',
-        args: [
-            address || constants.AddressZero,
-            CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as `0x${string}`,
+    const { data: allowances, refetch: refreshAllowances } = useContractReads({
+        contracts: [
+            {
+                address: CONTRACTS[VMEX_VEVMEX_CHAINID].vmexWeth as `0x${string}`,
+                abi: erc20ABI,
+                chainId: VMEX_VEVMEX_CHAINID,
+                functionName: 'allowance',
+                args: [
+                    address || constants.AddressZero,
+                    CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as `0x${string}`,
+                ],
+            },
+            {
+                address: CONTRACTS[VMEX_VEVMEX_CHAINID].dvmex as `0x${string}`,
+                abi: erc20ABI,
+                chainId: VMEX_VEVMEX_CHAINID,
+                functionName: 'allowance',
+                args: [
+                    address || constants.AddressZero,
+                    CONTRACTS[VMEX_VEVMEX_CHAINID].redemption as `0x${string}`,
+                ],
+            },
         ],
         enabled: !!address ?? false,
         watch: address ? true : false,
@@ -219,7 +233,7 @@ export const useToken = (clearInputs?: () => void) => {
     const vevmexRedeem = async (amount: BigNumber) => {
         if (!address || amount === BigNumber.from(0) || !amount) return;
         const cleanAddress = utils.getAddress(address);
-        if (vevmexIsApproved && vevmexIsApproved.lt(amount)) {
+        if (allowances?.[0] && allowances?.[0]?.lt(amount)) {
             setLoading({ ...loading, redeemApprove: true });
             const prepareApproveTx = await prepareWriteContract({
                 address: CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as `0x${string}`,
@@ -251,32 +265,41 @@ export const useToken = (clearInputs?: () => void) => {
     const dvmexRedeem = async (amount: BigNumber) => {
         if (!address || amount === BigNumber.from(0) || !amount) return;
         const cleanAddress = utils.getAddress(address);
-        if (!vevmexIsApproved) {
-            setLoading({ ...loading, redeemApprove: true });
-            const prepareApproveTx = await prepareWriteContract({
-                address: CONTRACTS[VMEX_VEVMEX_CHAINID].dvmex as `0x${string}`,
-                abi: erc20ABI,
+
+        try {
+            console.log('allowances', allowances);
+            if (allowances?.[1] && allowances?.[1]?.lt(amount)) {
+                setLoading({ ...loading, redeemApprove: true });
+                const prepareApproveTx = await prepareWriteContract({
+                    address: CONTRACTS[VMEX_VEVMEX_CHAINID].dvmex as `0x${string}`,
+                    abi: erc20ABI,
+                    chainId: VMEX_VEVMEX_CHAINID,
+                    functionName: 'approve',
+                    args: [CONTRACTS[VMEX_VEVMEX_CHAINID].redemption, amount],
+                });
+                const approveTx = await writeContract(prepareApproveTx);
+                await newTransaction(approveTx);
+                await approveTx.wait();
+                setLoading({ ...loading, redeemApprove: false });
+            }
+            setLoading({ ...loading, redeem: true });
+            const prepareRedeemTx = await prepareWriteContract({
+                address: CONTRACTS[VMEX_VEVMEX_CHAINID].redemption as `0x${string}`,
+                abi: VEVMEX_OPTIONS_ABI,
                 chainId: VMEX_VEVMEX_CHAINID,
-                functionName: 'approve',
-                args: [cleanAddress, amount],
+                functionName: 'redeem',
+                args: [amount, cleanAddress],
             });
-            const approveTx = await writeContract(prepareApproveTx);
-            await newTransaction(approveTx);
-            await approveTx.wait();
-            setLoading({ ...loading, redeemApprove: false });
+            console.log('prepareRedeemTx', prepareRedeemTx);
+            const redeemTx = await writeContract(prepareRedeemTx);
+            setLoading({ ...loading, redeem: false });
+            await newTransaction(redeemTx);
+            clearInputs && clearInputs();
+        } catch (e) {
+            console.error(e);
+            setLoading({ ...loading, redeem: false });
+            toast.error('Error occured while redeeming');
         }
-        setLoading({ ...loading, redeem: true });
-        const prepareRedeemTx = await prepareWriteContract({
-            address: CONTRACTS[VMEX_VEVMEX_CHAINID].dvmex as `0x${string}`,
-            abi: VEVMEX_OPTIONS_ABI,
-            chainId: VMEX_VEVMEX_CHAINID,
-            functionName: 'redeem',
-            args: [amount, cleanAddress],
-        });
-        const redeemTx = await writeContract(prepareRedeemTx);
-        setLoading({ ...loading, redeem: false });
-        await newTransaction(redeemTx);
-        clearInputs && clearInputs();
     };
 
     /**
@@ -289,12 +312,12 @@ export const useToken = (clearInputs?: () => void) => {
             if (TESTING)
                 console.log(
                     'VMEX Allowance:',
-                    utils.formatEther(vevmexIsApproved || BigNumber.from(0)),
+                    utils.formatEther(allowances?.[0] || BigNumber.from(0)),
                 );
             if (TESTING)
                 console.log('Amount:', utils.formatEther(amount), '\nTime:', time.toString());
             // Approval TX - if necessary
-            if (vevmexIsApproved && vevmexIsApproved.lt(amount)) {
+            if (allowances?.[0] && allowances?.[0]?.lt(amount)) {
                 const prepareApproveTx = await prepareWriteContract({
                     address: CONTRACTS[VMEX_VEVMEX_CHAINID].vmexWeth as `0x${string}`,
                     abi: erc20ABI,
@@ -404,8 +427,9 @@ export const useToken = (clearInputs?: () => void) => {
     };
 
     return {
-        vevmexIsApproved,
-        vevmexRefreshAllowances,
+        vevmexIsApproved: allowances?.[0] || BigNumber.from(0),
+        redeemDvmexIsApproved: allowances?.[1] || BigNumber.from(0),
+        refreshAllowances: refreshAllowances,
         vevmexRedeem,
         tokenLoading: loading,
         withdrawLockedVevmex,

@@ -17,10 +17,9 @@ import { useModal, useWindowSize } from '@/hooks';
 import { TrancheStatsCard } from '@/ui/features';
 import { CreateTrancheAssetsTable } from '@/ui/tables';
 import { ethers } from 'ethers';
-import { configureExistingTranche, SetAddress } from '@vmexfinance/sdk';
+import { configureExistingTranche, SetAddress, AVAILABLE_ASSETS } from '@vmexfinance/sdk';
 import {
     NETWORKS,
-    AVAILABLE_ASSETS,
     checkProfanity,
     nativeAmountToUSD,
     PRICING_DECIMALS,
@@ -28,7 +27,6 @@ import {
     isChainUnsupported,
 } from '../utils';
 import { useAnalyticsEventTracker } from '@/config';
-import { getNetwork } from '@wagmi/core';
 
 const MyTranches: React.FC = () => {
     const network = getNetworkName();

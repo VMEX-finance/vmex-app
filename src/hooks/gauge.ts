@@ -1,8 +1,8 @@
 import { INormalizedBN } from '@/api';
 import { useTransactionsContext, useVaultsContext } from '@/store';
 import { IAddress } from '@/types/wagmi';
-import { VMEX_VEVMEX_CHAINID, toNormalizedBN } from '@/utils';
-import { VEVMEX_GAUGE_ABI } from '@/utils/abis';
+import { CONTRACTS, VMEX_VEVMEX_CHAINID, toNormalizedBN } from '@/utils';
+import { VEVMEX_GAUGE_ABI, VMEX_REWARD_POOL_ABI } from '@/utils/abis';
 import { prepareWriteContract, writeContract } from '@wagmi/core';
 import { BigNumber, constants, utils } from 'ethers';
 import { useEffect, useState } from 'react';
@@ -30,7 +30,11 @@ export const useGauge = () => {
     const { vaults, isLoading } = useVaultsContext();
     const [selected, setSelected] = useState(vaults?.[0]?.gaugeAddress || '');
     const [gaugeRewards, setGaugeRewards] = useState(DEFAULT_REWARDS_STATE);
-    const [loading, setLoading] = useState({ redeem: false, rewards: false });
+    const [boostRewards, setBoostRewards] = useState<INormalizedBN>({
+        normalized: '0.0',
+        raw: BigNumber.from(0),
+    });
+    const [loading, setLoading] = useState({ redeem: false, rewards: false, boost: false });
 
     const defaultConfig = {
         address: selected as IAddress,
@@ -66,11 +70,54 @@ export const useGauge = () => {
         }
     };
 
-    // Get rewards on load
+    /**
+     * @function redeemBoostRewards
+     */
+    const claimBoostRewards = async () => {
+        if (!address) return;
+        try {
+            setLoading({ ...loading, boost: true });
+            const prepareClaimTx = await prepareWriteContract({
+                address: CONTRACTS[VMEX_VEVMEX_CHAINID].dvmexRewards,
+                abi: VMEX_REWARD_POOL_ABI,
+                chainId: VMEX_VEVMEX_CHAINID,
+                functionName: 'claim',
+            });
+            const claimTx = await writeContract(prepareClaimTx);
+            await Promise.all([newTransaction(claimTx), claimTx.wait()]);
+            setLoading({ ...loading, boost: false });
+            setGaugeRewards(DEFAULT_REWARDS_STATE);
+        } catch (e) {
+            console.error(e);
+            setLoading({ ...loading, redeem: false });
+        }
+    };
+
+    // TODO
+    const getBoostRewards = async (): Promise<void> => {
+        if (!address) return;
+        try {
+            const { result } = await (prepareWriteContract as any)({
+                chainId: VMEX_VEVMEX_CHAINID,
+                address: CONTRACTS[VMEX_VEVMEX_CHAINID].vmexWeth,
+                abi: VMEX_REWARD_POOL_ABI,
+                functionName: 'claim',
+            });
+            setBoostRewards(toNormalizedBN(result, 18));
+        } catch (error) {
+            console.warn(
+                `[err - BoostRewards]: static call reverted when trying to get claimable amount.`,
+            );
+            setBoostRewards(toNormalizedBN(BigNumber.from(0)));
+        }
+    };
+
+    // Get data on load
     useEffect(() => {
         if (vaults?.length && !selected) {
             setSelected(vaults?.[0]?.gaugeAddress);
         }
+        // (async () => getBoostRewards())().catch(e => console.error(e))
     }, [isLoading, vaults?.length]);
 
     // get rewards on selected vault change
@@ -111,13 +158,13 @@ export const useGauge = () => {
         })().catch((e) => console.error(e));
     }, [selected]);
 
-    console.log('gauge rewards', gaugeRewards);
-
     return {
         selected,
         setSelected,
         gaugeRewards,
         redeemGaugeRewards,
         gaugeLoading: loading,
+        claimBoostRewards,
+        boostRewards,
     };
 };

@@ -5,10 +5,10 @@ export function vmexTheme(isDark = false) {
         palette: {
             mode: isDark ? 'dark' : 'light',
             background: {
-                paper: isDark ? '#0f0f0f' : '#fff',
+                paper: isDark ? '#191919' : '#fff',
             },
             primary: {
-                main: isDark ? '#fff' : '#0f0f0f',
+                main: isDark ? '#fff' : '#191919',
             },
         },
         components: {

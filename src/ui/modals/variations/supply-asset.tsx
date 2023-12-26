@@ -160,7 +160,6 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                                                     amount={zapAmount}
                                                     setAmount={setZapAmount}
                                                     coin={{
-                                                        logo: `/coins/${zapAsset.symbol?.toLowerCase()}.svg`,
                                                         name: zapAsset.symbol,
                                                     }}
                                                     setIsMax={setIsMaxZap}
@@ -207,7 +206,6 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                                 amount={amount}
                                 setAmount={setAmount}
                                 coin={{
-                                    logo: `/coins/${asset?.toLowerCase() || 'eth'}.svg`,
                                     name: asset || 'ETH',
                                 }}
                                 balance={bigNumberToUnformattedString(
@@ -273,7 +271,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                                 )}
                             </div>
 
-                            <h3 className="mt-4 text-neutral400">Health Factor</h3>
+                            <h3 className="mt-3 2xl:mt-4 text-neutral400">Health Factor</h3>
                             <HealthFactor
                                 asset={asset || 'ETH'}
                                 amount={amount}
@@ -369,7 +367,6 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
                         amount={amount}
                         setAmount={setAmount}
                         coin={{
-                            logo: `/coins/${asset?.toLowerCase() || 'eth'}.svg`,
                             name: asset || 'ETH',
                         }}
                         balance={bigNumberToUnformattedString(

@@ -3,9 +3,10 @@ import { IoIosClose } from 'react-icons/io';
 import { AssetDisplay } from './display-asset';
 import { BasicToggle } from './toggle-default';
 import { ethers, utils } from 'ethers';
-import { AVAILABLE_ASSETS, getNetworkName, truncateAddress } from '@/utils';
+import { getNetworkName, truncateAddress } from '@/utils';
 import { AutoCompleteInput } from './input-autocomplete';
 import { useSubgraphAllAssetMappingsData } from '@/api';
+import { AVAILABLE_ASSETS } from '@vmexfinance/sdk';
 
 export interface IListInput {
     coin?: boolean;
