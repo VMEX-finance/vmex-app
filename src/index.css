@@ -31,6 +31,16 @@ a {
   height: 100%;
 }
 
+.slick-list {
+  padding: 0px 40px !important;
+}
+
+@media screen and (min-width: 413px) {
+  .slick-list {
+    padding: 0px 50px !important;
+  }
+}
+
 /* Checkbox */
 input[type='checkbox'] {
   background-color: #efefef;

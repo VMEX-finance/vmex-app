@@ -117,11 +117,9 @@ export const YourTransactionsTable = () => {
                                     <span>{el.datetime.toLocaleDateString()}</span>
                                 </td>
                                 <td>
-                                    <td>
-                                        {width > breakpoints['2xl']
-                                            ? el?.type || ''
-                                            : renderType(el.type as any)}
-                                    </td>
+                                    {width > breakpoints['2xl']
+                                        ? el?.type || ''
+                                        : renderType(el.type as any)}
                                 </td>
                                 <td>
                                     <span className="flex gap-1 items-center justify-end pr-3 sm:pr-0">
