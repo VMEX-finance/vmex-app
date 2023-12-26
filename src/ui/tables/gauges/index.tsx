@@ -61,7 +61,7 @@ const GaugesTable: React.FC<ITableProps> = React.memo(({ data, loading, userData
         },
         {
             name: 'vaultDeposited',
-            label: 'Deposited in Vault',
+            label: 'Deposited in Tranche',
             options: {
                 filter: false,
                 sort: true,

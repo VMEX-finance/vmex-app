@@ -110,7 +110,10 @@ export const VaultAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
                         balance={
                             (view === 'Deposit'
                                 ? vaultBalance?.formatted
-                                : gaugeBalance?.formatted) || '0.0'
+                                : utils.formatUnits(
+                                      gaugeBalance?.value || BigNumber.from(0),
+                                      underlying?.decimals || 18,
+                                  )) || '0.0'
                         }
                         isMax={isMax}
                         setIsMax={setIsMax}
@@ -160,7 +163,7 @@ export const VaultAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
                                 {
                                     label: 'Remaining Supply',
                                     value: `${
-                                        Number(data?.vaultDeposited?.normalized || '0') -
+                                        Number(data?.gaugeStaked?.normalized || '0') -
                                         Number(amount || '0')
                                     }`,
                                 },
