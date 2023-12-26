@@ -73,14 +73,13 @@ export const YourSuppliesTable: React.FC<IYourSuppliesTableProps> = ({
                                 });
                             }}
                         >
-                            <td className="whitespace-nowrap py-2 text-sm sm:pl-4">
+                            <td className="whitespace-nowrap text-sm sm:pl-4">
                                 <AssetDisplay
                                     name={i.asset}
                                     noText={responsive && width < breakpoints.sm}
-                                    size="sm"
                                 />
                             </td>
-                            <td>
+                            <td className="py-2">
                                 <NumberAndDollar
                                     value={`${bigNumberToNative(i.amountNative, i.asset)}`}
                                     dollar={i.amount}

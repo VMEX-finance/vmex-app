@@ -294,7 +294,7 @@ export const HealthFactor = ({
     };
 
     return (
-        <>
+        <div className="flex flex-col">
             <div className={`flex items-center gap-2 ${center ? 'justify-center' : ''}`}>
                 {withChange && (
                     <>
@@ -305,10 +305,8 @@ export const HealthFactor = ({
                 {withChange ? determineHFFinal() : determineHFInitial()}
             </div>
             {showInfo && (
-                <div>
-                    <span className="text-xs text-neutral-500 leading-0">{`Liquidation at <1.0`}</span>
-                </div>
+                <span className="text-xs text-neutral-500 leading-0">{`Liquidation at <1.0`}</span>
             )}
-        </>
+        </div>
     );
 };
