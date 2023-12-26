@@ -12,9 +12,9 @@ import { IDialogProps } from '../utils';
 import { useStepper, useModal } from '@/hooks';
 import { ModalFooter, ModalHeader } from '@/ui/modals';
 import { CreateTrancheAssetsTable } from '@/ui/tables';
-import { NETWORKS, AVAILABLE_ASSETS, checkProfanity, getNetworkName } from '@/utils';
+import { NETWORKS, checkProfanity, getNetworkName } from '@/utils';
 import { useAccount, useSigner } from 'wagmi';
-import { initTranche } from '@vmexfinance/sdk';
+import { AVAILABLE_ASSETS, initTranche } from '@vmexfinance/sdk';
 import { useSubgraphTranchesOverviewData } from '@/api';
 
 export const CreateTrancheDialog: React.FC<IDialogProps> = ({ name, data, closeDialog }) => {

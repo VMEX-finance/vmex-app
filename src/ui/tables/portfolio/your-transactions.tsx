@@ -1,11 +1,13 @@
 import React from 'react';
 import { useUserHistory } from '@/api';
 import { useTransactionsContext } from '@/store';
-import { NETWORKS, getNetworkName, truncate } from '@/utils';
+import { NETWORKS, getNetworkName, renderIcon, renderTxStatus, truncate } from '@/utils';
 import { useAccount } from 'wagmi';
-import { AssetDisplay, SmartPrice } from '@/ui/components';
+import { AssetDisplay, SmartPrice, Tooltip } from '@/ui/components';
+import { useWindowSize } from '@/hooks';
 
 export const YourTransactionsTable = () => {
+    const { width, breakpoints } = useWindowSize();
     const { address } = useAccount();
     const { transactions } = useTransactionsContext();
     const { queryUserTxHistory } = useUserHistory(address);
@@ -15,14 +17,29 @@ export const YourTransactionsTable = () => {
     const renderStatus = (status: 'error' | 'pending' | 'complete') => {
         switch (status) {
             case 'complete': {
+                if (width < breakpoints.xl) return renderTxStatus('complete');
                 return <span className="text-green-500 dark:text-green-400">Success</span>;
             }
             case 'pending': {
+                if (width < breakpoints.xl) return renderTxStatus('pending');
                 return <span className="text-yellow-400">Pending</span>;
             }
             default: {
+                if (width < breakpoints.xl) return renderTxStatus('error');
                 return <span className="text-red-600">Error</span>;
             }
+        }
+    };
+
+    const renderType = (type: 'Deposit' | 'Borrow' | 'Loop' | 'Stake') => {
+        // TODO: Loop and Stake
+        switch (type) {
+            case 'Deposit':
+                return renderIcon('lend');
+            case 'Borrow':
+                return renderIcon('borrow');
+            default:
+                return renderIcon();
         }
     };
 
@@ -64,7 +81,11 @@ export const YourTransactionsTable = () => {
                                     </a>
                                 </td>
                                 <td>{el.date}</td>
-                                <td>{el?.type || ''}</td>
+                                <td>
+                                    {width > breakpoints['2xl']
+                                        ? el?.type || ''
+                                        : renderType(el.type as any)}
+                                </td>
                                 <td>
                                     <span className="flex gap-1 items-center justify-end pr-3 sm:pr-0">
                                         <SmartPrice price={el.amount} />{' '}
@@ -72,7 +93,9 @@ export const YourTransactionsTable = () => {
                                     </span>
                                 </td>
                                 <td className="hidden sm:table-cell text-right pr-3">
-                                    {renderStatus(el.status)}
+                                    <span className="flex justify-end items-center">
+                                        {renderStatus(el.status)}
+                                    </span>
                                 </td>
                             </tr>
                         ))}
@@ -94,7 +117,11 @@ export const YourTransactionsTable = () => {
                                     <span>{el.datetime.toLocaleDateString()}</span>
                                 </td>
                                 <td>
-                                    <span>{el.type}</span>
+                                    <td>
+                                        {width > breakpoints['2xl']
+                                            ? el?.type || ''
+                                            : renderType(el.type as any)}
+                                    </td>
                                 </td>
                                 <td>
                                     <span className="flex gap-1 items-center justify-end pr-3 sm:pr-0">
@@ -103,7 +130,9 @@ export const YourTransactionsTable = () => {
                                     </span>
                                 </td>
                                 <td className="hidden sm:table-cell text-right pr-3">
-                                    {renderStatus('complete')}
+                                    <span className="flex justify-end items-center">
+                                        {renderStatus('complete')}
+                                    </span>
                                 </td>
                             </tr>
                         ))}

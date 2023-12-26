@@ -5,6 +5,7 @@ import { useWindowSize } from '@/hooks';
 import { BsArrowDownCircle, BsArrowUpCircle } from 'react-icons/bs';
 import { Tooltip, MultipleAssetsDisplay, Button, Label } from '@/ui/components';
 import { useAccount } from 'wagmi';
+import { renderTrancheActivity } from '@/utils';
 
 type ITranchesCustomRowProps = {
     name: string[];
@@ -31,46 +32,6 @@ const TranchesCustomRow = (props: ITranchesCustomRowProps) => {
         navigate(`/tranches/${tranche.name?.toLowerCase().replace(/\s+/g, '-')}`, {
             state: { view, trancheId: tranche.id },
         });
-    };
-
-    const renderActivity = (status: string) => {
-        const size = '20px';
-        if (status) {
-            switch (status?.toLowerCase()) {
-                case 'loading':
-                    return (
-                        <div className="flex gap-2 animate-pulse">
-                            <BsArrowDownCircle size={size} />
-                            <BsArrowUpCircle size={size} />
-                        </div>
-                    );
-                case 'supplied':
-                    return (
-                        <Tooltip text="Supplying">
-                            <BsArrowDownCircle size={size} />
-                        </Tooltip>
-                    );
-                case 'borrowed':
-                    return (
-                        <Tooltip text="Borrowing">
-                            <BsArrowUpCircle size={size} />
-                        </Tooltip>
-                    );
-                case 'both':
-                    return (
-                        <div className="flex gap-2">
-                            <Tooltip text="Supplying">
-                                <BsArrowDownCircle size={size} />
-                            </Tooltip>
-                            <Tooltip text="Borrowing">
-                                <BsArrowUpCircle size={size} />
-                            </Tooltip>
-                        </div>
-                    );
-                default:
-                    return <></>;
-            }
-        }
     };
 
     const renderCategory = () => {
@@ -110,7 +71,7 @@ const TranchesCustomRow = (props: ITranchesCustomRowProps) => {
                 {address && (
                     <td className="flex justify-between">
                         <span className="font-bold">Activity</span>
-                        <span>{renderActivity(yourActivity)}</span>
+                        <span>{renderTrancheActivity(yourActivity)}</span>
                     </td>
                 )}
                 <td className="flex justify-between">
@@ -149,7 +110,7 @@ const TranchesCustomRow = (props: ITranchesCustomRowProps) => {
                 </td> */}
                 {address && (
                     <td className="pl-4">
-                        {<div className="max-w-fit">{renderActivity(yourActivity)}</div>}
+                        {<div className="max-w-fit">{renderTrancheActivity(yourActivity)}</div>}
                     </td>
                 )}
                 <td className="pl-4">{supplyTotal}</td>

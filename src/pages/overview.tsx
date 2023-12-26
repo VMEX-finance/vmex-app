@@ -60,7 +60,7 @@ const Overview: React.FC = () => {
                         tranches={queryUserActivity.data?.tranchesInteractedWith}
                         profitLossChart={queryUserPnlChart.data || []}
                     />
-                    <div className="flex flex-col gap-4 lg:flex-row 2xl:col-span-2">
+                    <div className="flex flex-col gap-3 lg:flex-row 2xl:col-span-2">
                         <YourPositionsTable
                             type="supplies"
                             data={queryUserActivity.data?.supplies}
