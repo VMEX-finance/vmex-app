@@ -15,7 +15,7 @@ export const VaultDetails = ({ vault, deposited }: IVaultDetails & { deposited?:
             <a
                 href={`${NETWORKS[network]?.explorer}/address/${vault?.gaugeAddress}`}
                 target="_blank"
-                className="flex items-center gap-1"
+                className="flex items-center gap-1 w-fit"
                 rel="noreferrer"
             >
                 <AssetDisplay name={vault?.vaultSymbol || 'ETH'} size="xl" />

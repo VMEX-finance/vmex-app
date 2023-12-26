@@ -1,11 +1,10 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import Slider from 'react-slick';
 import { Card } from '../components/card';
 import { useWindowSize } from '@/hooks';
 import { HiOutlineChevronLeft, HiOutlineChevronRight } from 'react-icons/hi';
 import { StrategyCard } from '@/ui/components';
 import { NETWORKS, getNetworkName } from '@/utils';
-import { constants } from 'ethers';
 import { useLoopData } from '@/api';
 import { useAccount } from 'wagmi';
 
@@ -14,23 +13,20 @@ type ICarousel = {
     type?: 'strategies' | 'default';
 };
 
-const defaultStyle = `absolute top-1/2 -translate-y-1/2 h-full transition duration-150 rounded-sm hover:from-transparent hover:to-[rgb(200,200,200)] dark:hover:to-neutral-950 dark:hover:bg-neutral-800 min-w-[36px] flex items-center justify-center`;
+const defaultStyle = `absolute top-1/2 -translate-y-1/2 h-full transition duration-150 rounded text-neutral-500 hover:text-black dark:text-neutral-400 dark:hover:text-white from-transparent dark:via-[rgba(20,20,20,0.8)] dark:to-brand-background via-[rgba(234,234,234,0.8)] to-[rgb(234,234,234)] min-w-[36px] flex items-center justify-center z-50`;
 function PrevArrow(props: any) {
     const { className, style, onClick } = props;
     return (
-        <button className={`${defaultStyle} -left-[30px] hover:bg-gradient-to-l`} onClick={onClick}>
-            <HiOutlineChevronLeft className="dark:text-neutral-400" />
+        <button className={`${defaultStyle} -left-[4px] bg-gradient-to-l`} onClick={onClick}>
+            <HiOutlineChevronLeft size="24px" className="" />
         </button>
     );
 }
 function NextArrow(props: any) {
     const { className, style, onClick } = props;
     return (
-        <button
-            className={`${defaultStyle} -right-[30px] hover:bg-gradient-to-r`}
-            onClick={onClick}
-        >
-            <HiOutlineChevronRight className="dark:text-neutral-400" />
+        <button className={`${defaultStyle} -right-[4px] bg-gradient-to-r`} onClick={onClick}>
+            <HiOutlineChevronRight size="24px" className="" />
         </button>
     );
 }
@@ -91,6 +87,7 @@ export const Carousel = ({ items, type }: ICarousel) => {
         slidesToScroll: 5,
         nextArrow: <NextArrow />,
         prevArrow: <PrevArrow />,
+        centerMode: true,
         swipe: false,
         responsive: [
             {
@@ -136,7 +133,7 @@ export const Carousel = ({ items, type }: ICarousel) => {
                     Featured Strategies
                 </h2>
 
-                <div className="px-6">
+                <div>
                     <Slider {...settings}>
                         {items?.length && !isLoading
                             ? renderStrategyItems(data)?.map((el: any, i: number) => (

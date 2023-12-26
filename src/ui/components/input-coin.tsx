@@ -90,7 +90,7 @@ export const CoinInput = ({
             return res;
         }
     };
-    console.log('coin', coin);
+
     return (
         <Card type="inner-outline" padding="p-2">
             <div className="w-full flex flex-col justify-between mt-1 rounded-xl gap-3">

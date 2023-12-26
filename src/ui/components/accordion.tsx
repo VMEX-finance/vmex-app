@@ -84,7 +84,7 @@ export function DefaultAccordion({
                     noIcon ? (
                         <></>
                     ) : (
-                        <RiArrowDropDownLine fontSize="20px" color={isDark ? '#f5f5f5' : 'gray'} />
+                        <RiArrowDropDownLine fontSize="24px" color={isDark ? '#f5f5f5' : 'gray'} />
                     )
                 }
                 disabled={disabled}
