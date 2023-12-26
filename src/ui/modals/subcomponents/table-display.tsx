@@ -20,6 +20,7 @@ type IModalTableDisplayProps = {
     loading?: boolean;
     valueClass?: string;
     size?: 'sm' | 'md';
+    titleClass?: string;
 };
 
 export const ModalTableDisplay = ({
@@ -29,6 +30,7 @@ export const ModalTableDisplay = ({
     loading,
     valueClass,
     size = 'md',
+    titleClass,
 }: IModalTableDisplayProps) => {
     const determineSize = () => {
         switch (size) {
@@ -40,7 +42,7 @@ export const ModalTableDisplay = ({
     };
     return (
         <>
-            {title && <h3 className="mt-3 2xl:mt-4 mb-0.5">{title}</h3>}
+            {title && <h3 className={titleClass ?? 'mt-3 2xl:mt-4 mb-0.5'}>{title}</h3>}
             <Card type="inner-outline">
                 <div
                     className={`${

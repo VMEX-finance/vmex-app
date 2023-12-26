@@ -431,7 +431,7 @@ const Staking: React.FC = () => {
                                     onClick={claimBoostRewards}
                                     loading={gaugeLoading.boost}
                                 >
-                                    Claim
+                                    Coming Soon
                                 </Button>
                             </div>
                         </GridView>
@@ -457,7 +457,7 @@ const Staking: React.FC = () => {
                                     disabled
                                 />
                                 <Button type="accent" className="h-fit mb-[17.88px]" disabled>
-                                    Claim
+                                    Coming Soon
                                 </Button>
                             </div>
                         </GridView>

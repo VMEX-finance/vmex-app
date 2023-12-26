@@ -61,7 +61,7 @@ const formatGauges = async (gaugeAddresses: Address[]) => {
             symbol: results[2],
             decimals: results[3],
             totalStaked: toNormalizedBN(results[4], results[3]),
-            rewardRate: toNormalizedBN(results[5], 18),
+            rewardRate: toNormalizedBN(results[5], results[3]),
         };
     });
 

@@ -2,12 +2,13 @@ import React, { useEffect } from 'react';
 import { IDialogProps } from '../utils';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
 import { useModal, useVault } from '@/hooks';
-import { Button, TransactionStatus, CoinInput } from '@/ui/components';
+import { Button, TransactionStatus, CoinInput, DefaultAccordion } from '@/ui/components';
 import { VaultDetails } from '@/ui/features/vault-details';
 import { VMEX_VEVMEX_CHAINID, getChainId, toSymbol } from '@/utils';
 import { useAccount, useSwitchNetwork, useFeeData } from 'wagmi';
 import { useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '@/store';
+import { BigNumber, utils } from 'ethers';
 
 export const VaultAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, closeDialog }) => {
     const { address } = useAccount();
@@ -64,7 +65,13 @@ export const VaultAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
         updateTranche('id', trancheId.toString());
         closeDialog && closeDialog('vault-asset-dialog');
         navigate(`/tranches/${trancheName.replace(/\s+/g, '-')?.toLowerCase()}`, {
-            state: { view, trancheId: trancheId.toString() },
+            state: {
+                view,
+                trancheId: trancheId.toString(),
+                from: 'gauges',
+                action: 'supply',
+                asset: underlying?.asset,
+            },
         });
     };
 
@@ -72,6 +79,7 @@ export const VaultAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
         if (data?.tab) setView(data?.tab);
     }, []);
 
+    const depositToken = data?.vaultSymbol?.split('-')?.[1] ?? '';
     return (
         <>
             <ModalHeader
@@ -85,8 +93,14 @@ export const VaultAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
                 // Default State
                 <>
                     <h3 className="mt-3 text-neutral400">Vault Details</h3>
-                    <VaultDetails vault={data} deposited={gaugeBalance?.formatted} />
-                    <h3 className="mt-3 text-neutral400">Amount</h3>
+                    <VaultDetails
+                        vault={data}
+                        deposited={utils.formatUnits(
+                            gaugeBalance?.value || BigNumber.from(0),
+                            underlying?.decimals || 18,
+                        )}
+                    />
+                    <h3 className="text-neutral400 mt-2">Amount</h3>
                     <CoinInput
                         amount={amount}
                         setAmount={setAmount}
@@ -103,15 +117,42 @@ export const VaultAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
                         type={`staking-${view?.toLowerCase() || 'deposit'}` as any}
                     />
                     {view === 'Deposit' ? (
-                        <ModalTableDisplay
-                            title="Transaction Overview"
-                            content={[
-                                {
-                                    label: 'Estimated Gas',
-                                    value: `${gas?.formatted.gasPrice} gwei`,
-                                },
-                            ]}
-                        />
+                        <>
+                            <DefaultAccordion
+                                wrapperClass="!border-0 "
+                                customHover="hover:!text-brand-purple"
+                                detailsClass="!bg-white dark:!bg-brand-black !border-0"
+                                className="!px-0 !hover:!bg-inherit !bg-white dark:!bg-brand-black dark:disabled:!opacity-100 "
+                                title={`how-it-works-vault-asset`}
+                                summary={<span>How do I get {depositToken}?</span>}
+                                details={
+                                    <div className="px-2 mb-2">
+                                        <span>
+                                            Earn rewards with {depositToken} by depositing{' '}
+                                            {underlying?.asset} in {underlying?.tranche}.
+                                        </span>
+                                        <ol className="list-decimal px-5 text-sm">
+                                            <li>Go to {underlying?.tranche}</li>
+                                            <li>
+                                                Deposit {underlying?.asset} to get {depositToken}{' '}
+                                                receipt tokens
+                                            </li>
+                                            <li>Return here and stake your {depositToken}</li>
+                                        </ol>
+                                    </div>
+                                }
+                            />
+                            <ModalTableDisplay
+                                title="Transaction Overview"
+                                titleClass="mb-0.5"
+                                content={[
+                                    {
+                                        label: 'Estimated Gas',
+                                        value: `${gas?.formatted.gasPrice} gwei`,
+                                    },
+                                ]}
+                            />
+                        </>
                     ) : (
                         <ModalTableDisplay
                             title="Transaction Overview"
@@ -144,7 +185,8 @@ export const VaultAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
                         route(e, underlying?.asset, underlying?.trancheId, underlying?.tranche)
                     }
                 >
-                    Deposit {underlying?.asset}
+                    Deposit {underlying?.asset}{' '}
+                    <span className="hidden sm:block sm:ml-0.5">for {depositToken}</span>
                 </Button>
                 <Button
                     disabled={isSuccess}

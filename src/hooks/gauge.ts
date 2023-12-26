@@ -30,7 +30,10 @@ export const useGauge = () => {
     const { vaults, isLoading } = useVaultsContext();
     const [selected, setSelected] = useState(vaults?.[0]?.gaugeAddress || '');
     const [gaugeRewards, setGaugeRewards] = useState(DEFAULT_REWARDS_STATE);
-    const [boostRewards, setBoostRewards] = useState({ normalized: '0.0', raw: BigNumber.from(0) });
+    const [boostRewards, setBoostRewards] = useState<INormalizedBN>({
+        normalized: '0.0',
+        raw: BigNumber.from(0),
+    });
     const [loading, setLoading] = useState({ redeem: false, rewards: false, boost: false });
 
     const defaultConfig = {
@@ -75,7 +78,7 @@ export const useGauge = () => {
         try {
             setLoading({ ...loading, boost: true });
             const prepareClaimTx = await prepareWriteContract({
-                address: CONTRACTS[VMEX_VEVMEX_CHAINID].vmexWeth,
+                address: CONTRACTS[VMEX_VEVMEX_CHAINID].dvmexRewards,
                 abi: VMEX_REWARD_POOL_ABI,
                 chainId: VMEX_VEVMEX_CHAINID,
                 functionName: 'claim',
@@ -92,20 +95,21 @@ export const useGauge = () => {
 
     // TODO
     const getBoostRewards = async (): Promise<void> => {
-        return;
-        // if (!address) return;
-        // try {
-        //   const { result } = await prepareWriteContract({
-        //     chainId: VMEX_VEVMEX_CHAINID,
-        //     address: CONTRACTS[VMEX_VEVMEX_CHAINID].vmexWeth,
-        //     abi: VMEX_REWARD_POOL_ABI,
-        //     functionName: 'claim',
-        //   });
-        //   setBoostRewards(toNormalizedBN(result, 18));
-        // } catch (error) {
-        //   console.warn(`[err - BoostRewards]: static call reverted when trying to get claimable amount.`);
-        //   setBoostRewards(toNormalizedBN(BigNumber.from(0)));
-        // }
+        if (!address) return;
+        try {
+            const { result } = await (prepareWriteContract as any)({
+                chainId: VMEX_VEVMEX_CHAINID,
+                address: CONTRACTS[VMEX_VEVMEX_CHAINID].vmexWeth,
+                abi: VMEX_REWARD_POOL_ABI,
+                functionName: 'claim',
+            });
+            setBoostRewards(toNormalizedBN(result, 18));
+        } catch (error) {
+            console.warn(
+                `[err - BoostRewards]: static call reverted when trying to get claimable amount.`,
+            );
+            setBoostRewards(toNormalizedBN(BigNumber.from(0)));
+        }
     };
 
     // Get data on load
@@ -113,6 +117,7 @@ export const useGauge = () => {
         if (vaults?.length && !selected) {
             setSelected(vaults?.[0]?.gaugeAddress);
         }
+        // (async () => getBoostRewards())().catch(e => console.error(e))
     }, [isLoading, vaults?.length]);
 
     // get rewards on selected vault change

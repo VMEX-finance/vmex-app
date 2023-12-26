@@ -8,6 +8,7 @@ import {
     useSubgraphAllMarketsData,
 } from '@/api';
 import { useQuery } from '@tanstack/react-query';
+import { toNormalizedBN } from '@/utils';
 
 // Types
 export type IVaultsStoreProps = {
@@ -88,6 +89,7 @@ export function VaultsStore(props: { children: ReactNode }) {
                 return {
                     ...v,
                     vaultApy: Number(underlying?.supplyApy || '0'),
+                    vaultDeposited: toNormalizedBN(v.vaultDeposited.raw, underlying?.decimals),
                 };
             });
         } else {
