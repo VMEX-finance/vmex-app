@@ -34,7 +34,7 @@ function NextArrow(props: any) {
 const defaultSettings = {
     dots: true,
     infinite: true,
-    speed: 400,
+    speed: 300,
 };
 
 export const Carousel = ({ items, type }: ICarousel) => {
@@ -133,28 +133,26 @@ export const Carousel = ({ items, type }: ICarousel) => {
                     Featured Strategies
                 </h2>
 
-                <div>
-                    <Slider {...settings}>
-                        {items?.length && !isLoading
-                            ? renderStrategyItems(data)?.map((el: any, i: number) => (
-                                  <StrategyCard
-                                      key={`carousel-item-${i}-${el}`}
-                                      userLoops={address ? data : []}
-                                      {...el}
-                                      {...renderStrategy(el.assetAddress?.toLowerCase())}
-                                  />
-                              ))
-                            : [1, 2, 3, 4, 5]?.map((el, i) => (
-                                  <Card
-                                      key={`carousel-item-${i}`}
-                                      className="min-h-[225px]"
-                                      loading={true}
-                                  >
-                                      {'Loading'}
-                                  </Card>
-                              ))}
-                    </Slider>
-                </div>
+                <Slider {...settings}>
+                    {items?.length && !isLoading
+                        ? renderStrategyItems(data)?.map((el: any, i: number) => (
+                              <StrategyCard
+                                  key={`carousel-item-${i}-${el}`}
+                                  userLoops={address ? data : []}
+                                  {...el}
+                                  {...renderStrategy(el.assetAddress?.toLowerCase())}
+                              />
+                          ))
+                        : [1, 2, 3, 4, 5]?.map((el, i) => (
+                              <Card
+                                  key={`carousel-item-${i}`}
+                                  className="min-h-[225px]"
+                                  loading={true}
+                              >
+                                  {'Loading'}
+                              </Card>
+                          ))}
+                </Slider>
             </div>
         );
     }

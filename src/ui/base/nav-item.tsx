@@ -23,7 +23,7 @@ export const NavItem = ({ label, selected, onClick, mobile, highlighted }: INavI
     return (
         <button
             className={[
-                'w-full px-3 2xl:px-3.5 py-1.5 rounded-[10px] transition duration-200 whitespace-nowrap',
+                'w-full px-3 2xl:px-3.5 py-[5px] 2xl:py-1.5 rounded-[10px] transition duration-200 whitespace-nowrap',
                 mode,
                 highlight,
             ].join(' ')}

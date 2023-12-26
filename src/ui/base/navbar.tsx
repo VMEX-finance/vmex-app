@@ -1,24 +1,161 @@
 import { Menu, Transition } from '@headlessui/react';
-import React, { Fragment, useContext } from 'react';
+import React, { Fragment, useContext, useState } from 'react';
 import { HiOutlineMenuAlt3 } from 'react-icons/hi';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { DefaultDropdown, WalletButton, ToggleThemeButton } from '@/ui/components';
 import { ThemeContext, IDialogNames } from '@/store';
-import { useAccount, useSwitchNetwork } from 'wagmi';
+import { useAccount, useDisconnect, useSwitchNetwork } from 'wagmi';
 import { useDialogController, useWindowSize } from '@/hooks';
 import { useSubgraphUserData } from '@/api';
-import { isChainUnsupported, renderNetworks } from '@/utils';
+import {
+    NETWORKS,
+    getNetworkName,
+    isChainUnsupported,
+    renderNetworks,
+    truncateAddress,
+} from '@/utils';
 import { getNetwork } from '@wagmi/core';
 import { NavItem } from './nav-item';
+import { MdClose } from 'react-icons/md';
+import { useChainModal } from '@rainbow-me/rainbowkit';
 
 const navItems = ['Overview', 'Tranches', 'Markets', 'Portfolio', 'Staking'];
+
+const MobileDropdownMenu = ({
+    onClick,
+    navigate,
+    tranches,
+}: {
+    onClick: (e: IDialogNames, data?: any) => void;
+    navigate: any;
+    tranches?: any[];
+}) => {
+    const { address } = useAccount();
+    const { disconnect } = useDisconnect();
+    const { openChainModal } = useChainModal();
+    const [isOpen, setIsOpen] = useState(false);
+
+    const openMenu = () => (!isOpen ? setIsOpen(true) : setIsOpen(false));
+    const closeMenu = () => setIsOpen(false);
+    const network = getNetworkName();
+
+    return (
+        <div className="justify-self-end">
+            <button
+                onClick={openMenu}
+                className={[
+                    'dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-neutral-100',
+                    'px-2 md:px-3 py-1',
+                    'flex my-auto justify-center w-full rounded-md shadow-sm text-sm font-medium focus:outline-none focus:ring-0',
+                    'bg-neutral-800 hover:bg-neutral-700 text-neutral-100 lg:bg-neutral-300 lg:hover:bg-[rgb(200,200,200)]',
+                ].join(' ')}
+            >
+                <HiOutlineMenuAlt3 size="27px" />
+            </button>
+            <Transition
+                show={isOpen}
+                enter="transform transition ease-in-out duration-500"
+                enterFrom="translate-x-[100vw]"
+                enterTo="translate-x-0"
+                leave="transform transition ease-in-out duration-500"
+                leaveFrom="translate-x-0"
+                leaveTo="translate-x-[100vw]"
+                className="fixed z-30 h-screen right-0 top-0"
+            >
+                <div className="w-56 flex flex-col h-full bg-white dark:bg-brand-black shadow-md z-50 p-2 items-end text-right justify-between">
+                    <div className="flex flex-col w-full">
+                        <button
+                            onClick={closeMenu}
+                            className="inline-flex p-2 self-end rounded-md text-sm font-medium text-neutral-900 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-purple"
+                        >
+                            <MdClose size="27px" />
+                        </button>
+                        <ul className="flex flex-col gap-0.5 w-full">
+                            {navItems.map((item, i) => (
+                                <li key={`${item}-${i}`}>
+                                    <button
+                                        onClick={(e) => {
+                                            closeMenu();
+                                            navigate(e);
+                                        }}
+                                        className="uppercase dark:text-neutral-100 pr-4 py-1 text-lg font-medium"
+                                    >
+                                        {item}
+                                    </button>
+                                </li>
+                            ))}
+                            {!address && <WalletButton />}
+                        </ul>
+                    </div>
+                    <ul className="flex flex-col gap-0.5 justify-end items-end self-end w-full mb-6">
+                        {address && (
+                            <>
+                                <li className="w-full">
+                                    <button className="uppercase dark:text-neutral-100 px-4 py-1 text-lg font-medium border-y-2 border-gray-300 dark:border-gray-700 w-full flex items-center justify-between">
+                                        <img src={NETWORKS[network].icon} width="24" height="24" />
+                                        {truncateAddress(address)}
+                                    </button>
+                                </li>
+                                <li>
+                                    <button
+                                        className="uppercase dark:text-neutral-100 pr-4 py-1 text-lg font-medium"
+                                        onClick={() => onClick('transactions-dialog')}
+                                    >
+                                        TX History
+                                    </button>
+                                </li>
+                                {tranches?.length !== 0 && (
+                                    <li>
+                                        <button
+                                            className="uppercase dark:text-neutral-100 pr-4 py-1 text-lg font-medium"
+                                            onClick={() => navigate('my-tranches')}
+                                        >
+                                            My Tranches
+                                        </button>
+                                    </li>
+                                )}
+                                <li>
+                                    <button
+                                        className="flex items-center gap-2 uppercase dark:text-neutral-100 pr-4 py-1 text-lg font-medium"
+                                        onClick={() => openChainModal && openChainModal()}
+                                    >
+                                        Switch Chain
+                                    </button>
+                                </li>
+                                <li>
+                                    <button
+                                        className="uppercase text-red-600 dark:text-red-400 pr-4 py-1 text-lg font-medium"
+                                        onClick={() => disconnect()}
+                                    >
+                                        Disconnect
+                                    </button>
+                                </li>
+                            </>
+                        )}
+                    </ul>
+                </div>
+            </Transition>
+            <Transition
+                show={isOpen}
+                enter="transform transition ease-in-out duration-500"
+                enterFrom="-translate-x-[100vw]"
+                enterTo="translate-x-0"
+                leave="transform transition ease-in-out duration-500"
+                leaveFrom="translate-x-0"
+                leaveTo="-translate-x-[100vw]"
+                className="fixed z-20 h-screen right-0 top-0"
+            >
+                <div className="w-screen h-full bg-[rgba(0,0,0,0.25)]" onClick={closeMenu} />
+            </Transition>
+        </div>
+    );
+};
 
 export const Navbar: React.FC = () => {
     const { isDark } = useContext(ThemeContext);
     const navigate = useNavigate();
     const location = useLocation();
     const { width, breakpoints } = useWindowSize();
-    const { isConnected } = useAccount();
     const { openDialog } = useDialogController();
     const { address } = useAccount();
     const { queryTrancheAdminData } = useSubgraphUserData(address || '');
@@ -114,87 +251,11 @@ export const Navbar: React.FC = () => {
                         <MobileDropdownMenu
                             onClick={openDialog}
                             navigate={navigateTo}
-                            isConnected={isConnected}
                             tranches={queryTrancheAdminData?.data}
                         />
                     )}
                 </div>
             </div>
         </nav>
-    );
-};
-
-const MobileDropdownMenu = ({
-    onClick,
-    navigate,
-    isConnected,
-    tranches,
-}: {
-    onClick: (e: IDialogNames, data?: any) => void;
-    navigate: any;
-    isConnected: boolean;
-    tranches?: any[];
-}) => {
-    return (
-        <Menu as="div" className="relative inline-block my-auto">
-            <div>
-                <Menu.Button
-                    className={[
-                        'dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-neutral-100',
-                        'px-2 md:px-3 py-1',
-                        'flex my-auto justify-center w-full rounded-md shadow-sm text-sm font-medium focus:outline-none focus:ring-0',
-                        'bg-neutral-800 hover:bg-neutral-700 text-neutral-100 lg:bg-neutral-300 lg:hover:bg-[rgb(200,200,200)]',
-                    ].join(' ')}
-                >
-                    <HiOutlineMenuAlt3 size="27px" />
-                </Menu.Button>
-            </div>
-
-            <Transition
-                as={Fragment}
-                enter="transition ease-out duration-100"
-                enterFrom="transform opacity-0 scale-95"
-                enterTo="transform opacity-100 scale-100"
-                leave="transition ease-in duration-75"
-                leaveFrom="transform opacity-100 scale-100"
-                leaveTo="transform opacity-0 scale-95"
-            >
-                <Menu.Items className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                    <div className="p-2">
-                        {navItems.map((item: string, i: number) => (
-                            <Menu.Item key={`${item}-${i}`}>
-                                <NavItem key={item} label={item} onClick={navigate} mobile />
-                            </Menu.Item>
-                        ))}
-                        <div className="flex flex-col justify-center gap-1 border-2 border-neutral-800 rounded-xl mt-1">
-                            <WalletButton className="border-0 !bg-neutral-900 !rounded-b-none !text-white hover:!bg-neutral-800" />
-                            {isConnected && (
-                                <>
-                                    <NavItem label={`Portfolio`} onClick={navigate} mobile />
-                                    {/* WEN: uncomment when backend enables creating tranches */}
-                                    {/* <MenuItemButton
-                                        label={`Create Tranche`}
-                                        onClick={() => onClick('create-tranche-dialog')}
-                                        mobile
-                                    /> */}
-                                    <NavItem
-                                        label={`History`}
-                                        onClick={() => onClick('transactions-dialog')}
-                                        mobile
-                                    />
-                                    {tranches?.length !== 0 && (
-                                        <NavItem
-                                            label={`My Tranches`}
-                                            onClick={() => navigate('my-tranches')}
-                                            mobile
-                                        />
-                                    )}
-                                </>
-                            )}
-                        </div>
-                    </div>
-                </Menu.Items>
-            </Transition>
-        </Menu>
     );
 };
