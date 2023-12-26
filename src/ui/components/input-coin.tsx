@@ -2,7 +2,7 @@ import React from 'react';
 import { bigNumberToUSD, NETWORKS, getNetworkName } from '@/utils';
 import { useSigner } from 'wagmi';
 import { mintTokens } from '@vmexfinance/sdk';
-import { Button, SmartPrice, AssetDisplay } from '@/ui/components';
+import { Button, SmartPrice, AssetDisplay, Card } from '@/ui/components';
 import { usePricesData, useSubgraphAllAssetMappingsData } from '@/api';
 import { BigNumber, utils } from 'ethers';
 
@@ -92,14 +92,14 @@ export const CoinInput = ({
     };
     console.log('coin', coin);
     return (
-        <>
-            <div className="w-full flex flex-col justify-between mt-1 rounded-xl border border-neutral-300 dark:border-neutral-700 p-2 gap-3">
+        <Card type="inner-outline" padding="p-2">
+            <div className="w-full flex flex-col justify-between mt-1 rounded-xl gap-3">
                 <div className="flex flex-row justify-between gap-1.5">
                     <input
                         type="text"
                         value={amount}
                         onChange={onChange}
-                        className="text-2xl focus:outline-none max-w-[200px] sm:max-w-[250px] dark:bg-brand-black overflow-auto dark:placeholder:text-neutral-700"
+                        className="text-2xl focus:outline-none max-w-[200px] sm:max-w-[250px] dark:bg-neutral-900 bg-neutral-100 overflow-auto dark:placeholder:text-neutral-700"
                         placeholder="0.00"
                         disabled={disabled}
                     />
@@ -144,6 +144,6 @@ export const CoinInput = ({
                     >{`Mint ${coin.name}`}</Button>
                 </div>
             )}
-        </>
+        </Card>
     );
 };
