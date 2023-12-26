@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { Tooltip, Loader } from '@/ui/components';
+import { Tooltip, Loader, Card } from '@/ui/components';
 
 type IModalTableItemProps = {
     label: string;
@@ -33,77 +33,79 @@ export const ModalTableDisplay = ({
     const determineSize = () => {
         switch (size) {
             case 'sm':
-                return ['text-sm', 'gap-0.5', 'mt-0.5'];
+                return ['text-sm', 'gap-0.5'];
             default:
-                return ['text-md', 'gap-0.5', 'mt-1'];
+                return ['text-md', 'gap-0.5'];
         }
     };
     return (
         <>
-            {title && <h3 className="mt-3 2xl:mt-4">{title}</h3>}
-            <div
-                className={`${content?.length ? 'justify-between' : 'justify-center'} ${
-                    determineSize()[2]
-                } flex rounded-lg border border-neutral-300 dark:border-neutral-700 px-3 py-1.5 ${
-                    determineSize()[0]
-                }`}
-            >
-                {loading ? (
-                    <>
-                        <Loader height="auto" size="sm" type="spinner" />
-                    </>
-                ) : (
-                    <>
-                        {content?.length ? (
-                            <>
-                                <div className={`flex flex-col ${determineSize()[1]}`}>
-                                    {content.map((el, i) => (
-                                        <span key={i}>{el.label}</span>
-                                    ))}
-                                </div>
+            {title && <h3 className="mt-3 2xl:mt-4 mb-0.5">{title}</h3>}
+            <Card type="inner-outline">
+                <div
+                    className={`${
+                        content?.length ? 'justify-between' : 'justify-center'
+                    } flex rounded-lg ${determineSize()[0]}`}
+                >
+                    {loading ? (
+                        <>
+                            <Loader height="auto" size="sm" type="spinner" />
+                        </>
+                    ) : (
+                        <>
+                            {content?.length ? (
+                                <>
+                                    <div className={`flex flex-col ${determineSize()[1]}`}>
+                                        {content.map((el, i) => (
+                                            <span key={i}>{el.label}</span>
+                                        ))}
+                                    </div>
 
-                                <div
-                                    className={`min-w-[100px] flex flex-col ${determineSize()[1]}`}
-                                >
-                                    {content.map((el, i) => (
-                                        <span
-                                            key={i}
-                                            className={`${valueClass} ${
-                                                el.loading ? 'animate-pulse' : ''
-                                            } ${
-                                                el.baseLink
-                                                    ? 'underline text-brand-purple hover:text-opacity-80 duration-200 transition cursor-pointer'
-                                                    : ''
-                                            }`}
-                                        >
-                                            {el.error && el.error != '' ? (
-                                                <Tooltip text={el.error}>
-                                                    Transaction likely to revert
-                                                </Tooltip>
-                                            ) : el.baseLink ? (
-                                                <a href={`${el.baseLink}/${el.value}`}>
-                                                    {el.value}
-                                                </a>
-                                            ) : (
-                                                el.value
-                                            )}
-                                        </span>
-                                    ))}
+                                    <div
+                                        className={`min-w-[100px] flex flex-col ${
+                                            determineSize()[1]
+                                        }`}
+                                    >
+                                        {content.map((el, i) => (
+                                            <span
+                                                key={i}
+                                                className={`${valueClass} ${
+                                                    el.loading ? 'animate-pulse' : ''
+                                                } ${
+                                                    el.baseLink
+                                                        ? 'underline text-brand-purple hover:text-opacity-80 duration-200 transition cursor-pointer'
+                                                        : ''
+                                                }`}
+                                            >
+                                                {el.error && el.error != '' ? (
+                                                    <Tooltip text={el.error}>
+                                                        Transaction likely to revert
+                                                    </Tooltip>
+                                                ) : el.baseLink ? (
+                                                    <a href={`${el.baseLink}/${el.value}`}>
+                                                        {el.value}
+                                                    </a>
+                                                ) : (
+                                                    el.value
+                                                )}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </>
+                            ) : (
+                                <div className="flex flex-col justify-center items-center">
+                                    <span className="text-center">
+                                        {noData?.text || 'No Data Available'}
+                                    </span>
+                                    {noData?.ctaLink && noData?.ctaText && (
+                                        <a href={`/#${noData.ctaLink}`}>{noData.ctaText}</a>
+                                    )}
                                 </div>
-                            </>
-                        ) : (
-                            <div className="flex flex-col justify-center items-center">
-                                <span className="text-center">
-                                    {noData?.text || 'No Data Available'}
-                                </span>
-                                {noData?.ctaLink && noData?.ctaText && (
-                                    <a href={`/#${noData.ctaLink}`}>{noData.ctaText}</a>
-                                )}
-                            </div>
-                        )}
-                    </>
-                )}
-            </div>
+                            )}
+                        </>
+                    )}
+                </div>
+            </Card>
         </>
     );
 };

@@ -2,7 +2,7 @@ export const VMEX_REWARD_POOL_ABI = [
     {
         name: 'Initialized',
         inputs: [
-            { name: 'veyfi', type: 'address', indexed: false },
+            { name: 'vevmex', type: 'address', indexed: false },
             { name: 'start_time', type: 'uint256', indexed: false },
         ],
         anonymous: false,
@@ -51,7 +51,7 @@ export const VMEX_REWARD_POOL_ABI = [
         stateMutability: 'nonpayable',
         type: 'constructor',
         inputs: [
-            { name: 'veyfi', type: 'address' },
+            { name: 'vevmex', type: 'address' },
             { name: 'start_time', type: 'uint256' },
         ],
         outputs: [],
@@ -125,7 +125,7 @@ export const VMEX_REWARD_POOL_ABI = [
     {
         stateMutability: 'view',
         type: 'function',
-        name: 'veyfi',
+        name: 'vevmex',
         inputs: [],
         outputs: [{ name: '', type: 'address' }],
     },

@@ -27,7 +27,7 @@ const Base: React.FC<IAppTemplateProps> = ({
     descriptionLoading,
 }) => {
     return (
-        <div className="min-h-screen bg-[#eaeaea] dark:bg-neutral-900">
+        <div className="min-h-screen bg-[#eaeaea] dark:bg-brand-background">
             <Navbar />
             <DashboardTemplate
                 title={title}

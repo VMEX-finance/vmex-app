@@ -14,7 +14,7 @@ export const ProgressBar = ({ progress, setProgress }: IProgressBar) => {
     const progressRef = React.useRef(() => {});
     React.useEffect(() => {
         progressRef.current = () => {
-            if (realProgress > 100) {
+            if (realProgress >= 95) {
                 realSetProgress(100);
             } else {
                 const diff = Math.random() * 20;
@@ -26,7 +26,7 @@ export const ProgressBar = ({ progress, setProgress }: IProgressBar) => {
     React.useEffect(() => {
         const timer = setInterval(() => {
             if (realProgress < 100) progressRef.current();
-        }, 100);
+        }, 125);
 
         return () => {
             clearInterval(timer);

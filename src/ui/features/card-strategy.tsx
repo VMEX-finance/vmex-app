@@ -335,7 +335,7 @@ export const StrategyCard = ({
                 )}
                 <div className="mt-2.5">
                     <div className="flex justify-between items-end mx-0.5">
-                        <span className="text-xs">APY Breakdown</span>
+                        <span className="text-xs mb-0.5">APY Breakdown</span>
                         {tranche?.includes('LSD') && (
                             <Label
                                 color="pink"

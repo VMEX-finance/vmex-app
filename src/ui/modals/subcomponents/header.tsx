@@ -46,7 +46,7 @@ export const ModalHeader = ({
                 ))}
             </div>
             <button
-                className="self-baseline h-fit w-fit cursor-pointer text-neutral-900 dark:text-neutral-300 hover:text-neutral-600 dark:hover:text-neutral-300 transition duration-200 p-0.5 relative -mt-2 -mr-2"
+                className="self-baseline h-fit w-fit cursor-pointer text-neutral-900 dark:text-neutral-300 hover:text-black dark:hover:text-white transition duration-150 p-0.5 relative -mt-2 -mr-2 hover:bg-neutral-200 dark:hover:bg-neutral-800 rounded-full"
                 onClick={() => closeDialog(dialog)}
             >
                 <IoIosClose className="w-8 h-8" />
