@@ -515,14 +515,15 @@ const Staking: React.FC = () => {
                                     type="accent"
                                     className="h-fit mb-[17.88px]"
                                     onClick={() => dvmexRedeem(redeemInput.amountBn)}
-                                    disabled={
-                                        !redeemInput?.amount ||
-                                        redeemInput.amountBn.gt(
-                                            dvmexBalance?.value || BigNumber.from(0),
-                                        )
-                                    }
+                                    // disabled={
+                                    //     !redeemInput?.amount ||
+                                    //     redeemInput.amountBn.gt(
+                                    //         dvmexBalance?.value || BigNumber.from(0),
+                                    //     )
+                                    // }
+                                    disabled
                                 >
-                                    Redeem
+                                    Coming Soon
                                 </Button>
                             </div>
                         </GridView>

@@ -123,31 +123,35 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                         <div className="flex flex-col gap-1">
                             <span>Top Supplied Assets</span>
                             <div className="flex flex-wrap gap-1">
-                                {isLoading ? (
-                                    <Loader variant="rounded" className="!rounded-3xl">
-                                        <PillDisplay type="asset" asset={'BTC'} value={0} />
-                                    </Loader>
-                                ) : (
-                                    renderTopAssetsList(topSuppliedAssets).map((el, i) => (
-                                        <button
-                                            key={`top-supplied-asset-${i}`}
-                                            onClick={(e) =>
-                                                handlePillClick(
-                                                    el.asset,
-                                                    el.trancheId,
-                                                    el.trancheName,
-                                                )
-                                            }
-                                        >
-                                            <PillDisplay
-                                                type="asset"
-                                                asset={el.asset}
-                                                value={makeCompact(el.amount)}
-                                                hoverable
-                                            />
-                                        </button>
-                                    ))
-                                )}
+                                {isLoading
+                                    ? [1, 2, 3, 4].map((p) => (
+                                          <Loader
+                                              key={`top-supplied-${p}`}
+                                              variant="rounded"
+                                              className="!rounded-3xl"
+                                          >
+                                              <PillDisplay type="asset" asset={'BTC'} value={0} />
+                                          </Loader>
+                                      ))
+                                    : renderTopAssetsList(topSuppliedAssets).map((el, i) => (
+                                          <button
+                                              key={`top-supplied-asset-${i}`}
+                                              onClick={(e) =>
+                                                  handlePillClick(
+                                                      el.asset,
+                                                      el.trancheId,
+                                                      el.trancheName,
+                                                  )
+                                              }
+                                          >
+                                              <PillDisplay
+                                                  type="asset"
+                                                  asset={el.asset}
+                                                  value={makeCompact(el.amount)}
+                                                  hoverable
+                                              />
+                                          </button>
+                                      ))}
                             </div>
                         </div>
                     </div>
@@ -162,31 +166,35 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                         <div className="flex flex-col gap-1">
                             <span>Top Borrowed Assets</span>
                             <div className="flex flex-wrap gap-1">
-                                {isLoading ? (
-                                    <Loader variant="rounded" className="!rounded-3xl">
-                                        <PillDisplay type="asset" asset={'BTC'} value={0} />
-                                    </Loader>
-                                ) : (
-                                    renderTopAssetsList(topBorrowedAssets).map((el, i) => (
-                                        <button
-                                            key={`top-borrowed-asset-${i}`}
-                                            onClick={(e) =>
-                                                handlePillClick(
-                                                    el.asset,
-                                                    el.trancheId,
-                                                    el.trancheName,
-                                                )
-                                            }
-                                        >
-                                            <PillDisplay
-                                                type="asset"
-                                                asset={el.asset}
-                                                value={makeCompact(el.amount)}
-                                                hoverable
-                                            />
-                                        </button>
-                                    ))
-                                )}
+                                {isLoading
+                                    ? [1, 2, 3, 4].map((p) => (
+                                          <Loader
+                                              key={`top-borrowed-${p}`}
+                                              variant="rounded"
+                                              className="!rounded-3xl"
+                                          >
+                                              <PillDisplay type="asset" asset={'BTC'} value={0} />
+                                          </Loader>
+                                      ))
+                                    : renderTopAssetsList(topBorrowedAssets).map((el, i) => (
+                                          <button
+                                              key={`top-borrowed-asset-${i}`}
+                                              onClick={(e) =>
+                                                  handlePillClick(
+                                                      el.asset,
+                                                      el.trancheId,
+                                                      el.trancheName,
+                                                  )
+                                              }
+                                          >
+                                              <PillDisplay
+                                                  type="asset"
+                                                  asset={el.asset}
+                                                  value={makeCompact(el.amount)}
+                                                  hoverable
+                                              />
+                                          </button>
+                                      ))}
                             </div>
                         </div>
                     </div>

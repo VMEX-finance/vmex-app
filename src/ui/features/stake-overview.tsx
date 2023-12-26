@@ -27,7 +27,7 @@ export const StakingOverview = (props: IStakingOverviewProps) => {
             amount: props.yourLocked,
         },
         {
-            label: isBigger('sm') ? 'Expiration for the lock' : 'Your Expiration',
+            label: isBigger('sm') ? 'Expiration for the lock' : 'Lock Expiration',
             amount: props.expiration,
         },
     ];
