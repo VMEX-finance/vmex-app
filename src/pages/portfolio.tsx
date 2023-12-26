@@ -91,7 +91,7 @@ const Portfolio: React.FC = () => {
         <Base title="Portfolio">
             {address && !isChainUnsupported() ? (
                 <GridView type="fixed">
-                    <div className="col-span-3 2xl:col-span-2 flex flex-col gap-4">
+                    <div className="col-span-3 2xl:col-span-2 flex flex-col gap-3">
                         <PortfolioStatsCard
                             isLoading={queryUserActivity.isLoading}
                             networth={calculateNetworth()}
@@ -105,7 +105,7 @@ const Portfolio: React.FC = () => {
                             healthLoading={queryUserTranchesData.isLoading}
                             avgApy={queryUserActivity.data?.avgApy.toString()}
                         />
-                        <div className="flex flex-col lg:flex-row lg:grow gap-4">
+                        <div className="flex flex-col lg:flex-row lg:grow gap-3">
                             <YourPositionsTable
                                 type="supplies"
                                 data={queryUserActivity.data?.supplies || []}
@@ -118,7 +118,7 @@ const Portfolio: React.FC = () => {
                             />
                         </div>
                     </div>
-                    <div className="flex flex-col gap-4 col-span-3 2xl:col-span-1">
+                    <div className="flex flex-col gap-3 col-span-3 2xl:col-span-1">
                         <UserPerformanceCard
                             isLoading={queryUserActivity.isLoading || queryUserPnlChart.isLoading}
                             loanedAssets={queryUserActivity.data?.supplies?.map((el) => ({
@@ -134,7 +134,7 @@ const Portfolio: React.FC = () => {
                             cardClass="h-full"
                         />
                     </div>
-                    <div className="gap-4 col-span-3 flex flex-col lg:flex-row">
+                    <div className="gap-3 col-span-3 flex flex-col lg:flex-row">
                         <YourRewardsTable
                             data={queryUserRewards.data || []}
                             isLoading={queryUserRewards.isLoading}

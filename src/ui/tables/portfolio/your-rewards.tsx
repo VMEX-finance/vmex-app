@@ -71,7 +71,7 @@ export const YourRewardsTable: React.FC<IYourRewardsTableProps> = ({
                                 <th
                                     key={`table-header-${i}`}
                                     scope="col"
-                                    className={`py-3 text-left text-sm font-semibold text-neutral900 first-of-type:pl-2 first-of-type:md:pl-6`}
+                                    className={`py-1 text-left text-sm font-semibold text-neutral900 first-of-type:pl-2 first-of-type:md:pl-6`}
                                 >
                                     {el}
                                 </th>

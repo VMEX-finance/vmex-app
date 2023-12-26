@@ -71,7 +71,7 @@ export const YourPositionsTable: React.FC<IYourPositionsProps> = ({ type, data, 
                         summary={
                             <div className="grid items-center grid-cols-4 w-full">
                                 <span>{el[0].trancheId}</span>
-                                <span className="">{el[0].tranche}</span>
+                                <span className="truncate">{el[0].tranche}</span>
                                 <span className="justify-self-end">
                                     <MultipleAssetsDisplay
                                         assets={assetsPreview[i]}
@@ -108,7 +108,7 @@ export const YourPositionsTable: React.FC<IYourPositionsProps> = ({ type, data, 
                         summary={
                             <div className="grid items-center grid-cols-4 w-full">
                                 <span>{el[0].trancheId}</span>
-                                <span className="">{el[0].tranche}</span>
+                                <span className="truncate">{el[0].tranche}</span>
                                 <span className="justify-self-end">
                                     <MultipleAssetsDisplay
                                         assets={assetsPreview[i]}
@@ -141,11 +141,11 @@ export const YourPositionsTable: React.FC<IYourPositionsProps> = ({ type, data, 
     };
 
     return (
-        <Card loading={isLoading} title={`Your ${determineTitle()}`} titleClass="text-lg mb-8">
+        <Card loading={isLoading} title={`Your ${determineTitle()}`} titleClass="text-lg mb-2">
             {data && data.length !== 0 ? (
                 <div>
                     <ul
-                        className={`grid items-center grid-cols-4 w-full text-sm font-semibold pl-6 pr-3 pb-1 border-b ${
+                        className={`grid items-center grid-cols-4 w-full text-sm font-semibold pl-6 pr-3 py-1 border-b ${
                             isDark ? 'border-neutral-800' : 'border-neutral-300'
                         }`}
                     >

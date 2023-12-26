@@ -37,8 +37,10 @@ export const YourTransactionsTable = () => {
                                 <th
                                     key={`table-header-${i}`}
                                     scope="col"
-                                    className={`bg-neutral-100 pr-3 dark:bg-brand-black py-2 text-left text-sm font-semibold text-neutral900 first-of-type:pl-2 first-of-type:md:pl-6 ${
-                                        i === headers.length - 1 ? 'hidden sm:block text-right' : ''
+                                    className={`bg-white pr-3 dark:bg-brand-black py-1 text-left text-sm font-semibold text-neutral900 first-of-type:pl-2 first-of-type:md:pl-6 ${
+                                        i === headers.length - 1
+                                            ? 'hidden sm:table-cell text-right'
+                                            : ''
                                     } ${i === headers.length - 2 ? 'text-right' : ''}`}
                                 >
                                     {el}
