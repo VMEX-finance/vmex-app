@@ -35,7 +35,7 @@ const MobileDropdownMenu = ({
     const { openChainModal } = useChainModal();
     const [isOpen, setIsOpen] = useState(false);
 
-    const openMenu = () => setIsOpen(true);
+    const openMenu = () => (!isOpen ? setIsOpen(true) : setIsOpen(false));
     const closeMenu = () => setIsOpen(false);
     const network = getNetworkName();
 
@@ -87,7 +87,7 @@ const MobileDropdownMenu = ({
                             {!address && <WalletButton />}
                         </ul>
                     </div>
-                    <ul className="flex flex-col gap-0.5 justify-end items-end self-end w-full mb-12">
+                    <ul className="flex flex-col gap-0.5 justify-end items-end self-end w-full mb-6">
                         {address && (
                             <>
                                 <li className="w-full">
