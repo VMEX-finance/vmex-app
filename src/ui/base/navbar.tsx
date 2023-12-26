@@ -35,7 +35,7 @@ const MobileDropdownMenu = ({
     const { openChainModal } = useChainModal();
     const [isOpen, setIsOpen] = useState(false);
 
-    const openMenu = () => !isOpen && setIsOpen(true);
+    const openMenu = () => setIsOpen(true);
     const closeMenu = () => setIsOpen(false);
     const network = getNetworkName();
 
