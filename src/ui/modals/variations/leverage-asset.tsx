@@ -487,7 +487,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                 return;
             }
             if (borrowAllowance?.lt(VERY_BIG_ALLOWANCE)) {
-                console.log('approve looping');
+                console.log('#determineClick::approve looping');
                 await modalProps.submitTx(async () => await approveBorrowDelegation(), false);
                 return;
             }

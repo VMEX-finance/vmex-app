@@ -1,4 +1,4 @@
-import { TESTING, cleanNumberString } from '@/utils';
+import { LOGS, TESTING, cleanNumberString } from '@/utils';
 import { Decimal } from 'decimal.js';
 import { BigNumber } from 'ethers';
 import { formatEther, parseEther } from 'ethers/lib/utils.js';
@@ -29,7 +29,7 @@ export const useMaxBorrowableAmount = (
         const ltvDec = new Decimal(formatEther(ltv));
 
         if (minBorrowBN.gt(availableBorrowsBN)) {
-            if (TESTING)
+            if (LOGS)
                 console.warn('getMaxBorrowableAmount -> minBorrow greater than availableBorrows');
             return;
         }

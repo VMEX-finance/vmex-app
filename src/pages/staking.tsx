@@ -2,7 +2,15 @@ import React, { useEffect } from 'react';
 import { GridView } from '@/ui/templates';
 import { Base } from '@/ui/base';
 import { StakingOverview } from '@/ui/features';
-import { CONTRACTS, NETWORKS, TESTING, getChainId, percentFormatter, weeksToUnixBn } from '@/utils';
+import {
+    CONTRACTS,
+    LOGS,
+    NETWORKS,
+    TESTING,
+    getChainId,
+    percentFormatter,
+    weeksToUnixBn,
+} from '@/utils';
 import {
     Button,
     Card,
@@ -78,7 +86,7 @@ const Staking: React.FC = () => {
 
     // TESTING
     useEffect(() => {
-        if (TESTING) {
+        if (LOGS) {
             console.log('veVMEX:', vevmexMetaData.data);
             console.log('veVMEX User Data:', vevmexUserData.data);
         }
