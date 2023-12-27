@@ -36,7 +36,7 @@ export const GaugesCustomRow = (props: IVaultAsset & { loading?: boolean }) => {
         if (isChainUnsupported() && switchNetwork) return switchNetwork(DEFAULT_CHAINID);
         openDialog('vault-asset-dialog', {
             ...props,
-            tab: rowClick ? 'Deposit' : e.target.innerHTML,
+            tab: rowClick ? 'Withdraw' : e.target.innerHTML,
         });
     };
 

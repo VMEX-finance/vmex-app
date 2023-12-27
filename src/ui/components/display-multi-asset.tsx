@@ -86,10 +86,7 @@ export const MultipleAssetsDisplayOverlapping = ({
             text={determineCoinDescription(origAssetName || '')}
             key={`tooltip-multiple-assets-overlap-${getRandomNumber()}`}
         >
-            <div
-                className={`flex ${gap ? gap : 'gap-2'}`}
-                style={{ flexWrap: 'wrap', position: 'relative' }} // Added style for wrapping
-            >
+            <div className={`flex ${gap ? gap : 'gap-2'}`}>
                 {assets?.length !== 0 ? (
                     assets?.map((el, i) =>
                         i == assets?.length - 1 ? (
