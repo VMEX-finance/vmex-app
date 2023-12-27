@@ -2,6 +2,7 @@ import { utils } from 'ethers';
 
 // General
 export const TESTING = process.env.REACT_APP_TEST ? true : false;
+export const LOGS = process.env.REACT_APP_TEST ? true : false;
 
 export const HEALTH = {
     GREAT: 5,

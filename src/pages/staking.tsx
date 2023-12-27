@@ -50,6 +50,7 @@ const Staking: React.FC = () => {
         withdrawUnlockedVevmex,
         withdrawLockedVevmex,
         vw8020Balance,
+        dvmexDiscount,
     } = useToken(clearInputs);
     const { width, breakpoints } = useWindowSize();
     const [tabIndex, setTabIndex] = React.useState(0);
@@ -473,12 +474,12 @@ const Staking: React.FC = () => {
                             <div>
                                 <h3 className="text-xl mb-3">Redeem</h3>
                                 <p>
-                                    Got dVMEX, want VW8020? You’ve come to the right place. Redeem
-                                    dVMEX for VW8020 by paying the redemption cost in ETH. Enjoy
-                                    your cheap VW8020 anon.
+                                    Got dVMEX, want VMEX? You’ve come to the right place. Redeem
+                                    dVMEX for VMEX by paying the redemption cost in ETH. Enjoy your
+                                    cheap VMEX anon.
                                 </p>
                                 <p className="font-bold mt-2">
-                                    Current Discount: {percentFormatter.format(0.1183)}
+                                    Current Discount: {percentFormatter.format(dvmexDiscount)}
                                 </p>
                             </div>
                             <div className="grid sm:grid-cols-2 gap-1 lg:gap-2 content-end items-end">

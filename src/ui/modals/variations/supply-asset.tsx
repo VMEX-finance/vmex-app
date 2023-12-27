@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
 import { useDialogController, useModal, useSupply, useZap } from '@/hooks';
 import {
@@ -26,7 +26,7 @@ import {
 } from '@/ui/components';
 import { BigNumber } from 'ethers';
 import { ISupplyBorrowProps } from '../utils';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '@/store';
 import { usePricesData } from '@/api';
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
@@ -39,6 +39,7 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
     const { closeDialog, openDialog } = useDialogController();
     const { errorAssets } = usePricesData();
     const networkName = getNetworkName();
+    const location = useLocation();
     const {
         amountWalletNative,
         maxOnClick,
@@ -84,6 +85,20 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
     } = useZap(asset, (data as any)?.zapAsset, (data as any)?.zappableAssets);
 
     const poolLink = redirectToPool(convertSymbolToAddress(asset, networkName));
+
+    // Clear router state after success
+    useEffect(() => {
+        if (isSuccess && window && document) {
+            navigate('/staking', {
+                state: {
+                    from: 'tranche-details',
+                    data,
+                    action: 'stake',
+                },
+            });
+            window.history.replaceState({}, document.title);
+        }
+    }, [isSuccess]);
 
     return (
         <>

@@ -1,10 +1,11 @@
 import React from 'react';
 import { ApyToolitp, AssetDisplay, Button, Loader, SmartPrice } from '@/ui/components';
-import { useDialogController, useWindowSize } from '@/hooks';
+import { useDialogController, useVault, useWindowSize } from '@/hooks';
 import { IVaultAsset } from '@/api';
 import { DEFAULT_CHAINID, isChainUnsupported, percentFormatter } from '@/utils';
 import { useAccount, useSwitchNetwork } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
+import { BigNumber, utils } from 'ethers';
 
 export const GaugesCustomRow = (props: IVaultAsset & { loading?: boolean }) => {
     const {

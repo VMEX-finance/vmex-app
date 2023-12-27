@@ -26,7 +26,8 @@
     "scripts": {
         "start": "react-app-rewired start",
         "dev": "GENERATE_SOURCEMAP=false BROWSER=none react-app-rewired start",
-        "dev:l": "REACT_APP_TEST=1 GENERATE_SOURCEMAP=false BROWSER=none react-app-rewired start",
+        "dev:logs": "REACT_APP_LOGS=1 GENERATE_SOURCEMAP=false BROWSER=none react-app-rewired start",
+        "dev:test": "REACT_APP_TEST=1 REACT_APP_LOGS=1 GENERATE_SOURCEMAP=false BROWSER=none react-app-rewired start",
         "build": "react-app-rewired build",
         "test": "react-scripts test",
         "eject": "react-scripts eject",

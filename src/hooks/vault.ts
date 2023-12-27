@@ -1,6 +1,6 @@
 import { IMarketsAsset, useSubgraphAllMarketsData, useSubgraphTranchesOverviewData } from '@/api';
 import { getUnderlying, useTransactionsContext, useVaultsContext } from '@/store';
-import { TESTING, inputMediator, toSymbol } from '@/utils';
+import { LOGS, TESTING, inputMediator, toSymbol } from '@/utils';
 import {
     erc20ABI,
     erc4626ABI,
@@ -117,7 +117,7 @@ export const useVault = (vaultAddress?: string, gaugeAddress?: string, vaultSymb
             // Handle Deposit
             setLoading({ ...loading, deposit: true });
             const args = [bnAmount, address] as any;
-            if (TESTING) console.log('Deposit Args:', args);
+            if (LOGS) console.log('Deposit Args:', args);
             const prepDepositTx = await prepareWriteContract({
                 ...gaugeConfig,
                 functionName: 'deposit',
@@ -149,7 +149,7 @@ export const useVault = (vaultAddress?: string, gaugeAddress?: string, vaultSymb
             // Handle Deposit
             setLoading({ ...loading, withdraw: true });
             const args = [bnAmount, address, address] as any;
-            if (TESTING) console.log('Withdraw Args:', args);
+            if (LOGS) console.log('Withdraw Args:', args);
             const prepWithdrawTx = await prepareWriteContract({
                 ...gaugeConfig,
                 functionName: 'withdraw',

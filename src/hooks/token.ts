@@ -1,12 +1,18 @@
 import { useTransactionsContext } from '@/store';
 import { IAddress } from '@/types/wagmi';
-import { CONTRACTS, TESTING, VMEX_VEVMEX_CHAINID, weeksUntilUnlock } from '@/utils';
+import { CONTRACTS, LOGS, TESTING, VMEX_VEVMEX_CHAINID, weeksUntilUnlock } from '@/utils';
 import { VEVMEX_ABI, VEVMEX_GAUGE_ABI, VEVMEX_OPTIONS_ABI } from '@/utils/abis';
 import { useQueries } from '@tanstack/react-query';
-import { erc20ABI, writeContract, prepareWriteContract, readContracts } from '@wagmi/core';
+import {
+    erc20ABI,
+    writeContract,
+    prepareWriteContract,
+    readContracts,
+    readContract,
+} from '@wagmi/core';
 import { BigNumber, constants, utils } from 'ethers';
 import { formatEther } from 'ethers/lib/utils.js';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useAccount, useBalance, useContractRead, useContractReads } from 'wagmi';
 
@@ -207,6 +213,18 @@ export const useToken = (clearInputs?: () => void) => {
                 refetchInterval: 10 * 1000,
                 enabled: !!address,
             },
+            {
+                queryKey: ['vmex-data'],
+                queryFn: async () => {
+                    const supply = await readContract({
+                        address: CONTRACTS[VMEX_VEVMEX_CHAINID].vmex,
+                        abi: erc20ABI,
+                        functionName: 'totalSupply',
+                    });
+                    return utils.formatEther(supply);
+                },
+                refetchInterval: 30 * 1000,
+            },
             // {
             //     queryKey: ['vevmex-positions', address],
             //     queryFn: getPositionsData,
@@ -228,6 +246,19 @@ export const useToken = (clearInputs?: () => void) => {
         if (val && Number(val) > 0) return utils.parseEther(val); // veVMEX and VMEX tokens are 18 decimals
         return BigNumber.from('0');
     };
+
+    // TODO: getting 2% which is wrong
+    const dvmexDiscount = useMemo(() => {
+        if (queries?.[2]?.data && queries?.[0]?.data?.supply) {
+            if (LOGS) console.log('vevmex supply:', queries[0].data.supply);
+            if (LOGS) console.log('vmex supply:', queries[2].data);
+            const discount = (Number(queries[0].data.supply) / Number(queries[2].data)) * 100;
+            if (LOGS) console.log('Discount:', discount);
+            return 0.91;
+            // return discount;
+        }
+        return 0;
+    }, [queries.length]);
 
     // TODO
     const vevmexRedeem = async (amount: BigNumber) => {
@@ -326,13 +357,13 @@ export const useToken = (clearInputs?: () => void) => {
                     args: [CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as `0x${string}`, amount],
                 });
                 setLoading({ ...loading, lockApprove: true });
-                if (TESTING) console.log('Approve VMEX Spend TX:', prepareApproveTx);
+                if (LOGS) console.log('Approve VMEX Spend TX:', prepareApproveTx);
                 const approveTx = await writeContract(prepareApproveTx);
                 await Promise.all([newTransaction(approveTx), approveTx.wait()]);
                 setLoading({ ...loading, lockApprove: false });
             }
             // Lock TX
-            if (TESTING) console.log('VMEX Lock Args:', [amount.toString(), time.toString()]);
+            if (LOGS) console.log('VMEX Lock Args:', [amount.toString(), time.toString()]);
             const prepareLockTx = await prepareWriteContract({
                 address: CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as `0x${string}`,
                 abi: VEVMEX_ABI,
@@ -340,7 +371,7 @@ export const useToken = (clearInputs?: () => void) => {
                 functionName: 'modify_lock',
                 args: [amount, BigNumber.from(time)], // TODO: fix time
             });
-            if (TESTING) console.log('Lock VMEX TX:', prepareLockTx);
+            if (LOGS) console.log('Lock VMEX TX:', prepareLockTx);
             const lockTx = await writeContract(prepareLockTx);
             setLoading({ ...loading, lock: true });
             await Promise.all([newTransaction(lockTx), lockTx.wait()]);
@@ -444,5 +475,6 @@ export const useToken = (clearInputs?: () => void) => {
         dvmexBalance,
         dvmexRedeem,
         vw8020Balance,
+        dvmexDiscount,
     };
 };

@@ -69,6 +69,7 @@ export const VaultAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
                 view,
                 trancheId: trancheId.toString(),
                 from: 'gauges',
+                data,
                 action: 'supply',
                 asset: underlying?.asset,
             },

@@ -1,5 +1,5 @@
 import React, { createContext, ReactNode, useContext, useMemo } from 'react';
-import { getNetworkName } from '../utils/network';
+import { getNetworkName, VMEX_VEVMEX_CHAINID } from '../utils/network';
 import {
     IGaugesAsset,
     IMarketsAsset,
@@ -8,8 +8,12 @@ import {
     useSubgraphAllMarketsData,
 } from '@/api';
 import { useQuery } from '@tanstack/react-query';
-import { toNormalizedBN } from '@/utils';
-import { BigNumber } from 'ethers';
+import { LOGS, TESTING, toNormalizedBN } from '@/utils';
+import { BigNumber, utils } from 'ethers';
+import { readContract } from '@wagmi/core';
+import { VEVMEX_GAUGE_ABI } from '@/utils/abis';
+import { IAddress } from '@/types/wagmi';
+import { useAccount } from 'wagmi';
 
 // Types
 export type IVaultsStoreProps = {
@@ -73,6 +77,7 @@ export function VaultsStore(props: { children: ReactNode }) {
     const network = getNetworkName();
     const { queryGauges } = useGauages();
     const { queryAllMarketsData } = useSubgraphAllMarketsData();
+    const { address } = useAccount();
 
     const queryVaults = useQuery({
         queryKey: ['vaults', network],
@@ -85,7 +90,7 @@ export function VaultsStore(props: { children: ReactNode }) {
     const vaults = useMemo(() => {
         if (queryAllMarketsData.data?.length) {
             const markets = queryAllMarketsData.data;
-            return queryVaults?.data?.map((v) => {
+            const returnArr = queryVaults?.data?.map((v) => {
                 const underlying = getUnderlying(v.vaultSymbol, markets);
                 return {
                     ...v,
@@ -95,8 +100,11 @@ export function VaultsStore(props: { children: ReactNode }) {
                         raw: BigNumber.from(0),
                     },
                     gaugeStaked: toNormalizedBN(v.gaugeStaked.raw, underlying?.decimals),
+                    // TODO: yourStaked
                 };
             });
+            if (LOGS) console.log('Vaults:', returnArr);
+            return returnArr;
         } else {
             return queryVaults.data;
         }

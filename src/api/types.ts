@@ -88,6 +88,7 @@ export type IVaultAsset = {
     gaugeStaked: INormalizedBN;
     vaultSymbol: string;
     actions: undefined;
+    yourStaked?: string;
 };
 
 export type IGaugesAsset = {
