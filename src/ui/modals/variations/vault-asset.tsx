@@ -51,11 +51,10 @@ export const VaultAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
     const renderBtnText = () => {
         if (chainId !== VMEX_VEVMEX_CHAINID) return 'Switch Network';
         if (view === 'Deposit') {
-            return 'Disabled';
-            // if (approvedEnough) {
-            //     return 'Deposit';
-            // }
-            // return 'Approve';
+            if (approvedEnough) {
+                return 'Deposit';
+            }
+            return 'Approve';
         }
         return 'Withdraw';
     };
@@ -207,7 +206,7 @@ export const VaultAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
                     <span className="hidden sm:block sm:ml-0.5">for {depositToken}</span>
                 </Button>
                 <Button
-                    disabled={isSuccess || view === 'Deposit'}
+                    disabled={isSuccess}
                     onClick={handleSubmit}
                     loading={
                         isLoading || loading.deposit || loading.depositApprove || loading.withdraw

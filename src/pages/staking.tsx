@@ -17,6 +17,7 @@ import {
     CustomTabPanel,
     CustomTabs,
     DefaultDropdown,
+    MessageStatus,
     StakeInput,
 } from '@/ui/components';
 import { GaugesTable } from '@/ui/tables';
@@ -105,6 +106,11 @@ const Staking: React.FC = () => {
             title="staking"
             description={
                 <>
+                    <MessageStatus
+                        icon
+                        type="warning"
+                        message="Note: Staking your vTokens in gauges will decrease your health factor. Gauges v2 (Release: 01/11/24) will allow staked amounts to count towards your health factor."
+                    />
                     {TESTING && chainId === 5 && address && (
                         <Button
                             onClick={async () => {

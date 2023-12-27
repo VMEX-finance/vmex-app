@@ -161,7 +161,7 @@ export const getSubgraphAllMarketsData = async (): Promise<IMarketsAsset[]> => {
                     reserve.decimals,
                     assetUSDPrice,
                 ),
-
+                supplyTotalNative: utils.formatUnits(reserve.totalDeposits, reserve.decimals), // TODO
                 borrowTotal: nativeAmountToUSD(
                     reserve.totalCurrentVariableDebt,
                     PRICING_DECIMALS[network],

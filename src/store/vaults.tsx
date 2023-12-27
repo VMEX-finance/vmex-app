@@ -74,7 +74,6 @@ export function VaultsStore(props: { children: ReactNode }) {
     const network = getNetworkName();
     const { queryGauges } = useGauages();
     const { queryAllMarketsData } = useSubgraphAllMarketsData();
-    const { address } = useAccount();
 
     const queryVaults = useQuery({
         queryKey: ['vaults', network],
@@ -93,7 +92,7 @@ export function VaultsStore(props: { children: ReactNode }) {
                     ...v,
                     vaultApy: Number(underlying?.supplyApy || '0'),
                     vaultDeposited: {
-                        normalized: underlying?.supplyTotal || '0.0',
+                        normalized: underlying?.supplyTotalNative || '0.0',
                         raw: BigNumber.from(0),
                     },
                     underlyingAddress: underlying?.assetAddress,
