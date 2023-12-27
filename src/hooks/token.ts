@@ -214,16 +214,16 @@ export const useToken = (clearInputs?: () => void) => {
                 enabled: !!address,
             },
             {
-                queryKey: ['vmex-data'],
+                queryKey: ['dvmex-discount'],
                 queryFn: async () => {
-                    const supply = await readContract({
-                        address: CONTRACTS[VMEX_VEVMEX_CHAINID].vmex,
-                        abi: erc20ABI,
-                        functionName: 'totalSupply',
+                    const discount = await readContract({
+                        address: CONTRACTS[VMEX_VEVMEX_CHAINID].redemption,
+                        abi: VEVMEX_OPTIONS_ABI,
+                        functionName: 'discount',
                     });
-                    return utils.formatEther(supply);
+                    return utils.formatEther(discount);
                 },
-                refetchInterval: 30 * 1000,
+                refetchInterval: 60 * 1000,
             },
             // {
             //     queryKey: ['vevmex-positions', address],
@@ -246,19 +246,6 @@ export const useToken = (clearInputs?: () => void) => {
         if (val && Number(val) > 0) return utils.parseEther(val); // veVMEX and VMEX tokens are 18 decimals
         return BigNumber.from('0');
     };
-
-    // TODO: getting 2% which is wrong
-    const dvmexDiscount = useMemo(() => {
-        if (queries?.[2]?.data && queries?.[0]?.data?.supply) {
-            if (LOGS) console.log('dvmexDiscount::vevmex supply:', queries[0].data.supply);
-            if (LOGS) console.log('dvmexDiscount::vmex supply:', queries[2].data);
-            const discount = (Number(queries[0].data.supply) / Number(queries[2].data)) * 100;
-            if (LOGS) console.log('dvmexDiscount::discount:', discount);
-            return 0.91;
-            // return discount;
-        }
-        return 0;
-    }, [queries?.[2]?.data, queries?.[0]?.data?.supply, queries?.length]);
 
     // TODO
     const vevmexRedeem = async (amount: BigNumber) => {
@@ -481,6 +468,6 @@ export const useToken = (clearInputs?: () => void) => {
         dvmexBalance,
         dvmexRedeem,
         vw8020Balance,
-        dvmexDiscount,
+        dvmexDiscount: Number(queries?.[2]?.data),
     };
 };

@@ -1,6 +1,9 @@
+import { readContract } from '@wagmi/core';
 import { useToken } from './token';
 import { BigNumber, utils } from 'ethers';
 import React, { useEffect, useState } from 'react';
+import { CONTRACTS, VMEX_VEVMEX_CHAINID } from '@/utils';
+import { VEVMEX_OPTIONS_ABI } from '@/utils/abis';
 
 const maxWeeks = 52 * 5; // 5 years (10 years is technically the max)
 
@@ -12,6 +15,7 @@ export const useLockingUI = () => {
     const [lockInput, setLockInput] = useState({ ...defaultAmount, ...defaultPeriod });
     const [extendInput, setExtendInput] = useState(defaultPeriod);
     const [redeemInput, setRedeemInput] = useState(defaultAmount);
+    const [ethRequiredForRedeem, setEthRequiredForRedeem] = useState({ value: '', loading: false });
     const [error, setError] = useState('');
 
     function handleLockAmountInput(e: React.ChangeEvent<HTMLInputElement>) {
@@ -115,6 +119,24 @@ export const useLockingUI = () => {
         }
     }, [vevmexUserData.isLoading]);
 
+    // Get eth required based on redeem input
+    useEffect(() => {
+        (async () => {
+            if (redeemInput.amount) {
+                setEthRequiredForRedeem({ ...ethRequiredForRedeem, loading: true });
+                const ethRequired = await readContract({
+                    address: CONTRACTS[VMEX_VEVMEX_CHAINID].redemption,
+                    abi: VEVMEX_OPTIONS_ABI,
+                    functionName: 'eth_required',
+                    args: [redeemInput.amountBn],
+                });
+                setEthRequiredForRedeem({ value: utils.formatEther(ethRequired), loading: false });
+            } else {
+                setEthRequiredForRedeem({ loading: false, value: '' });
+            }
+        })().catch((e) => console.error(e));
+    }, [redeemInput.amount]);
+
     const clearInputs = () => {
         setExtendInput(defaultPeriod);
         setRedeemInput(defaultAmount);
@@ -137,5 +159,6 @@ export const useLockingUI = () => {
         handleRedeemMax,
         redeemInput,
         clearInputs,
+        ethRequiredForRedeem,
     };
 };

@@ -45,6 +45,7 @@ const Staking: React.FC = () => {
         redeemInput,
         extendPeriodError,
         clearInputs,
+        ethRequiredForRedeem,
     } = useLockingUI();
     const {
         dvmexBalance,
@@ -82,6 +83,13 @@ const Staking: React.FC = () => {
         if (vevmexUserData?.data?.locked?.end?.normalized)
             return `${vevmexUserData?.data?.locked?.end?.normalized} weeks`;
         return '1 week';
+    };
+
+    const renderRedemptionVmex = () => {
+        if (!redeemInput.amountBn.eq(BigNumber.from(0))) {
+            return String(Number(redeemInput.amount) / (1 - dvmexDiscount));
+        }
+        return '';
     };
 
     // TESTING
@@ -511,13 +519,13 @@ const Staking: React.FC = () => {
                                 <StakeInput
                                     header="Redemption cost (ETH)"
                                     onChange={() => {}}
-                                    value=""
                                     disabled
+                                    {...ethRequiredForRedeem}
                                 />
                                 <StakeInput
                                     header="Redeems VMEX"
                                     onChange={() => {}}
-                                    value=""
+                                    value={renderRedemptionVmex()}
                                     disabled
                                 />
                                 <Button
