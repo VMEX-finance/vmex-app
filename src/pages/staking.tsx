@@ -86,13 +86,6 @@ const Staking: React.FC = () => {
         return '1 week';
     };
 
-    const renderRedemptionVmex = () => {
-        if (!redeemInput.amountBn.eq(BigNumber.from(0))) {
-            return String(Number(redeemInput.amount) / (1 - dvmexDiscount));
-        }
-        return '';
-    };
-
     // TESTING
     useEffect(() => {
         if (LOGS) {
@@ -531,7 +524,7 @@ const Staking: React.FC = () => {
                                 <StakeInput
                                     header="Redeems VMEX"
                                     onChange={() => {}}
-                                    value={renderRedemptionVmex()}
+                                    value={redeemInput.amount}
                                     disabled
                                 />
                                 <Button

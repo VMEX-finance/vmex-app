@@ -4,6 +4,7 @@ import {
     HealthFactor,
     MultipleAssetsDisplay,
     NumberDisplay,
+    PillDisplay,
 } from '@/ui/components';
 import React from 'react';
 import { useWindowSize, useDialogController } from '@/hooks';
@@ -41,7 +42,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
     collateral,
     collateralChange,
 }) => {
-    const { width, breakpoints } = useWindowSize();
+    const { width, breakpoints, isBigger } = useWindowSize();
     const { openDialog } = useDialogController();
     const { data } = userData;
 
@@ -170,9 +171,9 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                 {(renderUserInteractions('borrows').length !== 0 ||
                     renderUserInteractions('supplies').length !== 0) && (
                     <>
-                        <div className="border-t-2 border-brand-black md:border-0 mt-4" />
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-                            <div className="text-center flex flex-col">
+                        <div className="border-t-2 border-neutral-300 dark:border-gray-800 md:border-0 mt-3" />
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-2">
+                            <div className="flex flex-col items-start text-left md:items-center md:text-center">
                                 <span className="text-sm">
                                     {width > breakpoints.md && 'User '}Supplies
                                 </span>
@@ -187,17 +188,17 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                                                         view: 'Withdraw',
                                                     })
                                                 }
-                                                className={buttonClass}
                                             >
-                                                <AssetDisplay
-                                                    className={assetDisplayClass}
-                                                    name={el.asset}
-                                                    size="sm"
+                                                <PillDisplay
+                                                    asset={el.asset}
                                                     value={usdFormatter().format(
                                                         parseFloat(
                                                             el.amount.slice(1).replaceAll(',', ''),
                                                         ),
                                                     )}
+                                                    hoverable
+                                                    size="sm"
+                                                    type="asset"
                                                 />
                                             </button>
                                         ))
@@ -206,7 +207,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                                     )}
                                 </div>
                             </div>
-                            <div className="text-center flex flex-col">
+                            <div className="text-right flex flex-col items-end md:items-center md:text-center">
                                 <span className="text-sm">
                                     {width > breakpoints.md && 'User '}Borrows
                                 </span>
@@ -221,17 +222,17 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                                                         view: 'Repay',
                                                     })
                                                 }
-                                                className={buttonClass}
                                             >
-                                                <AssetDisplay
-                                                    className={assetDisplayClass}
-                                                    name={el.asset}
-                                                    size="sm"
+                                                <PillDisplay
+                                                    asset={el.asset}
                                                     value={usdFormatter().format(
                                                         parseFloat(
                                                             el.amount.slice(1).replaceAll(',', ''),
                                                         ),
                                                     )}
+                                                    hoverable
+                                                    size="sm"
+                                                    type="asset"
                                                 />
                                             </button>
                                         ))
@@ -240,16 +241,19 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
                                     )}
                                 </div>
                             </div>
-                            <div className="text-center text-sm flex flex-col items-center">
+                            <div className="text-left text-sm flex flex-col items-start md:items-center md:text-center">
                                 <span>
                                     {width > breakpoints.md && 'User '}Health
                                     {width > breakpoints.md && ' Factor'}
                                 </span>
-                                <HealthFactor withChange={false} center />
+                                <HealthFactor withChange={false} center={isBigger('md')} />
                             </div>
-                            <div className="text-center text-sm flex flex-col items-center">
+                            <div className="text-right text-sm flex flex-col items-end md:items-center md:text-center">
                                 <span>{width > breakpoints.md && 'User '}Net APY</span>
-                                <NumberDisplay value={calculateUserNetAPY()} />
+                                <NumberDisplay
+                                    value={calculateUserNetAPY()}
+                                    align={isBigger('md') ? 'center' : 'right'}
+                                />
                             </div>
                         </div>
                     </>
