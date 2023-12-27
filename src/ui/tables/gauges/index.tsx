@@ -140,6 +140,10 @@ const GaugesTable: React.FC<ITableProps> = React.memo(({ data, loading, userData
                 data={data || []}
                 options={{
                     ...options,
+                    sortOrder: {
+                        name: 'gaugeAPR',
+                        direction: 'desc',
+                    },
                     customRowRender: (
                         [
                             vaultName,

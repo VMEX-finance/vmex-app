@@ -74,7 +74,7 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                             labelClass="text-2xl"
                             loading={isLoading}
                         />
-                        {tvlChart?.isLoading ? (
+                        {tvlChart?.isLoading || isLoading ? (
                             <Loader variant="rounded" animation="wave" className="min-w-full">
                                 <div className="h-[100px] lg:min-w-[360px] 2xl:min-w-0 w-full">
                                     <ReAreaChart data={tvlChart?.data || []} type="usd" />

@@ -174,7 +174,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                                     <Button
                                         onClick={() => openDialog('create-tranche-dialog')}
                                         disabled
-                                        icon={<BiPlus />}
+                                        icon={width > 1024 && <BiPlus />}
                                     >
                                         {width > 768 ? 'Create Tranche' : 'Create'}
                                     </Button>

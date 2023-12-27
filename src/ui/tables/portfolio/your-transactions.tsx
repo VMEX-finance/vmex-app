@@ -1,7 +1,14 @@
 import React from 'react';
 import { useUserHistory } from '@/api';
 import { useTransactionsContext } from '@/store';
-import { NETWORKS, getNetworkName, renderIcon, renderTxStatus, truncate } from '@/utils';
+import {
+    NETWORKS,
+    dateToLocale,
+    getNetworkName,
+    renderIcon,
+    renderTxStatus,
+    truncate,
+} from '@/utils';
 import { useAccount } from 'wagmi';
 import { AssetDisplay, SmartPrice, Tooltip } from '@/ui/components';
 import { useWindowSize } from '@/hooks';
@@ -68,7 +75,7 @@ export const YourTransactionsTable = () => {
                     <tbody className="divide-y divide-gray-200 dark:divide-neutral-800">
                         {transactions?.map((el, i) => (
                             <tr
-                                className="text-left transition duration-200 hover:bg-neutral-200 dark:hover:bg-neutral-900 hover:cursor-pointer"
+                                className="text-left transition duration-200 hover:bg-neutral-100 dark:hover:bg-neutral-900 hover:cursor-pointer"
                                 key={`transaction-${i}`}
                             >
                                 <td className="whitespace-nowrap pl-4 py-2 sm:pl-6">
@@ -101,7 +108,7 @@ export const YourTransactionsTable = () => {
                         ))}
                         {queryUserTxHistory?.data?.map((el, i) => (
                             <tr
-                                className="text-left transition duration-200 hover:bg-neutral-200 dark:hover:bg-neutral-900 hover:cursor-pointer"
+                                className="text-left transition duration-200 hover:bg-neutral-100 dark:hover:bg-neutral-900 hover:cursor-pointer"
                                 key={`transaction-${i}`}
                             >
                                 <td className="whitespace-nowrap pl-4 py-2 sm:pl-6">
@@ -114,7 +121,7 @@ export const YourTransactionsTable = () => {
                                     </a>
                                 </td>
                                 <td>
-                                    <span>{el.datetime.toLocaleDateString()}</span>
+                                    <span>{dateToLocale(el.datetime)}</span>
                                 </td>
                                 <td>
                                     {width > breakpoints['2xl']

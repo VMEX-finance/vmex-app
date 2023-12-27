@@ -14,6 +14,7 @@ import { useAccount, useNetwork } from 'wagmi';
 import { bigNumberToUnformattedString, isChainUnsupported, numberFormatter } from '@/utils';
 import { YourPositionsTable } from '@/ui/tables';
 import { GridView } from '@/ui/templates';
+import { useGlobalContext } from '@/store';
 
 const Overview: React.FC = () => {
     const gaEventTracker = useAnalyticsEventTracker('Overview');
@@ -37,7 +38,7 @@ const Overview: React.FC = () => {
                 topBorrowedAssets={queryProtocolData.data?.topBorrowedAssets}
                 topSuppliedAssets={queryProtocolData.data?.topSuppliedAssets}
                 topTranches={queryProtocolData.data?.topTranches}
-                isLoading={queryProtocolData.isLoading}
+                isLoading={queryProtocolData.isLoading || queryProtocolData.isRefetching}
             />
 
             <Carousel

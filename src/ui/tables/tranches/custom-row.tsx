@@ -43,7 +43,7 @@ const TranchesCustomRow = (props: ITranchesCustomRowProps) => {
     if (width < 900) {
         return (
             <tr
-                className="text-left transition duration-200 hover:bg-neutral-200 dark:hover:bg-neutral-900 hover:cursor-pointer flex flex-col px-4 pb-1 pt-2 border-y-[1px] dark:border-neutral-800"
+                className="text-left transition duration-150 hover:bg-neutral-100 dark:hover:bg-neutral-900 hover:cursor-pointer flex flex-col px-4 pb-1 pt-2 border-y-[1px] dark:border-neutral-800"
                 onClick={(e: any) => route(e, props)}
             >
                 <td className="flex justify-between">
@@ -88,7 +88,7 @@ const TranchesCustomRow = (props: ITranchesCustomRowProps) => {
     } else {
         return (
             <tr
-                className="text-left transition duration-200 hover:bg-neutral-200 dark:hover:bg-neutral-900 hover:cursor-pointer border-y-[1px] dark:border-neutral-800"
+                className="text-left transition duration-150 hover:bg-neutral-100 dark:hover:bg-neutral-900 hover:cursor-pointer border-y-[1px] dark:border-neutral-800"
                 onClick={(e: any) => route(e, props)}
             >
                 <td className="whitespace-nowrap py-3 pl-2 md:pl-4 pr-3">

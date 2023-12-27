@@ -33,6 +33,7 @@ const MobileDropdownMenu = ({
     const { address } = useAccount();
     const { disconnect } = useDisconnect();
     const { openChainModal } = useChainModal();
+    const { pathname } = useLocation();
     const [isOpen, setIsOpen] = useState(false);
 
     const openMenu = () => (!isOpen ? setIsOpen(true) : setIsOpen(false));
@@ -66,11 +67,11 @@ const MobileDropdownMenu = ({
                     <div className="flex flex-col w-full">
                         <button
                             onClick={closeMenu}
-                            className="inline-flex p-2 self-end rounded-md text-sm font-medium text-neutral-900 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-purple"
+                            className="inline-flex p-2 pl-4 pb-1 self-end rounded-md text-sm font-medium text-neutral-900 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-purple"
                         >
                             <MdClose size="27px" />
                         </button>
-                        <ul className="flex flex-col gap-0.5 w-full">
+                        <ul className="flex flex-col w-full">
                             {navItems.map((item, i) => (
                                 <li key={`${item}-${i}`}>
                                     <button
@@ -78,7 +79,11 @@ const MobileDropdownMenu = ({
                                             closeMenu();
                                             navigate(e);
                                         }}
-                                        className="uppercase dark:text-neutral-100 pr-4 py-1 text-lg font-medium"
+                                        className={`uppercase dark:text-neutral-100 pr-4 py-1.5 text-lg font-medium ${
+                                            pathname.includes(item?.toLowerCase())
+                                                ? '!text-brand-purple'
+                                                : ''
+                                        }`}
                                     >
                                         {item}
                                     </button>
@@ -87,19 +92,31 @@ const MobileDropdownMenu = ({
                             {!address && <WalletButton />}
                         </ul>
                     </div>
-                    <ul className="flex flex-col gap-0.5 justify-end items-end self-end w-full mb-6">
+                    <ul className="flex flex-col justify-end items-end self-end w-full mb-6">
                         {address && (
                             <>
                                 <li className="w-full">
-                                    <button className="uppercase dark:text-neutral-100 px-4 py-1 text-lg font-medium border-y-2 border-gray-300 dark:border-gray-700 w-full flex items-center justify-between">
-                                        <img src={NETWORKS[network].icon} width="24" height="24" />
+                                    <button className="uppercase dark:text-neutral-100 px-4 py-1.5 text-lg font-medium border-y-2 border-gray-300 dark:border-gray-700 w-full flex items-center justify-between">
+                                        {!isChainUnsupported() ? (
+                                            <img
+                                                src={NETWORKS[network].icon}
+                                                width="24"
+                                                height="24"
+                                            />
+                                        ) : (
+                                            <div />
+                                        )}
                                         {truncateAddress(address)}
                                     </button>
                                 </li>
                                 <li>
                                     <button
-                                        className="uppercase dark:text-neutral-100 pr-4 py-1 text-lg font-medium"
-                                        onClick={() => onClick('transactions-dialog')}
+                                        className="uppercase dark:text-neutral-100 pr-4 py-1.5 text-lg font-medium"
+                                        onClick={() =>
+                                            isChainUnsupported() && openChainModal
+                                                ? openChainModal()
+                                                : onClick('transactions-dialog')
+                                        }
                                     >
                                         TX History
                                     </button>
@@ -107,7 +124,7 @@ const MobileDropdownMenu = ({
                                 {tranches?.length !== 0 && (
                                     <li>
                                         <button
-                                            className="uppercase dark:text-neutral-100 pr-4 py-1 text-lg font-medium"
+                                            className="uppercase dark:text-neutral-100 pr-4 py-1.5 text-lg font-medium"
                                             onClick={() => navigate('my-tranches')}
                                         >
                                             My Tranches
@@ -116,7 +133,7 @@ const MobileDropdownMenu = ({
                                 )}
                                 <li>
                                     <button
-                                        className="flex items-center gap-2 uppercase dark:text-neutral-100 pr-4 py-1 text-lg font-medium"
+                                        className="flex items-center gap-2 uppercase dark:text-neutral-100 pr-4 py-1.5 text-lg font-medium"
                                         onClick={() => openChainModal && openChainModal()}
                                     >
                                         Switch Chain
@@ -124,7 +141,7 @@ const MobileDropdownMenu = ({
                                 </li>
                                 <li>
                                     <button
-                                        className="uppercase text-red-600 dark:text-red-400 pr-4 py-1 text-lg font-medium"
+                                        className="uppercase text-red-600 dark:text-red-400 pr-4 py-1.5 text-lg font-medium"
                                         onClick={() => disconnect()}
                                     >
                                         Disconnect
@@ -162,12 +179,13 @@ export const Navbar: React.FC = () => {
     const { switchNetworkAsync, switchNetwork } = useSwitchNetwork();
 
     function navigateTo(e: any, text?: string) {
-        if (text && text === 'Portfolio' && switchNetwork && isChainUnsupported()) switchNetwork();
-        if (typeof e === 'string') navigate(`../${e}`, { replace: false });
+        if (text && text === 'Portfolio' && switchNetwork && isChainUnsupported())
+            return switchNetwork();
+        if (typeof e === 'string') return navigate(`../${e}`, { replace: false });
         else {
             e.preventDefault();
             let value = e.target.innerText?.toLowerCase();
-            navigate(`../${value}`, { replace: false });
+            return navigate(`../${value}`, { replace: false, preventScrollReset: false });
         }
     }
 

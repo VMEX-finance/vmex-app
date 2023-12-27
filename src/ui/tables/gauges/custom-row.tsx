@@ -113,7 +113,7 @@ export const GaugesCustomRow = (props: IVaultAsset & { loading?: boolean }) => {
     } else {
         return (
             <tr
-                className="text-left transition duration-200 hover:bg-neutral-200 dark:hover:bg-neutral-900 hover:cursor-pointer border-y-[1px] dark:border-neutral-800"
+                className="text-left transition duration-150 hover:bg-neutral-100 dark:hover:bg-neutral-900 hover:cursor-pointer border-y-[1px] dark:border-neutral-800"
                 onClick={(e) => handleActionClick(e, true)}
             >
                 <td className="whitespace-nowrap pl-2 md:pl-4 pr-2 text-sm">

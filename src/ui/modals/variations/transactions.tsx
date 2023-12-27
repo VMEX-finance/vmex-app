@@ -12,7 +12,7 @@ export const TransactionsDialog: React.FC<IDialogProps> = ({ name, isOpen, data 
         <>
             <ModalHeader dialog="transactions-dialog" tabs={[`Transaction History`]} />
 
-            <div className="mt-4">
+            <div className="mt-4 mb-1">
                 <YourTransactionsTable />
             </div>
 
