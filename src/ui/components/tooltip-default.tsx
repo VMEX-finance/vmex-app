@@ -24,7 +24,7 @@ export const Tooltip = ({
     if (content) {
         return (
             <>
-                <span data-tooltip-id={id} className={`flex items-center w-fit ${className}`}>
+                <span data-tooltip-id={id} className={`flex items-center w-fit ${className ?? ''}`}>
                     {content}
                 </span>
                 <ReactTooltip id={id} className="!z-[999999999]">

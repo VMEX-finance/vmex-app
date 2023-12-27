@@ -12,6 +12,7 @@ type IPillDisplayProps = {
     hoverable?: boolean;
     selected?: boolean;
     truncate?: boolean;
+    noImg?: boolean;
 };
 
 export const PillDisplay = ({
@@ -23,6 +24,7 @@ export const PillDisplay = ({
     hoverable,
     selected,
     truncate,
+    noImg,
 }: IPillDisplayProps) => {
     const { width, breakpoints } = useWindowSize();
     const determineFormat = (val: number | string | ReactNode) => {
@@ -61,7 +63,11 @@ export const PillDisplay = ({
                 }`}
             >
                 <div className="flex items-center gap-1">
-                    <AssetDisplay name={asset} size="pill" noText />
+                    {!noImg ? (
+                        <AssetDisplay name={asset} size="pill" noText />
+                    ) : (
+                        <span className="w-[2px]" />
+                    )}
                     <span
                         className={`whitespace-nowrap truncate max-w-[100px] ${determineSize()[0]}`}
                     >
