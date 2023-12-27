@@ -1,8 +1,27 @@
 import { utils } from 'ethers';
+import { FaTwitter, FaDiscord, FaGithub } from 'react-icons/fa';
 
 // General
 export const TESTING = process.env.REACT_APP_TEST ? true : false;
 export const LOGS = process.env.REACT_APP_LOGS ? true : false;
+
+export const SOCIALS = [
+    {
+        text: 'Twitter',
+        icon: FaTwitter,
+        link: 'https://twitter.com/vmexfinance',
+    },
+    {
+        text: 'Discord',
+        icon: FaDiscord,
+        link: 'https://discord.gg/8eqq3V2aT9',
+    },
+    {
+        text: 'Github',
+        icon: FaGithub,
+        link: 'https://github.com/VMEX-Finance',
+    },
+];
 
 export const HEALTH = {
     GREAT: 5,

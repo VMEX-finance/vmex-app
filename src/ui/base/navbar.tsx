@@ -2,7 +2,7 @@ import { Menu, Transition } from '@headlessui/react';
 import React, { Fragment, useContext, useState } from 'react';
 import { HiOutlineMenuAlt3 } from 'react-icons/hi';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { DefaultDropdown, WalletButton, ToggleThemeButton } from '@/ui/components';
+import { DefaultDropdown, WalletButton, ToggleThemeButton, SocialList } from '@/ui/components';
 import { ThemeContext, IDialogNames } from '@/store';
 import { useAccount, useDisconnect, useSwitchNetwork } from 'wagmi';
 import { useDialogController, useWindowSize } from '@/hooks';
@@ -65,12 +65,15 @@ const MobileDropdownMenu = ({
             >
                 <div className="w-56 flex flex-col h-full bg-white dark:bg-brand-black shadow-md z-50 p-2 items-end text-right justify-between">
                     <div className="flex flex-col w-full">
+                        {/* <div className="flex items-center justify-between pl-2"> */}
+                        {/* <img src="/3D-logo.svg" alt="VMEX Finance" width="36" height="36" /> */}
                         <button
                             onClick={closeMenu}
                             className="inline-flex p-2 pl-4 pb-1 self-end rounded-md text-sm font-medium text-neutral-900 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-purple"
                         >
                             <MdClose size="27px" />
                         </button>
+                        {/* </div> */}
                         <ul className="flex flex-col w-full">
                             {navItems.map((item, i) => (
                                 <li key={`${item}-${i}`}>
@@ -92,11 +95,14 @@ const MobileDropdownMenu = ({
                             {!address && <WalletButton />}
                         </ul>
                     </div>
-                    <ul className="flex flex-col justify-end items-end self-end w-full mb-6">
+                    <ul className="flex flex-col justify-end items-end self-end w-full mb-2">
+                        <li className="py-1.5 pr-4 pl-2">
+                            <SocialList />
+                        </li>
                         {address && (
                             <>
                                 <li className="w-full">
-                                    <button className="uppercase dark:text-neutral-100 px-4 py-1.5 text-lg font-medium border-y-2 border-gray-300 dark:border-gray-700 w-full flex items-center justify-between">
+                                    <button className="uppercase dark:text-neutral-100 pr-4 pl-2 py-1.5 text-lg font-medium border-y-2 border-gray-300 dark:border-gray-700 w-full flex items-center justify-between">
                                         {!isChainUnsupported() ? (
                                             <img
                                                 src={NETWORKS[network].icon}
