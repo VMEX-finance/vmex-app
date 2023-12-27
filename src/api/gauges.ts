@@ -1,4 +1,4 @@
-import { CONTRACTS, TESTING, getNetworkName, VMEX_VEVMEX_CHAINID } from '@/utils';
+import { CONTRACTS, TESTING, getNetworkName, VMEX_VEVMEX_CHAINID, LOGS } from '@/utils';
 import { VEVMEX_GAUGE_ABI, VEVMEX_REGISTRY_ABI } from '@/utils/abis';
 import { useQuery } from '@tanstack/react-query';
 import { Address, readContract, readContracts } from '@wagmi/core';
@@ -101,8 +101,8 @@ export const useGauages = () => {
 
     // TODO: remove
     useEffect(() => {
-        if (TESTING) {
-            console.log('Available Gauges:', queryGauges.data);
+        if (LOGS) {
+            console.log('Gauges:', queryGauges.data);
         }
     }, [queryGauges.data]);
 

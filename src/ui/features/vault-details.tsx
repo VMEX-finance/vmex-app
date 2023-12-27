@@ -42,6 +42,7 @@ export const VaultDetails = ({ vault, deposited }: IVaultDetails & { deposited?:
                     value={`${vault?.vaultDeposited?.normalized || '0.0'}`}
                     label={isBigger('sm') ? 'Deposited in Tranche' : 'Total Deposited'}
                     align="right"
+                    units={vault?.underlyingSymbol}
                 />
             </div>
 
@@ -49,8 +50,14 @@ export const VaultDetails = ({ vault, deposited }: IVaultDetails & { deposited?:
                 <NumberDisplay
                     value={`${vault?.gaugeStaked?.normalized || '0.0'}`}
                     label="Total Staked"
+                    units={vault?.underlyingSymbol}
                 />
-                <NumberDisplay value={`${deposited || '0.0'}`} label="Your Staked" align="right" />
+                <NumberDisplay
+                    value={`${deposited || '0.0'}`}
+                    label="Your Staked"
+                    align="right"
+                    units={vault?.underlyingSymbol}
+                />
             </div>
         </div>
     );

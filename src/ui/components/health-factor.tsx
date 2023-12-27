@@ -15,6 +15,7 @@ import {
     calculateHealthFactorAfterLeverage,
     calculateTotalBorrowAmount,
     toSymbol,
+    LOGS,
 } from '@/utils';
 import { BigNumber, ethers, utils } from 'ethers';
 import { useAccount } from 'wagmi';
@@ -195,9 +196,9 @@ export const HealthFactor = ({
                     .mul(a.priceETH)
                     .div(ethers.utils.parseUnits('1', d)); //18 decimals or 8 decimals
             }
-            if (TESTING) {
-                console.log('amount: ', amount);
-                console.log('ethAmount: ', ethAmount);
+            if (LOGS) {
+                console.log('#determineFinalHF: amount: ', amount);
+                console.log('#determineFinalHF: ethAmount: ', ethAmount);
             }
 
             let totalCollateralETH = queryUserTrancheData.data?.totalCollateralETH;
@@ -249,7 +250,7 @@ export const HealthFactor = ({
                     ethAmount.mul(a.borrowFactor),
                 );
             }
-            if (TESTING) {
+            if (LOGS) {
                 console.log('total collateral after calc: ', collateralAfter);
                 console.log('total debtAfter after calc: ', debtAfter);
                 console.log(

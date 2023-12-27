@@ -37,6 +37,7 @@ export function usePricesData(): IPricesDataProps {
         queryKey: ['asset-prices', getNetworkName()],
         queryFn: getAllAssetPrices,
         refetchInterval: 1000 * 60 * 5, // refetch apys every 5 minutes
+        retryDelay: 1000,
     });
     const getErroredAssets = () => {
         const returnArr: string[] = [];

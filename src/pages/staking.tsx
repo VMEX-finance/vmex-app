@@ -2,13 +2,22 @@ import React, { useEffect } from 'react';
 import { GridView } from '@/ui/templates';
 import { Base } from '@/ui/base';
 import { StakingOverview } from '@/ui/features';
-import { CONTRACTS, NETWORKS, TESTING, getChainId, percentFormatter, weeksToUnixBn } from '@/utils';
+import {
+    CONTRACTS,
+    LOGS,
+    NETWORKS,
+    TESTING,
+    getChainId,
+    percentFormatter,
+    weeksToUnixBn,
+} from '@/utils';
 import {
     Button,
     Card,
     CustomTabPanel,
     CustomTabs,
     DefaultDropdown,
+    MessageStatus,
     StakeInput,
 } from '@/ui/components';
 import { GaugesTable } from '@/ui/tables';
@@ -37,6 +46,7 @@ const Staking: React.FC = () => {
         redeemInput,
         extendPeriodError,
         clearInputs,
+        ethRequiredForRedeem,
     } = useLockingUI();
     const {
         dvmexBalance,
@@ -50,6 +60,7 @@ const Staking: React.FC = () => {
         withdrawUnlockedVevmex,
         withdrawLockedVevmex,
         vw8020Balance,
+        dvmexDiscount,
     } = useToken(clearInputs);
     const { width, breakpoints } = useWindowSize();
     const [tabIndex, setTabIndex] = React.useState(0);
@@ -77,7 +88,7 @@ const Staking: React.FC = () => {
 
     // TESTING
     useEffect(() => {
-        if (TESTING) {
+        if (LOGS) {
             console.log('veVMEX:', vevmexMetaData.data);
             console.log('veVMEX User Data:', vevmexUserData.data);
         }
@@ -88,6 +99,11 @@ const Staking: React.FC = () => {
             title="staking"
             description={
                 <>
+                    <MessageStatus
+                        icon
+                        type="warning"
+                        message="Note: Staking your vTokens in gauges will decrease your health factor. Gauges v2 (Release: 01/11/24) will allow staked amounts to count towards your health factor."
+                    />
                     {TESTING && chainId === 5 && address && (
                         <Button
                             onClick={async () => {
@@ -473,12 +489,12 @@ const Staking: React.FC = () => {
                             <div>
                                 <h3 className="text-xl mb-3">Redeem</h3>
                                 <p>
-                                    Got dVMEX, want VW8020? You’ve come to the right place. Redeem
-                                    dVMEX for VW8020 by paying the redemption cost in ETH. Enjoy
-                                    your cheap VW8020 anon.
+                                    Got dVMEX, want VMEX? You’ve come to the right place. Redeem
+                                    dVMEX for VMEX by paying the redemption cost in ETH. Enjoy your
+                                    cheap VMEX anon.
                                 </p>
                                 <p className="font-bold mt-2">
-                                    Current Discount: {percentFormatter.format(0.1183)}
+                                    Current Discount: {percentFormatter.format(dvmexDiscount)}
                                 </p>
                             </div>
                             <div className="grid sm:grid-cols-2 gap-1 lg:gap-2 content-end items-end">
@@ -502,13 +518,13 @@ const Staking: React.FC = () => {
                                 <StakeInput
                                     header="Redemption cost (ETH)"
                                     onChange={() => {}}
-                                    value=""
                                     disabled
+                                    {...ethRequiredForRedeem}
                                 />
                                 <StakeInput
                                     header="Redeems VMEX"
                                     onChange={() => {}}
-                                    value=""
+                                    value={redeemInput.amount}
                                     disabled
                                 />
                                 <Button

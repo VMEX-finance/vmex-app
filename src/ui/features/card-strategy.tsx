@@ -305,6 +305,10 @@ export const StrategyCard = ({
                                                       el.assetAddress.toLowerCase() ===
                                                           foundUserLoop?.borrowAssetAddress?.toLowerCase()
                                                   }
+                                                  noImg={
+                                                      !el.assetName.includes('-') &&
+                                                      el.assetName.includes('/')
+                                                  }
                                               />
                                           </button>
                                       ))

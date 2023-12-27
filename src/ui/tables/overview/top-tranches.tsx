@@ -45,7 +45,7 @@ export const TopTranchesTable: React.FC<ITableProps> = ({ data, loading }) => {
                           return (
                               <tr
                                   key={`${i.name}-${index}`}
-                                  className="text-left cursor-pointer hover:bg-neutral-200 dark:hover:bg-neutral-900 transition duration-150"
+                                  className="text-left cursor-pointer hover:bg-neutral-100 dark:hover:bg-neutral-900 transition duration-150"
                                   onClick={(e) => route(e as any, i)}
                               >
                                   <td className="py-1 pl-1">{truncate(i.name)}</td>

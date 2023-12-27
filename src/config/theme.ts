@@ -1,3 +1,4 @@
+import { useWindowSize } from '@/hooks';
 import { createTheme } from '@mui/material/styles';
 
 export function vmexTheme(isDark = false) {
@@ -17,6 +18,15 @@ export function vmexTheme(isDark = false) {
                     root: {
                         display: 'flex',
                         alignItems: 'center',
+                    },
+                },
+            },
+            MUIDataTableSearch: {
+                styleOverrides: {
+                    clearIcon: {
+                        display: 'hidden',
+                        padding: '0',
+                        width: '0',
                     },
                 },
             },

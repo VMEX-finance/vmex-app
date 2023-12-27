@@ -47,6 +47,7 @@ import {
     isTrancheIdEqual,
     TESTING,
     hardcodedTrancheNames,
+    LOGS,
 } from '@/utils';
 import { useAccount } from 'wagmi';
 import { BigNumber, constants, utils } from 'ethers';
@@ -376,7 +377,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
         const leverageControllerAddress = getAddress(NETWORKS[network].leverageControllerAddress);
         const withdrawAmountNative = parseUnits(withdrawAmount, 18);
         const reserveData = findAssetInMarketsData(assetSymbol);
-        if (TESTING)
+        if (LOGS)
             console.log('#unwind - before read:', {
                 address: getAddress(reserveData.aTokenAddress),
                 abi: erc20ABI,
@@ -390,7 +391,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
             args: [wallet, leverageControllerAddress],
         });
         if (allowance.lt(withdrawAmountNative)) {
-            if (TESTING)
+            if (LOGS)
                 console.log('#unwind - before prepare approve params', {
                     address: getAddress(reserveData.aTokenAddress),
                     abi: erc20ABI,
@@ -403,7 +404,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                 functionName: 'approve',
                 args: [leverageControllerAddress, constants.MaxUint256],
             });
-            if (TESTING) console.log('#unwind - after prepare approve params:', config);
+            if (LOGS) console.log('#unwind - after prepare approve params:', config);
             const tx = await writeContract(config);
             await tx.wait();
         }
@@ -486,7 +487,7 @@ export const LeverageAssetDialog: React.FC<ILeverageProps> = ({ data }) => {
                 return;
             }
             if (borrowAllowance?.lt(VERY_BIG_ALLOWANCE)) {
-                console.log('approve looping');
+                console.log('#determineClick::approve looping');
                 await modalProps.submitTx(async () => await approveBorrowDelegation(), false);
                 return;
             }

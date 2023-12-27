@@ -2,6 +2,7 @@ import React from 'react';
 import { Loader } from './loader';
 import { PercentChangeDisplay } from './display-percent-change';
 import { SmartPrice } from './smart-price';
+import { useWindowSize } from '@/hooks';
 
 type INumberProps = {
     label?: string;
@@ -12,6 +13,7 @@ type INumberProps = {
     change?: number;
     loading?: boolean;
     labelClass?: string;
+    units?: string;
 };
 
 export const NumberDisplay = ({
@@ -23,7 +25,9 @@ export const NumberDisplay = ({
     change,
     loading,
     labelClass,
+    units,
 }: INumberProps) => {
+    const { isBigger } = useWindowSize();
     const labelSize = () => {
         if (labelClass) return labelClass;
         switch (size) {
@@ -68,8 +72,9 @@ export const NumberDisplay = ({
                     width={valueSize().skeletonWidth}
                 />
             ) : (
-                <span className={`${valueSize().css} ${color}`}>
+                <span className={`${valueSize().css} ${color} flex items-center gap-1`}>
                     {typeof value === 'string' ? <SmartPrice price={String(value)} /> : value}
+                    {units && isBigger('sm') && units}
                 </span>
             )}
             {change && <PercentChangeDisplay value={change} />}

@@ -23,6 +23,7 @@ export * from './progress';
 export * from './input-list';
 export * from './label';
 export * from './legend';
+export * from './social-list';
 export * from '../charts/line-chart'; // TODO
 export * from './loader';
 export * from './smart-price';

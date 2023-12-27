@@ -1,6 +1,6 @@
 import { IMarketsAsset, useSubgraphAllMarketsData, useSubgraphTranchesOverviewData } from '@/api';
 import { getUnderlying, useTransactionsContext, useVaultsContext } from '@/store';
-import { TESTING, inputMediator, toSymbol } from '@/utils';
+import { LOGS, TESTING, inputMediator, toSymbol } from '@/utils';
 import {
     erc20ABI,
     erc4626ABI,
@@ -87,7 +87,7 @@ export const useVault = (vaultAddress?: string, gaugeAddress?: string, vaultSymb
         if (!amount || !vaultDetails.data?.[4]) return false;
         const allowance = utils.formatUnits(vaultDetails.data?.[4]);
         const bnAmount = utils.parseUnits(amount); // TODO: handle decimals
-        console.log('Approved Enough:', Number(bnAmount) > Number(allowance));
+        console.log('approvedEnough::amount:', Number(bnAmount) > Number(allowance));
         return Number(bnAmount) > Number(allowance);
     }, [amount]);
 
@@ -117,7 +117,7 @@ export const useVault = (vaultAddress?: string, gaugeAddress?: string, vaultSymb
             // Handle Deposit
             setLoading({ ...loading, deposit: true });
             const args = [bnAmount, address] as any;
-            if (TESTING) console.log('Deposit Args:', args);
+            if (LOGS) console.log('#handleDeposit::Deposit Args:', args);
             const prepDepositTx = await prepareWriteContract({
                 ...gaugeConfig,
                 functionName: 'deposit',
@@ -149,7 +149,7 @@ export const useVault = (vaultAddress?: string, gaugeAddress?: string, vaultSymb
             // Handle Deposit
             setLoading({ ...loading, withdraw: true });
             const args = [bnAmount, address, address] as any;
-            if (TESTING) console.log('Withdraw Args:', args);
+            if (LOGS) console.log('#handleWithdraw::Withdraw Args:', args);
             const prepWithdrawTx = await prepareWriteContract({
                 ...gaugeConfig,
                 functionName: 'withdraw',

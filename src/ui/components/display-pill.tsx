@@ -12,6 +12,7 @@ type IPillDisplayProps = {
     hoverable?: boolean;
     selected?: boolean;
     truncate?: boolean;
+    noImg?: boolean;
 };
 
 export const PillDisplay = ({
@@ -23,6 +24,7 @@ export const PillDisplay = ({
     hoverable,
     selected,
     truncate,
+    noImg,
 }: IPillDisplayProps) => {
     const { width, breakpoints } = useWindowSize();
     const determineFormat = (val: number | string | ReactNode) => {
@@ -52,16 +54,22 @@ export const PillDisplay = ({
     if (type === 'asset') {
         return (
             <div
-                className={`transition duration-150 bg-neutral-300 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 rounded-3xl flex items-center gap-4 w-fit pl-1.5 pr-2 py-1 ${
-                    determineSize()[1]
-                } ${hoverable ? 'hover:bg-[rgb(200,200,200)] dark:hover:bg-neutral-700' : ''} ${
+                className={`transition duration-150 bg-neutral-300 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 rounded-3xl flex items-center ${
+                    size === 'sm' ? 'gap-2' : 'gap-3'
+                } w-fit pl-1.5 pr-2 py-1 ${determineSize()[1]} ${
+                    hoverable ? 'hover:bg-[rgb(200,200,200)] dark:hover:bg-neutral-700' : ''
+                } ${
                     selected
                         ? '!bg-[rgb(200,200,200)] outline outline-2 outline-brand-purple dark:!bg-neutral-700'
                         : ''
                 }`}
             >
                 <div className="flex items-center gap-1">
-                    <AssetDisplay name={asset} size="pill" noText />
+                    {!noImg ? (
+                        <AssetDisplay name={asset} size="pill" noText />
+                    ) : (
+                        <span className="w-[2px]" />
+                    )}
                     <span
                         className={`whitespace-nowrap truncate max-w-[100px] ${determineSize()[0]}`}
                     >

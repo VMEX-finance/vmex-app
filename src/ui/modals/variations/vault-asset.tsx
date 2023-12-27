@@ -2,7 +2,13 @@ import React, { useEffect } from 'react';
 import { IDialogProps } from '../utils';
 import { ModalFooter, ModalHeader, ModalTableDisplay } from '../subcomponents';
 import { useModal, useVault } from '@/hooks';
-import { Button, TransactionStatus, CoinInput, DefaultAccordion } from '@/ui/components';
+import {
+    Button,
+    TransactionStatus,
+    CoinInput,
+    DefaultAccordion,
+    MessageStatus,
+} from '@/ui/components';
 import { VaultDetails } from '@/ui/features/vault-details';
 import { VMEX_VEVMEX_CHAINID, getChainId, toSymbol } from '@/utils';
 import { useAccount, useSwitchNetwork, useFeeData } from 'wagmi';
@@ -69,6 +75,7 @@ export const VaultAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
                 view,
                 trancheId: trancheId.toString(),
                 from: 'gauges',
+                data,
                 action: 'supply',
                 asset: underlying?.asset,
             },
@@ -155,6 +162,13 @@ export const VaultAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
                                     },
                                 ]}
                             />
+                            <div className="mt-1">
+                                <MessageStatus
+                                    type="warning"
+                                    message="Gauge deposits are currently not used as collateral"
+                                    icon
+                                />
+                            </div>
                         </>
                     ) : (
                         <ModalTableDisplay

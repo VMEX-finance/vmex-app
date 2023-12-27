@@ -19,7 +19,7 @@ type IAssetDisplayProps = {
     noText?: boolean;
 };
 
-export const AssetDisplay = (props: IAssetDisplayProps) => {
+const AssetDisplay = React.memo((props: IAssetDisplayProps) => {
     const renderSize = () => {
         switch (props.size) {
             case 'xl':
@@ -64,7 +64,10 @@ export const AssetDisplay = (props: IAssetDisplayProps) => {
             )}
         </div>
     );
-};
+});
+
+AssetDisplay.displayName = 'AssetDisplay';
+export { AssetDisplay };
 
 export const renderAsset = (
     asset: string,

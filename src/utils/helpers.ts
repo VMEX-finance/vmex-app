@@ -221,10 +221,17 @@ export const getRandomNumber = (number?: number) => Math.floor(Math.random() * (
 
 export const capFirstLetter = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
-export function unixToDate(unix: string | number) {
+export function unixToDate(unix: string | number, trimYear?: boolean) {
     const isSeconds = String(unix).length < 12 ? true : false;
     const numberUnix = typeof unix === 'string' ? parseFloat(unix) : unix;
-    return new Date(numberUnix * (isSeconds ? 1000 : 1));
+    const date = new Date(numberUnix * (isSeconds ? 1000 : 1));
+    return date;
+}
+
+export function dateToLocale(date: Date) {
+    const locale = date.toLocaleDateString();
+    const [month, day, year] = locale.split('/');
+    return `${month}/${day.length === 1 ? `0${day}` : day}/${year.substring(2)}`;
 }
 
 export function sortArrByDate(arr?: any[], key = 'datetime', order?: 'asc' | 'desc') {

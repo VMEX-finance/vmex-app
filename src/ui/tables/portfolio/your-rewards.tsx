@@ -84,7 +84,7 @@ export const YourRewardsTable: React.FC<IYourRewardsTableProps> = ({
                                 return (
                                     <tr
                                         key={`reward-table-row-${reward.token}`}
-                                        className="text-left transition duration-150 hover:bg-neutral-200 dark:hover:bg-neutral-900 hover:cursor-pointer"
+                                        className="text-left transition duration-150 hover:bg-neutral-100 dark:hover:bg-neutral-900 hover:cursor-pointer"
                                         onClick={
                                             () => {}
                                             // openDialog('borrow-asset-dialog', {

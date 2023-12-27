@@ -1,5 +1,5 @@
 import React, { createContext, ReactNode, useContext, useMemo } from 'react';
-import { getNetworkName } from '../utils/network';
+import { getNetworkName, VMEX_VEVMEX_CHAINID } from '../utils/network';
 import {
     IGaugesAsset,
     IMarketsAsset,
@@ -8,8 +8,9 @@ import {
     useSubgraphAllMarketsData,
 } from '@/api';
 import { useQuery } from '@tanstack/react-query';
-import { toNormalizedBN } from '@/utils';
+import { LOGS, toNormalizedBN } from '@/utils';
 import { BigNumber } from 'ethers';
+import { useAccount } from 'wagmi';
 
 // Types
 export type IVaultsStoreProps = {
@@ -83,24 +84,34 @@ export function VaultsStore(props: { children: ReactNode }) {
     });
 
     const vaults = useMemo(() => {
-        if (queryAllMarketsData.data?.length) {
+        if (queryAllMarketsData.data?.length && queryAllMarketsData?.isFetched) {
             const markets = queryAllMarketsData.data;
-            return queryVaults?.data?.map((v) => {
+            const returnArr = queryVaults?.data?.map((v) => {
                 const underlying = getUnderlying(v.vaultSymbol, markets);
                 return {
                     ...v,
                     vaultApy: Number(underlying?.supplyApy || '0'),
                     vaultDeposited: {
-                        normalized: underlying?.supplyTotal || '0.0',
+                        normalized: underlying?.supplyTotalNative || '0.0',
                         raw: BigNumber.from(0),
                     },
+                    underlyingAddress: underlying?.assetAddress,
+                    underlyingSymbol: underlying?.asset,
                     gaugeStaked: toNormalizedBN(v.gaugeStaked.raw, underlying?.decimals),
+                    // TODO: yourStaked
                 };
             });
+            if (LOGS) console.log('Vaults:', returnArr);
+            return returnArr;
         } else {
             return queryVaults.data;
         }
-    }, [queryAllMarketsData?.data?.length, queryGauges?.data?.length, queryVaults?.data?.length]);
+    }, [
+        queryAllMarketsData?.data?.length,
+        queryGauges?.data?.length,
+        queryVaults?.data?.length,
+        queryAllMarketsData?.isFetched,
+    ]);
 
     return (
         <VaultsContext.Provider

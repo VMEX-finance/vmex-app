@@ -95,7 +95,6 @@ const MarketsTable: React.FC<ITableProps> = React.memo(({ data, loading, userAct
                 filter: false,
                 sort: true,
                 sortThirdClickReset: true,
-                sortDirection: 'desc',
             },
         },
         {
@@ -207,6 +206,10 @@ const MarketsTable: React.FC<ITableProps> = React.memo(({ data, loading, userAct
                 data={addFeaturedTranches(data, 'markets')}
                 options={{
                     ...options,
+                    sortOrder: {
+                        name: 'supplyApy',
+                        direction: 'desc',
+                    },
                     customRowRender: (
                         [
                             asset,

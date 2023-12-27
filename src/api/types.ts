@@ -60,6 +60,7 @@ export type IMarketsAsset = {
     available: string | number;
     availableNative: BigNumber;
     supplyTotal: number | string;
+    supplyTotalNative: string;
     borrowTotal: number | string;
     rating: string;
     strategies?: boolean;
@@ -88,6 +89,9 @@ export type IVaultAsset = {
     gaugeStaked: INormalizedBN;
     vaultSymbol: string;
     actions: undefined;
+    yourStaked?: string;
+    underlyingAddress?: string;
+    underlyingSymbol?: string;
 };
 
 export type IGaugesAsset = {

@@ -2,6 +2,7 @@ import React, { createContext, ReactNode, useContext, useEffect, useState } from
 import { useAccount, useSwitchNetwork } from 'wagmi';
 import { DEFAULT_NETWORK, getNetworkName } from '../utils/network';
 import { getNetwork } from '@wagmi/core';
+import { useLocation } from 'react-router-dom';
 
 // Types
 export type IGlobalStoreProps = {
