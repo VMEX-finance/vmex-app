@@ -124,6 +124,20 @@ const GaugesTable: React.FC<ITableProps> = React.memo(({ data, loading, userData
             },
         },
         {
+            name: 'underlyingAddress',
+            label: 'Underlying Address',
+            options: {
+                display: false,
+            },
+        },
+        {
+            name: 'underlyingSymbol',
+            label: 'Underlying Symbol',
+            options: {
+                display: false,
+            },
+        },
+        {
             name: '',
             label: '',
             options: {
@@ -156,6 +170,8 @@ const GaugesTable: React.FC<ITableProps> = React.memo(({ data, loading, userData
                             vaultAddress,
                             vaultSymbol,
                             gaugeAddress,
+                            underlyingAddress,
+                            underlyingSymbol,
                             actions,
                         ],
                         dataIndex,
@@ -173,6 +189,8 @@ const GaugesTable: React.FC<ITableProps> = React.memo(({ data, loading, userData
                             gaugeStaked={gaugeStaked}
                             vaultSymbol={vaultSymbol}
                             actions={actions}
+                            underlyingAddress={underlyingAddress}
+                            underlyingSymbol={underlyingSymbol}
                             key={`gauges-table-${rowIndex || Math.floor(Math.random() * 10000)}`}
                             loading={loading}
                         />

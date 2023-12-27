@@ -8,11 +8,8 @@ import {
     useSubgraphAllMarketsData,
 } from '@/api';
 import { useQuery } from '@tanstack/react-query';
-import { LOGS, TESTING, toNormalizedBN } from '@/utils';
-import { BigNumber, utils } from 'ethers';
-import { readContract } from '@wagmi/core';
-import { VEVMEX_GAUGE_ABI } from '@/utils/abis';
-import { IAddress } from '@/types/wagmi';
+import { LOGS, toNormalizedBN } from '@/utils';
+import { BigNumber } from 'ethers';
 import { useAccount } from 'wagmi';
 
 // Types
@@ -88,7 +85,7 @@ export function VaultsStore(props: { children: ReactNode }) {
     });
 
     const vaults = useMemo(() => {
-        if (queryAllMarketsData.data?.length) {
+        if (queryAllMarketsData.data?.length && queryAllMarketsData?.isFetched) {
             const markets = queryAllMarketsData.data;
             const returnArr = queryVaults?.data?.map((v) => {
                 const underlying = getUnderlying(v.vaultSymbol, markets);
@@ -99,6 +96,8 @@ export function VaultsStore(props: { children: ReactNode }) {
                         normalized: underlying?.supplyTotal || '0.0',
                         raw: BigNumber.from(0),
                     },
+                    underlyingAddress: underlying?.assetAddress,
+                    underlyingSymbol: underlying?.asset,
                     gaugeStaked: toNormalizedBN(v.gaugeStaked.raw, underlying?.decimals),
                     // TODO: yourStaked
                 };
@@ -108,7 +107,12 @@ export function VaultsStore(props: { children: ReactNode }) {
         } else {
             return queryVaults.data;
         }
-    }, [queryAllMarketsData?.data?.length, queryGauges?.data?.length, queryVaults?.data?.length]);
+    }, [
+        queryAllMarketsData?.data?.length,
+        queryGauges?.data?.length,
+        queryVaults?.data?.length,
+        queryAllMarketsData?.isFetched,
+    ]);
 
     return (
         <VaultsContext.Provider

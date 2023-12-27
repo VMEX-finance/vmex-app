@@ -250,7 +250,7 @@ export const HealthFactor = ({
                     ethAmount.mul(a.borrowFactor),
                 );
             }
-            if (TESTING) {
+            if (LOGS) {
                 console.log('total collateral after calc: ', collateralAfter);
                 console.log('total debtAfter after calc: ', debtAfter);
                 console.log(

@@ -89,6 +89,8 @@ export type IVaultAsset = {
     vaultSymbol: string;
     actions: undefined;
     yourStaked?: string;
+    underlyingAddress?: string;
+    underlyingSymbol?: string;
 };
 
 export type IGaugesAsset = {
