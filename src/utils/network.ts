@@ -6,7 +6,7 @@ import { CONTRACTS, STRATEGIES } from './contracts';
 export const NETWORKS: Record<string, any> = {
     optimism: {
         name: 'optimism',
-        rpc: `https://optimism.llamarpc.com/rpc/${process.env.REACT_APP_LLAMA_RPC_KEY}`, // https://mainnet.optimism.io
+        rpc: 'https://optimism-mainnet.public.blastapi.io', //`https://optimism.llamarpc.com/rpc/${process.env.REACT_APP_LLAMA_RPC_KEY}`, // https://mainnet.optimism.io
         subgraph: 'https://api.thegraph.com/subgraphs/name/fico23/vmex-optimism-test', // 'https://api.thegraph.com/subgraphs/name/vmex-finance/vmex-optimism',
         chainId: 10,
         explorer: 'https://explorer.optimism.io',
