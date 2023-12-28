@@ -18,7 +18,7 @@ const TrancheDetails: React.FC = () => {
     const { openDialog } = useDialogController();
     const { address } = useAccount();
     const { data: signer } = useSigner();
-    const { width, breakpoints } = useWindowSize();
+    const { width, breakpoints, isBigger } = useWindowSize();
     const { tranche, setTranche, asset } = useSelectedTrancheContext();
     const { queryTrancheData } = useSubgraphTrancheData(location.state?.trancheId);
     const { queryUserTrancheData } = useUserTrancheData(address, location.state?.trancheId);
@@ -151,8 +151,10 @@ const TrancheDetails: React.FC = () => {
                                             tabs={['Supply', 'Borrow']}
                                             tabIndex={tabIndex}
                                             handleTabChange={handleTabChange}
+                                            size="lg"
                                         />
                                         <Legend
+                                            compact={!isBigger('sm')}
                                             items={
                                                 tabIndex === 0
                                                     ? [

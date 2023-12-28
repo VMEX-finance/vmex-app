@@ -13,12 +13,22 @@ export const CustomTabs = ({
     tabIndex,
     handleTabChange,
     id,
+    size,
 }: {
+    size?: 'md' | 'lg';
     tabs: string[];
     tabIndex: number;
     id: string;
     handleTabChange: (event: React.SyntheticEvent, newValue: number) => void;
 }) => {
+    const determineSize = () => {
+        switch (size) {
+            case 'lg':
+                return 'text-lg';
+            default:
+                return 'text-md';
+        }
+    };
     return (
         <div className="border-b border-gray-300 dark:border-gray-700">
             <Tabs
@@ -30,7 +40,7 @@ export const CustomTabs = ({
             >
                 {tabs.map((tab, i) => (
                     <Tab
-                        label={<span className="normal-case">{tab}</span>}
+                        label={<span className={`normal-case ${determineSize()}`}>{tab}</span>}
                         key={`simple-tab-${id}-${i}`}
                         disableFocusRipple
                         disableTouchRipple
