@@ -11,3 +11,4 @@ export * from './veVmexOptions';
 export * from './veVmexPositionHelper';
 export * from './veVmexRegistry';
 export * from './veVmexRewardsClaimZap';
+export * from './VmexWeth';
