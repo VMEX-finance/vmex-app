@@ -73,9 +73,7 @@ const TrancheTVLDataCard: React.FC<ITrancheOverviewProps> = ({
         else return [];
     };
 
-    const buttonClass = `transition duration-100 hover:bg-neutral-100 rounded-lg dark:bg-neutral-800 dark:hover:bg-neutral-700`;
-    const assetDisplayClass = `transition duration-100 py-1 px-2 bg-neutral-200 hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700`;
-    const customBreakpoint = 1071;
+    const customBreakpoint = 900;
 
     return (
         <>

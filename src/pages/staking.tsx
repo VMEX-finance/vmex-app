@@ -21,7 +21,7 @@ import {
     StakeInput,
 } from '@/ui/components';
 import { GaugesTable } from '@/ui/tables';
-import { useLockingUI, useWindowSize, useToken, useGauge } from '@/hooks';
+import { useLockingUI, useWindowSize, useToken, useGauge, useCustomTabs } from '@/hooks';
 import { BigNumber, utils } from 'ethers';
 import { useAccount } from 'wagmi';
 import { writeContract } from '@wagmi/core';
@@ -63,7 +63,7 @@ const Staking: React.FC = () => {
         dvmexDiscount,
     } = useToken(clearInputs);
     const { width, breakpoints } = useWindowSize();
-    const [tabIndex, setTabIndex] = React.useState(0);
+    const { tabIndex, handleTabChange } = useCustomTabs();
     const { vaults, isError: vaultsError, isLoading: vaultsLoading } = useVaultsContext();
     const {
         selected,
@@ -74,11 +74,6 @@ const Staking: React.FC = () => {
         claimBoostRewards,
         boostRewards,
     } = useGauge();
-
-    const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
-        const tabText = (event.target as any).innerText;
-        setTabIndex(newValue);
-    };
 
     const renderMinWeeks = () => {
         if (vevmexUserData?.data?.locked?.end?.normalized)

@@ -207,6 +207,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
             >
                 <div className="flex justify-center w-full bg-white dark:bg-brand-background py-1 lg:py-1.5 border-t-2 border-yellow-400">
                     <MessageStatus
+                        icon
                         type="warning"
                         message="Error getting oracle prices. Proceed with caution."
                     />
