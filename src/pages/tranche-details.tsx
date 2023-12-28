@@ -2,16 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { GridView } from '@/ui/templates';
 import { Base } from '@/ui/base';
 import { TrancheTVLDataCard, TrancheInfoCard, TrancheStatisticsCard } from '@/ui/features';
-import { Card, Legend } from '@/ui/components';
+import { Card, CustomTabPanel, CustomTabs, Legend } from '@/ui/components';
 import { TrancheTable } from '@/ui/tables';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelectedTrancheContext } from '@/store';
 import { useAccount, useSigner } from 'wagmi';
 import { useSubgraphTrancheData, useUserTrancheData } from '@/api';
 import { useAnalyticsEventTracker } from '@/config';
-import { useDialogController, useWindowSize } from '@/hooks';
-import { convertSymbolToAddress } from '@vmexfinance/sdk';
-import { getNetworkName, hardcodedTrancheNames } from '@/utils';
+import { useCustomTabs, useDialogController, useWindowSize } from '@/hooks';
+import { hardcodedTrancheNames } from '@/utils';
 
 const TrancheDetails: React.FC = () => {
     const navigate = useNavigate();
@@ -19,11 +18,11 @@ const TrancheDetails: React.FC = () => {
     const { openDialog } = useDialogController();
     const { address } = useAccount();
     const { data: signer } = useSigner();
-    const { width, breakpoints } = useWindowSize();
+    const { width, breakpoints, isBigger } = useWindowSize();
     const { tranche, setTranche, asset } = useSelectedTrancheContext();
     const { queryTrancheData } = useSubgraphTrancheData(location.state?.trancheId);
     const { queryUserTrancheData } = useUserTrancheData(address, location.state?.trancheId);
-    const network = getNetworkName();
+    const { tabIndex, handleTabChange } = useCustomTabs();
     const [view, setView] = useState('tranche-overview');
     const gaEventTracker = useAnalyticsEventTracker(
         `Tranche Details - ${tranche?.id || location.state?.trancheId}`,
@@ -140,55 +139,132 @@ const TrancheDetails: React.FC = () => {
                     </GridView>
                 </>
             ) : (
-                <GridView type="fixed" cols="grid-cols-1 lg:grid-cols-2">
-                    <Card
-                        loading={queryTrancheData.isLoading}
-                        header={
-                            <div className="flex justify-between items-center">
-                                <h3 className={'text-2xl'}>Supply</h3>
-                                <Legend
-                                    items={[
-                                        {
-                                            name: width < breakpoints.sm ? 'Supply' : 'Supplied',
-                                            color: 'bg-brand-green-neon',
-                                        },
-                                        {
-                                            name:
-                                                width < breakpoints.sm
-                                                    ? 'Collateral'
-                                                    : 'Collateralized',
-                                            color: 'bg-brand-blue',
-                                        },
-                                        {
-                                            name: width < breakpoints.sm ? 'Reward' : 'Rewards',
-                                            color: 'bg-brand-purple',
-                                        },
-                                    ]}
-                                />
-                            </div>
-                        }
-                    >
-                        <TrancheTable data={renderSupplyList} type="supply" />
-                    </Card>
-                    <Card
-                        loading={queryTrancheData.isLoading}
-                        header={
-                            <div className="flex justify-between items-center">
-                                <h3 className={'text-2xl'}>Borrow</h3>
-                                <Legend
-                                    items={[
-                                        {
-                                            name: 'Borrowed',
-                                            color: 'bg-brand-green-neon',
-                                        },
-                                    ]}
-                                />
-                            </div>
-                        }
-                    >
-                        <TrancheTable data={renderBorrowList} type="borrow" />
-                    </Card>
-                </GridView>
+                <>
+                    {width < breakpoints.lg ? (
+                        <>
+                            <Card
+                                loading={queryTrancheData.isLoading}
+                                header={
+                                    <div className="flex justify-between items-center">
+                                        <CustomTabs
+                                            id="tranche-details"
+                                            tabs={['Supply', 'Borrow']}
+                                            tabIndex={tabIndex}
+                                            handleTabChange={handleTabChange}
+                                            size="lg"
+                                        />
+                                        <Legend
+                                            compact={!isBigger('sm')}
+                                            items={
+                                                tabIndex === 0
+                                                    ? [
+                                                          {
+                                                              name:
+                                                                  width < breakpoints.sm
+                                                                      ? 'Supply'
+                                                                      : 'Supplied',
+                                                              color: 'bg-brand-green-neon',
+                                                          },
+                                                          {
+                                                              name:
+                                                                  width < breakpoints.sm
+                                                                      ? 'Collateral'
+                                                                      : 'Collateralized',
+                                                              color: 'bg-brand-blue',
+                                                          },
+                                                          {
+                                                              name:
+                                                                  width < breakpoints.sm
+                                                                      ? 'Reward'
+                                                                      : 'Rewards',
+                                                              color: 'bg-brand-purple',
+                                                          },
+                                                      ]
+                                                    : [
+                                                          {
+                                                              name: 'Borrowed',
+                                                              color: 'bg-brand-green-neon',
+                                                          },
+                                                      ]
+                                            }
+                                        />
+                                    </div>
+                                }
+                            >
+                                <CustomTabPanel
+                                    value={tabIndex}
+                                    index={0}
+                                    className="min-h-[425px]"
+                                >
+                                    <TrancheTable data={renderSupplyList} type="supply" />
+                                </CustomTabPanel>
+                                <CustomTabPanel
+                                    value={tabIndex}
+                                    index={1}
+                                    className="min-h-[425px]"
+                                >
+                                    <TrancheTable data={renderBorrowList} type="borrow" />
+                                </CustomTabPanel>
+                            </Card>
+                        </>
+                    ) : (
+                        <GridView type="fixed" cols="grid-cols-1 lg:grid-cols-2">
+                            <Card
+                                loading={queryTrancheData.isLoading}
+                                header={
+                                    <div className="flex justify-between items-center">
+                                        <h3 className={'text-2xl'}>Supply</h3>
+                                        <Legend
+                                            items={[
+                                                {
+                                                    name:
+                                                        width < breakpoints.sm
+                                                            ? 'Supply'
+                                                            : 'Supplied',
+                                                    color: 'bg-brand-green-neon',
+                                                },
+                                                {
+                                                    name:
+                                                        width < breakpoints.sm
+                                                            ? 'Collateral'
+                                                            : 'Collateralized',
+                                                    color: 'bg-brand-blue',
+                                                },
+                                                {
+                                                    name:
+                                                        width < breakpoints.sm
+                                                            ? 'Reward'
+                                                            : 'Rewards',
+                                                    color: 'bg-brand-purple',
+                                                },
+                                            ]}
+                                        />
+                                    </div>
+                                }
+                            >
+                                <TrancheTable data={renderSupplyList} type="supply" />
+                            </Card>
+                            <Card
+                                loading={queryTrancheData.isLoading}
+                                header={
+                                    <div className="flex justify-between items-center">
+                                        <h3 className={'text-2xl'}>Borrow</h3>
+                                        <Legend
+                                            items={[
+                                                {
+                                                    name: 'Borrowed',
+                                                    color: 'bg-brand-green-neon',
+                                                },
+                                            ]}
+                                        />
+                                    </div>
+                                }
+                            >
+                                <TrancheTable data={renderBorrowList} type="borrow" />
+                            </Card>
+                        </GridView>
+                    )}
+                </>
             )}
         </Base>
     );

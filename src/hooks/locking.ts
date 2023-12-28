@@ -15,7 +15,11 @@ export const useLockingUI = () => {
     const [lockInput, setLockInput] = useState({ ...defaultAmount, ...defaultPeriod });
     const [extendInput, setExtendInput] = useState(defaultPeriod);
     const [redeemInput, setRedeemInput] = useState(defaultAmount);
-    const [ethRequiredForRedeem, setEthRequiredForRedeem] = useState({ value: '', loading: false });
+    const [ethRequiredForRedeem, setEthRequiredForRedeem] = useState({
+        value: '',
+        raw: BigNumber.from(0),
+        loading: false,
+    });
     const [error, setError] = useState('');
 
     function handleLockAmountInput(e: React.ChangeEvent<HTMLInputElement>) {
@@ -130,9 +134,13 @@ export const useLockingUI = () => {
                     functionName: 'eth_required',
                     args: [redeemInput.amountBn],
                 });
-                setEthRequiredForRedeem({ value: utils.formatEther(ethRequired), loading: false });
+                setEthRequiredForRedeem({
+                    value: utils.formatEther(ethRequired),
+                    raw: ethRequired,
+                    loading: false,
+                });
             } else {
-                setEthRequiredForRedeem({ loading: false, value: '' });
+                setEthRequiredForRedeem({ loading: false, value: '', raw: BigNumber.from(0) });
             }
         })().catch((e) => console.error(e));
     }, [redeemInput.amount]);

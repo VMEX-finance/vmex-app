@@ -13,3 +13,4 @@ export * from './locking';
 export * from './token';
 export * from './gauge';
 export * from './vault';
+export * from './tabs';

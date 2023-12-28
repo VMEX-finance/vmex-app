@@ -21,7 +21,7 @@ import {
     StakeInput,
 } from '@/ui/components';
 import { GaugesTable } from '@/ui/tables';
-import { useLockingUI, useWindowSize, useToken, useGauge } from '@/hooks';
+import { useLockingUI, useWindowSize, useToken, useGauge, useCustomTabs } from '@/hooks';
 import { BigNumber, utils } from 'ethers';
 import { useAccount } from 'wagmi';
 import { writeContract } from '@wagmi/core';
@@ -63,7 +63,7 @@ const Staking: React.FC = () => {
         dvmexDiscount,
     } = useToken(clearInputs);
     const { width, breakpoints } = useWindowSize();
-    const [tabIndex, setTabIndex] = React.useState(0);
+    const { tabIndex, handleTabChange } = useCustomTabs();
     const { vaults, isError: vaultsError, isLoading: vaultsLoading } = useVaultsContext();
     const {
         selected,
@@ -74,11 +74,6 @@ const Staking: React.FC = () => {
         claimBoostRewards,
         boostRewards,
     } = useGauge();
-
-    const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
-        const tabText = (event.target as any).innerText;
-        setTabIndex(newValue);
-    };
 
     const renderMinWeeks = () => {
         if (vevmexUserData?.data?.locked?.end?.normalized)
@@ -530,16 +525,18 @@ const Staking: React.FC = () => {
                                 <Button
                                     type="accent"
                                     className="h-fit mb-[17.88px]"
-                                    onClick={() => dvmexRedeem(redeemInput.amountBn)}
-                                    // disabled={
-                                    //     !redeemInput?.amount ||
-                                    //     redeemInput.amountBn.gt(
-                                    //         dvmexBalance?.value || BigNumber.from(0),
-                                    //     )
-                                    // }
-                                    disabled
+                                    onClick={() =>
+                                        dvmexRedeem(redeemInput.amountBn, ethRequiredForRedeem.raw)
+                                    }
+                                    disabled={
+                                        !redeemInput?.amount ||
+                                        redeemInput.amountBn.gt(
+                                            dvmexBalance?.value || BigNumber.from(0),
+                                        )
+                                    }
+                                    loading={tokenLoading.redeemApprove || tokenLoading.redeem}
                                 >
-                                    Coming Soon
+                                    Redeem
                                 </Button>
                             </div>
                         </GridView>
