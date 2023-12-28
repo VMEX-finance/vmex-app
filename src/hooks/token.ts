@@ -1,7 +1,7 @@
 import { useTransactionsContext } from '@/store';
 import { IAddress } from '@/types/wagmi';
-import { CONTRACTS, LOGS, TESTING, VMEX_VEVMEX_CHAINID, weeksUntilUnlock } from '@/utils';
-import { VEVMEX_ABI, VEVMEX_GAUGE_ABI, VEVMEX_OPTIONS_ABI } from '@/utils/abis';
+import { CONTRACTS, LOGS, VMEX_VEVMEX_CHAINID, weeksUntilUnlock } from '@/utils';
+import { VEVMEX_ABI, VEVMEX_OPTIONS_ABI } from '@/utils/abis';
 import { useQueries } from '@tanstack/react-query';
 import {
     erc20ABI,
@@ -12,9 +12,9 @@ import {
 } from '@wagmi/core';
 import { BigNumber, constants, utils } from 'ethers';
 import { formatEther } from 'ethers/lib/utils.js';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { useAccount, useBalance, useContractRead, useContractReads } from 'wagmi';
+import { useAccount, useBalance, useContractReads } from 'wagmi';
 
 const DEFAULT_LOADING = {
     redeem: false,
@@ -28,6 +28,11 @@ const DEFAULT_LOADING = {
     expiredLock: false,
     expiredLockApprove: false,
 };
+
+const WEEK = 7 * 86400;
+const MAX_LOCK_DURATION = Math.floor((4 * 365 * 86400) / WEEK) * WEEK;
+const SCALE = BigNumber.from(10).pow(18);
+const MAX_PENALTY_RATIO = SCALE.mul(3).div(4);
 
 /**
  * Contains all functions revolving around VMEX & veVMEX staking
@@ -86,10 +91,6 @@ export const useToken = (clearInputs?: () => void) => {
         watch: address ? true : false,
     });
 
-    const WEEK = 7 * 86400;
-    const MAX_LOCK_DURATION = Math.floor((4 * 365 * 86400) / WEEK) * WEEK;
-    const SCALE = BigNumber.from(10).pow(18);
-    const MAX_PENALTY_RATIO = SCALE.mul(3).div(4);
     const vevmexConfig = {
         address: CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as IAddress,
         abi: VEVMEX_ABI,
@@ -251,37 +252,49 @@ export const useToken = (clearInputs?: () => void) => {
     const vevmexRedeem = async (amount: BigNumber) => {
         if (!address || amount === BigNumber.from(0) || !amount) return;
         const cleanAddress = utils.getAddress(address);
-        if (allowances?.[0] && allowances?.[0]?.lt(amount)) {
-            setLoading({ ...loading, redeemApprove: true });
-            const prepareApproveTx = await prepareWriteContract({
+        try {
+            if (allowances?.[0] && allowances?.[0]?.lt(amount)) {
+                setLoading({ ...loading, redeemApprove: true });
+                const prepareApproveTx = await prepareWriteContract({
+                    address: CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as `0x${string}`,
+                    abi: erc20ABI,
+                    chainId: VMEX_VEVMEX_CHAINID,
+                    functionName: 'approve',
+                    args: [cleanAddress, amount],
+                });
+                const approveTx = await writeContract(prepareApproveTx);
+                await newTransaction(approveTx);
+                await approveTx.wait();
+                setLoading({ ...loading, redeemApprove: false });
+            }
+            setLoading({ ...loading, redeem: true });
+            const prepareRedeemTx = await prepareWriteContract({
                 address: CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as `0x${string}`,
-                abi: erc20ABI,
+                abi: VEVMEX_OPTIONS_ABI,
                 chainId: VMEX_VEVMEX_CHAINID,
-                functionName: 'approve',
-                args: [cleanAddress, amount],
+                functionName: 'redeem',
+                args: [amount, cleanAddress],
             });
-            const approveTx = await writeContract(prepareApproveTx);
-            await newTransaction(approveTx);
-            await approveTx.wait();
-            setLoading({ ...loading, redeemApprove: false });
+            const redeemTx = await writeContract(prepareRedeemTx);
+            setLoading({ ...loading, redeem: false });
+            await newTransaction(redeemTx);
+            clearInputs && clearInputs();
+        } catch (e) {
+            console.error(e);
+            if (!String(e).includes('User rejected request'))
+                toast.error('Error occured while redeeming');
         }
-        setLoading({ ...loading, redeem: true });
-        const prepareRedeemTx = await prepareWriteContract({
-            address: CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as `0x${string}`,
-            abi: VEVMEX_OPTIONS_ABI,
-            chainId: VMEX_VEVMEX_CHAINID,
-            functionName: 'redeem',
-            args: [amount, cleanAddress],
-        });
-        const redeemTx = await writeContract(prepareRedeemTx);
-        setLoading({ ...loading, redeem: false });
-        await newTransaction(redeemTx);
-        clearInputs && clearInputs();
     };
 
     // TODO
-    const dvmexRedeem = async (amount: BigNumber) => {
-        if (!address || amount === BigNumber.from(0) || !amount) return;
+    const dvmexRedeem = async (amount: BigNumber, ethRequired: BigNumber) => {
+        if (
+            !address ||
+            amount === BigNumber.from(0) ||
+            !amount ||
+            ethRequired === BigNumber.from(0)
+        )
+            return;
         const cleanAddress = utils.getAddress(address);
 
         try {
@@ -307,6 +320,9 @@ export const useToken = (clearInputs?: () => void) => {
                 chainId: VMEX_VEVMEX_CHAINID,
                 functionName: 'redeem',
                 args: [amount, cleanAddress],
+                overrides: {
+                    value: ethRequired,
+                },
             });
             if (LOGS) console.log('#dvmexRedeem::prepareRedeemTx:', prepareRedeemTx);
             const redeemTx = await writeContract(prepareRedeemTx);
@@ -316,7 +332,8 @@ export const useToken = (clearInputs?: () => void) => {
         } catch (e) {
             console.error(e);
             setLoading({ ...loading, redeem: false });
-            toast.error('Error occured while redeeming');
+            if (!String(e).includes('User rejected request'))
+                toast.error('Error occured while redeeming');
         }
     };
 
@@ -373,6 +390,8 @@ export const useToken = (clearInputs?: () => void) => {
         } catch (e) {
             console.error('#lockVmex:', e);
             setLoading(DEFAULT_LOADING);
+            if (!String(e).includes('User rejected request'))
+                toast.error('Error occured while redeeming');
         }
     };
 
@@ -422,6 +441,8 @@ export const useToken = (clearInputs?: () => void) => {
         } catch (e) {
             console.error(e);
             setLoading(DEFAULT_LOADING);
+            if (!String(e).includes('User rejected request'))
+                toast.error('Error occured while redeeming');
         }
     };
 
@@ -447,6 +468,8 @@ export const useToken = (clearInputs?: () => void) => {
         } catch (e) {
             console.error(e);
             setLoading(DEFAULT_LOADING);
+            if (!String(e).includes('User rejected request'))
+                toast.error('Error occured while redeeming');
         }
     };
 

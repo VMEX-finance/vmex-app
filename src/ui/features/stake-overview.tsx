@@ -38,7 +38,7 @@ export const StakingOverview = (props: IStakingOverviewProps) => {
                 {stats.map((el, i) => (
                     <div
                         key={`staking-overview-${i}`}
-                        className={`flex justify-center lg:items-center py-2 sm:border-none border-gray-300 dark:border-gray-700 lg:first:pt-0 lg:last:pb-0 ${
+                        className={`flex justify-center lg:items-center py-2 lg:border-none border-gray-300 dark:border-gray-700 lg:first:pt-0 lg:last:pb-0 ${
                             i > 1 ? 'border-t' : ''
                         }`}
                     >

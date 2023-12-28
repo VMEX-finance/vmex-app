@@ -525,16 +525,18 @@ const Staking: React.FC = () => {
                                 <Button
                                     type="accent"
                                     className="h-fit mb-[17.88px]"
-                                    onClick={() => dvmexRedeem(redeemInput.amountBn)}
-                                    // disabled={
-                                    //     !redeemInput?.amount ||
-                                    //     redeemInput.amountBn.gt(
-                                    //         dvmexBalance?.value || BigNumber.from(0),
-                                    //     )
-                                    // }
-                                    disabled
+                                    onClick={() =>
+                                        dvmexRedeem(redeemInput.amountBn, ethRequiredForRedeem.raw)
+                                    }
+                                    disabled={
+                                        !redeemInput?.amount ||
+                                        redeemInput.amountBn.gt(
+                                            dvmexBalance?.value || BigNumber.from(0),
+                                        )
+                                    }
+                                    loading={tokenLoading.redeemApprove || tokenLoading.redeem}
                                 >
-                                    Coming Soon
+                                    Redeem
                                 </Button>
                             </div>
                         </GridView>

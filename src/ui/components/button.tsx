@@ -3,8 +3,7 @@ import { isChainUnsupported } from '@/utils';
 import { useChainModal, useConnectModal } from '@rainbow-me/rainbowkit';
 import React from 'react';
 import { CgSpinner } from 'react-icons/cg';
-import { useNavigate } from 'react-router-dom';
-import { useAccount, useNetwork } from 'wagmi';
+import { useAccount } from 'wagmi';
 
 export type IButtonProps = {
     children?: string | React.ReactNode;
@@ -52,9 +51,7 @@ export const Button = ({
     highlight,
 }: IButtonProps) => {
     const { address } = useAccount();
-    const { chain } = useNetwork();
     const { width, breakpoints } = useWindowSize();
-    const navigate = useNavigate();
     const { openConnectModal } = useConnectModal();
     const { openChainModal } = useChainModal();
 
