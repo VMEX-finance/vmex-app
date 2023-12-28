@@ -34,9 +34,21 @@ export function vmexTheme(isDark = false) {
                 styleOverrides: {
                     root: {
                         padding: '2px 8px',
+                        minHeight: '42px',
                     },
                     main: {
                         padding: '2px 8px',
+                        minHeight: '42px',
+                    },
+                },
+            },
+            MuiTabs: {
+                styleOverrides: {
+                    root: {
+                        minHeight: '42px',
+                    },
+                    main: {
+                        minHeight: '42px',
                     },
                 },
             },
