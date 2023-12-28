@@ -80,7 +80,9 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                                         {descriptionLoading ? (
                                             <Loader height="24px" type="skeleton" />
                                         ) : (
-                                            <p className="dark:text-neutral-300">{description}</p>
+                                            <span className="dark:text-neutral-300">
+                                                {description}
+                                            </span>
                                         )}
                                     </div>
                                 )}
