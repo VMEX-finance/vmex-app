@@ -461,9 +461,6 @@ export type ISubgraphTranchesDataProps = {
 };
 
 export type ISubgraphProtocolData = {
-    queryProtocolTVLChart: UseQueryResult<
-        { deposits: ILineChartDataPointProps[]; daily: ILineChartDataPointProps[] },
-        unknown
-    >;
+    queryProtocolTVLChart: UseQueryResult<ILineChartDataPointProps[], unknown>;
     queryProtocolData: UseQueryResult<IGraphProtocolDataProps, unknown>;
 };

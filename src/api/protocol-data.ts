@@ -22,13 +22,11 @@ import { getSubgraphTranchesOverviewData } from './tranches-data';
 
 function subtractSeconds(date: Date, seconds: number): Date {
     date.setSeconds(date.getSeconds() - seconds);
+
     return date;
 }
 
-export const getSubgraphProtocolChart = async (): Promise<{
-    deposits: ILineChartDataPointProps[];
-    daily: ILineChartDataPointProps[];
-}> => {
+export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointProps[] | any> => {
     const { data, error } = await getApolloClient().query({
         query: gql`
             query QueryProtocolTVL {
@@ -58,7 +56,7 @@ export const getSubgraphProtocolChart = async (): Promise<{
             }
         `,
     });
-    if (error) return { deposits: [], daily: [] };
+    if (error) return [];
 
     const network = getNetworkName();
     let graphData: ILineChartDataPointProps[] = [];
@@ -114,33 +112,7 @@ export const getSubgraphProtocolChart = async (): Promise<{
         }
     });
 
-    /**
-     * Adds all duplicates together to compose daily chart
-     */
-    const addedDuplicates: ILineChartDataPointProps[] = [];
-    graphData.forEach((plot, index) => {
-        // Format
-        const isLocaleString = plot.xaxis?.toString()?.includes(',');
-        const justDateString = isLocaleString
-            ? plot?.xaxis?.toString()?.split(',')[0]
-            : plot?.xaxis?.toString();
-        // Check if already added to addedDuplicates
-        const found = addedDuplicates.find((d) => d.xaxis === justDateString);
-        if (found) {
-            if (plot.value === null || found.value === null) return;
-            found.value = plot.value;
-        } else {
-            addedDuplicates.push({
-                ...plot,
-                xaxis: justDateString,
-            });
-        }
-    });
-    console.log('End Data:', graphData, addedDuplicates);
-    return {
-        deposits: graphData,
-        daily: addedDuplicates,
-    };
+    return graphData;
 };
 
 async function getTopAssets(

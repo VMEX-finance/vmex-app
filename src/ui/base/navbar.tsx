@@ -84,7 +84,7 @@ const MobileNavMenu = ({
                         {address && (
                             <>
                                 <li className="w-full">
-                                    <button className="uppercase dark:text-neutral-100 pr-4 pl-2 py-1 text-lg font-medium border-y-2 border-gray-300 dark:border-gray-700 w-full flex items-center justify-between">
+                                    <span className="uppercase dark:text-neutral-100 pr-4 pl-2 py-1 text-lg font-medium bg-gray-300 dark:bg-gray-800 w-full flex items-center justify-between">
                                         {!isChainUnsupported() ? (
                                             <img
                                                 src={NETWORKS[network].icon}
@@ -95,7 +95,7 @@ const MobileNavMenu = ({
                                             <div />
                                         )}
                                         {truncateAddress(address)}
-                                    </button>
+                                    </span>
                                 </li>
                                 <li>
                                     <button
@@ -275,7 +275,7 @@ export const Navbar: React.FC = () => {
                                     'px-2 md:px-3 py-1',
                                     'flex my-auto justify-center rounded-md shadow-sm text-sm font-medium focus:outline-none focus:ring-0',
                                     isOpen
-                                        ? 'bg-neutral-100 hover:bg-gray-300 text-neutral-900'
+                                        ? '!bg-neutral-100 hover:!bg-gray-300 !text-neutral-900'
                                         : 'bg-neutral-800 hover:bg-neutral-700 text-neutral-100',
                                 ].join(' ')}
                             >
