@@ -22,11 +22,13 @@ import { getSubgraphTranchesOverviewData } from './tranches-data';
 
 function subtractSeconds(date: Date, seconds: number): Date {
     date.setSeconds(date.getSeconds() - seconds);
-
     return date;
 }
 
-export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointProps[] | any> => {
+export const getSubgraphProtocolChart = async (): Promise<{
+    deposits: ILineChartDataPointProps[];
+    daily: ILineChartDataPointProps[];
+}> => {
     const { data, error } = await getApolloClient().query({
         query: gql`
             query QueryProtocolTVL {
@@ -56,11 +58,12 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
             }
         `,
     });
-    if (error) return [];
+    if (error) return { deposits: [], daily: [] };
 
     const network = getNetworkName();
     let graphData: ILineChartDataPointProps[] = [];
     const prices = await getAllAssetPrices();
+    console.log('Chart Data:', data);
     data.tranches.map((tranche: IGraphTrancheProps) => {
         tranche?.depositHistory?.map((el) => {
             const asset = el.reserve.assetData.underlyingAssetName.toUpperCase();
@@ -101,13 +104,43 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
         });
     }
 
-    // Loop through and add previous day TVL to current day TVL
+    /**
+     * Loops through every deposit
+     * adds previous deposit(s) to current deposit
+     */
     graphData.forEach(function (plot, index) {
         if (index > 0) {
             plot.value = (plot.value || 0) + (graphData[index - 1].value || 0);
         }
     });
-    return graphData;
+
+    /**
+     * Adds all duplicates together to compose daily chart
+     */
+    const addedDuplicates: ILineChartDataPointProps[] = [];
+    graphData.forEach((plot, index) => {
+        // Format
+        const isLocaleString = plot.xaxis?.toString()?.includes(',');
+        const justDateString = isLocaleString
+            ? plot?.xaxis?.toString()?.split(',')[0]
+            : plot?.xaxis?.toString();
+        // Check if already added to addedDuplicates
+        const found = addedDuplicates.find((d) => d.xaxis === justDateString);
+        if (found) {
+            if (plot.value === null || found.value === null) return;
+            found.value = plot.value;
+        } else {
+            addedDuplicates.push({
+                ...plot,
+                xaxis: justDateString,
+            });
+        }
+    });
+    console.log('End Data:', graphData, addedDuplicates);
+    return {
+        deposits: graphData,
+        daily: addedDuplicates,
+    };
 };
 
 async function getTopAssets(
@@ -292,7 +325,7 @@ export function useSubgraphProtocolData(): ISubgraphProtocolData {
     const queryProtocolTVLChart = useQuery({
         queryKey: ['protocol-charts', network],
         queryFn: () => getSubgraphProtocolChart(),
-        refetchInterval: 1 * 60 * 1000, // Refetch every minute
+        refetchInterval: 60 * 1000, // Refetch every minute
     });
 
     const queryProtocolData = useQuery({

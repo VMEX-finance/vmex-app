@@ -26,7 +26,10 @@ export interface IProtocolProps {
     topBorrowedAssets?: AssetBalance[];
     topSuppliedAssets?: AssetBalance[];
     topTranches?: TrancheData[];
-    tvlChart?: UseQueryResult<ILineChartDataPointProps[], unknown>;
+    tvlChart?: UseQueryResult<
+        { deposits: ILineChartDataPointProps[]; daily: ILineChartDataPointProps[] },
+        unknown
+    >;
 }
 
 export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
@@ -77,12 +80,12 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                         {tvlChart?.isLoading || isLoading ? (
                             <Loader variant="rounded" animation="wave" className="min-w-full">
                                 <div className="h-[100px] lg:min-w-[360px] 2xl:min-w-0 w-full">
-                                    <ReAreaChart data={tvlChart?.data || []} type="usd" />
+                                    <ReAreaChart data={tvlChart?.data?.daily || []} type="usd" />
                                 </div>
                             </Loader>
                         ) : (
                             <div className="h-[100px] lg:h-full lg:min-w-[360px] 2xl:min-w-0 w-full">
-                                <ReAreaChart data={tvlChart?.data || []} type="usd" />
+                                <ReAreaChart data={tvlChart?.data?.daily || []} type="usd" />
                             </div>
                         )}
                     </div>

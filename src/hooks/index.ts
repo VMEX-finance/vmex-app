@@ -9,7 +9,7 @@ export * from './supply';
 export * from './borrow';
 export * from './zap';
 export * from './leverage';
-export * from './locking';
+export * from './staking';
 export * from './token';
 export * from './gauge';
 export * from './vault';

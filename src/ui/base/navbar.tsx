@@ -274,7 +274,9 @@ export const Navbar: React.FC = () => {
                                     'dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-neutral-100',
                                     'px-2 md:px-3 py-1',
                                     'flex my-auto justify-center rounded-md shadow-sm text-sm font-medium focus:outline-none focus:ring-0',
-                                    'bg-neutral-800 hover:bg-neutral-700 text-neutral-100 lg:bg-neutral-300 lg:hover:bg-[rgb(200,200,200)]',
+                                    isOpen
+                                        ? 'bg-neutral-100 hover:bg-gray-300 text-neutral-900'
+                                        : 'bg-neutral-800 hover:bg-neutral-700 text-neutral-100',
                                 ].join(' ')}
                             >
                                 {isOpen ? (
