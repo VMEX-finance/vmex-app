@@ -1,5 +1,5 @@
 import { IMarketsAsset, useSubgraphAllMarketsData, useSubgraphTranchesOverviewData } from '@/api';
-import { getUnderlying, useTransactionsContext, useVaultsContext } from '@/store';
+import { getUnderlyingMarket, useTransactionsContext, useVaultsContext } from '@/store';
 import { LOGS, TESTING, inputMediator, toSymbol } from '@/utils';
 import {
     erc20ABI,
@@ -189,7 +189,7 @@ export const useVault = (vaultAddress?: string, gaugeAddress?: string, vaultSymb
     }, [success]);
 
     return {
-        underlying: getUnderlying(vaultSymbol, queryAllMarketsData.data),
+        underlying: getUnderlyingMarket(vaultSymbol, queryAllMarketsData.data),
         amount,
         setAmount,
         isMax,

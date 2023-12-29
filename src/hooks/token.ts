@@ -1,7 +1,7 @@
 import { useTransactionsContext } from '@/store';
 import { IAddress } from '@/types/wagmi';
 import { CONTRACTS, LOGS, VMEX_VEVMEX_CHAINID, weeksUntilUnlock } from '@/utils';
-import { VEVMEX_ABI, VEVMEX_OPTIONS_ABI } from '@/utils/abis';
+import { VEVMEX_ABI, VMEXWETH_ABI, VEVMEX_OPTIONS_ABI } from '@/utils/abis';
 import { useQueries } from '@tanstack/react-query';
 import {
     erc20ABI,
@@ -10,11 +10,11 @@ import {
     readContracts,
     readContract,
 } from '@wagmi/core';
-import { BigNumber, constants, utils } from 'ethers';
+import { BigNumber, constants, ethers, utils } from 'ethers';
 import { formatEther } from 'ethers/lib/utils.js';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { useAccount, useBalance, useContractReads } from 'wagmi';
+import { useAccount, useBalance, useContractRead, useContractReads } from 'wagmi';
 
 const DEFAULT_LOADING = {
     redeem: false,
@@ -91,6 +91,47 @@ export const useToken = (clearInputs?: () => void) => {
         watch: address ? true : false,
     });
 
+    const { data: vmexPriceInEth } = useContractRead({
+        address: CONTRACTS[VMEX_VEVMEX_CHAINID].vmexWeth as `0x${string}`,
+        abi: VMEXWETH_ABI,
+        chainId: VMEX_VEVMEX_CHAINID,
+        functionName: 'getTimeWeightedAverage',
+        args: [
+            /**
+             * price = getTimeWeightedAverage([
+             *   variable: IBalancerTwapOracle.Variable.PAIR_PRICE,
+             *   secs: twapPeriod,
+             *   ago: 0
+             * ])
+             *
+             * PAIR_PRICE enum value = 0
+             * twapPeriod = 1 hour = 60*60
+             * ago = 0
+             *
+             * https://github.com/VMEX-finance/veVMEX/blob/master/src/test/Redemption.t.sol#L231
+             * */
+
+            [
+                {
+                    variable: 0,
+                    secs: BigNumber.from(3600),
+                    ago: BigNumber.from(0),
+                },
+            ],
+        ],
+    });
+
+    let vmexPriceInEthNoDecimals = 0;
+    if (vmexPriceInEth) {
+        vmexPriceInEthNoDecimals = Number(
+            ethers.utils.formatUnits(vmexPriceInEth[0].toString(), 18),
+        );
+    }
+
+    const WEEK = 7 * 86400;
+    const MAX_LOCK_DURATION = Math.floor((4 * 365 * 86400) / WEEK) * WEEK;
+    const SCALE = BigNumber.from(10).pow(18);
+    const MAX_PENALTY_RATIO = SCALE.mul(3).div(4);
     const vevmexConfig = {
         address: CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as IAddress,
         abi: VEVMEX_ABI,
@@ -473,6 +514,9 @@ export const useToken = (clearInputs?: () => void) => {
         }
     };
 
+    const dvmexDiscount = Number(queries?.[2]?.data);
+    const dvmexPrice = vmexPriceInEthNoDecimals * dvmexDiscount;
+
     return {
         vevmexIsApproved: allowances?.[0] || BigNumber.from(0),
         redeemDvmexIsApproved: allowances?.[1] || BigNumber.from(0),
@@ -491,6 +535,7 @@ export const useToken = (clearInputs?: () => void) => {
         dvmexBalance,
         dvmexRedeem,
         vw8020Balance,
-        dvmexDiscount: Number(queries?.[2]?.data),
+        dvmexDiscount: dvmexDiscount,
+        dvmexPriceInEthNoDecimals: dvmexPrice,
     };
 };

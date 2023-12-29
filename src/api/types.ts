@@ -92,6 +92,10 @@ export type IVaultAsset = {
     yourStaked?: string;
     underlyingAddress?: string;
     underlyingSymbol?: string;
+    // used only for gauge APR calculation
+    rewardRate?: INormalizedBN;
+    assetPrice?: number;
+    wethPrice?: number;
 };
 
 export type IGaugesAsset = {
