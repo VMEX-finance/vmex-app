@@ -34,7 +34,7 @@ export const YourRewardsTable: React.FC<IYourRewardsTableProps> = ({
     const { data: signer } = useSigner();
     const { chain } = useNetwork();
     const { switchNetworkAsync } = useSwitchNetwork();
-    const { submitTx } = useModal();
+    const { submitTx, isLoading: txLoading } = useModal();
 
     const handleClaim = async (
         account: string,
@@ -121,6 +121,7 @@ export const YourRewardsTable: React.FC<IYourRewardsTableProps> = ({
                                                             reward.chainId,
                                                         ) as any
                                                     }
+                                                    loading={txLoading}
                                                 >
                                                     Claim
                                                 </Button>

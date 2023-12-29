@@ -24,7 +24,7 @@ export const PortfolioStatsCard: React.FC<IPortfolioProps> = ({
     const { isBigger } = useWindowSize();
     return (
         <Card>
-            <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-4 divide-y-2 lg:divide-y-0 lg:divide-x-2 divide-black dark:divide-white">
+            <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-4 divide-y-2 lg:divide-y-0 lg:divide-x-2 divide-gray-300 dark:divide-gray-800">
                 <div className="grid grid-cols-2 md:grid-cols-1 font-basefont gap-4 items-end lg:items-center">
                     <NumberDisplay
                         label={isBigger('sm') ? 'Protocol Net Worth' : 'Net Worth'}
