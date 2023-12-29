@@ -144,7 +144,6 @@ export const GaugesCustomRow = (props: IVaultAsset & { loading?: boolean }) => {
                     </Loader>
                 </td>
                 <td className="pl-4">
-                    {' '}
                     <Loader loading={loading}>
                         {gaugeAPR ? percentFormatter.format(gaugeAPR) : '-'}
                     </Loader>

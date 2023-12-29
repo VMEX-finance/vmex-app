@@ -53,6 +53,7 @@ const calculateApyFromRewardRate = (
     const _usdRewardsPerYear = _rewardRate * SECONDS_PER_YEAR * dvmexPrice;
     const _numTokensPurchasedByReward = _usdRewardsPerYear / tokenPrice;
     const _aprDecimal = _numTokensPurchasedByReward / _totalStaked;
+    if (isNaN(_aprDecimal)) return 0;
     return _aprDecimal;
 };
 
