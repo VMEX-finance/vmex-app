@@ -84,7 +84,7 @@ const MobileNavMenu = ({
                         {address && (
                             <>
                                 <li className="w-full">
-                                    <span className="uppercase dark:text-neutral-100 pr-4 pl-2 py-1 text-lg font-medium bg-gray-300 dark:bg-gray-800 w-full flex items-center justify-between">
+                                    <span className="uppercase dark:text-neutral-100 pr-4 pl-2 py-1 text-lg font-medium border-t-2 border-b border-gray-300 dark:border-gray-700 w-full flex items-center justify-between">
                                         {!isChainUnsupported() ? (
                                             <img
                                                 src={NETWORKS[network].icon}
