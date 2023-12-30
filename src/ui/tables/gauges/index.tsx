@@ -90,9 +90,10 @@ const GaugesTable: React.FC<ITableProps> = React.memo(({ data, loading, userData
             name: 'gaugeBoost',
             label: 'Boost',
             options: {
-                filter: true,
-                sort: true,
-                sortThirdClickReset: true,
+                // filter: true,
+                // sort: true,
+                // sortThirdClickReset: true,
+                display: false,
             },
         },
         {
@@ -138,6 +139,13 @@ const GaugesTable: React.FC<ITableProps> = React.memo(({ data, loading, userData
             },
         },
         {
+            name: 'underlyingDecimals',
+            label: 'Underlying Decimals',
+            options: {
+                display: false,
+            },
+        },
+        {
             name: '',
             label: '',
             options: {
@@ -172,6 +180,7 @@ const GaugesTable: React.FC<ITableProps> = React.memo(({ data, loading, userData
                             gaugeAddress,
                             underlyingAddress,
                             underlyingSymbol,
+                            underlyingDecimals,
                             actions,
                         ],
                         dataIndex,
@@ -191,6 +200,7 @@ const GaugesTable: React.FC<ITableProps> = React.memo(({ data, loading, userData
                             actions={actions}
                             underlyingAddress={underlyingAddress}
                             underlyingSymbol={underlyingSymbol}
+                            underlyingDecimals={underlyingDecimals}
                             key={`gauges-table-${rowIndex || Math.floor(Math.random() * 10000)}`}
                             loading={loading}
                         />

@@ -1,10 +1,10 @@
 import React from 'react';
 import { Tooltip } from './tooltip-default';
 
-function SmartPrice({ price }: { price: string }) {
-    if (price === 'N/A' && !price) return <>-</>;
-    if (Number(price) === 0) return <>0.0</>;
-    if (price.includes('$')) return <>{price}</>;
+function SmartPrice({ price, decimals }: { price: string; decimals?: number }) {
+    if (price === 'N/A' && !price) return <span>-</span>;
+    if (Number(price) === 0) return <span>0.0</span>;
+    if (price.includes('$')) return <span>{price}</span>;
     const textClass = 'flex items-center';
 
     // The case where the price is not too small
@@ -13,6 +13,10 @@ function SmartPrice({ price }: { price: string }) {
         if (price.includes('.')) {
             if (Number(price) > 1000000)
                 return <span className={textClass}>{price.split('.')[0]}</span>;
+            if (decimals)
+                return <span className={textClass}>{Number(price).toFixed(decimals)}</span>;
+            if (Number(price) > 10000)
+                return <span className={textClass}>{Number(price).toFixed(1)}</span>;
             if (Number(price) > 100)
                 return <span className={textClass}>{Number(price).toFixed(2)}</span>;
         }
