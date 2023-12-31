@@ -69,7 +69,7 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                     <div className="flex flex-col justify-between min-w-[90%] lg:min-w-[300px]">
                         <NumberDisplay
                             size="xl"
-                            label="Total Available"
+                            label="Total Value Locked"
                             value={tvl ? makeCompact(tvl, true) : '-'}
                             labelClass="text-2xl"
                             loading={isLoading}
@@ -88,7 +88,7 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
                     </div>
                     <div className="flex md:flex-col justify-between gap-1">
                         <NumberDisplay
-                            label={'Reserves:'}
+                            label={'Available:'}
                             value={reserve ? reserve : '-'}
                             loading={isLoading}
                         />

@@ -87,7 +87,7 @@ export const TrancheStatsCard: React.FC<ITrancheStatsCardProps> = ({
                     </div>
                     <div className="flex md:flex-col justify-between gap-1">
                         <NumberDisplay
-                            label={'Reserves:'}
+                            label={'Available:'}
                             value={reserve || reserve === '0' ? reserve : '-'}
                             loading={isLoading}
                         />
