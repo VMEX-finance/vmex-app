@@ -2,7 +2,7 @@ import { determineCoinDescription, determineCoinImg, getRandomNumber } from '@/u
 import React from 'react';
 import { Loader } from './loader';
 import { Tooltip } from './tooltip-default';
-import { renderAsset, smallerIconSize, iconSizeClass, marginLeft } from './display-asset';
+import { renderAsset, smallerIconSize, iconSizeClass, addMargin } from './display-asset';
 import { IAssetSize } from '@/types/size';
 
 interface IMultipleAssetsProps {
@@ -96,11 +96,10 @@ export const MultipleAssetsDisplayOverlapping = ({
                                 alt={el}
                                 className={`${
                                     size ? smallerIconSize(size) : 'h-4 w-4'
-                                } absolute top-0 right-0`}
+                                } relative top-0 right-0`}
                                 style={{
-                                    position: 'relative',
                                     zIndex: i, // Increase zIndex for overlapping effect
-                                    marginLeft: i > 0 ? marginLeft(size) : 0, // Overlapping margin
+                                    marginLeft: i > 0 ? addMargin(size) : 0, // Overlapping margin
                                 }}
                             />
                         ) : (
@@ -112,7 +111,7 @@ export const MultipleAssetsDisplayOverlapping = ({
                                 style={{
                                     position: 'relative',
                                     zIndex: i, // Increase zIndex for overlapping effect
-                                    marginLeft: i > 0 ? marginLeft(size) : 0, // Overlapping margin
+                                    marginLeft: i > 0 ? addMargin(size) : 0, // Overlapping margin
                                 }}
                             />
                         ),
