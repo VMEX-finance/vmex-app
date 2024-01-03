@@ -182,17 +182,20 @@ export const determineCoinDescription = (asset: string, custom?: string) => {
             }
         }
         if (asset?.toLowerCase().includes('amm')) {
-            let stable = 'Stable';
-            if (asset.startsWith('v')) {
-                stable = 'Volatile';
+            let type = 'Stable',
+                protocol = 'Velodrome',
+                assets = asset.substring(7).split('/');
+            if (asset.startsWith('v')) type = 'Volatile';
+            if (network === 'base') {
+                protocol = 'Aerodrome';
+                assets = asset.substring(5).split('/');
             }
-            if (network == 'base') {
-                const assets = asset.substring(5).split('/');
-                return `${stable} Aerodrome pool between ${assets[0]} and ${assets[1]}`;
-            } else {
-                const assets = asset.substring(7).split('/');
-                return `${stable} Velodrome pool between ${assets[0]} and ${assets[1]}`;
+            if (assets[0].startsWith('2-')) {
+                return `${type} ${protocol} pool between ${assets[0].substring(2)} and ${
+                    assets[1]
+                } staked in Yearn`;
             }
+            return `${type} ${protocol} pool between ${assets[0]} and ${assets[1]}`;
         }
         if (asset?.toLowerCase().startsWith('cmlt')) {
             const assets = asset.substring(5).split('-');

@@ -32,7 +32,7 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
             query QueryProtocolTVL {
                 tranches {
                     id
-                    redeemUnderlyingHistory(orderBy: timestamp, orderDirection: asc) {
+                    redeemUnderlyingHistory(first: 1000, orderBy: timestamp, orderDirection: asc) {
                         timestamp
                         amount
                         reserve {
@@ -42,7 +42,7 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
                             decimals
                         }
                     }
-                    depositHistory(orderBy: timestamp, orderDirection: asc) {
+                    depositHistory(first: 1000, orderBy: timestamp, orderDirection: asc) {
                         timestamp
                         amount
                         reserve {
@@ -101,12 +101,16 @@ export const getSubgraphProtocolChart = async (): Promise<ILineChartDataPointPro
         });
     }
 
-    // Loop through and add previous day TVL to current day TVL
+    /**
+     * Loops through every deposit
+     * adds previous deposit(s) to current deposit
+     */
     graphData.forEach(function (plot, index) {
         if (index > 0) {
             plot.value = (plot.value || 0) + (graphData[index - 1].value || 0);
         }
     });
+
     return graphData;
 };
 
@@ -213,12 +217,12 @@ export async function getSubgraphProtocolData(): Promise<IGraphProtocolDataProps
     const { data, error } = await getApolloClient().query({
         query: gql`
             query QueryProtocolData {
-                deposits {
+                deposits(first: 1000) {
                     user {
                         id
                     }
                 }
-                borrows {
+                borrows(first: 1000) {
                     user {
                         id
                     }
@@ -249,7 +253,7 @@ export async function getSubgraphProtocolData(): Promise<IGraphProtocolDataProps
         return d - c;
     });
 
-    let tvl = 0,
+    let totalReserve = 0, // total supplied - total borrowed
         totalSupplied = 0,
         totalBorrowed = 0;
     allTrancheData.map((el) => {
@@ -262,7 +266,7 @@ export async function getSubgraphProtocolData(): Promise<IGraphProtocolDataProps
             });
         }
 
-        tvl += Number(el.tvl) || 0;
+        totalReserve += Number(el.tvl) || 0;
         totalBorrowed += Number(el.borrowTotal) || 0;
         totalSupplied += Number(el.supplyTotal) || 0;
     });
@@ -277,8 +281,8 @@ export async function getSubgraphProtocolData(): Promise<IGraphProtocolDataProps
         topSuppliedAssets: topAssets[0],
         topBorrowedAssets: topAssets[1],
         topTranches: topTranches,
-        tvl: usdFormatter(false).format(tvl),
-        reserve: usdFormatter().format(tvl),
+        tvl: usdFormatter(false).format(totalSupplied),
+        reserve: usdFormatter().format(totalReserve),
         totalBorrowed: usdFormatter(false).format(totalBorrowed),
         totalSupplied: usdFormatter(false).format(totalSupplied),
     };
@@ -292,7 +296,7 @@ export function useSubgraphProtocolData(): ISubgraphProtocolData {
     const queryProtocolTVLChart = useQuery({
         queryKey: ['protocol-charts', network],
         queryFn: () => getSubgraphProtocolChart(),
-        refetchInterval: 1 * 60 * 1000, // Refetch every minute
+        refetchInterval: 60 * 1000, // Refetch every minute
     });
 
     const queryProtocolData = useQuery({

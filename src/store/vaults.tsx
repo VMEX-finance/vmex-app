@@ -143,6 +143,7 @@ export function VaultsStore(props: { children: ReactNode }) {
                     },
                     underlyingAddress: underlying?.assetAddress,
                     underlyingSymbol: underlying?.asset,
+                    underlyingDecimals: underlying?.decimals,
                     gaugeStaked: gaugeStakedNormalized,
                     gaugeAPR: calculateApyFromRewardRate(
                         v.rewardRate?.normalized || 0,

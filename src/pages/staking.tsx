@@ -21,7 +21,7 @@ import {
     StakeInput,
 } from '@/ui/components';
 import { GaugesTable } from '@/ui/tables';
-import { useLockingUI, useWindowSize, useToken, useGauge, useCustomTabs } from '@/hooks';
+import { useStakingUI, useWindowSize, useToken, useGauge, useCustomTabs } from '@/hooks';
 import { BigNumber, utils } from 'ethers';
 import { useAccount } from 'wagmi';
 import { writeContract } from '@wagmi/core';
@@ -47,7 +47,8 @@ const Staking: React.FC = () => {
         extendPeriodError,
         clearInputs,
         ethRequiredForRedeem,
-    } = useLockingUI();
+        redeemButton,
+    } = useStakingUI();
     const {
         dvmexBalance,
         dvmexRedeem,
@@ -528,15 +529,10 @@ const Staking: React.FC = () => {
                                     onClick={() =>
                                         dvmexRedeem(redeemInput.amountBn, ethRequiredForRedeem.raw)
                                     }
-                                    disabled={
-                                        !redeemInput?.amount ||
-                                        redeemInput.amountBn.gt(
-                                            dvmexBalance?.value || BigNumber.from(0),
-                                        )
-                                    }
+                                    disabled={redeemButton().disabled}
                                     loading={tokenLoading.redeemApprove || tokenLoading.redeem}
                                 >
-                                    Redeem
+                                    {redeemButton().text}
                                 </Button>
                             </div>
                         </GridView>

@@ -4,14 +4,17 @@ import { BigNumber, utils } from 'ethers';
 import React, { useEffect, useState } from 'react';
 import { CONTRACTS, VMEX_VEVMEX_CHAINID } from '@/utils';
 import { VEVMEX_OPTIONS_ABI } from '@/utils/abis';
+import { useAccount, useBalance } from 'wagmi';
 
 const maxWeeks = 52 * 5; // 5 years (10 years is technically the max)
 
 const defaultPeriod = { period: '', periodBn: BigNumber.from(0) };
 const defaultAmount = { amount: '', amountBn: BigNumber.from(0) };
 
-export const useLockingUI = () => {
+export const useStakingUI = () => {
     const { dvmexBalance, vevmexUserData, vw8020Balance } = useToken();
+    const { address } = useAccount();
+    const { data: ethBalance } = useBalance({ address });
     const [lockInput, setLockInput] = useState({ ...defaultAmount, ...defaultPeriod });
     const [extendInput, setExtendInput] = useState(defaultPeriod);
     const [redeemInput, setRedeemInput] = useState(defaultAmount);
@@ -91,6 +94,18 @@ export const useLockingUI = () => {
         }
     }, [lockInput.amount, lockInput.period, extendInput.period]);
 
+    // Buttons
+    function redeemButton() {
+        if (!redeemInput.amount) return { text: 'Enter an amount', disabled: true };
+        if (redeemInput.amountBn.gt(dvmexBalance?.value || BigNumber.from(0))) {
+            return { disabled: true, text: 'Insufficient dVMEX balance' };
+        }
+        if (ethBalance?.value.lt(ethRequiredForRedeem.raw)) {
+            return { disabled: true, text: 'Insufficient ETH balance' };
+        }
+        return { disabled: false, text: 'Redeem' };
+    }
+
     // Clear error after 5 seconds
     const CLEAR_TIMER = 5 * 1000;
     useEffect(() => {
@@ -168,5 +183,6 @@ export const useLockingUI = () => {
         redeemInput,
         clearInputs,
         ethRequiredForRedeem,
+        redeemButton,
     };
 };

@@ -82,12 +82,20 @@ export const renderAsset = (
             size,
             origAssetName: asset,
         })
-    ) : asset?.substring(0, 2) == 'yv' ? (
-        MultipleAssetsDisplayOverlapping({
-            assets: [asset.substring(2), 'yearn'],
-            size,
-            origAssetName: asset,
-        })
+    ) : asset?.substring(0, 2) === 'yv' ? (
+        asset?.includes('AMMV2') ? (
+            MultipleAssetsDisplayOverlapping({
+                assets: [...asset.substring(10).split('/'), 'yearn'],
+                size,
+                origAssetName: asset.substring(1),
+            })
+        ) : (
+            MultipleAssetsDisplayOverlapping({
+                assets: [asset.substring(2), 'yearn'],
+                size,
+                origAssetName: asset,
+            })
+        )
     ) : asset?.substring(1, 5).toUpperCase() == 'AMM-' ? ( // aero in base
         MultipleAssetsDisplayOverlapping({
             assets: [asset?.split('/')[0].substring(5), 'aero'],
@@ -177,7 +185,7 @@ export const iconSizeClass = (size?: IAssetSize) => {
     }
 };
 
-export const marginLeft = (size?: IAssetSize) => {
+export const addMargin = (size?: IAssetSize) => {
     switch (size) {
         case 'lg':
             return '-1.5rem';

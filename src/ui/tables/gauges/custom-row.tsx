@@ -1,9 +1,15 @@
 import React from 'react';
 import { ApyToolitp, AssetDisplay, Button, Loader, SmartPrice } from '@/ui/components';
-import { useDialogController, useVault, useWindowSize } from '@/hooks';
+import { useDialogController, useWindowSize } from '@/hooks';
 import { IVaultAsset } from '@/api';
-import { DEFAULT_CHAINID, isChainUnsupported, percentFormatter } from '@/utils';
-import { useAccount, useSwitchNetwork } from 'wagmi';
+import {
+    DEFAULT_CHAINID,
+    VMEX_VEVMEX_CHAINID,
+    getDecimals,
+    isChainUnsupported,
+    percentFormatter,
+} from '@/utils';
+import { useAccount, useBalance, useSwitchNetwork } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { BigNumber, utils } from 'ethers';
 
@@ -22,6 +28,7 @@ export const GaugesCustomRow = (props: IVaultAsset & { loading?: boolean }) => {
         actions,
         underlyingAddress,
         underlyingSymbol,
+        underlyingDecimals,
         loading,
     } = props;
     const { width } = useWindowSize();
@@ -29,6 +36,12 @@ export const GaugesCustomRow = (props: IVaultAsset & { loading?: boolean }) => {
     const { address } = useAccount();
     const { switchNetwork } = useSwitchNetwork();
     const { openConnectModal } = useConnectModal();
+    const { data: gaugeBalance } = useBalance({
+        address,
+        token: gaugeAddress as `0x${string}`,
+        chainId: VMEX_VEVMEX_CHAINID,
+        watch: true,
+    });
 
     const handleActionClick = (e: any, rowClick?: boolean) => {
         e.stopPropagation();
@@ -63,7 +76,10 @@ export const GaugesCustomRow = (props: IVaultAsset & { loading?: boolean }) => {
                     <Loader loading={loading}>
                         <span className="flex items-center gap-1">
                             {vaultDeposited?.normalized ? (
-                                <SmartPrice price={String(vaultDeposited?.normalized)} />
+                                <SmartPrice
+                                    price={String(vaultDeposited?.normalized)}
+                                    decimals={2}
+                                />
                             ) : (
                                 '-'
                             )}
@@ -82,7 +98,7 @@ export const GaugesCustomRow = (props: IVaultAsset & { loading?: boolean }) => {
                     <Loader loading={loading}>
                         <span className="flex items-center gap-1">
                             {gaugeStaked?.normalized ? (
-                                <SmartPrice price={String(gaugeStaked?.normalized)} />
+                                <SmartPrice price={String(gaugeStaked?.normalized)} decimals={2} />
                             ) : (
                                 '-'
                             )}
@@ -90,12 +106,12 @@ export const GaugesCustomRow = (props: IVaultAsset & { loading?: boolean }) => {
                         </span>
                     </Loader>
                 </td>
-                <td className="flex justify-between">
+                {/* <td className="flex justify-between">
                     <span className="font-bold">Boost</span>
                     <Loader loading={loading}>
                         <span>{gaugeBoost ? gaugeBoost : '-'}</span>
                     </Loader>
-                </td>
+                </td> */}
                 <td>
                     <Button
                         className="mt-1 mb-2"
@@ -121,17 +137,17 @@ export const GaugesCustomRow = (props: IVaultAsset & { loading?: boolean }) => {
                 className="text-left transition duration-150 hover:bg-neutral-100 dark:hover:bg-neutral-900 hover:cursor-pointer border-y-[1px] dark:border-neutral-800"
                 onClick={(e) => handleActionClick(e, true)}
             >
-                <td className="whitespace-nowrap pl-2 md:pl-4 pr-2 text-sm">
+                <td className="whitespace-nowrap pl-2 md:pl-4 pr-1 text-sm">
                     <Loader loading={loading}>
                         <AssetDisplay name={vaultSymbol} />
                     </Loader>
                 </td>
-                <td className="min-w-[150px] pl-4 py-3">
+                <td className="min-w-[150px] pl-4 py-3 pr-1">
                     <Loader loading={loading}>
                         <ApyToolitp symbol={vaultName} oldApy={vaultApy} />
                     </Loader>
                 </td>
-                <td className="pl-4">
+                <td className="pl-4 pr-1">
                     <Loader loading={loading}>
                         <span className="flex items-center gap-1">
                             <SmartPrice
@@ -143,14 +159,14 @@ export const GaugesCustomRow = (props: IVaultAsset & { loading?: boolean }) => {
                         </span>
                     </Loader>
                 </td>
-                <td className="pl-4">
+                <td className="pl-4 pr-1">
                     <Loader loading={loading}>
                         {gaugeAPR ? percentFormatter.format(gaugeAPR) : '-'}
                     </Loader>
                 </td>
-                <td className="pl-4">
+                <td className="pl-4 pr-1">
                     <Loader loading={loading}>
-                        <span className="flex items-center gap-1">
+                        <span className="flex items-center gap-1 leading-tight">
                             <SmartPrice
                                 price={String(
                                     gaugeStaked?.normalized ? gaugeStaked?.normalized : '-',
@@ -158,12 +174,28 @@ export const GaugesCustomRow = (props: IVaultAsset & { loading?: boolean }) => {
                             />
                             {underlyingSymbol}
                         </span>
+                        <span
+                            className={`flex items-center gap-1 text-xs leading-tight whitespace-nowrap ${
+                                !gaugeBalance?.formatted || gaugeBalance?.formatted === '0.0'
+                                    ? 'text-gray-400 dark:text-gray-600'
+                                    : 'text-brand-purple'
+                            }`}
+                        >
+                            <span>Your Stake:</span>
+                            <SmartPrice
+                                price={utils.formatUnits(
+                                    gaugeBalance?.value || BigNumber.from(0),
+                                    underlyingDecimals,
+                                )}
+                            />
+                            <span>{underlyingSymbol}</span>
+                        </span>
                     </Loader>
                 </td>
-                <td className="pl-4">
+                {/* <td className="pl-4">
                     <Loader loading={loading}>{gaugeBoost ? gaugeBoost : '-'}</Loader>
-                </td>
-                <td className="text-right pr-3.5">
+                </td> */}
+                <td className="text-right pr-2">
                     <Button
                         type="accent"
                         left={{

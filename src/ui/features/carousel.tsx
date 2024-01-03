@@ -13,7 +13,7 @@ type ICarousel = {
     type?: 'strategies' | 'default';
 };
 
-const defaultStyle = `absolute top-1/2 -translate-y-1/2 h-full transition duration-150 rounded text-neutral-500 hover:text-black dark:text-neutral-400 dark:hover:text-white from-transparent dark:via-[rgba(20,20,20,0.8)] dark:to-brand-background via-[rgba(234,234,234,0.8)] to-[rgb(234,234,234)] min-w-[36px] flex items-center justify-center z-50`;
+const defaultStyle = `absolute top-1/2 -translate-y-1/2 h-full transition duration-150 rounded text-neutral-500 hover:text-black dark:text-neutral-400 dark:hover:text-white from-transparent dark:via-[rgba(20,20,20,0.8)] dark:to-brand-background via-[rgba(234,234,234,0.8)] to-[rgb(234,234,234)] min-w-[36px] flex items-center justify-center z-20`;
 function PrevArrow(props: any) {
     const { className, style, onClick } = props;
     return (
