@@ -5,6 +5,9 @@ import moment from 'moment';
 import { ILineChartDataPointProps } from '@/ui/components';
 import { getNetworkName } from './network';
 import { getDecimals, toAddress } from './sdk-helpers';
+import { erc20ABI, readContract } from '@wagmi/core';
+import { IAddress } from '@/types/wagmi';
+import { getUnderlyingMarket } from '@/store';
 
 const Filter = require('bad-words'),
     filter = new Filter();
@@ -303,4 +306,26 @@ export const hardcodedTrancheNames = (name: string): string => {
         return HARDCODED_TRANCHE_NAMES[name];
     }
     return name;
+};
+
+export const getBalance = async (
+    address: IAddress,
+    user: IAddress,
+    returnType: 'raw' | 'normalized' = 'raw',
+    markets?: any[],
+) => {
+    const balance = await readContract({
+        address,
+        abi: erc20ABI,
+        functionName: 'balanceOf',
+        args: [user],
+    });
+    if (returnType === 'raw') return balance;
+    if (markets) {
+        const underlying = getUnderlyingMarket(address, markets);
+        if (underlying) return utils.formatUnits(balance, underlying.decimals);
+    }
+    const network = getNetworkName();
+    const decimals = await getDecimals(address, network);
+    return utils.formatUnits(balance, decimals);
 };
