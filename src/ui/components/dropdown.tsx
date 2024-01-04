@@ -207,7 +207,7 @@ export const DefaultDropdown = ({
                                                         <NavItem
                                                             label={
                                                                 <span
-                                                                    className={`flex justify-between ${
+                                                                    className={`flex justify-between items-center ${
                                                                         item?.className || ''
                                                                     }`}
                                                                 >
@@ -227,19 +227,25 @@ export const DefaultDropdown = ({
                                                                         </span>
                                                                     ) : (
                                                                         <>
-                                                                            {uppercase
-                                                                                ? truncate
-                                                                                    ? _truncate(
-                                                                                          item.text.toUpperCase(),
-                                                                                          3,
-                                                                                      )
-                                                                                    : item.text.toUpperCase()
-                                                                                : truncate
-                                                                                ? _truncate(
-                                                                                      item.text,
-                                                                                      3,
-                                                                                  )
-                                                                                : item.text}
+                                                                            {uppercase ? (
+                                                                                truncate ? (
+                                                                                    _truncate(
+                                                                                        item.text.toUpperCase(),
+                                                                                        3,
+                                                                                    )
+                                                                                ) : (
+                                                                                    item.text.toUpperCase()
+                                                                                )
+                                                                            ) : truncate ? (
+                                                                                _truncate(
+                                                                                    item.text,
+                                                                                    3,
+                                                                                )
+                                                                            ) : (
+                                                                                <span>
+                                                                                    {item.text}
+                                                                                </span>
+                                                                            )}
                                                                             {item?.status &&
                                                                             item.status ===
                                                                                 'pending' ? (
@@ -252,6 +258,11 @@ export const DefaultDropdown = ({
                                                                                     <IoMdCheckmarkCircle size="20px" />
                                                                                 )
                                                                             )}
+                                                                            {item?.value &&
+                                                                                item?.value !==
+                                                                                    '0.0' && (
+                                                                                    <span className="relative h-2 w-2 rounded-full bg-brand-purple" />
+                                                                                )}
                                                                         </>
                                                                     )}
                                                                 </span>
