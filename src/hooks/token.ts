@@ -12,7 +12,7 @@ import {
 } from '@wagmi/core';
 import { BigNumber, constants, ethers, utils } from 'ethers';
 import { formatEther } from 'ethers/lib/utils.js';
-import { useState } from 'react';
+import { SyntheticEvent, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useAccount, useBalance, useContractRead, useContractReads } from 'wagmi';
 
@@ -167,7 +167,9 @@ export const useToken = (clearInputs?: () => void) => {
             const formatted = penaltyRatio.mul('10000').div(SCALE).toNumber();
             penalty = formatted / (100 * 100);
         }
-
+        const exitPreview = formatEther(
+            amount.sub(amount.mul((penalty * 100).toFixed(0)).div(100)),
+        );
         return {
             votingPower: utils.formatEther(balance),
             locked: {
@@ -181,10 +183,16 @@ export const useToken = (clearInputs?: () => void) => {
                 },
             },
             unlocked: {
-                normalized: '0.0',
-                raw: BigNumber.from(0),
+                normalized:
+                    exitPreview === utils.formatEther(amount) && weeksUntilUnlock(end) === 0
+                        ? exitPreview
+                        : '0.0',
+                raw:
+                    exitPreview === utils.formatEther(amount) && weeksUntilUnlock(end) === 0
+                        ? amount
+                        : BigNumber.from(0),
             },
-            exitPreview: formatEther(amount.sub(amount.mul((penalty * 100).toFixed(0)).div(100))),
+            exitPreview,
             penalty,
         };
     };
@@ -487,15 +495,12 @@ export const useToken = (clearInputs?: () => void) => {
         }
     };
 
-    const withdrawUnlockedVevmex = async () => {
-        // TODO
-    };
-
-    // TODO
-    const withdrawLockedVevmex = async () => {
+    const withdrawVevmex = async (e: SyntheticEvent) => {
         if (!address) return;
+        const type = e.currentTarget.innerHTML?.toLowerCase();
+        const typeToKey = type === 'claim' ? 'redeem' : 'earlyExit';
         try {
-            setLoading({ ...loading, earlyExit: true });
+            setLoading({ ...loading, [typeToKey]: true });
             const prepareEarlyExit = await prepareWriteContract({
                 address: CONTRACTS[VMEX_VEVMEX_CHAINID].vevmex as `0x${string}`,
                 abi: VEVMEX_ABI,
@@ -504,7 +509,7 @@ export const useToken = (clearInputs?: () => void) => {
             });
             const earlyExitTx = await writeContract(prepareEarlyExit);
             await Promise.all([newTransaction(earlyExitTx), earlyExitTx.wait()]);
-            setLoading({ ...loading, earlyExit: false });
+            setLoading({ ...loading, [typeToKey]: false });
             clearInputs && clearInputs();
         } catch (e) {
             console.error(e);
@@ -523,8 +528,7 @@ export const useToken = (clearInputs?: () => void) => {
         refreshAllowances: refreshAllowances,
         vevmexRedeem,
         tokenLoading: loading,
-        withdrawLockedVevmex,
-        withdrawUnlockedVevmex,
+        withdrawVevmex,
         extendVmexLockTime,
         increaseVmexLockAmount,
         lockVmex,

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { GridView } from '@/ui/templates';
 import { Base } from '@/ui/base';
 import { StakingOverview } from '@/ui/features';
@@ -58,8 +58,7 @@ const Staking: React.FC = () => {
         vevmexMetaData,
         vevmexUserData,
         extendVmexLockTime,
-        withdrawUnlockedVevmex,
-        withdrawLockedVevmex,
+        withdrawVevmex,
         vw8020Balance,
         dvmexDiscount,
     } = useToken(clearInputs);
@@ -81,6 +80,23 @@ const Staking: React.FC = () => {
             return `${vevmexUserData?.data?.locked?.end?.normalized} weeks`;
         return '1 week';
     };
+
+    const blurSection = () => {
+        if (vevmexUserData?.data?.locked?.amount?.normalized !== '0.0') return true;
+        if (vevmexUserData?.data?.votingPower && vevmexUserData?.data?.votingPower !== '0.0')
+            return true;
+        return false;
+    };
+
+    const vaultDropdownList = useMemo(() => {
+        return vaults
+            .sort((a, b) => (b.yourStaked?.raw.gt(a.yourStaked?.raw || BigNumber.from(0)) ? 1 : -1))
+            .map((v) => ({
+                text: v.vaultSymbol,
+                onClick: () => setSelected(v.gaugeAddress),
+                value: v.yourStaked?.normalized,
+            }));
+    }, [vaults.length]);
 
     // TESTING
     useEffect(() => {
@@ -235,10 +251,7 @@ const Staking: React.FC = () => {
                         </GridView>
                         <div
                             className={`${
-                                vevmexUserData?.data?.votingPower &&
-                                vevmexUserData?.data?.votingPower !== '0.0'
-                                    ? ''
-                                    : 'opacity-60 blur-[0.5px] !pointer-events-none'
+                                blurSection() ? '' : 'opacity-60 blur-[0.5px] !pointer-events-none'
                             } flex flex-col divide-y divide-gray-300 dark:divide-gray-700`}
                         >
                             <GridView
@@ -285,7 +298,7 @@ const Staking: React.FC = () => {
                                         onClick={() =>
                                             extendVmexLockTime(Number(extendInput.period))
                                         }
-                                        disabled={!extendInput?.period}
+                                        disabled={!extendInput?.period && !blurSection()}
                                     >
                                         Extend
                                     </Button>
@@ -331,7 +344,8 @@ const Staking: React.FC = () => {
                                     <Button
                                         type="accent"
                                         className="h-fit mb-[17.88px]"
-                                        onClick={withdrawLockedVevmex}
+                                        onClick={withdrawVevmex}
+                                        loading={tokenLoading.earlyExit}
                                     >
                                         Exit
                                     </Button>
@@ -351,13 +365,16 @@ const Staking: React.FC = () => {
                                         header="Unlocked VW8020"
                                         disabled
                                         onChange={() => {}}
-                                        value="0.0"
+                                        value={vevmexUserData.data?.unlocked?.normalized || '0.0'}
                                     />
                                     <Button
                                         type="accent"
                                         className="h-fit mb-[17.88px]"
-                                        onClick={withdrawUnlockedVevmex}
-                                        disabled
+                                        onClick={withdrawVevmex}
+                                        disabled={
+                                            vevmexUserData.data?.unlocked?.normalized === '0.0'
+                                        }
+                                        loading={tokenLoading.redeem}
                                     >
                                         Claim
                                     </Button>
@@ -388,10 +405,7 @@ const Staking: React.FC = () => {
                                         full
                                         type="fresh"
                                         className=""
-                                        items={vaults.map((v) => ({
-                                            text: v.vaultSymbol,
-                                            onClick: () => setSelected(v.gaugeAddress),
-                                        }))}
+                                        items={vaultDropdownList}
                                         selected={
                                             vaults.find((v) => v.gaugeAddress === selected)
                                                 ?.vaultSymbol || vaults[0]?.vaultSymbol

@@ -9,9 +9,11 @@ import {
     useSubgraphAllMarketsData,
 } from '@/api';
 import { useQuery } from '@tanstack/react-query';
-import { LOGS, toNormalizedBN } from '@/utils';
+import { getBalance, LOGS, toNormalizedBN } from '@/utils';
 import { BigNumber } from 'ethers';
 import { useToken } from '@/hooks';
+import { IAddress } from '@/types/wagmi';
+import { useAccount } from 'wagmi';
 
 // Types
 export type IVaultsStoreProps = {
@@ -72,28 +74,34 @@ const getAssetUSDPrice = (prices: any, symbol: string): number => {
 };
 
 // Utils
-const renderGauges = async (gauges: IGaugesAsset[]): Promise<IVaultAsset[]> => {
+const renderGauges = async (gauges: IGaugesAsset[], user?: IAddress): Promise<IVaultAsset[]> => {
     if (!gauges.length) return [];
 
     const prices = await getAllAssetPrices();
     return await Promise.all(
-        gauges.map((g: IGaugesAsset) => ({
-            ...g,
-            gaugeAddress: g.address,
-            vaultAddress: g.vaultAddress,
-            decimals: g.decimals,
-            vaultName: g.name,
-            vaultApy: 0,
-            vaultDeposited: g.totalStaked,
-            gaugeAPR: 0,
-            gaugeBoost: 0,
-            gaugeStaked: g.totalStaked,
-            vaultSymbol: g.symbol,
-            actions: undefined,
-            rewardRate: g.rewardRate,
-            assetPrice: getAssetUSDPrice(prices, getUnderlyingSymbolFromGauge(g.symbol)),
-            wethPrice: getAssetUSDPrice(prices, 'WETH'),
-        })),
+        gauges.map(async (g: IGaugesAsset) => {
+            const yourStaked = user
+                ? ((await getBalance(g.address as any, user, 'raw')) as BigNumber)
+                : BigNumber.from(0);
+            return {
+                ...g,
+                gaugeAddress: g.address,
+                vaultAddress: g.vaultAddress,
+                decimals: g.decimals,
+                vaultName: g.name,
+                vaultApy: 0,
+                vaultDeposited: g.totalStaked,
+                gaugeAPR: 0,
+                gaugeBoost: 0,
+                gaugeStaked: g.totalStaked,
+                vaultSymbol: g.symbol,
+                actions: undefined,
+                rewardRate: g.rewardRate,
+                assetPrice: getAssetUSDPrice(prices, getUnderlyingSymbolFromGauge(g.symbol)),
+                wethPrice: getAssetUSDPrice(prices, 'WETH'),
+                yourStaked: toNormalizedBN(yourStaked),
+            };
+        }),
     );
 };
 
@@ -113,13 +121,14 @@ export function getUnderlyingMarket(_vaultSymbol?: string, markets?: IMarketsAss
 // Wrapper
 export function VaultsStore(props: { children: ReactNode }) {
     const network = getNetworkName();
+    const { address } = useAccount();
     const { queryGauges } = useGauages();
     const { dvmexPriceInEthNoDecimals } = useToken();
     const { queryAllMarketsData } = useSubgraphAllMarketsData();
 
     const queryVaults = useQuery({
-        queryKey: ['vaults', network],
-        queryFn: () => renderGauges(queryGauges.data),
+        queryKey: ['vaults', network, address],
+        queryFn: () => renderGauges(queryGauges.data, address),
         enabled: queryGauges?.data?.length > 0,
         initialData: [],
         refetchInterval: 10 * 1000,
