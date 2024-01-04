@@ -183,8 +183,14 @@ export const useToken = (clearInputs?: () => void) => {
                 },
             },
             unlocked: {
-                normalized: exitPreview === utils.formatEther(amount) ? exitPreview : '0.0',
-                raw: exitPreview === utils.formatEther(amount) ? amount : BigNumber.from(0),
+                normalized:
+                    exitPreview === utils.formatEther(amount) && weeksUntilUnlock(end) === 0
+                        ? exitPreview
+                        : '0.0',
+                raw:
+                    exitPreview === utils.formatEther(amount) && weeksUntilUnlock(end) === 0
+                        ? amount
+                        : BigNumber.from(0),
             },
             exitPreview,
             penalty,
