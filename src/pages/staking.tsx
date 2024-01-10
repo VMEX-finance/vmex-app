@@ -449,6 +449,7 @@ const Staking: React.FC = () => {
                                     onChange={() => {}}
                                     value={gaugeRewards.boostRewards.normalized}
                                     disabled
+                                    loading={gaugeLoading.rewards}
                                 />
                                 <Button
                                     type="accent"
@@ -480,6 +481,7 @@ const Staking: React.FC = () => {
                                     header="Unclaimed veVMEX exit rewards (VW8020)"
                                     onChange={() => {}}
                                     value={gaugeRewards.exitRewards.normalized}
+                                    loading={gaugeLoading.rewards}
                                     disabled
                                 />
                                 <Button
