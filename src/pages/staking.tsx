@@ -61,19 +61,15 @@ const Staking: React.FC = () => {
         withdrawVevmex,
         vw8020Balance,
         dvmexDiscount,
+        vevmexRewards,
+        dvmexRewards,
+        rewardsLoading,
+        redeemRewards,
     } = useToken(clearInputs);
     const { width, breakpoints } = useWindowSize();
     const { tabIndex, handleTabChange } = useCustomTabs();
     const { vaults, isError: vaultsError, isLoading: vaultsLoading } = useVaultsContext();
-    const {
-        selected,
-        setSelected,
-        gaugeRewards,
-        redeemGaugeRewards,
-        gaugeLoading,
-        claimBoostRewards,
-        claimExitRewards,
-    } = useGauge();
+    const { selected, setSelected, gaugeRewards, redeemGaugeRewards, gaugeLoading } = useGauge();
 
     const renderMinWeeks = () => {
         if (vevmexUserData?.data?.locked?.end?.normalized)
@@ -447,16 +443,16 @@ const Staking: React.FC = () => {
                                 <StakeInput
                                     header="Unclaimed veVMEX boost rewards (dVMEX)"
                                     onChange={() => {}}
-                                    value={gaugeRewards.boostRewards.normalized}
+                                    value={dvmexRewards.normalized}
                                     disabled
-                                    loading={gaugeLoading.rewards}
+                                    loading={rewardsLoading}
                                 />
                                 <Button
                                     type="accent"
                                     className="h-fit mb-[17.88px]"
-                                    disabled={gaugeRewards.boostRewards.normalized === '0.0'}
-                                    onClick={claimBoostRewards}
-                                    loading={gaugeLoading.boost}
+                                    disabled={dvmexRewards.normalized === '0.0'}
+                                    onClick={() => redeemRewards('boost', dvmexRewards.raw)}
+                                    loading={tokenLoading.claimBoostRewards}
                                 >
                                     Claim
                                 </Button>
@@ -480,16 +476,16 @@ const Staking: React.FC = () => {
                                 <StakeInput
                                     header="Unclaimed veVMEX exit rewards (VW8020)"
                                     onChange={() => {}}
-                                    value={gaugeRewards.exitRewards.normalized}
-                                    loading={gaugeLoading.rewards}
+                                    value={vevmexRewards.normalized}
+                                    loading={rewardsLoading}
                                     disabled
                                 />
                                 <Button
                                     type="accent"
                                     className="h-fit mb-[17.88px]"
-                                    disabled={gaugeRewards.exitRewards.normalized === '0.0'}
-                                    loading={gaugeLoading.exit}
-                                    onClick={claimExitRewards}
+                                    disabled={vevmexRewards.normalized === '0.0'}
+                                    loading={tokenLoading.claimExitRewards}
+                                    onClick={() => redeemRewards('exit', vevmexRewards.raw)}
                                 >
                                     Claim
                                 </Button>

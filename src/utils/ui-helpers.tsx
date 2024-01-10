@@ -8,6 +8,12 @@ import { Tooltip } from '@/ui/components';
 import { MdError, MdCheckBox } from 'react-icons/md';
 import { IoCloseCircle } from 'react-icons/io5';
 import { HiMiniEllipsisHorizontalCircle } from 'react-icons/hi2';
+import { BigNumber, utils } from 'ethers';
+
+export const inputToBn = (val: string, decimals?: number) => {
+    if (val && Number(val) > 0) return utils.parseUnits(val, decimals ?? 18); // veVMEX and VMEX tokens are 18 decimals
+    return BigNumber.from('0');
+};
 
 export const renderIcon = (txType?: IProtocolActions, size = 20) => {
     switch (txType) {

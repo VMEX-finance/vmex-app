@@ -9,15 +9,10 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { readContracts, useAccount } from 'wagmi';
 
-const DEFAULT_REWARDS_STATE: Record<
-    'balance' | 'earned' | 'boostedBalance' | 'exitRewards' | 'boostRewards',
-    INormalizedBN
-> = {
+const DEFAULT_REWARDS_STATE: Record<'balance' | 'earned' | 'boostedBalance', INormalizedBN> = {
     balance: DEFAULT_NORMALIZED_VALS,
     earned: DEFAULT_NORMALIZED_VALS,
     boostedBalance: DEFAULT_NORMALIZED_VALS,
-    exitRewards: DEFAULT_NORMALIZED_VALS,
-    boostRewards: DEFAULT_NORMALIZED_VALS,
 };
 
 export const useGauge = () => {
@@ -29,8 +24,6 @@ export const useGauge = () => {
     const [loading, setLoading] = useState({
         redeem: false,
         rewards: false,
-        boost: false,
-        exit: false,
     });
 
     const defaultConfig = {
@@ -67,60 +60,6 @@ export const useGauge = () => {
         }
     };
 
-    /**
-     * @function claimBoostRewards
-     */
-    const claimBoostRewards = async () => {
-        if (!address) return;
-        try {
-            setLoading({ ...loading, boost: true });
-
-            // TODO: mel0n - START
-            const prepareClaimTx = await prepareWriteContract({
-                address: CONTRACTS[VMEX_VEVMEX_CHAINID].dvmexRewards,
-                abi: VMEX_REWARD_POOL_ABI,
-                chainId: VMEX_VEVMEX_CHAINID,
-                functionName: 'claim',
-            });
-            const claimTx = await writeContract(prepareClaimTx);
-            // mel0n - END
-
-            await Promise.all([newTransaction(claimTx), claimTx.wait()]);
-            setLoading({ ...loading, boost: false });
-            setGaugeRewards({ ...gaugeRewards, boostRewards: DEFAULT_NORMALIZED_VALS });
-        } catch (e) {
-            console.error(e);
-            setLoading({ ...loading, boost: false });
-        }
-    };
-
-    /**
-     * @function claimExitRewards
-     */
-    const claimExitRewards = async () => {
-        if (!address) return;
-        try {
-            setLoading({ ...loading, exit: true });
-
-            // TODO: mel0n - START
-            const prepareClaimTx = await prepareWriteContract({
-                address: CONTRACTS[VMEX_VEVMEX_CHAINID].dvmexRewards,
-                abi: VMEX_REWARD_POOL_ABI,
-                chainId: VMEX_VEVMEX_CHAINID,
-                functionName: 'claim',
-            });
-            const claimTx = await writeContract(prepareClaimTx);
-            // mel0n - END
-
-            await Promise.all([newTransaction(claimTx), claimTx.wait()]);
-            setLoading({ ...loading, exit: false });
-            setGaugeRewards({ ...gaugeRewards, exitRewards: DEFAULT_NORMALIZED_VALS });
-        } catch (e) {
-            console.error(e);
-            setLoading({ ...loading, exit: false });
-        }
-    };
-
     // Get data on load
     useEffect(() => {
         if (vaults?.length && !selected) setSelected(vaults?.[0]?.gaugeAddress);
@@ -152,7 +91,6 @@ export const useGauge = () => {
                         ...defaultConfig,
                         functionName: 'decimals',
                     },
-                    // TODO: mel0n --> using the appropriate method, grab the gauges exit and boosted rewards
                 ],
             });
             const decimals = gaugeRewards[3];
@@ -160,8 +98,6 @@ export const useGauge = () => {
                 balance: toNormalizedBN(gaugeRewards[0], decimals),
                 earned: toNormalizedBN(gaugeRewards[1], decimals),
                 boostedBalance: toNormalizedBN(gaugeRewards[2], decimals),
-                exitRewards: toNormalizedBN(BigNumber.from(0)), // TODO: mel0n
-                boostRewards: toNormalizedBN(BigNumber.from(0)), // TODO: mel0n
             });
             setLoading({ ...loading, rewards: false });
         })().catch((e) => console.error(e));
@@ -173,7 +109,5 @@ export const useGauge = () => {
         gaugeRewards,
         redeemGaugeRewards,
         gaugeLoading: loading,
-        claimBoostRewards,
-        claimExitRewards,
     };
 };
