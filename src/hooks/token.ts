@@ -310,7 +310,7 @@ export const useToken = (clearInputs?: () => void) => {
                     abi: VMEX_REWARD_POOL_ABI,
                     chainId: VMEX_VEVMEX_CHAINID,
                     functionName: 'claim',
-                    args: [cleanAddress],
+                    args: [cleanAddress, true],
                 });
                 const redeemTx = await writeContract(prepareRedeemTx);
                 setLoading({ ...loading, claimExitRewards: false });
@@ -332,7 +332,7 @@ export const useToken = (clearInputs?: () => void) => {
                 abi: VMEX_REWARD_POOL_ABI,
                 chainId: VMEX_VEVMEX_CHAINID,
                 functionName: 'claim',
-                args: [cleanAddress],
+                args: [cleanAddress, true],
             });
             const redeemTx = await writeContract(prepareRedeemTx);
             setLoading({ ...loading, claimBoostRewards: false });
