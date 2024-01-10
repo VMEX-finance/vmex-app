@@ -1,7 +1,7 @@
 import { INormalizedBN } from '@/api';
 import { useTransactionsContext, useVaultsContext } from '@/store';
 import { IAddress } from '@/types/wagmi';
-import { CONTRACTS, VMEX_VEVMEX_CHAINID, toNormalizedBN } from '@/utils';
+import { CONTRACTS, DEFAULT_NORMALIZED_VALS, VMEX_VEVMEX_CHAINID, toNormalizedBN } from '@/utils';
 import { VEVMEX_GAUGE_ABI, VMEX_REWARD_POOL_ABI } from '@/utils/abis';
 import { prepareWriteContract, writeContract } from '@wagmi/core';
 import { BigNumber, constants, utils } from 'ethers';
@@ -9,19 +9,15 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { readContracts, useAccount } from 'wagmi';
 
-const DEFAULT_REWARDS_STATE: Record<'balance' | 'earned' | 'boostedBalance', INormalizedBN> = {
-    balance: {
-        normalized: 0,
-        raw: BigNumber.from(0),
-    },
-    earned: {
-        normalized: 0,
-        raw: BigNumber.from(0),
-    },
-    boostedBalance: {
-        normalized: 0,
-        raw: BigNumber.from(0),
-    },
+const DEFAULT_REWARDS_STATE: Record<
+    'balance' | 'earned' | 'boostedBalance' | 'exitRewards' | 'boostRewards',
+    INormalizedBN
+> = {
+    balance: DEFAULT_NORMALIZED_VALS,
+    earned: DEFAULT_NORMALIZED_VALS,
+    boostedBalance: DEFAULT_NORMALIZED_VALS,
+    exitRewards: DEFAULT_NORMALIZED_VALS,
+    boostRewards: DEFAULT_NORMALIZED_VALS,
 };
 
 export const useGauge = () => {
@@ -30,11 +26,12 @@ export const useGauge = () => {
     const { vaults, isLoading } = useVaultsContext();
     const [selected, setSelected] = useState(vaults?.[0]?.gaugeAddress || '');
     const [gaugeRewards, setGaugeRewards] = useState(DEFAULT_REWARDS_STATE);
-    const [boostRewards, setBoostRewards] = useState<INormalizedBN>({
-        normalized: '0.0',
-        raw: BigNumber.from(0),
+    const [loading, setLoading] = useState({
+        redeem: false,
+        rewards: false,
+        boost: false,
+        exit: false,
     });
-    const [loading, setLoading] = useState({ redeem: false, rewards: false, boost: false });
 
     const defaultConfig = {
         address: selected as IAddress,
@@ -71,12 +68,14 @@ export const useGauge = () => {
     };
 
     /**
-     * @function redeemBoostRewards
+     * @function claimBoostRewards
      */
     const claimBoostRewards = async () => {
         if (!address) return;
         try {
             setLoading({ ...loading, boost: true });
+
+            // TODO: mel0n - START
             const prepareClaimTx = await prepareWriteContract({
                 address: CONTRACTS[VMEX_VEVMEX_CHAINID].dvmexRewards,
                 abi: VMEX_REWARD_POOL_ABI,
@@ -84,40 +83,47 @@ export const useGauge = () => {
                 functionName: 'claim',
             });
             const claimTx = await writeContract(prepareClaimTx);
+            // mel0n - END
+
             await Promise.all([newTransaction(claimTx), claimTx.wait()]);
             setLoading({ ...loading, boost: false });
-            setGaugeRewards(DEFAULT_REWARDS_STATE);
+            setGaugeRewards({ ...gaugeRewards, boostRewards: DEFAULT_NORMALIZED_VALS });
         } catch (e) {
             console.error(e);
-            setLoading({ ...loading, redeem: false });
+            setLoading({ ...loading, boost: false });
         }
     };
 
-    // TODO
-    const getBoostRewards = async (): Promise<void> => {
+    /**
+     * @function claimExitRewards
+     */
+    const claimExitRewards = async () => {
         if (!address) return;
         try {
-            const { result } = await (prepareWriteContract as any)({
-                chainId: VMEX_VEVMEX_CHAINID,
-                address: CONTRACTS[VMEX_VEVMEX_CHAINID].vmexWeth,
+            setLoading({ ...loading, exit: true });
+
+            // TODO: mel0n - START
+            const prepareClaimTx = await prepareWriteContract({
+                address: CONTRACTS[VMEX_VEVMEX_CHAINID].dvmexRewards,
                 abi: VMEX_REWARD_POOL_ABI,
+                chainId: VMEX_VEVMEX_CHAINID,
                 functionName: 'claim',
             });
-            setBoostRewards(toNormalizedBN(result, 18));
-        } catch (error) {
-            console.warn(
-                `[err - BoostRewards]: static call reverted when trying to get claimable amount.`,
-            );
-            setBoostRewards(toNormalizedBN(BigNumber.from(0)));
+            const claimTx = await writeContract(prepareClaimTx);
+            // mel0n - END
+
+            await Promise.all([newTransaction(claimTx), claimTx.wait()]);
+            setLoading({ ...loading, exit: false });
+            setGaugeRewards({ ...gaugeRewards, exitRewards: DEFAULT_NORMALIZED_VALS });
+        } catch (e) {
+            console.error(e);
+            setLoading({ ...loading, exit: false });
         }
     };
 
     // Get data on load
     useEffect(() => {
-        if (vaults?.length && !selected) {
-            setSelected(vaults?.[0]?.gaugeAddress);
-        }
-        // (async () => getBoostRewards())().catch(e => console.error(e))
+        if (vaults?.length && !selected) setSelected(vaults?.[0]?.gaugeAddress);
     }, [isLoading, vaults?.length]);
 
     // get rewards on selected vault change
@@ -146,6 +152,7 @@ export const useGauge = () => {
                         ...defaultConfig,
                         functionName: 'decimals',
                     },
+                    // TODO: mel0n --> using the appropriate method, grab the gauges exit and boosted rewards
                 ],
             });
             const decimals = gaugeRewards[3];
@@ -153,6 +160,8 @@ export const useGauge = () => {
                 balance: toNormalizedBN(gaugeRewards[0], decimals),
                 earned: toNormalizedBN(gaugeRewards[1], decimals),
                 boostedBalance: toNormalizedBN(gaugeRewards[2], decimals),
+                exitRewards: toNormalizedBN(BigNumber.from(0)), // TODO: mel0n
+                boostRewards: toNormalizedBN(BigNumber.from(0)), // TODO: mel0n
             });
             setLoading({ ...loading, rewards: false });
         })().catch((e) => console.error(e));
@@ -165,6 +174,6 @@ export const useGauge = () => {
         redeemGaugeRewards,
         gaugeLoading: loading,
         claimBoostRewards,
-        boostRewards,
+        claimExitRewards,
     };
 };

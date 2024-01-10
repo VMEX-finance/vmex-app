@@ -72,7 +72,7 @@ const Staking: React.FC = () => {
         redeemGaugeRewards,
         gaugeLoading,
         claimBoostRewards,
-        boostRewards,
+        claimExitRewards,
     } = useGauge();
 
     const renderMinWeeks = () => {
@@ -447,17 +447,17 @@ const Staking: React.FC = () => {
                                 <StakeInput
                                     header="Unclaimed veVMEX boost rewards (dVMEX)"
                                     onChange={() => {}}
-                                    value={boostRewards.normalized}
+                                    value={gaugeRewards.boostRewards.normalized}
                                     disabled
                                 />
                                 <Button
                                     type="accent"
                                     className="h-fit mb-[17.88px]"
-                                    disabled
+                                    disabled={gaugeRewards.boostRewards.normalized === '0.0'}
                                     onClick={claimBoostRewards}
                                     loading={gaugeLoading.boost}
                                 >
-                                    Coming Soon
+                                    Claim
                                 </Button>
                             </div>
                         </GridView>
@@ -479,11 +479,17 @@ const Staking: React.FC = () => {
                                 <StakeInput
                                     header="Unclaimed veVMEX exit rewards (VW8020)"
                                     onChange={() => {}}
-                                    value="0.0"
+                                    value={gaugeRewards.exitRewards.normalized}
                                     disabled
                                 />
-                                <Button type="accent" className="h-fit mb-[17.88px]" disabled>
-                                    Coming Soon
+                                <Button
+                                    type="accent"
+                                    className="h-fit mb-[17.88px]"
+                                    disabled={gaugeRewards.exitRewards.normalized === '0.0'}
+                                    loading={gaugeLoading.exit}
+                                    onClick={claimExitRewards}
+                                >
+                                    Claim
                                 </Button>
                             </div>
                         </GridView>

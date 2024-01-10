@@ -1,4 +1,4 @@
-import { utils } from 'ethers';
+import { BigNumber, utils } from 'ethers';
 import { FaTwitter, FaDiscord, FaGithub } from 'react-icons/fa';
 
 // General
@@ -22,6 +22,11 @@ export const SOCIALS = [
         link: 'https://github.com/VMEX-Finance',
     },
 ];
+
+export const DEFAULT_NORMALIZED_VALS = {
+    normalized: '0.0',
+    raw: BigNumber.from(0),
+};
 
 export const HEALTH = {
     GREAT: 5,
