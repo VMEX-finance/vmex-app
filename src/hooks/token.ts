@@ -38,6 +38,13 @@ const DEFAULT_LOADING = {
     claimExitRewards: false,
 };
 
+const balanceConfig = (address?: IAddress) => ({
+    address,
+    chainId: VMEX_VEVMEX_CHAINID,
+    watch: true,
+    enabled: !!address,
+});
+
 /**
  * Utils
  */
@@ -63,26 +70,24 @@ export const useToken = (clearInputs?: () => void) => {
      * Get token balances
      */
     const { data: vmexBalance } = useBalance({
-        address,
-        chainId: VMEX_VEVMEX_CHAINID,
-        watch: true,
-        enabled: !!address,
+        ...balanceConfig(address),
         token: CONTRACTS[VMEX_VEVMEX_CHAINID].vmex as any,
     });
     const { data: vw8020Balance } = useBalance({
-        address,
-        chainId: VMEX_VEVMEX_CHAINID,
-        watch: true,
-        enabled: !!address,
+        ...balanceConfig(address),
         token: CONTRACTS[VMEX_VEVMEX_CHAINID].vmexWeth as any,
     });
-
     const { data: dvmexBalance } = useBalance({
-        address,
-        chainId: VMEX_VEVMEX_CHAINID,
-        watch: true,
-        enabled: !!address,
+        ...balanceConfig(address),
         token: CONTRACTS[VMEX_VEVMEX_CHAINID].dvmex as any,
+    });
+    const dvmexRewards = useBalance({
+        ...balanceConfig(address),
+        token: CONTRACTS[VMEX_VEVMEX_CHAINID].dvmexRewards as any,
+    });
+    const vevmexRewards = useBalance({
+        ...balanceConfig(address),
+        token: CONTRACTS[VMEX_VEVMEX_CHAINID].vmexRewards as any,
     });
 
     /**
@@ -275,28 +280,9 @@ export const useToken = (clearInputs?: () => void) => {
     });
 
     /**
-     * Get user veVMEX and dVMEX rewards
-     */
-    // TODO: mel0n
-    const rewards = useContractReads({
-        contracts: [
-            {
-                address: CONTRACTS[VMEX_VEVMEX_CHAINID].dvmexRewards,
-                abi: VMEX_REWARD_POOL_ABI,
-                functionName: 'start_time', // TODO: mel0n
-            },
-            {
-                address: CONTRACTS[VMEX_VEVMEX_CHAINID].vmexRewards,
-                abi: VMEX_REWARD_POOL_ABI,
-                functionName: 'start_time', // TODO: mel0n
-            },
-        ],
-    });
-
-    /**
      * All claiming, entering, and exit methods regarding staking
      */
-    // TODO: mel0n
+    // TODO: mel0n --> confirm this works
     const redeemRewards = async (type: 'exit' | 'boost', amount: BigNumber) => {
         if (!address || amount === BigNumber.from(0) || !amount) return;
         const cleanAddress = utils.getAddress(address);
@@ -554,9 +540,9 @@ export const useToken = (clearInputs?: () => void) => {
 
         vw8020Balance,
 
-        dvmexRewards: toNormalizedBN(rewards.data?.[0] || BigNumber.from(0)),
-        vevmexRewards: toNormalizedBN(rewards.data?.[1] || BigNumber.from(0)),
-        rewardsLoading: rewards.isLoading,
+        dvmexRewards: toNormalizedBN(dvmexRewards.data?.value || BigNumber.from(0)),
+        vevmexRewards: toNormalizedBN(vevmexRewards.data?.value || BigNumber.from(0)),
+        rewardsLoading: dvmexRewards.isLoading || vevmexRewards.isLoading,
         redeemRewards,
     };
 };
