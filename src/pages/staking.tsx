@@ -138,7 +138,7 @@ const Staking: React.FC = () => {
         >
             <StakingOverview
                 //get current week -> call tokens per week -> calculate weekly apr -> multiply by 54 to get apr
-                apr={`${dvmexAPR?.toFixed(2).toLocaleString()}%` || '- %'} // TODO
+                apr={dvmexAPR ? percentFormatter.format(dvmexAPR) : '- %'} // TODO
                 totalLocked={vevmexMetaData.data?.supply || '0'}
                 yourLocked={vevmexUserData?.data?.locked?.amount?.normalized || '0'}
                 expiration={vevmexUserData?.data?.locked?.end?.normalized || '-'}
