@@ -518,8 +518,6 @@ export const useToken = (clearInputs?: () => void) => {
     const dvmexDiscount = Number(queries?.[2]?.data);
     const dvmexPrice = vmexPriceInEthNoDecimals * dvmexDiscount;
 
-    //how do we get the current week
-    //get starting epoch -> add week to it -> check if we are over current week in ts -> if not, use base week -> if we are, add week and increment
     //this is very scuffed but oh well
     const { data: dvmexToDistribute } = useContractRead({
         address: CONTRACTS[VMEX_VEVMEX_CHAINID].dvmexRewards as `0x${string}`,
