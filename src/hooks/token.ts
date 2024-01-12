@@ -556,7 +556,7 @@ export const useToken = (clearInputs?: () => void) => {
 
         dvmexRewards: toNormalizedBN(dvmexRewards.data?.value || BigNumber.from(0)),
         vevmexRewards: toNormalizedBN(vevmexRewards.data?.value || BigNumber.from(0)),
-        rewardsLoading: dvmexRewards.isLoading || vevmexRewards.isLoading,
+        rewardsLoading: dvmexRewards.isLoading && vevmexRewards.isLoading,
         redeemRewards,
     };
 };
