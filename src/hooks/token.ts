@@ -535,7 +535,6 @@ export const useToken = (clearInputs?: () => void) => {
     return {
         refreshAllowances: refreshAllowances,
         tokenLoading: loading,
-
         withdrawVevmex,
         extendVmexLockTime,
         increaseVmexLockAmount,
