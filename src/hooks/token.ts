@@ -518,6 +518,22 @@ export const useToken = (clearInputs?: () => void) => {
     const dvmexDiscount = Number(queries?.[2]?.data);
     const dvmexPrice = vmexPriceInEthNoDecimals * dvmexDiscount;
 
+    //how do we get the current week
+    //get starting epoch -> add week to it -> check if we are over current week in ts -> if not, use base week -> if we are, add week and increment
+    //this is very scuffed but oh well
+    const { data: dvmexToDistribute } = useContractRead({
+        address: CONTRACTS[VMEX_VEVMEX_CHAINID].dvmexRewards as `0x${string}`,
+        abi: VMEX_REWARD_POOL_ABI,
+        chainId: VMEX_VEVMEX_CHAINID,
+        functionName: 'token_last_balance',
+    });
+
+    let dvmexAPR: number = 0;
+    //we can assume that the tokens will always be distributed weekly if people are claiming
+    if (dvmexToDistribute) {
+        dvmexAPR = (Number(ethers.utils.formatUnits(dvmexToDistribute.toString(), 18)) / 7) * 365;
+    }
+
     return {
         refreshAllowances: refreshAllowances,
         tokenLoading: loading,
@@ -537,6 +553,7 @@ export const useToken = (clearInputs?: () => void) => {
         redeemDvmexIsApproved: allowances?.[1] || BigNumber.from(0),
         dvmexDiscount: dvmexDiscount,
         dvmexPriceInEthNoDecimals: dvmexPrice,
+        dvmexAPR,
 
         vw8020Balance,
 
