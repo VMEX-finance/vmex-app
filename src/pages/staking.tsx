@@ -61,6 +61,7 @@ const Staking: React.FC = () => {
         withdrawVevmex,
         vw8020Balance,
         dvmexDiscount,
+        dvmexAPR,
         vevmexRewards,
         dvmexRewards,
         rewardsLoading,
@@ -136,7 +137,8 @@ const Staking: React.FC = () => {
             }
         >
             <StakingOverview
-                apr={'- %'} // TODO
+                //get current week -> call tokens per week -> calculate weekly apr -> multiply by 54 to get apr
+                apr={`${dvmexAPR?.toFixed(2).toLocaleString()}%` || '- %'} // TODO
                 totalLocked={vevmexMetaData.data?.supply || '0'}
                 yourLocked={vevmexUserData?.data?.locked?.amount?.normalized || '0'}
                 expiration={vevmexUserData?.data?.locked?.end?.normalized || '-'}
