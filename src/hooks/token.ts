@@ -17,11 +17,11 @@ import {
     readContracts,
     readContract,
 } from '@wagmi/core';
-import { BigNumber, constants, ethers, utils } from 'ethers';
+import { BigNumber, constants, Contract, ethers, utils } from 'ethers';
 import { formatEther } from 'ethers/lib/utils.js';
 import { SyntheticEvent, useState } from 'react';
 import { toast } from 'react-toastify';
-import { useAccount, useBalance, useContractRead, useContractReads } from 'wagmi';
+import { useAccount, useBalance, useContractRead, useContractReads, useSigner } from 'wagmi';
 
 const DEFAULT_LOADING = {
     redeem: false,
@@ -63,6 +63,7 @@ const vevmexConfig = {
  */
 export const useToken = (clearInputs?: () => void) => {
     const { address } = useAccount();
+    const { data: signer } = useSigner();
     const { newTransaction } = useTransactionsContext();
     const [loading, setLoading] = useState(DEFAULT_LOADING);
 
@@ -80,14 +81,6 @@ export const useToken = (clearInputs?: () => void) => {
     const { data: dvmexBalance } = useBalance({
         ...balanceConfig(address),
         token: CONTRACTS[VMEX_VEVMEX_CHAINID].dvmex as any,
-    });
-    const dvmexRewards = useBalance({
-        ...balanceConfig(address),
-        token: CONTRACTS[VMEX_VEVMEX_CHAINID].dvmexRewards as any,
-    });
-    const vevmexRewards = useBalance({
-        ...balanceConfig(address),
-        token: CONTRACTS[VMEX_VEVMEX_CHAINID].vmexRewards as any,
     });
 
     /**
@@ -179,6 +172,26 @@ export const useToken = (clearInputs?: () => void) => {
             ],
         });
 
+        // Get user pool rewards
+        // TODO: mel0n --> maybe better to use ethers `provider.call()` since it seems wagmi's prepareWriteContract is not just making a static call in this version we use
+        // the "signer" is exposed already at the top of this file so you can readily use that
+        const defaultRewardConfig: any = {
+            abi: VMEX_REWARD_POOL_ABI,
+            chainId: VMEX_VEVMEX_CHAINID,
+            functionName: 'claim',
+            args: [address, true],
+        };
+        const [boostRewards, exitRewards] = await Promise.all([
+            prepareWriteContract({
+                address: CONTRACTS[VMEX_VEVMEX_CHAINID].dvmexRewards as `0x${string}`,
+                ...defaultRewardConfig,
+            }),
+            prepareWriteContract({
+                address: CONTRACTS[VMEX_VEVMEX_CHAINID].vmexRewards as `0x${string}`,
+                ...defaultRewardConfig,
+            }),
+        ]);
+
         const now = Math.floor(Date.now() / 1000);
         let penalty = 0;
         if (end.gt(now)) {
@@ -216,6 +229,12 @@ export const useToken = (clearInputs?: () => void) => {
                         ? amount
                         : BigNumber.from(0),
             },
+            boostRewards:
+                // toNormalizedBN(boostRewards),
+                toNormalizedBN(BigNumber.from(0)),
+            exitRewards:
+                // toNormalizedBN(exitRewards),
+                toNormalizedBN(BigNumber.from(0)),
             exitPreview,
             penalty,
         };
@@ -282,7 +301,6 @@ export const useToken = (clearInputs?: () => void) => {
     /**
      * All claiming, entering, and exit methods regarding staking
      */
-    // TODO: mel0n --> confirm this works
     const redeemRewards = async (type: 'exit' | 'boost', amount: BigNumber) => {
         if (!address || amount === BigNumber.from(0) || !amount) return;
         const cleanAddress = utils.getAddress(address);
@@ -554,9 +572,7 @@ export const useToken = (clearInputs?: () => void) => {
 
         vw8020Balance,
 
-        dvmexRewards: toNormalizedBN(dvmexRewards.data?.value || BigNumber.from(0)),
-        vevmexRewards: toNormalizedBN(vevmexRewards.data?.value || BigNumber.from(0)),
-        rewardsLoading: dvmexRewards.isLoading && vevmexRewards.isLoading,
+        rewardsLoading: queries[1].isLoading,
         redeemRewards,
     };
 };

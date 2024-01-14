@@ -62,8 +62,6 @@ const Staking: React.FC = () => {
         vw8020Balance,
         dvmexDiscount,
         dvmexAPR,
-        vevmexRewards,
-        dvmexRewards,
         rewardsLoading,
         redeemRewards,
     } = useToken(clearInputs);
@@ -445,15 +443,23 @@ const Staking: React.FC = () => {
                                 <StakeInput
                                     header="Unclaimed veVMEX boost rewards (dVMEX)"
                                     onChange={() => {}}
-                                    value={dvmexRewards.normalized}
+                                    value={vevmexUserData.data?.boostRewards.normalized ?? '0.0'}
                                     disabled
                                     loading={rewardsLoading}
                                 />
                                 <Button
                                     type="accent"
                                     className="h-fit mb-[17.88px]"
-                                    disabled={dvmexRewards.normalized === '0.0'}
-                                    onClick={() => redeemRewards('boost', dvmexRewards.raw)}
+                                    disabled={
+                                        vevmexUserData.data?.boostRewards.normalized === '0.0'
+                                    }
+                                    onClick={() =>
+                                        redeemRewards(
+                                            'boost',
+                                            vevmexUserData.data?.boostRewards.raw ??
+                                                BigNumber.from(0),
+                                        )
+                                    }
                                     loading={tokenLoading.claimBoostRewards}
                                 >
                                     Claim
@@ -478,16 +484,22 @@ const Staking: React.FC = () => {
                                 <StakeInput
                                     header="Unclaimed veVMEX exit rewards (VW8020)"
                                     onChange={() => {}}
-                                    value={vevmexRewards.normalized}
+                                    value={vevmexUserData.data?.exitRewards.normalized ?? '0.0'}
                                     loading={rewardsLoading}
                                     disabled
                                 />
                                 <Button
                                     type="accent"
                                     className="h-fit mb-[17.88px]"
-                                    disabled={vevmexRewards.normalized === '0.0'}
+                                    disabled={vevmexUserData.data?.exitRewards.normalized === '0.0'}
                                     loading={tokenLoading.claimExitRewards}
-                                    onClick={() => redeemRewards('exit', vevmexRewards.raw)}
+                                    onClick={() =>
+                                        redeemRewards(
+                                            'exit',
+                                            vevmexUserData.data?.exitRewards.raw ??
+                                                BigNumber.from(0),
+                                        )
+                                    }
                                 >
                                     Claim
                                 </Button>
