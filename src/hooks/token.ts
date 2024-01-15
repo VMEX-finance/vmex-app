@@ -175,21 +175,25 @@ export const useToken = (clearInputs?: () => void) => {
         // Get user pool rewards
         // TODO: mel0n --> maybe better to use ethers `provider.call()` since it seems wagmi's prepareWriteContract is not just making a static call in this version we use
         // the "signer" is exposed already at the top of this file so you can readily use that
-        const defaultRewardConfig: any = {
-            abi: VMEX_REWARD_POOL_ABI,
-            chainId: VMEX_VEVMEX_CHAINID,
-            functionName: 'claim',
-            args: [address, true],
-        };
-        const [boostRewards, exitRewards] = await Promise.all([
-            prepareWriteContract({
-                address: CONTRACTS[VMEX_VEVMEX_CHAINID].dvmexRewards as `0x${string}`,
-                ...defaultRewardConfig,
-            }),
-            prepareWriteContract({
-                address: CONTRACTS[VMEX_VEVMEX_CHAINID].vmexRewards as `0x${string}`,
-                ...defaultRewardConfig,
-            }),
+        //const defaultRewardConfig: any = {
+        //    abi: VMEX_REWARD_POOL_ABI,
+        //    chainId: VMEX_VEVMEX_CHAINID,
+        //    functionName: 'claim',
+        //    args: [address, true],
+        //};
+        const dvmexRewardsContract = new ethers.Contract(
+            '0xC4F1050a3216b116a78133038912BC3b9506aEF0',
+            VMEX_REWARD_POOL_ABI,
+            signer?.provider,
+        );
+        const vevmexRewardsContract = new ethers.Contract(
+            '0xecF3e854D428074d116DE6f31213522F6525Cf81',
+            VMEX_REWARD_POOL_ABI,
+            signer?.provider,
+        );
+        let [boostRewards, exitRewards] = await Promise.all([
+            dvmexRewardsContract.call.claim(),
+            vevmexRewardsContract.call.claim(),
         ]);
 
         const now = Math.floor(Date.now() / 1000);
