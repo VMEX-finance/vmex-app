@@ -57,7 +57,7 @@ export const Button = ({
 
     // CSS
     const baseClass =
-        'flex items-center justify-center gap-0.5 font-basefont cursor-pointer disabled:cursor-not-allowed disabled:opacity-70';
+        'flex items-center justify-center gap-0.5 font-basefont cursor-pointer disabled:cursor-not-allowed disabled:opacity-70 whitespace-nowrap';
     const borderClass = 'border border-transparent';
     const shadowClass = 'shadow shadow-sm hover:shadow-none dark:shadow-black';
     const transitionClass = 'transition duration-150';

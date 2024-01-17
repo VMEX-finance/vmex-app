@@ -88,15 +88,18 @@ export const SupplyAssetDialog: React.FC<ISupplyBorrowProps> = ({ data }) => {
 
     // Clear router state after success
     useEffect(() => {
-        if (isSuccess && window && document) {
-            navigate('/staking', {
-                state: {
-                    from: 'tranche-details',
-                    data,
-                    action: 'stake',
-                },
-            });
-            window.history.replaceState({}, document.title);
+        if (isSuccess && window && document && location.state?.from === 'gauges') {
+            const timeout = setTimeout(() => {
+                navigate('/staking', {
+                    state: {
+                        from: 'tranche-details',
+                        data,
+                        action: 'stake',
+                    },
+                });
+                window.history.replaceState({}, document.title);
+            }, 1000);
+            return () => clearTimeout(timeout);
         }
     }, [isSuccess]);
 
