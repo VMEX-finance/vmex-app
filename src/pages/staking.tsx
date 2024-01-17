@@ -133,6 +133,7 @@ const Staking: React.FC = () => {
                     )}
                 </>
             }
+            topRight={<a href="https://snapshot.org/#/vmex.eth">Snapshot Voting</a>}
         >
             <StakingOverview
                 //get current week -> call tokens per week -> calculate weekly apr -> multiply by 54 to get apr
@@ -155,11 +156,7 @@ const Staking: React.FC = () => {
                     handleTabChange={handleTabChange}
                 />
                 <CustomTabPanel value={tabIndex} index={0} className="min-h-[425px]">
-                    <div className="text-center">
-                        <h1>
-                            <a href="https://snapshot.org/#/vmex.eth"> Snapshot Voting Page </a>
-                        </h1>
-                    </div>
+                    <div className="text-center"></div>
                     <GaugesTable data={vaults} loading={vaultsLoading} error={vaultsError} />
                 </CustomTabPanel>
                 <CustomTabPanel value={tabIndex} index={1} className="min-h-[425px]">

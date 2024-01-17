@@ -4,7 +4,7 @@ import { IGraphUserDataProps, ISubgraphUserData, IGraphTrancheDataProps } from '
 import { ILineChartDataPointProps } from '@/ui/components';
 import { BigNumber, ethers } from 'ethers';
 import { getAllAssetPrices } from './asset-prices';
-import { nativeAmountToUSD, PRICING_DECIMALS, getNetworkName } from '@/utils';
+import { nativeAmountToUSD, PRICING_DECIMALS, getNetworkName, LOGS } from '@/utils';
 import { getApolloClient } from '@/config';
 import { processTrancheData } from './tranche-data';
 
@@ -282,7 +282,7 @@ export const getSubgraphUserChart = async (
     allReserves.map((reserve: any) => {
         const asset = reserve.reserve.assetData.underlyingAssetName.toUpperCase();
         const decimals = reserve.reserve.decimals;
-        if (!(prices as any)[asset]) {
+        if (!(prices as any)[asset] && LOGS) {
             console.warn(
                 'MISSING ORACLE PRICE FOR',
                 asset,
