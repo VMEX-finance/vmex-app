@@ -173,14 +173,6 @@ export const useToken = (clearInputs?: () => void) => {
         });
 
         // Get user pool rewards
-        // TODO: mel0n --> maybe better to use ethers `provider.call()` since it seems wagmi's prepareWriteContract is not just making a static call in this version we use
-        // the "signer" is exposed already at the top of this file so you can readily use that
-        //const defaultRewardConfig: any = {
-        //    abi: VMEX_REWARD_POOL_ABI,
-        //    chainId: VMEX_VEVMEX_CHAINID,
-        //    functionName: 'claim',
-        //    args: [address, true],
-        //};
         const dvmexRewardsContract = new ethers.Contract(
             '0xC4F1050a3216b116a78133038912BC3b9506aEF0',
             VMEX_REWARD_POOL_ABI,
@@ -233,12 +225,8 @@ export const useToken = (clearInputs?: () => void) => {
                         ? amount
                         : BigNumber.from(0),
             },
-            boostRewards:
-                // toNormalizedBN(boostRewards),
-                toNormalizedBN(BigNumber.from(0)),
-            exitRewards:
-                // toNormalizedBN(exitRewards),
-                toNormalizedBN(BigNumber.from(0)),
+            boostRewards: toNormalizedBN(boostRewards ?? BigNumber.from(0)),
+            exitRewards: toNormalizedBN(exitRewards ?? BigNumber.from(0)),
             exitPreview,
             penalty,
         };
