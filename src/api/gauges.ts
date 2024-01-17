@@ -1,5 +1,5 @@
 import { CONTRACTS, TESTING, getNetworkName, VMEX_VEVMEX_CHAINID, LOGS } from '@/utils';
-import { VEVMEX_GAUGE_ABI, VEVMEX_REGISTRY_ABI } from '@/utils/abis';
+import { IncentivesControllerABI, VEVMEX_GAUGE_ABI, VEVMEX_REGISTRY_ABI } from '@/utils/abis';
 import { useQuery } from '@tanstack/react-query';
 import { Address, readContract, readContracts } from '@wagmi/core';
 import { BigNumber, BigNumberish, utils } from 'ethers';
@@ -69,35 +69,35 @@ const formatGauges = async (gaugeAddresses: Address[]) => {
     return allGauges;
 };
 
-const getGauges = async () => {
-    const vaults = await readContract({
-        address: getAddress(CONTRACTS[VMEX_VEVMEX_CHAINID].registry),
-        abi: VEVMEX_REGISTRY_ABI,
-        functionName: 'getVaults',
+const getGauges = async (aTokens: string[]) => {
+    console.log('ohhhh im getgauging', aTokens);
+    const incentivesControllerAddress = CONTRACTS[VMEX_VEVMEX_CHAINID].incentivesController;
+    if (!incentivesControllerAddress) return;
+
+    const contracts = aTokens.map((x) => {
+        return {
+            address: incentivesControllerAddress,
+            abi: IncentivesControllerABI,
+            functionName: 'getDVmexReward',
+            args: [x],
+        };
+    });
+    const gaugesDetails = await readContracts({
+        contracts,
     });
 
-    const gauges = await readContracts({
-        contracts: vaults.map((x) => {
-            return {
-                address: getAddress(CONTRACTS[VMEX_VEVMEX_CHAINID].registry),
-                abi: VEVMEX_REGISTRY_ABI,
-                functionName: 'gauges',
-                args: [x],
-            };
-        }),
-    });
+    console.log(gaugesDetails);
 
-    return await formatGauges(gauges as Address[]);
+    // return gaugesDetails as
 };
 
-export const useGauages = () => {
+export const useGauges = (aTokens: string[]) => {
     const network = getNetworkName();
 
-    const queryGauges = useQuery({
-        queryKey: ['gauges', network],
-        queryFn: getGauges,
-        initialData: [],
-    });
+    const queryGauges = useQuery(
+        ['gauges', network, ...aTokens], // Query Key: an array including your params
+        () => getGauges(aTokens),
+    );
 
     // TODO: remove
     useEffect(() => {

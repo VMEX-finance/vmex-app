@@ -70,6 +70,7 @@ export type IMarketsAsset = {
     supplyCap?: BigNumber;
     liquidationThreshold: BigNumber;
     decimals: number;
+    aTokenAddress: string;
 };
 
 export type INormalizedBN = {

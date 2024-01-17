@@ -5,7 +5,7 @@ import {
     IGaugesAsset,
     IMarketsAsset,
     IVaultAsset,
-    useGauages,
+    useGauges,
     useSubgraphAllMarketsData,
 } from '@/api';
 import { useQuery } from '@tanstack/react-query';
@@ -122,9 +122,10 @@ export function getUnderlyingMarket(_vaultSymbol?: string, markets?: IMarketsAss
 export function VaultsStore(props: { children: ReactNode }) {
     const network = getNetworkName();
     const { address } = useAccount();
-    const { queryGauges } = useGauages();
     const { dvmexPriceInEthNoDecimals } = useToken();
     const { queryAllMarketsData } = useSubgraphAllMarketsData();
+    const aTokens = queryAllMarketsData.data?.map((x) => x.aTokenAddress) || [];
+    const { queryGauges } = useGauges(aTokens);
 
     const queryVaults = useQuery({
         queryKey: ['vaults', network, address],

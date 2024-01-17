@@ -12,3 +12,4 @@ export * from './veVmexPositionHelper';
 export * from './veVmexRegistry';
 export * from './veVmexRewardsClaimZap';
 export * from './VmexWeth';
+export * from './IncentivesController';
