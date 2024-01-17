@@ -298,7 +298,7 @@ export const useZap = (
             const zappableTokens = queryUserWallet.data.assets
                 .filter(
                     (x) =>
-                        x.asset.length < 5 && // TODO what other way to filter out simple ERC20s than < 5 characters?
+                        x.asset?.length < 5 && // TODO what other way to filter out simple ERC20s than < 5 characters?
                         (isAddressEqual(x.assetAddress, veloPoolDetails.token0) ||
                             isAddressEqual(x.assetAddress, veloPoolDetails.token1)),
                 )
