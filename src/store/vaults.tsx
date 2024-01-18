@@ -4,9 +4,11 @@ import {
     getAllAssetPrices,
     IGaugesAsset,
     IMarketsAsset,
+    IUserActivityDataProps,
     IVaultAsset,
     useGauges,
     useSubgraphAllMarketsData,
+    useUserData,
 } from '@/api';
 import { useQuery } from '@tanstack/react-query';
 import { getBalance, LOGS, toNormalizedBN } from '@/utils';
@@ -74,19 +76,21 @@ const getAssetUSDPrice = (prices: any, symbol: string): number => {
 };
 
 // Utils
-const renderGauges = async (gauges: IGaugesAsset[], user?: IAddress): Promise<IVaultAsset[]> => {
-    if (!gauges.length) return [];
+const renderGauges = async (
+    gauges: IGaugesAsset[],
+    userData?: IUserActivityDataProps,
+): Promise<IVaultAsset[]> => {
+    if (!gauges.length || !userData) return [];
 
     const prices = await getAllAssetPrices();
     return await Promise.all(
         gauges.map(async (g: IGaugesAsset) => {
-            const yourStaked = user
-                ? ((await getBalance(g.address as any, user, 'raw')) as BigNumber)
-                : BigNumber.from(0);
+            // const yourStaked = userData.supplies.find(x => x.)
+            const yourStaked = BigNumber.from(0);
             return {
                 ...g,
+                aTokenAddress: g.address,
                 gaugeAddress: g.address,
-                vaultAddress: g.vaultAddress,
                 decimals: g.decimals,
                 vaultName: g.name,
                 vaultApy: 0,
@@ -124,18 +128,27 @@ export function VaultsStore(props: { children: ReactNode }) {
     const { address } = useAccount();
     const { dvmexPriceInEthNoDecimals } = useToken();
     const { queryAllMarketsData } = useSubgraphAllMarketsData();
-    const aTokens = queryAllMarketsData.data?.map((x) => x.aTokenAddress) || [];
-    const { queryGauges } = useGauges(aTokens);
+    const { queryGauges } = useGauges(queryAllMarketsData.data || []);
+    const { queryUserActivity } = useUserData(address);
 
-    const queryVaults = useQuery({
-        queryKey: ['vaults', network, address],
-        queryFn: () => renderGauges(queryGauges.data, address),
-        enabled: queryGauges?.data?.length > 0,
-        initialData: [],
-        refetchInterval: 10 * 1000,
-    });
+    console.log('vaults store', queryAllMarketsData.data?.length, queryGauges.data);
+
+    const queryVaults = useQuery(
+        ['vaults', network, address],
+        () => renderGauges(queryGauges.data || [], queryUserActivity.data),
+        {
+            enabled: !!queryGauges?.data?.length, // Additional options
+            initialData: [],
+            refetchInterval: 10 * 1000,
+        },
+    );
 
     const vaults = useMemo(() => {
+        console.log(
+            'vaults store memo',
+            queryAllMarketsData.data?.length,
+            queryAllMarketsData.data?.length && queryAllMarketsData?.isFetched,
+        );
         if (queryAllMarketsData.data?.length && queryAllMarketsData?.isFetched) {
             const markets = queryAllMarketsData.data;
             const returnArr = queryVaults?.data?.map((v) => {

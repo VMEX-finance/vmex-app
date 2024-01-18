@@ -8,6 +8,7 @@ import {
     NETWORKS,
     TESTING,
     getChainId,
+    isAddressEqual,
     percentFormatter,
     weeksToUnixBn,
 } from '@/utils';
@@ -93,7 +94,7 @@ const Staking: React.FC = () => {
             .sort((a, b) => (b.yourStaked?.raw.gt(a.yourStaked?.raw || BigNumber.from(0)) ? 1 : -1))
             .map((v) => ({
                 text: v.vaultSymbol,
-                onClick: () => setSelected(v.gaugeAddress),
+                onClick: () => setSelected(v.aTokenAddress),
                 value: v.yourStaked?.normalized,
             }));
     }, [vaults.length]);
@@ -407,8 +408,9 @@ const Staking: React.FC = () => {
                                         className=""
                                         items={vaultDropdownList}
                                         selected={
-                                            vaults.find((v) => v.gaugeAddress === selected)
-                                                ?.vaultSymbol || vaults[0]?.vaultSymbol
+                                            vaults.find((v) =>
+                                                isAddressEqual(v.aTokenAddress, selected),
+                                            )?.vaultSymbol || vaults[0]?.vaultSymbol
                                         }
                                     />
                                     <StakeInput

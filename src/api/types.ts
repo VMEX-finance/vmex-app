@@ -79,8 +79,7 @@ export type INormalizedBN = {
 };
 
 export type IVaultAsset = {
-    gaugeAddress: string;
-    vaultAddress: string;
+    aTokenAddress: string;
     decimals: number;
     vaultName: string;
     vaultApy: number;
@@ -107,7 +106,7 @@ export type IGaugesAsset = {
     rewardRate: INormalizedBN;
     symbol: string;
     totalStaked: INormalizedBN;
-    vaultAddress: string;
+    periodFinish: number;
 };
 
 export type ITrancheProps = {

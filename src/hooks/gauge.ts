@@ -2,7 +2,7 @@ import { INormalizedBN } from '@/api';
 import { useTransactionsContext, useVaultsContext } from '@/store';
 import { IAddress } from '@/types/wagmi';
 import { CONTRACTS, VMEX_VEVMEX_CHAINID, toNormalizedBN } from '@/utils';
-import { VEVMEX_GAUGE_ABI, VMEX_REWARD_POOL_ABI } from '@/utils/abis';
+import { IncentivesControllerABI, VEVMEX_GAUGE_ABI, VMEX_REWARD_POOL_ABI } from '@/utils/abis';
 import { prepareWriteContract, writeContract } from '@wagmi/core';
 import { BigNumber, constants, utils } from 'ethers';
 import { useEffect, useState } from 'react';
@@ -28,7 +28,7 @@ export const useGauge = () => {
     const { address } = useAccount();
     const { newTransaction } = useTransactionsContext();
     const { vaults, isLoading } = useVaultsContext();
-    const [selected, setSelected] = useState(vaults?.[0]?.gaugeAddress || '');
+    const [selected, setSelected] = useState(vaults?.[0]?.aTokenAddress || '');
     const [gaugeRewards, setGaugeRewards] = useState(DEFAULT_REWARDS_STATE);
     const [boostRewards, setBoostRewards] = useState<INormalizedBN>({
         normalized: '0.0',
@@ -56,9 +56,10 @@ export const useGauge = () => {
             setLoading({ ...loading, redeem: true });
             const prepareRedeemTx = await prepareWriteContract({
                 address: selected as IAddress,
-                abi: VEVMEX_GAUGE_ABI,
+                abi: IncentivesControllerABI,
                 chainId: VMEX_VEVMEX_CHAINID,
-                functionName: 'getReward',
+                functionName: 'claimDVmexReward',
+                args: [selected, address],
             });
             const redeemTx = await writeContract(prepareRedeemTx);
             await Promise.all([newTransaction(redeemTx), redeemTx.wait()]);
@@ -115,7 +116,7 @@ export const useGauge = () => {
     // Get data on load
     useEffect(() => {
         if (vaults?.length && !selected) {
-            setSelected(vaults?.[0]?.gaugeAddress);
+            setSelected(vaults?.[0]?.aTokenAddress);
         }
         // (async () => getBoostRewards())().catch(e => console.error(e))
     }, [isLoading, vaults?.length]);

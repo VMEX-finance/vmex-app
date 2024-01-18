@@ -5,7 +5,6 @@ import { IVaultAsset } from '@/api';
 import {
     DEFAULT_CHAINID,
     VMEX_VEVMEX_CHAINID,
-    getDecimals,
     isChainUnsupported,
     percentFormatter,
 } from '@/utils';
@@ -15,8 +14,7 @@ import { BigNumber, utils } from 'ethers';
 
 export const GaugesCustomRow = (props: IVaultAsset & { loading?: boolean }) => {
     const {
-        gaugeAddress,
-        vaultAddress,
+        aTokenAddress,
         decimals,
         vaultName,
         vaultSymbol,
@@ -38,7 +36,7 @@ export const GaugesCustomRow = (props: IVaultAsset & { loading?: boolean }) => {
     const { openConnectModal } = useConnectModal();
     const { data: gaugeBalance } = useBalance({
         address,
-        token: gaugeAddress as `0x${string}`,
+        token: aTokenAddress as `0x${string}`,
         chainId: VMEX_VEVMEX_CHAINID,
         watch: true,
     });

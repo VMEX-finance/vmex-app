@@ -1,110 +1,82 @@
-import { CONTRACTS, TESTING, getNetworkName, VMEX_VEVMEX_CHAINID, LOGS } from '@/utils';
-import { IncentivesControllerABI, VEVMEX_GAUGE_ABI, VEVMEX_REGISTRY_ABI } from '@/utils/abis';
+import { CONTRACTS, getNetworkName, VMEX_VEVMEX_CHAINID, LOGS } from '@/utils';
+import { IncentivesControllerABI } from '@/utils/abis';
 import { useQuery } from '@tanstack/react-query';
-import { Address, readContract, readContracts } from '@wagmi/core';
+import { readContracts } from '@wagmi/core';
 import { BigNumber, BigNumberish, utils } from 'ethers';
-import { getAddress } from 'ethers/lib/utils.js';
-import { useEffect } from 'react';
+import { IGaugesAsset, IMarketsAsset } from './types';
+import { parseUnits } from 'viem';
 
 const toNormalizedBN = (value: BigNumberish, decimals?: number) => ({
     raw: BigNumber.from(value),
     normalized: utils.formatUnits(BigNumber.from(value), decimals ?? 18),
 });
 
-const formatGauges = async (gaugeAddresses: Address[]) => {
-    const gaugePromises = gaugeAddresses.map(async (gaugeAddress) => {
-        const results = await readContracts({
-            contracts: [
-                {
-                    address: gaugeAddress,
-                    abi: VEVMEX_GAUGE_ABI,
-                    chainId: VMEX_VEVMEX_CHAINID,
-                    functionName: 'asset',
-                },
-                {
-                    address: gaugeAddress,
-                    abi: VEVMEX_GAUGE_ABI,
-                    chainId: VMEX_VEVMEX_CHAINID,
-                    functionName: 'name',
-                },
-                {
-                    address: gaugeAddress,
-                    abi: VEVMEX_GAUGE_ABI,
-                    chainId: VMEX_VEVMEX_CHAINID,
-                    functionName: 'symbol',
-                },
-                {
-                    address: gaugeAddress,
-                    abi: VEVMEX_GAUGE_ABI,
-                    chainId: VMEX_VEVMEX_CHAINID,
-                    functionName: 'decimals',
-                },
-                {
-                    address: gaugeAddress,
-                    abi: VEVMEX_GAUGE_ABI,
-                    chainId: VMEX_VEVMEX_CHAINID,
-                    functionName: 'totalAssets',
-                },
-                {
-                    address: gaugeAddress,
-                    abi: VEVMEX_GAUGE_ABI,
-                    chainId: VMEX_VEVMEX_CHAINID,
-                    functionName: 'rewardRate',
-                },
-            ],
-        });
-
-        return {
-            address: gaugeAddress,
-            vaultAddress: results[0],
-            name: results[1],
-            symbol: results[2],
-            decimals: results[3],
-            totalStaked: toNormalizedBN(results[4], results[3]),
-            rewardRate: toNormalizedBN(results[5], results[3]),
-        };
-    });
-
-    const allGauges = await Promise.all(gaugePromises);
-    return allGauges;
+type DVmexReward = {
+    aToken: string;
+    periodFinish: number;
+    lastUpdateTime: number;
+    rewardRate: BigNumber;
+    rewardPerTokenStored: BigNumber;
+    decimals: number;
+    queuedRewards: BigNumber;
+    currentRewards: BigNumber;
 };
 
-const getGauges = async (aTokens: string[]) => {
-    console.log('ohhhh im getgauging', aTokens);
+const getGauges = async (marketData: IMarketsAsset[]): Promise<IGaugesAsset[]> => {
+    const aTokens = marketData.map((x) => x.aTokenAddress);
     const incentivesControllerAddress = CONTRACTS[VMEX_VEVMEX_CHAINID].incentivesController;
-    if (!incentivesControllerAddress) return;
+    console.log(
+        'getgauges',
+        VMEX_VEVMEX_CHAINID,
+        incentivesControllerAddress,
+        marketData.length,
+        aTokens.length,
+        !incentivesControllerAddress || !aTokens.length,
+    );
+    if (!incentivesControllerAddress || !aTokens.length) return [];
+    console.log('WTF IS HAPPENIN');
+    const gaugesDetails = (await readContracts({
+        contracts: aTokens.map((x) => {
+            return {
+                address: incentivesControllerAddress,
+                abi: IncentivesControllerABI,
+                functionName: 'getDVmexReward',
+                args: [x],
+            };
+        }),
+    })) as DVmexReward[];
 
-    const contracts = aTokens.map((x) => {
-        return {
-            address: incentivesControllerAddress,
-            abi: IncentivesControllerABI,
-            functionName: 'getDVmexReward',
-            args: [x],
-        };
-    });
-    const gaugesDetails = await readContracts({
-        contracts,
-    });
+    console.log('getgautes', gaugesDetails);
 
-    console.log(gaugesDetails);
+    const gaugesFormatted = [];
+    for (const i in Object.entries(gaugesDetails)) {
+        if (gaugesDetails[i].periodFinish == 0) continue;
+        const suppliedNative = parseUnits(
+            marketData[i].supplyTotalNative,
+            gaugesDetails[i].decimals,
+        );
+        gaugesFormatted.push({
+            address: aTokens[i],
+            name: `${marketData[i].asset}:${marketData[i].tranche}`,
+            symbol: `${marketData[i].asset}:${marketData[i].tranche}`,
+            totalStaked: toNormalizedBN(suppliedNative, gaugesDetails[i].decimals),
+            rewardRate: toNormalizedBN(gaugesDetails[i].rewardRate, 18),
+            periodFinish: gaugesDetails[i].periodFinish,
+            decimals: gaugesDetails[i].decimals,
+        });
+    }
+    console.log('getgauges result', gaugesFormatted);
 
-    // return gaugesDetails as
+    return gaugesFormatted;
 };
 
-export const useGauges = (aTokens: string[]) => {
+export const useGauges = (marketData: IMarketsAsset[]) => {
     const network = getNetworkName();
 
     const queryGauges = useQuery(
-        ['gauges', network, ...aTokens], // Query Key: an array including your params
-        () => getGauges(aTokens),
+        ['gauges', network, marketData.map((x) => x.aTokenAddress).length.toString()], // Query Key: an array including your params
+        () => getGauges(marketData),
     );
-
-    // TODO: remove
-    useEffect(() => {
-        if (LOGS) {
-            console.log('Gauges:', queryGauges.data);
-        }
-    }, [queryGauges.data]);
 
     return {
         queryGauges,
