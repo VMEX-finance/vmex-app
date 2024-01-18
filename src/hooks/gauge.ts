@@ -3,7 +3,8 @@ import { useTransactionsContext, useVaultsContext } from '@/store';
 import { IAddress } from '@/types/wagmi';
 import { CONTRACTS, VMEX_VEVMEX_CHAINID, toNormalizedBN } from '@/utils';
 import { IncentivesControllerABI, VEVMEX_GAUGE_ABI, VMEX_REWARD_POOL_ABI } from '@/utils/abis';
-import { prepareWriteContract, writeContract } from '@wagmi/core';
+import { getAddress } from '@ethersproject/address';
+import { erc20ABI, prepareWriteContract, writeContract } from '@wagmi/core';
 import { BigNumber, constants, utils } from 'ethers';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -47,7 +48,11 @@ export const useGauge = () => {
      */
     const redeemGaugeRewards = async () => {
         if (!address) return;
-        if (!selected || !utils.isAddress(selected)) {
+        if (
+            !selected ||
+            !utils.isAddress(selected) ||
+            !CONTRACTS[VMEX_VEVMEX_CHAINID].incentivesController
+        ) {
             console.warn('No gauge address being passed');
             toast.error('No gauge selected');
             return;
@@ -55,7 +60,7 @@ export const useGauge = () => {
         try {
             setLoading({ ...loading, redeem: true });
             const prepareRedeemTx = await prepareWriteContract({
-                address: selected as IAddress,
+                address: CONTRACTS[VMEX_VEVMEX_CHAINID].incentivesController,
                 abi: IncentivesControllerABI,
                 chainId: VMEX_VEVMEX_CHAINID,
                 functionName: 'claimDVmexReward',
@@ -124,36 +129,46 @@ export const useGauge = () => {
     // get rewards on selected vault change
     useEffect(() => {
         (async () => {
-            if (!address || !selected) return;
+            if (!address || !selected || !CONTRACTS[VMEX_VEVMEX_CHAINID].incentivesController)
+                return;
             setLoading({ ...loading, rewards: true });
             const gaugeRewards = await readContracts({
                 contracts: [
                     {
-                        ...defaultConfig,
+                        address: getAddress(selected),
+                        abi: erc20ABI,
+                        chainId: VMEX_VEVMEX_CHAINID,
                         functionName: 'balanceOf',
                         args: [address || constants.AddressZero],
                     },
                     {
-                        ...defaultConfig,
+                        address: CONTRACTS[VMEX_VEVMEX_CHAINID].incentivesController,
+                        abi: IncentivesControllerABI,
+                        chainId: VMEX_VEVMEX_CHAINID,
                         functionName: 'earned',
-                        args: [address || constants.AddressZero],
+                        args: [getAddress(selected), address || constants.AddressZero],
                     },
                     {
-                        ...defaultConfig,
+                        address: CONTRACTS[VMEX_VEVMEX_CHAINID].incentivesController,
+                        abi: IncentivesControllerABI,
+                        chainId: VMEX_VEVMEX_CHAINID,
                         functionName: 'nextBoostedBalanceOf',
-                        args: [address || constants.AddressZero],
+                        args: [getAddress(selected), address || constants.AddressZero],
                     },
                     {
-                        ...defaultConfig,
-                        functionName: 'decimals',
+                        address: CONTRACTS[VMEX_VEVMEX_CHAINID].incentivesController,
+                        abi: IncentivesControllerABI,
+                        chainId: VMEX_VEVMEX_CHAINID,
+                        functionName: 'getDVmexReward',
+                        args: [getAddress(selected)],
                     },
                 ],
             });
-            const decimals = gaugeRewards[3];
+            const decimals = gaugeRewards[3].decimals;
             setGaugeRewards({
                 balance: toNormalizedBN(gaugeRewards[0], decimals),
-                earned: toNormalizedBN(gaugeRewards[1], decimals),
-                boostedBalance: toNormalizedBN(gaugeRewards[2], decimals),
+                earned: toNormalizedBN(gaugeRewards[1], 18),
+                boostedBalance: toNormalizedBN(gaugeRewards[2], 18),
             });
             setLoading({ ...loading, rewards: false });
         })().catch((e) => console.error(e));

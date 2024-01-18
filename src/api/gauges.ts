@@ -50,7 +50,7 @@ const getGauges = async (marketData: IMarketsAsset[]): Promise<IGaugesAsset[]> =
         gaugesFormatted.push({
             address: aTokens[i],
             name: `${marketData[i].asset}:${marketData[i].tranche}`,
-            symbol: `vG-v${marketData[i].asset}:${marketData[i].trancheId}`,
+            symbol: `vG-v${marketData[i].asset}${marketData[i].trancheId}`,
             totalStaked: toNormalizedBN(suppliedNative, gaugesDetails[i].decimals),
             rewardRate: toNormalizedBN(gaugesDetails[i].rewardRate, 18),
             periodFinish: gaugesDetails[i].periodFinish,

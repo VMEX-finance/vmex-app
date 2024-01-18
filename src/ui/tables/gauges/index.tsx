@@ -15,7 +15,6 @@ interface ITableProps {
 }
 
 const GaugesTable: React.FC<ITableProps> = React.memo(({ data, loading, userData, error }: any) => {
-    console.log('ALO TODO GAUGESTABLE', data);
     const columns = [
         {
             name: 'vaultName',
@@ -105,13 +104,6 @@ const GaugesTable: React.FC<ITableProps> = React.memo(({ data, loading, userData
             },
         },
         {
-            name: 'vaultAddress',
-            label: 'Vault Address',
-            options: {
-                display: false,
-            },
-        },
-        {
             name: 'vaultSymbol',
             label: 'Symbol',
             options: {
@@ -119,8 +111,8 @@ const GaugesTable: React.FC<ITableProps> = React.memo(({ data, loading, userData
             },
         },
         {
-            name: 'gaugeAddress',
-            label: 'Gauge Address',
+            name: 'aTokenAddress',
+            label: 'aToken address',
             options: {
                 display: false,
             },

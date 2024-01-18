@@ -13,7 +13,6 @@ import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { BigNumber, utils } from 'ethers';
 
 export const GaugesCustomRow = (props: IVaultAsset & { loading?: boolean }) => {
-    console.log('ALO TODO CUSTOM ROW', props);
     const {
         aTokenAddress,
         decimals,
@@ -111,7 +110,7 @@ export const GaugesCustomRow = (props: IVaultAsset & { loading?: boolean }) => {
                         <span>{gaugeBoost ? gaugeBoost : '-'}</span>
                     </Loader>
                 </td> */}
-                <td>
+                {/* <td>
                     <Button
                         className="mt-1 mb-2"
                         type="accent"
@@ -126,7 +125,7 @@ export const GaugesCustomRow = (props: IVaultAsset & { loading?: boolean }) => {
                             onClick: handleActionClick,
                         }}
                     />
-                </td>
+                </td> */}
             </tr>
         );
         // Desktop
@@ -134,7 +133,7 @@ export const GaugesCustomRow = (props: IVaultAsset & { loading?: boolean }) => {
         return (
             <tr
                 className="text-left transition duration-150 hover:bg-neutral-100 dark:hover:bg-neutral-900 hover:cursor-pointer border-y-[1px] dark:border-neutral-800"
-                onClick={(e) => handleActionClick(e, true)}
+                // onClick={(e) => handleActionClick(e, true)}
             >
                 <td className="whitespace-nowrap pl-2 md:pl-4 pr-1 text-sm">
                     <Loader loading={loading}>
@@ -194,7 +193,7 @@ export const GaugesCustomRow = (props: IVaultAsset & { loading?: boolean }) => {
                 {/* <td className="pl-4">
                     <Loader loading={loading}>{gaugeBoost ? gaugeBoost : '-'}</Loader>
                 </td> */}
-                <td className="text-right pr-2">
+                {/* <td className="text-right pr-2">
                     <Button
                         type="accent"
                         left={{
@@ -208,7 +207,7 @@ export const GaugesCustomRow = (props: IVaultAsset & { loading?: boolean }) => {
                             onClick: handleActionClick,
                         }}
                     />
-                </td>
+                </td> */}
             </tr>
         );
     }
