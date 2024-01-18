@@ -83,7 +83,7 @@ const renderGauges = async (
     if (!gauges.length || !userData) return [];
 
     const prices = await getAllAssetPrices();
-    const x = gauges.map((g: IGaugesAsset) => {
+    return gauges.map((g: IGaugesAsset) => {
         const yourStaked = BigNumber.from(0);
         return {
             ...g,
@@ -104,8 +104,6 @@ const renderGauges = async (
             yourStaked: toNormalizedBN(yourStaked),
         };
     });
-    console.log('close baby close', x);
-    return x;
 };
 
 export function getUnderlyingMarket(_vaultSymbol?: string, markets?: IMarketsAsset[]) {
@@ -130,8 +128,6 @@ export function VaultsStore(props: { children: ReactNode }) {
     const { queryGauges } = useGauges(queryAllMarketsData.data || []);
     const { queryUserActivity } = useUserData(address);
 
-    console.log('vaults store', queryAllMarketsData.data?.length, queryGauges.data);
-
     const queryVaults = useQuery(
         ['vaults', network, address],
         () => renderGauges(queryGauges.data || [], queryUserActivity.data),
@@ -142,18 +138,10 @@ export function VaultsStore(props: { children: ReactNode }) {
         },
     );
 
-    console.log('close close queryVaults', queryVaults.data);
-
     const vaults = useMemo(() => {
-        console.log(
-            'vaults store memo',
-            queryAllMarketsData.data?.length,
-            queryAllMarketsData.data?.length && queryAllMarketsData?.isFetched,
-        );
         if (queryAllMarketsData.data?.length && queryAllMarketsData?.isFetched) {
             const markets = queryAllMarketsData.data;
             const returnArr = queryVaults?.data?.map((v) => {
-                console.log('find underyling', v, markets);
                 const marketAssetData = markets.find((x) =>
                     isAddressEqual(x.aTokenAddress, v.aTokenAddress),
                 );
@@ -181,7 +169,6 @@ export function VaultsStore(props: { children: ReactNode }) {
                     // TODO: yourStaked
                 };
             });
-            console.log('close close queryVaults result', returnArr);
             if (LOGS) console.log('Vaults:', returnArr);
             return returnArr;
         } else {

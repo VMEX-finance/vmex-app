@@ -15,6 +15,7 @@ interface ITableProps {
 }
 
 const GaugesTable: React.FC<ITableProps> = React.memo(({ data, loading, userData, error }: any) => {
+    console.log('ALO TODO GAUGESTABLE', data);
     const columns = [
         {
             name: 'vaultName',

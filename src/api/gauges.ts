@@ -25,14 +25,7 @@ type DVmexReward = {
 const getGauges = async (marketData: IMarketsAsset[]): Promise<IGaugesAsset[]> => {
     const aTokens = marketData.map((x) => x.aTokenAddress);
     const incentivesControllerAddress = CONTRACTS[VMEX_VEVMEX_CHAINID].incentivesController;
-    console.log(
-        'getgauges',
-        VMEX_VEVMEX_CHAINID,
-        incentivesControllerAddress,
-        marketData.length,
-        aTokens.length,
-        !incentivesControllerAddress || !aTokens.length,
-    );
+
     if (!incentivesControllerAddress || !aTokens.length) return [];
 
     const gaugesDetails = (await readContracts({

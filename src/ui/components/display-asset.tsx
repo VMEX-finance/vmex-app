@@ -76,7 +76,6 @@ export const renderAsset = (
     custom?: string,
     key?: string,
 ) => {
-    console.log('renderAsset', asset, size, i, custom, key);
     return asset?.includes('moo') ? (
         MultipleAssetsDisplayOverlapping({
             assets: [asset?.substring(3), 'beefy'],

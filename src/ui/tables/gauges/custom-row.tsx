@@ -13,6 +13,7 @@ import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { BigNumber, utils } from 'ethers';
 
 export const GaugesCustomRow = (props: IVaultAsset & { loading?: boolean }) => {
+    console.log('ALO TODO CUSTOM ROW', props);
     const {
         aTokenAddress,
         decimals,
