@@ -1,27 +1,17 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useWindowSize, useDialogController } from '@/hooks';
 import { BiChevronLeft, BiPlus } from 'react-icons/bi';
 import { Tooltip, Button, Loader, Label, MessageStatus } from '../components';
-import { useAccount, useNetwork } from 'wagmi';
+import { useAccount } from 'wagmi';
 import { Skeleton } from '@mui/material';
 import { usePricesData, useSubgraphUserData } from '@/api';
 import { useSelectedTrancheContext } from '@/store';
 import { Transition } from '@headlessui/react';
 import { isChainUnsupported } from '@/utils';
+import { IAppTemplateProps } from '../base';
 
-interface IDashboardTemplateProps {
-    title?: string;
-    children?: React.ReactElement | React.ReactElement[];
-    description?: string | React.ReactNode;
-    view?: string;
-    setView?: any;
-    titleLoading?: boolean;
-    right?: React.ReactNode;
-    descriptionLoading?: boolean;
-}
-
-const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
+const DashboardTemplate: React.FC<IAppTemplateProps> = ({
     title,
     children,
     description,
@@ -30,8 +20,8 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
     titleLoading,
     right,
     descriptionLoading,
+    topRight,
 }) => {
-    const { chain } = useNetwork();
     const { isError } = usePricesData();
     const { openDialog } = useDialogController();
     const location = useLocation();
@@ -56,7 +46,7 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                     }
                 justify-between items-end`}
                 >
-                    <div className="flex flex-col">
+                    <div className="flex flex-col w-full">
                         {view ? (
                             <div className="flex flex-col md:flex-row justify-between md:justify-start md:items-center gap-3">
                                 <Button onClick={routeChange} type="selected">
@@ -72,9 +62,18 @@ const DashboardTemplate: React.FC<IDashboardTemplateProps> = ({
                             </div>
                         ) : (
                             <>
-                                <h1 className="text-[26px] 2xl:text-3xl font-basefont capitalize leading-tight text-neutral-900 dark:text-neutral-300">
-                                    {title}
-                                </h1>
+                                {topRight ? (
+                                    <div className="flex justify-between items-baseline w-full">
+                                        <h1 className="text-[26px] 2xl:text-3xl font-basefont capitalize leading-tight text-neutral-900 dark:text-neutral-300">
+                                            {title}
+                                        </h1>
+                                        {topRight}
+                                    </div>
+                                ) : (
+                                    <h1 className="text-[26px] 2xl:text-3xl font-basefont capitalize leading-tight text-neutral-900 dark:text-neutral-300">
+                                        {title}
+                                    </h1>
+                                )}
                                 {(description || descriptionLoading) && (
                                     <div className="mt-1">
                                         {descriptionLoading ? (

@@ -4,6 +4,8 @@ import { useThemeContext } from '@/store';
 import { Transition } from '@headlessui/react';
 import { Skeleton } from '@mui/material';
 import { ProgressBar } from './progress';
+import { useChainId } from 'wagmi';
+import { capFirstLetter, getNetworkName } from '@/utils';
 
 type ILoaderProps = {
     type?: 'spinner' | 'skeleton' | 'full-page';
@@ -60,6 +62,8 @@ export const Loader = ({
     }
 
     if (type === 'full-page') {
+        const name = getNetworkName();
+
         return (
             <>
                 <Transition
@@ -94,6 +98,9 @@ export const Loader = ({
                             <div className="w-60 mx-auto mt-2">
                                 <ProgressBar />
                             </div>
+                            <p className="text-center font-light dark:text-neutral-300 mt-2 tracking-wide">
+                                {capFirstLetter(name)}
+                            </p>
                         </Transition>
                     </div>
                 </Transition>

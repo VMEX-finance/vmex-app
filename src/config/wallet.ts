@@ -2,6 +2,7 @@ import '@rainbow-me/rainbowkit/styles.css';
 import { connectorsForWallets, RainbowKitProvider, lightTheme } from '@rainbow-me/rainbowkit';
 import { configureChains, createClient, WagmiConfig, Chain } from 'wagmi';
 import { publicProvider } from 'wagmi/providers/public';
+import { alchemyProvider } from 'wagmi/providers/alchemy';
 import {
     coinbaseWallet,
     injectedWallet,
@@ -17,6 +18,9 @@ import merge from 'lodash.merge';
 import { availableNetworks } from '../utils/network';
 
 export const { chains, provider } = configureChains(availableNetworks('wagmi') as Chain[], [
+    alchemyProvider({
+        apiKey: process.env.REACT_APP_ALCHEMY_KEY || 'EImdy4a1TClpW1fECNQ-O-yD71cFjBFr',
+    }),
     publicProvider(),
 ]);
 
