@@ -107,6 +107,7 @@ export type IGaugesAsset = {
     symbol: string;
     totalStaked: INormalizedBN;
     periodFinish: number;
+    underlyingAsset: string;
 };
 
 export type ITrancheProps = {

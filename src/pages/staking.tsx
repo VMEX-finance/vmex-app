@@ -66,6 +66,7 @@ const Staking: React.FC = () => {
     const { width, breakpoints } = useWindowSize();
     const { tabIndex, handleTabChange } = useCustomTabs();
     const { vaults, isError: vaultsError, isLoading: vaultsLoading } = useVaultsContext();
+    console.log('staking.ts vaults', vaults);
     const {
         selected,
         setSelected,

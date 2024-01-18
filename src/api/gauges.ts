@@ -34,7 +34,7 @@ const getGauges = async (marketData: IMarketsAsset[]): Promise<IGaugesAsset[]> =
         !incentivesControllerAddress || !aTokens.length,
     );
     if (!incentivesControllerAddress || !aTokens.length) return [];
-    console.log('WTF IS HAPPENIN');
+
     const gaugesDetails = (await readContracts({
         contracts: aTokens.map((x) => {
             return {
@@ -46,8 +46,6 @@ const getGauges = async (marketData: IMarketsAsset[]): Promise<IGaugesAsset[]> =
         }),
     })) as DVmexReward[];
 
-    console.log('getgautes', gaugesDetails);
-
     const gaugesFormatted = [];
     for (const i in Object.entries(gaugesDetails)) {
         if (gaugesDetails[i].periodFinish == 0) continue;
@@ -55,17 +53,18 @@ const getGauges = async (marketData: IMarketsAsset[]): Promise<IGaugesAsset[]> =
             marketData[i].supplyTotalNative,
             gaugesDetails[i].decimals,
         );
+
         gaugesFormatted.push({
             address: aTokens[i],
             name: `${marketData[i].asset}:${marketData[i].tranche}`,
-            symbol: `${marketData[i].asset}:${marketData[i].tranche}`,
+            symbol: `vG-v${marketData[i].asset}:${marketData[i].trancheId}`,
             totalStaked: toNormalizedBN(suppliedNative, gaugesDetails[i].decimals),
             rewardRate: toNormalizedBN(gaugesDetails[i].rewardRate, 18),
             periodFinish: gaugesDetails[i].periodFinish,
             decimals: gaugesDetails[i].decimals,
+            underlyingAsset: marketData[i].asset,
         });
     }
-    console.log('getgauges result', gaugesFormatted);
 
     return gaugesFormatted;
 };

@@ -11,7 +11,7 @@ import {
     useUserData,
 } from '@/api';
 import { useQuery } from '@tanstack/react-query';
-import { getBalance, LOGS, toNormalizedBN } from '@/utils';
+import { getBalance, isAddressEqual, LOGS, toNormalizedBN } from '@/utils';
 import { BigNumber } from 'ethers';
 import { useToken } from '@/hooks';
 import { IAddress } from '@/types/wagmi';
@@ -83,30 +83,29 @@ const renderGauges = async (
     if (!gauges.length || !userData) return [];
 
     const prices = await getAllAssetPrices();
-    return await Promise.all(
-        gauges.map(async (g: IGaugesAsset) => {
-            // const yourStaked = userData.supplies.find(x => x.)
-            const yourStaked = BigNumber.from(0);
-            return {
-                ...g,
-                aTokenAddress: g.address,
-                gaugeAddress: g.address,
-                decimals: g.decimals,
-                vaultName: g.name,
-                vaultApy: 0,
-                vaultDeposited: g.totalStaked,
-                gaugeAPR: 0,
-                gaugeBoost: 0,
-                gaugeStaked: g.totalStaked,
-                vaultSymbol: g.symbol,
-                actions: undefined,
-                rewardRate: g.rewardRate,
-                assetPrice: getAssetUSDPrice(prices, getUnderlyingSymbolFromGauge(g.symbol)),
-                wethPrice: getAssetUSDPrice(prices, 'WETH'),
-                yourStaked: toNormalizedBN(yourStaked),
-            };
-        }),
-    );
+    const x = gauges.map((g: IGaugesAsset) => {
+        const yourStaked = BigNumber.from(0);
+        return {
+            ...g,
+            aTokenAddress: g.address,
+            gaugeAddress: g.address,
+            decimals: g.decimals,
+            vaultName: g.name,
+            vaultApy: 0,
+            vaultDeposited: g.totalStaked,
+            gaugeAPR: 0,
+            gaugeBoost: 0,
+            gaugeStaked: g.totalStaked,
+            vaultSymbol: g.symbol,
+            actions: undefined,
+            rewardRate: g.rewardRate,
+            assetPrice: getAssetUSDPrice(prices, g.underlyingAsset),
+            wethPrice: getAssetUSDPrice(prices, 'WETH'),
+            yourStaked: toNormalizedBN(yourStaked),
+        };
+    });
+    console.log('close baby close', x);
+    return x;
 };
 
 export function getUnderlyingMarket(_vaultSymbol?: string, markets?: IMarketsAsset[]) {
@@ -143,6 +142,8 @@ export function VaultsStore(props: { children: ReactNode }) {
         },
     );
 
+    console.log('close close queryVaults', queryVaults.data);
+
     const vaults = useMemo(() => {
         console.log(
             'vaults store memo',
@@ -152,21 +153,24 @@ export function VaultsStore(props: { children: ReactNode }) {
         if (queryAllMarketsData.data?.length && queryAllMarketsData?.isFetched) {
             const markets = queryAllMarketsData.data;
             const returnArr = queryVaults?.data?.map((v) => {
-                const underlying = getUnderlyingMarket(v.vaultSymbol, markets);
+                console.log('find underyling', v, markets);
+                const marketAssetData = markets.find((x) =>
+                    isAddressEqual(x.aTokenAddress, v.aTokenAddress),
+                );
                 const gaugeStakedNormalized = toNormalizedBN(
                     v.gaugeStaked.raw,
-                    underlying?.decimals,
+                    marketAssetData?.decimals,
                 );
                 return {
                     ...v,
-                    vaultApy: Number(underlying?.supplyApy || '0'),
+                    vaultApy: Number(marketAssetData?.supplyApy || '0'),
                     vaultDeposited: {
-                        normalized: underlying?.supplyTotalNative || '0.0',
+                        normalized: marketAssetData?.supplyTotalNative || '0.0',
                         raw: BigNumber.from(0),
                     },
-                    underlyingAddress: underlying?.assetAddress,
-                    underlyingSymbol: underlying?.asset,
-                    underlyingDecimals: underlying?.decimals,
+                    underlyingAddress: marketAssetData?.assetAddress,
+                    underlyingSymbol: marketAssetData?.asset,
+                    underlyingDecimals: marketAssetData?.decimals,
                     gaugeStaked: gaugeStakedNormalized,
                     gaugeAPR: calculateApyFromRewardRate(
                         v.rewardRate?.normalized || 0,
@@ -177,6 +181,7 @@ export function VaultsStore(props: { children: ReactNode }) {
                     // TODO: yourStaked
                 };
             });
+            console.log('close close queryVaults result', returnArr);
             if (LOGS) console.log('Vaults:', returnArr);
             return returnArr;
         } else {
