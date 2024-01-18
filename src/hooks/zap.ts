@@ -1,7 +1,15 @@
 import { constants, utils } from 'ethers';
 import { SyntheticEvent, useEffect, useState } from 'react';
 import { useUserData } from '@/api';
-import { DECIMALS, NETWORKS, isAddressEqual, isPoolStable, toAddress, toSymbol } from '@/utils';
+import {
+    DECIMALS,
+    LOGS,
+    NETWORKS,
+    isAddressEqual,
+    isPoolStable,
+    toAddress,
+    toSymbol,
+} from '@/utils';
 import { VeloPoolABI, VeloRouterABI } from '@/utils/abis';
 import {
     erc20ABI,
@@ -207,7 +215,7 @@ export const useZap = (
     }
 
     async function generateZapInParams(lpAddress: string, zapAsset: string, zapAmount: BigNumber) {
-        console.log('#generateZapInParams::params:', lpAddress, zapAsset, zapAmount);
+        if (LOGS) console.log('#generateZapInParams::params:', lpAddress, zapAsset, zapAmount);
         if (!chain?.network) return;
         if (!veloPoolDetails) return;
 
@@ -216,7 +224,7 @@ export const useZap = (
         if (!veloRouterAddress || !factory) return;
 
         if (isAddressEqual(token0, zapAsset)) {
-            console.log('#generateZapInParams::token0 in lp');
+            if (LOGS) console.log('#generateZapInParams::token0 in lp');
             // zap asset is one of the lp underyling tokens -> token0
             const stable = isPoolStable(chain.network, zapAsset, token1);
             return readContract({
@@ -235,10 +243,10 @@ export const useZap = (
                 ],
             });
         } else if (isAddressEqual(token1, zapAsset)) {
-            console.log('#generateZapInParams::token1 in lp');
+            if (LOGS) console.log('#generateZapInParams::token1 in lp');
             // zap asset is one of the lp underyling tokens -> token1
             const stable = isPoolStable(chain.network, zapAsset, token0);
-            console.log('#generateZapInParams::stable:', stable);
+            if (LOGS) console.log('#generateZapInParams::stable:', stable);
             return readContract({
                 address: veloRouterAddress,
                 abi: VeloRouterABI,
@@ -258,7 +266,7 @@ export const useZap = (
             // zap asset is NOT one of the lp underyling tokens
             const stable0 = isPoolStable(chain.network, zapAsset, token0);
             const stable1 = isPoolStable(chain.network, zapAsset, token1);
-            console.log('#generateZapInParams::stable0, stable1:', stable0, stable1);
+            if (LOGS) console.log('#generateZapInParams::stable0, stable1:', stable0, stable1);
             return readContract({
                 address: veloRouterAddress,
                 abi: VeloRouterABI,

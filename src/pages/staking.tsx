@@ -129,7 +129,7 @@ const Staking: React.FC = () => {
                                         args: [address, utils.parseEther('1000')],
                                         mode: 'recklesslyUnprepared',
                                     });
-                                    console.log('Minted 1000 VMEX tokens');
+                                    alert('Minted 1000 VMEX tokens');
                                 } catch (e) {
                                     return;
                                 }

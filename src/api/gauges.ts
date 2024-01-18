@@ -4,7 +4,6 @@ import { useQuery } from '@tanstack/react-query';
 import { readContracts } from '@wagmi/core';
 import { BigNumber, BigNumberish, utils } from 'ethers';
 import { IGaugesAsset, IMarketsAsset } from './types';
-import { parseUnits } from 'viem';
 
 const toNormalizedBN = (value: BigNumberish, decimals?: number) => ({
     raw: BigNumber.from(value),
@@ -42,7 +41,7 @@ const getGauges = async (marketData: IMarketsAsset[]): Promise<IGaugesAsset[]> =
     const gaugesFormatted = [];
     for (const i in Object.entries(gaugesDetails)) {
         if (gaugesDetails[i].periodFinish == 0) continue;
-        const suppliedNative = parseUnits(
+        const suppliedNative = utils.parseUnits(
             marketData[i].supplyTotalNative,
             gaugesDetails[i].decimals,
         );
