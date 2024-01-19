@@ -65,6 +65,7 @@ const Staking: React.FC = () => {
         dvmexAPR,
         rewardsLoading,
         redeemRewards,
+        userRewards,
     } = useToken(clearInputs);
     const { width, breakpoints } = useWindowSize();
     const { tabIndex, handleTabChange } = useCustomTabs();
@@ -448,21 +449,18 @@ const Staking: React.FC = () => {
                                 <StakeInput
                                     header="Unclaimed veVMEX boost rewards (dVMEX)"
                                     onChange={() => {}}
-                                    value={vevmexUserData.data?.boostRewards.normalized ?? '0.0'}
+                                    value={userRewards?.boostRewards.normalized ?? '0.0'}
                                     disabled
                                     loading={rewardsLoading}
                                 />
                                 <Button
                                     type="accent"
                                     className="h-fit mb-[17.88px]"
-                                    disabled={
-                                        vevmexUserData.data?.boostRewards.normalized === '0.0'
-                                    }
+                                    disabled={userRewards?.boostRewards.normalized === '0.0'}
                                     onClick={() =>
                                         redeemRewards(
                                             'boost',
-                                            vevmexUserData.data?.boostRewards.raw ??
-                                                BigNumber.from(0),
+                                            userRewards?.boostRewards.raw ?? BigNumber.from(0),
                                         )
                                     }
                                     loading={tokenLoading.claimBoostRewards}
@@ -489,20 +487,19 @@ const Staking: React.FC = () => {
                                 <StakeInput
                                     header="Unclaimed veVMEX exit rewards (VW8020)"
                                     onChange={() => {}}
-                                    value={vevmexUserData.data?.exitRewards.normalized ?? '0.0'}
+                                    value={userRewards?.exitRewards.normalized ?? '0.0'}
                                     loading={rewardsLoading}
                                     disabled
                                 />
                                 <Button
                                     type="accent"
                                     className="h-fit mb-[17.88px]"
-                                    disabled={vevmexUserData.data?.exitRewards.normalized === '0.0'}
+                                    disabled={userRewards?.exitRewards.normalized === '0.0'}
                                     loading={tokenLoading.claimExitRewards}
                                     onClick={() =>
                                         redeemRewards(
                                             'exit',
-                                            vevmexUserData.data?.exitRewards.raw ??
-                                                BigNumber.from(0),
+                                            userRewards?.exitRewards.raw ?? BigNumber.from(0),
                                         )
                                     }
                                 >

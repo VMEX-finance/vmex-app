@@ -172,22 +172,6 @@ export const useToken = (clearInputs?: () => void) => {
             ],
         });
 
-        // Get user pool rewards
-        const dvmexRewardsContract = new ethers.Contract(
-            '0xC4F1050a3216b116a78133038912BC3b9506aEF0',
-            VMEX_REWARD_POOL_ABI,
-            signer?.provider,
-        );
-        const vevmexRewardsContract = new ethers.Contract(
-            '0xecF3e854D428074d116DE6f31213522F6525Cf81',
-            VMEX_REWARD_POOL_ABI,
-            signer?.provider,
-        );
-        let [boostRewards, exitRewards] = await Promise.all([
-            dvmexRewardsContract.call.claim(),
-            vevmexRewardsContract.call.claim(),
-        ]);
-
         const now = Math.floor(Date.now() / 1000);
         let penalty = 0;
         if (end.gt(now)) {
@@ -225,10 +209,32 @@ export const useToken = (clearInputs?: () => void) => {
                         ? amount
                         : BigNumber.from(0),
             },
-            boostRewards: toNormalizedBN(boostRewards ?? BigNumber.from(0)),
-            exitRewards: toNormalizedBN(exitRewards ?? BigNumber.from(0)),
             exitPreview,
             penalty,
+        };
+    };
+
+    const getVevmexUserRewards = async () => {
+        if (!address) return;
+        // Get user pool rewards
+        const dvmexRewardsContract = new ethers.Contract(
+            CONTRACTS[VMEX_VEVMEX_CHAINID].dvmexRewards as `0x${string}`,
+            VMEX_REWARD_POOL_ABI,
+            signer?.provider,
+        );
+        const vevmexRewardsContract = new ethers.Contract(
+            CONTRACTS[VMEX_VEVMEX_CHAINID].vmexRewards as `0x${string}`,
+            VMEX_REWARD_POOL_ABI,
+            signer?.provider,
+        );
+        if (!dvmexRewardsContract || !vevmexRewardsContract) return;
+        let [boostRewards, exitRewards] = await Promise.all([
+            dvmexRewardsContract.callStatic['claim(address)'](address),
+            vevmexRewardsContract.callStatic['claim(address)'](address),
+        ]);
+        return {
+            boostRewards: toNormalizedBN(boostRewards ?? BigNumber.from(0)),
+            exitRewards: toNormalizedBN(exitRewards ?? BigNumber.from(0)),
         };
     };
 
@@ -286,6 +292,12 @@ export const useToken = (clearInputs?: () => void) => {
                     return utils.formatEther(discount);
                 },
                 refetchInterval: 60 * 1000,
+            },
+            {
+                queryKey: ['vevmex-user-rewards', address],
+                queryFn: getVevmexUserRewards,
+                refetchInterval: 10 * 1000,
+                enabled: !!address && !!signer?.provider,
             },
         ],
     });
@@ -564,7 +576,8 @@ export const useToken = (clearInputs?: () => void) => {
 
         vw8020Balance,
 
-        rewardsLoading: queries[1].isLoading,
+        rewardsLoading: queries[3].isLoading,
+        userRewards: queries[3].data,
         redeemRewards,
     };
 };
