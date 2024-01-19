@@ -4,12 +4,14 @@ import {
     getAllAssetPrices,
     IGaugesAsset,
     IMarketsAsset,
+    IUserActivityDataProps,
     IVaultAsset,
-    useGauages,
+    useGauges,
     useSubgraphAllMarketsData,
+    useUserData,
 } from '@/api';
 import { useQuery } from '@tanstack/react-query';
-import { getBalance, LOGS, toNormalizedBN } from '@/utils';
+import { getBalance, isAddressEqual, LOGS, toNormalizedBN } from '@/utils';
 import { BigNumber } from 'ethers';
 import { useToken } from '@/hooks';
 import { IAddress } from '@/types/wagmi';
@@ -74,35 +76,34 @@ const getAssetUSDPrice = (prices: any, symbol: string): number => {
 };
 
 // Utils
-const renderGauges = async (gauges: IGaugesAsset[], user?: IAddress): Promise<IVaultAsset[]> => {
-    if (!gauges.length) return [];
+const renderGauges = async (
+    gauges: IGaugesAsset[],
+    userData?: IUserActivityDataProps,
+): Promise<IVaultAsset[]> => {
+    if (!gauges.length || !userData) return [];
 
     const prices = await getAllAssetPrices();
-    return await Promise.all(
-        gauges.map(async (g: IGaugesAsset) => {
-            const yourStaked = user
-                ? ((await getBalance(g.address as any, user, 'raw')) as BigNumber)
-                : BigNumber.from(0);
-            return {
-                ...g,
-                gaugeAddress: g.address,
-                vaultAddress: g.vaultAddress,
-                decimals: g.decimals,
-                vaultName: g.name,
-                vaultApy: 0,
-                vaultDeposited: g.totalStaked,
-                gaugeAPR: 0,
-                gaugeBoost: 0,
-                gaugeStaked: g.totalStaked,
-                vaultSymbol: g.symbol,
-                actions: undefined,
-                rewardRate: g.rewardRate,
-                assetPrice: getAssetUSDPrice(prices, getUnderlyingSymbolFromGauge(g.symbol)),
-                wethPrice: getAssetUSDPrice(prices, 'WETH'),
-                yourStaked: toNormalizedBN(yourStaked),
-            };
-        }),
-    );
+    return gauges.map((g: IGaugesAsset) => {
+        const yourStaked = BigNumber.from(0);
+        return {
+            ...g,
+            aTokenAddress: g.address,
+            gaugeAddress: g.address,
+            decimals: g.decimals,
+            vaultName: g.name,
+            vaultApy: 0,
+            vaultDeposited: g.totalStaked,
+            gaugeAPR: 0,
+            gaugeBoost: 0,
+            gaugeStaked: g.totalStaked,
+            vaultSymbol: g.symbol,
+            actions: undefined,
+            rewardRate: g.rewardRate,
+            assetPrice: getAssetUSDPrice(prices, g.underlyingAsset),
+            wethPrice: getAssetUSDPrice(prices, 'WETH'),
+            yourStaked: toNormalizedBN(yourStaked),
+        };
+    });
 };
 
 export function getUnderlyingMarket(_vaultSymbol?: string, markets?: IMarketsAsset[]) {
@@ -122,37 +123,42 @@ export function getUnderlyingMarket(_vaultSymbol?: string, markets?: IMarketsAss
 export function VaultsStore(props: { children: ReactNode }) {
     const network = getNetworkName();
     const { address } = useAccount();
-    const { queryGauges } = useGauages();
     const { dvmexPriceInEthNoDecimals } = useToken();
     const { queryAllMarketsData } = useSubgraphAllMarketsData();
+    const { queryGauges } = useGauges(queryAllMarketsData.data || []);
+    const { queryUserActivity } = useUserData(address);
 
-    const queryVaults = useQuery({
-        queryKey: ['vaults', network, address],
-        queryFn: () => renderGauges(queryGauges.data, address),
-        enabled: queryGauges?.data?.length > 0,
-        initialData: [],
-        refetchInterval: 10 * 1000,
-    });
+    const queryVaults = useQuery(
+        ['vaults', network, address],
+        () => renderGauges(queryGauges.data || [], queryUserActivity.data),
+        {
+            enabled: !!queryGauges?.data?.length, // Additional options
+            initialData: [],
+            refetchInterval: 10 * 1000,
+        },
+    );
 
     const vaults = useMemo(() => {
         if (queryAllMarketsData.data?.length && queryAllMarketsData?.isFetched) {
             const markets = queryAllMarketsData.data;
             const returnArr = queryVaults?.data?.map((v) => {
-                const underlying = getUnderlyingMarket(v.vaultSymbol, markets);
+                const marketAssetData = markets.find((x) =>
+                    isAddressEqual(x.aTokenAddress, v.aTokenAddress),
+                );
                 const gaugeStakedNormalized = toNormalizedBN(
                     v.gaugeStaked.raw,
-                    underlying?.decimals,
+                    marketAssetData?.decimals,
                 );
                 return {
                     ...v,
-                    vaultApy: Number(underlying?.supplyApy || '0'),
+                    vaultApy: Number(marketAssetData?.supplyApy || '0'),
                     vaultDeposited: {
-                        normalized: underlying?.supplyTotalNative || '0.0',
+                        normalized: marketAssetData?.supplyTotalNative || '0.0',
                         raw: BigNumber.from(0),
                     },
-                    underlyingAddress: underlying?.assetAddress,
-                    underlyingSymbol: underlying?.asset,
-                    underlyingDecimals: underlying?.decimals,
+                    underlyingAddress: marketAssetData?.assetAddress,
+                    underlyingSymbol: marketAssetData?.asset,
+                    underlyingDecimals: marketAssetData?.decimals,
                     gaugeStaked: gaugeStakedNormalized,
                     gaugeAPR: calculateApyFromRewardRate(
                         v.rewardRate?.normalized || 0,

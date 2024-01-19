@@ -104,13 +104,6 @@ const GaugesTable: React.FC<ITableProps> = React.memo(({ data, loading, userData
             },
         },
         {
-            name: 'vaultAddress',
-            label: 'Vault Address',
-            options: {
-                display: false,
-            },
-        },
-        {
             name: 'vaultSymbol',
             label: 'Symbol',
             options: {
@@ -118,8 +111,8 @@ const GaugesTable: React.FC<ITableProps> = React.memo(({ data, loading, userData
             },
         },
         {
-            name: 'gaugeAddress',
-            label: 'Gauge Address',
+            name: 'aTokenAddress',
+            label: 'aToken address',
             options: {
                 display: false,
             },
@@ -175,9 +168,8 @@ const GaugesTable: React.FC<ITableProps> = React.memo(({ data, loading, userData
                             gaugeStaked,
                             gaugeBoost,
                             decimals,
-                            vaultAddress,
                             vaultSymbol,
-                            gaugeAddress,
+                            aTokenAddress,
                             underlyingAddress,
                             underlyingSymbol,
                             underlyingDecimals,
@@ -187,8 +179,7 @@ const GaugesTable: React.FC<ITableProps> = React.memo(({ data, loading, userData
                         rowIndex,
                     ) => (
                         <GaugesCustomRow
-                            gaugeAddress={gaugeAddress}
-                            vaultAddress={vaultAddress}
+                            aTokenAddress={aTokenAddress}
                             decimals={decimals}
                             vaultName={vaultName}
                             vaultApy={vaultApy}

@@ -1,10 +1,11 @@
 import { INormalizedBN } from '@/api';
 import { useTransactionsContext, useVaultsContext } from '@/store';
 import { IAddress } from '@/types/wagmi';
+import { getAddress } from '@ethersproject/address';
+import { erc20ABI, prepareWriteContract, writeContract } from '@wagmi/core';
 import { CONTRACTS, DEFAULT_NORMALIZED_VALS, VMEX_VEVMEX_CHAINID, toNormalizedBN } from '@/utils';
-import { VEVMEX_GAUGE_ABI, VMEX_REWARD_POOL_ABI } from '@/utils/abis';
-import { prepareWriteContract, writeContract } from '@wagmi/core';
-import { BigNumber, constants, utils } from 'ethers';
+import { IncentivesControllerABI, VEVMEX_GAUGE_ABI } from '@/utils/abis';
+import { constants, utils } from 'ethers';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { readContracts, useAccount } from 'wagmi';
@@ -19,7 +20,7 @@ export const useGauge = () => {
     const { address } = useAccount();
     const { newTransaction } = useTransactionsContext();
     const { vaults, isLoading } = useVaultsContext();
-    const [selected, setSelected] = useState(vaults?.[0]?.gaugeAddress || '');
+    const [selected, setSelected] = useState(vaults?.[0]?.aTokenAddress || '');
     const [gaugeRewards, setGaugeRewards] = useState(DEFAULT_REWARDS_STATE);
     const [loading, setLoading] = useState({
         redeem: false,
@@ -37,7 +38,11 @@ export const useGauge = () => {
      */
     const redeemGaugeRewards = async () => {
         if (!address) return;
-        if (!selected || !utils.isAddress(selected)) {
+        if (
+            !selected ||
+            !utils.isAddress(selected) ||
+            !CONTRACTS[VMEX_VEVMEX_CHAINID].incentivesController
+        ) {
             console.warn('No gauge address being passed');
             toast.error('No gauge selected');
             return;
@@ -45,10 +50,11 @@ export const useGauge = () => {
         try {
             setLoading({ ...loading, redeem: true });
             const prepareRedeemTx = await prepareWriteContract({
-                address: selected as IAddress,
-                abi: VEVMEX_GAUGE_ABI,
+                address: CONTRACTS[VMEX_VEVMEX_CHAINID].incentivesController,
+                abi: IncentivesControllerABI,
                 chainId: VMEX_VEVMEX_CHAINID,
-                functionName: 'getReward',
+                functionName: 'claimDVmexReward',
+                args: [selected, address],
             });
             const redeemTx = await writeContract(prepareRedeemTx);
             await Promise.all([newTransaction(redeemTx), redeemTx.wait()]);
@@ -62,42 +68,55 @@ export const useGauge = () => {
 
     // Get data on load
     useEffect(() => {
-        if (vaults?.length && !selected) setSelected(vaults?.[0]?.gaugeAddress);
+        if (vaults?.length && !selected) {
+            setSelected(vaults?.[0]?.aTokenAddress);
+        }
+        // (async () => getBoostRewards())().catch(e => console.error(e))
     }, [isLoading, vaults?.length]);
 
     // get rewards on selected vault change
     useEffect(() => {
         (async () => {
-            if (!address || !selected) return;
+            if (!address || !selected || !CONTRACTS[VMEX_VEVMEX_CHAINID].incentivesController)
+                return;
             setLoading({ ...loading, rewards: true });
             const gaugeRewards = await readContracts({
                 contracts: [
                     {
-                        ...defaultConfig,
+                        address: getAddress(selected),
+                        abi: erc20ABI,
+                        chainId: VMEX_VEVMEX_CHAINID,
                         functionName: 'balanceOf',
                         args: [address || constants.AddressZero],
                     },
                     {
-                        ...defaultConfig,
+                        address: CONTRACTS[VMEX_VEVMEX_CHAINID].incentivesController,
+                        abi: IncentivesControllerABI,
+                        chainId: VMEX_VEVMEX_CHAINID,
                         functionName: 'earned',
-                        args: [address || constants.AddressZero],
+                        args: [getAddress(selected), address || constants.AddressZero],
                     },
                     {
-                        ...defaultConfig,
+                        address: CONTRACTS[VMEX_VEVMEX_CHAINID].incentivesController,
+                        abi: IncentivesControllerABI,
+                        chainId: VMEX_VEVMEX_CHAINID,
                         functionName: 'nextBoostedBalanceOf',
-                        args: [address || constants.AddressZero],
+                        args: [getAddress(selected), address || constants.AddressZero],
                     },
                     {
-                        ...defaultConfig,
-                        functionName: 'decimals',
+                        address: CONTRACTS[VMEX_VEVMEX_CHAINID].incentivesController,
+                        abi: IncentivesControllerABI,
+                        chainId: VMEX_VEVMEX_CHAINID,
+                        functionName: 'getDVmexReward',
+                        args: [getAddress(selected)],
                     },
                 ],
             });
-            const decimals = gaugeRewards[3];
+            const decimals = gaugeRewards[3].decimals;
             setGaugeRewards({
                 balance: toNormalizedBN(gaugeRewards[0], decimals),
-                earned: toNormalizedBN(gaugeRewards[1], decimals),
-                boostedBalance: toNormalizedBN(gaugeRewards[2], decimals),
+                earned: toNormalizedBN(gaugeRewards[1], 18),
+                boostedBalance: toNormalizedBN(gaugeRewards[2], 18),
             });
             setLoading({ ...loading, rewards: false });
         })().catch((e) => console.error(e));

@@ -8,6 +8,7 @@ import {
     NETWORKS,
     TESTING,
     getChainId,
+    isAddressEqual,
     percentFormatter,
     weeksToUnixBn,
 } from '@/utils';
@@ -68,6 +69,7 @@ const Staking: React.FC = () => {
     const { width, breakpoints } = useWindowSize();
     const { tabIndex, handleTabChange } = useCustomTabs();
     const { vaults, isError: vaultsError, isLoading: vaultsLoading } = useVaultsContext();
+
     const { selected, setSelected, gaugeRewards, redeemGaugeRewards, gaugeLoading } = useGauge();
 
     const renderMinWeeks = () => {
@@ -88,7 +90,7 @@ const Staking: React.FC = () => {
             .sort((a, b) => (b.yourStaked?.raw.gt(a.yourStaked?.raw || BigNumber.from(0)) ? 1 : -1))
             .map((v) => ({
                 text: v.vaultSymbol,
-                onClick: () => setSelected(v.gaugeAddress),
+                onClick: () => setSelected(v.aTokenAddress),
                 value: v.yourStaked?.normalized,
             }));
     }, [vaults.length]);
@@ -106,11 +108,11 @@ const Staking: React.FC = () => {
             title="staking"
             description={
                 <>
-                    <MessageStatus
+                    {/* <MessageStatus
                         icon
                         type="warning"
-                        message="GaugesV2 are now LIVE. Please withdraw from the current gauges. To earn rewards, simply supply any asset that's earning dVMEX rewards!"
-                    />
+                        message="Note: Staking your vTokens in gauges will decrease your health factor. Gauges v2 (Release: 01/11/24) will allow staked amounts to count towards your health factor."
+                    /> */}
                     {TESTING && chainId === 5 && address && (
                         <Button
                             onClick={async () => {
@@ -122,7 +124,7 @@ const Staking: React.FC = () => {
                                         args: [address, utils.parseEther('1000')],
                                         mode: 'recklesslyUnprepared',
                                     });
-                                    console.log('Minted 1000 VMEX tokens');
+                                    alert('Minted 1000 VMEX tokens');
                                 } catch (e) {
                                     return;
                                 }
@@ -405,8 +407,9 @@ const Staking: React.FC = () => {
                                         className=""
                                         items={vaultDropdownList}
                                         selected={
-                                            vaults.find((v) => v.gaugeAddress === selected)
-                                                ?.vaultSymbol || vaults[0]?.vaultSymbol
+                                            vaults.find((v) =>
+                                                isAddressEqual(v.aTokenAddress, selected),
+                                            )?.vaultSymbol || vaults[0]?.vaultSymbol
                                         }
                                     />
                                     <StakeInput

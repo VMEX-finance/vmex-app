@@ -15,7 +15,7 @@ export const VaultDetails = ({ vault, deposited }: IVaultDetails & { deposited?:
     return (
         <div>
             <a
-                href={`${NETWORKS[network]?.explorer}/address/${vault?.gaugeAddress}`}
+                href={`${NETWORKS[network]?.explorer}/address/${vault?.aTokenAddress}`}
                 target="_blank"
                 className="flex items-center gap-1 w-fit"
                 rel="noreferrer"

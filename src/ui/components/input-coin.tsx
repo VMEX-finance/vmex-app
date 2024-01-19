@@ -86,7 +86,7 @@ export const CoinInput = ({
                 test: NETWORKS[network].testing,
                 providerRpc: NETWORKS[network].rpc,
             });
-            console.log(`Minted ${coin.name} to wallet`);
+            alert(`Minted ${coin.name} to wallet`);
             return res;
         }
     };

@@ -128,7 +128,7 @@ export const VaultAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
                     />
                     {view === 'Deposit' ? (
                         <>
-                            <DefaultAccordion
+                            {/* <DefaultAccordion
                                 wrapperClass="!border-0 "
                                 customHover="hover:!text-brand-purple"
                                 detailsClass="!bg-white dark:!bg-brand-black !border-0"
@@ -151,7 +151,7 @@ export const VaultAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
                                         </ol>
                                     </div>
                                 }
-                            />
+                            /> */}
                             <ModalTableDisplay
                                 title="Transaction Overview"
                                 titleClass="mb-0.5"
@@ -195,7 +195,7 @@ export const VaultAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
                 </div>
             )}
 
-            <ModalFooter between>
+            {/* <ModalFooter between>
                 <Button
                     type="outline"
                     onClick={(e: any) =>
@@ -215,7 +215,7 @@ export const VaultAssetDialog: React.FC<IDialogProps> = ({ name, isOpen, data, c
                 >
                     {renderBtnText()}
                 </Button>
-            </ModalFooter>
+            </ModalFooter> */}
         </>
     );
 };

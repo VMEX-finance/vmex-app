@@ -1,110 +1,73 @@
-import { CONTRACTS, TESTING, getNetworkName, VMEX_VEVMEX_CHAINID, LOGS } from '@/utils';
-import { VEVMEX_GAUGE_ABI, VEVMEX_REGISTRY_ABI } from '@/utils/abis';
+import { CONTRACTS, getNetworkName, VMEX_VEVMEX_CHAINID, LOGS } from '@/utils';
+import { IncentivesControllerABI } from '@/utils/abis';
 import { useQuery } from '@tanstack/react-query';
-import { Address, readContract, readContracts } from '@wagmi/core';
+import { readContracts } from '@wagmi/core';
 import { BigNumber, BigNumberish, utils } from 'ethers';
-import { getAddress } from 'ethers/lib/utils.js';
-import { useEffect } from 'react';
+import { IGaugesAsset, IMarketsAsset } from './types';
 
 const toNormalizedBN = (value: BigNumberish, decimals?: number) => ({
     raw: BigNumber.from(value),
     normalized: utils.formatUnits(BigNumber.from(value), decimals ?? 18),
 });
 
-const formatGauges = async (gaugeAddresses: Address[]) => {
-    const gaugePromises = gaugeAddresses.map(async (gaugeAddress) => {
-        const results = await readContracts({
-            contracts: [
-                {
-                    address: gaugeAddress,
-                    abi: VEVMEX_GAUGE_ABI,
-                    chainId: VMEX_VEVMEX_CHAINID,
-                    functionName: 'asset',
-                },
-                {
-                    address: gaugeAddress,
-                    abi: VEVMEX_GAUGE_ABI,
-                    chainId: VMEX_VEVMEX_CHAINID,
-                    functionName: 'name',
-                },
-                {
-                    address: gaugeAddress,
-                    abi: VEVMEX_GAUGE_ABI,
-                    chainId: VMEX_VEVMEX_CHAINID,
-                    functionName: 'symbol',
-                },
-                {
-                    address: gaugeAddress,
-                    abi: VEVMEX_GAUGE_ABI,
-                    chainId: VMEX_VEVMEX_CHAINID,
-                    functionName: 'decimals',
-                },
-                {
-                    address: gaugeAddress,
-                    abi: VEVMEX_GAUGE_ABI,
-                    chainId: VMEX_VEVMEX_CHAINID,
-                    functionName: 'totalAssets',
-                },
-                {
-                    address: gaugeAddress,
-                    abi: VEVMEX_GAUGE_ABI,
-                    chainId: VMEX_VEVMEX_CHAINID,
-                    functionName: 'rewardRate',
-                },
-            ],
-        });
-
-        return {
-            address: gaugeAddress,
-            vaultAddress: results[0],
-            name: results[1],
-            symbol: results[2],
-            decimals: results[3],
-            totalStaked: toNormalizedBN(results[4], results[3]),
-            rewardRate: toNormalizedBN(results[5], results[3]),
-        };
-    });
-
-    const allGauges = await Promise.all(gaugePromises);
-    return allGauges;
+type DVmexReward = {
+    aToken: string;
+    periodFinish: number;
+    lastUpdateTime: number;
+    rewardRate: BigNumber;
+    rewardPerTokenStored: BigNumber;
+    decimals: number;
+    queuedRewards: BigNumber;
+    currentRewards: BigNumber;
 };
 
-const getGauges = async () => {
-    const vaults = await readContract({
-        address: getAddress(CONTRACTS[VMEX_VEVMEX_CHAINID].registry),
-        abi: VEVMEX_REGISTRY_ABI,
-        functionName: 'getVaults',
-    });
+const getGauges = async (marketData: IMarketsAsset[]): Promise<IGaugesAsset[]> => {
+    const aTokens = marketData.map((x) => x.aTokenAddress);
+    const incentivesControllerAddress = CONTRACTS[VMEX_VEVMEX_CHAINID].incentivesController;
 
-    const gauges = await readContracts({
-        contracts: vaults.map((x) => {
+    if (!incentivesControllerAddress || !aTokens.length) return [];
+
+    const gaugesDetails = (await readContracts({
+        contracts: aTokens.map((x) => {
             return {
-                address: getAddress(CONTRACTS[VMEX_VEVMEX_CHAINID].registry),
-                abi: VEVMEX_REGISTRY_ABI,
-                functionName: 'gauges',
+                address: incentivesControllerAddress,
+                abi: IncentivesControllerABI,
+                functionName: 'getDVmexReward',
                 args: [x],
             };
         }),
-    });
+    })) as DVmexReward[];
 
-    return await formatGauges(gauges as Address[]);
+    const gaugesFormatted = [];
+    for (const i in Object.entries(gaugesDetails)) {
+        if (gaugesDetails[i].periodFinish == 0) continue;
+        const suppliedNative = utils.parseUnits(
+            marketData[i].supplyTotalNative,
+            gaugesDetails[i].decimals,
+        );
+
+        gaugesFormatted.push({
+            address: aTokens[i],
+            name: `${marketData[i].asset}:${marketData[i].tranche}`,
+            symbol: `vG-v${marketData[i].asset}${marketData[i].trancheId}`,
+            totalStaked: toNormalizedBN(suppliedNative, gaugesDetails[i].decimals),
+            rewardRate: toNormalizedBN(gaugesDetails[i].rewardRate, 18),
+            periodFinish: gaugesDetails[i].periodFinish,
+            decimals: gaugesDetails[i].decimals,
+            underlyingAsset: marketData[i].asset,
+        });
+    }
+
+    return gaugesFormatted;
 };
 
-export const useGauages = () => {
+export const useGauges = (marketData: IMarketsAsset[]) => {
     const network = getNetworkName();
 
-    const queryGauges = useQuery({
-        queryKey: ['gauges', network],
-        queryFn: getGauges,
-        initialData: [],
-    });
-
-    // TODO: remove
-    useEffect(() => {
-        if (LOGS) {
-            console.log('Gauges:', queryGauges.data);
-        }
-    }, [queryGauges.data]);
+    const queryGauges = useQuery(
+        ['gauges', network, marketData.map((x) => x.aTokenAddress).length.toString()], // Query Key: an array including your params
+        () => getGauges(marketData),
+    );
 
     return {
         queryGauges,

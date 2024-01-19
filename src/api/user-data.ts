@@ -17,15 +17,9 @@ import {
     getNetworkName,
     toSymbol,
 } from '@/utils';
-import {
-    IUserActivityDataProps,
-    IUserDataProps,
-    IUserLoopingProps,
-    IUserWalletDataProps,
-} from './types';
+import { IUserActivityDataProps, IUserDataProps, IUserWalletDataProps } from './types';
 import { BigNumber } from 'ethers';
 import { getSubgraphTranchesOverviewData } from './tranches-data';
-import { getUserLoopingQuery } from './queries/user-looping';
 // Gets
 export async function getUserActivityData(userAddress: string): Promise<IUserActivityDataProps> {
     if (!userAddress) {
