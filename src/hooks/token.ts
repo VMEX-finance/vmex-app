@@ -336,7 +336,7 @@ export const useToken = (clearInputs?: () => void) => {
                     abi: VMEX_REWARD_POOL_ABI,
                     chainId: VMEX_VEVMEX_CHAINID,
                     functionName: 'claim',
-                    args: [cleanAddress, true],
+                    args: [cleanAddress],
                 });
                 const redeemTx = await writeContract(prepareRedeemTx);
                 await Promise.all([newTransaction(redeemTx), redeemTx.wait()]);
@@ -359,7 +359,7 @@ export const useToken = (clearInputs?: () => void) => {
                 abi: VMEX_REWARD_POOL_ABI,
                 chainId: VMEX_VEVMEX_CHAINID,
                 functionName: 'claim',
-                args: [cleanAddress, true],
+                args: [cleanAddress],
             });
             const redeemTx = await writeContract(prepareRedeemTx);
             await Promise.all([newTransaction(redeemTx), redeemTx.wait()]);
