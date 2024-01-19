@@ -232,6 +232,30 @@ export const useToken = (clearInputs?: () => void) => {
         };
     };
 
+    const getVevmexUserRewards = async () => {
+        if (!address) return;
+        // Get user pool rewards
+        const dvmexRewardsContract = new ethers.Contract(
+            CONTRACTS[VMEX_VEVMEX_CHAINID].dvmexRewards as `0x${string}`,
+            VMEX_REWARD_POOL_ABI,
+            signer?.provider,
+        );
+        const vevmexRewardsContract = new ethers.Contract(
+            CONTRACTS[VMEX_VEVMEX_CHAINID].vmexRewards as `0x${string}`,
+            VMEX_REWARD_POOL_ABI,
+            signer?.provider,
+        );
+        if (!dvmexRewardsContract || !vevmexRewardsContract) return;
+        let [boostRewards, exitRewards] = await Promise.all([
+            dvmexRewardsContract.callStatic['claim(address)'](address),
+            vevmexRewardsContract.callStatic['claim(address)'](address),
+        ]);
+        return {
+            boostRewards: toNormalizedBN(boostRewards ?? BigNumber.from(0)),
+            exitRewards: toNormalizedBN(exitRewards ?? BigNumber.from(0)),
+        };
+    };
+
     /**
      * Gets all vevmex metadata
      */
@@ -287,6 +311,12 @@ export const useToken = (clearInputs?: () => void) => {
                 },
                 refetchInterval: 60 * 1000,
             },
+            {
+                queryKey: ['vevmex-user-rewards', address],
+                queryFn: getVevmexUserRewards,
+                refetchInterval: 10 * 1000,
+                enabled: !!address && !!signer?.provider,
+            },
         ],
     });
 
@@ -306,13 +336,14 @@ export const useToken = (clearInputs?: () => void) => {
                     abi: VMEX_REWARD_POOL_ABI,
                     chainId: VMEX_VEVMEX_CHAINID,
                     functionName: 'claim',
-                    args: [cleanAddress, true],
+                    args: [cleanAddress],
                 });
                 const redeemTx = await writeContract(prepareRedeemTx);
-                setLoading({ ...loading, claimExitRewards: false });
                 await Promise.all([newTransaction(redeemTx), redeemTx.wait()]);
+                setLoading({ ...loading, claimExitRewards: false });
                 clearInputs && clearInputs();
             } catch (e) {
+                setLoading({ ...loading, claimBoostRewards: false });
                 console.error(e);
                 if (!String(e).includes('User rejected request'))
                     toast.error('Error occured while redeeming');
@@ -328,13 +359,14 @@ export const useToken = (clearInputs?: () => void) => {
                 abi: VMEX_REWARD_POOL_ABI,
                 chainId: VMEX_VEVMEX_CHAINID,
                 functionName: 'claim',
-                args: [cleanAddress, true],
+                args: [cleanAddress],
             });
             const redeemTx = await writeContract(prepareRedeemTx);
-            setLoading({ ...loading, claimBoostRewards: false });
             await Promise.all([newTransaction(redeemTx), redeemTx.wait()]);
+            setLoading({ ...loading, claimBoostRewards: false });
             clearInputs && clearInputs();
         } catch (e) {
+            setLoading({ ...loading, claimBoostRewards: false });
             console.error(e);
             if (!String(e).includes('User rejected request'))
                 toast.error('Error occured while redeeming');
@@ -364,8 +396,7 @@ export const useToken = (clearInputs?: () => void) => {
                     args: [CONTRACTS[VMEX_VEVMEX_CHAINID].redemption, amount],
                 });
                 const approveTx = await writeContract(prepareApproveTx);
-                await newTransaction(approveTx);
-                await approveTx.wait();
+                await Promise.all([newTransaction(approveTx), approveTx.wait()]);
                 setLoading({ ...loading, redeemApprove: false });
             }
             setLoading({ ...loading, redeem: true });
@@ -381,8 +412,8 @@ export const useToken = (clearInputs?: () => void) => {
             });
             if (LOGS) console.log('#dvmexRedeem::prepareRedeemTx:', prepareRedeemTx);
             const redeemTx = await writeContract(prepareRedeemTx);
+            await Promise.all([newTransaction(redeemTx), redeemTx.wait()]);
             setLoading({ ...loading, redeem: false });
-            await newTransaction(redeemTx);
             clearInputs && clearInputs();
         } catch (e) {
             console.error(e);
@@ -564,7 +595,8 @@ export const useToken = (clearInputs?: () => void) => {
 
         vw8020Balance,
 
-        rewardsLoading: queries[1].isLoading,
+        rewardsLoading: queries[3].isLoading,
+        userRewards: queries[3].data,
         redeemRewards,
     };
 };
