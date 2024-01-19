@@ -339,8 +339,8 @@ export const useToken = (clearInputs?: () => void) => {
                     args: [cleanAddress, true],
                 });
                 const redeemTx = await writeContract(prepareRedeemTx);
-                setLoading({ ...loading, claimExitRewards: false });
                 await Promise.all([newTransaction(redeemTx), redeemTx.wait()]);
+                setLoading({ ...loading, claimExitRewards: false });
                 clearInputs && clearInputs();
             } catch (e) {
                 setLoading({ ...loading, claimBoostRewards: false });
@@ -362,8 +362,8 @@ export const useToken = (clearInputs?: () => void) => {
                 args: [cleanAddress, true],
             });
             const redeemTx = await writeContract(prepareRedeemTx);
-            setLoading({ ...loading, claimBoostRewards: false });
             await Promise.all([newTransaction(redeemTx), redeemTx.wait()]);
+            setLoading({ ...loading, claimBoostRewards: false });
             clearInputs && clearInputs();
         } catch (e) {
             setLoading({ ...loading, claimBoostRewards: false });
@@ -396,8 +396,7 @@ export const useToken = (clearInputs?: () => void) => {
                     args: [CONTRACTS[VMEX_VEVMEX_CHAINID].redemption, amount],
                 });
                 const approveTx = await writeContract(prepareApproveTx);
-                await newTransaction(approveTx);
-                await approveTx.wait();
+                await Promise.all([newTransaction(approveTx), approveTx.wait()]);
                 setLoading({ ...loading, redeemApprove: false });
             }
             setLoading({ ...loading, redeem: true });
@@ -413,8 +412,8 @@ export const useToken = (clearInputs?: () => void) => {
             });
             if (LOGS) console.log('#dvmexRedeem::prepareRedeemTx:', prepareRedeemTx);
             const redeemTx = await writeContract(prepareRedeemTx);
+            await Promise.all([newTransaction(redeemTx), redeemTx.wait()]);
             setLoading({ ...loading, redeem: false });
-            await newTransaction(redeemTx);
             clearInputs && clearInputs();
         } catch (e) {
             console.error(e);
