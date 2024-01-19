@@ -8,6 +8,7 @@ import {
     NETWORKS,
     TESTING,
     getChainId,
+    isAddressEqual,
     percentFormatter,
     weeksToUnixBn,
 } from '@/utils';
@@ -61,19 +62,15 @@ const Staking: React.FC = () => {
         withdrawVevmex,
         vw8020Balance,
         dvmexDiscount,
+        dvmexAPR,
+        rewardsLoading,
+        redeemRewards,
     } = useToken(clearInputs);
     const { width, breakpoints } = useWindowSize();
     const { tabIndex, handleTabChange } = useCustomTabs();
     const { vaults, isError: vaultsError, isLoading: vaultsLoading } = useVaultsContext();
-    const {
-        selected,
-        setSelected,
-        gaugeRewards,
-        redeemGaugeRewards,
-        gaugeLoading,
-        claimBoostRewards,
-        boostRewards,
-    } = useGauge();
+
+    const { selected, setSelected, gaugeRewards, redeemGaugeRewards, gaugeLoading } = useGauge();
 
     const renderMinWeeks = () => {
         if (vevmexUserData?.data?.locked?.end?.normalized)
@@ -93,7 +90,7 @@ const Staking: React.FC = () => {
             .sort((a, b) => (b.yourStaked?.raw.gt(a.yourStaked?.raw || BigNumber.from(0)) ? 1 : -1))
             .map((v) => ({
                 text: v.vaultSymbol,
-                onClick: () => setSelected(v.gaugeAddress),
+                onClick: () => setSelected(v.aTokenAddress),
                 value: v.yourStaked?.normalized,
             }));
     }, [vaults.length]);
@@ -111,11 +108,11 @@ const Staking: React.FC = () => {
             title="staking"
             description={
                 <>
-                    <MessageStatus
+                    {/* <MessageStatus
                         icon
                         type="warning"
                         message="Note: Staking your vTokens in gauges will decrease your health factor. Gauges v2 (Release: 01/11/24) will allow staked amounts to count towards your health factor."
-                    />
+                    /> */}
                     {TESTING && chainId === 5 && address && (
                         <Button
                             onClick={async () => {
@@ -127,7 +124,7 @@ const Staking: React.FC = () => {
                                         args: [address, utils.parseEther('1000')],
                                         mode: 'recklesslyUnprepared',
                                     });
-                                    console.log('Minted 1000 VMEX tokens');
+                                    alert('Minted 1000 VMEX tokens');
                                 } catch (e) {
                                     return;
                                 }
@@ -138,9 +135,11 @@ const Staking: React.FC = () => {
                     )}
                 </>
             }
+            topRight={<a href="https://snapshot.org/#/vmex.eth">Snapshot Voting</a>}
         >
             <StakingOverview
-                apr={'- %'} // TODO
+                //get current week -> call tokens per week -> calculate weekly apr -> multiply by 54 to get apr
+                apr={dvmexAPR ? percentFormatter.format(Number(dvmexAPR) / 100) : '- %'} // TODO
                 totalLocked={vevmexMetaData.data?.supply || '0'}
                 yourLocked={vevmexUserData?.data?.locked?.amount?.normalized || '0'}
                 expiration={vevmexUserData?.data?.locked?.end?.normalized || '-'}
@@ -159,6 +158,7 @@ const Staking: React.FC = () => {
                     handleTabChange={handleTabChange}
                 />
                 <CustomTabPanel value={tabIndex} index={0} className="min-h-[425px]">
+                    <div className="text-center"></div>
                     <GaugesTable data={vaults} loading={vaultsLoading} error={vaultsError} />
                 </CustomTabPanel>
                 <CustomTabPanel value={tabIndex} index={1} className="min-h-[425px]">
@@ -407,8 +407,9 @@ const Staking: React.FC = () => {
                                         className=""
                                         items={vaultDropdownList}
                                         selected={
-                                            vaults.find((v) => v.gaugeAddress === selected)
-                                                ?.vaultSymbol || vaults[0]?.vaultSymbol
+                                            vaults.find((v) =>
+                                                isAddressEqual(v.aTokenAddress, selected),
+                                            )?.vaultSymbol || vaults[0]?.vaultSymbol
                                         }
                                     />
                                     <StakeInput
@@ -447,17 +448,26 @@ const Staking: React.FC = () => {
                                 <StakeInput
                                     header="Unclaimed veVMEX boost rewards (dVMEX)"
                                     onChange={() => {}}
-                                    value={boostRewards.normalized}
+                                    value={vevmexUserData.data?.boostRewards.normalized ?? '0.0'}
                                     disabled
+                                    loading={rewardsLoading}
                                 />
                                 <Button
                                     type="accent"
                                     className="h-fit mb-[17.88px]"
-                                    disabled
-                                    onClick={claimBoostRewards}
-                                    loading={gaugeLoading.boost}
+                                    disabled={
+                                        vevmexUserData.data?.boostRewards.normalized === '0.0'
+                                    }
+                                    onClick={() =>
+                                        redeemRewards(
+                                            'boost',
+                                            vevmexUserData.data?.boostRewards.raw ??
+                                                BigNumber.from(0),
+                                        )
+                                    }
+                                    loading={tokenLoading.claimBoostRewards}
                                 >
-                                    Coming Soon
+                                    Claim
                                 </Button>
                             </div>
                         </GridView>
@@ -479,11 +489,24 @@ const Staking: React.FC = () => {
                                 <StakeInput
                                     header="Unclaimed veVMEX exit rewards (VW8020)"
                                     onChange={() => {}}
-                                    value="0.0"
+                                    value={vevmexUserData.data?.exitRewards.normalized ?? '0.0'}
+                                    loading={rewardsLoading}
                                     disabled
                                 />
-                                <Button type="accent" className="h-fit mb-[17.88px]" disabled>
-                                    Coming Soon
+                                <Button
+                                    type="accent"
+                                    className="h-fit mb-[17.88px]"
+                                    disabled={vevmexUserData.data?.exitRewards.normalized === '0.0'}
+                                    loading={tokenLoading.claimExitRewards}
+                                    onClick={() =>
+                                        redeemRewards(
+                                            'exit',
+                                            vevmexUserData.data?.exitRewards.raw ??
+                                                BigNumber.from(0),
+                                        )
+                                    }
+                                >
+                                    Claim
                                 </Button>
                             </div>
                         </GridView>

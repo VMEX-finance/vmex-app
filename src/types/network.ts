@@ -15,4 +15,5 @@ export type INetworkContracts = {
     vmexWeth: IAddress;
     redemption: IAddress;
     vmexComputed: IAddress;
+    incentivesController?: IAddress;
 };

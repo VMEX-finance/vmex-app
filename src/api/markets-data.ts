@@ -106,6 +106,7 @@ export const getSubgraphAllMarketsData = async (): Promise<IMarketsAsset[]> => {
                         externalReward {
                             isActive
                         }
+                        id
                     }
                 }
             }
@@ -174,6 +175,7 @@ export const getSubgraphAllMarketsData = async (): Promise<IMarketsAsset[]> => {
                 canBeBorrowed: reserve.borrowingEnabled,
                 liquidationThreshold: reserve.assetData.liquidationThreshold,
                 strategies: reserve.aToken?.externalReward?.isActive || false,
+                aTokenAddress: reserve.aToken?.id,
             });
         });
         return returnObj;

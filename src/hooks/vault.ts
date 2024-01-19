@@ -87,7 +87,7 @@ export const useVault = (vaultAddress?: string, gaugeAddress?: string, vaultSymb
         if (!amount || !vaultDetails.data?.[4]) return false;
         const allowance = utils.formatUnits(vaultDetails.data?.[4]);
         const bnAmount = utils.parseUnits(amount); // TODO: handle decimals
-        console.log('approvedEnough::amount:', Number(bnAmount) > Number(allowance));
+        if (LOGS) console.log('approvedEnough::amount:', Number(bnAmount) > Number(allowance));
         return Number(bnAmount) > Number(allowance);
     }, [amount]);
 
