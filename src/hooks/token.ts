@@ -343,6 +343,7 @@ export const useToken = (clearInputs?: () => void) => {
                 await Promise.all([newTransaction(redeemTx), redeemTx.wait()]);
                 clearInputs && clearInputs();
             } catch (e) {
+                setLoading({ ...loading, claimBoostRewards: false });
                 console.error(e);
                 if (!String(e).includes('User rejected request'))
                     toast.error('Error occured while redeeming');
@@ -365,6 +366,7 @@ export const useToken = (clearInputs?: () => void) => {
             await Promise.all([newTransaction(redeemTx), redeemTx.wait()]);
             clearInputs && clearInputs();
         } catch (e) {
+            setLoading({ ...loading, claimBoostRewards: false });
             console.error(e);
             if (!String(e).includes('User rejected request'))
                 toast.error('Error occured while redeeming');
