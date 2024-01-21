@@ -401,7 +401,7 @@ export const useToken = (clearInputs?: () => void) => {
             }
             setLoading({ ...loading, redeem: true });
             const prepareRedeemTx = await prepareWriteContract({
-                address: CONTRACTS[VMEX_VEVMEX_CHAINID].dvmexRewards as `0x${string}`,
+                address: CONTRACTS[VMEX_VEVMEX_CHAINID].redemption as `0x${string}`,
                 abi: VEVMEX_OPTIONS_ABI,
                 chainId: VMEX_VEVMEX_CHAINID,
                 functionName: 'redeem',
