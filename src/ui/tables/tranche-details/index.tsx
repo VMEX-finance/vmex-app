@@ -305,7 +305,11 @@ export const TrancheTable: React.FC<ITableProps> = ({ data, type }) => {
                             ) : null}
                             <td>
                                 {type === 'supply' ? (
-                                    <ApyToolitp symbol={el.asset} oldApy={el.apy} />
+                                    <ApyToolitp
+                                        symbol={el.asset}
+                                        oldApy={el.apy}
+                                        trancheId={location.state?.trancheId}
+                                    />
                                 ) : (
                                     percentFormatter.format(Number(el.apy) || 0)
                                 )}

@@ -11,6 +11,7 @@ import {
     bigNumberToNative,
     isChainUnsupported,
     percentFormatter,
+    toAddress,
     usdFormatter,
 } from '@/utils';
 import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
@@ -90,7 +91,7 @@ const MarketsCustomRow = React.memo((props: any) => {
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Supply APY</span>
-                    <ApyToolitp symbol={asset} oldApy={supplyApy} />
+                    <ApyToolitp symbol={asset} oldApy={supplyApy} trancheId={String(trancheId)} />
                 </td>
                 <td className="flex justify-between">
                     <span className="font-bold">Borrow APY</span>
@@ -166,7 +167,7 @@ const MarketsCustomRow = React.memo((props: any) => {
                 </td>
                 <td className="min-w-[150px] pl-4 py-3">{tranche}</td>
                 <td className="pl-4">
-                    <ApyToolitp symbol={asset} oldApy={supplyApy} />
+                    <ApyToolitp symbol={asset} oldApy={supplyApy} trancheId={String(trancheId)} />
                 </td>
                 <td className="pl-4">{borrowable ? percentFormatter.format(borrowApy) : '-'}</td>
                 {address && (
