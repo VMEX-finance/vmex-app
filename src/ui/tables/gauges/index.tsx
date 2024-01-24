@@ -81,9 +81,10 @@ const GaugesTable: React.FC<ITableProps> = React.memo(({ data, loading, userData
             name: 'gaugeStaked',
             label: 'Staked In Gauge',
             options: {
-                filter: false,
-                sort: true,
-                sortThirdClickReset: true,
+                //filter: false,
+                //sort: true,
+                //sortThirdClickReset: true
+                display: false,
             },
         },
         {

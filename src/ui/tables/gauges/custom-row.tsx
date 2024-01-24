@@ -155,23 +155,6 @@ export const GaugesCustomRow = (props: IVaultAsset & { loading?: boolean }) => {
                             />
                             {underlyingSymbol}
                         </span>
-                    </Loader>
-                </td>
-                <td className="pl-4 pr-1">
-                    <Loader loading={loading}>
-                        {gaugeAPR ? percentFormatter.format(gaugeAPR) : '-'}
-                    </Loader>
-                </td>
-                <td className="pl-4 pr-1">
-                    <Loader loading={loading}>
-                        <span className="flex items-center gap-1 leading-tight">
-                            <SmartPrice
-                                price={String(
-                                    gaugeStaked?.normalized ? gaugeStaked?.normalized : '-',
-                                )}
-                            />
-                            {underlyingSymbol}
-                        </span>
                         <span
                             className={`flex items-center gap-1 text-xs leading-tight whitespace-nowrap ${
                                 !gaugeBalance?.formatted || gaugeBalance?.formatted === '0.0'
@@ -188,6 +171,11 @@ export const GaugesCustomRow = (props: IVaultAsset & { loading?: boolean }) => {
                             />
                             <span>{underlyingSymbol}</span>
                         </span>
+                    </Loader>
+                </td>
+                <td className="pl-4 pr-1">
+                    <Loader loading={loading}>
+                        {gaugeAPR ? percentFormatter.format(gaugeAPR) : '-'}
                     </Loader>
                 </td>
                 {/* <td className="pl-4">
