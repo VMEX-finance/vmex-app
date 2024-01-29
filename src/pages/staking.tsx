@@ -109,11 +109,13 @@ const Staking: React.FC = () => {
             title="staking"
             description={
                 <>
-                    {/* <MessageStatus
-                        icon
-                        type="warning"
-                        message="Note: Staking your vTokens in gauges will decrease your health factor. Gauges v2 (Release: 01/11/24) will allow staked amounts to count towards your health factor."
-                    /> */}
+                    {
+                        <MessageStatus
+                            icon
+                            type="success"
+                            message="Gauges V2 are now live! To receive dVMEX rewards, simply deposit into any of the underlying assets."
+                        />
+                    }
                     {TESTING && chainId === 5 && address && (
                         <Button
                             onClick={async () => {

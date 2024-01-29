@@ -10,7 +10,6 @@ const Markets: React.FC = () => {
     const { address } = useAccount();
     const { queryUserActivity } = useUserData(address);
     const { queryAllMarketsData } = useSubgraphAllMarketsData();
-
     return (
         <Base title="markets">
             <div className="shadow-md shadow-gray-300 dark:shadow-neutral-950">

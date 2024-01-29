@@ -1,7 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
-import { NETWORKS, getNetworkName } from '@/utils';
+import { CONTRACTS, NETWORKS, VMEX_VEVMEX_CHAINID, getNetworkName } from '@/utils';
 import { IAssetApyProps } from './types';
 import { convertAddressToSymbol } from '@vmexfinance/sdk';
+import { useVaultsContext } from '@/store';
+import { useEffect, useMemo } from 'react';
 
 export async function getAllAssetApys(): Promise<IAssetApyProps[]> {
     const network = getNetworkName();
@@ -58,6 +60,35 @@ export function useApyData() {
         queryFn: getAllAssetApys,
         refetchInterval: 1000 * 60 * 5, // refetch apys every 5 minutes
     });
+    // const { vaults } = useVaultsContext();
+
+    // const returnData = useMemo(() => {
+    //     if(vaults.length && queryAssetApys.data?.length) {
+    //         queryAssetApys.data.map((assetApy) => {
+    //             const _apysByToken = [];
+    //             let _total = 0;
+    //             // Look in vaults for juicy APY
+    //             console.log("asset apy", assetApy)
+    //             const foundInVault = vaults?.find((v) => v.underlyingAddress?.toLowerCase() === assetApy.asset?.toLowerCase());
+    //             if(foundInVault) {
+    //                 console.log("found", foundInVault)
+    //                 const realAPR = Number(foundInVault.gaugeAPR) * 100;
+    //                 _apysByToken.push({ apy: String(realAPR), asset: CONTRACTS[VMEX_VEVMEX_CHAINID].vmex, name: 'VMEX Finance', symbol: 'VMEX' });
+    //                 _total = _total + realAPR;
+    //             }
+    //                 if(assetApy?.apysByToken?.length) {
+    //                     _apysByToken.push(...assetApy.apysByToken);
+    //                     _total = _total + Number(assetApy.totalApy);
+    //                 }
+    //             return {
+    //                 ...assetApy,
+    //                 totalApy: String(_total),
+    //                 apysByToken: _apysByToken
+    //             }
+    //         })
+    //     }
+    //     return queryAssetApys.data;
+    // }, [vaults.length, queryAssetApys.data?.length])
 
     return { queryAssetApys };
 }
