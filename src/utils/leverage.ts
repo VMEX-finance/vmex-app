@@ -233,6 +233,7 @@ export const processUserLoop = (
             .div(TEN_E_18)
             .toString(),
     );
+    //potential issue
     const interestPayAmount = new Decimal(borrowedAssetData.borrowApy).mul(
         borrowPrice.usdPrice
             .mul(parseEther(userLoopingState.borrowAmountNative))
