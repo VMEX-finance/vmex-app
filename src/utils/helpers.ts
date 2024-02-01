@@ -264,10 +264,13 @@ export const formatUsdUnits = (amount: BigNumber, precion: number = 2) => {
 
 export const cleanNumberString = (val: string | undefined) => {
     if (!val) return '';
-    return val
-        .replace(/[^\d.]/g, '')
-        .replaceAll(',', '')
-        .replaceAll('$', '');
+    if (typeof val === 'string') {
+        return val
+            .replace(/[^\d.]/g, '')
+            .replaceAll(',', '')
+            .replaceAll('$', '');
+    }
+    return val;
 };
 
 export const calculatePercentDiffBN = (initialValue: BigNumber, finalValue: BigNumber) => {

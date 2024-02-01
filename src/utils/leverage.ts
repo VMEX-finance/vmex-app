@@ -1,5 +1,5 @@
 import { Decimal } from 'decimal.js';
-import { BigNumber } from 'ethers';
+import { BigNumber, utils } from 'ethers';
 import { formatEther, parseEther } from 'ethers/lib/utils.js';
 import { formatUnits, parseUnits } from 'ethers/lib/utils.js';
 import { IGraphAssetData, IUserTrancheData } from '@/api';
@@ -195,60 +195,60 @@ export const processUserLoop = (
 ): any => {
     if (!userLoopingState || !allMarketsData || !userActivity) return;
 
-    const depositedAssetData = allMarketsData.find(
-        (x) =>
-            isTrancheIdEqual(x.trancheId, trancheId) &&
-            isAddressEqual(x.assetAddress, assetAddress),
-    );
-    const depositedUserData = userActivity.supplies.find(
-        (x: any) =>
-            isTrancheIdEqual(x.trancheId, trancheId) &&
-            isAddressEqual(x.assetAddress, assetAddress),
-    );
-    const borrowedAssetData = allMarketsData.find(
-        (x) =>
-            isTrancheIdEqual(x.trancheId, trancheId) &&
-            isAddressEqual(x.assetAddress, userLoopingState.borrowAssetAddress),
-    );
-    const depositPrice = prices[userLoopingState.depositAsset.toUpperCase()];
-    const borrowPrice = prices[userLoopingState.borrowAsset.toUpperCase()];
+    try {
+        const depositedAssetData = allMarketsData.find(
+            (x) =>
+                isTrancheIdEqual(x.trancheId, trancheId) &&
+                isAddressEqual(x.assetAddress, assetAddress),
+        );
+        const depositedUserData = userActivity.supplies.find(
+            (x: any) =>
+                isTrancheIdEqual(x.trancheId, trancheId) &&
+                isAddressEqual(x.assetAddress, assetAddress),
+        );
+        const borrowedAssetData = allMarketsData.find(
+            (x) =>
+                isTrancheIdEqual(x.trancheId, trancheId) &&
+                isAddressEqual(x.assetAddress, userLoopingState.borrowAssetAddress),
+        );
+        const depositPrice = prices[userLoopingState.depositAsset.toUpperCase()];
+        const borrowPrice = prices[userLoopingState.borrowAsset.toUpperCase()];
 
-    if (!depositPrice || !borrowPrice) {
-        console.error('processUserLoop cant find deposit or borrow price');
-        return;
+        if (!depositPrice || !borrowPrice) {
+            console.error('processUserLoop cant find deposit or borrow price');
+            return;
+        }
+
+        if (depositedUserData.amountNative.lte(parseEther(userLoopingState.depositAmountNative))) {
+            console.error('processUserLoop cant determine starting amount');
+            return;
+        }
+
+        const cleanDepositPrice = BigNumber.from(cleanNumberString(depositPrice.usdPrice));
+        const cleanBorrowPrice = BigNumber.from(cleanNumberString(borrowPrice.usdPrice));
+
+        const startingAmount = depositedUserData.amountNative
+            .sub(parseEther(userLoopingState.depositAmountNative))
+            .mul(cleanDepositPrice)
+            .div(TEN_E_18);
+        const earnAmount = new Decimal(depositedAssetData.supplyApy).mul(
+            cleanDepositPrice
+                .mul(parseEther(userLoopingState.depositAmountNative))
+                .div(TEN_E_18)
+                .toString(),
+        );
+        //potential issue
+        const interestPayAmount = new Decimal(borrowedAssetData.borrowApy).mul(
+            cleanBorrowPrice
+                .mul(parseEther(userLoopingState.borrowAmountNative))
+                .div(TEN_E_18)
+                .toString(),
+        );
+        const apy = earnAmount.minus(interestPayAmount).div(startingAmount.toString());
+
+        return `${(parseFloat(apy.toString()) * 100).toFixed(2)} %`;
+    } catch (e) {
+        console.error('#processUserLoop:', e);
+        return '0.00 %';
     }
-
-    if (depositedUserData.amountNative.lte(parseEther(userLoopingState.depositAmountNative))) {
-        console.error('processUserLoop cant determine starting amount');
-        return;
-    }
-    const cleanDepositPrice =
-        typeof depositPrice.usdPrice === 'string'
-            ? cleanNumberString(depositPrice.usdPrice)
-            : depositPrice.usdPrice;
-    const cleanBorrowPrice =
-        typeof borrowPrice.usdPrice === 'string'
-            ? cleanNumberString(borrowPrice.usdPrice)
-            : borrowPrice.usdPrice;
-
-    const startingAmount = depositedUserData.amountNative
-        .sub(parseEther(userLoopingState.depositAmountNative))
-        .mul(cleanDepositPrice)
-        .div(TEN_E_18);
-    const earnAmount = new Decimal(depositedAssetData.supplyApy).mul(
-        cleanDepositPrice
-            .mul(parseEther(userLoopingState.depositAmountNative))
-            .div(TEN_E_18)
-            .toString(),
-    );
-    //potential issue
-    const interestPayAmount = new Decimal(borrowedAssetData.borrowApy).mul(
-        cleanBorrowPrice
-            .mul(parseEther(userLoopingState.borrowAmountNative))
-            .div(TEN_E_18)
-            .toString(),
-    );
-    const apy = earnAmount.minus(interestPayAmount).div(startingAmount.toString());
-
-    return `${(parseFloat(apy.toString()) * 100).toFixed(2)} %`;
 };
