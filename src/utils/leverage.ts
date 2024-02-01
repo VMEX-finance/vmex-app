@@ -222,19 +222,28 @@ export const processUserLoop = (
         console.error('processUserLoop cant determine starting amount');
         return;
     }
+    const cleanDepositPrice =
+        typeof depositPrice.usdPrice === 'string'
+            ? cleanNumberString(depositPrice.usdPrice)
+            : depositPrice.usdPrice;
+    const cleanBorrowPrice =
+        typeof borrowPrice.usdPrice === 'string'
+            ? cleanNumberString(borrowPrice.usdPrice)
+            : borrowPrice.usdPrice;
 
     const startingAmount = depositedUserData.amountNative
         .sub(parseEther(userLoopingState.depositAmountNative))
-        .mul(depositPrice.usdPrice)
+        .mul(cleanDepositPrice)
         .div(TEN_E_18);
     const earnAmount = new Decimal(depositedAssetData.supplyApy).mul(
-        depositPrice.usdPrice
+        cleanDepositPrice
             .mul(parseEther(userLoopingState.depositAmountNative))
             .div(TEN_E_18)
             .toString(),
     );
+    //potential issue
     const interestPayAmount = new Decimal(borrowedAssetData.borrowApy).mul(
-        borrowPrice.usdPrice
+        cleanBorrowPrice
             .mul(parseEther(userLoopingState.borrowAmountNative))
             .div(TEN_E_18)
             .toString(),

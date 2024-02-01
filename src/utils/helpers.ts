@@ -20,6 +20,10 @@ export const endsWithNumber = (text: string) => {
     return /\d$/.test(text);
 };
 
+export const removeNumberAtEnd = (text: string) => {
+    return text.slice(0, text.length - 1);
+};
+
 export function truncateAddress(s: string) {
     return `${s.slice(0, 3)}...${s.slice(-4)}`;
 }

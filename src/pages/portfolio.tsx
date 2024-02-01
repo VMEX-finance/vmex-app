@@ -90,8 +90,9 @@ const Portfolio: React.FC = () => {
     return (
         <Base title="Portfolio">
             {address && !isChainUnsupported() ? (
-                <GridView type="fixed">
-                    <div className="col-span-3 2xl:col-span-2 flex flex-col gap-3">
+                //<GridView type="fixed" cols="2">
+                <div className="w-full grid grid-cols-2 gap-3">
+                    <div className="col-span-3 2xl:col-span-2 flex-row flex flex-col gap-3">
                         <PortfolioStatsCard
                             isLoading={queryUserActivity.isLoading}
                             networth={calculateNetworth()}
@@ -118,7 +119,7 @@ const Portfolio: React.FC = () => {
                             />
                         </div>
                     </div>
-                    <div className="flex flex-col gap-3 col-span-3 2xl:col-span-1">
+                    {/*                   <div className="flex flex-col gap-3 col-span-3 2xl:col-span-1">
                         <UserPerformanceCard
                             isLoading={queryUserActivity.isLoading || queryUserPnlChart.isLoading}
                             loanedAssets={queryUserActivity.data?.supplies?.map((el) => ({
@@ -133,8 +134,8 @@ const Portfolio: React.FC = () => {
                             profitLossChart={queryUserPnlChart.data || []}
                             cardClass="h-full"
                         />
-                    </div>
-                    <div className="gap-3 col-span-3 flex flex-col lg:flex-row">
+</div> */}
+                    <div className="gap-3 col-span-2 flex flex-col lg:flex-row">
                         <YourRewardsTable
                             data={queryUserRewards.data || []}
                             isLoading={queryUserRewards.isLoading}
@@ -144,7 +145,8 @@ const Portfolio: React.FC = () => {
                             <YourTransactionsTable />
                         </Card>
                     </div>
-                </GridView>
+                    {/*   </GridView> */}
+                </div>
             ) : (
                 <div className="mt-10 text-center flex-col">
                     <div className="mb-4">

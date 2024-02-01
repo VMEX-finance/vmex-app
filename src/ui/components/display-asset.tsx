@@ -3,6 +3,7 @@ import {
     determineCoinImg,
     endsWithNumber,
     getRandomNumber,
+    removeNumberAtEnd,
 } from '@/utils';
 import React from 'react';
 import { Tooltip } from './tooltip-default';
@@ -120,15 +121,21 @@ export const renderAsset = (
             size,
             origAssetName: asset,
         })
+    ) : asset?.substring(0, 4) === 'vG-v' && asset?.substring(4, 6) === 'yv' ? (
+        MultipleAssetsDisplayOverlapping({
+            assets: ['vmex', removeNumberAtEnd(asset.substring(6)), 'yearn'],
+            size,
+            origAssetName: asset,
+        })
     ) : asset?.substring(0, 4) === 'vG-v' ? (
         MultipleAssetsDisplayOverlapping({
-            assets: ['vmex', asset.substring(4).replace(/[0-9]/g, '')],
+            assets: ['vmex', removeNumberAtEnd(asset.substring(4))],
             size,
             origAssetName: asset,
         })
     ) : asset?.startsWith('v') && endsWithNumber(asset) ? (
         MultipleAssetsDisplayOverlapping({
-            assets: ['vmex', asset?.substring(1)?.replace(/[0-9]/g, '')],
+            assets: ['vmex', removeNumberAtEnd(asset?.substring(1))],
             size,
             origAssetName: asset,
         })
