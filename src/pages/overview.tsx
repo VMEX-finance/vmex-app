@@ -49,8 +49,9 @@ const Overview: React.FC = () => {
             />
 
             {isConnected && !isChainUnsupported() ? (
-                <GridView type="fixed" className="mt-8">
-                    <UserPerformanceCard
+                <GridView type="fixed" cols="2xl:grid-cols-2" className="mt-8">
+                    {/* TODO: Graph just doesn't make sense */}
+                    {/* <UserPerformanceCard
                         isLoading={queryUserActivity.isLoading || queryUserPnlChart.isLoading}
                         loanedAssets={queryUserActivity.data?.supplies?.map((el: any) => ({
                             asset: el.asset,
@@ -60,7 +61,7 @@ const Overview: React.FC = () => {
                         }))}
                         tranches={queryUserActivity.data?.tranchesInteractedWith}
                         profitLossChart={queryUserPnlChart.data || []}
-                    />
+                    /> */}
                     <div className="flex flex-col gap-3 lg:flex-row 2xl:col-span-2">
                         <YourPositionsTable
                             type="supplies"
