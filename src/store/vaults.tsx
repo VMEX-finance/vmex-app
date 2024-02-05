@@ -99,7 +99,7 @@ const renderGauges = async (
             vaultSymbol: g.symbol,
             actions: undefined,
             rewardRate: g.rewardRate,
-            assetPrice: getAssetUSDPrice(prices, g.underlyingAsset),
+            assetPrice: getAssetUSDPrice(prices, g.underlyingAsset.toUpperCase()), //this bastard was the culprit
             wethPrice: getAssetUSDPrice(prices, 'WETH'),
             yourStaked: toNormalizedBN(yourStaked),
         };
