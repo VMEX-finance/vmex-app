@@ -58,7 +58,7 @@ const calculateApyFromRewardRate = (
     const _numTokensPurchasedByReward = _usdRewardsPerYear / tokenPrice;
     const _aprDecimal = _numTokensPurchasedByReward / _totalStaked;
     if (isNaN(_aprDecimal)) return 0;
-    return _aprDecimal / 100; //stop gap fix, not sure where everything being scaled, TODO fix this later
+    return _aprDecimal;
 };
 
 const getUnderlyingSymbolFromGauge = (gaugeSymbol: string) => {
