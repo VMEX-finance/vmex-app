@@ -538,7 +538,7 @@ export const useToken = (clearInputs?: () => void) => {
         }
     };
 
-    const dvmexDiscount = Number(queries?.[2]?.data);
+    const dvmexDiscount = Number(queries?.[2]?.data) / 100; //on backend this is scaled as 50e18, so we want the percentage
     const dvmexPrice = vmexPriceInEthNoDecimals * dvmexDiscount;
 
     //this is very scuffed but oh well
