@@ -36,7 +36,7 @@ export const CONTRACTS: Record<5 | 10, INetworkContracts> = {
         gaugeFactory: '0x9D2105416cE030c4dE41Eea9C37c83a065508977', // Gauage Factory
         registry: '0xe04B52356246C3b21CA796799532f4C1Fb7ac4A7', // registry
         vmexWeth: '0x4Dde571Dc66217a062e4B50f9b20c4D08b3245a0', // vmexWeth Pool
-        redemption: '0xFC98797C100CA3ef8D35CF92D69a9aC4CdFF8D99', // Redemption
+        redemption: '0x2506Dea3B7807B4C9D3365a74D32740F19D7aDDC', // Redemption
         vmexComputed: '0xecF3e854D428074d116DE6f31213522F6525Cf81',
         incentivesController: '0x8E2a4c71906640B058051c00783160bE306c38fE',
     },
