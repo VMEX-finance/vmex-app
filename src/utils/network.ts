@@ -10,7 +10,7 @@ export const NETWORKS: Record<string, any> = {
         subgraph: 'https://api.thegraph.com/subgraphs/name/fico23/vmex-optimism-test', // 'https://api.thegraph.com/subgraphs/name/vmex-finance/vmex-optimism',
         chainId: 10,
         explorer: 'https://explorer.optimism.io',
-        backend: 'https://seal-app-bomfb.ondigitalocean.app',
+        backend: 'https://mel0n.xyz',
         testing: false,
         icon: '/coins/op.svg',
         veloRouterAddress: CONTRACTS[10].veloRouter,
