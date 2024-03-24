@@ -28,7 +28,7 @@ const Overview: React.FC = () => {
         <Base title="overview">
             <ProtocolStatsCard
                 tvl={queryProtocolData.data?.tvl}
-                tvlChart={queryProtocolTVLChart}
+                //tvlChart={queryProtocolTVLChart}
                 reserve={queryProtocolData.data?.reserve}
                 lenders={queryProtocolData.data?.uniqueLenders}
                 borrowers={queryProtocolData.data?.uniqueBorrowers}
