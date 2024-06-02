@@ -62,53 +62,50 @@ export const ProtocolStatsCard: React.FC<IProtocolProps> = ({
         });
     };
 
+    //TODO: fix card layout centering on mobile
     return (
         <Card>
             <div className="flex flex-col lg:flex-row gap-2 md:gap-4 divide-y-2 lg:divide-y-0 lg:divide-x-2 divide-neutral-300 dark:divide-neutral-800">
                 <div className="flex flex-col md:flex-row font-basefont gap-2 md:gap-4 2xl:gap-6">
                     <div className="flex flex-col justify-between min-w-[90%] lg:min-w-[300px]">
-                        <NumberDisplay
-                            size="xl"
-                            label="Total Value Locked"
-                            value={tvl ? makeCompact(tvl, true) : '-'}
-                            labelClass="text-2xl"
-                            loading={isLoading}
-                        />
-                        {tvlChart?.isLoading || isLoading ? (
-                            <Loader variant="rounded" animation="wave" className="min-w-full">
-                                <div className="h-[100px] lg:min-w-[360px] 2xl:min-w-0 w-full">
-                                    <ReAreaChart data={tvlChart?.data || []} type="usd" />
-                                </div>
-                            </Loader>
-                        ) : (
-                            <div className="h-[100px] lg:h-full lg:min-w-[360px] 2xl:min-w-0 w-full">
-                                <ReAreaChart data={tvlChart?.data || []} type="usd" />
-                            </div>
-                        )}
-                    </div>
-                    <div className="flex md:flex-col justify-between gap-1">
-                        <NumberDisplay
-                            label={'Available:'}
-                            value={reserve ? reserve : '-'}
-                            loading={isLoading}
-                        />
-                        <NumberDisplay
-                            color="text-brand-purple"
-                            label={'Lenders:'}
-                            value={lenders ? lenders : '-'}
-                            loading={isLoading}
-                        />
-                        <NumberDisplay
-                            color="text-brand-green"
-                            label={'Borrowers:'}
-                            value={borrowers ? borrowers : '-'}
-                            loading={isLoading}
-                        />
-                        <NumberDisplay
-                            label={'Markets:'}
-                            value={markets ? markets : '-'}
-                            loading={isLoading}
-                        />
+                        <div className="flex grid grid-cols-4 grid-rows-2 gap-y-5 items-center">
+                            <span className="col-span-4">
+                                <NumberDisplay
+                                    size="lg"
+                                    label="Total Value Locked"
+                                    value={tvl ? makeCompact(tvl, true) : '-'}
+                                    labelClass="text-2xl"
+                                    loading={isLoading}
+                                    align="center"
+                                />
+                            </span>
+                            <NumberDisplay
+                                label={'Available'}
+                                value={reserve ? reserve : '-'}
+                                loading={isLoading}
+                                align="center"
+                            />
+                            <NumberDisplay
+                                color="text-brand-purple"
+                                label={'Lenders'}
+                                value={lenders ? lenders : '-'}
+                                loading={isLoading}
+                                align="center"
+                            />
+                            <NumberDisplay
+                                color="text-brand-green"
+                                label={'Borrowers'}
+                                value={borrowers ? borrowers : '-'}
+                                loading={isLoading}
+                                align="center"
+                            />
+                            <NumberDisplay
+                                label={'Markets:'}
+                                value={markets ? markets : '-'}
+                                loading={isLoading}
+                                align="center"
+                            />
+                        </div>
                     </div>
                 </div>
 
